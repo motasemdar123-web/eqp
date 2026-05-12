@@ -16,7 +16,7 @@ export default function VerifyPage() {
 
         const response =
             await fetch(
-                'http://localhost:5000/verify-user',
+                'https://eqp.onrender.com/verify-user',
                 {
 
                     method: 'POST',

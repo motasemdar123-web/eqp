@@ -94,7 +94,7 @@ export default function DashboardPage() {
 
             const response =
                 await fetch(
-                    'http://localhost:5000/machines'
+                    'https://eqp.onrender.com/machines'
                 );
 
             const data =
@@ -121,7 +121,7 @@ async function loadMachineHistory() {
         const response =
 
             await fetch(
-                'http://localhost:5000/machine-history'
+                'https://eqp.onrender.com/machine-history'
             );
 
         const text =
@@ -312,7 +312,7 @@ async function loadMachineHistory() {
 
                 await fetch(
 
-                    'http://localhost:5000/generate-reports',
+                    'https://eqp.onrender.com/generate-reports',
 
                     {
 
