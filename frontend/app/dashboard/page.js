@@ -444,6 +444,15 @@ async function loadMachineHistory() {
 
                     </button>
 
+                   
+<button
+    onClick={() => router.push('/reports')}
+    className="w-full rounded-2xl bg-zinc-900 p-4 text-left text-xl font-bold text-white transition hover:bg-zinc-800"
+>
+    Reports
+</button>
+
+
                 </div>
 
             </div>
