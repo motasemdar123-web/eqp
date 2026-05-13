@@ -98,7 +98,7 @@ export default function ReportsPage() {
 
                     body: JSON.stringify({
 
-                        report_name: newName
+                        file_name: newName
 
                     })
 
@@ -201,7 +201,7 @@ export default function ReportsPage() {
 
                                                     report.id,
 
-                                                    report.report_name
+                                                   report.file_name
                                                 )
                                             }
                                             className="rounded-xl bg-zinc-700 px-4 py-2"
