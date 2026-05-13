@@ -61,25 +61,27 @@ app.put('/reports/:id', async (req, res) => {
 
         const { id } = req.params;
 
-        const { report_name } = req.body;
+    
+const { file_name } = req.body;
 
-        const result = await client.query(
+const result = await client.query(
 
-            `
+    `
 
-            UPDATE reports
+    UPDATE reports
 
-            SET report_name = $1
+    SET file_name = $1
 
-            WHERE id = $2
+    WHERE id = $2
 
-            RETURNING *
+    RETURNING *
 
-            `,
+    `,
 
-            [report_name, id]
+    [file_name, id]
 
-        );
+);
+
 
         res.json(result.rows[0]);
 
