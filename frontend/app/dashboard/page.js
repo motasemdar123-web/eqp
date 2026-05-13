@@ -541,7 +541,7 @@ function MachinesTable({ machines, selectedMachines, toggleMachine, toggleSelect
 
 function SortableHeader({ label, column, sortConfig, onSort }) {
   const active = sortConfig.key === column;
-  const indicator = active ? (sortConfig.direction === 'asc' ? '↑' : '↓') : '';
+  const indicator = active ? (sortConfig.direction === 'asc' ? 'ASC' : 'DESC') : '';
 
   return (
     <th className="px-5 py-4 text-left">

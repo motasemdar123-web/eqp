@@ -25,6 +25,10 @@ export default function VerifyPage() {
       setLoading(true);
       const data = await verifyUser(userCode);
 
+      if (!data.user?.sessionToken) {
+        throw new Error('Backend session is not ready. Redeploy the Render backend, then try again.');
+      }
+
       setStoredUser(data.user);
       router.push('/dashboard');
     } catch (verifyError) {
