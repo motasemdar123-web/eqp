@@ -167,7 +167,7 @@ export default function ReportsPage() {
 
                                     <td className="p-5">
 
-                                        {report.report_name}
+                                        {report.file_name}
 
                                     </td>
 
