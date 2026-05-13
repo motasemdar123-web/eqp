@@ -1,243 +1,292 @@
-
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import Link from 'next/link';
+import { deleteReport, getReports, renameReport } from '../../lib/api';
+import { getStoredUser } from '../../lib/auth';
+import Button from '../../components/ui/Button';
+import Card from '../../components/ui/Card';
+import EmptyState from '../../components/ui/EmptyState';
+import Badge from '../../components/ui/Badge';
+import Toast from '../../components/ui/Toast';
+import ConfirmDialog from '../../components/ConfirmDialog';
 
 export default function ReportsPage() {
+  const [reports, setReports] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [sortConfig, setSortConfig] = useState({ key: 'created_at', direction: 'desc' });
+  const [toast, setToast] = useState(null);
+  const [reportToDelete, setReportToDelete] = useState(null);
+  const [renamingReport, setRenamingReport] = useState(null);
+  const [renameValue, setRenameValue] = useState('');
 
-    const [reports, setReports] = useState([]);
+  useEffect(() => {
+    const user = getStoredUser();
 
-    const [loading, setLoading] = useState(true);
-
-    const backendUrl =
-        process.env.NEXT_PUBLIC_BACKEND_URL;
-
-    useEffect(() => {
-
-        loadReports();
-
-    }, []);
-
-    async function loadReports() {
-
-        try {
-
-            const response = await fetch(
-
-                `${backendUrl}/reports`
-            );
-
-            const data = await response.json();
-
-            setReports(data);
-
-        } catch (error) {
-
-            console.error(error);
-
-        } finally {
-
-            setLoading(false);
-
-        }
-
+    if (!user?.sessionToken) {
+      localStorage.removeItem('user');
+      window.location.href = '/';
+      return;
     }
 
-    async function deleteReport(id) {
+    loadReports();
+  }, []);
 
-        const confirmed =
-            confirm('Delete this report?');
-
-        if (!confirmed) return;
-
-        try {
-
-            await fetch(
-
-                `${backendUrl}/reports/${id}`,
-
-                {
-                    method: 'DELETE'
-                }
-
-            );
-
-            loadReports();
-
-        } catch (error) {
-
-            console.error(error);
-
-        }
-
+  async function loadReports() {
+    try {
+      setError('');
+      const data = await getReports();
+      setReports(data);
+      setToast({ type: 'info', message: 'Reports archive refreshed.' });
+    } catch (loadError) {
+      setError(loadError.message || 'Failed to load reports');
+      setToast({ type: 'error', message: loadError.message || 'Failed to load reports.' });
+    } finally {
+      setLoading(false);
     }
+  }
 
-    async function renameReport(id, oldName) {
+  const filteredReports = useMemo(() => {
+    const normalizedSearch = searchTerm.trim().toLowerCase();
+    const filtered = reports.filter((report) => {
+      if (!normalizedSearch) return true;
 
-        const newName =
-            prompt('New report name:', oldName);
+      return (
+        report.file_name?.toLowerCase().includes(normalizedSearch) ||
+        report.report_no?.toLowerCase().includes(normalizedSearch) ||
+        report.machine_number?.toString().toLowerCase().includes(normalizedSearch) ||
+        report.machine_type?.toLowerCase().includes(normalizedSearch)
+      );
+    });
 
-        if (!newName) return;
+    return [...filtered].sort((a, b) => {
+      const aValue = a[sortConfig.key] ?? '';
+      const bValue = b[sortConfig.key] ?? '';
 
-        try {
+      if (sortConfig.key === 'created_at') {
+        const aDate = new Date(aValue).getTime();
+        const bDate = new Date(bValue).getTime();
+        return sortConfig.direction === 'asc' ? aDate - bDate : bDate - aDate;
+      }
 
-            await fetch(
+      return sortConfig.direction === 'asc'
+        ? String(aValue).localeCompare(String(bValue), undefined, { numeric: true })
+        : String(bValue).localeCompare(String(aValue), undefined, { numeric: true });
+    });
+  }, [reports, searchTerm, sortConfig]);
 
-                `${backendUrl}/reports/${id}`,
+  const archiveStats = useMemo(() => {
+    const lastReport = reports[0]?.created_at ? new Date(reports[0].created_at).toLocaleDateString() : 'No reports';
+    const machineCount = new Set(reports.map((report) => report.machine_id || report.machine_number)).size;
 
-                {
+    return {
+      total: reports.length,
+      machines: machineCount,
+      lastReport,
+    };
+  }, [reports]);
 
-                    method: 'PUT',
+  function changeSort(key) {
+    setSortConfig((previous) => ({
+      key,
+      direction: previous.key === key && previous.direction === 'asc' ? 'desc' : 'asc',
+    }));
+  }
 
-                    headers: {
+  function openRename(report) {
+    setRenamingReport(report);
+    setRenameValue(report.file_name || '');
+  }
 
-                        'Content-Type':
-                        'application/json'
+  async function handleDeleteReport() {
+    if (!reportToDelete) return;
 
-                    },
-
-                    body: JSON.stringify({
-
-                        file_name: newName
-
-                    })
-
-                }
-
-            );
-
-            loadReports();
-
-        } catch (error) {
-
-            console.error(error);
-
-        }
-
+    try {
+      await deleteReport(reportToDelete.id);
+      setToast({ type: 'success', message: 'Report deleted successfully.' });
+      setReportToDelete(null);
+      await loadReports();
+    } catch (deleteError) {
+      setError(deleteError.message || 'Failed to delete report');
+      setToast({ type: 'error', message: deleteError.message || 'Failed to delete report.' });
     }
+  }
 
-    return (
+  async function handleRenameReport(event) {
+    event.preventDefault();
 
-        <div className="min-h-screen bg-black p-10 text-white">
+    if (!renamingReport || !renameValue.trim()) return;
 
-            <h1 className="mb-8 text-4xl font-black text-yellow-500">
+    try {
+      await renameReport(renamingReport.id, renameValue.trim());
+      setToast({ type: 'success', message: 'Report renamed successfully.' });
+      setRenamingReport(null);
+      setRenameValue('');
+      await loadReports();
+    } catch (renameError) {
+      setError(renameError.message || 'Failed to rename report');
+      setToast({ type: 'error', message: renameError.message || 'Failed to rename report.' });
+    }
+  }
 
-                Reports
-
-            </h1>
-
-            {loading ? (
-
-                <p>Loading...</p>
-
-            ) : (
-
-                <div className="overflow-x-auto rounded-3xl border border-zinc-800">
-
-                    <table className="w-full">
-
-                        <thead className="bg-zinc-900">
-
-                            <tr>
-
-                                <th className="p-5 text-left">
-                                    Report
-                                </th>
-
-                                <th className="p-5 text-left">
-                                    Created
-                                </th>
-
-                                <th className="p-5 text-left">
-                                    Actions
-                                </th>
-
-                            </tr>
-
-                        </thead>
-
-                        <tbody>
-
-                            {reports.map((report) => (
-
-                                <tr
-                                    key={report.id}
-                                    className="border-t border-zinc-800"
-                                >
-
-                                    <td className="p-5">
-
-                                        {report.file_name}
-
-                                    </td>
-
-                                    <td className="p-5">
-
-                                        {
-
-                                            new Date(
-                                                report.created_at
-                                            ).toLocaleString()
-
-                                        }
-
-                                    </td>
-
-                                    <td className="flex gap-3 p-5">
-
-                                        <a
-                                            href={report.file_url}
-                                            target="_blank"
-                                            className="rounded-xl bg-yellow-500 px-4 py-2 font-bold text-black"
-                                        >
-
-                                            Download
-
-                                        </a>
-
-                                        <button
-                                            onClick={() =>
-                                                renameReport(
-
-                                                    report.id,
-
-                                                   report.file_name
-                                                )
-                                            }
-                                            className="rounded-xl bg-zinc-700 px-4 py-2"
-                                        >
-
-                                            Rename
-
-                                        </button>
-
-                                        <button
-                                            onClick={() =>
-                                                deleteReport(report.id)
-                                            }
-                                            className="rounded-xl bg-red-600 px-4 py-2"
-                                        >
-
-                                            Delete
-
-                                        </button>
-
-                                    </td>
-
-                                </tr>
-
-                            ))}
-
-                        </tbody>
-
-                    </table>
-
-                </div>
-
-            )}
-
+  return (
+    <main className="min-h-screen bg-[#f4f6f3] px-4 py-8 text-zinc-900 sm:px-8">
+      <div className="mx-auto max-w-7xl">
+        <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">Archive</p>
+            <h1 className="mt-1 text-3xl font-black text-zinc-950">Reports</h1>
+            <p className="mt-2 text-sm text-zinc-500">Generated files and report archive</p>
+          </div>
+          <Link className="rounded-md border border-zinc-300 bg-white px-4 py-2.5 text-center text-sm font-semibold text-zinc-700 transition hover:bg-zinc-50" href="/dashboard">
+            Back to Dashboard
+          </Link>
         </div>
 
-    );
+        <div className="mb-6 grid gap-4 sm:grid-cols-3">
+          <ArchiveMetric label="Total Reports" value={archiveStats.total} tone="dark" />
+          <ArchiveMetric label="Machines Covered" value={archiveStats.machines} />
+          <ArchiveMetric label="Latest Report" value={archiveStats.lastReport} />
+        </div>
 
+        {error && (
+          <p className="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
+            {error}
+          </p>
+        )}
+
+        {loading ? (
+          <p className="text-zinc-500">Loading...</p>
+        ) : reports.length === 0 ? (
+          <EmptyState title="No reports yet" description="Generated reports will appear here." />
+        ) : (
+          <Card className="overflow-hidden">
+            <div className="border-b border-zinc-200 p-5">
+              <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+                <input
+                  type="text"
+                  placeholder="Search reports, machines, or report numbers"
+                  value={searchTerm}
+                  onChange={(event) => setSearchTerm(event.target.value)}
+                  className="w-full rounded-md border border-zinc-300 bg-white px-4 py-2.5 text-zinc-900 outline-none transition focus:border-yellow-400 focus:ring-2 focus:ring-yellow-100 lg:max-w-md"
+                />
+                <div className="flex flex-wrap items-center gap-2">
+                  <Badge tone="neutral">{filteredReports.length} visible</Badge>
+                  <Button variant="secondary" onClick={loadReports}>Refresh</Button>
+                  <Button variant="ghost" onClick={() => setSearchTerm('')}>Clear Search</Button>
+                </div>
+              </div>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[960px]">
+                <thead className="bg-zinc-50 text-xs uppercase tracking-[0.12em] text-zinc-500">
+                  <tr>
+                    <SortableHeader label="Report" column="file_name" sortConfig={sortConfig} onSort={changeSort} />
+                    <SortableHeader label="Machine" column="machine_number" sortConfig={sortConfig} onSort={changeSort} />
+                    <SortableHeader label="Service" column="service_type" sortConfig={sortConfig} onSort={changeSort} />
+                    <SortableHeader label="Created" column="created_at" sortConfig={sortConfig} onSort={changeSort} />
+                    <th className="px-5 py-4 text-left">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredReports.map((report) => (
+                    <tr key={report.id} className="border-t border-zinc-100 transition hover:bg-yellow-50/60">
+                      <td className="px-5 py-4">
+                        <div className="font-semibold text-zinc-950">{report.file_name}</div>
+                        {report.report_no && <div className="mt-1 font-mono text-xs text-zinc-500">{report.report_no}</div>}
+                      </td>
+                      <td className="px-5 py-4 text-zinc-600">
+                        {report.machine_type} {report.machine_number}
+                      </td>
+                      <td className="px-5 py-4">
+                        <Badge tone="yellow">{report.service_type || 'Report'}</Badge>
+                      </td>
+                      <td className="px-5 py-4 text-zinc-600">
+                        {new Date(report.created_at).toLocaleString()}
+                      </td>
+                      <td className="flex gap-2 px-5 py-4">
+                        <a
+                          href={report.file_url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="rounded-md bg-yellow-400 px-4 py-2.5 text-sm font-semibold text-zinc-950 transition hover:bg-yellow-300"
+                        >
+                          Download
+                        </a>
+                        <Button variant="secondary" onClick={() => openRename(report)}>
+                          Rename
+                        </Button>
+                        <Button variant="danger" onClick={() => setReportToDelete(report)}>
+                          Delete
+                        </Button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </Card>
+        )}
+      </div>
+
+      {reportToDelete && (
+        <ConfirmDialog
+          title="Delete report?"
+          description={`This will remove "${reportToDelete.file_name}" from the archive and storage bucket.`}
+          confirmLabel="Delete Report"
+          onCancel={() => setReportToDelete(null)}
+          onConfirm={handleDeleteReport}
+        />
+      )}
+
+      {renamingReport && (
+        <div className="fixed inset-0 z-50 grid place-items-center bg-zinc-950/60 p-4 backdrop-blur-sm">
+          <form onSubmit={handleRenameReport} className="w-full max-w-md rounded-lg border border-zinc-200 bg-white p-6 shadow-2xl">
+            <h2 className="text-xl font-bold text-zinc-950">Rename Report</h2>
+            <p className="mt-2 text-sm text-zinc-600">Use a clear operational file name for this report.</p>
+            <input
+              value={renameValue}
+              onChange={(event) => setRenameValue(event.target.value)}
+              className="mt-5 w-full rounded-md border border-zinc-300 bg-white px-4 py-2.5 text-zinc-900 outline-none transition focus:border-yellow-400 focus:ring-2 focus:ring-yellow-100"
+              autoFocus
+            />
+            <div className="mt-6 flex justify-end gap-3">
+              <Button type="button" variant="secondary" onClick={() => setRenamingReport(null)}>Cancel</Button>
+              <Button type="submit">Save Name</Button>
+            </div>
+          </form>
+        </div>
+      )}
+
+      <Toast message={toast?.message} type={toast?.type} onClose={() => setToast(null)} />
+    </main>
+  );
+}
+
+function ArchiveMetric({ label, value, tone = 'light' }) {
+  return (
+    <div className={`rounded-lg border p-4 shadow-sm ${tone === 'dark' ? 'border-zinc-900 bg-zinc-950 text-white' : 'border-zinc-200 bg-white text-zinc-900'}`}>
+      <div className={`text-xs font-semibold uppercase tracking-[0.14em] ${tone === 'dark' ? 'text-zinc-400' : 'text-zinc-500'}`}>{label}</div>
+      <div className={`mt-2 text-2xl font-black ${tone === 'dark' ? 'text-yellow-400' : 'text-zinc-950'}`}>{value}</div>
+    </div>
+  );
+}
+
+function SortableHeader({ label, column, sortConfig, onSort }) {
+  const active = sortConfig.key === column;
+  const indicator = active ? (sortConfig.direction === 'asc' ? '↑' : '↓') : '';
+
+  return (
+    <th className="px-5 py-4 text-left">
+      <button
+        type="button"
+        onClick={() => onSort(column)}
+        className="inline-flex items-center gap-1 font-bold text-zinc-600 transition hover:text-zinc-950"
+      >
+        {label} {indicator}
+      </button>
+    </th>
+  );
 }

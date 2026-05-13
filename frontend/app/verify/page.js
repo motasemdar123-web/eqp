@@ -1,122 +1,65 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { setStoredUser } from '../../lib/auth';
+import { verifyUser } from '../../lib/api';
+import Button from '../../components/ui/Button';
 
 export default function VerifyPage() {
+  const router = useRouter();
+  const [userCode, setUserCode] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-    const router = useRouter();
+  async function handleVerify(event) {
+    event.preventDefault();
+    setError('');
 
-    const [userCode, setUserCode] =
-        useState('');
-
-    async function handleVerify() {
+    if (!userCode) {
+      setError('Enter your technician code');
+      return;
+    }
 
     try {
+      setLoading(true);
+      const data = await verifyUser(userCode);
 
-        const response =
-            await fetch(
-                'https://eqp.onrender.com/verify-user',
-                {
-
-                    method: 'POST',
-
-                    headers: {
-                        'Content-Type':
-                            'application/json'
-                    },
-
-                    body: JSON.stringify({
-
-                        userNumber:
-                            Number(userCode)
-
-                    })
-
-                }
-            );
-
-        const data =
-            await response.json();
-
-        if (!data.success) {
-
-            alert(
-                'Invalid technician code'
-            );
-
-            return;
-        }
-
-        localStorage.setItem(
-            'user',
-            JSON.stringify(
-                data.user
-            )
-        );
-
-        router.push('/dashboard');
-
-    } catch (error) {
-
-        console.error(error);
-
-        alert(
-            'Verification failed'
-        );
+      setStoredUser(data.user);
+      router.push('/dashboard');
+    } catch (verifyError) {
+      setError(verifyError.message || 'Verification failed');
+    } finally {
+      setLoading(false);
     }
-}
+  }
 
-    return (
-
-        <div className="flex min-h-screen items-center justify-center bg-black text-white">
-
-            <div className="w-full max-w-lg rounded-3xl border border-zinc-800 bg-zinc-950 p-12 shadow-2xl">
-
-                <div className="mb-10 text-center">
-
-                    <h1 className="text-4xl font-black">
-
-                        Technician Verification
-
-                    </h1>
-
-                    <p className="mt-4 text-zinc-400">
-
-                        Enter your assigned technician code
-
-                    </p>
-
-                </div>
-
-                <div className="space-y-6">
-
-                    <input
-                        type="number"
-                        placeholder="1001"
-                        value={userCode}
-                        onChange={(e) =>
-                            setUserCode(
-                                e.target.value
-                            )
-                        }
-                        className="w-full rounded-2xl border border-zinc-700 bg-zinc-900 px-6 py-5 text-center text-3xl font-bold outline-none transition focus:border-yellow-500"
-                    />
-
-                    <button
-                        onClick={handleVerify}
-                        className="w-full rounded-2xl bg-yellow-500 px-6 py-5 text-xl font-bold text-black transition hover:bg-yellow-400"
-                    >
-
-                        Continue
-
-                    </button>
-
-                </div>
-
-            </div>
-
+  return (
+    <main className="grid min-h-screen place-items-center bg-[#f4f6f3] px-4 text-zinc-900">
+      <form onSubmit={handleVerify} className="w-full max-w-md rounded-lg border border-zinc-200 bg-white p-8 shadow-xl shadow-zinc-900/5">
+        <div className="mb-8 text-center">
+          <h1 className="text-3xl font-black text-zinc-950">Technician Verification</h1>
+          <p className="mt-3 text-sm text-zinc-500">Enter your assigned technician code</p>
         </div>
 
-    );
+        <input
+          type="number"
+          placeholder="1001"
+          value={userCode}
+          onChange={(event) => setUserCode(event.target.value)}
+          className="w-full rounded-md border border-zinc-300 bg-white px-5 py-4 text-center text-3xl font-bold text-zinc-950 outline-none transition focus:border-yellow-400 focus:ring-2 focus:ring-yellow-100"
+        />
+
+        {error && (
+          <p className="mt-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
+            {error}
+          </p>
+        )}
+
+        <Button type="submit" disabled={loading} className="mt-6 w-full py-4 text-lg">
+          {loading ? 'Checking...' : 'Continue'}
+        </Button>
+      </form>
+    </main>
+  );
 }

@@ -1,1115 +1,607 @@
-
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import AppShell from '../../components/AppShell';
+import DatesModal from '../../components/DatesModal';
+import LoadingOverlay from '../../components/LoadingOverlay';
+import Button from '../../components/ui/Button';
+import Card from '../../components/ui/Card';
+import EmptyState from '../../components/ui/EmptyState';
+import Field from '../../components/ui/Field';
+import Badge from '../../components/ui/Badge';
+import Skeleton from '../../components/ui/Skeleton';
+import Toast from '../../components/ui/Toast';
+import { getStoredUser, clearStoredUser } from '../../lib/auth';
+import { generateReports, getMachineHistory, getMachines } from '../../lib/api';
+import { REPORT_TYPES, SERVICE_TYPES } from '../../lib/reportOptions';
 
 export default function DashboardPage() {
+  const router = useRouter();
+  const [activePage, setActivePage] = useState('dashboard');
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [reportCount, setReportCount] = useState('');
+  const [showDatesModal, setShowDatesModal] = useState(false);
+  const [reportDates, setReportDates] = useState([]);
+  const [machineHistory, setMachineHistory] = useState([]);
+  const [machines, setMachines] = useState([]);
+  const [selectedMachines, setSelectedMachines] = useState([]);
+  const [user] = useState(() => getStoredUser());
+  const userCode = user?.userNumber || '';
+  const [reportType, setReportType] = useState('W30');
+  const [serviceType, setServiceType] = useState('1st Service');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterType, setFilterType] = useState('ALL');
+  const [filterEngineer, setFilterEngineer] = useState('ALL');
+  const [showOnlySelected, setShowOnlySelected] = useState(false);
+  const [sortConfig, setSortConfig] = useState({ key: 'machine_number', direction: 'asc' });
+  const [toast, setToast] = useState(null);
+  const [generationSummary, setGenerationSummary] = useState(null);
 
-    const router = useRouter();
+  const loadDashboardData = useCallback(async () => {
+    try {
+      setError('');
+      setLoading(true);
 
-    // =========================
-    // STATES
-    // =========================
+      const [machinesResponse, historyResponse] = await Promise.all([
+        getMachines(),
+        getMachineHistory(),
+      ]);
 
-    const [activePage, setActivePage] =
-        useState('dashboard');
+      setMachines(machinesResponse.machines || []);
+      setMachineHistory(historyResponse.history || []);
+    } catch (loadError) {
+      setError(loadError.message || 'Failed to load dashboard data');
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
-    const [isGenerating, setIsGenerating] =
-        useState(false);
-
-    const [reportCount, setReportCount] =
-        useState('');
-
-    const [showDatesModal, setShowDatesModal] =
-        useState(false);
-
-    const [reportDates, setReportDates] =
-        useState([]);
-
-    const [machineHistory, setMachineHistory] =
-        useState([]);
-
-    const [machines, setMachines] =
-        useState([]);
-
-    const [selectedMachines, setSelectedMachines] =
-        useState([]);
-
-    const [userCode, setUserCode] =
-        useState('');
-
-    const [reportType, setReportType] =
-        useState('W30');
-
-    const [serviceType, setServiceType] =
-        useState('1st Service');
-
-    const [searchTerm, setSearchTerm] =
-        useState('');
-
-    const [filterType, setFilterType] =
-        useState('ALL');
-
-    const [filterEngineer, setFilterEngineer] =
-        useState('ALL');
-
-    const [showOnlySelected, setShowOnlySelected] =
-        useState(false);
-
-    // =========================
-    // AUTH
-    // =========================
-
-    useEffect(() => {
-
-        const storedUser =
-            localStorage.getItem('user');
-
-        if (!storedUser) {
-
-            router.push('/');
-            return;
-        }
-
-        const parsedUser =
-            JSON.parse(storedUser);
-
-        setUserCode(
-            parsedUser.userNumber
-        );
-
-        loadMachines();
-        loadMachineHistory();
-
-    }, []);
-
-    // =========================
-    // LOAD MACHINES
-    // =========================
-
-    async function loadMachines() {
-
-        try {
-
-            const response =
-                await fetch(
-                    'https://eqp.onrender.com/machines'
-                );
-
-            const data =
-                await response.json();
-
-            setMachines(
-                data.machines || []
-            );
-
-        } catch (error) {
-
-            console.error(error);
-        }
+  useEffect(() => {
+    if (!user?.sessionToken) {
+      clearStoredUser();
+      router.push('/');
+      return;
     }
 
-    // =========================
-    // LOAD HISTORY
-    // =========================
+    const loadTimer = setTimeout(() => {
+      loadDashboardData();
+    }, 0);
 
-async function loadMachineHistory() {
+    return () => clearTimeout(loadTimer);
+  }, [router, loadDashboardData, user]);
+
+  const machineTypes = useMemo(
+    () => [...new Set(machines.map((machine) => machine.machine_type).filter(Boolean))],
+    [machines]
+  );
+
+  const engineers = useMemo(
+    () => [...new Set(machines.map((machine) => machine.responsible_engineer).filter(Boolean))],
+    [machines]
+  );
+
+  const filteredMachines = useMemo(() => {
+    const normalizedSearch = searchTerm.trim().toLowerCase();
+    const filtered = machines.filter((machine) => {
+      const matchesSearch =
+        !normalizedSearch ||
+        machine.machine_number?.toString().toLowerCase().includes(normalizedSearch) ||
+        machine.engine_number?.toString().toLowerCase().includes(normalizedSearch) ||
+        machine.machine_type?.toString().toLowerCase().includes(normalizedSearch);
+      const matchesType = filterType === 'ALL' || machine.machine_type === filterType;
+      const matchesEngineer =
+        filterEngineer === 'ALL' || machine.responsible_engineer === filterEngineer;
+      const matchesSelected = !showOnlySelected || selectedMachines.includes(machine.id);
+
+      return matchesSearch && matchesType && matchesEngineer && matchesSelected;
+    });
+
+    return [...filtered].sort((a, b) => {
+      const aValue = a[sortConfig.key] ?? '';
+      const bValue = b[sortConfig.key] ?? '';
+
+      if (typeof aValue === 'number' && typeof bValue === 'number') {
+        return sortConfig.direction === 'asc' ? aValue - bValue : bValue - aValue;
+      }
+
+      return sortConfig.direction === 'asc'
+        ? String(aValue).localeCompare(String(bValue), undefined, { numeric: true })
+        : String(bValue).localeCompare(String(aValue), undefined, { numeric: true });
+    });
+  }, [machines, searchTerm, filterType, filterEngineer, showOnlySelected, selectedMachines, sortConfig]);
+
+  const fleetInsights = useMemo(() => {
+    const averageSmr =
+      machines.length === 0
+        ? 0
+        : Math.round(
+            machines.reduce((total, machine) => total + Number(machine.last_smr || 0), 0) /
+              machines.length
+          );
+    const activeTypes = machineTypes.length;
+    const latestOperation = machineHistory[0]?.operation_date
+      ? new Date(machineHistory[0].operation_date).toLocaleDateString()
+      : 'No activity';
+
+    return { averageSmr, activeTypes, latestOperation };
+  }, [machines, machineHistory, machineTypes]);
+
+  function handleNavigate(page) {
+    if (page === 'reports') {
+      router.push('/reports');
+      return;
+    }
+
+    setActivePage(page);
+  }
+
+  function logout() {
+    clearStoredUser();
+    router.push('/');
+  }
+
+  function toggleMachine(machineId) {
+    setSelectedMachines((previous) => {
+      if (previous.includes(machineId)) {
+        return previous.filter((id) => id !== machineId);
+      }
+
+      return [...previous, machineId];
+    });
+  }
+
+  function toggleSelectAll() {
+    const filteredIds = filteredMachines.map((machine) => machine.id);
+    const allFilteredSelected =
+      filteredIds.length > 0 && filteredIds.every((id) => selectedMachines.includes(id));
+
+    if (allFilteredSelected) {
+      setSelectedMachines((previous) => previous.filter((id) => !filteredIds.includes(id)));
+      return;
+    }
+
+    setSelectedMachines((previous) => [...new Set([...previous, ...filteredIds])]);
+  }
+
+  function clearSelection() {
+    setSelectedMachines([]);
+  }
+
+  function resetFilters() {
+    setSearchTerm('');
+    setFilterType('ALL');
+    setFilterEngineer('ALL');
+    setShowOnlySelected(false);
+  }
+
+  function changeSort(key) {
+    setSortConfig((previous) => ({
+      key,
+      direction: previous.key === key && previous.direction === 'asc' ? 'desc' : 'asc',
+    }));
+  }
+
+  function openDatesModal() {
+    setError('');
+
+    if (selectedMachines.length === 0) {
+      setError('Please select at least one machine');
+      setToast({ type: 'error', message: 'Select at least one machine before generating reports.' });
+      return;
+    }
+
+    const count = Number(reportCount);
+
+    if (!Number.isInteger(count) || count <= 0 || count > 12) {
+      setError('Reports count must be between 1 and 12');
+      setToast({ type: 'error', message: 'Reports count must be between 1 and 12.' });
+      return;
+    }
+
+    setReportDates(Array(count).fill(''));
+    setShowDatesModal(true);
+  }
+
+  function updateReportDate(index, value) {
+    setReportDates((previous) => {
+      const updated = [...previous];
+      updated[index] = value;
+      return updated;
+    });
+  }
+
+  async function submitMultipleReports() {
+    if (reportDates.some((date) => !date)) {
+      setError('Please fill all report dates');
+      setToast({ type: 'error', message: 'Please fill all report dates.' });
+      return;
+    }
 
     try {
+      setError('');
+      setIsGenerating(true);
 
-        const response =
+      const data = await generateReports({
+        userNumber: Number(userCode),
+        reportType,
+        serviceType,
+        selectedMachines,
+        reportDates,
+      });
 
-            await fetch(
-                'https://eqp.onrender.com/machine-history'
-            );
-
-        const text =
-            await response.text();
-
-        console.log(text);
-
-        const data =
-            JSON.parse(text);
-
-        setMachineHistory(
-            data.history || []
-        );
-
-    } catch (error) {
-
-        console.error(error);
+      setGenerationSummary(data);
+      setToast({ type: 'success', message: `Generated ${data.generatedFiles.length} reports successfully.` });
+      setShowDatesModal(false);
+      setSelectedMachines([]);
+      await loadDashboardData();
+    } catch (generateError) {
+      setError(generateError.message || 'Something went wrong');
+      setToast({ type: 'error', message: generateError.message || 'Something went wrong.' });
+    } finally {
+      setIsGenerating(false);
     }
+  }
+
+  return (
+    <AppShell activePage={activePage} onNavigate={handleNavigate} onLogout={logout} userCode={userCode}>
+      <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6">
+        {error && (
+          <p className="mb-5 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
+            {error}
+          </p>
+        )}
+
+        {activePage === 'dashboard' ? (
+          <DashboardContent
+            loading={loading}
+            reportType={reportType}
+            setReportType={setReportType}
+            serviceType={serviceType}
+            setServiceType={setServiceType}
+            reportCount={reportCount}
+            setReportCount={setReportCount}
+            openDatesModal={openDatesModal}
+            machines={machines}
+            filteredMachines={filteredMachines}
+            selectedMachines={selectedMachines}
+            toggleMachine={toggleMachine}
+            toggleSelectAll={toggleSelectAll}
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+            filterType={filterType}
+            setFilterType={setFilterType}
+            filterEngineer={filterEngineer}
+            setFilterEngineer={setFilterEngineer}
+            machineTypes={machineTypes}
+            engineers={engineers}
+            showOnlySelected={showOnlySelected}
+            setShowOnlySelected={setShowOnlySelected}
+            sortConfig={sortConfig}
+            changeSort={changeSort}
+            clearSelection={clearSelection}
+            resetFilters={resetFilters}
+            fleetInsights={fleetInsights}
+            generationSummary={generationSummary}
+          />
+        ) : (
+          <MachineHistory history={machineHistory} />
+        )}
+      </main>
+
+      {showDatesModal && (
+        <DatesModal
+          dates={reportDates}
+          onChange={updateReportDate}
+          onCancel={() => setShowDatesModal(false)}
+          onSubmit={submitMultipleReports}
+          disabled={isGenerating}
+        />
+      )}
+
+      {isGenerating && (
+        <LoadingOverlay title="Generating Reports..." description="Creating files and updating machine counters" />
+      )}
+
+      <Toast
+        message={toast?.message}
+        type={toast?.type}
+        onClose={() => setToast(null)}
+      />
+    </AppShell>
+  );
 }
 
-    // =========================
-    // TOGGLE MACHINE
-    // =========================
-
-    function toggleMachine(machineId) {
-
-        setSelectedMachines(prev => {
-
-            if (prev.includes(machineId)) {
-
-                return prev.filter(
-                    id => id !== machineId
-                );
-            }
-
-            return [
-                ...prev,
-                machineId
-            ];
-        });
-    }
-
-    // =========================
-    // FILTERED MACHINES
-    // =========================
-
-    const filteredMachines =
-
-        machines.filter(machine => {
-
-            const matchesSearch =
-
-                machine.machine_number
-                    ?.toString()
-                    .includes(searchTerm)
-
-                ||
-
-                machine.engine_number
-                    ?.toString()
-                    .includes(searchTerm);
-
-            const matchesType =
-
-                filterType === 'ALL'
-                ||
-                machine.machine_type === filterType;
-
-            const matchesEngineer =
-
-                filterEngineer === 'ALL'
-                ||
-                machine.responsible_engineer === filterEngineer;
-
-            const matchesSelected =
-
-                !showOnlySelected
-                ||
-                selectedMachines.includes(machine.id);
-
-            return (
-
-                matchesSearch
-                &&
-                matchesType
-                &&
-                matchesEngineer
-                &&
-                matchesSelected
-            );
-        });
-
-    // =========================
-    // SELECT ALL
-    // =========================
-
-    function toggleSelectAll() {
-
-        if (
-
-            selectedMachines.length ===
-            filteredMachines.length
-
-        ) {
-
-            setSelectedMachines([]);
-
-        } else {
-
-            setSelectedMachines(
-
-                filteredMachines.map(
-                    machine => machine.id
-                )
-            );
-        }
-    }
-
-    // =========================
-    // GENERATE REPORTS
-    // =========================
-
-    async function generateReports() {
-
-        if (selectedMachines.length === 0) {
-
-            alert(
-                'Please select at least one machine'
-            );
-
-            return;
-        }
-
-        const count =
-            parseInt(reportCount);
-
-        if (
-            isNaN(count)
-            ||
-            count <= 0
-        ) {
-
-            alert(
-                'Please enter valid reports count'
-            );
-
-            return;
-        }
-
-        const datesArray =
-
-            Array(count)
-                .fill('');
-
-        setReportDates(
-            datesArray
-        );
-
-        setShowDatesModal(true);
-    }
-
-    // =========================
-    // SUBMIT REPORTS
-    // =========================
-
-    async function submitMultipleReports() {
-
-        if (
-
-            reportDates.some(
-                date => !date
-            )
-
-        ) {
-
-            alert(
-                'Please fill all dates'
-            );
-
-            return;
-        }
-
-        try {
-
-            setIsGenerating(true);
-
-            const response =
-
-                await fetch(
-
-                    'https://eqp.onrender.com/generate-reports',
-
-                    {
-
-                        method: 'POST',
-
-                        headers: {
-                            'Content-Type':
-                                'application/json'
-                        },
-
-                        body: JSON.stringify({
-
-                            userNumber:
-                                Number(userCode),
-
-                            reportType,
-
-                            serviceType,
-
-                            selectedMachines,
-
-                            reportDates
-
-                        })
-                    }
-                );
-
-            const data =
-                await response.json();
-
-            if (data.success) {
-
-                alert(
-
-                    `Generated ${data.generatedFiles.length} reports`
-
-                );
-
-                setShowDatesModal(false);
-
-                setSelectedMachines([]);
-
-                await loadMachines();
-                await loadMachineHistory();
-            }
-
-        } catch (error) {
-
-            console.error(error);
-
-            alert(
-                'Something went wrong'
-            );
-
-        } finally {
-
-            setIsGenerating(false);
-        }
-    }
-
-    // =========================
-    // LOGOUT
-    // =========================
-
-    function logout() {
-
-        localStorage.removeItem('user');
-
-        router.push('/');
-    }
-
-    // =========================
-    // RETURN
-    // =========================
-
-    return (
-
-        <div className="flex min-h-screen bg-black text-white">
-
-            {/* SIDEBAR */}
-
-            <div className="flex w-72 flex-col border-r border-zinc-800 bg-zinc-950">
-
-                <div className="border-b border-zinc-800 p-8">
-
-                    <h1 className="text-3xl font-black text-yellow-500">
-
-                        KOMATSU
-
-                    </h1>
-
-                    <p className="mt-2 text-zinc-500">
-
-                        Fleet Management System
-
-                    </p>
-
-                </div>
-
-                <div className="flex flex-1 flex-col gap-3 p-5">
-
-                    <button
-                        onClick={() =>
-                            setActivePage('dashboard')
-                        }
-                        className={`rounded-2xl px-5 py-4 text-left text-lg font-semibold transition ${
-                            activePage === 'dashboard'
-                                ? 'bg-yellow-500 text-black'
-                                : 'bg-zinc-900 text-white hover:bg-zinc-800'
-                        }`}
-                    >
-
-                        Dashboard
-
-                    </button>
-
-                    <button
-                        onClick={() =>
-                            setActivePage('machine-history')
-                        }
-                        className={`rounded-2xl px-5 py-4 text-left text-lg font-semibold transition ${
-                            activePage === 'machine-history'
-                                ? 'bg-yellow-500 text-black'
-                                : 'bg-zinc-900 text-white hover:bg-zinc-800'
-                        }`}
-                    >
-
-                        Machine History
-
-                    </button>
-
-                   
-<button
-    onClick={() => router.push('/reports')}
-    className="w-full rounded-2xl bg-zinc-900 p-4 text-left text-xl font-bold text-white transition hover:bg-zinc-800"
->
-    Reports
-</button>
-
-
-                </div>
-
-            </div>
-
-            {/* CONTENT */}
-
-            <div className="flex-1 overflow-auto">
-
-{
-    activePage === 'dashboard' && (
-
-        <>
-
-            <header className="border-b border-zinc-800 bg-zinc-950">
-
-                <div className="mx-auto flex max-w-7xl items-center justify-between px-8 py-6">
-
-                    <div>
-
-                        <h1 className="text-4xl font-black">
-
-                            KOMATSU FLEET SYSTEM
-
-                        </h1>
-
-                        <p className="mt-1 text-zinc-400">
-
-                            Equipment Reporting Dashboard
-
-                        </p>
-
-                    </div>
-
-                    <div className="flex items-center gap-4">
-
-                        <div className="rounded-2xl border border-zinc-700 bg-zinc-900 px-6 py-3 font-mono">
-
-                            User: {userCode}
-
-                        </div>
-
-                        <button
-                            onClick={logout}
-                            className="rounded-2xl bg-red-500 px-6 py-3 font-bold hover:bg-red-600 transition"
-                        >
-
-                            Logout
-
-                        </button>
-
-                    </div>
-
-                </div>
-
-            </header>
-
-            <main className="mx-auto grid max-w-7xl grid-cols-1 gap-8 px-8 py-8 lg:grid-cols-3">
-
-                {/* LEFT PANEL */}
-
-                <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-8">
-
-                    <h2 className="mb-8 text-4xl font-bold">
-
-                        Generate Reports
-
-                    </h2>
-
-                    <div className="space-y-6">
-
-                        <div>
-
-                            <label className="mb-3 block text-lg text-zinc-400">
-
-                                Report Type
-
-                            </label>
-
-                            <select
-                                value={reportType}
-                                onChange={(e) =>
-                                    setReportType(e.target.value)
-                                }
-                                className="w-full rounded-2xl border border-zinc-700 bg-zinc-900 px-6 py-5 text-xl outline-none"
-                            >
-
-                                <option>W30</option>
-                                <option>W41</option>
-
-                            </select>
-
-                        </div>
-
-                        <div>
-
-                            <label className="mb-3 block text-lg text-zinc-400">
-
-                                Service Type
-
-                            </label>
-
-                            <select
-                                value={serviceType}
-                                onChange={(e) =>
-                                    setServiceType(e.target.value)
-                                }
-                                className="w-full rounded-2xl border border-zinc-700 bg-zinc-900 px-6 py-5 text-xl outline-none"
-                            >
-
-                                <option>Pre Delivery</option>
-                                <option>Delivery New</option>
-                                <option>1st Service</option>
-                                <option>2nd Service</option>
-                                <option>3rd Service</option>
-                                <option>Add. Service</option>
-
-                            </select>
-
-                        </div>
-
-                        <div>
-
-                            <label className="mb-3 block text-lg text-zinc-400">
-
-                                Reports Count
-
-                            </label>
-
-                            <input
-                                type="text"
-                                placeholder="1"
-                                value={reportCount}
-                                onChange={(e) => {
-
-                                    const value =
-                                        e.target.value;
-
-                                    if (
-                                        value === ''
-                                        ||
-                                        (
-                                            /^[0-9]+$/.test(value)
-                                            &&
-                                            Number(value) <= 12
-                                        )
-                                    ) {
-
-                                        setReportCount(value);
-
-                                    } else if (Number(value) > 12) {
-
-                                        alert(
-                                            'Maximum is 12 reports'
-                                        );
-                                    }
-                                }}
-                                className="w-full rounded-2xl border border-zinc-700 bg-zinc-900 px-6 py-5 text-xl outline-none"
-                            />
-
-                        </div>
-
-                        <button
-                            onClick={generateReports}
-                            className="w-full rounded-2xl bg-yellow-500 px-6 py-5 text-xl font-bold text-black transition hover:bg-yellow-400"
-                        >
-
-                            Generate Reports
-
-                        </button>
-
-                    </div>
-
-                </div>
-
-                {/* RIGHT PANEL */}
-
-                <div className="lg:col-span-2">
-
-                    <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-8">
-
-                        <h2 className="mb-2 text-4xl font-bold">
-
-                            Fleet Machines
-
-                        </h2>
-
-                        <p className="mb-8 text-zinc-400">
-
-                            Live machines loaded from database
-
-                        </p>
-
-                        <div className="mb-6 grid grid-cols-1 gap-4 lg:grid-cols-4">
-
-                            <input
-                                type="text"
-                                placeholder="Search machine"
-                                value={searchTerm}
-                                onChange={(e) =>
-                                    setSearchTerm(e.target.value)
-                                }
-                                className="rounded-2xl border border-zinc-700 bg-zinc-900 px-5 py-4 outline-none"
-                            />
-
-                            <select
-                                value={filterType}
-                                onChange={(e) =>
-                                    setFilterType(e.target.value)
-                                }
-                                className="rounded-2xl border border-zinc-700 bg-zinc-900 px-5 py-4 outline-none"
-                            >
-
-                                <option value="ALL">
-
-                                    All Types
-
-                                </option>
-
-                                {[...new Set(
-                                    machines.map(
-                                        m => m.machine_type
-                                    )
-                                )].map(type => (
-
-                                    <option
-                                        key={type}
-                                    >
-
-                                        {type}
-
-                                    </option>
-
-                                ))}
-
-                            </select>
-
-                            <select
-                                value={filterEngineer}
-                                onChange={(e) =>
-                                    setFilterEngineer(e.target.value)
-                                }
-                                className="rounded-2xl border border-zinc-700 bg-zinc-900 px-5 py-4 outline-none"
-                            >
-
-                                <option value="ALL">
-
-                                    All Engineers
-
-                                </option>
-
-                            </select>
-
-                            <label className="flex items-center gap-3 rounded-2xl border border-zinc-700 bg-zinc-900 px-5 py-4">
-
-                                <input
-                                    type="checkbox"
-                                    checked={showOnlySelected}
-                                    onChange={() =>
-                                        setShowOnlySelected(
-                                            !showOnlySelected
-                                        )
-                                    }
-                                />
-
-                                Show Selected Only
-
-                            </label>
-
-                        </div>
-
-                        <div className="overflow-x-auto rounded-2xl border border-zinc-800">
-
-                            <table className="min-w-full border-collapse">
-
-                                <thead className="bg-zinc-900">
-
-                                    <tr>
-
-                                        <th className="px-6 py-5 text-left">
-
-                                            <input
-                                                type="checkbox"
-                                                checked={
-                                                    filteredMachines.length > 0
-                                                    &&
-                                                    selectedMachines.length ===
-                                                    filteredMachines.length
-                                                }
-                                                onChange={toggleSelectAll}
-                                            />
-
-                                        </th>
-
-                                        <th className="px-6 py-5 text-left">
-
-                                            Machine
-
-                                        </th>
-
-                                        <th className="px-6 py-5 text-left">
-
-                                            Type
-
-                                        </th>
-
-                                        <th className="px-6 py-5 text-left">
-
-                                            Engine
-
-                                        </th>
-
-                                        <th className="px-6 py-5 text-left">
-
-                                            SMR
-
-                                        </th>
-
-                                        <th className="px-6 py-5 text-left">
-
-                                            Step
-
-                                        </th>
-
-                                    </tr>
-
-                                </thead>
-
-                                <tbody>
-
-                                    {filteredMachines.map(machine => (
-
-                                        <tr
-                                            key={machine.id}
-                                            className="border-t border-zinc-800"
-                                        >
-
-                                            <td className="px-6 py-5">
-
-                                                <input
-                                                    type="checkbox"
-                                                    checked={
-                                                        selectedMachines.includes(
-                                                            machine.id
-                                                        )
-                                                    }
-                                                    onChange={() =>
-                                                        toggleMachine(
-                                                            machine.id
-                                                        )
-                                                    }
-                                                />
-
-                                            </td>
-
-                                            <td className="px-6 py-5">
-
-                                                {machine.machine_number}
-
-                                            </td>
-
-                                            <td className="px-6 py-5">
-
-                                                {machine.machine_type}
-
-                                            </td>
-
-                                            <td className="px-6 py-5">
-
-                                                {machine.engine_number}
-
-                                            </td>
-
-                                            <td className="px-6 py-5">
-
-                                                {machine.last_smr}
-
-                                            </td>
-
-                                            <td className="px-6 py-5">
-
-                                                {machine.smr_step}
-
-                                            </td>
-
-                                        </tr>
-
-                                    ))}
-
-                                </tbody>
-
-                            </table>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </main>
-
-        </>
-
-    )
-}
-
-
-                {
-                    activePage === 'machine-history' && (
-
-                        <div className="p-10">
-
-                            <h1 className="text-5xl font-black">
-
-                                Machine History
-
-                            </h1>
-
-                            <p className="mt-3 text-xl text-zinc-500">
-
-                                Fleet operations and service timeline
-
-                            </p>
-
-                            <div className="mt-10 overflow-x-auto rounded-2xl border border-zinc-800 bg-zinc-950">
-
-                                <table className="min-w-full border-collapse">
-
-                                    <thead className="bg-zinc-900">
-
-                                        <tr>
-
-                                            <th className="px-6 py-5 text-left">
-
-                                                Machine
-
-                                            </th>
-
-                                            <th className="px-6 py-5 text-left">
-
-                                                Operation
-
-                                            </th>
-
-                                            <th className="px-6 py-5 text-left">
-
-                                                Report
-
-                                            </th>
-
-                                            <th className="px-6 py-5 text-left">
-
-                                                Service
-
-                                            </th>
-
-                                            <th className="px-6 py-5 text-left">
-
-                                                SMR
-
-                                            </th>
-
-                                            <th className="px-6 py-5 text-left">
-
-                                                Engineer
-
-                                            </th>
-
-                                            <th className="px-6 py-5 text-left">
-
-                                                Date
-
-                                            </th>
-
-                                        </tr>
-
-                                    </thead>
-
-                                    <tbody>
-
-                                        {machineHistory.map((item, index) => (
-
-                                            <tr
-                                                key={index}
-                                                className="border-t border-zinc-800"
-                                            >
-
-                                                <td className="px-6 py-5">
-
-                                                    {item.machine_type} {item.machine_number}
-
-                                                </td>
-
-                                                <td className="px-6 py-5">
-
-                                                    {item.operation_type}
-
-                                                </td>
-
-                                                <td className="px-6 py-5">
-
-                                                    {item.report_type}
-
-                                                </td>
-
-                                                <td className="px-6 py-5">
-
-                                                    {item.service_type}
-
-                                                </td>
-
-                                                <td className="px-6 py-5">
-
-                                                    {item.smr}
-
-                                                </td>
-
-                                                <td className="px-6 py-5">
-
-                                                    {item.performed_by}
-
-                                                </td>
-
-                                                <td className="px-6 py-5">
-
-                                                    {
-                                                        new Date(
-                                                            item.operation_date
-                                                        ).toLocaleDateString()
-                                                    }
-
-                                                </td>
-
-                                            </tr>
-
-                                        ))}
-
-                                    </tbody>
-
-                                </table>
-
-                            </div>
-
-                        </div>
-                    )
-                }
-
-                {/* MODAL */}
-
-                {
-                    showDatesModal && (
-
-                        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-6">
-
-                            <div className="w-full max-w-2xl rounded-3xl border border-zinc-800 bg-zinc-950 p-8">
-
-                                <h2 className="mb-6 text-3xl font-bold">
-
-                                    Select Report Dates
-
-                                </h2>
-
-                                <div className="grid gap-4">
-
-                                    {reportDates.map((date, index) => (
-
-                                        <div
-                                            key={index}
-                                            className="flex items-center gap-4"
-                                        >
-
-                                            <div className="w-32">
-
-                                                Report {index + 1}
-
-                                            </div>
-
-                                            <input
-                                                type="date"
-                                                value={date}
-
-                                                onChange={(e) => {
-
-                                                    const updated =
-                                                        [...reportDates];
-
-                                                    updated[index] =
-                                                        e.target.value;
-
-                                                    setReportDates(updated);
-                                                }}
-
-                                                className="flex-1 rounded-2xl border border-zinc-700 bg-black px-5 py-4"
-                                            />
-
-                                        </div>
-
-                                    ))}
-
-                                </div>
-
-                                <div className="mt-8 flex justify-end gap-4">
-
-                                    <button
-                                        onClick={() =>
-                                            setShowDatesModal(false)
-                                        }
-                                        className="rounded-2xl bg-zinc-700 px-6 py-4"
-                                    >
-
-                                        Cancel
-
-                                    </button>
-
-                                    <button
-                                        onClick={submitMultipleReports}
-                                        className="rounded-2xl bg-yellow-500 px-6 py-4 font-bold text-black"
-                                    >
-
-                                        Generate
-
-                                    </button>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-                    )
-                }
-
-                {/* LOADING */}
-
-                {
-                    isGenerating && (
-
-                        <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-black/90">
-
-                            <div className="h-24 w-24 animate-spin rounded-full border-4 border-yellow-500 border-t-transparent"></div>
-
-                            <h2 className="mt-8 text-3xl font-bold">
-
-                                Generating Reports...
-
-                            </h2>
-
-                            <p className="mt-3 text-zinc-400">
-
-                                Please wait
-
-                            </p>
-
-                        </div>
-                    )
-                }
-
-            </div>
-
+function DashboardContent(props) {
+  return (
+    <div className="grid gap-6">
+      <div className="grid gap-4 sm:grid-cols-3">
+        <Metric label="Fleet Machines" value={props.machines.length} tone="dark" />
+        <Metric label="Average SMR" value={props.fleetInsights.averageSmr} />
+        <Metric label="Machine Types" value={props.fleetInsights.activeTypes} />
+      </div>
+
+      <div className="grid gap-6 lg:grid-cols-[360px_1fr]">
+      <Card className="p-6">
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-yellow-700">Report Builder</p>
+            <h2 className="mt-2 text-2xl font-bold text-zinc-950">Generate Reports</h2>
+            <p className="mt-2 text-sm text-zinc-500">Choose template type, service, machines, and dates.</p>
+          </div>
         </div>
-    );
+
+        <div className="mt-6 grid gap-5">
+          <Field label="Report Type">
+            <select
+              value={props.reportType}
+              onChange={(event) => props.setReportType(event.target.value)}
+              className="rounded-md border border-zinc-300 bg-white px-4 py-2.5 text-zinc-900 outline-none transition focus:border-yellow-400 focus:ring-2 focus:ring-yellow-100"
+            >
+              {REPORT_TYPES.map((type) => (
+                <option key={type}>{type}</option>
+              ))}
+            </select>
+          </Field>
+
+          <Field label="Service Type">
+            <select
+              value={props.serviceType}
+              onChange={(event) => props.setServiceType(event.target.value)}
+              className="rounded-md border border-zinc-300 bg-white px-4 py-2.5 text-zinc-900 outline-none transition focus:border-yellow-400 focus:ring-2 focus:ring-yellow-100"
+            >
+              {SERVICE_TYPES.map((type) => (
+                <option key={type}>{type}</option>
+              ))}
+            </select>
+          </Field>
+
+          <Field label="Reports Count">
+            <input
+              type="number"
+              min="1"
+              max="12"
+              placeholder="1"
+              value={props.reportCount}
+              onChange={(event) => props.setReportCount(event.target.value)}
+              className="rounded-md border border-zinc-300 bg-white px-4 py-2.5 text-zinc-900 outline-none transition focus:border-yellow-400 focus:ring-2 focus:ring-yellow-100"
+            />
+          </Field>
+
+          <Button onClick={props.openDatesModal} className="w-full">
+            Generate Reports
+          </Button>
+        </div>
+
+        <div className="mt-5 grid gap-3">
+          <p className="rounded-md bg-zinc-50 px-4 py-3 text-sm text-zinc-600">
+            Up to 12 report dates can be generated in one run.
+          </p>
+          <div className="rounded-md border border-zinc-200 p-4">
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-zinc-500">Latest Activity</p>
+            <p className="mt-2 text-sm font-semibold text-zinc-900">{props.fleetInsights.latestOperation}</p>
+          </div>
+        </div>
+
+        {props.generationSummary && (
+          <div className="mt-5 rounded-lg border border-emerald-200 bg-emerald-50 p-4">
+            <p className="text-sm font-bold text-emerald-800">
+              {props.generationSummary.generatedFiles.length} reports generated
+            </p>
+            <p className="mt-1 text-xs text-emerald-700">
+              {props.generationSummary.totalMachines} machines were processed in the latest run.
+            </p>
+          </div>
+        )}
+      </Card>
+
+      <Card className="overflow-hidden">
+        <div className="border-b border-zinc-200 p-6">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <h2 className="text-2xl font-bold text-zinc-950">Fleet Machines</h2>
+              <p className="mt-2 text-sm text-zinc-500">Live machines loaded from database</p>
+            </div>
+            <div className="rounded-md bg-zinc-100 px-3 py-2 text-sm font-semibold text-zinc-700">
+              {props.selectedMachines.length} selected
+            </div>
+          </div>
+
+          <div className="mt-5 grid gap-3 md:grid-cols-[1.4fr_1fr_1fr_auto]">
+            <input
+              type="text"
+              placeholder="Search by machine, type, or engine"
+              value={props.searchTerm}
+              onChange={(event) => props.setSearchTerm(event.target.value)}
+              className="rounded-md border border-zinc-300 bg-white px-4 py-2.5 text-zinc-900 outline-none transition focus:border-yellow-400 focus:ring-2 focus:ring-yellow-100"
+            />
+
+            <select
+              value={props.filterType}
+              onChange={(event) => props.setFilterType(event.target.value)}
+              className="rounded-md border border-zinc-300 bg-white px-4 py-2.5 text-zinc-900 outline-none transition focus:border-yellow-400 focus:ring-2 focus:ring-yellow-100"
+            >
+              <option value="ALL">All Types</option>
+              {props.machineTypes.map((type) => (
+                <option key={type}>{type}</option>
+              ))}
+            </select>
+
+            <select
+              value={props.filterEngineer}
+              onChange={(event) => props.setFilterEngineer(event.target.value)}
+              className="rounded-md border border-zinc-300 bg-white px-4 py-2.5 text-zinc-900 outline-none transition focus:border-yellow-400 focus:ring-2 focus:ring-yellow-100"
+            >
+              <option value="ALL">All Engineers</option>
+              {props.engineers.map((engineer) => (
+                <option key={engineer}>{engineer}</option>
+              ))}
+            </select>
+
+            <label className="flex items-center gap-3 rounded-md border border-zinc-300 bg-white px-4 py-2.5 text-sm font-medium text-zinc-700">
+              <input
+                type="checkbox"
+                checked={props.showOnlySelected}
+                onChange={() => props.setShowOnlySelected(!props.showOnlySelected)}
+              />
+              Show Selected Only
+            </label>
+          </div>
+
+          <div className="mt-4 flex flex-wrap items-center gap-2">
+            <Badge tone="neutral">{props.filteredMachines.length} visible</Badge>
+            <Badge tone={props.selectedMachines.length > 0 ? 'yellow' : 'neutral'}>
+              {props.selectedMachines.length} selected
+            </Badge>
+            <Button variant="ghost" onClick={props.resetFilters}>Reset Filters</Button>
+            {props.selectedMachines.length > 0 && (
+              <Button variant="secondary" onClick={props.clearSelection}>Clear Selection</Button>
+            )}
+          </div>
+        </div>
+
+        {props.loading ? (
+          <div className="grid gap-3 p-6">
+            <Skeleton className="h-12" />
+            <Skeleton className="h-12" />
+            <Skeleton className="h-12" />
+          </div>
+        ) : props.filteredMachines.length === 0 ? (
+          <div className="p-6">
+            <EmptyState title="No machines found" description="Try changing the filters or search term." />
+          </div>
+        ) : (
+          <MachinesTable
+            machines={props.filteredMachines}
+            selectedMachines={props.selectedMachines}
+            toggleMachine={props.toggleMachine}
+            toggleSelectAll={props.toggleSelectAll}
+            sortConfig={props.sortConfig}
+            changeSort={props.changeSort}
+          />
+        )}
+      </Card>
+      </div>
+    </div>
+  );
+}
+
+function Metric({ label, value, tone = 'light' }) {
+  return (
+    <div className={`rounded-lg border p-4 shadow-sm ${tone === 'dark' ? 'border-zinc-900 bg-zinc-950 text-white' : 'border-zinc-200 bg-white text-zinc-900'}`}>
+      <div className={`text-xs font-semibold uppercase tracking-[0.14em] ${tone === 'dark' ? 'text-zinc-400' : 'text-zinc-500'}`}>{label}</div>
+      <div className={`mt-2 text-3xl font-black ${tone === 'dark' ? 'text-yellow-400' : 'text-zinc-950'}`}>{value}</div>
+    </div>
+  );
+}
+
+function MachinesTable({ machines, selectedMachines, toggleMachine, toggleSelectAll, sortConfig, changeSort }) {
+  const visibleIds = machines.map((machine) => machine.id);
+  const allVisibleSelected = visibleIds.length > 0 && visibleIds.every((id) => selectedMachines.includes(id));
+
+  return (
+    <div className="overflow-x-auto">
+      <table className="w-full min-w-[820px]">
+        <thead className="bg-zinc-50 text-xs uppercase tracking-[0.12em] text-zinc-500">
+          <tr>
+            <th className="px-5 py-4 text-left">
+              <input type="checkbox" checked={allVisibleSelected} onChange={toggleSelectAll} />
+            </th>
+            <SortableHeader label="Machine" column="machine_number" sortConfig={sortConfig} onSort={changeSort} />
+            <SortableHeader label="Type" column="machine_type" sortConfig={sortConfig} onSort={changeSort} />
+            <SortableHeader label="Engine" column="engine_number" sortConfig={sortConfig} onSort={changeSort} />
+            <SortableHeader label="SMR" column="last_smr" sortConfig={sortConfig} onSort={changeSort} />
+            <SortableHeader label="Step" column="smr_step" sortConfig={sortConfig} onSort={changeSort} />
+          </tr>
+        </thead>
+        <tbody>
+          {machines.map((machine) => (
+            <tr key={machine.id} className="border-t border-zinc-100 transition hover:bg-yellow-50/60">
+              <td className="px-5 py-4">
+                <input
+                  type="checkbox"
+                  checked={selectedMachines.includes(machine.id)}
+                  onChange={() => toggleMachine(machine.id)}
+                />
+              </td>
+              <td className="px-5 py-4 font-semibold text-zinc-950">{machine.machine_number}</td>
+              <td className="px-5 py-4 text-zinc-600">{machine.machine_type}</td>
+              <td className="px-5 py-4 font-mono text-sm text-zinc-600">{machine.engine_number}</td>
+              <td className="px-5 py-4 text-zinc-700">{machine.last_smr}</td>
+              <td className="px-5 py-4 text-zinc-700">{machine.smr_step}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+function SortableHeader({ label, column, sortConfig, onSort }) {
+  const active = sortConfig.key === column;
+  const indicator = active ? (sortConfig.direction === 'asc' ? '↑' : '↓') : '';
+
+  return (
+    <th className="px-5 py-4 text-left">
+      <button
+        type="button"
+        onClick={() => onSort(column)}
+        className="inline-flex items-center gap-1 font-bold text-zinc-600 transition hover:text-zinc-950"
+      >
+        {label} {indicator}
+      </button>
+    </th>
+  );
+}
+
+function MachineHistory({ history }) {
+  return (
+    <Card className="overflow-hidden">
+      <div className="border-b border-zinc-200 p-6">
+        <h2 className="text-2xl font-bold text-zinc-950">Machine History</h2>
+        <p className="mt-2 text-sm text-zinc-500">Fleet operations and service timeline</p>
+      </div>
+
+      {history.length === 0 ? (
+        <div className="p-6">
+          <EmptyState title="No history yet" description="Machine activity will appear after report generation." />
+        </div>
+      ) : (
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[900px]">
+            <thead className="bg-zinc-50 text-xs uppercase tracking-[0.12em] text-zinc-500">
+              <tr>
+                <th className="px-5 py-4 text-left">Machine</th>
+                <th className="px-5 py-4 text-left">Operation</th>
+                <th className="px-5 py-4 text-left">Report</th>
+                <th className="px-5 py-4 text-left">Service</th>
+                <th className="px-5 py-4 text-left">SMR</th>
+                <th className="px-5 py-4 text-left">Engineer</th>
+                <th className="px-5 py-4 text-left">Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              {history.map((item, index) => (
+                <tr key={`${item.machine_id}-${item.created_at}-${index}`} className="border-t border-zinc-100 transition hover:bg-zinc-50">
+                  <td className="px-5 py-4 font-semibold text-zinc-950">
+                    {item.machine_type} {item.machine_number}
+                  </td>
+                  <td className="px-5 py-4 text-zinc-600">{item.operation_type}</td>
+                  <td className="px-5 py-4 text-zinc-600">{item.report_type}</td>
+                  <td className="px-5 py-4 text-zinc-600">{item.service_type}</td>
+                  <td className="px-5 py-4 text-zinc-700">{item.smr}</td>
+                  <td className="px-5 py-4 text-zinc-600">{item.performed_by}</td>
+                  <td className="px-5 py-4 text-zinc-600">
+                    {new Date(item.operation_date).toLocaleDateString()}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </Card>
+  );
 }
