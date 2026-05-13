@@ -55,6 +55,140 @@ client.connect()
 // Test Route
 // =========================
 
+app.put('/reports/:id', async (req, res) => {
+
+    try {
+
+        const { id } = req.params;
+
+        const { report_name } = req.body;
+
+        const result = await pool.query(
+
+            `
+
+            UPDATE reports
+
+            SET report_name = $1
+
+            WHERE id = $2
+
+            RETURNING *
+
+            `,
+
+            [report_name, id]
+
+        );
+
+        res.json(result.rows[0]);
+
+    } catch (error) {
+
+        console.error(error);
+
+        res.status(500).json({
+
+            error: 'Failed to rename report'
+
+        });
+
+    }
+
+});
+
+app.delete('/reports/:id', async (req, res) => {
+
+    try {
+
+        const { id } = req.params;
+
+        const reportResult = await pool.query(
+
+            `SELECT * FROM reports WHERE id = $1`,
+
+            [id]
+
+        );
+
+        if (!reportResult.rows.length) {
+
+            return res.status(404).json({
+
+                error: 'Report not found'
+
+            });
+
+        }
+
+        const report = reportResult.rows[0];
+
+        const fileName = report.file_url.split('/').pop();
+
+        await supabase.storage
+            .from('reports')
+            .remove([fileName]);
+
+        await pool.query(
+
+            `DELETE FROM reports WHERE id = $1`,
+
+            [id]
+
+        );
+
+        res.json({
+
+            success: true
+
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        res.status(500).json({
+
+            error: 'Failed to delete report'
+
+        });
+
+    }
+
+});
+
+
+app.get('/reports', async (req, res) => {
+
+    try {
+
+        const result = await pool.query(`
+
+            SELECT *
+
+            FROM reports
+
+            ORDER BY created_at DESC
+
+        `);
+
+        res.json(result.rows);
+
+    } catch (error) {
+
+        console.error(error);
+
+        res.status(500).json({
+
+            error: 'Failed to fetch reports'
+
+        });
+
+    }
+
+});
+
+
 app.get('/', (req, res) => {
 
     res.json({
