@@ -63,7 +63,7 @@ app.put('/reports/:id', async (req, res) => {
 
         const { report_name } = req.body;
 
-        const result = await pool.query(
+        const result = await client.query(
 
             `
 
@@ -103,7 +103,7 @@ app.delete('/reports/:id', async (req, res) => {
 
         const { id } = req.params;
 
-        const reportResult = await pool.query(
+        const reportResult = await client.query(
 
             `SELECT * FROM reports WHERE id = $1`,
 
@@ -129,7 +129,7 @@ app.delete('/reports/:id', async (req, res) => {
             .from('reports')
             .remove([fileName]);
 
-        await pool.query(
+        await client.query(
 
             `DELETE FROM reports WHERE id = $1`,
 
@@ -162,7 +162,7 @@ app.get('/reports', async (req, res) => {
 
     try {
 
-        const result = await pool.query(`
+        const result = await client.query(`
 
             SELECT *
 
