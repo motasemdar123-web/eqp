@@ -67,6 +67,19 @@ app.get('/', (req, res) => {
 // Load Machines Route
 // =========================
 
+const { createClient } =
+
+require('@supabase/supabase-js');
+
+const supabase =
+
+createClient(
+
+    process.env.SUPABASE_URL,
+
+    process.env.SUPABASE_SERVICE_ROLE_KEY
+
+);
 
 
 
@@ -636,9 +649,59 @@ if (fs.existsSync(signaturePath)) {
             // Save File
             // =========================
 
-            await workbook.xlsx.writeFile(
-                filePath
-            );
+         
+const buffer =
+
+    await workbook.xlsx.writeBuffer();
+
+const {
+
+    data: uploadData,
+
+    error: uploadError
+
+} =
+
+await supabase.storage
+    .from('reports')
+    .upload(
+
+        fileName,
+
+        buffer,
+
+        {
+
+            contentType:
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+
+            upsert: true
+
+        }
+
+    );
+
+if (uploadError) {
+
+    throw uploadError;
+}
+
+
+
+const {
+
+    data: fileData
+
+} =
+
+supabase.storage
+    .from('reports')
+    .getPublicUrl(fileName);
+
+const fileUrl =
+
+    fileData.publicUrl;
+
 
 
             // =========================
@@ -659,11 +722,12 @@ if (fs.existsSync(signaturePath)) {
                     machine_number,
                     report_type,
                     service_type,
-                    file_name
+                    file_name,
+                    file_url
                 )
                 VALUES
                 (
-                    $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12
+                    $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13
                 )
             `, [
 
@@ -678,7 +742,8 @@ if (fs.existsSync(signaturePath)) {
                 machine.machine_number,
                 reportType,
                 serviceType,
-                fileName
+                fileName,
+                fileUrl
 
             ]);
 
