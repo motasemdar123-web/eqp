@@ -14,7 +14,7 @@ const env = {
   },
   security: {
     appSecret: process.env.APP_SECRET,
-    allowedOrigins: (process.env.ALLOWED_ORIGINS || 'http://localhost:3000,http://127.0.0.1:3000')
+    allowedOrigins: (process.env.ALLOWED_ORIGINS || 'http://localhost:3000,http://127.0.0.1:3000,https://*.vercel.app')
       .split(',')
       .map((origin) => origin.trim())
       .filter(Boolean),

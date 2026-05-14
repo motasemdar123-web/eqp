@@ -29,7 +29,7 @@ SUPABASE_URL=...
 SUPABASE_SERVICE_ROLE_KEY=...
 SUPABASE_REPORTS_BUCKET=reports
 APP_SECRET=replace-with-a-long-random-secret
-ALLOWED_ORIGINS=https://your-vercel-domain.vercel.app
+ALLOWED_ORIGINS=https://your-vercel-domain.vercel.app,https://*.vercel.app
 ```
 
 `APP_SECRET` must be a long random value and must never be exposed to Vercel.
@@ -45,6 +45,8 @@ NEXT_PUBLIC_BACKEND_URL=https://your-render-backend.onrender.com
 ```
 
 After changing `NEXT_PUBLIC_BACKEND_URL`, redeploy the Vercel project because this value is bundled into the client build.
+
+If Vercel preview deployments need to call the backend, include `https://*.vercel.app` in `ALLOWED_ORIGINS`.
 
 ## Supabase
 

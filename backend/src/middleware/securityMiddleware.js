@@ -7,13 +7,33 @@ const { ApiError } = require('../utils/ApiError');
 function buildCorsMiddleware() {
   return cors({
     origin(origin, callback) {
-      if (!origin || env.security.allowedOrigins.includes(origin)) {
+      if (!origin || isAllowedOrigin(origin)) {
         callback(null, true);
         return;
       }
 
       callback(new ApiError(403, 'Origin is not allowed by CORS'));
     },
+  });
+}
+
+function isAllowedOrigin(origin) {
+  if (env.security.allowedOrigins.includes('*')) {
+    return true;
+  }
+
+  if (env.security.allowedOrigins.includes(origin)) {
+    return true;
+  }
+
+  return env.security.allowedOrigins.some((allowedOrigin) => {
+    if (!allowedOrigin.includes('*')) return false;
+
+    const escapedPattern = allowedOrigin
+      .replace(/[.+?^${}()|[\]\\]/g, '\\$&')
+      .replace(/\*/g, '.*');
+
+    return new RegExp(`^${escapedPattern}$`).test(origin);
   });
 }
 
