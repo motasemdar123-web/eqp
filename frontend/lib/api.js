@@ -1,11 +1,11 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://eqp.onrender.com';
+export const API_BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://eqp.onrender.com';
 
 async function request(path, options = {}) {
   let token = '';
 
   if (typeof window !== 'undefined') {
     try {
-      token = JSON.parse(localStorage.getItem('user') || 'null')?.sessionToken || '';
+      token = localStorage.getItem('platformToken') || JSON.parse(localStorage.getItem('user') || 'null')?.sessionToken || '';
     } catch {
       localStorage.removeItem('user');
     }
@@ -31,6 +31,8 @@ async function request(path, options = {}) {
   if (!response.ok) {
     if (response.status === 401 && typeof window !== 'undefined') {
       localStorage.removeItem('user');
+      localStorage.removeItem('platformToken');
+      localStorage.removeItem('platformUser');
       window.location.href = '/';
     }
 
@@ -40,17 +42,21 @@ async function request(path, options = {}) {
   return data;
 }
 
-export function verifyUser(userNumber) {
-  return request('/verify-user', {
-    method: 'POST',
-    body: JSON.stringify({ userNumber: Number(userNumber) }),
-  });
+export function getMicrosoftLoginUrl(returnTo = '/management') {
+  const loginUrl = new URL(`${API_BASE_URL}/api/auth/microsoft/start`);
+  loginUrl.searchParams.set('returnTo', returnTo);
+
+  if (typeof window !== 'undefined') {
+    loginUrl.searchParams.set('frontendCallbackUrl', `${window.location.origin}/auth/microsoft/callback`);
+  }
+
+  return loginUrl.toString();
 }
 
-export function unifiedLogin(payload) {
-  return request('/api/auth/unified-login', {
+export function completeMicrosoftLogin(code) {
+  return request('/api/auth/microsoft/session', {
     method: 'POST',
-    body: JSON.stringify(payload),
+    body: JSON.stringify({ code }),
   });
 }
 

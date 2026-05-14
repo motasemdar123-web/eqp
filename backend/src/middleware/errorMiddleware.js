@@ -10,7 +10,11 @@ function errorHandler(error, req, res, next) {
   const isProduction = process.env.NODE_ENV === 'production';
   const isApiError = error instanceof ApiError || Boolean(error.statusCode);
 
-  console.error(error);
+  if (isServerError) {
+    console.error(error);
+  } else {
+    console.warn(error.message);
+  }
 
   res.status(statusCode).json({
     success: false,

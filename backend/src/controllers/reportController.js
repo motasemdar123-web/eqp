@@ -38,6 +38,7 @@ async function generateReports(req, res) {
   assertDateStrings(req.body.reportDates, 'reportDates');
 
   const result = await reportGeneratorService.generateReports({
+    userId: req.user.sub,
     userNumber: req.user.userNumber,
     reportType: req.body.reportType,
     serviceType: req.body.serviceType,

@@ -92,7 +92,9 @@ function addSignature(workbook, sheet, userName) {
 }
 
 async function generateReports(payload) {
-  const user = await userRepository.findByUserNumber(payload.userNumber);
+  const user = payload.userNumber
+    ? await userRepository.findByUserNumber(payload.userNumber)
+    : await userRepository.findById(payload.userId);
 
   if (!user) {
     throw new ApiError(404, 'User not found');

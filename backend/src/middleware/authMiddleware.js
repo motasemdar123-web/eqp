@@ -1,4 +1,5 @@
 const { verifySessionToken } = require('../utils/sessionToken');
+const { verifyPlatformJwt } = require('./platformAuthMiddleware');
 const { ApiError } = require('../utils/ApiError');
 
 function requireAuth(req, res, next) {
@@ -10,10 +11,23 @@ function requireAuth(req, res, next) {
       throw new ApiError(401, 'Authentication required');
     }
 
-    req.user = verifySessionToken(token);
+    try {
+      req.user = verifySessionToken(token);
+    } catch (sessionError) {
+      const platformUser = verifyPlatformJwt(token);
+      req.user = {
+        sub: platformUser.sub,
+        userNumber: platformUser.userNumber,
+        fullName: platformUser.fullName,
+        email: platformUser.email,
+        roles: platformUser.roles || [],
+        permissions: platformUser.permissions || [],
+      };
+    }
+
     next();
   } catch (error) {
-    next(error);
+    next(error.statusCode ? error : new ApiError(401, 'Invalid or expired token'));
   }
 }
 

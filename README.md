@@ -12,10 +12,10 @@ The existing EQP functionality is preserved as a dedicated module:
 
 ## Applications
 
-- `backend`: Node.js / Express API with PostgreSQL, Prisma schema, security middleware, RBAC foundations, and EQP compatibility routes.
+- `backend`: Node.js / Express API with PostgreSQL, Prisma schema, security middleware, RBAC foundations, Microsoft authentication, and EQP compatibility routes.
 - `frontend`: Next.js application with:
   - English-first management dashboard
-  - Arabic-first RTL technician interface
+  - Microsoft-only sign-in
   - EQP module routes
 
 ## Main Routes
@@ -24,15 +24,16 @@ Frontend:
 
 - `/` platform entry
 - `/management` admin/operations dashboard
-- `/technician/login` Arabic technician login
-- `/technician/tasks` Arabic technician tasks
+- `/auth/microsoft/callback` Microsoft sign-in callback
 - `/eqp` EQP module landing
 - `/eqp/generate-reports` preserved EQP report generation
 - `/eqp/reports` preserved EQP report archive
 
 Backend:
 
-- `/api/auth/login`
+- `/api/auth/microsoft/start`
+- `/api/auth/microsoft/callback`
+- `/api/auth/microsoft/session`
 - `/api/dashboard`
 - `/api/maintenance-requests`
 - `/api/work-orders`
@@ -66,6 +67,30 @@ cd frontend
 npm install
 npm run dev
 ```
+
+## Microsoft Authentication
+
+Interactive sign-in is handled exclusively through Microsoft Entra ID.
+
+Create an App Registration in Microsoft Entra and configure this backend redirect URI:
+
+```text
+https://your-backend-domain.com/api/auth/microsoft/callback
+```
+
+Set these backend environment variables:
+
+```bash
+MICROSOFT_TENANT_ID=your-entra-tenant-id
+MICROSOFT_CLIENT_ID=your-app-registration-client-id
+MICROSOFT_CLIENT_SECRET=your-app-registration-client-secret
+MICROSOFT_REDIRECT_URI=https://your-backend-domain.com/api/auth/microsoft/callback
+MICROSOFT_FRONTEND_CALLBACK_URL=https://your-frontend-domain.com/auth/microsoft/callback
+MICROSOFT_ALLOWED_DOMAINS=daralhai.com
+MICROSOFT_ADMIN_EMAILS=motasem.ghanem@daralhai.com
+```
+
+The Microsoft app needs delegated access for `openid`, `profile`, `email`, and Microsoft Graph `User.Read`.
 
 ## Database
 
@@ -102,11 +127,5 @@ The backend EQP repositories include compatibility adapters that can read legacy
 ## Language Rules
 
 - Management dashboards are English-first.
-- Technician pages are Arabic-first with RTL layout.
 - Internal enums and API values use English canonical values.
-- Arabic technician labels map to English internal statuses.
-
-Example:
-
-- `قيد التنفيذ` maps to `IN_PROGRESS`
-- `تم الإنجاز` maps to `COMPLETED`
+- Arabic notes can be stored as free text where operationally needed.

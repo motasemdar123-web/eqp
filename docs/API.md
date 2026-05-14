@@ -2,43 +2,42 @@
 
 ## Authentication
 
-The platform has one unified authentication entry point. After login, the client routes users by role and renders role-based UI.
+The platform uses Microsoft Entra ID authentication only. Local email/password and technician-code sign-in endpoints are disabled.
 
-### POST `/api/auth/login`
+### GET `/api/auth/microsoft/start`
 
-Body:
+Starts Microsoft OAuth login and redirects the browser to Microsoft.
 
-```json
-{
-  "email": "admin@daralhai.com",
-  "password": "ChangeMe123!"
-}
-```
+Query parameters:
 
-Returns a JWT for Dar Al HAI platform APIs.
+- `returnTo`: optional relative frontend path after successful sign-in.
+- `frontendCallbackUrl`: optional frontend callback URL. The backend accepts it only when its origin is allowed by CORS.
 
-### POST `/api/auth/unified-login`
+### GET `/api/auth/microsoft/callback`
 
-Single entry point for the frontend login screen. The backend detects whether the user entered a company email or a technician code.
+Microsoft redirects back to this backend endpoint after authentication. The backend exchanges the authorization code, reads the signed-in Microsoft profile through Microsoft Graph, creates a short-lived one-time login code, and redirects to the frontend callback.
 
-Email login returns platform JWT and role-based redirect:
+### POST `/api/auth/microsoft/session`
+
+Exchanges the one-time login code for the Dar Al HAI platform JWT and EQP-compatible session token.
 
 ```json
 {
-  "identifier": "admin@daralhai.com",
-  "password": "ChangeMe123!",
-  "preferredModule": "auto"
+  "code": "one-time-login-code"
 }
 ```
 
-Technician code login returns the signed EQP/technician session and routes by module preference:
+Returns:
 
-```json
-{
-  "identifier": "1001",
-  "preferredModule": "technician"
-}
-```
+- `token`: platform JWT for role-based APIs.
+- `user`: signed-in platform user, roles, permissions, and EQP-compatible `sessionToken`.
+- `redirectTo`: frontend route after login.
+
+Deprecated local endpoints return `410 Microsoft authentication is required`:
+
+- `POST /api/auth/login`
+- `POST /api/auth/unified-login`
+- `POST /verify-user`
 
 ## Maintenance Requests
 
@@ -63,7 +62,7 @@ Canonical status values are English:
 - `CANCELLED`
 - `MERGED`
 
-Arabic UI labels are mapped before persistence.
+Arabic notes can still be stored as free text, while API statuses remain English canonical values.
 
 ## Work Orders
 

@@ -19,6 +19,23 @@ const env = {
       .map((origin) => origin.trim())
       .filter(Boolean),
   },
+  microsoft: {
+    tenantId: process.env.MICROSOFT_TENANT_ID,
+    clientId: process.env.MICROSOFT_CLIENT_ID,
+    clientSecret: process.env.MICROSOFT_CLIENT_SECRET,
+    redirectUri: process.env.MICROSOFT_REDIRECT_URI,
+    frontendCallbackUrl: process.env.MICROSOFT_FRONTEND_CALLBACK_URL || process.env.FRONTEND_URL,
+    allowedDomains: (process.env.MICROSOFT_ALLOWED_DOMAINS || 'daralhai.com')
+      .split(',')
+      .map((domain) => domain.trim().toLowerCase())
+      .filter(Boolean),
+    adminEmails: (process.env.MICROSOFT_ADMIN_EMAILS || '')
+      .split(',')
+      .map((email) => email.trim().toLowerCase())
+      .filter(Boolean),
+    autoProvision: process.env.MICROSOFT_AUTO_PROVISION === 'true',
+    defaultRole: process.env.MICROSOFT_DEFAULT_ROLE || 'CLIENT',
+  },
 };
 
 module.exports = { env };

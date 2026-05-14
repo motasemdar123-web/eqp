@@ -1,5 +1,6 @@
-const bcrypt = require('bcryptjs');
+const crypto = require('crypto');
 const { getPrisma } = require('../config/prisma');
+const { env } = require('../config/env');
 const { ApiError } = require('../utils/ApiError');
 const { signJwt } = require('../middleware/platformAuthMiddleware');
 const { normalizeArabicStatus } = require('../utils/platformEnums');
@@ -15,42 +16,50 @@ function requirePrisma() {
   return prisma;
 }
 
-async function login({ email, password }) {
-  const prisma = requirePrisma();
-  const user = await prisma.user.findUnique({
-    where: { email },
-    include: { roles: { include: { role: true } } },
+async function buildPlatformAuthResult(prisma, user, preferredModule, authType = 'PLATFORM') {
+  const userRoles = await prisma.userRole.findMany({
+    where: { userId: user.id },
+    include: { role: true },
   });
-
-  if (!user || !user.passwordHash || !(await bcrypt.compare(password, user.passwordHash))) {
-    throw new ApiError(401, 'Invalid email or password');
-  }
-
-  const roleNames = user.roles.map((userRole) => userRole.role.code);
+  const roleNames = userRoles.map((userRole) => userRole.role.code);
   const permissions = await prisma.rolePermission.findMany({
     where: { role: { code: { in: roleNames } } },
     include: { permission: true },
+  });
+  const permissionNames = [...new Set(permissions.map((rolePermission) => rolePermission.permission.code))];
+  const sessionToken = createSessionToken({
+    id: user.id,
+    user_number: user.userNumber,
+    full_name: user.fullName,
   });
 
   const token = signJwt({
     sub: user.id,
     email: user.email,
     fullName: user.fullName,
+    userNumber: user.userNumber,
     roles: roleNames,
-    permissions: [...new Set(permissions.map((rolePermission) => rolePermission.permission.code))],
+    permissions: permissionNames,
   });
-  const permissionNames = [...new Set(permissions.map((rolePermission) => rolePermission.permission.code))];
 
   return {
+    authType,
     token,
     user: {
       id: user.id,
       email: user.email,
+      userNumber: user.userNumber,
       fullName: user.fullName,
       roles: roleNames,
       permissions: permissionNames,
+      sessionToken,
     },
+    redirectTo: resolvePlatformRedirect(roleNames, permissionNames, preferredModule),
   };
+}
+
+async function login() {
+  throw new ApiError(410, 'Microsoft authentication is required.');
 }
 
 function resolvePlatformRedirect(roles, permissions, preferredModule) {
@@ -80,65 +89,302 @@ function resolvePlatformRedirect(roles, permissions, preferredModule) {
   return '/management';
 }
 
-async function unifiedLogin({ identifier, email, password, userNumber, preferredModule }) {
-  const prisma = requirePrisma();
-  const rawIdentifier = String(identifier || email || userNumber || '').trim();
+async function unifiedLogin() {
+  throw new ApiError(410, 'Microsoft authentication is required.');
+}
 
-  if (!rawIdentifier) {
-    throw new ApiError(400, 'Email or technician code is required');
+const MICROSOFT_SCOPE = 'openid profile email User.Read';
+const MICROSOFT_STATE_TTL_MS = 10 * 60 * 1000;
+const microsoftStates = new Map();
+const microsoftLoginCodes = new Map();
+
+function cleanupMicrosoftAuthStore() {
+  const now = Date.now();
+
+  for (const [state, value] of microsoftStates.entries()) {
+    if (value.expiresAt <= now) microsoftStates.delete(state);
   }
 
-  if (rawIdentifier.includes('@')) {
-    if (!password) {
-      throw new ApiError(400, 'Password is required for email login');
-    }
+  for (const [code, value] of microsoftLoginCodes.entries()) {
+    if (value.expiresAt <= now) microsoftLoginCodes.delete(code);
+  }
+}
 
-    const result = await login({ email: rawIdentifier.toLowerCase(), password });
-    const permissions = result.user.permissions || [];
+function randomToken() {
+  return crypto.randomBytes(32).toString('base64url');
+}
 
-    return {
-      authType: 'PLATFORM',
-      token: result.token,
-      user: result.user,
-      redirectTo: resolvePlatformRedirect(result.user.roles, permissions, preferredModule),
-    };
+function requireMicrosoftConfig() {
+  const { tenantId, clientId, clientSecret } = env.microsoft;
+
+  if (!tenantId || !clientId || !clientSecret) {
+    throw new ApiError(503, 'Microsoft authentication is not configured. Set MICROSOFT_TENANT_ID, MICROSOFT_CLIENT_ID, and MICROSOFT_CLIENT_SECRET.');
   }
 
-  const technicianCode = Number(rawIdentifier);
-  if (!Number.isInteger(technicianCode) || technicianCode <= 0) {
-    throw new ApiError(400, 'Enter a valid email or technician code');
+  return { tenantId, clientId, clientSecret };
+}
+
+function requestOrigin(req) {
+  const proto = req.get('x-forwarded-proto') || req.protocol || 'https';
+  const host = req.get('x-forwarded-host') || req.get('host');
+  return `${proto}://${host}`;
+}
+
+function microsoftRedirectUri(req) {
+  return env.microsoft.redirectUri || `${requestOrigin(req)}/api/auth/microsoft/callback`;
+}
+
+function originMatchesAllowed(origin, allowedOrigin) {
+  if (allowedOrigin === '*') return true;
+  if (allowedOrigin === origin) return true;
+  if (!allowedOrigin.includes('*')) return false;
+
+  const escapedPattern = allowedOrigin
+    .replace(/[.+?^${}()|[\]\\]/g, '\\$&')
+    .replace(/\*/g, '.*');
+
+  return new RegExp(`^${escapedPattern}$`).test(origin);
+}
+
+function safeFrontendCallbackUrl(value) {
+  if (!value || typeof value !== 'string') return null;
+
+  try {
+    const url = new URL(value);
+    const isAllowed = env.security.allowedOrigins.some((origin) => originMatchesAllowed(url.origin, origin));
+
+    if (!isAllowed) return null;
+
+    url.pathname = '/auth/microsoft/callback';
+    url.search = '';
+    url.hash = '';
+    return url;
+  } catch {
+    return null;
+  }
+}
+
+function frontendCallbackUrl(req, preferredCallbackUrl) {
+  const preferred = safeFrontendCallbackUrl(preferredCallbackUrl);
+  if (preferred) return preferred;
+
+  const configured = env.microsoft.frontendCallbackUrl;
+  const fallbackOrigin = env.security.allowedOrigins.find((origin) => origin.startsWith('http') && !origin.includes('*'));
+  const base = configured || fallbackOrigin || 'http://localhost:3000';
+  const url = new URL(base);
+
+  if (url.pathname === '/' || url.pathname === '') {
+    url.pathname = '/auth/microsoft/callback';
   }
 
-  const user = await prisma.user.findUnique({
-    where: { userNumber: technicianCode },
-    include: { roles: { include: { role: true } } },
+  return url;
+}
+
+function safeReturnTo(returnTo) {
+  if (!returnTo || typeof returnTo !== 'string') return '/management';
+  if (!returnTo.startsWith('/') || returnTo.startsWith('//')) return '/management';
+  if (returnTo.startsWith('/auth/')) return '/management';
+  return returnTo;
+}
+
+function microsoftErrorRedirect(req, message, preferredCallbackUrl) {
+  const url = frontendCallbackUrl(req, preferredCallbackUrl);
+  url.searchParams.set('error', message || 'Microsoft authentication failed.');
+  return url.toString();
+}
+
+function buildMicrosoftLoginUrl(req, query = {}) {
+  cleanupMicrosoftAuthStore();
+  const { tenantId, clientId } = requireMicrosoftConfig();
+  const state = randomToken();
+  const redirectUri = microsoftRedirectUri(req);
+
+  microsoftStates.set(state, {
+    redirectUri,
+    frontendCallbackUrl: safeFrontendCallbackUrl(query.frontendCallbackUrl)?.toString(),
+    returnTo: safeReturnTo(query.returnTo),
+    preferredModule: query.preferredModule || 'auto',
+    expiresAt: Date.now() + MICROSOFT_STATE_TTL_MS,
   });
 
-  if (!user) {
-    throw new ApiError(404, 'Invalid user code');
+  const authUrl = new URL(`https://login.microsoftonline.com/${tenantId}/oauth2/v2.0/authorize`);
+  authUrl.searchParams.set('client_id', clientId);
+  authUrl.searchParams.set('response_type', 'code');
+  authUrl.searchParams.set('redirect_uri', redirectUri);
+  authUrl.searchParams.set('response_mode', 'query');
+  authUrl.searchParams.set('scope', MICROSOFT_SCOPE);
+  authUrl.searchParams.set('state', state);
+  authUrl.searchParams.set('prompt', 'select_account');
+
+  return authUrl.toString();
+}
+
+async function exchangeMicrosoftCode({ code, redirectUri }) {
+  const { tenantId, clientId, clientSecret } = requireMicrosoftConfig();
+  const tokenUrl = `https://login.microsoftonline.com/${tenantId}/oauth2/v2.0/token`;
+  const body = new URLSearchParams({
+    client_id: clientId,
+    client_secret: clientSecret,
+    code,
+    redirect_uri: redirectUri,
+    grant_type: 'authorization_code',
+    scope: MICROSOFT_SCOPE,
+  });
+
+  const response = await fetch(tokenUrl, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body,
+  });
+  const data = await response.json().catch(() => ({}));
+
+  if (!response.ok || !data.access_token) {
+    throw new ApiError(502, data.error_description || data.error || 'Microsoft token exchange failed.');
   }
 
-  const roles = user.roles.map((userRole) => userRole.role.code);
-  const eqpUser = {
-    id: user.id,
-    user_number: user.userNumber,
-    full_name: user.fullName,
-  };
-  const sessionToken = createSessionToken(eqpUser);
+  return data;
+}
 
-  return {
-    authType: 'EQP_TECHNICIAN',
-    token: sessionToken,
-    user: {
-      id: user.id,
-      userNumber: user.userNumber,
-      fullName: user.fullName,
-      roles,
-      locale: user.locale,
-      sessionToken,
+async function fetchMicrosoftProfile(accessToken) {
+  const response = await fetch('https://graph.microsoft.com/v1.0/me?$select=id,displayName,mail,userPrincipalName', {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+  const profile = await response.json().catch(() => ({}));
+
+  if (!response.ok) {
+    throw new ApiError(502, profile.error?.message || 'Unable to read Microsoft profile.');
+  }
+
+  return profile;
+}
+
+function normalizeMicrosoftEmail(profile) {
+  return String(profile.mail || profile.userPrincipalName || '').trim().toLowerCase();
+}
+
+function assertAllowedMicrosoftEmail(email) {
+  if (!email || !email.includes('@')) {
+    throw new ApiError(403, 'Microsoft account does not expose a valid email address.');
+  }
+
+  const domain = email.split('@').pop();
+  if (env.microsoft.allowedDomains.length > 0 && !env.microsoft.allowedDomains.includes(domain)) {
+    throw new ApiError(403, 'Use an approved Dar Al HAI Microsoft account.');
+  }
+}
+
+async function ensureUserRole(prisma, userId, roleCode) {
+  const role = await prisma.role.findUnique({ where: { code: roleCode } });
+
+  if (!role) {
+    throw new ApiError(503, `Role ${roleCode} is not configured in the database.`);
+  }
+
+  await prisma.userRole.upsert({
+    where: {
+      userId_roleId: {
+        userId,
+        roleId: role.id,
+      },
     },
-    redirectTo: '/dashboard',
-  };
+    update: {},
+    create: {
+      userId,
+      roleId: role.id,
+    },
+  });
+}
+
+async function findOrCreateMicrosoftUser(prisma, profile) {
+  const email = normalizeMicrosoftEmail(profile);
+  assertAllowedMicrosoftEmail(email);
+
+  let user = await prisma.user.findUnique({ where: { email } });
+  const isConfiguredAdmin = env.microsoft.adminEmails.includes(email);
+
+  if (!user) {
+    if (!isConfiguredAdmin && !env.microsoft.autoProvision) {
+      throw new ApiError(403, 'Microsoft account verified, but no platform user exists. Ask an administrator to create your user or enable MICROSOFT_AUTO_PROVISION.');
+    }
+
+    user = await prisma.user.create({
+      data: {
+        email,
+        fullName: profile.displayName || email,
+        passwordHash: `MICROSOFT_SSO_ONLY:${randomToken()}`,
+        locale: 'en',
+        status: 'ACTIVE',
+      },
+    });
+  }
+
+  if (user.status !== 'ACTIVE') {
+    throw new ApiError(403, 'This platform user is not active.');
+  }
+
+  if (isConfiguredAdmin) {
+    await ensureUserRole(prisma, user.id, 'SUPER_ADMIN');
+  } else if (env.microsoft.autoProvision) {
+    await ensureUserRole(prisma, user.id, env.microsoft.defaultRole);
+  }
+
+  return user;
+}
+
+async function finishMicrosoftCallback(query, req) {
+  cleanupMicrosoftAuthStore();
+
+  if (query.error) {
+    throw new ApiError(401, query.error_description || query.error);
+  }
+
+  if (!query.code || !query.state) {
+    throw new ApiError(400, 'Microsoft callback is missing code or state.');
+  }
+
+  const state = microsoftStates.get(query.state);
+  microsoftStates.delete(query.state);
+
+  if (!state || state.expiresAt <= Date.now()) {
+    throw new ApiError(401, 'Microsoft login session expired. Please sign in again.');
+  }
+
+  const tokenSet = await exchangeMicrosoftCode({
+    code: query.code,
+    redirectUri: state.redirectUri,
+  });
+  const profile = await fetchMicrosoftProfile(tokenSet.access_token);
+  const prisma = requirePrisma();
+  const user = await findOrCreateMicrosoftUser(prisma, profile);
+  const authResult = await buildPlatformAuthResult(prisma, user, state.preferredModule, 'MICROSOFT');
+  const loginCode = randomToken();
+
+  authResult.redirectTo = state.returnTo || authResult.redirectTo;
+  microsoftLoginCodes.set(loginCode, {
+    authResult,
+    expiresAt: Date.now() + MICROSOFT_STATE_TTL_MS,
+  });
+
+  const callbackUrl = frontendCallbackUrl(req, state.frontendCallbackUrl);
+  callbackUrl.searchParams.set('code', loginCode);
+  return callbackUrl.toString();
+}
+
+function completeMicrosoftLogin(code) {
+  cleanupMicrosoftAuthStore();
+
+  if (!code || typeof code !== 'string') {
+    throw new ApiError(400, 'Microsoft login code is required.');
+  }
+
+  const session = microsoftLoginCodes.get(code);
+  microsoftLoginCodes.delete(code);
+
+  if (!session || session.expiresAt <= Date.now()) {
+    throw new ApiError(401, 'Microsoft login code expired. Please sign in again.');
+  }
+
+  return session.authResult;
 }
 
 function nextNumber(prefix) {
@@ -669,6 +915,10 @@ async function createModel(modelName, payload) {
 module.exports = {
   login,
   unifiedLogin,
+  buildMicrosoftLoginUrl,
+  finishMicrosoftCallback,
+  completeMicrosoftLogin,
+  microsoftErrorRedirect,
   listDashboard,
   createMaintenanceRequest,
   listMaintenanceRequests,

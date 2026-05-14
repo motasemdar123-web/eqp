@@ -16,8 +16,8 @@ The frontend uses Next.js App Router and separates:
 - reusable components in `frontend/components`
 - API helpers in `frontend/lib`
 - management pages in `frontend/app/management`
-- Arabic technician pages in `frontend/app/technician`
 - EQP module pages in `frontend/app/eqp`
+- Microsoft callback page in `frontend/app/auth/microsoft/callback`
 
 ## EQP Preservation Rule
 
@@ -67,8 +67,22 @@ No manual table creation is required.
 
 ## Security
 
-- Platform auth uses JWT.
-- EQP auth uses signed technician session tokens.
+- Authentication is Microsoft Entra ID only.
+- The backend implements the OAuth authorization-code callback and exchanges the code with Microsoft.
+- The backend reads the signed-in user through Microsoft Graph `/me`.
+- The frontend receives only a one-time backend login code, then exchanges it for the internal platform JWT.
+- Platform auth uses JWT after Microsoft verification.
+- EQP compatibility uses a signed session token generated after Microsoft verification.
 - RBAC permissions are represented by English canonical values.
 - API middleware enforces permission gates.
 - Helmet, rate limiting, and CORS are enabled.
+
+Required Microsoft environment variables:
+
+- `MICROSOFT_TENANT_ID`
+- `MICROSOFT_CLIENT_ID`
+- `MICROSOFT_CLIENT_SECRET`
+- `MICROSOFT_REDIRECT_URI`
+- `MICROSOFT_FRONTEND_CALLBACK_URL`
+- `MICROSOFT_ALLOWED_DOMAINS`
+- `MICROSOFT_ADMIN_EMAILS`

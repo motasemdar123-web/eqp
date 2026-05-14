@@ -2,13 +2,31 @@ const platformService = require('../services/platformService');
 const { requireFields } = require('../utils/validation');
 
 async function login(req, res) {
-  requireFields(req.body, ['email', 'password']);
   const result = await platformService.login(req.body);
   res.json({ success: true, ...result });
 }
 
 async function unifiedLogin(req, res) {
   const result = await platformService.unifiedLogin(req.body);
+  res.json({ success: true, ...result });
+}
+
+async function startMicrosoftLogin(req, res) {
+  res.redirect(platformService.buildMicrosoftLoginUrl(req, req.query));
+}
+
+async function microsoftCallback(req, res) {
+  try {
+    const redirectTo = await platformService.finishMicrosoftCallback(req.query, req);
+    res.redirect(redirectTo);
+  } catch (error) {
+    res.redirect(platformService.microsoftErrorRedirect(req, error.message));
+  }
+}
+
+async function completeMicrosoftLogin(req, res) {
+  requireFields(req.body, ['code']);
+  const result = platformService.completeMicrosoftLogin(req.body.code);
   res.json({ success: true, ...result });
 }
 
@@ -100,6 +118,9 @@ function create(modelName, responseKey) {
 module.exports = {
   login,
   unifiedLogin,
+  startMicrosoftLogin,
+  microsoftCallback,
+  completeMicrosoftLogin,
   dashboard,
   listRequests,
   createRequest,

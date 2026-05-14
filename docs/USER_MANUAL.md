@@ -2,7 +2,7 @@
 
 ## Management Users
 
-Open `/` to sign in from the unified login page. The system detects whether you entered a company email or a technician code and opens the right workspace.
+Open `/` and choose `Continue with Microsoft`. Use your Dar Al HAI Microsoft account.
 
 Open `/management` to view the operations dashboard.
 
@@ -21,7 +21,7 @@ Open `/management/scheduling`.
 
 Use the page to:
 
-- sign in with a management account
+- sign in with Microsoft when needed
 - view the daily technician roster
 - create shifts
 - add or update technician daily schedules
@@ -30,20 +30,6 @@ Use the page to:
 - define work hours, task scope, safety notes, required tools, required parts, and permit requirements
 
 The seeded demo environment includes 9 technicians and a daily schedule for each technician.
-
-## Field Technicians
-
-Open `/technician/login`.
-
-The technician interface is Arabic-first and right-to-left:
-
-- عرض المهام
-- بدء المهمة
-- تعبئة قائمة الفحص
-- إضافة ملاحظات عربية
-- إغلاق المهمة
-
-Arabic labels are translated into English internal statuses for reporting and audit consistency.
 
 ## EQP Users
 

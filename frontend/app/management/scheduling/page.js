@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Card from '../../../components/ui/Card';
 import Badge from '../../../components/ui/Badge';
 import Button from '../../../components/ui/Button';
+import { getMicrosoftLoginUrl } from '../../../lib/api';
 
 const API_BASE = process.env.NEXT_PUBLIC_BACKEND_URL || process.env.NEXT_PUBLIC_API_BASE_URL || 'https://eqp.onrender.com';
 
@@ -73,10 +74,9 @@ function initialJobCardForm(date) {
 }
 
 export default function SchedulingPage() {
-  const [token, setToken] = useState(() => (
+  const [token] = useState(() => (
     typeof window === 'undefined' ? '' : localStorage.getItem('platformToken') || ''
   ));
-  const [credentials, setCredentials] = useState({ email: 'admin@daralhai.com', password: '' });
   const [date, setDate] = useState(today());
   const [board, setBoard] = useState(emptyBoard);
   const [loading, setLoading] = useState(false);
@@ -136,26 +136,8 @@ export default function SchedulingPage() {
     }
   }
 
-  async function login(event) {
-    event.preventDefault();
-    setLoading(true);
-    setMessage('');
-    try {
-      const response = await fetch(`${API_BASE}/api/auth/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(credentials),
-      });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.message || 'Login failed');
-      localStorage.setItem('platformToken', data.token);
-      setToken(data.token);
-      setMessage(`Signed in as ${data.user.fullName}`);
-    } catch (error) {
-      setMessage(error.message);
-    } finally {
-      setLoading(false);
-    }
+  function signInWithMicrosoft() {
+    window.location.href = getMicrosoftLoginUrl('/management/scheduling');
   }
 
   async function saveShift(event) {
@@ -267,26 +249,10 @@ export default function SchedulingPage() {
       <section className="mx-auto grid max-w-7xl gap-5 px-6 py-6">
         {!token && (
           <Card className="p-5">
-            <form onSubmit={login} className="grid gap-3 md:grid-cols-[1fr_1fr_auto] md:items-end">
-              <label className="grid gap-1 text-sm font-semibold text-zinc-700">
-                Email
-                <input
-                  value={credentials.email}
-                  onChange={(event) => setCredentials((current) => ({ ...current, email: event.target.value }))}
-                  className="h-11 rounded-md border border-zinc-300 px-3 text-zinc-950"
-                />
-              </label>
-              <label className="grid gap-1 text-sm font-semibold text-zinc-700">
-                Password
-                <input
-                  type="password"
-                  value={credentials.password}
-                  onChange={(event) => setCredentials((current) => ({ ...current, password: event.target.value }))}
-                  className="h-11 rounded-md border border-zinc-300 px-3 text-zinc-950"
-                />
-              </label>
-              <Button type="submit" disabled={loading}>Sign In</Button>
-            </form>
+            <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+              <p className="text-sm font-semibold text-zinc-700">Sign in with your Microsoft account to manage scheduling.</p>
+              <Button type="button" onClick={signInWithMicrosoft}>Continue with Microsoft</Button>
+            </div>
           </Card>
         )}
 

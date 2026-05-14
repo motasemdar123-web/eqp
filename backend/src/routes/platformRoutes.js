@@ -7,6 +7,9 @@ const router = Router();
 
 router.post('/api/auth/login', asyncHandler(platformController.login));
 router.post('/api/auth/unified-login', asyncHandler(platformController.unifiedLogin));
+router.get('/api/auth/microsoft/start', asyncHandler(platformController.startMicrosoftLogin));
+router.get('/api/auth/microsoft/callback', asyncHandler(platformController.microsoftCallback));
+router.post('/api/auth/microsoft/session', asyncHandler(platformController.completeMicrosoftLogin));
 
 router.get('/api/dashboard', requirePlatformAuth, requirePermission('REPORTS_READ'), asyncHandler(platformController.dashboard));
 

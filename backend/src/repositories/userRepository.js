@@ -13,4 +13,17 @@ async function findByUserNumber(userNumber) {
   return result.rows[0] || null;
 }
 
-module.exports = { findByUserNumber };
+async function findById(id) {
+  const result = await db.query(
+    `
+      SELECT *
+      FROM users
+      WHERE id = $1
+    `,
+    [id]
+  );
+
+  return result.rows[0] || null;
+}
+
+module.exports = { findByUserNumber, findById };

@@ -45,5 +45,6 @@ export function clearStoredUser() {
 }
 
 export function getSessionToken() {
-  return getStoredUser()?.sessionToken || '';
+  if (typeof window === 'undefined') return '';
+  return getStoredUser()?.sessionToken || localStorage.getItem('platformToken') || '';
 }

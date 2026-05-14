@@ -10,6 +10,10 @@ function signJwt(payload) {
   return jwt.sign(payload, getJwtSecret(), { expiresIn: '12h' });
 }
 
+function verifyPlatformJwt(token) {
+  return jwt.verify(token, getJwtSecret());
+}
+
 function requirePlatformAuth(req, res, next) {
   try {
     const header = req.get('authorization') || '';
@@ -19,7 +23,7 @@ function requirePlatformAuth(req, res, next) {
       throw new ApiError(401, 'Authentication required');
     }
 
-    req.platformUser = jwt.verify(token, getJwtSecret());
+    req.platformUser = verifyPlatformJwt(token);
     next();
   } catch (error) {
     next(error.statusCode ? error : new ApiError(401, 'Invalid or expired token'));
@@ -41,6 +45,7 @@ function requirePermission(permission) {
 
 module.exports = {
   signJwt,
+  verifyPlatformJwt,
   requirePlatformAuth,
   requirePermission,
 };
