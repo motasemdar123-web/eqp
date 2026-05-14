@@ -68,12 +68,24 @@ npm run dev
 
 Prisma schema is in `backend/prisma/schema.prisma`.
 
-Existing EQP tables are mapped with Prisma models using `@@map` and are not renamed:
+The database can be created from scratch with no manual SQL:
 
-- `machines`
-- `reports`
-- `machine_history`
-- `report_comments`
+```bash
+cd backend
+npm run prisma:migrate
+npm run prisma:seed
+```
+
+The initial migration creates all platform tables, enums, indexes, constraints, and EQP module tables.
+
+EQP is now represented by first-class Prisma-managed tables:
+
+- `eqp_machines`
+- `eqp_reports`
+- `eqp_machine_history`
+- `eqp_report_comments`
+
+The backend EQP repositories include compatibility adapters that can read legacy table names if a deployment has not migrated yet.
 
 ## Language Rules
 

@@ -20,8 +20,8 @@ router.post('/api/work-orders/:id/close', requirePlatformAuth, requirePermission
 router.get('/api/assets', requirePlatformAuth, requirePermission('ASSETS_MANAGE'), asyncHandler(platformController.list('asset', 'assets')));
 router.post('/api/assets', requirePlatformAuth, requirePermission('ASSETS_MANAGE'), asyncHandler(platformController.create('asset', 'asset')));
 
-router.get('/api/spare-parts', requirePlatformAuth, requirePermission('INVENTORY_MANAGE'), asyncHandler(platformController.list('sparePart', 'spareParts')));
-router.post('/api/spare-parts', requirePlatformAuth, requirePermission('INVENTORY_MANAGE'), asyncHandler(platformController.create('sparePart', 'sparePart')));
+router.get('/api/spare-parts', requirePlatformAuth, requirePermission('INVENTORY_MANAGE'), asyncHandler(platformController.list('inventoryItem', 'spareParts')));
+router.post('/api/spare-parts', requirePlatformAuth, requirePermission('INVENTORY_MANAGE'), asyncHandler(platformController.create('inventoryItem', 'sparePart')));
 
 router.get('/api/clients', requirePlatformAuth, requirePermission('REQUESTS_READ'), asyncHandler(platformController.list('client', 'clients')));
 router.post('/api/clients', requirePlatformAuth, requirePermission('SYSTEM_CONFIGURE'), asyncHandler(platformController.create('client', 'client')));

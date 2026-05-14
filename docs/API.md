@@ -2,6 +2,8 @@
 
 ## Authentication
 
+The platform has one unified authentication entry point. After login, the client routes users by role and renders role-based UI.
+
 ### POST `/api/auth/login`
 
 Body:

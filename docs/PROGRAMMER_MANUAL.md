@@ -32,15 +32,25 @@ Current compatibility routes:
 
 New Dar Al HAI models are canonical Prisma models.
 
-Existing EQP tables use mapped Prisma models:
+EQP module tables use mapped Prisma models:
 
 ```prisma
 model EqpMachine {
-  @@map("machines")
+  @@map("eqp_machines")
 }
 ```
 
-This avoids breaking production data.
+Repository adapters can still fall back to the legacy `machines`, `reports`, `machine_history`, and `report_comments` tables during transition.
+
+## Fresh Database Bootstrap
+
+```bash
+cd backend
+npm run prisma:migrate
+npm run prisma:seed
+```
+
+No manual table creation is required.
 
 ## Security
 

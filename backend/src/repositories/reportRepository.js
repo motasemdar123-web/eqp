@@ -1,9 +1,11 @@
 const db = require('../config/database');
+const { resolveEqpTable } = require('./eqpTableResolver');
 
 async function findAll() {
+  const table = await resolveEqpTable('eqp_reports', 'reports');
   const result = await db.query(`
     SELECT *
-    FROM reports
+    FROM ${table}
     ORDER BY created_at DESC
   `);
 
@@ -11,10 +13,11 @@ async function findAll() {
 }
 
 async function findById(id) {
+  const table = await resolveEqpTable('eqp_reports', 'reports');
   const result = await db.query(
     `
       SELECT *
-      FROM reports
+      FROM ${table}
       WHERE id = $1
     `,
     [id]
@@ -24,9 +27,10 @@ async function findById(id) {
 }
 
 async function rename(id, fileName) {
+  const table = await resolveEqpTable('eqp_reports', 'reports');
   const result = await db.query(
     `
-      UPDATE reports
+      UPDATE ${table}
       SET file_name = $1
       WHERE id = $2
       RETURNING *
@@ -38,9 +42,10 @@ async function rename(id, fileName) {
 }
 
 async function remove(id) {
+  const table = await resolveEqpTable('eqp_reports', 'reports');
   await db.query(
     `
-      DELETE FROM reports
+      DELETE FROM ${table}
       WHERE id = $1
     `,
     [id]
@@ -48,9 +53,10 @@ async function remove(id) {
 }
 
 async function create(report) {
+  const table = await resolveEqpTable('eqp_reports', 'reports');
   await db.query(
     `
-      INSERT INTO reports
+      INSERT INTO ${table}
       (
         report_no,
         machine_type,

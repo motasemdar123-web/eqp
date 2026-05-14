@@ -18,16 +18,17 @@ async function login({ email, password }) {
   const prisma = requirePrisma();
   const user = await prisma.user.findUnique({
     where: { email },
-    include: { roles: true },
+    include: { roles: { include: { role: true } } },
   });
 
   if (!user || !user.passwordHash || !(await bcrypt.compare(password, user.passwordHash))) {
     throw new ApiError(401, 'Invalid email or password');
   }
 
-  const roleNames = user.roles.map((role) => role.role);
+  const roleNames = user.roles.map((userRole) => userRole.role.code);
   const permissions = await prisma.rolePermission.findMany({
-    where: { role: { in: roleNames } },
+    where: { role: { code: { in: roleNames } } },
+    include: { permission: true },
   });
 
   const token = signJwt({
@@ -35,7 +36,7 @@ async function login({ email, password }) {
     email: user.email,
     fullName: user.fullName,
     roles: roleNames,
-    permissions: [...new Set(permissions.map((permission) => permission.permission))],
+    permissions: [...new Set(permissions.map((rolePermission) => rolePermission.permission.code))],
   });
 
   return {
