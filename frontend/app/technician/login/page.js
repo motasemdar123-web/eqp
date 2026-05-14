@@ -4,7 +4,7 @@ import UnifiedLogin from '../../../components/UnifiedLogin';
 export default function TechnicianLoginPage() {
   return (
     <Suspense>
-      <UnifiedLogin preferredModule="technician" />
+      <UnifiedLogin preferredModule="auto" />
     </Suspense>
   );
 }

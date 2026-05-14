@@ -4,7 +4,7 @@ import UnifiedLogin from '../../components/UnifiedLogin';
 export default function VerifyPage() {
   return (
     <Suspense>
-      <UnifiedLogin preferredModule="eqp" />
+      <UnifiedLogin preferredModule="auto" />
     </Suspense>
   );
 }
