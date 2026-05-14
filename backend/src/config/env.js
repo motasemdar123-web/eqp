@@ -33,6 +33,14 @@ const env = {
       .split(',')
       .map((email) => email.trim().toLowerCase())
       .filter(Boolean),
+    engineerEmails: (process.env.MICROSOFT_ENGINEER_EMAILS || 'motasem.ghanem@daralhai.com,abdelrahman@daralhai.com,faisal@daralhai.com')
+      .split(',')
+      .map((email) => email.trim().toLowerCase())
+      .filter(Boolean),
+    engineerNames: (process.env.MICROSOFT_ENGINEER_NAMES || 'motasem,abdelrahman,faisal')
+      .split(',')
+      .map((name) => name.trim().toLowerCase())
+      .filter(Boolean),
     autoProvision: process.env.MICROSOFT_AUTO_PROVISION === 'true',
     defaultRole: process.env.MICROSOFT_DEFAULT_ROLE || 'CLIENT',
   },

@@ -99,9 +99,20 @@ MICROSOFT_REDIRECT_URI=https://your-backend-domain.com/api/auth/microsoft/callba
 MICROSOFT_FRONTEND_CALLBACK_URL=https://your-frontend-domain.com/auth/microsoft/callback
 MICROSOFT_ALLOWED_DOMAINS=daralhai.com
 MICROSOFT_ADMIN_EMAILS=motasem.ghanem@daralhai.com
+MICROSOFT_ENGINEER_EMAILS=motasem.ghanem@daralhai.com,abdelrahman@daralhai.com,faisal@daralhai.com
+MICROSOFT_ENGINEER_NAMES=motasem,abdelrahman,faisal
 ```
 
 The Microsoft app needs delegated access for `openid`, `profile`, `email`, and Microsoft Graph `User.Read`.
+
+Engineer accounts listed in `MICROSOFT_ENGINEER_EMAILS` are automatically assigned the `MAINTENANCE_SUPERVISOR` role on Microsoft sign-in. Motasem, Abdelrahman, and Faisal are treated as engineers, not technicians, and the EQP module is restricted to engineer/management permissions.
+
+To reconcile an existing live database after changing engineer ownership:
+
+```bash
+cd backend
+npm run reconcile:engineers
+```
 
 ## Database
 

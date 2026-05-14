@@ -12,7 +12,8 @@
     "test": "jest --runInBand",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate deploy",
-    "prisma:seed": "node prisma/seed.js"
+    "prisma:seed": "node prisma/seed.js",
+    "reconcile:engineers": "node scripts/reconcile-engineers.js"
   },
   "keywords": [],
   "author": "",

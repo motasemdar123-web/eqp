@@ -46,6 +46,47 @@ async function ensureUserRole(userId, roleId) {
   });
 }
 
+async function removeUserRole(userId, roleId) {
+  await prisma.userRole.deleteMany({
+    where: { userId, roleId },
+  });
+}
+
+async function removeTechnicianProfileForUser(userId) {
+  const technician = await prisma.technicianProfile.findUnique({
+    where: { userId },
+  });
+
+  if (!technician) return;
+
+  const activeWorkOrderStatuses = ['DRAFT', 'OPEN', 'ASSIGNED', 'IN_PROGRESS', 'WAITING_PARTS', 'PENDING_APPROVAL'];
+
+  await prisma.workOrder.updateMany({
+    where: {
+      teamLeadTechnicianId: technician.id,
+      status: { in: activeWorkOrderStatuses },
+    },
+    data: { teamLeadTechnicianId: null },
+  });
+  await prisma.workOrderAssignment.deleteMany({
+    where: {
+      technicianId: technician.id,
+      workOrder: { status: { in: activeWorkOrderStatuses } },
+    },
+  });
+  await prisma.technicianSchedule.updateMany({
+    where: { technicianId: technician.id, deletedAt: null },
+    data: { deletedAt: new Date() },
+  });
+  await prisma.technicianProfile.update({
+    where: { id: technician.id },
+    data: {
+      isAvailable: false,
+      deletedAt: new Date(),
+    },
+  });
+}
+
 async function upsertSeedUser({ email, userNumber, fullName, passwordHash, locale = 'en' }) {
   if (userNumber) {
     const existingByNumber = await prisma.user.findUnique({ where: { userNumber } });
@@ -149,8 +190,30 @@ async function main() {
   });
   await ensureUserRole(manager.id, roles.OPERATIONS_MANAGER.id);
 
+  const engineerSeeds = [
+    { email: 'motasem.ghanem@daralhai.com', fullName: 'Motasem Ghanem' },
+    { email: 'abdelrahman@daralhai.com', fullName: 'Abdelrahman' },
+    { email: 'faisal@daralhai.com', fullName: 'Faisal' },
+  ];
+
+  for (const engineerSeed of engineerSeeds) {
+    const engineer = await upsertSeedUser({
+      email: engineerSeed.email,
+      fullName: engineerSeed.fullName,
+      passwordHash,
+      locale: 'en',
+    });
+    await ensureUserRole(engineer.id, roles.MAINTENANCE_SUPERVISOR.id);
+    await removeUserRole(engineer.id, roles.FIELD_TECHNICIAN.id);
+    await prisma.user.update({
+      where: { id: engineer.id },
+      data: { userNumber: null },
+    });
+    await removeTechnicianProfileForUser(engineer.id);
+  }
+
   const technicianSeeds = [
-    { userNumber: 1001, email: 'technician.1001@daralhai.com', fullName: 'Motasem Ghanem', employeeCode: 'TECH-1001', region: 'Riyadh North', shiftName: 'Morning Shift', skills: [['HVAC', 'SENIOR'], ['Electrical Safety', 'INTERMEDIATE']] },
+    { userNumber: 1001, email: 'technician.1001@daralhai.com', fullName: 'Nasser Al Harbi', employeeCode: 'TECH-1001', region: 'Riyadh North', shiftName: 'Morning Shift', skills: [['HVAC', 'SENIOR'], ['Electrical Safety', 'INTERMEDIATE']] },
     { userNumber: 1002, email: 'technician.1002@daralhai.com', fullName: 'Ahmad Al Harbi', employeeCode: 'TECH-1002', region: 'Riyadh North', shiftName: 'Morning Shift', skills: [['Plumbing', 'SENIOR'], ['Leak Detection', 'SENIOR']] },
     { userNumber: 1003, email: 'technician.1003@daralhai.com', fullName: 'Omar Al Qahtani', employeeCode: 'TECH-1003', region: 'Riyadh East', shiftName: 'Morning Shift', skills: [['Electrical', 'SENIOR'], ['Generator', 'INTERMEDIATE']] },
     { userNumber: 1004, email: 'technician.1004@daralhai.com', fullName: 'Khaled Mansour', employeeCode: 'TECH-1004', region: 'Riyadh Central', shiftName: 'Afternoon Shift', skills: [['HVAC', 'INTERMEDIATE'], ['BMS', 'INTERMEDIATE']] },
@@ -267,6 +330,7 @@ async function main() {
       locale: 'ar',
     });
     await ensureUserRole(user.id, roles.FIELD_TECHNICIAN.id);
+    await removeUserRole(user.id, roles.MAINTENANCE_SUPERVISOR.id);
 
     const assignedShift = shifts[technicianSeed.shiftName];
     const technician = await prisma.technicianProfile.upsert({
@@ -276,6 +340,7 @@ async function main() {
         region: technicianSeed.region,
         shiftId: assignedShift.id,
         isAvailable: true,
+        deletedAt: null,
       },
       create: {
         userId: user.id,
@@ -303,6 +368,7 @@ async function main() {
         endsAt: assignedShift.endsAt,
         status: 'CONFIRMED',
         notes: `${technicianSeed.region} coverage`,
+        deletedAt: null,
       },
       create: {
         technicianId: technician.id,

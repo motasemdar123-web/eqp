@@ -299,15 +299,25 @@ async function ensureUserRole(prisma, userId, roleCode) {
   });
 }
 
+function isConfiguredEngineer(email, profile) {
+  const displayName = String(profile.displayName || '').toLowerCase();
+
+  return (
+    env.microsoft.engineerEmails.includes(email) ||
+    env.microsoft.engineerNames.some((name) => displayName.includes(name))
+  );
+}
+
 async function findOrCreateMicrosoftUser(prisma, profile) {
   const email = normalizeMicrosoftEmail(profile);
   assertAllowedMicrosoftEmail(email);
 
   let user = await prisma.user.findUnique({ where: { email } });
   const isConfiguredAdmin = env.microsoft.adminEmails.includes(email);
+  const isEngineer = isConfiguredEngineer(email, profile);
 
   if (!user) {
-    if (!isConfiguredAdmin && !env.microsoft.autoProvision) {
+    if (!isConfiguredAdmin && !isEngineer && !env.microsoft.autoProvision) {
       throw new ApiError(403, 'Microsoft account verified, but no platform user exists. Ask an administrator to create your user or enable MICROSOFT_AUTO_PROVISION.');
     }
 
@@ -328,6 +338,18 @@ async function findOrCreateMicrosoftUser(prisma, profile) {
 
   if (isConfiguredAdmin) {
     await ensureUserRole(prisma, user.id, 'SUPER_ADMIN');
+  } else if (isEngineer) {
+    await ensureUserRole(prisma, user.id, 'MAINTENANCE_SUPERVISOR');
+
+    const fieldTechnicianRole = await prisma.role.findUnique({ where: { code: 'FIELD_TECHNICIAN' } });
+    if (fieldTechnicianRole) {
+      await prisma.userRole.deleteMany({
+        where: {
+          userId: user.id,
+          roleId: fieldTechnicianRole.id,
+        },
+      });
+    }
   } else if (env.microsoft.autoProvision) {
     await ensureUserRole(prisma, user.id, env.microsoft.defaultRole);
   }
@@ -644,6 +666,16 @@ function assertEngineerAccess(actor) {
 async function findTechnicianForActor(prisma, actor) {
   if (!actor?.sub) {
     throw new ApiError(401, 'Authentication required');
+  }
+
+  const permissions = actor.permissions || [];
+  if (
+    permissions.includes('WORK_ORDERS_MANAGE') ||
+    permissions.includes('REQUESTS_ASSIGN') ||
+    permissions.includes('EQP_MANAGE') ||
+    permissions.includes('SYSTEM_CONFIGURE')
+  ) {
+    throw new ApiError(403, 'Engineer accounts cannot use the technician page.');
   }
 
   const technician = await prisma.technicianProfile.findFirst({
