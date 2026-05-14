@@ -12,6 +12,7 @@ const navSections = [
     items: [
       { href: '/management', label: 'Command Center', code: 'CC' },
       { href: '/engineer', label: 'Engineer Approvals', code: 'EA' },
+      { href: '/management/technicians', label: 'Technicians Management', code: 'TM' },
       { href: '/management/scheduling', label: 'Scheduling', code: 'SC' },
       { href: '/management/requests', label: 'Requests', code: 'RQ' },
       { href: '/management/work-orders', label: 'Work Orders', code: 'WO' },

@@ -121,3 +121,25 @@ export function reviewCompletionRequest(id, payload) {
     body: JSON.stringify(payload),
   });
 }
+
+export function getTechnicians() {
+  return request('/api/technicians');
+}
+
+export function createTechnician(payload) {
+  return request('/api/technicians', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+}
+
+export function updateTechnician(id, payload) {
+  return request(`/api/technicians/${id}`, {
+    method: 'PATCH',
+    body: JSON.stringify(payload),
+  });
+}
+
+export function getShifts() {
+  return request('/api/shifts');
+}

@@ -1089,6 +1089,265 @@ async function listTechnicians() {
   });
 }
 
+function normalizeTechnicianSkills(skills) {
+  if (!skills) return [];
+
+  const items = Array.isArray(skills)
+    ? skills
+    : String(skills).split(',').map((skill) => skill.trim()).filter(Boolean);
+
+  return items
+    .map((item) => {
+      if (typeof item === 'string') return { skill: item.trim(), level: null };
+      return {
+        skill: String(item.skill || item.name || '').trim(),
+        level: item.level ? String(item.level).trim() : null,
+      };
+    })
+    .filter((item) => item.skill);
+}
+
+async function syncTechnicianSkills(tx, technicianId, skills) {
+  if (skills === undefined) return;
+
+  const normalizedSkills = normalizeTechnicianSkills(skills);
+
+  await tx.technicianSkill.deleteMany({
+    where: { technicianId },
+  });
+
+  if (normalizedSkills.length === 0) return;
+
+  await tx.technicianSkill.createMany({
+    data: normalizedSkills.map((item) => ({
+      technicianId,
+      skill: item.skill,
+      level: item.level,
+    })),
+    skipDuplicates: true,
+  });
+}
+
+async function assignFieldTechnicianRole(tx, userId) {
+  const role = await tx.role.findUnique({ where: { code: 'FIELD_TECHNICIAN' } });
+
+  if (!role) {
+    throw new ApiError(503, 'FIELD_TECHNICIAN role is not configured.');
+  }
+
+  await tx.userRole.upsert({
+    where: {
+      userId_roleId: {
+        userId,
+        roleId: role.id,
+      },
+    },
+    update: {},
+    create: {
+      userId,
+      roleId: role.id,
+    },
+  });
+}
+
+async function createTechnician(payload, actorId) {
+  const prisma = requirePrisma();
+  const fullName = String(payload.fullName || payload.full_name || '').trim();
+  const email = String(payload.email || '').trim().toLowerCase();
+  const employeeCode = String(payload.employeeCode || payload.employee_code || '').trim();
+
+  if (!fullName || !email || !employeeCode) {
+    throw new ApiError(400, 'fullName, email, and employeeCode are required.');
+  }
+
+  return prisma.$transaction(async (tx) => {
+    const existingProfile = await tx.technicianProfile.findFirst({
+      where: { employeeCode },
+    });
+
+    if (existingProfile && !existingProfile.deletedAt) {
+      throw new ApiError(409, 'A technician with this employee code already exists.');
+    }
+
+    const requestedUserNumber = payload.userNumber || payload.user_number
+      ? Number(payload.userNumber || payload.user_number)
+      : null;
+
+    if (requestedUserNumber) {
+      const userNumberOwner = await tx.user.findUnique({ where: { userNumber: requestedUserNumber } });
+      if (userNumberOwner && userNumberOwner.email !== email) {
+        throw new ApiError(409, 'This user number is already assigned to another user.');
+      }
+    }
+
+    const user = await tx.user.upsert({
+      where: { email },
+      update: {
+        fullName,
+        ...(requestedUserNumber ? { userNumber: requestedUserNumber } : {}),
+        phone: payload.phone || null,
+        locale: payload.locale || 'ar',
+        status: payload.status || 'ACTIVE',
+        deletedAt: null,
+        updatedById: actorId,
+      },
+      create: {
+        email,
+        ...(requestedUserNumber ? { userNumber: requestedUserNumber } : {}),
+        fullName,
+        phone: payload.phone || null,
+        locale: payload.locale || 'ar',
+        status: payload.status || 'ACTIVE',
+        passwordHash: `MICROSOFT_SSO_ONLY:${randomToken()}`,
+        createdById: actorId,
+      },
+    });
+
+    if (existingProfile && existingProfile.deletedAt && existingProfile.userId !== user.id) {
+      await tx.technicianProfile.update({
+        where: { id: existingProfile.id },
+        data: {
+          employeeCode: null,
+          updatedById: actorId,
+        },
+      });
+    }
+
+    await assignFieldTechnicianRole(tx, user.id);
+
+    const technician = await tx.technicianProfile.upsert({
+      where: { userId: user.id },
+      update: {
+        employeeCode,
+        region: payload.region || null,
+        shiftId: payload.shiftId || null,
+        isAvailable: payload.isAvailable !== undefined ? Boolean(payload.isAvailable) : true,
+        deletedAt: null,
+        updatedById: actorId,
+      },
+      create: {
+        userId: user.id,
+        employeeCode,
+        region: payload.region || null,
+        shiftId: payload.shiftId || null,
+        isAvailable: payload.isAvailable !== undefined ? Boolean(payload.isAvailable) : true,
+        createdById: actorId,
+      },
+    });
+
+    await syncTechnicianSkills(tx, technician.id, payload.skills);
+
+    return tx.technicianProfile.findUnique({
+      where: { id: technician.id },
+      include: {
+        user: { select: publicUserSelect },
+        shift: true,
+        skills: true,
+        assignments: {
+          where: { workOrder: { status: { in: ['OPEN', 'ASSIGNED', 'IN_PROGRESS', 'WAITING_PARTS'] } } },
+          include: { workOrder: true },
+        },
+      },
+    });
+  });
+}
+
+async function updateTechnician(id, payload, actorId) {
+  const prisma = requirePrisma();
+  const technician = await prisma.technicianProfile.findUnique({
+    where: { id },
+    include: { user: true },
+  });
+
+  if (!technician || technician.deletedAt) {
+    throw new ApiError(404, 'Technician not found.');
+  }
+
+  return prisma.$transaction(async (tx) => {
+    const userUpdates = {};
+    if (payload.fullName || payload.full_name) userUpdates.fullName = String(payload.fullName || payload.full_name).trim();
+    if (payload.email) userUpdates.email = String(payload.email).trim().toLowerCase();
+    if (payload.phone !== undefined) userUpdates.phone = payload.phone || null;
+    if (payload.userNumber !== undefined || payload.user_number !== undefined) {
+      const userNumber = payload.userNumber || payload.user_number ? Number(payload.userNumber || payload.user_number) : null;
+      if (userNumber) {
+        const owner = await tx.user.findUnique({ where: { userNumber } });
+        if (owner && owner.id !== technician.userId) {
+          throw new ApiError(409, 'This user number is already assigned to another user.');
+        }
+      }
+      userUpdates.userNumber = userNumber;
+    }
+    if (payload.status) userUpdates.status = payload.status;
+
+    if (Object.keys(userUpdates).length > 0) {
+      await tx.user.update({
+        where: { id: technician.userId },
+        data: {
+          ...userUpdates,
+          updatedById: actorId,
+        },
+      });
+    }
+
+    const profileUpdates = {};
+    if (payload.employeeCode || payload.employee_code) profileUpdates.employeeCode = String(payload.employeeCode || payload.employee_code).trim();
+    if (payload.region !== undefined) profileUpdates.region = payload.region || null;
+    if (payload.shiftId !== undefined) profileUpdates.shiftId = payload.shiftId || null;
+    if (payload.isAvailable !== undefined) profileUpdates.isAvailable = Boolean(payload.isAvailable);
+
+    if (profileUpdates.employeeCode && profileUpdates.employeeCode !== technician.employeeCode) {
+      const existingProfile = await tx.technicianProfile.findFirst({
+        where: {
+          employeeCode: profileUpdates.employeeCode,
+          id: { not: id },
+        },
+      });
+
+      if (existingProfile && !existingProfile.deletedAt) {
+        throw new ApiError(409, 'A technician with this employee code already exists.');
+      }
+
+      if (existingProfile && existingProfile.deletedAt) {
+        await tx.technicianProfile.update({
+          where: { id: existingProfile.id },
+          data: {
+            employeeCode: null,
+            updatedById: actorId,
+          },
+        });
+      }
+    }
+
+    if (Object.keys(profileUpdates).length > 0) {
+      await tx.technicianProfile.update({
+        where: { id },
+        data: {
+          ...profileUpdates,
+          updatedById: actorId,
+        },
+      });
+    }
+
+    if (payload.skills !== undefined) {
+      await syncTechnicianSkills(tx, id, payload.skills);
+    }
+
+    return tx.technicianProfile.findUnique({
+      where: { id },
+      include: {
+        user: { select: publicUserSelect },
+        shift: true,
+        skills: true,
+        assignments: {
+          where: { workOrder: { status: { in: ['OPEN', 'ASSIGNED', 'IN_PROGRESS', 'WAITING_PARTS'] } } },
+          include: { workOrder: true },
+        },
+      },
+    });
+  });
+}
+
 async function listShifts() {
   const prisma = requirePrisma();
   return prisma.shift.findMany({ where: { deletedAt: null }, include: { branch: true }, orderBy: { startsAt: 'asc' } });
@@ -1363,6 +1622,8 @@ module.exports = {
   listEngineerCompletionRequests,
   reviewCompletionRequest,
   listTechnicians,
+  createTechnician,
+  updateTechnician,
   listShifts,
   createShift,
   upsertTechnicianSchedule,

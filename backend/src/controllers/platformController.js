@@ -94,6 +94,17 @@ async function listTechnicians(req, res) {
   res.json({ success: true, technicians });
 }
 
+async function createTechnician(req, res) {
+  requireFields(req.body, ['fullName', 'email', 'employeeCode']);
+  const technician = await platformService.createTechnician(req.body, req.platformUser?.sub);
+  res.status(201).json({ success: true, technician });
+}
+
+async function updateTechnician(req, res) {
+  const technician = await platformService.updateTechnician(req.params.id, req.body, req.platformUser?.sub);
+  res.json({ success: true, technician });
+}
+
 async function listShifts(req, res) {
   const shifts = await platformService.listShifts();
   res.json({ success: true, shifts });
@@ -154,6 +165,8 @@ module.exports = {
   engineerCompletionRequests,
   reviewCompletionRequest,
   listTechnicians,
+  createTechnician,
+  updateTechnician,
   listShifts,
   createShift,
   schedulingBoard,

@@ -9,6 +9,7 @@ import { getStoredPlatformSession } from '../../lib/auth';
 
 const modules = [
   { title: 'Engineer Approvals', href: '/engineer', status: 'Live', description: 'Review technician completion evidence, approve finished jobs, or return work for correction.' },
+  { title: 'Technicians Management', href: '/management/technicians', status: 'Live', description: 'Add technicians, assign shifts and regions, manage skills, and update availability.' },
   { title: 'Scheduling', href: '/management/scheduling', status: 'Live', description: 'Daily roster, shifts, dispatch board, and multi-technician job cards.' },
   { title: 'Maintenance Requests', href: '/management/requests', status: 'Ready', description: 'Request intake, SLA, notes, attachments, reopen and lifecycle control.' },
   { title: 'Work Orders', href: '/management/work-orders', status: 'Ready', description: 'Assignment, labor, materials, closure controls, and team execution.' },
