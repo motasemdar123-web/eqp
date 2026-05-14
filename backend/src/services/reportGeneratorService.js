@@ -16,6 +16,48 @@ const TEMPLATE_ROOT = path.join(__dirname, '..', '..', 'templates');
 const SIGNATURE_ROOT = path.join(__dirname, '..', '..', 'signatures');
 const execFileAsync = promisify(execFile);
 
+function converterCommands() {
+  return [...new Set([
+    process.env.LIBREOFFICE_BIN,
+    'soffice',
+    'libreoffice',
+  ].filter(Boolean))];
+}
+
+async function probeConverterCommand(command) {
+  try {
+    const { stdout, stderr } = await execFileAsync(command, ['--version'], { timeout: 10000 });
+    return {
+      command,
+      available: true,
+      version: String(stdout || stderr || '').trim(),
+    };
+  } catch (error) {
+    return {
+      command,
+      available: false,
+      error: error.code === 'ENOENT' ? 'Command not found' : error.message,
+    };
+  }
+}
+
+async function getPdfConverterStatus() {
+  const commands = converterCommands();
+  const probes = await Promise.all(commands.map((command) => probeConverterCommand(command)));
+
+  return {
+    available: probes.some((probe) => probe.available),
+    commands: probes,
+    configuredBinary: process.env.LIBREOFFICE_BIN || null,
+    runtime: {
+      platform: process.platform,
+      release: os.release(),
+      render: process.env.RENDER === 'true',
+      nodeEnv: process.env.NODE_ENV || null,
+    },
+  };
+}
+
 function buildWeightedCommentPicker(comments) {
   const pool = [];
 
@@ -96,11 +138,7 @@ function addSignature(workbook, sheet, userName) {
 }
 
 async function tryConvertWorkbookToPdf(workbookBuffer) {
-  const commands = [...new Set([
-    process.env.LIBREOFFICE_BIN,
-    'soffice',
-    'libreoffice',
-  ].filter(Boolean))];
+  const commands = converterCommands();
   const tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), 'eqp-report-'));
   const workbookPath = path.join(tempRoot, 'report.xlsx');
   const pdfPath = path.join(tempRoot, 'report.pdf');
@@ -258,4 +296,4 @@ async function generateReports(payload) {
   };
 }
 
-module.exports = { generateReports };
+module.exports = { generateReports, getPdfConverterStatus };

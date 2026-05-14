@@ -4,5 +4,6 @@ const healthController = require('../controllers/healthController');
 const router = Router();
 
 router.get('/', healthController.health);
+router.get('/health/pdf-converter', healthController.pdfConverter);
 
 module.exports = router;
