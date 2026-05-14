@@ -12,18 +12,24 @@ export default function UnifiedLogin({ preferredModule = 'auto' }) {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const isEmail = identifier.includes('@');
 
   async function handleSubmit(event) {
     event.preventDefault();
     setError('');
 
-    if (!identifier.trim()) {
-      setError('Enter your work email or technician code.');
+    const email = identifier.trim();
+
+    if (!email) {
+      setError('Enter your company email.');
       return;
     }
 
-    if (isEmail && !password) {
+    if (!email.includes('@')) {
+      setError('Use your company email to sign in.');
+      return;
+    }
+
+    if (!password) {
       setError('Enter your password.');
       return;
     }
@@ -31,7 +37,7 @@ export default function UnifiedLogin({ preferredModule = 'auto' }) {
     try {
       setLoading(true);
       const result = await unifiedLogin({
-        identifier: identifier.trim(),
+        identifier: email,
         password,
         preferredModule,
       });
@@ -61,33 +67,31 @@ export default function UnifiedLogin({ preferredModule = 'auto' }) {
               DH
             </div>
             <p className="mt-5 text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">Dar Al HAI</p>
-            <h1 className="mt-2 text-3xl font-black text-zinc-950">تسجيل الدخول</h1>
+            <h1 className="mt-2 text-3xl font-black text-zinc-950">Sign In</h1>
           </div>
 
           <div className="mt-7 grid gap-4">
             <label className="grid gap-2 text-sm font-semibold text-zinc-700">
-              الإيميل أو كود الفني
+              Company Email
               <input
                 value={identifier}
                 onChange={(event) => setIdentifier(event.target.value)}
-                placeholder="email@daralhai.com / 1001"
+                placeholder="name@daralhai.com"
                 className="h-12 rounded-md border border-zinc-300 bg-white px-4 text-zinc-950 outline-none transition focus:border-yellow-400 focus:ring-2 focus:ring-yellow-100"
                 autoComplete="username"
               />
             </label>
 
-            {isEmail && (
-              <label className="grid gap-2 text-sm font-semibold text-zinc-700">
-                كلمة المرور
-                <input
-                  type="password"
-                  value={password}
-                  onChange={(event) => setPassword(event.target.value)}
-                  className="h-12 rounded-md border border-zinc-300 bg-white px-4 text-zinc-950 outline-none transition focus:border-yellow-400 focus:ring-2 focus:ring-yellow-100"
-                  autoComplete="current-password"
-                />
-              </label>
-            )}
+            <label className="grid gap-2 text-sm font-semibold text-zinc-700">
+              Password
+              <input
+                type="password"
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+                className="h-12 rounded-md border border-zinc-300 bg-white px-4 text-zinc-950 outline-none transition focus:border-yellow-400 focus:ring-2 focus:ring-yellow-100"
+                autoComplete="current-password"
+              />
+            </label>
           </div>
 
           {error && (
@@ -97,7 +101,7 @@ export default function UnifiedLogin({ preferredModule = 'auto' }) {
           )}
 
           <Button type="submit" disabled={loading} className="mt-6 w-full py-4 text-base">
-            {loading ? 'جاري الدخول...' : 'دخول'}
+            {loading ? 'Signing in...' : 'Sign In'}
           </Button>
         </form>
       </section>

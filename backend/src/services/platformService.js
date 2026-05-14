@@ -54,10 +54,6 @@ async function login({ email, password }) {
 }
 
 function resolvePlatformRedirect(roles, permissions, preferredModule) {
-  if (preferredModule === 'technician' && roles.includes('FIELD_TECHNICIAN')) {
-    return '/technician/tasks';
-  }
-
   if (preferredModule === 'eqp' && permissions.includes('EQP_MANAGE')) {
     return '/eqp';
   }
@@ -78,7 +74,7 @@ function resolvePlatformRedirect(roles, permissions, preferredModule) {
   }
 
   if (roles.includes('FIELD_TECHNICIAN')) {
-    return '/technician/tasks';
+    return '/management';
   }
 
   return '/management';
@@ -141,7 +137,7 @@ async function unifiedLogin({ identifier, email, password, userNumber, preferred
       locale: user.locale,
       sessionToken,
     },
-    redirectTo: preferredModule === 'eqp' ? '/dashboard' : '/technician/tasks',
+    redirectTo: '/dashboard',
   };
 }
 

@@ -2,7 +2,7 @@ import "./globals.css";
 
 export const metadata = {
   title: "Dar Al HAI Maintenance Management",
-  description: "Unified maintenance, scheduling, technician, and EQP reporting platform",
+  description: "Unified maintenance, scheduling, operations, and EQP reporting platform",
 };
 
 export default function RootLayout({ children }) {

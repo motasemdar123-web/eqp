@@ -95,12 +95,12 @@ export default function ManagementDashboardPage() {
               <Badge tone="dark">Enterprise Pattern</Badge>
               <h2 className="mt-4 text-2xl font-black text-zinc-950">Unified login, role-based routing, and operational governance</h2>
               <p className="mt-3 max-w-3xl text-sm leading-6 text-zinc-600">
-                Users enter through one login screen. The platform routes managers to the command center, field technicians to Arabic task screens, and EQP users to reporting without exposing separate app silos.
+                Users enter through one login screen. The platform routes authorized users into the management workspace or EQP reporting module according to role and permissions.
               </p>
             </div>
             <div className="border-t border-zinc-100 bg-zinc-50 p-6 lg:border-l lg:border-t-0">
               <div className="grid gap-3 text-sm">
-                {['RBAC permissions', 'Audit-ready activities', 'SLA and escalation readiness', 'Arabic technician mapping'].map((item) => (
+                {['RBAC permissions', 'Audit-ready activities', 'SLA and escalation readiness', 'Centralized role routing'].map((item) => (
                   <div key={item} className="rounded-md bg-white px-4 py-3 font-semibold text-zinc-700 shadow-sm">
                     {item}
                   </div>
