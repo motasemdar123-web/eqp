@@ -147,9 +147,9 @@ EQP is now represented by first-class Prisma-managed tables:
 
 The backend EQP repositories include compatibility adapters that can read legacy table names if a deployment has not migrated yet.
 
-EQP report generation still populates the existing Excel templates first, then exports the exact workbook result as PDF before uploading to Supabase. Docker installs LibreOffice for workbook-to-PDF conversion. If `LIBREOFFICE_BIN` or a system `soffice` binary is unavailable, the backend can fall back to ConvertAPI when `CONVERTAPI_SECRET` is configured. Without either converter, generation fails with a clear configuration error instead of producing a different-looking PDF.
+EQP report generation still populates the existing Excel templates first, then exports the exact workbook result as PDF before uploading to Supabase. Docker installs LibreOffice for workbook-to-PDF conversion. If `LIBREOFFICE_BIN` or a system `soffice` binary is unavailable, the backend can fall back to ConvertAPI when `CONVERTAPI_TOKEN` is configured. Without either converter, generation fails with a clear configuration error instead of producing a different-looking PDF.
 
-On Render, the best self-contained setup is a Docker service. The repository includes `render.yaml` and Dockerfiles; the Docker image installs LibreOffice and exposes `soffice` for conversion. If Docker is not possible on the current service, set `CONVERTAPI_SECRET` on the backend service to use the hosted conversion fallback.
+On Render, the best self-contained setup is a Docker service. The repository includes `render.yaml` and Dockerfiles; the Docker image installs LibreOffice and exposes `soffice` for conversion. If Docker is not possible on the current service, set `CONVERTAPI_TOKEN` on the backend service to use the hosted conversion fallback.
 
 ## Language Rules
 

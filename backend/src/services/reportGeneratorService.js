@@ -24,6 +24,15 @@ function converterCommands() {
   ].filter(Boolean))];
 }
 
+function getConvertApiConfig() {
+  return {
+    token: process.env.CONVERTAPI_TOKEN || process.env.CONVERTAPI_API_TOKEN || null,
+    legacySecret: process.env.CONVERTAPI_SECRET || null,
+    endpoint: process.env.CONVERTAPI_ENDPOINT || 'https://v2.convertapi.com/convert/xlsx/to/pdf',
+    timeoutMs: Number(process.env.CONVERTAPI_TIMEOUT_MS) || 90000,
+  };
+}
+
 async function probeConverterCommand(command) {
   try {
     const { stdout, stderr } = await execFileAsync(command, ['--version'], { timeout: 10000 });
@@ -45,7 +54,8 @@ async function getPdfConverterStatus() {
   const commands = converterCommands();
   const probes = await Promise.all(commands.map((command) => probeConverterCommand(command)));
   const localAvailable = probes.some((probe) => probe.available);
-  const convertApiConfigured = Boolean(process.env.CONVERTAPI_SECRET);
+  const convertApiConfig = getConvertApiConfig();
+  const convertApiConfigured = Boolean(convertApiConfig.token || convertApiConfig.legacySecret);
 
   return {
     available: localAvailable || convertApiConfigured,
@@ -55,7 +65,8 @@ async function getPdfConverterStatus() {
     remoteProviders: {
       convertApi: {
         configured: convertApiConfigured,
-        endpoint: process.env.CONVERTAPI_ENDPOINT || 'https://v2.convertapi.com/convert/xlsx/to/pdf',
+        authMode: convertApiConfig.token ? 'bearer-token' : 'legacy-secret',
+        endpoint: convertApiConfig.endpoint,
       },
     },
     runtime: {
@@ -204,25 +215,30 @@ async function tryConvertWorkbookToPdf(workbookBuffer) {
 }
 
 async function tryConvertWorkbookWithConvertApi(workbookBuffer) {
-  const secret = process.env.CONVERTAPI_SECRET;
+  const convertApiConfig = getConvertApiConfig();
 
-  if (!secret) return null;
+  if (!convertApiConfig.token && !convertApiConfig.legacySecret) return null;
 
-  const endpoint = process.env.CONVERTAPI_ENDPOINT || 'https://v2.convertapi.com/convert/xlsx/to/pdf';
-  const timeoutMs = Number(process.env.CONVERTAPI_TIMEOUT_MS) || 90000;
-  const url = new URL(endpoint);
-  url.searchParams.set('Secret', secret);
+  const url = new URL(convertApiConfig.endpoint);
+  if (convertApiConfig.legacySecret && !convertApiConfig.token) {
+    url.searchParams.set('Secret', convertApiConfig.legacySecret);
+  }
 
   let response;
+  const headers = {
+    Accept: 'application/json, application/pdf, application/octet-stream',
+    'Content-Type': 'application/json',
+  };
+
+  if (convertApiConfig.token) {
+    headers.Authorization = `Bearer ${convertApiConfig.token}`;
+  }
 
   try {
     response = await fetch(url, {
       method: 'POST',
-      headers: {
-        Accept: 'application/json, application/pdf, application/octet-stream',
-        'Content-Type': 'application/json',
-      },
-      signal: AbortSignal.timeout(timeoutMs),
+      headers,
+      signal: AbortSignal.timeout(convertApiConfig.timeoutMs),
       body: JSON.stringify({
         Parameters: [
           {
@@ -266,7 +282,7 @@ async function tryConvertWorkbookWithConvertApi(workbookBuffer) {
 
     if (resultFile && resultFile.Url) {
       const fileResponse = await fetch(resultFile.Url, {
-        signal: AbortSignal.timeout(timeoutMs),
+        signal: AbortSignal.timeout(convertApiConfig.timeoutMs),
       });
       const pdfBuffer = Buffer.from(await fileResponse.arrayBuffer());
       if (fileResponse.ok && bufferLooksLikePdf(pdfBuffer)) return pdfBuffer;

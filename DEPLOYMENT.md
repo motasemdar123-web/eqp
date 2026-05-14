@@ -15,7 +15,7 @@ Do not use Render's native Node runtime for the backend. Native Node does not in
 
 If Render logs show paths like `/opt/render/project/src/backend`, the backend is still running with Render's native Node runtime. A Docker deploy from this repository runs the backend from `/app/backend`.
 
-Alternative when Docker cannot be used: set `CONVERTAPI_SECRET` on the backend Render service. The backend tries LibreOffice first, then falls back to ConvertAPI by sending the populated `.xlsx` workbook and storing the returned PDF in Supabase. Keep `CONVERTAPI_SECRET` only on the backend.
+Alternative when Docker cannot be used: set `CONVERTAPI_TOKEN` on the backend Render service. The backend tries LibreOffice first, then falls back to ConvertAPI by sending the populated `.xlsx` workbook and storing the returned PDF in Supabase. Keep `CONVERTAPI_TOKEN` only on the backend. `CONVERTAPI_SECRET` is also supported for older ConvertAPI accounts.
 
 The Docker image installs:
 
@@ -44,7 +44,7 @@ SUPABASE_URL=...
 SUPABASE_SERVICE_ROLE_KEY=...
 SUPABASE_REPORTS_BUCKET=reports
 LIBREOFFICE_BIN=soffice
-CONVERTAPI_SECRET=optional-render-native-fallback
+CONVERTAPI_TOKEN=optional-render-native-fallback
 APP_SECRET=replace-with-a-long-random-secret
 ALLOWED_ORIGINS=https://your-vercel-domain.vercel.app,https://*.vercel.app
 ```
