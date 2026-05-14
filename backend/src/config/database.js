@@ -1,8 +1,10 @@
 const { Client } = require('pg');
 const { env } = require('./env');
+const { getDatabaseUrl } = require('./prisma');
 
+const databaseUrl = getDatabaseUrl();
 const client = new Client({
-  ...env.db,
+  ...(databaseUrl ? { connectionString: databaseUrl } : env.db),
   ssl: {
     rejectUnauthorized: false,
   },

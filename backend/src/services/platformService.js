@@ -9,7 +9,7 @@ function requirePrisma() {
   const prisma = getPrisma();
 
   if (!prisma) {
-    throw new ApiError(503, 'Prisma is not configured. Set DATABASE_URL and run migrations.');
+    throw new ApiError(503, 'Database is not configured for Prisma. Set DATABASE_URL or DB_HOST, DB_PORT, DB_NAME, DB_USER, and DB_PASSWORD on the backend environment.');
   }
 
   return prisma;

@@ -1,16 +1,54 @@
 let prisma = null;
 
+function buildDatabaseUrlFromLegacyEnv() {
+  const {
+    DB_HOST,
+    DB_PORT = '5432',
+    DB_NAME,
+    DB_USER,
+    DB_PASSWORD,
+    DB_SSLMODE = 'require',
+  } = process.env;
+
+  if (!DB_HOST || !DB_NAME || !DB_USER || !DB_PASSWORD) {
+    return null;
+  }
+
+  const databaseUrl = new URL(
+    `postgresql://${encodeURIComponent(DB_USER)}:${encodeURIComponent(DB_PASSWORD)}@${DB_HOST}:${DB_PORT}/${DB_NAME}`,
+  );
+
+  if (DB_SSLMODE) {
+    databaseUrl.searchParams.set('sslmode', DB_SSLMODE);
+  }
+
+  return databaseUrl.toString();
+}
+
+function getDatabaseUrl() {
+  return process.env.DATABASE_URL || buildDatabaseUrlFromLegacyEnv();
+}
+
 function getPrisma() {
   if (prisma) return prisma;
 
-  if (!process.env.DATABASE_URL) {
+  const databaseUrl = getDatabaseUrl();
+
+  if (!databaseUrl) {
     return null;
   }
 
   const { PrismaClient } = require('@prisma/client');
 
-  prisma = new PrismaClient();
+  prisma = new PrismaClient({
+    datasources: {
+      db: {
+        url: databaseUrl,
+      },
+    },
+  });
+
   return prisma;
 }
 
-module.exports = { getPrisma };
+module.exports = { getPrisma, getDatabaseUrl };

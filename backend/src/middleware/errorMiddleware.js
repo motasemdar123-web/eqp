@@ -8,12 +8,13 @@ function errorHandler(error, req, res, next) {
   const statusCode = error.statusCode || 500;
   const isServerError = statusCode >= 500;
   const isProduction = process.env.NODE_ENV === 'production';
+  const isApiError = error instanceof ApiError || Boolean(error.statusCode);
 
   console.error(error);
 
   res.status(statusCode).json({
     success: false,
-    error: isServerError && isProduction
+    error: isServerError && isProduction && !isApiError
       ? 'Internal server error'
       : error.message || 'Internal server error',
   });
