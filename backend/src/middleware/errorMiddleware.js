@@ -6,12 +6,16 @@ function notFoundHandler(req, res, next) {
 
 function errorHandler(error, req, res, next) {
   const statusCode = error.statusCode || 500;
+  const isServerError = statusCode >= 500;
+  const isProduction = process.env.NODE_ENV === 'production';
 
   console.error(error);
 
   res.status(statusCode).json({
     success: false,
-    error: error.message || 'Internal server error',
+    error: isServerError && isProduction
+      ? 'Internal server error'
+      : error.message || 'Internal server error',
   });
 }
 

@@ -8,8 +8,17 @@ const DEFAULT_TTL_SECONDS = 60 * 60 * 12;
 function getSigningSecret() {
   if (env.security.appSecret) return env.security.appSecret;
 
+  const fallbackSecret =
+    env.supabase.serviceRoleKey ||
+    env.db.password;
+
+  if (fallbackSecret) {
+    console.warn('APP_SECRET is not set. Falling back to an existing server-side secret for session signing.');
+    return fallbackSecret;
+  }
+
   if (process.env.NODE_ENV === 'production') {
-    throw new ApiError(500, 'APP_SECRET is required in production.');
+    throw new ApiError(500, 'Server session configuration is missing.');
   }
 
   console.warn('APP_SECRET is not set. Using development-only session signing secret.');
