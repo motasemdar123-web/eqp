@@ -23,6 +23,8 @@ The existing EQP functionality is preserved as a dedicated module:
 Frontend:
 
 - `/` platform entry
+- `/engineer` engineer approval workspace
+- `/technician` Arabic technician schedule and completion evidence page
 - `/management` admin/operations dashboard
 - `/auth/microsoft/callback` Microsoft sign-in callback
 - `/eqp` EQP module landing
@@ -40,6 +42,10 @@ Backend:
 - `/api/dashboard`
 - `/api/maintenance-requests`
 - `/api/work-orders`
+- `/api/technician/schedule`
+- `/api/technician/work-orders/:id/finish`
+- `/api/engineer/completion-requests`
+- `/api/engineer/completion-requests/:id/review`
 - `/api/scheduling/board`
 - `/api/scheduling/technician-schedules`
 - `/api/scheduling/job-cards`
@@ -132,5 +138,7 @@ The backend EQP repositories include compatibility adapters that can read legacy
 ## Language Rules
 
 - Management dashboards are English-first.
+- Engineer approval pages are English-first.
+- Technician pages are Arabic-first with RTL layout.
 - Internal enums and API values use English canonical values.
 - Arabic notes can be stored as free text where operationally needed.

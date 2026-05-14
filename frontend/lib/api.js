@@ -42,9 +42,12 @@ async function request(path, options = {}) {
   return data;
 }
 
-export function getMicrosoftLoginUrl(returnTo = '/management') {
+export function getMicrosoftLoginUrl(returnTo) {
   const loginUrl = new URL(`${API_BASE_URL}/api/auth/microsoft/start`);
-  loginUrl.searchParams.set('returnTo', returnTo);
+
+  if (returnTo) {
+    loginUrl.searchParams.set('returnTo', returnTo);
+  }
 
   if (typeof window !== 'undefined') {
     loginUrl.searchParams.set('frontendCallbackUrl', `${window.location.origin}/auth/microsoft/callback`);
@@ -93,5 +96,28 @@ export function renameReport(id, fileName) {
 export function deleteReport(id) {
   return request(`/reports/${id}`, {
     method: 'DELETE',
+  });
+}
+
+export function getTechnicianSchedule(date) {
+  const query = date ? `?date=${encodeURIComponent(date)}` : '';
+  return request(`/api/technician/schedule${query}`);
+}
+
+export function submitTechnicianCompletion(id, payload) {
+  return request(`/api/technician/work-orders/${id}/finish`, {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+}
+
+export function getEngineerCompletionRequests() {
+  return request('/api/engineer/completion-requests');
+}
+
+export function reviewCompletionRequest(id, payload) {
+  return request(`/api/engineer/completion-requests/${id}/review`, {
+    method: 'POST',
+    body: JSON.stringify(payload),
   });
 }

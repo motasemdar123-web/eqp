@@ -59,12 +59,33 @@ async function listWorkOrders(req, res) {
 
 async function createWorkOrder(req, res) {
   requireFields(req.body, ['title']);
-  const workOrder = await platformService.createWorkOrder(req.body);
+  const workOrder = await platformService.createWorkOrder(req.body, req.platformUser?.sub);
   res.status(201).json({ success: true, workOrder });
 }
 
 async function closeWorkOrder(req, res) {
   const workOrder = await platformService.closeWorkOrder(req.params.id, req.body);
+  res.json({ success: true, workOrder });
+}
+
+async function technicianSchedule(req, res) {
+  const data = await platformService.listTechnicianSchedule(req.platformUser, req.query.date);
+  res.json({ success: true, ...data });
+}
+
+async function submitTechnicianCompletion(req, res) {
+  const workOrder = await platformService.submitTechnicianCompletion(req.params.id, req.body, req.platformUser);
+  res.json({ success: true, workOrder });
+}
+
+async function engineerCompletionRequests(req, res) {
+  const workOrders = await platformService.listEngineerCompletionRequests(req.platformUser);
+  res.json({ success: true, workOrders });
+}
+
+async function reviewCompletionRequest(req, res) {
+  requireFields(req.body, ['decision']);
+  const workOrder = await platformService.reviewCompletionRequest(req.params.id, req.body, req.platformUser);
   res.json({ success: true, workOrder });
 }
 
@@ -128,6 +149,10 @@ module.exports = {
   listWorkOrders,
   createWorkOrder,
   closeWorkOrder,
+  technicianSchedule,
+  submitTechnicianCompletion,
+  engineerCompletionRequests,
+  reviewCompletionRequest,
   listTechnicians,
   listShifts,
   createShift,

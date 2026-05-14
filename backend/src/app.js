@@ -17,7 +17,7 @@ function createApp() {
   app.use(helmet());
   app.use(buildCorsMiddleware());
   app.use(generalRateLimit);
-  app.use(express.json({ limit: '2mb' }));
+  app.use(express.json({ limit: '25mb' }));
 
   app.use(routes);
   app.use(notFoundHandler);

@@ -15,6 +15,8 @@ The frontend uses Next.js App Router and separates:
 
 - reusable components in `frontend/components`
 - API helpers in `frontend/lib`
+- engineer approval page in `frontend/app/engineer`
+- Arabic technician execution page in `frontend/app/technician`
 - management pages in `frontend/app/management`
 - EQP module pages in `frontend/app/eqp`
 - Microsoft callback page in `frontend/app/auth/microsoft/callback`
@@ -54,6 +56,28 @@ Scheduling uses:
 - `activity_timelines` for dispatch and operational audit events
 
 Job card fields on `work_orders` include `job_type`, `work_scope`, `safety_notes`, `required_tools`, `required_parts`, `permit_required`, `customer_contact`, `estimated_duration_minutes`, and `team_lead_technician_id`.
+
+## Technician Completion Approval
+
+Technicians submit completion evidence through:
+
+- `GET /api/technician/schedule`
+- `POST /api/technician/work-orders/:id/finish`
+
+Completion submission stores:
+
+- `work_orders.status = PENDING_APPROVAL`
+- technician notes in `comments` with `visibility = TECHNICIAN`
+- uploaded photos in `attachments` with `owner_type = WORK_ORDER`
+- timeline event `TECHNICIAN_COMPLETION_SUBMITTED`
+- engineer notifications
+
+Engineers review through:
+
+- `GET /api/engineer/completion-requests`
+- `POST /api/engineer/completion-requests/:id/review`
+
+Approval moves the work order to `COMPLETED`. Rejection returns it to `IN_PROGRESS` and notifies assigned technicians.
 
 ## Fresh Database Bootstrap
 

@@ -67,6 +67,14 @@ function resolvePlatformRedirect(roles, permissions, preferredModule) {
     return '/eqp';
   }
 
+  if (roles.includes('FIELD_TECHNICIAN') && roles.length === 1) {
+    return '/technician';
+  }
+
+  if (permissions.includes('WORK_ORDERS_MANAGE') || permissions.includes('REQUESTS_ASSIGN')) {
+    return '/engineer';
+  }
+
   const managementRoles = [
     'SUPER_ADMIN',
     'GENERAL_MANAGER',
@@ -79,10 +87,6 @@ function resolvePlatformRedirect(roles, permissions, preferredModule) {
   ];
 
   if (roles.some((role) => managementRoles.includes(role))) {
-    return '/management';
-  }
-
-  if (roles.includes('FIELD_TECHNICIAN')) {
     return '/management';
   }
 
@@ -181,9 +185,9 @@ function frontendCallbackUrl(req, preferredCallbackUrl) {
 }
 
 function safeReturnTo(returnTo) {
-  if (!returnTo || typeof returnTo !== 'string') return '/management';
-  if (!returnTo.startsWith('/') || returnTo.startsWith('//')) return '/management';
-  if (returnTo.startsWith('/auth/')) return '/management';
+  if (!returnTo || typeof returnTo !== 'string') return null;
+  if (!returnTo.startsWith('/') || returnTo.startsWith('//')) return null;
+  if (returnTo.startsWith('/auth/')) return null;
   return returnTo;
 }
 
@@ -568,7 +572,7 @@ async function updateMaintenanceRequestStatus(id, status, notes) {
   });
 }
 
-async function createWorkOrder(payload) {
+async function createWorkOrder(payload, actorId) {
   const prisma = requirePrisma();
   const { scheduledStartAt, scheduledEndAt } = buildScheduledWindow(payload);
 
@@ -593,6 +597,7 @@ async function createWorkOrder(payload) {
         teamLeadTechnicianId: payload.teamLeadTechnicianId || null,
         scheduledStartAt,
         scheduledEndAt,
+        createdById: actorId,
       },
     });
 
@@ -606,6 +611,7 @@ async function createWorkOrder(payload) {
         data: technicianIds.map((technicianId) => ({
           workOrderId: workOrder.id,
           technicianId,
+          createdById: actorId,
         })),
         skipDuplicates: true,
       });
@@ -621,6 +627,400 @@ async function createWorkOrder(payload) {
 async function listWorkOrders() {
   const prisma = requirePrisma();
   return prisma.workOrder.findMany({ include: workOrderInclude, orderBy: { createdAt: 'desc' }, take: 100 });
+}
+
+function assertEngineerAccess(actor) {
+  const permissions = actor?.permissions || [];
+
+  if (
+    !permissions.includes('WORK_ORDERS_MANAGE') &&
+    !permissions.includes('REQUESTS_ASSIGN') &&
+    !permissions.includes('SYSTEM_CONFIGURE')
+  ) {
+    throw new ApiError(403, 'Engineer approval access is required.');
+  }
+}
+
+async function findTechnicianForActor(prisma, actor) {
+  if (!actor?.sub) {
+    throw new ApiError(401, 'Authentication required');
+  }
+
+  const technician = await prisma.technicianProfile.findFirst({
+    where: {
+      userId: actor.sub,
+      deletedAt: null,
+    },
+    include: {
+      user: { select: publicUserSelect },
+      shift: true,
+      skills: true,
+    },
+  });
+
+  if (!technician) {
+    throw new ApiError(403, 'Technician profile is required for this page.');
+  }
+
+  return technician;
+}
+
+async function attachWorkOrderEvidence(prisma, workOrders) {
+  const ids = workOrders.map((workOrder) => workOrder.id);
+
+  if (ids.length === 0) return workOrders;
+
+  const [attachments, comments, timeline] = await Promise.all([
+    prisma.attachment.findMany({
+      where: {
+        ownerType: 'WORK_ORDER',
+        ownerId: { in: ids },
+      },
+      orderBy: { createdAt: 'desc' },
+    }),
+    prisma.comment.findMany({
+      where: {
+        workOrderId: { in: ids },
+        deletedAt: null,
+      },
+      orderBy: { createdAt: 'desc' },
+      take: ids.length * 8,
+    }),
+    prisma.activityTimeline.findMany({
+      where: {
+        workOrderId: { in: ids },
+      },
+      orderBy: { createdAt: 'desc' },
+      take: ids.length * 8,
+    }),
+  ]);
+
+  return workOrders.map((workOrder) => ({
+    ...workOrder,
+    attachments: attachments.filter((attachment) => attachment.ownerId === workOrder.id),
+    comments: comments.filter((comment) => comment.workOrderId === workOrder.id),
+    timeline: timeline.filter((event) => event.workOrderId === workOrder.id),
+  }));
+}
+
+async function listTechnicianSchedule(actor, dateText) {
+  const prisma = requirePrisma();
+  const technician = await findTechnicianForActor(prisma, actor);
+  const { date, start, end, workDate } = schedulingRange(dateText);
+
+  const [schedule, workOrders] = await Promise.all([
+    prisma.technicianSchedule.findUnique({
+      where: {
+        technicianId_workDate: {
+          technicianId: technician.id,
+          workDate,
+        },
+      },
+      include: {
+        shift: true,
+        branch: true,
+      },
+    }),
+    prisma.workOrder.findMany({
+      where: {
+        deletedAt: null,
+        assignments: {
+          some: {
+            technicianId: technician.id,
+          },
+        },
+        status: { notIn: ['CANCELLED', 'CLOSED'] },
+        OR: [
+          { scheduledStartAt: { gte: start, lt: end } },
+          { scheduledStartAt: null, status: { in: ['OPEN', 'ASSIGNED', 'IN_PROGRESS', 'WAITING_PARTS', 'PENDING_APPROVAL'] } },
+          { status: 'PENDING_APPROVAL' },
+        ],
+      },
+      include: workOrderInclude,
+      orderBy: [
+        { scheduledStartAt: 'asc' },
+        { createdAt: 'desc' },
+      ],
+      take: 50,
+    }),
+  ]);
+
+  return {
+    date,
+    technician,
+    schedule,
+    workOrders: await attachWorkOrderEvidence(prisma, workOrders),
+  };
+}
+
+function normalizeCompletionPhotos(photos = []) {
+  if (!Array.isArray(photos)) {
+    throw new ApiError(400, 'photos must be an array.');
+  }
+
+  if (photos.length > 6) {
+    throw new ApiError(400, 'Upload up to 6 photos per completion request.');
+  }
+
+  const totalSize = photos.reduce((size, photo) => size + String(photo.dataUrl || '').length, 0);
+  if (totalSize > 18 * 1024 * 1024) {
+    throw new ApiError(400, 'Photo upload is too large. Compress the images and try again.');
+  }
+
+  return photos.map((photo, index) => {
+    const fileName = String(photo.fileName || `completion-photo-${index + 1}.jpg`).slice(0, 160);
+    const mimeType = String(photo.mimeType || 'image/jpeg').slice(0, 80);
+    const dataUrl = String(photo.dataUrl || '');
+
+    if (!dataUrl.startsWith('data:image/')) {
+      throw new ApiError(400, 'Only image uploads are allowed.');
+    }
+
+    return { fileName, mimeType, dataUrl };
+  });
+}
+
+async function notifyEngineers(tx, workOrder, actorId) {
+  const recipientFilters = [
+    {
+      roles: {
+        some: {
+          role: {
+            code: { in: ['MAINTENANCE_SUPERVISOR', 'OPERATIONS_MANAGER', 'SYSTEM_ADMIN', 'SUPER_ADMIN'] },
+          },
+        },
+      },
+    },
+  ];
+
+  if (workOrder.createdById) {
+    recipientFilters.unshift({ id: workOrder.createdById });
+  }
+
+  const engineerUsers = await tx.user.findMany({
+    where: {
+      OR: recipientFilters,
+    },
+    select: { id: true },
+  });
+  const userIds = uniqueIds(engineerUsers.map((user) => user.id));
+
+  if (userIds.length === 0) return;
+
+  await tx.notification.createMany({
+    data: userIds.map((userId) => ({
+      userId,
+      title: 'Work order completion pending approval',
+      message: `${workOrder.workOrderNumber} is waiting for engineer approval.`,
+      metadata: {
+        workOrderId: workOrder.id,
+        workOrderNumber: workOrder.workOrderNumber,
+      },
+      createdById: actorId,
+    })),
+  });
+}
+
+async function notifyTechnicians(tx, workOrder, actorId, title, message) {
+  const assignments = await tx.workOrderAssignment.findMany({
+    where: { workOrderId: workOrder.id },
+    include: { technician: true },
+  });
+  const userIds = uniqueIds(assignments.map((assignment) => assignment.technician.userId));
+
+  if (userIds.length === 0) return;
+
+  await tx.notification.createMany({
+    data: userIds.map((userId) => ({
+      userId,
+      title,
+      message,
+      metadata: {
+        workOrderId: workOrder.id,
+        workOrderNumber: workOrder.workOrderNumber,
+      },
+      createdById: actorId,
+    })),
+  });
+}
+
+async function submitTechnicianCompletion(workOrderId, payload, actor) {
+  const prisma = requirePrisma();
+  const technician = await findTechnicianForActor(prisma, actor);
+  const notes = String(payload.completionNotes || payload.notes || '').trim();
+  const photos = normalizeCompletionPhotos(payload.photos || []);
+
+  if (!notes && photos.length === 0) {
+    throw new ApiError(400, 'Completion notes or photos are required.');
+  }
+
+  const workOrder = await prisma.workOrder.findUnique({
+    where: { id: workOrderId },
+    include: {
+      ...workOrderInclude,
+      assignments: true,
+    },
+  });
+
+  if (!workOrder || workOrder.deletedAt) {
+    throw new ApiError(404, 'Work order not found.');
+  }
+
+  if (!workOrder.assignments.some((assignment) => assignment.technicianId === technician.id)) {
+    throw new ApiError(403, 'This work order is not assigned to you.');
+  }
+
+  if (['COMPLETED', 'CLOSED', 'CANCELLED'].includes(workOrder.status)) {
+    throw new ApiError(400, 'This work order is already closed.');
+  }
+
+  return prisma.$transaction(async (tx) => {
+    const updatedWorkOrder = await tx.workOrder.update({
+      where: { id: workOrder.id },
+      data: {
+        status: 'PENDING_APPROVAL',
+        completedAt: new Date(),
+        closureNotes: notes || workOrder.closureNotes,
+        updatedById: actor.sub,
+      },
+      include: workOrderInclude,
+    });
+
+    if (notes) {
+      await tx.comment.create({
+        data: {
+          workOrderId: workOrder.id,
+          visibility: 'TECHNICIAN',
+          body: notes,
+          createdById: actor.sub,
+        },
+      });
+    }
+
+    if (photos.length > 0) {
+      await tx.attachment.createMany({
+        data: photos.map((photo) => ({
+          ownerType: 'WORK_ORDER',
+          ownerId: workOrder.id,
+          fileName: photo.fileName,
+          fileUrl: photo.dataUrl,
+          mimeType: photo.mimeType,
+          category: 'TECHNICIAN_COMPLETION_PHOTO',
+          createdById: actor.sub,
+        })),
+      });
+    }
+
+    await tx.activityTimeline.create({
+      data: {
+        requestId: workOrder.requestId || null,
+        workOrderId: workOrder.id,
+        eventType: 'TECHNICIAN_COMPLETION_SUBMITTED',
+        message: 'Technician submitted completion evidence for engineer approval.',
+        metadata: {
+          technicianId: technician.id,
+          photoCount: photos.length,
+        },
+        createdById: actor.sub,
+      },
+    });
+
+    await notifyEngineers(tx, workOrder, actor.sub);
+
+    return updatedWorkOrder;
+  });
+}
+
+async function listEngineerCompletionRequests(actor) {
+  assertEngineerAccess(actor);
+  const prisma = requirePrisma();
+  const workOrders = await prisma.workOrder.findMany({
+    where: {
+      status: 'PENDING_APPROVAL',
+      deletedAt: null,
+    },
+    include: workOrderInclude,
+    orderBy: { updatedAt: 'desc' },
+    take: 100,
+  });
+
+  return attachWorkOrderEvidence(prisma, workOrders);
+}
+
+async function reviewCompletionRequest(workOrderId, payload, actor) {
+  assertEngineerAccess(actor);
+  const prisma = requirePrisma();
+  const decision = String(payload.decision || '').toUpperCase();
+  const reviewNotes = String(payload.reviewNotes || payload.notes || '').trim();
+
+  if (!['APPROVED', 'REJECTED'].includes(decision)) {
+    throw new ApiError(400, 'decision must be APPROVED or REJECTED.');
+  }
+
+  const workOrder = await prisma.workOrder.findUnique({
+    where: { id: workOrderId },
+    include: workOrderInclude,
+  });
+
+  if (!workOrder || workOrder.deletedAt) {
+    throw new ApiError(404, 'Work order not found.');
+  }
+
+  if (workOrder.status !== 'PENDING_APPROVAL') {
+    throw new ApiError(400, 'This work order is not pending approval.');
+  }
+
+  return prisma.$transaction(async (tx) => {
+    const approved = decision === 'APPROVED';
+    const updatedWorkOrder = await tx.workOrder.update({
+      where: { id: workOrder.id },
+      data: {
+        status: approved ? 'COMPLETED' : 'IN_PROGRESS',
+        completedAt: approved ? (workOrder.completedAt || new Date()) : null,
+        updatedById: actor.sub,
+      },
+      include: workOrderInclude,
+    });
+
+    if (reviewNotes) {
+      await tx.comment.create({
+        data: {
+          workOrderId: workOrder.id,
+          visibility: 'INTERNAL',
+          body: reviewNotes,
+          createdById: actor.sub,
+        },
+      });
+    }
+
+    await tx.activityTimeline.create({
+      data: {
+        requestId: workOrder.requestId || null,
+        workOrderId: workOrder.id,
+        eventType: approved ? 'COMPLETION_APPROVED' : 'COMPLETION_REJECTED',
+        message: approved
+          ? 'Engineer approved technician completion.'
+          : 'Engineer rejected completion and returned the work order to the technician.',
+        metadata: {
+          decision,
+          reviewNotes,
+        },
+        createdById: actor.sub,
+      },
+    });
+
+    await notifyTechnicians(
+      tx,
+      workOrder,
+      actor.sub,
+      approved ? 'Work order approved' : 'Work order needs correction',
+      approved
+        ? `${workOrder.workOrderNumber} has been approved by the engineer.`
+        : `${workOrder.workOrderNumber} was returned by the engineer. Review the notes and resubmit.`,
+    );
+
+    return updatedWorkOrder;
+  });
 }
 
 async function closeWorkOrder(id, payload) {
@@ -926,6 +1326,10 @@ module.exports = {
   createWorkOrder,
   listWorkOrders,
   closeWorkOrder,
+  listTechnicianSchedule,
+  submitTechnicianCompletion,
+  listEngineerCompletionRequests,
+  reviewCompletionRequest,
   listTechnicians,
   listShifts,
   createShift,

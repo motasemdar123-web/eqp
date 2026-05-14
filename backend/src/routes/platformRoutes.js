@@ -23,6 +23,10 @@ router.patch('/api/maintenance-requests/:id/status', requirePlatformAuth, requir
 router.get('/api/work-orders', requirePlatformAuth, requirePermission('WORK_ORDERS_MANAGE'), asyncHandler(platformController.listWorkOrders));
 router.post('/api/work-orders', requirePlatformAuth, requirePermission('WORK_ORDERS_MANAGE'), asyncHandler(platformController.createWorkOrder));
 router.post('/api/work-orders/:id/close', requirePlatformAuth, requirePermission('WORK_ORDERS_CLOSE'), asyncHandler(platformController.closeWorkOrder));
+router.get('/api/technician/schedule', requirePlatformAuth, asyncHandler(platformController.technicianSchedule));
+router.post('/api/technician/work-orders/:id/finish', requirePlatformAuth, asyncHandler(platformController.submitTechnicianCompletion));
+router.get('/api/engineer/completion-requests', requirePlatformAuth, requirePermission('WORK_ORDERS_MANAGE'), asyncHandler(platformController.engineerCompletionRequests));
+router.post('/api/engineer/completion-requests/:id/review', requirePlatformAuth, requirePermission('WORK_ORDERS_MANAGE'), asyncHandler(platformController.reviewCompletionRequest));
 
 router.get('/api/technicians', requirePlatformAuth, requirePermission('SCHEDULE_MANAGE'), asyncHandler(platformController.listTechnicians));
 router.get('/api/shifts', requirePlatformAuth, requirePermission('SCHEDULE_MANAGE'), asyncHandler(platformController.listShifts));

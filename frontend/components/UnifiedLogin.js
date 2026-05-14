@@ -9,8 +9,7 @@ export default function UnifiedLogin({ preferredModule = 'auto' }) {
 
   function startMicrosoftLogin() {
     setLoading(true);
-    const returnTo = preferredModule === 'eqp' ? '/eqp' : '/management';
-    window.location.href = getMicrosoftLoginUrl(returnTo);
+    window.location.href = getMicrosoftLoginUrl(preferredModule === 'eqp' ? '/eqp' : undefined);
   }
 
   return (

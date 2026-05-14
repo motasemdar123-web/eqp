@@ -84,6 +84,66 @@ Creates manual or request-linked work orders.
 
 Stores closure notes, root cause, corrective action, and preventive action.
 
+## Technician Execution
+
+### GET `/api/technician/schedule?date=YYYY-MM-DD`
+
+Requires Microsoft platform authentication and a linked technician profile.
+
+Returns:
+
+- technician profile
+- daily schedule
+- assigned work orders
+- technician comments, photos, and activity timeline for those work orders
+
+### POST `/api/technician/work-orders/:id/finish`
+
+Requires Microsoft platform authentication and an assignment to the work order.
+
+Submits completion evidence and moves the work order to `PENDING_APPROVAL`.
+
+```json
+{
+  "completionNotes": "Completed the repair and tested the unit.",
+  "photos": [
+    {
+      "fileName": "after.jpg",
+      "mimeType": "image/jpeg",
+      "dataUrl": "data:image/jpeg;base64,..."
+    }
+  ]
+}
+```
+
+The backend stores Arabic notes as raw text, stores completion photos as work-order attachments, adds an activity timeline event, and notifies engineers.
+
+## Engineer Approvals
+
+### GET `/api/engineer/completion-requests`
+
+Requires `WORK_ORDERS_MANAGE`.
+
+Returns work orders in `PENDING_APPROVAL` with technician evidence.
+
+### POST `/api/engineer/completion-requests/:id/review`
+
+Requires `WORK_ORDERS_MANAGE`.
+
+Approves or rejects technician completion.
+
+```json
+{
+  "decision": "APPROVED",
+  "reviewNotes": "Approved after photo review."
+}
+```
+
+Decisions:
+
+- `APPROVED`: moves the work order to `COMPLETED`
+- `REJECTED`: returns the work order to `IN_PROGRESS` and notifies the technician
+
 ## Scheduling and Job Cards
 
 ### GET `/api/scheduling/board?date=YYYY-MM-DD`
