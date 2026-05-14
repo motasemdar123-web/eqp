@@ -2,19 +2,30 @@
 
 ## Backend on Render
 
-Use `backend` as the service root.
+The backend must run as a Docker service because EQP report generation exports populated Excel workbooks with LibreOffice/`soffice`.
 
-Build command:
+Use the repository `render.yaml` blueprint, or configure the existing Render web service manually:
+
+- Runtime / Language: `Docker`
+- Dockerfile path: `./backend/Dockerfile`
+- Docker context: `./backend`
+- Start command: leave empty so Render uses the Dockerfile `CMD`
+
+Do not use Render's native Node runtime for the backend. Native Node does not include LibreOffice, so Excel-to-PDF conversion will fail.
+
+The Docker image installs:
+
+- `libreoffice`
+- `fonts-dejavu`
+- `fontconfig`
+
+You can confirm the deployed backend has conversion support with:
 
 ```bash
-npm install
+curl https://your-render-backend.onrender.com/health/pdf-converter
 ```
 
-Start command:
-
-```bash
-npm start
-```
+The response must include `"available": true`.
 
 Required environment variables:
 
@@ -28,6 +39,7 @@ DB_PASSWORD=...
 SUPABASE_URL=...
 SUPABASE_SERVICE_ROLE_KEY=...
 SUPABASE_REPORTS_BUCKET=reports
+LIBREOFFICE_BIN=soffice
 APP_SECRET=replace-with-a-long-random-secret
 ALLOWED_ORIGINS=https://your-vercel-domain.vercel.app,https://*.vercel.app
 ```
