@@ -17,6 +17,13 @@ router.get('/api/work-orders', requirePlatformAuth, requirePermission('WORK_ORDE
 router.post('/api/work-orders', requirePlatformAuth, requirePermission('WORK_ORDERS_MANAGE'), asyncHandler(platformController.createWorkOrder));
 router.post('/api/work-orders/:id/close', requirePlatformAuth, requirePermission('WORK_ORDERS_CLOSE'), asyncHandler(platformController.closeWorkOrder));
 
+router.get('/api/technicians', requirePlatformAuth, requirePermission('SCHEDULE_MANAGE'), asyncHandler(platformController.listTechnicians));
+router.get('/api/shifts', requirePlatformAuth, requirePermission('SCHEDULE_MANAGE'), asyncHandler(platformController.listShifts));
+router.post('/api/shifts', requirePlatformAuth, requirePermission('SCHEDULE_MANAGE'), asyncHandler(platformController.createShift));
+router.get('/api/scheduling/board', requirePlatformAuth, requirePermission('SCHEDULE_MANAGE'), asyncHandler(platformController.schedulingBoard));
+router.post('/api/scheduling/technician-schedules', requirePlatformAuth, requirePermission('SCHEDULE_MANAGE'), asyncHandler(platformController.upsertTechnicianSchedule));
+router.post('/api/scheduling/job-cards', requirePlatformAuth, requirePermission('WORK_ORDERS_MANAGE'), asyncHandler(platformController.createJobCard));
+
 router.get('/api/assets', requirePlatformAuth, requirePermission('ASSETS_MANAGE'), asyncHandler(platformController.list('asset', 'assets')));
 router.post('/api/assets', requirePlatformAuth, requirePermission('ASSETS_MANAGE'), asyncHandler(platformController.create('asset', 'asset')));
 

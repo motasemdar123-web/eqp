@@ -45,6 +45,39 @@ async function closeWorkOrder(req, res) {
   res.json({ success: true, workOrder });
 }
 
+async function listTechnicians(req, res) {
+  const technicians = await platformService.listTechnicians();
+  res.json({ success: true, technicians });
+}
+
+async function listShifts(req, res) {
+  const shifts = await platformService.listShifts();
+  res.json({ success: true, shifts });
+}
+
+async function createShift(req, res) {
+  requireFields(req.body, ['name', 'startsAt', 'endsAt']);
+  const shift = await platformService.createShift(req.body, req.platformUser?.sub);
+  res.status(201).json({ success: true, shift });
+}
+
+async function schedulingBoard(req, res) {
+  const board = await platformService.getSchedulingBoard(req.query.date);
+  res.json({ success: true, board });
+}
+
+async function upsertTechnicianSchedule(req, res) {
+  requireFields(req.body, ['technicianId', 'workDate', 'startsAt', 'endsAt']);
+  const schedule = await platformService.upsertTechnicianSchedule(req.body, req.platformUser?.sub);
+  res.status(201).json({ success: true, schedule });
+}
+
+async function createJobCard(req, res) {
+  requireFields(req.body, ['title', 'workDate', 'startsAt', 'endsAt']);
+  const jobCard = await platformService.createJobCard(req.body, req.platformUser?.sub);
+  res.status(201).json({ success: true, jobCard });
+}
+
 function list(modelName, responseKey) {
   return async (req, res) => {
     const items = await platformService.listModel(modelName);
@@ -68,6 +101,12 @@ module.exports = {
   listWorkOrders,
   createWorkOrder,
   closeWorkOrder,
+  listTechnicians,
+  listShifts,
+  createShift,
+  schedulingBoard,
+  upsertTechnicianSchedule,
+  createJobCard,
   list,
   create,
 };

@@ -56,6 +56,109 @@ function nextNumber(prefix) {
   return `${prefix}-${stamp}-${random}`;
 }
 
+const BUSINESS_TIMEZONE_OFFSET = process.env.BUSINESS_TIMEZONE_OFFSET || '+03:00';
+
+function todayText() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+function normalizeDateText(dateText) {
+  const value = dateText || todayText();
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+    throw new ApiError(400, 'Date must use YYYY-MM-DD format');
+  }
+  return value;
+}
+
+function toWorkDate(dateText) {
+  return new Date(`${normalizeDateText(dateText)}T00:00:00.000Z`);
+}
+
+function addDays(dateText, days) {
+  const date = toWorkDate(dateText);
+  date.setUTCDate(date.getUTCDate() + days);
+  return date.toISOString().slice(0, 10);
+}
+
+function buildBusinessDateTime(dateText, timeText) {
+  if (!dateText || !timeText) return null;
+  const normalizedTime = timeText.length === 5 ? `${timeText}:00` : timeText;
+  return new Date(`${normalizeDateText(dateText)}T${normalizedTime}${BUSINESS_TIMEZONE_OFFSET}`);
+}
+
+function buildScheduledWindow(payload) {
+  const workDate = normalizeDateText(payload.workDate || payload.date || todayText());
+  const startsAt = payload.startsAt || payload.startTime;
+  const endsAt = payload.endsAt || payload.endTime;
+  const scheduledStartAt = payload.scheduledStartAt
+    ? new Date(payload.scheduledStartAt)
+    : buildBusinessDateTime(workDate, startsAt);
+  let scheduledEndAt = payload.scheduledEndAt
+    ? new Date(payload.scheduledEndAt)
+    : buildBusinessDateTime(workDate, endsAt);
+
+  if (scheduledStartAt && scheduledEndAt && scheduledEndAt <= scheduledStartAt) {
+    scheduledEndAt = buildBusinessDateTime(addDays(workDate, 1), endsAt);
+  }
+
+  return { workDate, scheduledStartAt, scheduledEndAt };
+}
+
+function schedulingRange(dateText) {
+  const day = normalizeDateText(dateText);
+  return {
+    date: day,
+    start: buildBusinessDateTime(day, '00:00'),
+    end: buildBusinessDateTime(addDays(day, 1), '00:00'),
+    workDate: toWorkDate(day),
+  };
+}
+
+function uniqueIds(values = []) {
+  return [...new Set(values.filter(Boolean))];
+}
+
+function toIdArray(value) {
+  if (!value) return [];
+  if (Array.isArray(value)) return value;
+  if (typeof value === 'string') {
+    return value.split(',').map((item) => item.trim()).filter(Boolean);
+  }
+  return [];
+}
+
+const publicUserSelect = {
+  id: true,
+  email: true,
+  userNumber: true,
+  fullName: true,
+  phone: true,
+  locale: true,
+  status: true,
+};
+
+const workOrderInclude = {
+  request: true,
+  asset: true,
+  teamLead: {
+    include: {
+      user: { select: publicUserSelect },
+      shift: true,
+    },
+  },
+  assignments: {
+    include: {
+      technician: {
+        include: {
+          user: { select: publicUserSelect },
+          shift: true,
+          skills: true,
+        },
+      },
+    },
+  },
+};
+
 async function listDashboard() {
   const prisma = requirePrisma();
   const [
@@ -130,6 +233,7 @@ async function updateMaintenanceRequestStatus(id, status, notes) {
 
 async function createWorkOrder(payload) {
   const prisma = requirePrisma();
+  const { scheduledStartAt, scheduledEndAt } = buildScheduledWindow(payload);
 
   return prisma.$transaction(async (tx) => {
     const workOrder = await tx.workOrder.create({
@@ -141,30 +245,45 @@ async function createWorkOrder(payload) {
         description: payload.description,
         priority: payload.priority || 'MEDIUM',
         status: payload.status || 'OPEN',
-        scheduledStartAt: payload.scheduledStartAt ? new Date(payload.scheduledStartAt) : null,
-        scheduledEndAt: payload.scheduledEndAt ? new Date(payload.scheduledEndAt) : null,
+        jobType: payload.jobType,
+        workScope: payload.workScope,
+        safetyNotes: payload.safetyNotes,
+        requiredTools: payload.requiredTools,
+        requiredParts: payload.requiredParts,
+        permitRequired: Boolean(payload.permitRequired),
+        customerContact: payload.customerContact,
+        estimatedDurationMinutes: payload.estimatedDurationMinutes ? Number(payload.estimatedDurationMinutes) : null,
+        teamLeadTechnicianId: payload.teamLeadTechnicianId || null,
+        scheduledStartAt,
+        scheduledEndAt,
       },
     });
 
-    if (payload.assignedTechnicianId) {
-      await tx.workOrderAssignment.create({
-        data: {
+    const technicianIds = uniqueIds([
+      payload.assignedTechnicianId,
+      ...toIdArray(payload.technicianIds),
+    ]);
+
+    if (technicianIds.length > 0) {
+      await tx.workOrderAssignment.createMany({
+        data: technicianIds.map((technicianId) => ({
           workOrderId: workOrder.id,
-          technicianId: payload.assignedTechnicianId,
-        },
+          technicianId,
+        })),
+        skipDuplicates: true,
       });
     }
 
     return tx.workOrder.findUnique({
       where: { id: workOrder.id },
-      include: { assignments: true },
+      include: workOrderInclude,
     });
   });
 }
 
 async function listWorkOrders() {
   const prisma = requirePrisma();
-  return prisma.workOrder.findMany({ orderBy: { createdAt: 'desc' }, take: 100 });
+  return prisma.workOrder.findMany({ include: workOrderInclude, orderBy: { createdAt: 'desc' }, take: 100 });
 }
 
 async function closeWorkOrder(id, payload) {
@@ -181,6 +300,269 @@ async function closeWorkOrder(id, payload) {
       preventiveAction: payload.preventiveAction,
     },
   });
+}
+
+async function listTechnicians() {
+  const prisma = requirePrisma();
+
+  return prisma.technicianProfile.findMany({
+    where: { deletedAt: null },
+    include: {
+      user: { select: publicUserSelect },
+      shift: true,
+      skills: true,
+      assignments: {
+        where: { workOrder: { status: { in: ['OPEN', 'ASSIGNED', 'IN_PROGRESS', 'WAITING_PARTS'] } } },
+        include: { workOrder: true },
+      },
+    },
+    orderBy: { employeeCode: 'asc' },
+  });
+}
+
+async function listShifts() {
+  const prisma = requirePrisma();
+  return prisma.shift.findMany({ where: { deletedAt: null }, include: { branch: true }, orderBy: { startsAt: 'asc' } });
+}
+
+async function createShift(payload, actorId) {
+  const prisma = requirePrisma();
+  const name = payload.name?.trim();
+  if (!name || !payload.startsAt || !payload.endsAt) {
+    throw new ApiError(400, 'Shift name, startsAt, and endsAt are required');
+  }
+
+  const existingShift = await prisma.shift.findFirst({
+    where: { branchId: payload.branchId || null, name, deletedAt: null },
+  });
+
+  if (existingShift) {
+    return prisma.shift.update({
+      where: { id: existingShift.id },
+      data: {
+        startsAt: payload.startsAt,
+        endsAt: payload.endsAt,
+        updatedById: actorId,
+      },
+    });
+  }
+
+  return prisma.shift.create({
+    data: {
+      name,
+      startsAt: payload.startsAt,
+      endsAt: payload.endsAt,
+      branchId: payload.branchId || null,
+      createdById: actorId,
+    },
+  });
+}
+
+async function upsertTechnicianSchedule(payload, actorId) {
+  const prisma = requirePrisma();
+  const workDate = toWorkDate(payload.workDate || payload.date);
+
+  if (!payload.technicianId || !payload.startsAt || !payload.endsAt) {
+    throw new ApiError(400, 'technicianId, startsAt, and endsAt are required');
+  }
+
+  return prisma.technicianSchedule.upsert({
+    where: {
+      technicianId_workDate: {
+        technicianId: payload.technicianId,
+        workDate,
+      },
+    },
+    update: {
+      shiftId: payload.shiftId || null,
+      branchId: payload.branchId || null,
+      startsAt: payload.startsAt,
+      endsAt: payload.endsAt,
+      status: payload.status || 'PLANNED',
+      notes: payload.notes || null,
+      updatedById: actorId,
+    },
+    create: {
+      technicianId: payload.technicianId,
+      shiftId: payload.shiftId || null,
+      branchId: payload.branchId || null,
+      workDate,
+      startsAt: payload.startsAt,
+      endsAt: payload.endsAt,
+      status: payload.status || 'PLANNED',
+      notes: payload.notes || null,
+      createdById: actorId,
+    },
+    include: {
+      technician: { include: { user: { select: publicUserSelect } } },
+      shift: true,
+      branch: true,
+    },
+  });
+}
+
+async function createJobCard(payload, actorId) {
+  const prisma = requirePrisma();
+  const technicianIds = uniqueIds([payload.teamLeadTechnicianId, ...toIdArray(payload.technicianIds)]);
+  if (!payload.title || !payload.workDate || !payload.startsAt || !payload.endsAt) {
+    throw new ApiError(400, 'title, workDate, startsAt, and endsAt are required');
+  }
+  if (technicianIds.length === 0) {
+    throw new ApiError(400, 'At least one technician is required');
+  }
+
+  const { scheduledStartAt, scheduledEndAt } = buildScheduledWindow(payload);
+
+  return prisma.$transaction(async (tx) => {
+    const workOrder = await tx.workOrder.create({
+      data: {
+        workOrderNumber: nextNumber('JC'),
+        requestId: payload.requestId || null,
+        assetId: payload.assetId || null,
+        title: payload.title,
+        description: payload.description || payload.workScope || null,
+        priority: payload.priority || 'MEDIUM',
+        status: 'ASSIGNED',
+        jobType: payload.jobType || 'Corrective Maintenance',
+        workScope: payload.workScope || payload.description || null,
+        safetyNotes: payload.safetyNotes || null,
+        requiredTools: payload.requiredTools || null,
+        requiredParts: payload.requiredParts || null,
+        permitRequired: Boolean(payload.permitRequired),
+        customerContact: payload.customerContact || null,
+        estimatedDurationMinutes: payload.estimatedDurationMinutes ? Number(payload.estimatedDurationMinutes) : null,
+        teamLeadTechnicianId: payload.teamLeadTechnicianId || technicianIds[0],
+        scheduledStartAt,
+        scheduledEndAt,
+        createdById: actorId,
+      },
+    });
+
+    await tx.workOrderAssignment.createMany({
+      data: technicianIds.map((technicianId) => ({
+        workOrderId: workOrder.id,
+        technicianId,
+        createdById: actorId,
+      })),
+      skipDuplicates: true,
+    });
+
+    if (payload.requestId) {
+      await tx.maintenanceRequest.update({
+        where: { id: payload.requestId },
+        data: { status: 'ASSIGNED', updatedById: actorId },
+      });
+    }
+
+    await tx.activityTimeline.create({
+      data: {
+        requestId: payload.requestId || null,
+        workOrderId: workOrder.id,
+        eventType: 'JOB_CARD_CREATED',
+        message: 'Job card created and dispatched to technicians.',
+        metadata: {
+          technicianIds,
+          scheduledStartAt,
+          scheduledEndAt,
+          jobType: payload.jobType || 'Corrective Maintenance',
+        },
+        createdById: actorId,
+      },
+    });
+
+    return tx.workOrder.findUnique({
+      where: { id: workOrder.id },
+      include: workOrderInclude,
+    });
+  });
+}
+
+async function getSchedulingBoard(dateText) {
+  const prisma = requirePrisma();
+  const { date, start, end, workDate } = schedulingRange(dateText);
+
+  const [
+    technicians,
+    shifts,
+    branches,
+    assets,
+    openRequests,
+    jobCards,
+    unscheduledWorkOrders,
+  ] = await Promise.all([
+    prisma.technicianProfile.findMany({
+      where: { deletedAt: null },
+      include: {
+        user: { select: publicUserSelect },
+        shift: true,
+        skills: true,
+        schedules: {
+          where: { workDate, deletedAt: null },
+          include: { shift: true, branch: true },
+        },
+        assignments: {
+          where: {
+            workOrder: {
+              scheduledStartAt: { gte: start, lt: end },
+              deletedAt: null,
+            },
+          },
+          include: { workOrder: true },
+        },
+      },
+      orderBy: { employeeCode: 'asc' },
+    }),
+    prisma.shift.findMany({ where: { deletedAt: null }, include: { branch: true }, orderBy: { startsAt: 'asc' } }),
+    prisma.branch.findMany({ where: { deletedAt: null }, orderBy: { name: 'asc' } }),
+    prisma.asset.findMany({ where: { deletedAt: null }, orderBy: { name: 'asc' }, take: 100 }),
+    prisma.maintenanceRequest.findMany({
+      where: { status: { in: ['NEW', 'TRIAGED', 'ASSIGNED', 'IN_PROGRESS'] }, deletedAt: null },
+      orderBy: { createdAt: 'desc' },
+      take: 50,
+    }),
+    prisma.workOrder.findMany({
+      where: { scheduledStartAt: { gte: start, lt: end }, deletedAt: null },
+      include: workOrderInclude,
+      orderBy: { scheduledStartAt: 'asc' },
+      take: 100,
+    }),
+    prisma.workOrder.findMany({
+      where: {
+        scheduledStartAt: null,
+        status: { in: ['OPEN', 'ASSIGNED', 'IN_PROGRESS', 'WAITING_PARTS'] },
+        deletedAt: null,
+      },
+      include: workOrderInclude,
+      orderBy: { createdAt: 'desc' },
+      take: 25,
+    }),
+  ]);
+
+  const scheduledTechnicians = technicians.filter((technician) => technician.schedules.length > 0).length;
+  const availableTechnicians = technicians.filter((technician) => {
+    const status = technician.schedules[0]?.status;
+    return technician.isAvailable && (!status || ['PLANNED', 'CONFIRMED', 'ON_DUTY'].includes(status));
+  }).length;
+  const overloadedTechnicians = technicians.filter((technician) => technician.assignments.length >= 4).length;
+
+  return {
+    date,
+    kpis: {
+      technicians: technicians.length,
+      scheduledTechnicians,
+      availableTechnicians,
+      jobCards: jobCards.length,
+      unscheduledWorkOrders: unscheduledWorkOrders.length,
+      overloadedTechnicians,
+    },
+    technicians,
+    shifts,
+    branches,
+    assets,
+    openRequests,
+    jobCards,
+    unscheduledWorkOrders,
+  };
 }
 
 async function listModel(modelName) {
@@ -202,6 +584,12 @@ module.exports = {
   createWorkOrder,
   listWorkOrders,
   closeWorkOrder,
+  listTechnicians,
+  listShifts,
+  createShift,
+  upsertTechnicianSchedule,
+  createJobCard,
+  getSchedulingBoard,
   listModel,
   createModel,
 };

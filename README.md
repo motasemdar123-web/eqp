@@ -36,6 +36,9 @@ Backend:
 - `/api/dashboard`
 - `/api/maintenance-requests`
 - `/api/work-orders`
+- `/api/scheduling/board`
+- `/api/scheduling/technician-schedules`
+- `/api/scheduling/job-cards`
 - `/api/assets`
 - `/api/spare-parts`
 - `/api/clients`
@@ -77,6 +80,15 @@ npm run prisma:seed
 ```
 
 The initial migration creates all platform tables, enums, indexes, constraints, and EQP module tables.
+
+The scheduling module includes:
+
+- 9 seeded field technicians
+- reusable shifts
+- daily technician schedules
+- dispatch-ready job cards
+- multi-technician job assignment
+- job scope, safety notes, tools, parts, permit, and team lead fields
 
 EQP is now represented by first-class Prisma-managed tables:
 

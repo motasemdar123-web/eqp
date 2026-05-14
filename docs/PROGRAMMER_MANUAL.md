@@ -42,6 +42,19 @@ model EqpMachine {
 
 Repository adapters can still fall back to the legacy `machines`, `reports`, `machine_history`, and `report_comments` tables during transition.
 
+## Scheduling Domain
+
+Scheduling uses:
+
+- `technician_profiles` for technician identity and default shift
+- `shifts` for reusable work-hour templates
+- `technician_schedules` for daily technician schedules
+- `work_orders` as job cards
+- `work_order_assignments` for one or more assigned technicians
+- `activity_timelines` for dispatch and operational audit events
+
+Job card fields on `work_orders` include `job_type`, `work_scope`, `safety_notes`, `required_tools`, `required_parts`, `permit_required`, `customer_contact`, `estimated_duration_minutes`, and `team_lead_technician_id`.
+
 ## Fresh Database Bootstrap
 
 ```bash

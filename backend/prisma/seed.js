@@ -82,6 +82,26 @@ async function upsertSeedUser({ email, userNumber, fullName, passwordHash, local
   });
 }
 
+function todayDateText() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+function dateOnly(dateText) {
+  return new Date(`${dateText}T00:00:00.000Z`);
+}
+
+function businessDateTime(dateText, timeText) {
+  return new Date(`${dateText}T${timeText}:00+03:00`);
+}
+
+async function ensureWorkOrderAssignment(workOrderId, technicianId) {
+  await prisma.workOrderAssignment.upsert({
+    where: { workOrderId_technicianId: { workOrderId, technicianId } },
+    update: {},
+    create: { workOrderId, technicianId },
+  });
+}
+
 async function main() {
   const roles = {};
   const permissions = {};
@@ -129,14 +149,17 @@ async function main() {
   });
   await ensureUserRole(manager.id, roles.OPERATIONS_MANAGER.id);
 
-  const technicianUser = await upsertSeedUser({
-    email: 'technician.ahmad@daralhai.com',
-    userNumber: 1001,
-    fullName: 'Ahmad Field Technician',
-    passwordHash,
-    locale: 'ar',
-  });
-  await ensureUserRole(technicianUser.id, roles.FIELD_TECHNICIAN.id);
+  const technicianSeeds = [
+    { userNumber: 1001, email: 'technician.1001@daralhai.com', fullName: 'Motasem Ghanem', employeeCode: 'TECH-1001', region: 'Riyadh North', shiftName: 'Morning Shift', skills: [['HVAC', 'SENIOR'], ['Electrical Safety', 'INTERMEDIATE']] },
+    { userNumber: 1002, email: 'technician.1002@daralhai.com', fullName: 'Ahmad Al Harbi', employeeCode: 'TECH-1002', region: 'Riyadh North', shiftName: 'Morning Shift', skills: [['Plumbing', 'SENIOR'], ['Leak Detection', 'SENIOR']] },
+    { userNumber: 1003, email: 'technician.1003@daralhai.com', fullName: 'Omar Al Qahtani', employeeCode: 'TECH-1003', region: 'Riyadh East', shiftName: 'Morning Shift', skills: [['Electrical', 'SENIOR'], ['Generator', 'INTERMEDIATE']] },
+    { userNumber: 1004, email: 'technician.1004@daralhai.com', fullName: 'Khaled Mansour', employeeCode: 'TECH-1004', region: 'Riyadh Central', shiftName: 'Afternoon Shift', skills: [['HVAC', 'INTERMEDIATE'], ['BMS', 'INTERMEDIATE']] },
+    { userNumber: 1005, email: 'technician.1005@daralhai.com', fullName: 'Yousef Nasser', employeeCode: 'TECH-1005', region: 'Riyadh Central', shiftName: 'Afternoon Shift', skills: [['Civil Works', 'SENIOR'], ['Painting', 'INTERMEDIATE']] },
+    { userNumber: 1006, email: 'technician.1006@daralhai.com', fullName: 'Fahad Al Mutairi', employeeCode: 'TECH-1006', region: 'Riyadh South', shiftName: 'Afternoon Shift', skills: [['Fire Safety', 'SENIOR'], ['Pump Systems', 'INTERMEDIATE']] },
+    { userNumber: 1007, email: 'technician.1007@daralhai.com', fullName: 'Saeed Al Otaibi', employeeCode: 'TECH-1007', region: 'Riyadh West', shiftName: 'Night Shift', skills: [['Electrical', 'INTERMEDIATE'], ['Emergency Response', 'SENIOR']] },
+    { userNumber: 1008, email: 'technician.1008@daralhai.com', fullName: 'Nawaf Saleh', employeeCode: 'TECH-1008', region: 'Riyadh West', shiftName: 'Night Shift', skills: [['HVAC', 'INTERMEDIATE'], ['Refrigeration', 'INTERMEDIATE']] },
+    { userNumber: 1009, email: 'technician.1009@daralhai.com', fullName: 'Bader Al Dosari', employeeCode: 'TECH-1009', region: 'Riyadh South', shiftName: 'Night Shift', skills: [['Plumbing', 'INTERMEDIATE'], ['Water Treatment', 'SENIOR']] },
+  ];
 
   const client = await prisma.client.upsert({
     where: { code: 'DAH' },
@@ -210,42 +233,105 @@ async function main() {
     },
   });
 
-  const shift = await prisma.shift.upsert({
-    where: { branchId_name: { branchId: branch.id, name: 'Morning Shift' } },
-    update: {
-      startsAt: '08:00',
-      endsAt: '16:00',
-    },
-    create: {
-      name: 'Morning Shift',
-      startsAt: '08:00',
-      endsAt: '16:00',
-      branchId: branch.id,
-    },
-  });
+  const shiftSeeds = [
+    { name: 'Morning Shift', startsAt: '08:00', endsAt: '16:00' },
+    { name: 'Afternoon Shift', startsAt: '14:00', endsAt: '22:00' },
+    { name: 'Night Shift', startsAt: '22:00', endsAt: '06:00' },
+  ];
+  const shifts = {};
 
-  const technician = await prisma.technicianProfile.upsert({
-    where: { userId: technicianUser.id },
-    update: { shiftId: shift.id },
-    create: {
-      userId: technicianUser.id,
-      employeeCode: 'TECH-1001',
-      region: 'Riyadh',
-      shiftId: shift.id,
-    },
-  });
+  for (const shiftSeed of shiftSeeds) {
+    shifts[shiftSeed.name] = await prisma.shift.upsert({
+      where: { branchId_name: { branchId: branch.id, name: shiftSeed.name } },
+      update: {
+        startsAt: shiftSeed.startsAt,
+        endsAt: shiftSeed.endsAt,
+      },
+      create: {
+        ...shiftSeed,
+        branchId: branch.id,
+      },
+    });
+  }
 
-  await prisma.technicianSkill.createMany({
-    data: [
-      { technicianId: technician.id, skill: 'HVAC', level: 'SENIOR' },
-      { technicianId: technician.id, skill: 'Electrical Safety', level: 'INTERMEDIATE' },
-    ],
-    skipDuplicates: true,
-  });
+  const technicians = [];
+  const scheduleDateText = todayDateText();
+  const scheduleWorkDate = dateOnly(scheduleDateText);
+
+  for (const technicianSeed of technicianSeeds) {
+    const user = await upsertSeedUser({
+      email: technicianSeed.email,
+      userNumber: technicianSeed.userNumber,
+      fullName: technicianSeed.fullName,
+      passwordHash,
+      locale: 'ar',
+    });
+    await ensureUserRole(user.id, roles.FIELD_TECHNICIAN.id);
+
+    const assignedShift = shifts[technicianSeed.shiftName];
+    const technician = await prisma.technicianProfile.upsert({
+      where: { userId: user.id },
+      update: {
+        employeeCode: technicianSeed.employeeCode,
+        region: technicianSeed.region,
+        shiftId: assignedShift.id,
+        isAvailable: true,
+      },
+      create: {
+        userId: user.id,
+        employeeCode: technicianSeed.employeeCode,
+        region: technicianSeed.region,
+        shiftId: assignedShift.id,
+      },
+    });
+
+    await prisma.technicianSkill.createMany({
+      data: technicianSeed.skills.map(([skill, level]) => ({
+        technicianId: technician.id,
+        skill,
+        level,
+      })),
+      skipDuplicates: true,
+    });
+
+    await prisma.technicianSchedule.upsert({
+      where: { technicianId_workDate: { technicianId: technician.id, workDate: scheduleWorkDate } },
+      update: {
+        shiftId: assignedShift.id,
+        branchId: branch.id,
+        startsAt: assignedShift.startsAt,
+        endsAt: assignedShift.endsAt,
+        status: 'CONFIRMED',
+        notes: `${technicianSeed.region} coverage`,
+      },
+      create: {
+        technicianId: technician.id,
+        shiftId: assignedShift.id,
+        branchId: branch.id,
+        workDate: scheduleWorkDate,
+        startsAt: assignedShift.startsAt,
+        endsAt: assignedShift.endsAt,
+        status: 'CONFIRMED',
+        notes: `${technicianSeed.region} coverage`,
+      },
+    });
+
+    technicians.push({ ...technicianSeed, user, profile: technician, shift: assignedShift });
+  }
+
+  const leadTechnician = technicians[0].profile;
+  const hvacSupportTechnician = technicians[3].profile;
+  const plumbingLead = technicians[1].profile;
+  const electricalLead = technicians[2].profile;
 
   const request = await prisma.maintenanceRequest.upsert({
     where: { requestNumber: 'REQ-20260514-1001' },
-    update: {},
+    update: {
+      status: 'ASSIGNED',
+      branchId: branch.id,
+      locationId: location.id,
+      assetId: asset.id,
+    },
     create: {
       requestNumber: 'REQ-20260514-1001',
       title: 'AC not cooling - Admin Building',
@@ -264,24 +350,123 @@ async function main() {
 
   const workOrder = await prisma.workOrder.upsert({
     where: { workOrderNumber: 'WO-20260514-1001' },
-    update: {},
-    create: {
-      workOrderNumber: 'WO-20260514-1001',
-      title: 'Inspect and repair AC cooling issue',
+    update: {
       requestId: request.id,
       assetId: asset.id,
       priority: 'HIGH',
       status: 'ASSIGNED',
-      scheduledStartAt: new Date(Date.now() + 60 * 60 * 1000),
-      scheduledEndAt: new Date(Date.now() + 3 * 60 * 60 * 1000),
+      jobType: 'Corrective Maintenance',
+      workScope: 'Diagnose cooling performance, inspect filters, verify refrigerant pressure, and restore normal operation.',
+      safetyNotes: 'Lock out electrical panel before opening the rooftop unit. Use roof access harness.',
+      requiredTools: 'Multimeter, manifold gauge, hand tools, filter kit',
+      requiredParts: 'AC filter 24x24 if replacement is required',
+      permitRequired: true,
+      customerContact: 'Facilities Desk +966500000001',
+      estimatedDurationMinutes: 120,
+      teamLeadTechnicianId: leadTechnician.id,
+      scheduledStartAt: businessDateTime(scheduleDateText, '09:00'),
+      scheduledEndAt: businessDateTime(scheduleDateText, '11:00'),
+    },
+    create: {
+      workOrderNumber: 'WO-20260514-1001',
+      title: 'Inspect and repair AC cooling issue',
+      description: 'AC unit is not reaching the required set point in the admin office.',
+      requestId: request.id,
+      assetId: asset.id,
+      priority: 'HIGH',
+      status: 'ASSIGNED',
+      jobType: 'Corrective Maintenance',
+      workScope: 'Diagnose cooling performance, inspect filters, verify refrigerant pressure, and restore normal operation.',
+      safetyNotes: 'Lock out electrical panel before opening the rooftop unit. Use roof access harness.',
+      requiredTools: 'Multimeter, manifold gauge, hand tools, filter kit',
+      requiredParts: 'AC filter 24x24 if replacement is required',
+      permitRequired: true,
+      customerContact: 'Facilities Desk +966500000001',
+      estimatedDurationMinutes: 120,
+      teamLeadTechnicianId: leadTechnician.id,
+      scheduledStartAt: businessDateTime(scheduleDateText, '09:00'),
+      scheduledEndAt: businessDateTime(scheduleDateText, '11:00'),
     },
   });
 
-  await prisma.workOrderAssignment.upsert({
-    where: { workOrderId_technicianId: { workOrderId: workOrder.id, technicianId: technician.id } },
-    update: {},
-    create: { workOrderId: workOrder.id, technicianId: technician.id },
+  await ensureWorkOrderAssignment(workOrder.id, leadTechnician.id);
+  await ensureWorkOrderAssignment(workOrder.id, hvacSupportTechnician.id);
+
+  const plumbingJobCard = await prisma.workOrder.upsert({
+    where: { workOrderNumber: 'JC-DAH-DEMO-1002' },
+    update: {
+      status: 'ASSIGNED',
+      jobType: 'Inspection',
+      workScope: 'Inspect domestic water pump set, check pressure fluctuation, verify valve position, and submit findings.',
+      safetyNotes: 'Use eye protection and isolate pump before opening any casing.',
+      requiredTools: 'Pressure gauge, pipe wrench, inspection light',
+      requiredParts: 'Valve gasket set if needed',
+      customerContact: 'Operations Supervisor +966500000002',
+      estimatedDurationMinutes: 90,
+      teamLeadTechnicianId: plumbingLead.id,
+      scheduledStartAt: businessDateTime(scheduleDateText, '10:30'),
+      scheduledEndAt: businessDateTime(scheduleDateText, '12:00'),
+    },
+    create: {
+      workOrderNumber: 'JC-DAH-DEMO-1002',
+      title: 'Water pump pressure inspection',
+      description: 'Pump pressure fluctuation reported by facilities team.',
+      assetId: asset.id,
+      priority: 'MEDIUM',
+      status: 'ASSIGNED',
+      jobType: 'Inspection',
+      workScope: 'Inspect domestic water pump set, check pressure fluctuation, verify valve position, and submit findings.',
+      safetyNotes: 'Use eye protection and isolate pump before opening any casing.',
+      requiredTools: 'Pressure gauge, pipe wrench, inspection light',
+      requiredParts: 'Valve gasket set if needed',
+      customerContact: 'Operations Supervisor +966500000002',
+      estimatedDurationMinutes: 90,
+      teamLeadTechnicianId: plumbingLead.id,
+      scheduledStartAt: businessDateTime(scheduleDateText, '10:30'),
+      scheduledEndAt: businessDateTime(scheduleDateText, '12:00'),
+    },
   });
+
+  await ensureWorkOrderAssignment(plumbingJobCard.id, plumbingLead.id);
+  await ensureWorkOrderAssignment(plumbingJobCard.id, technicians[8].profile.id);
+
+  const electricalJobCard = await prisma.workOrder.upsert({
+    where: { workOrderNumber: 'JC-DAH-DEMO-1003' },
+    update: {
+      status: 'ASSIGNED',
+      jobType: 'Preventive Maintenance',
+      workScope: 'Inspect DB panel, tighten terminals, check load balance, and record thermal readings.',
+      safetyNotes: 'Follow LOTO procedure and verify absence of voltage before contact.',
+      requiredTools: 'Thermal camera, insulated screwdriver set, clamp meter',
+      requiredParts: 'Cable lugs and labels',
+      permitRequired: true,
+      estimatedDurationMinutes: 120,
+      teamLeadTechnicianId: electricalLead.id,
+      scheduledStartAt: businessDateTime(scheduleDateText, '13:00'),
+      scheduledEndAt: businessDateTime(scheduleDateText, '15:00'),
+    },
+    create: {
+      workOrderNumber: 'JC-DAH-DEMO-1003',
+      title: 'Electrical panel preventive inspection',
+      description: 'Routine preventive inspection for the floor distribution board.',
+      assetId: asset.id,
+      priority: 'MEDIUM',
+      status: 'ASSIGNED',
+      jobType: 'Preventive Maintenance',
+      workScope: 'Inspect DB panel, tighten terminals, check load balance, and record thermal readings.',
+      safetyNotes: 'Follow LOTO procedure and verify absence of voltage before contact.',
+      requiredTools: 'Thermal camera, insulated screwdriver set, clamp meter',
+      requiredParts: 'Cable lugs and labels',
+      permitRequired: true,
+      estimatedDurationMinutes: 120,
+      teamLeadTechnicianId: electricalLead.id,
+      scheduledStartAt: businessDateTime(scheduleDateText, '13:00'),
+      scheduledEndAt: businessDateTime(scheduleDateText, '15:00'),
+    },
+  });
+
+  await ensureWorkOrderAssignment(electricalJobCard.id, electricalLead.id);
+  await ensureWorkOrderAssignment(electricalJobCard.id, technicians[6].profile.id);
 
   const supplier = await prisma.supplier.upsert({
     where: { code: 'SUP-HVAC-01' },

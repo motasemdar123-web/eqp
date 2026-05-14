@@ -157,6 +157,15 @@ enum CustomFieldEntity {
   BRANCH
   LOCATION
 }
+enum TechnicianScheduleStatus {
+  PLANNED
+  CONFIRMED
+  ON_DUTY
+  OFF_DUTY
+  LEAVE
+  COMPLETED
+  CANCELLED
+}
 
 model User {
   id           String     @id @default(uuid())
@@ -294,6 +303,7 @@ model Branch {
   assets      Asset[]
   requests    MaintenanceRequest[]
   shifts      Shift[]
+  technicianSchedules TechnicianSchedule[]
   holidays    Holiday[]
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
@@ -454,12 +464,22 @@ model WorkOrder {
   scheduledEndAt   DateTime?      @map("scheduled_end_at")
   startedAt       DateTime?       @map("started_at")
   completedAt     DateTime?       @map("completed_at")
+  jobType         String?         @map("job_type")
+  workScope       String?         @map("work_scope")
+  safetyNotes     String?         @map("safety_notes")
+  requiredTools   String?         @map("required_tools")
+  requiredParts   String?         @map("required_parts")
+  permitRequired  Boolean         @default(false) @map("permit_required")
+  customerContact String?         @map("customer_contact")
+  estimatedDurationMinutes Int?   @map("estimated_duration_minutes")
+  teamLeadTechnicianId String?    @map("team_lead_technician_id")
   closureNotes    String?         @map("closure_notes")
   rootCause       String?         @map("root_cause")
   correctiveAction String?        @map("corrective_action")
   preventiveAction String?        @map("preventive_action")
   request         MaintenanceRequest? @relation(fields: [requestId], references: [id])
   asset           Asset?          @relation(fields: [assetId], references: [id])
+  teamLead        TechnicianProfile? @relation("WorkOrderTeamLead", fields: [teamLeadTechnicianId], references: [id])
   assignments     WorkOrderAssignment[]
   stockMovements  StockMovement[]
   comments        Comment[]
@@ -473,6 +493,7 @@ model WorkOrder {
 
   @@index([requestId])
   @@index([assetId])
+  @@index([teamLeadTechnicianId])
   @@index([status])
   @@index([scheduledStartAt])
   @@map("work_orders")
@@ -506,9 +527,11 @@ model TechnicianProfile {
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   shift       Shift?   @relation(fields: [shiftId], references: [id])
   skills      TechnicianSkill[]
+  schedules   TechnicianSchedule[]
   attendance  TechnicianAttendance[]
   metrics     TechnicianPerformanceMetric[]
   assignments WorkOrderAssignment[]
+  leadWorkOrders WorkOrder[] @relation("WorkOrderTeamLead")
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
   createdById String?  @map("created_by")
@@ -843,6 +866,7 @@ model Shift {
   endsAt      String @map("ends_at")
   branch      Branch? @relation(fields: [branchId], references: [id])
   technicians TechnicianProfile[]
+  schedules   TechnicianSchedule[]
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
   createdById String? @map("created_by")
@@ -852,6 +876,32 @@ model Shift {
   @@index([branchId])
   @@unique([branchId, name])
   @@map("shifts")
+}
+
+model TechnicianSchedule {
+  id           String                   @id @default(uuid())
+  technicianId String                   @map("technician_id")
+  shiftId      String?                  @map("shift_id")
+  branchId     String?                  @map("branch_id")
+  workDate     DateTime                 @map("work_date") @db.Date
+  startsAt     String                   @map("starts_at")
+  endsAt       String                   @map("ends_at")
+  status       TechnicianScheduleStatus @default(PLANNED)
+  notes        String?
+  technician   TechnicianProfile        @relation(fields: [technicianId], references: [id], onDelete: Cascade)
+  shift        Shift?                   @relation(fields: [shiftId], references: [id], onDelete: SetNull)
+  branch       Branch?                  @relation(fields: [branchId], references: [id], onDelete: SetNull)
+  createdAt    DateTime                 @default(now()) @map("created_at")
+  updatedAt    DateTime                 @updatedAt @map("updated_at")
+  createdById  String?                  @map("created_by")
+  updatedById  String?                  @map("updated_by")
+  deletedAt    DateTime?                @map("deleted_at")
+
+  @@unique([technicianId, workDate])
+  @@index([workDate])
+  @@index([branchId, workDate])
+  @@index([shiftId])
+  @@map("technician_schedules")
 }
 
 model TechnicianAttendance {
