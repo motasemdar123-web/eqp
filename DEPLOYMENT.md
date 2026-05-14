@@ -7,11 +7,13 @@ The backend must run as a Docker service because EQP report generation exports p
 Use the repository `render.yaml` blueprint, or configure the existing Render web service manually:
 
 - Runtime / Language: `Docker`
-- Dockerfile path: `./backend/Dockerfile`
-- Docker context: `./backend`
+- Dockerfile path: `./Dockerfile`
+- Docker context: `.`
 - Start command: leave empty so Render uses the Dockerfile `CMD`
 
 Do not use Render's native Node runtime for the backend. Native Node does not include LibreOffice, so Excel-to-PDF conversion will fail.
+
+If Render logs show paths like `/opt/render/project/src/backend`, the backend is still running with Render's native Node runtime. A Docker deploy from this repository runs the backend from `/app/backend`.
 
 The Docker image installs:
 

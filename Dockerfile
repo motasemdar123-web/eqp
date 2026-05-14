@@ -1,0 +1,17 @@
+FROM node:20-slim
+
+WORKDIR /app/backend
+
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends libreoffice fonts-dejavu fontconfig \
+  && rm -rf /var/lib/apt/lists/*
+
+COPY backend/package*.json ./
+RUN npm ci
+
+COPY backend/ ./
+RUN npm run prisma:generate || true
+
+EXPOSE 5000
+
+CMD ["npm", "start"]
