@@ -34,6 +34,9 @@ Backend:
 - `/api/auth/microsoft/start`
 - `/api/auth/microsoft/callback`
 - `/api/auth/microsoft/session`
+- `/auth/microsoft/start` compatibility alias
+- `/auth/microsoft/callback` compatibility alias
+- `/auth/microsoft/session` compatibility alias
 - `/api/dashboard`
 - `/api/maintenance-requests`
 - `/api/work-orders`
@@ -77,6 +80,8 @@ Create an App Registration in Microsoft Entra and configure this backend redirec
 ```text
 https://your-backend-domain.com/api/auth/microsoft/callback
 ```
+
+The backend also accepts `/auth/microsoft/callback` as a compatibility alias, but `/api/auth/microsoft/callback` is the recommended URI.
 
 Set these backend environment variables:
 

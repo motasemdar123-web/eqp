@@ -39,6 +39,12 @@ Deprecated local endpoints return `410 Microsoft authentication is required`:
 - `POST /api/auth/unified-login`
 - `POST /verify-user`
 
+Compatibility aliases are also available:
+
+- `GET /auth/microsoft/start`
+- `GET /auth/microsoft/callback`
+- `POST /auth/microsoft/session`
+
 ## Maintenance Requests
 
 ### GET `/api/maintenance-requests`

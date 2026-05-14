@@ -10,6 +10,9 @@ router.post('/api/auth/unified-login', asyncHandler(platformController.unifiedLo
 router.get('/api/auth/microsoft/start', asyncHandler(platformController.startMicrosoftLogin));
 router.get('/api/auth/microsoft/callback', asyncHandler(platformController.microsoftCallback));
 router.post('/api/auth/microsoft/session', asyncHandler(platformController.completeMicrosoftLogin));
+router.get('/auth/microsoft/start', asyncHandler(platformController.startMicrosoftLogin));
+router.get('/auth/microsoft/callback', asyncHandler(platformController.microsoftCallback));
+router.post('/auth/microsoft/session', asyncHandler(platformController.completeMicrosoftLogin));
 
 router.get('/api/dashboard', requirePlatformAuth, requirePermission('REPORTS_READ'), asyncHandler(platformController.dashboard));
 
