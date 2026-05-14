@@ -3,6 +3,7 @@ const { getPrisma } = require('../config/prisma');
 const { ApiError } = require('../utils/ApiError');
 const { signJwt } = require('../middleware/platformAuthMiddleware');
 const { normalizeArabicStatus } = require('../utils/platformEnums');
+const { createSessionToken } = require('../utils/sessionToken');
 
 function requirePrisma() {
   const prisma = getPrisma();
@@ -38,6 +39,7 @@ async function login({ email, password }) {
     roles: roleNames,
     permissions: [...new Set(permissions.map((rolePermission) => rolePermission.permission.code))],
   });
+  const permissionNames = [...new Set(permissions.map((rolePermission) => rolePermission.permission.code))];
 
   return {
     token,
@@ -46,7 +48,100 @@ async function login({ email, password }) {
       email: user.email,
       fullName: user.fullName,
       roles: roleNames,
+      permissions: permissionNames,
     },
+  };
+}
+
+function resolvePlatformRedirect(roles, permissions, preferredModule) {
+  if (preferredModule === 'technician' && roles.includes('FIELD_TECHNICIAN')) {
+    return '/technician/tasks';
+  }
+
+  if (preferredModule === 'eqp' && permissions.includes('EQP_MANAGE')) {
+    return '/eqp';
+  }
+
+  const managementRoles = [
+    'SUPER_ADMIN',
+    'GENERAL_MANAGER',
+    'OPERATIONS_MANAGER',
+    'MAINTENANCE_SUPERVISOR',
+    'CALL_CENTER',
+    'WAREHOUSE_OFFICER',
+    'FINANCE',
+    'SYSTEM_ADMIN',
+  ];
+
+  if (roles.some((role) => managementRoles.includes(role))) {
+    return '/management';
+  }
+
+  if (roles.includes('FIELD_TECHNICIAN')) {
+    return '/technician/tasks';
+  }
+
+  return '/management';
+}
+
+async function unifiedLogin({ identifier, email, password, userNumber, preferredModule }) {
+  const prisma = requirePrisma();
+  const rawIdentifier = String(identifier || email || userNumber || '').trim();
+
+  if (!rawIdentifier) {
+    throw new ApiError(400, 'Email or technician code is required');
+  }
+
+  if (rawIdentifier.includes('@')) {
+    if (!password) {
+      throw new ApiError(400, 'Password is required for email login');
+    }
+
+    const result = await login({ email: rawIdentifier.toLowerCase(), password });
+    const permissions = result.user.permissions || [];
+
+    return {
+      authType: 'PLATFORM',
+      token: result.token,
+      user: result.user,
+      redirectTo: resolvePlatformRedirect(result.user.roles, permissions, preferredModule),
+    };
+  }
+
+  const technicianCode = Number(rawIdentifier);
+  if (!Number.isInteger(technicianCode) || technicianCode <= 0) {
+    throw new ApiError(400, 'Enter a valid email or technician code');
+  }
+
+  const user = await prisma.user.findUnique({
+    where: { userNumber: technicianCode },
+    include: { roles: { include: { role: true } } },
+  });
+
+  if (!user) {
+    throw new ApiError(404, 'Invalid user code');
+  }
+
+  const roles = user.roles.map((userRole) => userRole.role.code);
+  const eqpUser = {
+    id: user.id,
+    user_number: user.userNumber,
+    full_name: user.fullName,
+  };
+  const sessionToken = createSessionToken(eqpUser);
+
+  return {
+    authType: 'EQP_TECHNICIAN',
+    token: sessionToken,
+    user: {
+      id: user.id,
+      userNumber: user.userNumber,
+      fullName: user.fullName,
+      roles,
+      locale: user.locale,
+      sessionToken,
+    },
+    redirectTo: preferredModule === 'eqp' ? '/dashboard' : '/technician/tasks',
   };
 }
 
@@ -577,6 +672,7 @@ async function createModel(modelName, payload) {
 
 module.exports = {
   login,
+  unifiedLogin,
   listDashboard,
   createMaintenanceRequest,
   listMaintenanceRequests,

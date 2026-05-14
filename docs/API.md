@@ -17,6 +17,29 @@ Body:
 
 Returns a JWT for Dar Al HAI platform APIs.
 
+### POST `/api/auth/unified-login`
+
+Single entry point for the frontend login screen. The backend detects whether the user entered a company email or a technician code.
+
+Email login returns platform JWT and role-based redirect:
+
+```json
+{
+  "identifier": "admin@daralhai.com",
+  "password": "ChangeMe123!",
+  "preferredModule": "auto"
+}
+```
+
+Technician code login returns the signed EQP/technician session and routes by module preference:
+
+```json
+{
+  "identifier": "1001",
+  "preferredModule": "technician"
+}
+```
+
 ## Maintenance Requests
 
 ### GET `/api/maintenance-requests`

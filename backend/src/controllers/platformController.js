@@ -7,6 +7,11 @@ async function login(req, res) {
   res.json({ success: true, ...result });
 }
 
+async function unifiedLogin(req, res) {
+  const result = await platformService.unifiedLogin(req.body);
+  res.json({ success: true, ...result });
+}
+
 async function dashboard(req, res) {
   const data = await platformService.listDashboard();
   res.json({ success: true, data });
@@ -94,6 +99,7 @@ function create(modelName, responseKey) {
 
 module.exports = {
   login,
+  unifiedLogin,
   dashboard,
   listRequests,
   createRequest,

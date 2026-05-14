@@ -47,6 +47,13 @@ export function verifyUser(userNumber) {
   });
 }
 
+export function unifiedLogin(payload) {
+  return request('/api/auth/unified-login', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+}
+
 export function getMachines() {
   return request('/machines');
 }

@@ -8,16 +8,16 @@ export default function AppShell({ activePage, onNavigate, onLogout, userCode, c
   ];
 
   return (
-    <div className="min-h-screen bg-[#f4f6f3] text-zinc-900 lg:flex">
+    <div className="min-h-screen bg-[#edf1ea] text-zinc-900 lg:flex">
       <aside className="border-b border-zinc-200 bg-zinc-950 text-white lg:sticky lg:top-0 lg:h-screen lg:w-72 lg:border-b-0 lg:border-r lg:border-zinc-900">
         <div className="border-b border-white/10 p-6">
           <div className="flex items-center gap-3">
             <div className="grid h-11 w-11 place-items-center rounded-md bg-yellow-400 text-xl font-black text-zinc-950">
-              K
+              DH
             </div>
             <div>
-              <div className="text-xl font-black text-white">KOMATSU</div>
-              <p className="text-xs text-zinc-400">Fleet Management</p>
+              <div className="text-xl font-black text-white">Dar Al HAI</div>
+              <p className="text-xs text-zinc-400">EQP Reporting Module</p>
             </div>
           </div>
         </div>
@@ -44,8 +44,8 @@ export default function AppShell({ activePage, onNavigate, onLogout, userCode, c
         <header className="border-b border-zinc-200 bg-white/90 backdrop-blur">
           <div className="mx-auto flex max-w-7xl flex-col gap-4 px-5 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-6">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">Operations Console</p>
-              <h1 className="mt-1 text-2xl font-black tracking-tight text-zinc-950 sm:text-3xl">Fleet Reporting</h1>
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">Equipment Preventive Maintenance</p>
+              <h1 className="mt-1 text-2xl font-black tracking-tight text-zinc-950 sm:text-3xl">EQP Reporting Workspace</h1>
             </div>
 
             <div className="flex flex-wrap items-center gap-3">

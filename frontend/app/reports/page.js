@@ -132,7 +132,7 @@ export default function ReportsPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#f4f6f3] px-4 py-8 text-zinc-900 sm:px-8">
+    <main className="min-h-screen bg-[#edf1ea] px-4 py-8 text-zinc-900 sm:px-8">
       <div className="mx-auto max-w-7xl">
         <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>

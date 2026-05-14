@@ -6,6 +6,7 @@ const { requirePlatformAuth, requirePermission } = require('../middleware/platfo
 const router = Router();
 
 router.post('/api/auth/login', asyncHandler(platformController.login));
+router.post('/api/auth/unified-login', asyncHandler(platformController.unifiedLogin));
 
 router.get('/api/dashboard', requirePlatformAuth, requirePermission('REPORTS_READ'), asyncHandler(platformController.dashboard));
 

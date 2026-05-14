@@ -1,8 +1,8 @@
 import "./globals.css";
 
 export const metadata = {
-  title: "EQP Fleet System",
-  description: "Equipment fleet reporting dashboard",
+  title: "Dar Al HAI Maintenance Management",
+  description: "Unified maintenance, scheduling, technician, and EQP reporting platform",
 };
 
 export default function RootLayout({ children }) {

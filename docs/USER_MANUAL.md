@@ -2,6 +2,8 @@
 
 ## Management Users
 
+Open `/` to sign in from the unified login page. The system detects whether you entered a company email or a technician code and opens the right workspace.
+
 Open `/management` to view the operations dashboard.
 
 Use the dashboard modules to manage:

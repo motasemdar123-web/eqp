@@ -6,7 +6,7 @@ import Card from '../../../components/ui/Card';
 import Badge from '../../../components/ui/Badge';
 import Button from '../../../components/ui/Button';
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:5000';
+const API_BASE = process.env.NEXT_PUBLIC_BACKEND_URL || process.env.NEXT_PUBLIC_API_BASE_URL || 'https://eqp.onrender.com';
 
 const emptyBoard = {
   kpis: {},
@@ -240,7 +240,7 @@ export default function SchedulingPage() {
   const jobCards = board.jobCards || [];
 
   return (
-    <main className="min-h-screen bg-[#f4f6f3] text-zinc-900">
+    <main className="min-h-screen bg-[#edf1ea] text-zinc-900">
       <header className="border-b border-zinc-200 bg-white">
         <div className="mx-auto flex max-w-7xl flex-col gap-4 px-6 py-5 md:flex-row md:items-center md:justify-between">
           <div>
