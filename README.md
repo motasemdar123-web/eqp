@@ -149,6 +149,8 @@ The backend EQP repositories include compatibility adapters that can read legacy
 
 EQP report generation still populates the existing Excel templates first, then exports the exact workbook result as PDF before uploading to Supabase. Docker installs LibreOffice for workbook-to-PDF conversion. If `LIBREOFFICE_BIN` or a system `soffice` binary is unavailable, generation fails with a clear configuration error instead of producing a different-looking PDF.
 
+On Render, the backend must run as a Docker service for exact Excel-to-PDF export. The repository includes `render.yaml` and `backend/Dockerfile`; the Docker image installs LibreOffice and exposes `soffice` for conversion.
+
 ## Language Rules
 
 - Management dashboards are English-first.

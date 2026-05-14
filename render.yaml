@@ -1,0 +1,55 @@
+services:
+  - type: web
+    name: eqp
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    plan: starter
+    healthCheckPath: /health
+    envVars:
+      - key: PORT
+        value: 5000
+      - key: DATABASE_URL
+        sync: false
+      - key: DB_HOST
+        sync: false
+      - key: DB_PORT
+        sync: false
+      - key: DB_NAME
+        sync: false
+      - key: DB_USER
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: DB_SSL
+        sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: SUPABASE_REPORTS_BUCKET
+        value: reports
+      - key: LIBREOFFICE_BIN
+        value: soffice
+      - key: APP_SECRET
+        sync: false
+      - key: ALLOWED_ORIGINS
+        sync: false
+      - key: MICROSOFT_TENANT_ID
+        sync: false
+      - key: MICROSOFT_CLIENT_ID
+        sync: false
+      - key: MICROSOFT_CLIENT_SECRET
+        sync: false
+      - key: MICROSOFT_REDIRECT_URI
+        sync: false
+      - key: MICROSOFT_FRONTEND_CALLBACK_URL
+        sync: false
+      - key: MICROSOFT_ALLOWED_DOMAINS
+        sync: false
+      - key: MICROSOFT_ADMIN_EMAILS
+        sync: false
+      - key: MICROSOFT_ENGINEER_EMAILS
+        sync: false
+      - key: MICROSOFT_ENGINEER_NAMES
+        sync: false
