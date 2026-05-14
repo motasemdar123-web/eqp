@@ -21,6 +21,7 @@ services:
       DB_NAME: daralhai
       DB_USER: daralhai
       DB_PASSWORD: daralhai_password
+      DB_SSL: "false"
       APP_SECRET: local-docker-secret-change-me
       ALLOWED_ORIGINS: http://localhost:3000,http://127.0.0.1:3000
     ports:

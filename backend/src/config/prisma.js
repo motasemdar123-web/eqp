@@ -1,5 +1,9 @@
 let prisma = null;
 
+function isLocalDatabaseHost(host) {
+  return ['localhost', '127.0.0.1', '::1', 'postgres'].includes(String(host || '').toLowerCase());
+}
+
 function buildDatabaseUrlFromLegacyEnv() {
   const {
     DB_HOST,
@@ -7,7 +11,7 @@ function buildDatabaseUrlFromLegacyEnv() {
     DB_NAME,
     DB_USER,
     DB_PASSWORD,
-    DB_SSLMODE = 'require',
+    DB_SSLMODE,
   } = process.env;
 
   if (!DB_HOST || !DB_NAME || !DB_USER || !DB_PASSWORD) {
@@ -18,8 +22,10 @@ function buildDatabaseUrlFromLegacyEnv() {
     `postgresql://${encodeURIComponent(DB_USER)}:${encodeURIComponent(DB_PASSWORD)}@${DB_HOST}:${DB_PORT}/${DB_NAME}`,
   );
 
-  if (DB_SSLMODE) {
-    databaseUrl.searchParams.set('sslmode', DB_SSLMODE);
+  const sslMode = DB_SSLMODE || (isLocalDatabaseHost(DB_HOST) ? '' : 'require');
+
+  if (sslMode) {
+    databaseUrl.searchParams.set('sslmode', sslMode);
   }
 
   return databaseUrl.toString();
