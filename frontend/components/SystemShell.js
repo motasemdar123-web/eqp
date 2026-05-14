@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Button from './ui/Button';
 import { clearStoredUser, getStoredPlatformSession, getStoredUser } from '../lib/auth';
 
@@ -59,14 +59,24 @@ export default function SystemShell({
   contentClassName = '',
 }) {
   const pathname = usePathname();
-  const [user] = useState(() => getSessionUser());
+  const [user, setUser] = useState(null);
+  const [hasHydrated, setHasHydrated] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setUser(getSessionUser());
+      setHasHydrated(true);
+    }, 0);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   const roleLabel = useMemo(() => {
     if (userLabel) return userLabel;
     if (user?.roles?.length) return user.roles.join(', ');
     if (user?.userNumber) return `User ${user.userNumber}`;
-    return 'Signed in';
-  }, [user, userLabel]);
+    return hasHydrated ? 'Signed in' : 'Loading session';
+  }, [hasHydrated, user, userLabel]);
 
   function logout() {
     if (onLogout) {
@@ -140,8 +150,12 @@ export default function SystemShell({
             <div className="flex flex-wrap items-center gap-2">
               {actions}
               <div className="rounded-md border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm text-zinc-700">
-                <span className="block max-w-52 truncate font-semibold">{user?.fullName || user?.email || 'Not signed in'}</span>
-                <span className="block max-w-52 truncate text-xs text-zinc-500">{user ? roleLabel : 'Authentication required'}</span>
+                <span className="block max-w-52 truncate font-semibold">
+                  {hasHydrated ? (user?.fullName || user?.email || 'Not signed in') : 'Loading session'}
+                </span>
+                <span className="block max-w-52 truncate text-xs text-zinc-500">
+                  {user ? roleLabel : hasHydrated ? 'Authentication required' : 'Checking authentication'}
+                </span>
               </div>
               {user && <Button type="button" variant="ghost" onClick={logout}>Logout</Button>}
             </div>
