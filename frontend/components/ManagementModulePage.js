@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import SystemShell from './SystemShell';
 import Card from './ui/Card';
 import Badge from './ui/Badge';
 
@@ -25,29 +26,29 @@ const sampleRows = {
   ],
 };
 
+const modulePaths = {
+  requests: '/management/requests',
+  workOrders: '/management/work-orders',
+  assets: '/management/assets',
+  inventory: '/management/inventory',
+};
+
 export default function ManagementModulePage({ title, description, moduleKey, columns, actionHref }) {
   const rows = sampleRows[moduleKey] || [];
 
   return (
-    <main className="min-h-screen bg-[#edf1ea] px-6 py-8 text-zinc-900">
-      <div className="mx-auto grid max-w-7xl gap-6">
-        <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">Dar Al HAI Operations</p>
-            <h1 className="mt-2 text-3xl font-black text-zinc-950">{title}</h1>
-            <p className="mt-2 max-w-2xl text-sm leading-6 text-zinc-600">{description}</p>
-          </div>
-          <div className="flex gap-2">
-            <Link href="/management" className="rounded-md border border-zinc-300 bg-white px-4 py-2.5 text-sm font-semibold text-zinc-700 hover:bg-zinc-50">
-              Command Center
-            </Link>
-            {actionHref && (
-              <Link href={actionHref} className="rounded-md bg-yellow-400 px-4 py-2.5 text-sm font-semibold text-zinc-950 hover:bg-yellow-300">
-                Open Workflow
-              </Link>
-            )}
-          </div>
-        </div>
+    <SystemShell
+      activePath={modulePaths[moduleKey] || '/management'}
+      eyebrow="Dar Al HAI Operations"
+      title={title}
+      description={description}
+      actions={actionHref ? (
+        <Link href={actionHref} className="rounded-md bg-yellow-400 px-4 py-2.5 text-sm font-semibold text-zinc-950 hover:bg-yellow-300">
+          Open Workflow
+        </Link>
+      ) : null}
+    >
+      <div className="grid gap-6">
 
         <div className="grid gap-4 md:grid-cols-4">
           {[
@@ -97,6 +98,6 @@ export default function ManagementModulePage({ title, description, moduleKey, co
           </div>
         </Card>
       </div>
-    </main>
+    </SystemShell>
   );
 }

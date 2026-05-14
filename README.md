@@ -4,7 +4,8 @@ This repository is being transformed from the original EQP reporting app into th
 
 The existing EQP functionality is preserved as a dedicated module:
 
-- Equipment preventive maintenance Excel report generation
+- Equipment preventive maintenance Excel template population
+- Final PDF report export from populated EQP workbooks
 - Machine and report history
 - Supabase report storage
 - Download, rename, and delete report archive
@@ -29,7 +30,7 @@ Frontend:
 - `/auth/microsoft/callback` Microsoft sign-in callback
 - `/eqp` EQP module landing
 - `/eqp/generate-reports` preserved EQP report generation
-- `/eqp/reports` preserved EQP report archive
+- `/eqp/reports` preserved EQP PDF report archive
 
 Backend:
 
@@ -145,6 +146,8 @@ EQP is now represented by first-class Prisma-managed tables:
 - `eqp_report_comments`
 
 The backend EQP repositories include compatibility adapters that can read legacy table names if a deployment has not migrated yet.
+
+EQP report generation still populates the existing Excel templates first, then exports the final result as PDF before uploading to Supabase. Docker installs LibreOffice for true workbook-to-PDF conversion. If `LIBREOFFICE_BIN` or a system `soffice` binary is unavailable, the backend produces a structured PDF fallback instead of returning an Excel file.
 
 ## Language Rules
 

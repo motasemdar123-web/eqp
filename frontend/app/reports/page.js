@@ -1,9 +1,9 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import Link from 'next/link';
 import { deleteReport, getReports, renameReport } from '../../lib/api';
-import { getStoredUser } from '../../lib/auth';
+import { getStoredPlatformSession, getStoredUser } from '../../lib/auth';
+import SystemShell from '../../components/SystemShell';
 import Button from '../../components/ui/Button';
 import Card from '../../components/ui/Card';
 import EmptyState from '../../components/ui/EmptyState';
@@ -23,9 +23,10 @@ export default function ReportsPage() {
   const [renameValue, setRenameValue] = useState('');
 
   useEffect(() => {
+    const platformSession = getStoredPlatformSession();
     const user = getStoredUser();
 
-    if (!user?.sessionToken) {
+    if (!platformSession?.token && !user?.sessionToken) {
       localStorage.removeItem('user');
       window.location.href = '/';
       return;
@@ -132,18 +133,14 @@ export default function ReportsPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#edf1ea] px-4 py-8 text-zinc-900 sm:px-8">
-      <div className="mx-auto max-w-7xl">
-        <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">Archive</p>
-            <h1 className="mt-1 text-3xl font-black text-zinc-950">Reports</h1>
-            <p className="mt-2 text-sm text-zinc-500">Generated files and report archive</p>
-          </div>
-          <Link className="rounded-md border border-zinc-300 bg-white px-4 py-2.5 text-center text-sm font-semibold text-zinc-700 transition hover:bg-zinc-50" href="/dashboard">
-            Back to Dashboard
-          </Link>
-        </div>
+    <SystemShell
+      activePath="/eqp/reports"
+      eyebrow="EQP Module"
+      title="PDF Reports Archive"
+      description="Generated maintenance PDFs, report numbers, machine coverage, and archive actions."
+      actions={<Button type="button" variant="secondary" onClick={loadReports}>Refresh</Button>}
+    >
+      <div className="grid gap-6">
 
         <div className="mb-6 grid gap-4 sm:grid-cols-3">
           <ArchiveMetric label="Total Reports" value={archiveStats.total} tone="dark" />
@@ -174,7 +171,6 @@ export default function ReportsPage() {
                 />
                 <div className="flex flex-wrap items-center gap-2">
                   <Badge tone="neutral">{filteredReports.length} visible</Badge>
-                  <Button variant="secondary" onClick={loadReports}>Refresh</Button>
                   <Button variant="ghost" onClick={() => setSearchTerm('')}>Clear Search</Button>
                 </div>
               </div>
@@ -261,7 +257,7 @@ export default function ReportsPage() {
       )}
 
       <Toast message={toast?.message} type={toast?.type} onClose={() => setToast(null)} />
-    </main>
+    </SystemShell>
   );
 }
 

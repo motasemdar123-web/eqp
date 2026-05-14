@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import Link from 'next/link';
+import SystemShell from '../../../components/SystemShell';
 import Card from '../../../components/ui/Card';
 import Badge from '../../../components/ui/Badge';
 import Button from '../../../components/ui/Button';
@@ -222,31 +222,26 @@ export default function SchedulingPage() {
   const jobCards = board.jobCards || [];
 
   return (
-    <main className="min-h-screen bg-[#edf1ea] text-zinc-900">
-      <header className="border-b border-zinc-200 bg-white">
-        <div className="mx-auto flex max-w-7xl flex-col gap-4 px-6 py-5 md:flex-row md:items-center md:justify-between">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">Operations Control</p>
-            <h1 className="mt-1 text-3xl font-black text-zinc-950">Scheduling & Job Cards</h1>
-          </div>
-          <div className="flex flex-wrap gap-2">
-            <Link href="/management" className="rounded-md border border-zinc-300 bg-white px-4 py-2.5 text-sm font-semibold text-zinc-700 hover:bg-zinc-50">
-              Dashboard
-            </Link>
-            <input
-              type="date"
-              value={date}
-              onChange={(event) => loadBoard(event.target.value)}
-              className="h-10 rounded-md border border-zinc-300 bg-white px-3 text-sm font-semibold text-zinc-800"
-            />
-            <Button type="button" variant="secondary" onClick={() => loadBoard(date)} disabled={!token || loading}>
-              Refresh
-            </Button>
-          </div>
-        </div>
-      </header>
-
-      <section className="mx-auto grid max-w-7xl gap-5 px-6 py-6">
+    <SystemShell
+      activePath="/management/scheduling"
+      eyebrow="Operations Control"
+      title="Scheduling & Job Cards"
+      description="Daily roster, shifts, job cards, team assignments, and workload control."
+      actions={(
+        <>
+          <input
+            type="date"
+            value={date}
+            onChange={(event) => loadBoard(event.target.value)}
+            className="h-10 rounded-md border border-zinc-300 bg-white px-3 text-sm font-semibold text-zinc-800"
+          />
+          <Button type="button" variant="secondary" onClick={() => loadBoard(date)} disabled={!token || loading}>
+            Refresh
+          </Button>
+        </>
+      )}
+    >
+      <section className="grid gap-5">
         {!token && (
           <Card className="p-5">
             <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
@@ -450,6 +445,6 @@ export default function SchedulingPage() {
           </Card>
         </div>
       </section>
-    </main>
+    </SystemShell>
   );
 }

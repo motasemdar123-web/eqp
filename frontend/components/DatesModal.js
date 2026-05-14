@@ -5,7 +5,7 @@ export default function DatesModal({ dates, onChange, onCancel, onSubmit, disabl
     <div className="fixed inset-0 z-40 flex items-center justify-center bg-zinc-950/60 p-4 backdrop-blur-sm">
       <div className="w-full max-w-2xl rounded-lg border border-zinc-200 bg-white p-6 text-zinc-900 shadow-2xl">
         <h2 className="text-2xl font-bold">Select Report Dates</h2>
-        <p className="mt-2 text-sm text-zinc-500">Each date creates one report per selected machine.</p>
+        <p className="mt-2 text-sm text-zinc-500">Each date creates one PDF per selected machine.</p>
 
         <div className="mt-6 grid gap-3">
           {dates.map((date, index) => (
@@ -23,7 +23,7 @@ export default function DatesModal({ dates, onChange, onCancel, onSubmit, disabl
 
         <div className="mt-6 flex justify-end gap-3">
           <Button variant="secondary" onClick={onCancel} disabled={disabled}>Cancel</Button>
-          <Button onClick={onSubmit} disabled={disabled}>Generate</Button>
+          <Button onClick={onSubmit} disabled={disabled}>Generate PDFs</Button>
         </div>
       </div>
     </div>

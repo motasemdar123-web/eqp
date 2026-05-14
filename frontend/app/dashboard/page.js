@@ -131,7 +131,7 @@ export default function DashboardPage() {
 
   function handleNavigate(page) {
     if (page === 'reports') {
-      router.push('/reports');
+      router.push('/eqp/reports');
       return;
     }
 
@@ -233,7 +233,7 @@ export default function DashboardPage() {
       });
 
       setGenerationSummary(data);
-      setToast({ type: 'success', message: `Generated ${data.generatedFiles.length} reports successfully.` });
+      setToast({ type: 'success', message: `Generated ${data.generatedFiles.length} PDF reports successfully.` });
       setShowDatesModal(false);
       setSelectedMachines([]);
       await loadDashboardData();
@@ -247,7 +247,7 @@ export default function DashboardPage() {
 
   return (
     <AppShell activePage={activePage} onNavigate={handleNavigate} onLogout={logout} userCode={userCode}>
-      <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6">
+      <div className="grid gap-6">
         {error && (
           <p className="mb-5 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
             {error}
@@ -289,7 +289,7 @@ export default function DashboardPage() {
         ) : (
           <MachineHistory history={machineHistory} />
         )}
-      </main>
+      </div>
 
       {showDatesModal && (
         <DatesModal
@@ -302,7 +302,7 @@ export default function DashboardPage() {
       )}
 
       {isGenerating && (
-        <LoadingOverlay title="Generating Reports..." description="Creating files and updating machine counters" />
+        <LoadingOverlay title="Generating PDF Reports..." description="Preparing workbooks, exporting PDFs, and updating machine counters" />
       )}
 
       <Toast
@@ -328,8 +328,8 @@ function DashboardContent(props) {
         <div className="flex items-start justify-between gap-4">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-yellow-700">Report Builder</p>
-            <h2 className="mt-2 text-2xl font-bold text-zinc-950">Generate Reports</h2>
-            <p className="mt-2 text-sm text-zinc-500">Choose template type, service, machines, and dates.</p>
+            <h2 className="mt-2 text-2xl font-bold text-zinc-950">Generate PDF Reports</h2>
+            <p className="mt-2 text-sm text-zinc-500">Create finalized PDF reports from EQP templates.</p>
           </div>
         </div>
 
@@ -371,7 +371,7 @@ function DashboardContent(props) {
           </Field>
 
           <Button onClick={props.openDatesModal} className="w-full">
-            Generate Reports
+            Generate PDF Reports
           </Button>
         </div>
 
@@ -388,10 +388,10 @@ function DashboardContent(props) {
         {props.generationSummary && (
           <div className="mt-5 rounded-lg border border-emerald-200 bg-emerald-50 p-4">
             <p className="text-sm font-bold text-emerald-800">
-              {props.generationSummary.generatedFiles.length} reports generated
+              {props.generationSummary.generatedFiles.length} PDF reports generated
             </p>
             <p className="mt-1 text-xs text-emerald-700">
-              {props.generationSummary.totalMachines} machines were processed in the latest run.
+              {props.generationSummary.totalMachines} machines were processed and exported as PDF.
             </p>
           </div>
         )}

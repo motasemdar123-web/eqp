@@ -2,10 +2,10 @@
 
 import Link from 'next/link';
 import { useMemo, useState } from 'react';
+import SystemShell from '../../components/SystemShell';
 import Card from '../../components/ui/Card';
 import Badge from '../../components/ui/Badge';
-import Button from '../../components/ui/Button';
-import { clearStoredUser, getStoredPlatformSession } from '../../lib/auth';
+import { getStoredPlatformSession } from '../../lib/auth';
 
 const modules = [
   { title: 'Engineer Approvals', href: '/engineer', status: 'Live', description: 'Review technician completion evidence, approve finished jobs, or return work for correction.' },
@@ -14,7 +14,7 @@ const modules = [
   { title: 'Work Orders', href: '/management/work-orders', status: 'Ready', description: 'Assignment, labor, materials, closure controls, and team execution.' },
   { title: 'Assets', href: '/management/assets', status: 'Ready', description: 'Asset register, QR readiness, warranty, history, and cost accumulation.' },
   { title: 'Inventory', href: '/management/inventory', status: 'Ready', description: 'Stock, reorder thresholds, issue, return, transfer, supplier and cost tracking.' },
-  { title: 'EQP Module', href: '/eqp', status: 'Preserved', description: 'Preventive maintenance Excel reports, archive, machine history, and storage.' },
+  { title: 'EQP Module', href: '/eqp', status: 'Preserved', description: 'Preventive maintenance PDF reports, archive, machine history, and storage.' },
 ];
 
 const kpis = [
@@ -29,39 +29,20 @@ export default function ManagementDashboardPage() {
   const user = session?.user;
   const roleLabel = useMemo(() => user?.roles?.join(', ') || 'Guest view', [user]);
 
-  function logout() {
-    clearStoredUser();
-    window.location.href = '/';
-  }
-
   return (
-    <main className="min-h-screen bg-[#edf1ea] text-zinc-900">
-      <header className="border-b border-zinc-200 bg-white/90 backdrop-blur">
-        <div className="mx-auto flex max-w-7xl flex-col gap-5 px-6 py-6 lg:flex-row lg:items-center lg:justify-between">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">Dar Al HAI</p>
-            <h1 className="mt-2 text-3xl font-black tracking-tight text-zinc-950 md:text-4xl">Maintenance Command Center</h1>
-            <p className="mt-2 max-w-2xl text-sm leading-6 text-zinc-600">
-              A unified operations workspace for requests, scheduling, assets, inventory, work orders, and EQP reporting.
-            </p>
-          </div>
-          <div className="flex flex-wrap gap-2">
-            <div className="rounded-md border border-zinc-200 bg-zinc-50 px-4 py-2 text-sm text-zinc-700">
-              <span className="font-semibold">{user?.fullName || 'Not signed in'}</span>
-              <span className="block text-xs text-zinc-500">{roleLabel}</span>
-            </div>
-            {user ? (
-              <Button variant="ghost" onClick={logout}>Logout</Button>
-            ) : (
-              <Link href="/" className="rounded-md bg-yellow-400 px-4 py-2.5 text-sm font-semibold text-zinc-950 hover:bg-yellow-300">
-                Sign In
-              </Link>
-            )}
-          </div>
-        </div>
-      </header>
-
-      <section className="mx-auto grid max-w-7xl gap-6 px-6 py-8">
+    <SystemShell
+      activePath="/management"
+      eyebrow="Dar Al HAI"
+      title="Maintenance Command Center"
+      description="Unified operations workspace for requests, scheduling, assets, inventory, work orders, and EQP reporting."
+      userLabel={roleLabel}
+      actions={!user ? (
+        <Link href="/" className="rounded-md bg-yellow-400 px-4 py-2.5 text-sm font-semibold text-zinc-950 hover:bg-yellow-300">
+          Sign In
+        </Link>
+      ) : null}
+    >
+      <section className="grid gap-6">
         <div className="grid gap-4 md:grid-cols-4">
           {kpis.map((kpi) => (
             <Card key={kpi.label} className={`p-5 ${kpi.tone === 'dark' ? 'border-zinc-900 bg-zinc-950 text-white' : ''}`}>
@@ -111,6 +92,6 @@ export default function ManagementDashboardPage() {
           </div>
         </Card>
       </section>
-    </main>
+    </SystemShell>
   );
 }

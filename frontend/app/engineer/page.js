@@ -3,7 +3,7 @@
 /* eslint-disable @next/next/no-img-element */
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import Link from 'next/link';
+import SystemShell from '../../components/SystemShell';
 import Button from '../../components/ui/Button';
 import Card from '../../components/ui/Card';
 import Badge from '../../components/ui/Badge';
@@ -97,27 +97,15 @@ export default function EngineerApprovalsPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#edf1ea] text-zinc-900">
-      <header className="border-b border-zinc-200 bg-white">
-        <div className="mx-auto flex max-w-7xl flex-col gap-4 px-6 py-5 md:flex-row md:items-center md:justify-between">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">Dar Al HAI</p>
-            <h1 className="mt-1 text-3xl font-black text-zinc-950">Engineer Approvals</h1>
-            <p className="mt-2 max-w-2xl text-sm text-zinc-600">
-              Review technician completion evidence, approve completed work, or return jobs for correction.
-            </p>
-          </div>
-          <div className="flex flex-wrap gap-2">
-            <Link href="/management" className="rounded-md border border-zinc-300 bg-white px-4 py-2.5 text-sm font-semibold text-zinc-700 hover:bg-zinc-50">
-              Command Center
-            </Link>
-            <Button type="button" variant="secondary" onClick={loadRequests} disabled={loading}>Refresh</Button>
-            <Button type="button" variant="ghost" onClick={logout}>Logout</Button>
-          </div>
-        </div>
-      </header>
-
-      <section className="mx-auto grid max-w-7xl gap-5 px-6 py-6">
+    <SystemShell
+      activePath="/engineer"
+      eyebrow="Dar Al HAI"
+      title="Engineer Approvals"
+      description="Review technician completion evidence, approve completed work, or return jobs for correction."
+      onLogout={logout}
+      actions={<Button type="button" variant="secondary" onClick={loadRequests} disabled={loading}>Refresh</Button>}
+    >
+      <section className="grid gap-5">
         {message && (
           <div className="rounded-md border border-zinc-200 bg-white px-4 py-3 text-sm font-semibold text-zinc-700">
             {message}
@@ -221,7 +209,7 @@ export default function EngineerApprovalsPage() {
           })}
         </div>
       </section>
-    </main>
+    </SystemShell>
   );
 }
 

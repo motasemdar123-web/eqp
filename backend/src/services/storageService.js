@@ -1,13 +1,13 @@
 const { getSupabaseClient } = require('../config/supabase');
 const { env } = require('../config/env');
 
-async function uploadReport(fileName, buffer) {
+async function uploadReport(fileName, buffer, contentType = 'application/pdf') {
   const supabase = getSupabaseClient();
 
   const { error } = await supabase.storage
     .from(env.supabase.reportsBucket)
     .upload(fileName, buffer, {
-      contentType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      contentType,
       upsert: true,
     });
 
