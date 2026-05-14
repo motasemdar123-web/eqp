@@ -70,7 +70,7 @@ async function listDashboard() {
     prisma.maintenanceRequest.count({ where: { slaTargetAt: { lt: new Date() }, status: { notIn: ['COMPLETED', 'CLOSED', 'CANCELLED'] } } }),
     prisma.workOrder.count({ where: { status: { in: ['OPEN', 'ASSIGNED', 'IN_PROGRESS', 'WAITING_PARTS'] } } }),
     prisma.asset.count(),
-    prisma.stockItem.count({ where: { quantity: { lte: 0 } } }),
+    prisma.inventoryItem.count({ where: { quantity: { lte: 0 } } }),
     prisma.maintenanceRequest.findMany({ orderBy: { createdAt: 'desc' }, take: 8 }),
   ]);
 
@@ -131,20 +131,34 @@ async function updateMaintenanceRequestStatus(id, status, notes) {
 async function createWorkOrder(payload) {
   const prisma = requirePrisma();
 
-  return prisma.workOrder.create({
-    data: {
-      workOrderNumber: nextNumber('WO'),
-      requestId: payload.requestId,
-      assetId: payload.assetId,
-      title: payload.title,
-      description: payload.description,
-      priority: payload.priority || 'MEDIUM',
-      status: payload.status || 'OPEN',
-      assignedTechnicianId: payload.assignedTechnicianId,
-      teamName: payload.teamName,
-      scheduledStartAt: payload.scheduledStartAt ? new Date(payload.scheduledStartAt) : null,
-      scheduledEndAt: payload.scheduledEndAt ? new Date(payload.scheduledEndAt) : null,
-    },
+  return prisma.$transaction(async (tx) => {
+    const workOrder = await tx.workOrder.create({
+      data: {
+        workOrderNumber: nextNumber('WO'),
+        requestId: payload.requestId,
+        assetId: payload.assetId,
+        title: payload.title,
+        description: payload.description,
+        priority: payload.priority || 'MEDIUM',
+        status: payload.status || 'OPEN',
+        scheduledStartAt: payload.scheduledStartAt ? new Date(payload.scheduledStartAt) : null,
+        scheduledEndAt: payload.scheduledEndAt ? new Date(payload.scheduledEndAt) : null,
+      },
+    });
+
+    if (payload.assignedTechnicianId) {
+      await tx.workOrderAssignment.create({
+        data: {
+          workOrderId: workOrder.id,
+          technicianId: payload.assignedTechnicianId,
+        },
+      });
+    }
+
+    return tx.workOrder.findUnique({
+      where: { id: workOrder.id },
+      include: { assignments: true },
+    });
   });
 }
 

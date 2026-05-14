@@ -29,6 +29,7 @@ async function findByIds(machineIds) {
 
 async function updateCounters(machineId, values) {
   const table = await resolveEqpTable('eqp_machines', 'machines');
+  const updatedAtClause = table === 'eqp_machines' ? ', updated_at = CURRENT_TIMESTAMP' : '';
   await db.query(
     `
       UPDATE ${table}
@@ -36,6 +37,7 @@ async function updateCounters(machineId, values) {
         last_smr = $1,
         smr_step = $2,
         report_counter = $3
+        ${updatedAtClause}
       WHERE id = $4
     `,
     [

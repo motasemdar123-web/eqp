@@ -28,10 +28,12 @@ async function findById(id) {
 
 async function rename(id, fileName) {
   const table = await resolveEqpTable('eqp_reports', 'reports');
+  const updatedAtClause = table === 'eqp_reports' ? ', updated_at = CURRENT_TIMESTAMP' : '';
   const result = await db.query(
     `
       UPDATE ${table}
       SET file_name = $1
+      ${updatedAtClause}
       WHERE id = $2
       RETURNING *
     `,
@@ -54,6 +56,8 @@ async function remove(id) {
 
 async function create(report) {
   const table = await resolveEqpTable('eqp_reports', 'reports');
+  const timestampColumns = table === 'eqp_reports' ? ', updated_at' : '';
+  const timestampValues = table === 'eqp_reports' ? ', CURRENT_TIMESTAMP' : '';
   await db.query(
     `
       INSERT INTO ${table}
@@ -71,10 +75,12 @@ async function create(report) {
         service_type,
         file_name,
         file_url
+        ${timestampColumns}
       )
       VALUES
       (
         $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13
+        ${timestampValues}
       )
     `,
     [

@@ -1,0 +1,5 @@
+-- Baseline marker for existing legacy EQP databases.
+-- Fresh databases can run this as a no-op before the Dar Al HAI platform migration.
+-- Existing production databases should mark this migration as applied once, then
+-- run prisma migrate deploy so the next migration performs the safe compatibility
+-- upgrade and data copy.

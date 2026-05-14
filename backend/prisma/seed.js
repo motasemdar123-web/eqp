@@ -38,6 +38,50 @@ async function upsertPermission(code) {
   });
 }
 
+async function ensureUserRole(userId, roleId) {
+  await prisma.userRole.upsert({
+    where: { userId_roleId: { userId, roleId } },
+    update: {},
+    create: { userId, roleId },
+  });
+}
+
+async function upsertSeedUser({ email, userNumber, fullName, passwordHash, locale = 'en' }) {
+  if (userNumber) {
+    const existingByNumber = await prisma.user.findUnique({ where: { userNumber } });
+    if (existingByNumber) {
+      return prisma.user.update({
+        where: { id: existingByNumber.id },
+        data: {
+          email,
+          fullName: existingByNumber.fullName || fullName,
+          passwordHash,
+          locale,
+          status: 'ACTIVE',
+        },
+      });
+    }
+  }
+
+  return prisma.user.upsert({
+    where: { email },
+    update: {
+      ...(userNumber ? { userNumber } : {}),
+      fullName,
+      passwordHash,
+      locale,
+      status: 'ACTIVE',
+    },
+    create: {
+      email,
+      ...(userNumber ? { userNumber } : {}),
+      fullName,
+      passwordHash,
+      locale,
+    },
+  });
+}
+
 async function main() {
   const roles = {};
   const permissions = {};
@@ -71,42 +115,28 @@ async function main() {
   const passwordHash = await bcrypt.hash(process.env.SEED_ADMIN_PASSWORD || 'ChangeMe123!', 12);
   const adminEmail = process.env.SEED_ADMIN_EMAIL || 'admin@daralhai.com';
 
-  const admin = await prisma.user.upsert({
-    where: { email: adminEmail },
-    update: {},
-    create: {
-      email: adminEmail,
-      fullName: 'Dar Al HAI System Administrator',
-      passwordHash,
-      roles: {
-        create: [{ roleId: roles.SUPER_ADMIN.id }],
-      },
-    },
+  const admin = await upsertSeedUser({
+    email: adminEmail,
+    fullName: 'Dar Al HAI System Administrator',
+    passwordHash,
   });
+  await ensureUserRole(admin.id, roles.SUPER_ADMIN.id);
 
-  const manager = await prisma.user.upsert({
-    where: { email: 'operations.manager@daralhai.com' },
-    update: {},
-    create: {
-      email: 'operations.manager@daralhai.com',
-      fullName: 'Operations Manager',
-      passwordHash,
-      roles: { create: [{ roleId: roles.OPERATIONS_MANAGER.id }] },
-    },
+  const manager = await upsertSeedUser({
+    email: 'operations.manager@daralhai.com',
+    fullName: 'Operations Manager',
+    passwordHash,
   });
+  await ensureUserRole(manager.id, roles.OPERATIONS_MANAGER.id);
 
-  const technicianUser = await prisma.user.upsert({
-    where: { email: 'technician.ahmad@daralhai.com' },
-    update: {},
-    create: {
-      email: 'technician.ahmad@daralhai.com',
-      userNumber: 1001,
-      fullName: 'Ahmad Field Technician',
-      passwordHash,
-      locale: 'ar',
-      roles: { create: [{ roleId: roles.FIELD_TECHNICIAN.id }] },
-    },
+  const technicianUser = await upsertSeedUser({
+    email: 'technician.ahmad@daralhai.com',
+    userNumber: 1001,
+    fullName: 'Ahmad Field Technician',
+    passwordHash,
+    locale: 'ar',
   });
+  await ensureUserRole(technicianUser.id, roles.FIELD_TECHNICIAN.id);
 
   const client = await prisma.client.upsert({
     where: { code: 'DAH' },
@@ -180,8 +210,13 @@ async function main() {
     },
   });
 
-  const shift = await prisma.shift.create({
-    data: {
+  const shift = await prisma.shift.upsert({
+    where: { branchId_name: { branchId: branch.id, name: 'Morning Shift' } },
+    update: {
+      startsAt: '08:00',
+      endsAt: '16:00',
+    },
+    create: {
       name: 'Morning Shift',
       startsAt: '08:00',
       endsAt: '16:00',
@@ -268,8 +303,13 @@ async function main() {
     },
   });
 
-  await prisma.stockMovement.create({
-    data: {
+  await prisma.stockMovement.upsert({
+    where: { itemId_reference: { itemId: filter.id, reference: 'SEED-STOCK' } },
+    update: {
+      quantity: 25,
+      unitCost: 35,
+    },
+    create: {
       itemId: filter.id,
       type: 'PURCHASE_RECEIPT',
       quantity: 25,
@@ -278,8 +318,13 @@ async function main() {
     },
   });
 
-  const pmPlan = await prisma.preventiveMaintenancePlan.create({
-    data: {
+  const pmPlan = await prisma.preventiveMaintenancePlan.upsert({
+    where: { assetId_name: { assetId: asset.id, name: 'Monthly HVAC Filter Inspection' } },
+    update: {
+      frequency: 'MONTHLY',
+      isActive: true,
+    },
+    create: {
       name: 'Monthly HVAC Filter Inspection',
       assetId: asset.id,
       frequency: 'MONTHLY',
@@ -287,10 +332,13 @@ async function main() {
     },
   });
 
-  await prisma.preventiveMaintenanceSchedule.create({
-    data: {
+  const nextPmDueAt = new Date('2026-06-01T08:00:00.000Z');
+  await prisma.preventiveMaintenanceSchedule.upsert({
+    where: { planId_dueAt: { planId: pmPlan.id, dueAt: nextPmDueAt } },
+    update: {},
+    create: {
       planId: pmPlan.id,
-      dueAt: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
+      dueAt: nextPmDueAt,
     },
   });
 

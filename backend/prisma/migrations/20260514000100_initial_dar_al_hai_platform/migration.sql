@@ -1,6 +1,61 @@
 -- CreateSchema
 CREATE SCHEMA IF NOT EXISTS "public";
 
+-- Legacy EQP compatibility:
+-- Existing deployments may already have a legacy "users" table with numeric ids.
+-- Rename it before creating the platform users table, then copy technician codes back
+-- into the new canonical "users" table at the end of this migration.
+DO $$
+DECLARE
+  legacy_index record;
+BEGIN
+  IF to_regclass('public.users') IS NOT NULL
+     AND EXISTS (
+       SELECT 1
+       FROM information_schema.columns
+       WHERE table_schema = 'public'
+         AND table_name = 'users'
+         AND column_name = 'id'
+         AND data_type IN ('integer', 'bigint')
+     )
+     AND NOT EXISTS (
+       SELECT 1
+       FROM information_schema.columns
+       WHERE table_schema = 'public'
+         AND table_name = 'users'
+         AND column_name = 'email'
+     )
+  THEN
+    IF to_regclass('public.legacy_eqp_users') IS NULL THEN
+      ALTER TABLE public.users RENAME TO legacy_eqp_users;
+      IF EXISTS (
+        SELECT 1
+        FROM pg_constraint
+        WHERE conrelid = 'public.legacy_eqp_users'::regclass
+          AND conname = 'users_pkey'
+      ) THEN
+        ALTER TABLE public.legacy_eqp_users RENAME CONSTRAINT users_pkey TO legacy_eqp_users_pkey;
+      END IF;
+
+      FOR legacy_index IN
+        SELECT indexname
+        FROM pg_indexes
+        WHERE schemaname = 'public'
+          AND tablename = 'legacy_eqp_users'
+          AND indexname LIKE 'users_%'
+      LOOP
+        EXECUTE format(
+          'ALTER INDEX public.%I RENAME TO %I',
+          legacy_index.indexname,
+          'legacy_eqp_' || legacy_index.indexname
+        );
+      END LOOP;
+    ELSE
+      RAISE EXCEPTION 'Cannot migrate: both legacy users and legacy_eqp_users exist.';
+    END IF;
+  END IF;
+END $$;
+
 -- CreateEnum
 CREATE TYPE "UserStatus" AS ENUM ('ACTIVE', 'INACTIVE', 'SUSPENDED', 'INVITED');
 
@@ -935,13 +990,22 @@ CREATE INDEX "technician_profiles_shift_id_idx" ON "technician_profiles"("shift_
 CREATE INDEX "technician_skills_skill_idx" ON "technician_skills"("skill");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "technician_skills_technician_id_skill_key" ON "technician_skills"("technician_id", "skill");
+
+-- CreateIndex
 CREATE INDEX "preventive_maintenance_plans_asset_id_idx" ON "preventive_maintenance_plans"("asset_id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "preventive_maintenance_plans_asset_id_name_key" ON "preventive_maintenance_plans"("asset_id", "name");
 
 -- CreateIndex
 CREATE INDEX "preventive_maintenance_schedules_due_at_idx" ON "preventive_maintenance_schedules"("due_at");
 
 -- CreateIndex
 CREATE INDEX "preventive_maintenance_schedules_plan_id_idx" ON "preventive_maintenance_schedules"("plan_id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "preventive_maintenance_schedules_plan_id_due_at_key" ON "preventive_maintenance_schedules"("plan_id", "due_at");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "inventory_items_sku_key" ON "inventory_items"("sku");
@@ -957,6 +1021,9 @@ CREATE INDEX "stock_movements_work_order_id_idx" ON "stock_movements"("work_orde
 
 -- CreateIndex
 CREATE INDEX "stock_movements_type_idx" ON "stock_movements"("type");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "stock_movements_item_id_reference_key" ON "stock_movements"("item_id", "reference");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "suppliers_code_key" ON "suppliers"("code");
@@ -1016,6 +1083,9 @@ CREATE INDEX "holidays_branch_id_date_idx" ON "holidays"("branch_id", "date");
 CREATE INDEX "shifts_branch_id_idx" ON "shifts"("branch_id");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "shifts_branch_id_name_key" ON "shifts"("branch_id", "name");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "technician_attendance_technician_id_date_key" ON "technician_attendance"("technician_id", "date");
 
 -- CreateIndex
@@ -1056,6 +1126,9 @@ CREATE INDEX "eqp_machine_history_machine_id_idx" ON "eqp_machine_history"("mach
 
 -- CreateIndex
 CREATE INDEX "eqp_machine_history_created_at_idx" ON "eqp_machine_history"("created_at");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "eqp_report_comments_comment_text_key" ON "eqp_report_comments"("comment_text");
 
 -- AddForeignKey
 ALTER TABLE "users" ADD CONSTRAINT "users_client_id_fkey" FOREIGN KEY ("client_id") REFERENCES "clients"("id") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -1194,4 +1267,197 @@ ALTER TABLE "eqp_reports" ADD CONSTRAINT "eqp_reports_machine_id_fkey" FOREIGN K
 
 -- AddForeignKey
 ALTER TABLE "eqp_machine_history" ADD CONSTRAINT "eqp_machine_history_machine_id_fkey" FOREIGN KEY ("machine_id") REFERENCES "eqp_machines"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- Copy data from the legacy EQP tables when this migration is applied to an
+-- existing EQP deployment. Fresh databases simply skip these blocks.
+DO $$
+BEGIN
+  IF to_regclass('public.legacy_eqp_users') IS NOT NULL THEN
+    INSERT INTO public.users (
+      id,
+      email,
+      user_number,
+      full_name,
+      password_hash,
+      locale,
+      status,
+      created_at,
+      updated_at
+    )
+    SELECT
+      lower(md5('legacy-eqp-user:' || id::text)),
+      'legacy.user.' || user_number::text || '@daralhai.local',
+      user_number,
+      COALESCE(NULLIF(full_name, ''), NULLIF(trim(concat_ws(' ', first_name, last_name)), ''), 'Legacy EQP User ' || user_number::text),
+      '$2b$12$7j.U4Ck2BUPboYaxqa1Ec..crziknpMECOn3aLHsGpwzm0KF3ZOVa',
+      'ar',
+      'ACTIVE'::"UserStatus",
+      CURRENT_TIMESTAMP,
+      CURRENT_TIMESTAMP
+    FROM public.legacy_eqp_users
+    ON CONFLICT (user_number) DO NOTHING;
+  END IF;
+END $$;
+
+DO $$
+DECLARE
+  max_id integer;
+BEGIN
+  IF to_regclass('public.machines') IS NOT NULL THEN
+    INSERT INTO public.eqp_machines (
+      id,
+      machine_number,
+      engine_number,
+      machine_type,
+      last_smr,
+      smr_step,
+      report_counter,
+      responsible_engineer,
+      created_at,
+      updated_at
+    )
+    SELECT
+      id::integer,
+      machine_number::text,
+      engine_number::text,
+      machine_type,
+      COALESCE(last_smr, 0)::integer,
+      COALESCE(smr_step, 0)::integer,
+      COALESCE(report_counter, 0)::integer,
+      responsible_engineer,
+      CURRENT_TIMESTAMP,
+      CURRENT_TIMESTAMP
+    FROM public.machines
+    WHERE id BETWEEN 1 AND 2147483647
+    ON CONFLICT (machine_number) DO NOTHING;
+
+    SELECT MAX(id) INTO max_id FROM public.eqp_machines;
+    PERFORM setval(pg_get_serial_sequence('public.eqp_machines', 'id'), COALESCE(max_id, 1), max_id IS NOT NULL);
+  END IF;
+END $$;
+
+DO $$
+DECLARE
+  max_id integer;
+BEGIN
+  IF to_regclass('public.reports') IS NOT NULL THEN
+    INSERT INTO public.eqp_reports (
+      id,
+      report_no,
+      machine_type,
+      machine_id,
+      engine_number,
+      smr,
+      service_date,
+      comments,
+      created_by,
+      machine_number,
+      report_type,
+      service_type,
+      file_name,
+      file_url,
+      created_at,
+      updated_at
+    )
+    SELECT
+      r.id::integer,
+      r.report_no,
+      r.machine_type,
+      CASE
+        WHEN r.machine_id IS NOT NULL AND EXISTS (
+          SELECT 1 FROM public.eqp_machines em WHERE em.id = r.machine_id::integer
+        )
+        THEN r.machine_id::integer
+        ELSE NULL
+      END,
+      r.engine_number::text,
+      r.smr,
+      r.service_date,
+      r.comments,
+      r.created_by,
+      r.machine_number,
+      r.report_type,
+      r.service_type,
+      r.file_name,
+      r.file_url,
+      COALESCE(r.created_at, CURRENT_TIMESTAMP),
+      COALESCE(r.created_at, CURRENT_TIMESTAMP)
+    FROM public.reports r
+    WHERE r.report_no IS NOT NULL
+      AND r.id BETWEEN 1 AND 2147483647
+    ON CONFLICT (report_no) DO NOTHING;
+
+    SELECT MAX(id) INTO max_id FROM public.eqp_reports;
+    PERFORM setval(pg_get_serial_sequence('public.eqp_reports', 'id'), COALESCE(max_id, 1), max_id IS NOT NULL);
+  END IF;
+END $$;
+
+DO $$
+DECLARE
+  max_id integer;
+BEGIN
+  IF to_regclass('public.machine_history') IS NOT NULL THEN
+    INSERT INTO public.eqp_machine_history (
+      id,
+      machine_id,
+      operation_type,
+      smr,
+      performed_by,
+      operation_date,
+      created_at,
+      updated_at
+    )
+    SELECT
+      mh.id::integer,
+      CASE
+        WHEN mh.machine_id IS NOT NULL AND EXISTS (
+          SELECT 1 FROM public.eqp_machines em WHERE em.id = mh.machine_id::integer
+        )
+        THEN mh.machine_id::integer
+        ELSE NULL
+      END,
+      mh.operation_type,
+      mh.smr,
+      mh.performed_by,
+      mh.operation_date,
+      COALESCE(mh.created_at, CURRENT_TIMESTAMP),
+      COALESCE(mh.created_at, CURRENT_TIMESTAMP)
+    FROM public.machine_history mh
+    WHERE mh.id BETWEEN 1 AND 2147483647
+    ON CONFLICT (id) DO NOTHING;
+
+    SELECT MAX(id) INTO max_id FROM public.eqp_machine_history;
+    PERFORM setval(pg_get_serial_sequence('public.eqp_machine_history', 'id'), COALESCE(max_id, 1), max_id IS NOT NULL);
+  END IF;
+END $$;
+
+DO $$
+DECLARE
+  max_id integer;
+BEGIN
+  IF to_regclass('public.report_comments') IS NOT NULL THEN
+    INSERT INTO public.eqp_report_comments (
+      id,
+      comment_text,
+      frequency,
+      created_at,
+      updated_at
+    )
+    SELECT
+      id::integer,
+      comment_text,
+      COALESCE(frequency, 1),
+      CURRENT_TIMESTAMP,
+      CURRENT_TIMESTAMP
+    FROM public.report_comments
+    WHERE comment_text IS NOT NULL
+      AND id BETWEEN 1 AND 2147483647
+    ON CONFLICT (comment_text) DO UPDATE
+      SET frequency = GREATEST(public.eqp_report_comments.frequency, EXCLUDED.frequency),
+          updated_at = CURRENT_TIMESTAMP;
+
+    SELECT MAX(id) INTO max_id FROM public.eqp_report_comments;
+    PERFORM setval(pg_get_serial_sequence('public.eqp_report_comments', 'id'), COALESCE(max_id, 1), max_id IS NOT NULL);
+  END IF;
+END $$;
 

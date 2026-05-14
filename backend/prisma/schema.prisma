@@ -74,6 +74,7 @@ enum RequestSource {
   EMAIL
   WHATSAPP
   PORTAL
+  CALL_CENTER
   TECHNICIAN
   PREVENTIVE_MAINTENANCE
   MANAGEMENT
@@ -531,6 +532,7 @@ model TechnicianSkill {
   updatedById  String?  @map("updated_by")
 
   @@index([skill])
+  @@unique([technicianId, skill])
   @@map("technician_skills")
 }
 
@@ -549,6 +551,7 @@ model PreventiveMaintenancePlan {
   deletedAt   DateTime? @map("deleted_at")
 
   @@index([assetId])
+  @@unique([assetId, name])
   @@map("preventive_maintenance_plans")
 }
 
@@ -566,6 +569,7 @@ model PreventiveMaintenanceSchedule {
 
   @@index([dueAt])
   @@index([planId])
+  @@unique([planId, dueAt])
   @@map("preventive_maintenance_schedules")
 }
 
@@ -607,6 +611,7 @@ model StockMovement {
   @@index([itemId])
   @@index([workOrderId])
   @@index([type])
+  @@unique([itemId, reference])
   @@map("stock_movements")
 }
 
@@ -845,6 +850,7 @@ model Shift {
   deletedAt   DateTime? @map("deleted_at")
 
   @@index([branchId])
+  @@unique([branchId, name])
   @@map("shifts")
 }
 
@@ -1002,7 +1008,7 @@ model EqpMachineHistory {
 
 model EqpReportComment {
   id          Int      @id @default(autoincrement())
-  commentText String   @map("comment_text")
+  commentText String   @unique @map("comment_text")
   frequency   Int      @default(1)
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
