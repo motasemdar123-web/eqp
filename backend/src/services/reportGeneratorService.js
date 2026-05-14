@@ -44,11 +44,20 @@ async function probeConverterCommand(command) {
 async function getPdfConverterStatus() {
   const commands = converterCommands();
   const probes = await Promise.all(commands.map((command) => probeConverterCommand(command)));
+  const localAvailable = probes.some((probe) => probe.available);
+  const convertApiConfigured = Boolean(process.env.CONVERTAPI_SECRET);
 
   return {
-    available: probes.some((probe) => probe.available),
+    available: localAvailable || convertApiConfigured,
+    localAvailable,
     commands: probes,
     configuredBinary: process.env.LIBREOFFICE_BIN || null,
+    remoteProviders: {
+      convertApi: {
+        configured: convertApiConfigured,
+        endpoint: process.env.CONVERTAPI_ENDPOINT || 'https://v2.convertapi.com/convert/xlsx/to/pdf',
+      },
+    },
     runtime: {
       platform: process.platform,
       release: os.release(),
@@ -56,6 +65,23 @@ async function getPdfConverterStatus() {
       nodeEnv: process.env.NODE_ENV || null,
     },
   };
+}
+
+function bufferLooksLikePdf(buffer) {
+  return Buffer.isBuffer(buffer) && buffer.subarray(0, 4).toString('utf8') === '%PDF';
+}
+
+function parseConvertApiError(responseBuffer) {
+  const raw = responseBuffer.toString('utf8').trim();
+
+  if (!raw) return 'empty response';
+
+  try {
+    const parsed = JSON.parse(raw);
+    return parsed.Message || parsed.message || parsed.Code || raw;
+  } catch (_error) {
+    return raw.slice(0, 500);
+  }
 }
 
 function buildWeightedCommentPicker(comments) {
@@ -177,13 +203,89 @@ async function tryConvertWorkbookToPdf(workbookBuffer) {
   }
 }
 
+async function tryConvertWorkbookWithConvertApi(workbookBuffer) {
+  const secret = process.env.CONVERTAPI_SECRET;
+
+  if (!secret) return null;
+
+  const endpoint = process.env.CONVERTAPI_ENDPOINT || 'https://v2.convertapi.com/convert/xlsx/to/pdf';
+  const timeoutMs = Number(process.env.CONVERTAPI_TIMEOUT_MS) || 90000;
+  const url = new URL(endpoint);
+  url.searchParams.set('Secret', secret);
+
+  let response;
+
+  try {
+    response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json, application/pdf, application/octet-stream',
+        'Content-Type': 'application/json',
+      },
+      signal: AbortSignal.timeout(timeoutMs),
+      body: JSON.stringify({
+        Parameters: [
+          {
+            Name: 'StoreFile',
+            Value: false,
+          },
+          {
+            Name: 'File',
+            FileValue: {
+              Name: 'report.xlsx',
+              Data: Buffer.from(workbookBuffer).toString('base64'),
+            },
+          },
+        ],
+      }),
+    });
+  } catch (error) {
+    throw new ApiError(502, `ConvertAPI Excel-to-PDF request failed: ${error.message}`);
+  }
+
+  const responseBuffer = Buffer.from(await response.arrayBuffer());
+
+  if (!response.ok) {
+    throw new ApiError(502, `ConvertAPI Excel-to-PDF conversion failed: ${parseConvertApiError(responseBuffer)}`);
+  }
+
+  if (bufferLooksLikePdf(responseBuffer)) {
+    return responseBuffer;
+  }
+
+  const contentType = response.headers.get('content-type') || '';
+
+  if (contentType.includes('application/json')) {
+    const payload = JSON.parse(responseBuffer.toString('utf8'));
+    const resultFile = payload.Files && payload.Files[0];
+
+    if (resultFile && resultFile.FileData) {
+      const pdfBuffer = Buffer.from(resultFile.FileData, 'base64');
+      if (bufferLooksLikePdf(pdfBuffer)) return pdfBuffer;
+    }
+
+    if (resultFile && resultFile.Url) {
+      const fileResponse = await fetch(resultFile.Url, {
+        signal: AbortSignal.timeout(timeoutMs),
+      });
+      const pdfBuffer = Buffer.from(await fileResponse.arrayBuffer());
+      if (fileResponse.ok && bufferLooksLikePdf(pdfBuffer)) return pdfBuffer;
+    }
+  }
+
+  throw new ApiError(502, 'ConvertAPI returned a response, but it was not a valid PDF file.');
+}
+
 async function workbookToPdfBuffer(workbookBuffer) {
   const convertedBuffer = await tryConvertWorkbookToPdf(workbookBuffer);
   if (convertedBuffer) return convertedBuffer;
 
+  const remoteConvertedBuffer = await tryConvertWorkbookWithConvertApi(workbookBuffer);
+  if (remoteConvertedBuffer) return remoteConvertedBuffer;
+
   throw new ApiError(
     503,
-    'Excel-to-PDF conversion is not available. Install LibreOffice/soffice on the backend environment or deploy the backend Docker image.'
+    'Excel-to-PDF conversion is not available. Install LibreOffice/soffice, deploy the backend Docker image, or configure CONVERTAPI_SECRET.'
   );
 }
 

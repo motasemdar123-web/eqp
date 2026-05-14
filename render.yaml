@@ -31,6 +31,10 @@ services:
         value: reports
       - key: LIBREOFFICE_BIN
         value: soffice
+      - key: CONVERTAPI_SECRET
+        sync: false
+      - key: CONVERTAPI_ENDPOINT
+        value: https://v2.convertapi.com/convert/xlsx/to/pdf
       - key: APP_SECRET
         sync: false
       - key: ALLOWED_ORIGINS
