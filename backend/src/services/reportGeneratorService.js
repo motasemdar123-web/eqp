@@ -24,6 +24,8 @@ const A4_PRINTABLE_HEIGHT_PX = 1055;
 function converterCommands() {
   return [...new Set([
     process.env.LIBREOFFICE_BIN,
+    'C:\\Program Files\\LibreOffice\\program\\soffice.exe',
+    'C:\\Program Files (x86)\\LibreOffice\\program\\soffice.exe',
     'soffice',
     'libreoffice',
   ].filter(Boolean))];
@@ -65,7 +67,7 @@ async function getPdfConverterStatus() {
   const htmlPdfAvailable = htmlProbes.some((probe) => probe.available);
 
   return {
-    available: true,
+    available: localAvailable,
     localAvailable,
     commands: probes,
     configuredBinary: process.env.LIBREOFFICE_BIN || null,
@@ -75,8 +77,9 @@ async function getPdfConverterStatus() {
       configuredBinary: process.env.PRINCE_BIN || null,
     },
     nodePdfFallback: {
-      available: true,
+      available: false,
       engine: 'pdfkit',
+      reason: 'Disabled for EQP reports because it cannot preserve the Excel template layout.',
     },
     runtime: {
       platform: process.platform,
@@ -528,6 +531,7 @@ function addSignature(workbook, sheet, userName) {
 async function tryConvertWorkbookToPdf(workbookBuffer) {
   const commands = converterCommands();
   const tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), 'eqp-report-'));
+  const profileRoot = await fs.mkdtemp(path.join(os.tmpdir(), 'eqp-libreoffice-profile-'));
   const workbookPath = path.join(tempRoot, 'report.xlsx');
   const pdfPath = path.join(tempRoot, 'report.pdf');
 
@@ -540,8 +544,14 @@ async function tryConvertWorkbookToPdf(workbookBuffer) {
           command,
           [
             '--headless',
+            '--invisible',
+            '--nodefault',
+            '--nolockcheck',
+            '--nofirststartwizard',
+            '--norestore',
+            `-env:UserInstallation=file:///${profileRoot.replace(/\\/g, '/')}`,
             '--convert-to',
-            'pdf',
+            'pdf:calc_pdf_Export',
             '--outdir',
             tempRoot,
             workbookPath,
@@ -562,7 +572,10 @@ async function tryConvertWorkbookToPdf(workbookBuffer) {
 
     return null;
   } finally {
-    await fs.remove(tempRoot);
+    await Promise.all([
+      fs.remove(tempRoot),
+      fs.remove(profileRoot),
+    ]);
   }
 }
 
@@ -1029,16 +1042,9 @@ async function workbookToPdfBuffer(workbookBuffer, workbook, context) {
   const convertedBuffer = await tryConvertWorkbookToPdf(workbookBuffer);
   if (convertedBuffer) return convertedBuffer;
 
-  if (workbook) {
-    const localRenderedBuffer = await tryRenderWorkbookToPdfWithPrince(workbook);
-    if (localRenderedBuffer) return localRenderedBuffer;
-
-    return renderWorkbookToPdfWithPdfKit(workbook, context);
-  }
-
   throw new ApiError(
     503,
-    'Local PDF conversion is not available. Install LibreOffice/soffice, deploy the backend Docker image, or enable the built-in Node PDF renderer.'
+    'Exact Excel template PDF export is unavailable. Install LibreOffice/soffice on the backend or deploy the Docker image that includes LibreOffice.'
   );
 }
 
