@@ -99,11 +99,6 @@ export function deleteReport(id) {
   });
 }
 
-export function getTechnicianSchedule(date) {
-  const query = date ? `?date=${encodeURIComponent(date)}` : '';
-  return request(`/api/technician/schedule${query}`);
-}
-
 export function getTechnicians() {
   return request('/api/technicians');
 }

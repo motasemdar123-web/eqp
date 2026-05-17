@@ -35,11 +35,6 @@ async function dashboard(req, res) {
   res.json({ success: true, data });
 }
 
-async function technicianSchedule(req, res) {
-  const data = await platformService.listTechnicianSchedule(req.platformUser, req.query.date);
-  res.json({ success: true, ...data });
-}
-
 async function listTechnicians(req, res) {
   const technicians = await platformService.listTechnicians();
   res.json({ success: true, technicians });
@@ -85,7 +80,6 @@ module.exports = {
   microsoftCallback,
   completeMicrosoftLogin,
   dashboard,
-  technicianSchedule,
   listTechnicians,
   createTechnician,
   updateTechnician,

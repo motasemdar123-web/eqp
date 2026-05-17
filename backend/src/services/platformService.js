@@ -540,54 +540,6 @@ async function listDashboard() {
   };
 }
 
-async function findTechnicianForActor(prisma, actor) {
-  if (!actor?.sub) {
-    throw new ApiError(401, 'Authentication required');
-  }
-
-  const technician = await prisma.technicianProfile.findFirst({
-    where: {
-      userId: actor.sub,
-      deletedAt: null,
-    },
-    include: {
-      user: { select: publicUserSelect },
-      shift: true,
-      skills: true,
-    },
-  });
-
-  if (!technician) {
-    throw new ApiError(403, 'Technician profile is required for this page.');
-  }
-
-  return technician;
-}
-
-async function listTechnicianSchedule(actor, dateText) {
-  const prisma = requirePrisma();
-  const technician = await findTechnicianForActor(prisma, actor);
-  const { date, workDate } = schedulingRange(dateText);
-  const schedule = await prisma.technicianSchedule.findUnique({
-    where: {
-      technicianId_workDate: {
-        technicianId: technician.id,
-        workDate,
-      },
-    },
-    include: {
-      shift: true,
-      branch: true,
-    },
-  });
-
-  return {
-    date,
-    technician,
-    schedule,
-    workOrders: [],
-  };
-}
 async function listTechnicians() {
   const prisma = requirePrisma();
 
@@ -1064,7 +1016,6 @@ module.exports = {
   completeMicrosoftLogin,
   microsoftErrorRedirect,
   listDashboard,
-  listTechnicianSchedule,
   listTechnicians,
   createTechnician,
   updateTechnician,
