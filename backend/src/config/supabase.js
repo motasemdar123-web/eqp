@@ -1,4 +1,5 @@
 const { createClient } = require('@supabase/supabase-js');
+const WebSocket = require('ws');
 const { env } = require('./env');
 const { ApiError } = require('../utils/ApiError');
 
@@ -16,7 +17,12 @@ function getSupabaseClient() {
 
   supabase = createClient(
     env.supabase.url,
-    env.supabase.serviceRoleKey
+    env.supabase.serviceRoleKey,
+    {
+      realtime: {
+        transport: WebSocket,
+      },
+    }
   );
 
   return supabase;
