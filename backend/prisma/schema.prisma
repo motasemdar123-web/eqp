@@ -54,21 +54,21 @@ enum TechnicianScheduleStatus {
 }
 
 model User {
-  id           String     @id @default(uuid())
-  email        String     @unique
-  userNumber   Int?       @unique @map("user_number")
-  fullName     String     @map("full_name")
-  passwordHash String     @map("password_hash")
+  id           String             @id @default(uuid())
+  email        String             @unique
+  userNumber   Int?               @unique @map("user_number")
+  fullName     String             @map("full_name")
+  passwordHash String             @map("password_hash")
   phone        String?
-  locale       String     @default("en")
-  status       UserStatus @default(ACTIVE)
+  locale       String             @default("en")
+  status       UserStatus         @default(ACTIVE)
   roles        UserRole[]
   technician   TechnicianProfile?
-  createdAt    DateTime   @default(now()) @map("created_at")
-  updatedAt    DateTime   @updatedAt @map("updated_at")
-  createdById  String?    @map("created_by")
-  updatedById  String?    @map("updated_by")
-  deletedAt    DateTime?  @map("deleted_at")
+  createdAt    DateTime           @default(now()) @map("created_at")
+  updatedAt    DateTime           @updatedAt @map("updated_at")
+  createdById  String?            @map("created_by")
+  updatedById  String?            @map("updated_by")
+  deletedAt    DateTime?          @map("deleted_at")
 
   @@map("users")
 }
@@ -164,27 +164,28 @@ model Shift {
   updatedById String?              @map("updated_by")
   deletedAt   DateTime?            @map("deleted_at")
 
-  @@index([branchId])
   @@unique([branchId, name])
+  @@index([branchId])
   @@map("shifts")
 }
 
 model TechnicianProfile {
-  id           String               @id @default(uuid())
-  userId       String               @unique @map("user_id")
-  employeeCode String?              @unique @map("employee_code")
-  region       String?
-  shiftId      String?              @map("shift_id")
-  isAvailable  Boolean              @default(true) @map("is_available")
-  user         User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
-  shift        Shift?               @relation(fields: [shiftId], references: [id])
-  skills       TechnicianSkill[]
-  schedules    TechnicianSchedule[]
-  createdAt    DateTime             @default(now()) @map("created_at")
-  updatedAt    DateTime             @updatedAt @map("updated_at")
-  createdById  String?              @map("created_by")
-  updatedById  String?              @map("updated_by")
-  deletedAt    DateTime?            @map("deleted_at")
+  id              String                        @id @default(uuid())
+  userId          String                        @unique @map("user_id")
+  employeeCode    String?                       @unique @map("employee_code")
+  region          String?
+  shiftId         String?                       @map("shift_id")
+  isAvailable     Boolean                       @default(true) @map("is_available")
+  user            User                          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  shift           Shift?                        @relation(fields: [shiftId], references: [id])
+  skills          TechnicianSkill[]
+  schedules       TechnicianSchedule[]
+  taskAssignments DailyScheduleTaskTechnician[]
+  createdAt       DateTime                      @default(now()) @map("created_at")
+  updatedAt       DateTime                      @updatedAt @map("updated_at")
+  createdById     String?                       @map("created_by")
+  updatedById     String?                       @map("updated_by")
+  deletedAt       DateTime?                     @map("deleted_at")
 
   @@index([shiftId])
   @@map("technician_profiles")
@@ -202,8 +203,8 @@ model TechnicianSkill {
   createdById    String?           @map("created_by")
   updatedById    String?           @map("updated_by")
 
-  @@index([skill])
   @@unique([technicianId, skill])
+  @@index([skill])
   @@map("technician_skills")
 }
 
@@ -231,6 +232,42 @@ model TechnicianSchedule {
   @@index([branchId, workDate])
   @@index([shiftId])
   @@map("technician_schedules")
+}
+
+model DailyScheduleTask {
+  id          String                        @id @default(uuid())
+  workDate    DateTime                      @map("work_date") @db.Date
+  task        String
+  description String?
+  location    String?
+  startsAt    String                        @map("starts_at")
+  endsAt      String                        @map("ends_at")
+  status      TechnicianScheduleStatus      @default(CONFIRMED)
+  notes       String?
+  technicians DailyScheduleTaskTechnician[]
+  createdAt   DateTime                      @default(now()) @map("created_at")
+  updatedAt   DateTime                      @updatedAt @map("updated_at")
+  createdById String?                       @map("created_by")
+  updatedById String?                       @map("updated_by")
+  deletedAt   DateTime?                     @map("deleted_at")
+
+  @@index([workDate])
+  @@index([status])
+  @@map("daily_schedule_tasks")
+}
+
+model DailyScheduleTaskTechnician {
+  id           String            @id @default(uuid())
+  taskId       String            @map("task_id")
+  technicianId String            @map("technician_id")
+  task         DailyScheduleTask @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  technician   TechnicianProfile @relation(fields: [technicianId], references: [id], onDelete: Cascade)
+  createdAt    DateTime          @default(now()) @map("created_at")
+  createdById  String?           @map("created_by")
+
+  @@unique([taskId, technicianId])
+  @@index([technicianId])
+  @@map("daily_schedule_task_technicians")
 }
 
 model EqpMachine {

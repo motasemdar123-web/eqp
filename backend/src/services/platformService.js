@@ -406,14 +406,6 @@ function completeMicrosoftLogin(code) {
   return session.authResult;
 }
 
-function nextNumber(prefix) {
-  const stamp = new Date().toISOString().slice(0, 10).replace(/-/g, '');
-  const random = Math.floor(Math.random() * 9000) + 1000;
-  return `${prefix}-${stamp}-${random}`;
-}
-
-const BUSINESS_TIMEZONE_OFFSET = process.env.BUSINESS_TIMEZONE_OFFSET || '+03:00';
-
 function todayText() {
   return new Date().toISOString().slice(0, 10);
 }
@@ -430,42 +422,10 @@ function toWorkDate(dateText) {
   return new Date(`${normalizeDateText(dateText)}T00:00:00.000Z`);
 }
 
-function addDays(dateText, days) {
-  const date = toWorkDate(dateText);
-  date.setUTCDate(date.getUTCDate() + days);
-  return date.toISOString().slice(0, 10);
-}
-
-function buildBusinessDateTime(dateText, timeText) {
-  if (!dateText || !timeText) return null;
-  const normalizedTime = timeText.length === 5 ? `${timeText}:00` : timeText;
-  return new Date(`${normalizeDateText(dateText)}T${normalizedTime}${BUSINESS_TIMEZONE_OFFSET}`);
-}
-
-function buildScheduledWindow(payload) {
-  const workDate = normalizeDateText(payload.workDate || payload.date || todayText());
-  const startsAt = payload.startsAt || payload.startTime;
-  const endsAt = payload.endsAt || payload.endTime;
-  const scheduledStartAt = payload.scheduledStartAt
-    ? new Date(payload.scheduledStartAt)
-    : buildBusinessDateTime(workDate, startsAt);
-  let scheduledEndAt = payload.scheduledEndAt
-    ? new Date(payload.scheduledEndAt)
-    : buildBusinessDateTime(workDate, endsAt);
-
-  if (scheduledStartAt && scheduledEndAt && scheduledEndAt <= scheduledStartAt) {
-    scheduledEndAt = buildBusinessDateTime(addDays(workDate, 1), endsAt);
-  }
-
-  return { workDate, scheduledStartAt, scheduledEndAt };
-}
-
 function schedulingRange(dateText) {
   const day = normalizeDateText(dateText);
   return {
     date: day,
-    start: buildBusinessDateTime(day, '00:00'),
-    end: buildBusinessDateTime(addDays(day, 1), '00:00'),
     workDate: toWorkDate(day),
   };
 }
@@ -493,16 +453,8 @@ const publicUserSelect = {
   status: true,
 };
 
-const workOrderInclude = {
-  request: true,
-  asset: true,
-  teamLead: {
-    include: {
-      user: { select: publicUserSelect },
-      shift: true,
-    },
-  },
-  assignments: {
+const dailyScheduleTaskInclude = {
+  technicians: {
     include: {
       technician: {
         include: {
@@ -512,6 +464,7 @@ const workOrderInclude = {
         },
       },
     },
+    orderBy: { createdAt: 'asc' },
   },
 };
 
@@ -525,7 +478,7 @@ async function listDashboard() {
   ] = await Promise.all([
     prisma.technicianProfile.count({ where: { deletedAt: null } }),
     prisma.technicianProfile.count({ where: { deletedAt: null, isAvailable: true } }),
-    prisma.technicianSchedule.count({ where: { workDate: toWorkDate(new Date().toISOString().slice(0, 10)), deletedAt: null } }),
+    prisma.dailyScheduleTask.count({ where: { workDate: toWorkDate(new Date().toISOString().slice(0, 10)), deletedAt: null } }),
     prisma.shift.count({ where: { deletedAt: null } }),
   ]);
 
@@ -886,90 +839,116 @@ async function upsertTechnicianSchedule(payload, actorId) {
   });
 }
 
-async function createJobCard(payload, actorId) {
+function normalizeDailyScheduleTask(task) {
+  if (!task) return task;
+  return {
+    ...task,
+    technicians: (task.technicians || []).map((assignment) => assignment.technician),
+  };
+}
+
+function dailyScheduleDateRange(fromText, toText) {
+  const from = normalizeDateText(fromText);
+  const to = normalizeDateText(toText || from);
+  if (to < from) {
+    throw new ApiError(400, 'History end date cannot be before the start date.');
+  }
+  return {
+    from,
+    to,
+    fromDate: toWorkDate(from),
+    toDate: toWorkDate(to),
+  };
+}
+
+async function createDailyScheduleTask(payload, actorId) {
   const prisma = requirePrisma();
-  const technicianIds = uniqueIds([payload.teamLeadTechnicianId, ...toIdArray(payload.technicianIds)]);
-  if (!payload.title || !payload.workDate || !payload.startsAt || !payload.endsAt) {
-    throw new ApiError(400, 'title, workDate, startsAt, and endsAt are required');
+  const technicianIds = uniqueIds(toIdArray(payload.technicianIds));
+  const task = String(payload.task || '').trim();
+  const workDate = toWorkDate(payload.workDate || payload.date);
+
+  if (!task || !payload.startsAt || !payload.endsAt) {
+    throw new ApiError(400, 'task, startsAt, and endsAt are required.');
   }
   if (technicianIds.length === 0) {
-    throw new ApiError(400, 'At least one technician is required');
+    throw new ApiError(400, 'At least one technician is required.');
   }
 
-  const { scheduledStartAt, scheduledEndAt } = buildScheduledWindow(payload);
+  const technicians = await prisma.technicianProfile.findMany({
+    where: { id: { in: technicianIds }, deletedAt: null },
+    select: { id: true },
+  });
+
+  if (technicians.length !== technicianIds.length) {
+    throw new ApiError(400, 'One or more selected technicians are not available.');
+  }
 
   return prisma.$transaction(async (tx) => {
-    const workOrder = await tx.workOrder.create({
+    const createdTask = await tx.dailyScheduleTask.create({
       data: {
-        workOrderNumber: nextNumber('JC'),
-        requestId: payload.requestId || null,
-        assetId: payload.assetId || null,
-        title: payload.title,
-        description: payload.description || payload.workScope || null,
-        priority: payload.priority || 'MEDIUM',
-        status: 'ASSIGNED',
-        jobType: payload.jobType || 'Corrective Maintenance',
-        workScope: payload.workScope || payload.description || null,
-        safetyNotes: payload.safetyNotes || null,
-        requiredTools: payload.requiredTools || null,
-        requiredParts: payload.requiredParts || null,
-        permitRequired: Boolean(payload.permitRequired),
-        customerContact: payload.customerContact || null,
-        estimatedDurationMinutes: payload.estimatedDurationMinutes ? Number(payload.estimatedDurationMinutes) : null,
-        teamLeadTechnicianId: payload.teamLeadTechnicianId || technicianIds[0],
-        scheduledStartAt,
-        scheduledEndAt,
+        workDate,
+        task,
+        description: payload.description || null,
+        location: payload.location || null,
+        startsAt: payload.startsAt,
+        endsAt: payload.endsAt,
+        status: payload.status || 'CONFIRMED',
+        notes: payload.notes || null,
         createdById: actorId,
       },
     });
 
-    await tx.workOrderAssignment.createMany({
+    await tx.dailyScheduleTaskTechnician.createMany({
       data: technicianIds.map((technicianId) => ({
-        workOrderId: workOrder.id,
+        taskId: createdTask.id,
         technicianId,
         createdById: actorId,
       })),
       skipDuplicates: true,
     });
 
-    if (payload.requestId) {
-      await tx.maintenanceRequest.update({
-        where: { id: payload.requestId },
-        data: { status: 'ASSIGNED', updatedById: actorId },
-      });
-    }
-
-    await tx.activityTimeline.create({
-      data: {
-        requestId: payload.requestId || null,
-        workOrderId: workOrder.id,
-        eventType: 'JOB_CARD_CREATED',
-        message: 'Job card created and dispatched to technicians.',
-        metadata: {
-          technicianIds,
-          scheduledStartAt,
-          scheduledEndAt,
-          jobType: payload.jobType || 'Corrective Maintenance',
-        },
-        createdById: actorId,
-      },
+    const fullTask = await tx.dailyScheduleTask.findUnique({
+      where: { id: createdTask.id },
+      include: dailyScheduleTaskInclude,
     });
 
-    return tx.workOrder.findUnique({
-      where: { id: workOrder.id },
-      include: workOrderInclude,
-    });
+    return normalizeDailyScheduleTask(fullTask);
   });
 }
 
-async function getSchedulingBoard(dateText) {
+async function listDailyScheduleTasks(fromText, toText) {
+  const prisma = requirePrisma();
+  const { from, to, fromDate, toDate } = dailyScheduleDateRange(fromText, toText);
+  const tasks = await prisma.dailyScheduleTask.findMany({
+    where: {
+      workDate: { gte: fromDate, lte: toDate },
+      deletedAt: null,
+    },
+    include: dailyScheduleTaskInclude,
+    orderBy: [
+      { workDate: 'desc' },
+      { startsAt: 'asc' },
+    ],
+  });
+
+  return {
+    from,
+    to,
+    tasks: tasks.map(normalizeDailyScheduleTask),
+  };
+}
+
+async function getSchedulingBoard(dateText, historyFromText, historyToText) {
   const prisma = requirePrisma();
   const { date, workDate } = schedulingRange(dateText);
+  const historyRange = dailyScheduleDateRange(historyFromText || date, historyToText || historyFromText || date);
 
   const [
     technicians,
     shifts,
     branches,
+    dayTasks,
+    historyTasks,
   ] = await Promise.all([
     prisma.technicianProfile.findMany({
       where: { deletedAt: null },
@@ -986,9 +965,28 @@ async function getSchedulingBoard(dateText) {
     }),
     prisma.shift.findMany({ where: { deletedAt: null }, include: { branch: true }, orderBy: { startsAt: 'asc' } }),
     prisma.branch.findMany({ where: { deletedAt: null }, orderBy: { name: 'asc' } }),
+    prisma.dailyScheduleTask.findMany({
+      where: { workDate, deletedAt: null },
+      include: dailyScheduleTaskInclude,
+      orderBy: { startsAt: 'asc' },
+    }),
+    prisma.dailyScheduleTask.findMany({
+      where: {
+        workDate: { gte: historyRange.fromDate, lte: historyRange.toDate },
+        deletedAt: null,
+      },
+      include: dailyScheduleTaskInclude,
+      orderBy: [
+        { workDate: 'desc' },
+        { startsAt: 'asc' },
+      ],
+    }),
   ]);
 
-  const scheduledTechnicians = technicians.filter((technician) => technician.schedules.length > 0).length;
+  const scheduledTechnicianIds = new Set(
+    dayTasks.flatMap((task) => task.technicians.map((assignment) => assignment.technicianId)),
+  );
+  const scheduledTechnicians = scheduledTechnicianIds.size;
   const availableTechnicians = technicians.filter((technician) => {
     const status = technician.schedules[0]?.status;
     return technician.isAvailable && (!status || ['PLANNED', 'CONFIRMED', 'ON_DUTY'].includes(status));
@@ -1001,10 +999,17 @@ async function getSchedulingBoard(dateText) {
       scheduledTechnicians,
       availableTechnicians,
       shifts: shifts.length,
+      dailyTasks: dayTasks.length,
     },
     technicians,
     shifts,
     branches,
+    tasks: dayTasks.map(normalizeDailyScheduleTask),
+    history: {
+      from: historyRange.from,
+      to: historyRange.to,
+      tasks: historyTasks.map(normalizeDailyScheduleTask),
+    },
   };
 }
 
@@ -1022,5 +1027,7 @@ module.exports = {
   listShifts,
   createShift,
   upsertTechnicianSchedule,
+  createDailyScheduleTask,
+  listDailyScheduleTasks,
   getSchedulingBoard,
 };

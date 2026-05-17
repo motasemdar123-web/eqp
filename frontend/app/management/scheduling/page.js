@@ -14,6 +14,8 @@ const emptyBoard = {
   technicians: [],
   shifts: [],
   branches: [],
+  tasks: [],
+  history: { tasks: [] },
 };
 
 const statusTone = {
@@ -30,8 +32,21 @@ function today() {
   return new Date().toISOString().slice(0, 10);
 }
 
+function formatDate(value) {
+  if (!value) return '-';
+  return new Date(value).toISOString().slice(0, 10);
+}
+
 function technicianName(technician) {
   return technician?.user?.fullName || technician?.user?.full_name || technician?.employeeCode || 'Technician';
+}
+
+function selectedTechnicianSummary(technicians, ids) {
+  if (ids.length === 0) return 'No technicians selected';
+  return technicians
+    .filter((technician) => ids.includes(technician.id))
+    .map(technicianName)
+    .join(', ');
 }
 
 export default function SchedulingPage() {
@@ -39,18 +54,21 @@ export default function SchedulingPage() {
     typeof window === 'undefined' ? '' : localStorage.getItem('platformToken') || ''
   ));
   const [date, setDate] = useState(today());
+  const [historyFrom, setHistoryFrom] = useState(today());
+  const [historyTo, setHistoryTo] = useState(today());
   const [board, setBoard] = useState(emptyBoard);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
-  const [scheduleForm, setScheduleForm] = useState({
-    technicianId: '',
-    shiftId: '',
-    branchId: '',
+  const [taskForm, setTaskForm] = useState({
+    technicianIds: [],
     workDate: today(),
+    task: '',
+    description: '',
+    location: '',
     startsAt: '08:00',
     endsAt: '16:00',
-    status: 'CONFIRMED',
     notes: '',
+    status: 'CONFIRMED',
   });
   const [shiftForm, setShiftForm] = useState({
     name: '',
@@ -79,15 +97,22 @@ export default function SchedulingPage() {
     return data;
   }
 
-  async function loadBoard(nextDate = date) {
+  async function loadBoard(nextDate = date, nextFrom = historyFrom, nextTo = historyTo) {
     if (!token) return;
     setLoading(true);
     setMessage('');
     try {
-      const data = await request(`/api/scheduling/board?date=${nextDate}`);
+      const params = new URLSearchParams({
+        date: nextDate,
+        historyFrom: nextFrom,
+        historyTo: nextTo,
+      });
+      const data = await request(`/api/scheduling/board?${params.toString()}`);
       setBoard(data.board || emptyBoard);
       setDate(nextDate);
-      setScheduleForm((current) => ({ ...current, workDate: nextDate }));
+      setHistoryFrom(nextFrom);
+      setHistoryTo(nextTo);
+      setTaskForm((current) => ({ ...current, workDate: nextDate }));
     } catch (error) {
       setMessage(error.message);
     } finally {
@@ -97,6 +122,18 @@ export default function SchedulingPage() {
 
   function signInWithMicrosoft() {
     window.location.href = getMicrosoftLoginUrl('/management/scheduling');
+  }
+
+  function toggleTechnician(technicianId) {
+    setTaskForm((current) => {
+      const hasTechnician = current.technicianIds.includes(technicianId);
+      return {
+        ...current,
+        technicianIds: hasTechnician
+          ? current.technicianIds.filter((id) => id !== technicianId)
+          : [...current.technicianIds, technicianId],
+      };
+    });
   }
 
   async function saveShift(event) {
@@ -121,21 +158,25 @@ export default function SchedulingPage() {
     }
   }
 
-  async function saveTechnicianSchedule(event) {
+  async function saveDailyTask(event) {
     event.preventDefault();
     setLoading(true);
     setMessage('');
     try {
-      await request('/api/scheduling/technician-schedules', {
+      await request('/api/scheduling/tasks', {
         method: 'POST',
-        body: JSON.stringify({
-          ...scheduleForm,
-          shiftId: scheduleForm.shiftId || null,
-          branchId: scheduleForm.branchId || null,
-        }),
+        body: JSON.stringify(taskForm),
       });
-      setMessage('Technician schedule saved');
-      await loadBoard(scheduleForm.workDate);
+      setMessage('Daily schedule task saved');
+      setTaskForm((current) => ({
+        ...current,
+        technicianIds: [],
+        task: '',
+        description: '',
+        location: '',
+        notes: '',
+      }));
+      await loadBoard(taskForm.workDate, historyFrom, historyTo);
     } catch (error) {
       setMessage(error.message);
     } finally {
@@ -151,24 +192,25 @@ export default function SchedulingPage() {
   }, [token]);
 
   const technicians = board.technicians || [];
-  const shifts = board.shifts || [];
   const branches = board.branches || [];
+  const tasks = board.tasks || [];
+  const historyTasks = board.history?.tasks || [];
 
   return (
     <SystemShell
       activePath="/management/scheduling"
       eyebrow="Operations Control"
       title="Scheduling"
-      description="Daily roster, shifts, and technician availability planning."
+      description="Build daily technician groups, assign tasks, and review schedule history."
       actions={(
         <>
           <input
             type="date"
             value={date}
-            onChange={(event) => loadBoard(event.target.value)}
+            onChange={(event) => loadBoard(event.target.value, historyFrom, historyTo)}
             className="h-10 rounded-md border border-zinc-300 bg-white px-3 text-sm font-semibold text-zinc-800"
           />
-          <Button type="button" variant="secondary" onClick={() => loadBoard(date)} disabled={!token || loading}>
+          <Button type="button" variant="secondary" onClick={() => loadBoard(date, historyFrom, historyTo)} disabled={!token || loading}>
             Refresh
           </Button>
         </>
@@ -193,9 +235,9 @@ export default function SchedulingPage() {
         <div className="grid gap-4 md:grid-cols-4">
           {[
             ['Technicians', board.kpis?.technicians || 0],
-            ['Scheduled', board.kpis?.scheduledTechnicians || 0],
+            ['Daily Tasks', board.kpis?.dailyTasks || 0],
+            ['Assigned Today', board.kpis?.scheduledTechnicians || 0],
             ['Available', board.kpis?.availableTechnicians || 0],
-            ['Shifts', board.kpis?.shifts || 0],
           ].map(([label, value]) => (
             <Card key={label} className="p-4">
               <p className="text-xs font-semibold uppercase tracking-[0.14em] text-zinc-500">{label}</p>
@@ -204,54 +246,7 @@ export default function SchedulingPage() {
           ))}
         </div>
 
-        <Card className="overflow-hidden">
-          <div className="border-b border-zinc-100 px-5 py-4">
-            <h2 className="text-xl font-bold text-zinc-950">Technician Roster</h2>
-          </div>
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[860px]">
-              <thead className="bg-zinc-50 text-xs uppercase tracking-[0.12em] text-zinc-500">
-                <tr>
-                  <th className="px-5 py-4 text-left">Technician</th>
-                  <th className="px-5 py-4 text-left">Shift</th>
-                  <th className="px-5 py-4 text-left">Hours</th>
-                  <th className="px-5 py-4 text-left">Region</th>
-                  <th className="px-5 py-4 text-left">Skills</th>
-                </tr>
-              </thead>
-              <tbody>
-                {technicians.map((technician) => {
-                  const schedule = technician.schedules?.[0];
-                  return (
-                    <tr key={technician.id} className="border-t border-zinc-100 align-top">
-                      <td className="px-5 py-4">
-                        <p className="font-bold text-zinc-950">{technicianName(technician)}</p>
-                        <p className="mt-1 font-mono text-xs text-zinc-500">{technician.employeeCode}</p>
-                      </td>
-                      <td className="px-5 py-4">
-                        <Badge tone={statusTone[schedule?.status] || 'neutral'}>{schedule?.status || 'NO_SCHEDULE'}</Badge>
-                        <p className="mt-2 text-sm text-zinc-600">{schedule?.shift?.name || technician.shift?.name || 'Unassigned'}</p>
-                      </td>
-                      <td className="px-5 py-4 text-sm font-semibold text-zinc-700">
-                        {schedule ? `${schedule.startsAt} - ${schedule.endsAt}` : '-'}
-                      </td>
-                      <td className="px-5 py-4 text-sm text-zinc-600">{technician.region || '-'}</td>
-                      <td className="px-5 py-4">
-                        <div className="flex flex-wrap gap-1.5">
-                          {(technician.skills || []).slice(0, 3).map((skill) => (
-                            <Badge key={skill.id} tone="neutral">{skill.skill}</Badge>
-                          ))}
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        </Card>
-
-        <div className="grid gap-5 xl:grid-cols-2">
+        <div className="grid gap-5 xl:grid-cols-[0.9fr_1.1fr]">
           <Card className="p-5">
             <h2 className="text-xl font-bold text-zinc-950">Add Shift</h2>
             <form onSubmit={saveShift} className="mt-4 grid gap-3">
@@ -269,38 +264,102 @@ export default function SchedulingPage() {
           </Card>
 
           <Card className="p-5">
-            <h2 className="text-xl font-bold text-zinc-950">Add Technician Schedule</h2>
-            <form onSubmit={saveTechnicianSchedule} className="mt-4 grid gap-3">
-              <select className="h-11 rounded-md border border-zinc-300 px-3" value={scheduleForm.technicianId} onChange={(event) => setScheduleForm((current) => ({ ...current, technicianId: event.target.value }))}>
-                <option value="">Technician</option>
-                {technicians.map((technician) => <option key={technician.id} value={technician.id}>{technicianName(technician)} - {technician.employeeCode}</option>)}
-              </select>
-              <select className="h-11 rounded-md border border-zinc-300 px-3" value={scheduleForm.shiftId} onChange={(event) => {
-                const shift = shifts.find((item) => item.id === event.target.value);
-                setScheduleForm((current) => ({
-                  ...current,
-                  shiftId: event.target.value,
-                  startsAt: shift?.startsAt || current.startsAt,
-                  endsAt: shift?.endsAt || current.endsAt,
-                }));
-              }}>
-                <option value="">Shift</option>
-                {shifts.map((shift) => <option key={shift.id} value={shift.id}>{shift.name} ({shift.startsAt}-{shift.endsAt})</option>)}
-              </select>
-              <input type="date" className="h-11 rounded-md border border-zinc-300 px-3" value={scheduleForm.workDate} onChange={(event) => setScheduleForm((current) => ({ ...current, workDate: event.target.value }))} />
-              <div className="grid grid-cols-2 gap-3">
-                <input type="time" className="h-11 rounded-md border border-zinc-300 px-3" value={scheduleForm.startsAt} onChange={(event) => setScheduleForm((current) => ({ ...current, startsAt: event.target.value }))} />
-                <input type="time" className="h-11 rounded-md border border-zinc-300 px-3" value={scheduleForm.endsAt} onChange={(event) => setScheduleForm((current) => ({ ...current, endsAt: event.target.value }))} />
+            <h2 className="text-xl font-bold text-zinc-950">Add Daily Schedule Task</h2>
+            <form onSubmit={saveDailyTask} className="mt-4 grid gap-3">
+              <div className="grid gap-3 md:grid-cols-2">
+                <input type="date" className="h-11 rounded-md border border-zinc-300 px-3" value={taskForm.workDate} onChange={(event) => setTaskForm((current) => ({ ...current, workDate: event.target.value }))} />
+                <input className="h-11 rounded-md border border-zinc-300 px-3" placeholder="Location" value={taskForm.location} onChange={(event) => setTaskForm((current) => ({ ...current, location: event.target.value }))} />
               </div>
-              <select className="h-11 rounded-md border border-zinc-300 px-3" value={scheduleForm.status} onChange={(event) => setScheduleForm((current) => ({ ...current, status: event.target.value }))}>
-                {['PLANNED', 'CONFIRMED', 'ON_DUTY', 'OFF_DUTY', 'LEAVE', 'COMPLETED', 'CANCELLED'].map((status) => <option key={status} value={status}>{status}</option>)}
-              </select>
-              <textarea rows={3} className="rounded-md border border-zinc-300 px-3 py-2" placeholder="Schedule notes" value={scheduleForm.notes} onChange={(event) => setScheduleForm((current) => ({ ...current, notes: event.target.value }))} />
-              <Button type="submit" disabled={!token || loading}>Save Schedule</Button>
+              <div className="grid grid-cols-2 gap-3">
+                <input type="time" className="h-11 rounded-md border border-zinc-300 px-3" value={taskForm.startsAt} onChange={(event) => setTaskForm((current) => ({ ...current, startsAt: event.target.value }))} />
+                <input type="time" className="h-11 rounded-md border border-zinc-300 px-3" value={taskForm.endsAt} onChange={(event) => setTaskForm((current) => ({ ...current, endsAt: event.target.value }))} />
+              </div>
+              <input className="h-11 rounded-md border border-zinc-300 px-3" placeholder="Task" value={taskForm.task} onChange={(event) => setTaskForm((current) => ({ ...current, task: event.target.value }))} />
+              <textarea rows={3} className="rounded-md border border-zinc-300 px-3 py-2" placeholder="Description" value={taskForm.description} onChange={(event) => setTaskForm((current) => ({ ...current, description: event.target.value }))} />
+              <div className="rounded-md border border-zinc-200 bg-zinc-50 p-3">
+                <p className="text-sm font-bold text-zinc-950">Technicians</p>
+                <p className="mt-1 text-xs text-zinc-500">{selectedTechnicianSummary(technicians, taskForm.technicianIds)}</p>
+                <div className="mt-3 grid max-h-52 gap-2 overflow-y-auto pr-1 sm:grid-cols-2">
+                  {technicians.map((technician) => (
+                    <label key={technician.id} className="flex items-center gap-2 rounded-md border border-zinc-200 bg-white px-3 py-2 text-sm font-semibold text-zinc-700">
+                      <input type="checkbox" checked={taskForm.technicianIds.includes(technician.id)} onChange={() => toggleTechnician(technician.id)} />
+                      <span>{technicianName(technician)} <span className="font-mono text-xs text-zinc-400">{technician.employeeCode}</span></span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+              <textarea rows={2} className="rounded-md border border-zinc-300 px-3 py-2" placeholder="Notes" value={taskForm.notes} onChange={(event) => setTaskForm((current) => ({ ...current, notes: event.target.value }))} />
+              <Button type="submit" disabled={!token || loading}>Save Daily Task</Button>
             </form>
           </Card>
         </div>
+
+        <Card className="overflow-hidden">
+          <div className="border-b border-zinc-100 px-5 py-4">
+            <h2 className="text-xl font-bold text-zinc-950">Daily Schedule</h2>
+          </div>
+          <ScheduleTable tasks={tasks} emptyText="No tasks scheduled for this day." />
+        </Card>
+
+        <Card className="overflow-hidden">
+          <div className="flex flex-col gap-4 border-b border-zinc-100 px-5 py-4 lg:flex-row lg:items-center lg:justify-between">
+            <h2 className="text-xl font-bold text-zinc-950">Schedule History</h2>
+            <div className="flex flex-wrap items-center gap-2">
+              <input type="date" className="h-10 rounded-md border border-zinc-300 px-3 text-sm" value={historyFrom} onChange={(event) => setHistoryFrom(event.target.value)} />
+              <input type="date" className="h-10 rounded-md border border-zinc-300 px-3 text-sm" value={historyTo} onChange={(event) => setHistoryTo(event.target.value)} />
+              <Button type="button" variant="secondary" onClick={() => loadBoard(date, historyFrom, historyTo)} disabled={!token || loading}>Search</Button>
+            </div>
+          </div>
+          <ScheduleTable tasks={historyTasks} showDate emptyText="No schedule history found for this range." />
+        </Card>
       </section>
     </SystemShell>
+  );
+}
+
+function ScheduleTable({ tasks, showDate = false, emptyText }) {
+  return (
+    <div className="overflow-x-auto">
+      <table className="w-full min-w-[980px]">
+        <thead className="bg-zinc-50 text-xs uppercase tracking-[0.12em] text-zinc-500">
+          <tr>
+            {showDate && <th className="px-5 py-4 text-left">Date</th>}
+            <th className="px-5 py-4 text-left">Time</th>
+            <th className="px-5 py-4 text-left">Task</th>
+            <th className="px-5 py-4 text-left">Technicians</th>
+            <th className="px-5 py-4 text-left">Location</th>
+            <th className="px-5 py-4 text-left">Notes</th>
+            <th className="px-5 py-4 text-left">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {tasks.length === 0 && (
+            <tr>
+              <td colSpan={showDate ? 7 : 6} className="px-5 py-8 text-center text-sm font-semibold text-zinc-500">{emptyText}</td>
+            </tr>
+          )}
+          {tasks.map((task) => (
+            <tr key={task.id} className="border-t border-zinc-100 align-top">
+              {showDate && <td className="px-5 py-4 text-sm font-semibold text-zinc-700">{formatDate(task.workDate)}</td>}
+              <td className="px-5 py-4 text-sm font-semibold text-zinc-700">{task.startsAt} - {task.endsAt}</td>
+              <td className="px-5 py-4">
+                <p className="font-bold text-zinc-950">{task.task}</p>
+                <p className="mt-1 max-w-md text-sm leading-6 text-zinc-600">{task.description || '-'}</p>
+              </td>
+              <td className="px-5 py-4">
+                <div className="flex flex-wrap gap-1.5">
+                  {(task.technicians || []).map((technician) => (
+                    <Badge key={technician.id} tone="neutral">{technicianName(technician)}</Badge>
+                  ))}
+                </div>
+              </td>
+              <td className="px-5 py-4 text-sm text-zinc-600">{task.location || '-'}</td>
+              <td className="px-5 py-4 text-sm text-zinc-600">{task.notes || '-'}</td>
+              <td className="px-5 py-4"><Badge tone={statusTone[task.status] || 'neutral'}>{task.status}</Badge></td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }

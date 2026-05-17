@@ -63,8 +63,19 @@ async function createShift(req, res) {
 }
 
 async function schedulingBoard(req, res) {
-  const board = await platformService.getSchedulingBoard(req.query.date);
+  const board = await platformService.getSchedulingBoard(req.query.date, req.query.historyFrom, req.query.historyTo);
   res.json({ success: true, board });
+}
+
+async function createDailyScheduleTask(req, res) {
+  requireFields(req.body, ['technicianIds', 'workDate', 'task', 'startsAt', 'endsAt']);
+  const task = await platformService.createDailyScheduleTask(req.body, req.platformUser?.sub);
+  res.status(201).json({ success: true, task });
+}
+
+async function listDailyScheduleTasks(req, res) {
+  const history = await platformService.listDailyScheduleTasks(req.query.from || req.query.date, req.query.to);
+  res.json({ success: true, history });
 }
 
 async function upsertTechnicianSchedule(req, res) {
@@ -86,5 +97,7 @@ module.exports = {
   listShifts,
   createShift,
   schedulingBoard,
+  createDailyScheduleTask,
+  listDailyScheduleTasks,
   upsertTechnicianSchedule,
 };
