@@ -15,7 +15,7 @@ Do not use Render's native Node runtime for the backend. Native Node does not in
 
 If Render logs show paths like `/opt/render/project/src/backend`, the backend is still running with Render's native Node runtime. A Docker deploy from this repository runs the backend from `/app/backend`.
 
-Alternative when Docker cannot be used: Render's native runtime includes `princexml`/`prince` in the deploy environment. The backend tries LibreOffice first, then falls back to a local HTML-to-PDF renderer that uses `prince`. If neither binary exists, it uses the built-in Node/PDFKit renderer. No paid external API is required.
+There is no supported non-Docker fallback for EQP PDF generation. The backend now rejects report generation if LibreOffice is unavailable, because HTML or Node PDF renderers cannot preserve the exact Excel template layout.
 
 The Docker image installs:
 
@@ -30,6 +30,8 @@ curl https://your-render-backend.onrender.com/health/pdf-converter
 ```
 
 The response must include `"available": true`.
+
+The response should also show `soffice` or `libreoffice` with `"available": true`. If it does not, the service is not running the Docker image or LibreOffice did not install correctly.
 
 Required environment variables:
 
