@@ -7,7 +7,7 @@
     "node": ">=20"
   },
   "scripts": {
-    "start": "node app.js",
+    "start": "prisma migrate deploy && node app.js",
     "check": "node --check app.js",
     "test": "jest --runInBand",
     "prisma:generate": "prisma generate",

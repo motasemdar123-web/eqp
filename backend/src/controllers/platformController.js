@@ -35,58 +35,9 @@ async function dashboard(req, res) {
   res.json({ success: true, data });
 }
 
-async function listRequests(req, res) {
-  const requests = await platformService.listMaintenanceRequests();
-  res.json({ success: true, requests });
-}
-
-async function createRequest(req, res) {
-  requireFields(req.body, ['title', 'category']);
-  const request = await platformService.createMaintenanceRequest(req.body, req.platformUser?.sub);
-  res.status(201).json({ success: true, request });
-}
-
-async function updateRequestStatus(req, res) {
-  requireFields(req.body, ['status']);
-  const request = await platformService.updateMaintenanceRequestStatus(req.params.id, req.body.status, req.body.notes);
-  res.json({ success: true, request });
-}
-
-async function listWorkOrders(req, res) {
-  const workOrders = await platformService.listWorkOrders();
-  res.json({ success: true, workOrders });
-}
-
-async function createWorkOrder(req, res) {
-  requireFields(req.body, ['title']);
-  const workOrder = await platformService.createWorkOrder(req.body, req.platformUser?.sub);
-  res.status(201).json({ success: true, workOrder });
-}
-
-async function closeWorkOrder(req, res) {
-  const workOrder = await platformService.closeWorkOrder(req.params.id, req.body);
-  res.json({ success: true, workOrder });
-}
-
 async function technicianSchedule(req, res) {
   const data = await platformService.listTechnicianSchedule(req.platformUser, req.query.date);
   res.json({ success: true, ...data });
-}
-
-async function submitTechnicianCompletion(req, res) {
-  const workOrder = await platformService.submitTechnicianCompletion(req.params.id, req.body, req.platformUser);
-  res.json({ success: true, workOrder });
-}
-
-async function engineerCompletionRequests(req, res) {
-  const workOrders = await platformService.listEngineerCompletionRequests(req.platformUser);
-  res.json({ success: true, workOrders });
-}
-
-async function reviewCompletionRequest(req, res) {
-  requireFields(req.body, ['decision']);
-  const workOrder = await platformService.reviewCompletionRequest(req.params.id, req.body, req.platformUser);
-  res.json({ success: true, workOrder });
 }
 
 async function listTechnicians(req, res) {
@@ -127,12 +78,6 @@ async function upsertTechnicianSchedule(req, res) {
   res.status(201).json({ success: true, schedule });
 }
 
-async function createJobCard(req, res) {
-  requireFields(req.body, ['title', 'workDate', 'startsAt', 'endsAt']);
-  const jobCard = await platformService.createJobCard(req.body, req.platformUser?.sub);
-  res.status(201).json({ success: true, jobCard });
-}
-
 function list(modelName, responseKey) {
   return async (req, res) => {
     const items = await platformService.listModel(modelName);
@@ -154,16 +99,7 @@ module.exports = {
   microsoftCallback,
   completeMicrosoftLogin,
   dashboard,
-  listRequests,
-  createRequest,
-  updateRequestStatus,
-  listWorkOrders,
-  createWorkOrder,
-  closeWorkOrder,
   technicianSchedule,
-  submitTechnicianCompletion,
-  engineerCompletionRequests,
-  reviewCompletionRequest,
   listTechnicians,
   createTechnician,
   updateTechnician,
@@ -171,7 +107,6 @@ module.exports = {
   createShift,
   schedulingBoard,
   upsertTechnicianSchedule,
-  createJobCard,
   list,
   create,
 };

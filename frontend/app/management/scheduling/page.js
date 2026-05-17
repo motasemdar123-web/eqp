@@ -14,10 +14,6 @@ const emptyBoard = {
   technicians: [],
   shifts: [],
   branches: [],
-  assets: [],
-  openRequests: [],
-  jobCards: [],
-  unscheduledWorkOrders: [],
 };
 
 const statusTone = {
@@ -28,49 +24,14 @@ const statusTone = {
   LEAVE: 'red',
   COMPLETED: 'dark',
   CANCELLED: 'red',
-  ASSIGNED: 'yellow',
-  IN_PROGRESS: 'green',
-  OPEN: 'neutral',
-  WAITING_PARTS: 'red',
 };
 
 function today() {
   return new Date().toISOString().slice(0, 10);
 }
 
-function formatTime(value) {
-  if (!value) return 'Not scheduled';
-  return new Intl.DateTimeFormat('en-GB', {
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false,
-  }).format(new Date(value));
-}
-
 function technicianName(technician) {
   return technician?.user?.fullName || technician?.user?.full_name || technician?.employeeCode || 'Technician';
-}
-
-function initialJobCardForm(date) {
-  return {
-    title: '',
-    jobType: 'Corrective Maintenance',
-    priority: 'MEDIUM',
-    workDate: date,
-    startsAt: '09:00',
-    endsAt: '11:00',
-    requestId: '',
-    assetId: '',
-    teamLeadTechnicianId: '',
-    technicianIds: [],
-    customerContact: '',
-    estimatedDurationMinutes: '120',
-    workScope: '',
-    safetyNotes: '',
-    requiredTools: '',
-    requiredParts: '',
-    permitRequired: false,
-  };
 }
 
 export default function SchedulingPage() {
@@ -97,7 +58,6 @@ export default function SchedulingPage() {
     endsAt: '16:00',
     branchId: '',
   });
-  const [jobCardForm, setJobCardForm] = useState(initialJobCardForm(today()));
 
   const headers = useMemo(() => ({
     'Content-Type': 'application/json',
@@ -114,7 +74,7 @@ export default function SchedulingPage() {
     });
     const data = await response.json().catch(() => ({}));
     if (!response.ok) {
-      throw new Error(data.message || 'Request failed');
+      throw new Error(data.message || data.error || 'Request failed');
     }
     return data;
   }
@@ -128,7 +88,6 @@ export default function SchedulingPage() {
       setBoard(data.board || emptyBoard);
       setDate(nextDate);
       setScheduleForm((current) => ({ ...current, workDate: nextDate }));
-      setJobCardForm((current) => ({ ...current, workDate: nextDate }));
     } catch (error) {
       setMessage(error.message);
     } finally {
@@ -184,31 +143,6 @@ export default function SchedulingPage() {
     }
   }
 
-  async function createJobCard(event) {
-    event.preventDefault();
-    setLoading(true);
-    setMessage('');
-    try {
-      await request('/api/scheduling/job-cards', {
-        method: 'POST',
-        body: JSON.stringify({
-          ...jobCardForm,
-          requestId: jobCardForm.requestId || null,
-          assetId: jobCardForm.assetId || null,
-          teamLeadTechnicianId: jobCardForm.teamLeadTechnicianId || null,
-          estimatedDurationMinutes: Number(jobCardForm.estimatedDurationMinutes) || null,
-        }),
-      });
-      setJobCardForm(initialJobCardForm(jobCardForm.workDate));
-      setMessage('Job card created');
-      await loadBoard(jobCardForm.workDate);
-    } catch (error) {
-      setMessage(error.message);
-    } finally {
-      setLoading(false);
-    }
-  }
-
   useEffect(() => {
     if (!token) return undefined;
     const timer = setTimeout(() => loadBoard(date), 0);
@@ -219,14 +153,13 @@ export default function SchedulingPage() {
   const technicians = board.technicians || [];
   const shifts = board.shifts || [];
   const branches = board.branches || [];
-  const jobCards = board.jobCards || [];
 
   return (
     <SystemShell
       activePath="/management/scheduling"
       eyebrow="Operations Control"
-      title="Scheduling & Job Cards"
-      description="Daily roster, shifts, job cards, team assignments, and workload control."
+      title="Scheduling"
+      description="Daily roster, shifts, and technician availability planning."
       actions={(
         <>
           <input
@@ -257,13 +190,12 @@ export default function SchedulingPage() {
           </div>
         )}
 
-        <div className="grid gap-4 md:grid-cols-5">
+        <div className="grid gap-4 md:grid-cols-4">
           {[
             ['Technicians', board.kpis?.technicians || 0],
             ['Scheduled', board.kpis?.scheduledTechnicians || 0],
             ['Available', board.kpis?.availableTechnicians || 0],
-            ['Job Cards', board.kpis?.jobCards || 0],
-            ['Unscheduled', board.kpis?.unscheduledWorkOrders || 0],
+            ['Shifts', board.kpis?.shifts || 0],
           ].map(([label, value]) => (
             <Card key={label} className="p-4">
               <p className="text-xs font-semibold uppercase tracking-[0.14em] text-zinc-500">{label}</p>
@@ -272,85 +204,54 @@ export default function SchedulingPage() {
           ))}
         </div>
 
-        <div className="grid gap-5 xl:grid-cols-[1.25fr_0.75fr]">
-          <Card className="overflow-hidden">
-            <div className="border-b border-zinc-100 px-5 py-4">
-              <h2 className="text-xl font-bold text-zinc-950">Technician Roster</h2>
-            </div>
-            <div className="overflow-x-auto">
-              <table className="w-full min-w-[980px]">
-                <thead className="bg-zinc-50 text-xs uppercase tracking-[0.12em] text-zinc-500">
-                  <tr>
-                    <th className="px-5 py-4 text-left">Technician</th>
-                    <th className="px-5 py-4 text-left">Shift</th>
-                    <th className="px-5 py-4 text-left">Hours</th>
-                    <th className="px-5 py-4 text-left">Region</th>
-                    <th className="px-5 py-4 text-left">Skills</th>
-                    <th className="px-5 py-4 text-left">Workload</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {technicians.map((technician) => {
-                    const schedule = technician.schedules?.[0];
-                    return (
-                      <tr key={technician.id} className="border-t border-zinc-100 align-top">
-                        <td className="px-5 py-4">
-                          <p className="font-bold text-zinc-950">{technicianName(technician)}</p>
-                          <p className="mt-1 font-mono text-xs text-zinc-500">{technician.employeeCode}</p>
-                        </td>
-                        <td className="px-5 py-4">
-                          <Badge tone={statusTone[schedule?.status] || 'neutral'}>{schedule?.status || 'NO_SCHEDULE'}</Badge>
-                          <p className="mt-2 text-sm text-zinc-600">{schedule?.shift?.name || technician.shift?.name || 'Unassigned'}</p>
-                        </td>
-                        <td className="px-5 py-4 text-sm font-semibold text-zinc-700">
-                          {schedule ? `${schedule.startsAt} - ${schedule.endsAt}` : '-'}
-                        </td>
-                        <td className="px-5 py-4 text-sm text-zinc-600">{technician.region || '-'}</td>
-                        <td className="px-5 py-4">
-                          <div className="flex flex-wrap gap-1.5">
-                            {(technician.skills || []).slice(0, 3).map((skill) => (
-                              <Badge key={skill.id} tone="neutral">{skill.skill}</Badge>
-                            ))}
-                          </div>
-                        </td>
-                        <td className="px-5 py-4 text-sm font-semibold text-zinc-800">
-                          {technician.assignments?.length || 0} cards
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
-          </Card>
+        <Card className="overflow-hidden">
+          <div className="border-b border-zinc-100 px-5 py-4">
+            <h2 className="text-xl font-bold text-zinc-950">Technician Roster</h2>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[860px]">
+              <thead className="bg-zinc-50 text-xs uppercase tracking-[0.12em] text-zinc-500">
+                <tr>
+                  <th className="px-5 py-4 text-left">Technician</th>
+                  <th className="px-5 py-4 text-left">Shift</th>
+                  <th className="px-5 py-4 text-left">Hours</th>
+                  <th className="px-5 py-4 text-left">Region</th>
+                  <th className="px-5 py-4 text-left">Skills</th>
+                </tr>
+              </thead>
+              <tbody>
+                {technicians.map((technician) => {
+                  const schedule = technician.schedules?.[0];
+                  return (
+                    <tr key={technician.id} className="border-t border-zinc-100 align-top">
+                      <td className="px-5 py-4">
+                        <p className="font-bold text-zinc-950">{technicianName(technician)}</p>
+                        <p className="mt-1 font-mono text-xs text-zinc-500">{technician.employeeCode}</p>
+                      </td>
+                      <td className="px-5 py-4">
+                        <Badge tone={statusTone[schedule?.status] || 'neutral'}>{schedule?.status || 'NO_SCHEDULE'}</Badge>
+                        <p className="mt-2 text-sm text-zinc-600">{schedule?.shift?.name || technician.shift?.name || 'Unassigned'}</p>
+                      </td>
+                      <td className="px-5 py-4 text-sm font-semibold text-zinc-700">
+                        {schedule ? `${schedule.startsAt} - ${schedule.endsAt}` : '-'}
+                      </td>
+                      <td className="px-5 py-4 text-sm text-zinc-600">{technician.region || '-'}</td>
+                      <td className="px-5 py-4">
+                        <div className="flex flex-wrap gap-1.5">
+                          {(technician.skills || []).slice(0, 3).map((skill) => (
+                            <Badge key={skill.id} tone="neutral">{skill.skill}</Badge>
+                          ))}
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </Card>
 
-          <Card className="p-5">
-            <h2 className="text-xl font-bold text-zinc-950">Daily Job Cards</h2>
-            <div className="mt-4 grid gap-3">
-              {jobCards.length === 0 && <p className="text-sm text-zinc-500">No job cards for this date.</p>}
-              {jobCards.map((card) => (
-                <div key={card.id} className="rounded-md border border-zinc-200 p-4">
-                  <div className="flex items-start justify-between gap-3">
-                    <div>
-                      <p className="font-mono text-xs text-zinc-500">{card.workOrderNumber}</p>
-                      <h3 className="mt-1 font-bold text-zinc-950">{card.title}</h3>
-                    </div>
-                    <Badge tone={statusTone[card.status] || 'neutral'}>{card.status}</Badge>
-                  </div>
-                  <p className="mt-3 text-sm text-zinc-600">{formatTime(card.scheduledStartAt)} - {formatTime(card.scheduledEndAt)}</p>
-                  <p className="mt-2 text-sm text-zinc-700">{card.workScope || card.description || 'No scope entered'}</p>
-                  <div className="mt-3 flex flex-wrap gap-1.5">
-                    {(card.assignments || []).map((assignment) => (
-                      <Badge key={assignment.id} tone="yellow">{technicianName(assignment.technician)}</Badge>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </Card>
-        </div>
-
-        <div className="grid gap-5 xl:grid-cols-3">
+        <div className="grid gap-5 xl:grid-cols-2">
           <Card className="p-5">
             <h2 className="text-xl font-bold text-zinc-950">Add Shift</h2>
             <form onSubmit={saveShift} className="mt-4 grid gap-3">
@@ -396,51 +297,6 @@ export default function SchedulingPage() {
               </select>
               <textarea rows={3} className="rounded-md border border-zinc-300 px-3 py-2" placeholder="Schedule notes" value={scheduleForm.notes} onChange={(event) => setScheduleForm((current) => ({ ...current, notes: event.target.value }))} />
               <Button type="submit" disabled={!token || loading}>Save Schedule</Button>
-            </form>
-          </Card>
-
-          <Card className="p-5">
-            <h2 className="text-xl font-bold text-zinc-950">Create Job Card</h2>
-            <form onSubmit={createJobCard} className="mt-4 grid gap-3">
-              <input className="h-11 rounded-md border border-zinc-300 px-3" placeholder="Job card title" value={jobCardForm.title} onChange={(event) => setJobCardForm((current) => ({ ...current, title: event.target.value }))} />
-              <div className="grid grid-cols-2 gap-3">
-                <select className="h-11 rounded-md border border-zinc-300 px-3" value={jobCardForm.jobType} onChange={(event) => setJobCardForm((current) => ({ ...current, jobType: event.target.value }))}>
-                  {['Corrective Maintenance', 'Preventive Maintenance', 'Inspection', 'Emergency', 'Project Support'].map((type) => <option key={type} value={type}>{type}</option>)}
-                </select>
-                <select className="h-11 rounded-md border border-zinc-300 px-3" value={jobCardForm.priority} onChange={(event) => setJobCardForm((current) => ({ ...current, priority: event.target.value }))}>
-                  {['LOW', 'MEDIUM', 'HIGH', 'CRITICAL'].map((priority) => <option key={priority} value={priority}>{priority}</option>)}
-                </select>
-              </div>
-              <div className="grid grid-cols-3 gap-3">
-                <input type="date" className="h-11 rounded-md border border-zinc-300 px-3" value={jobCardForm.workDate} onChange={(event) => setJobCardForm((current) => ({ ...current, workDate: event.target.value }))} />
-                <input type="time" className="h-11 rounded-md border border-zinc-300 px-3" value={jobCardForm.startsAt} onChange={(event) => setJobCardForm((current) => ({ ...current, startsAt: event.target.value }))} />
-                <input type="time" className="h-11 rounded-md border border-zinc-300 px-3" value={jobCardForm.endsAt} onChange={(event) => setJobCardForm((current) => ({ ...current, endsAt: event.target.value }))} />
-              </div>
-              <select className="h-11 rounded-md border border-zinc-300 px-3" value={jobCardForm.assetId} onChange={(event) => setJobCardForm((current) => ({ ...current, assetId: event.target.value }))}>
-                <option value="">Asset</option>
-                {(board.assets || []).map((asset) => <option key={asset.id} value={asset.id}>{asset.assetCode} - {asset.name}</option>)}
-              </select>
-              <select className="h-11 rounded-md border border-zinc-300 px-3" value={jobCardForm.teamLeadTechnicianId} onChange={(event) => setJobCardForm((current) => ({ ...current, teamLeadTechnicianId: event.target.value }))}>
-                <option value="">Team lead</option>
-                {technicians.map((technician) => <option key={technician.id} value={technician.id}>{technicianName(technician)}</option>)}
-              </select>
-              <select multiple className="min-h-28 rounded-md border border-zinc-300 px-3 py-2" value={jobCardForm.technicianIds} onChange={(event) => setJobCardForm((current) => ({ ...current, technicianIds: Array.from(event.target.selectedOptions).map((option) => option.value) }))}>
-                {technicians.map((technician) => <option key={technician.id} value={technician.id}>{technicianName(technician)} - {technician.employeeCode}</option>)}
-              </select>
-              <textarea rows={3} className="rounded-md border border-zinc-300 px-3 py-2" placeholder="Task scope" value={jobCardForm.workScope} onChange={(event) => setJobCardForm((current) => ({ ...current, workScope: event.target.value }))} />
-              <textarea rows={2} className="rounded-md border border-zinc-300 px-3 py-2" placeholder="Safety notes" value={jobCardForm.safetyNotes} onChange={(event) => setJobCardForm((current) => ({ ...current, safetyNotes: event.target.value }))} />
-              <div className="grid grid-cols-2 gap-3">
-                <input className="h-11 rounded-md border border-zinc-300 px-3" placeholder="Required tools" value={jobCardForm.requiredTools} onChange={(event) => setJobCardForm((current) => ({ ...current, requiredTools: event.target.value }))} />
-                <input className="h-11 rounded-md border border-zinc-300 px-3" placeholder="Required parts" value={jobCardForm.requiredParts} onChange={(event) => setJobCardForm((current) => ({ ...current, requiredParts: event.target.value }))} />
-              </div>
-              <div className="grid grid-cols-[1fr_auto] gap-3">
-                <input className="h-11 rounded-md border border-zinc-300 px-3" placeholder="Customer contact" value={jobCardForm.customerContact} onChange={(event) => setJobCardForm((current) => ({ ...current, customerContact: event.target.value }))} />
-                <label className="flex h-11 items-center gap-2 rounded-md border border-zinc-300 px-3 text-sm font-semibold text-zinc-700">
-                  <input type="checkbox" checked={jobCardForm.permitRequired} onChange={(event) => setJobCardForm((current) => ({ ...current, permitRequired: event.target.checked }))} />
-                  Permit
-                </label>
-              </div>
-              <Button type="submit" disabled={!token || loading}>Create Job Card</Button>
             </form>
           </Card>
         </div>

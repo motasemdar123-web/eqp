@@ -36,7 +36,6 @@ function requireEqpAccess(req, res, next) {
 
   if (
     !permissions.includes('EQP_MANAGE') &&
-    !permissions.includes('WORK_ORDERS_MANAGE') &&
     !permissions.includes('SYSTEM_CONFIGURE')
   ) {
     next(new ApiError(403, 'Engineer EQP access is required'));

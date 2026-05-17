@@ -44,17 +44,12 @@ const replacementTechnicians = [
 ];
 
 const engineerPermissionCodes = [
-  PermissionCode.REQUESTS_READ,
-  PermissionCode.REQUESTS_ASSIGN,
-  PermissionCode.WORK_ORDERS_MANAGE,
-  PermissionCode.WORK_ORDERS_CLOSE,
   PermissionCode.REPORTS_READ,
   PermissionCode.EQP_MANAGE,
 ];
 
 const technicianPermissionCodes = [
-  PermissionCode.REQUESTS_READ,
-  PermissionCode.WORK_ORDERS_CLOSE,
+  PermissionCode.SCHEDULE_MANAGE,
 ];
 
 function parseList(value) {
@@ -222,21 +217,6 @@ async function softRemoveTechnicianProfile(userId) {
 
   if (!technician) return;
 
-  const activeStatuses = ['DRAFT', 'OPEN', 'ASSIGNED', 'IN_PROGRESS', 'WAITING_PARTS', 'PENDING_APPROVAL'];
-
-  await prisma.workOrder.updateMany({
-    where: {
-      teamLeadTechnicianId: technician.id,
-      status: { in: activeStatuses },
-    },
-    data: { teamLeadTechnicianId: null },
-  });
-  await prisma.workOrderAssignment.deleteMany({
-    where: {
-      technicianId: technician.id,
-      workOrder: { status: { in: activeStatuses } },
-    },
-  });
   await prisma.technicianSchedule.updateMany({
     where: {
       technicianId: technician.id,

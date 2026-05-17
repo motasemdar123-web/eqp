@@ -8,21 +8,16 @@ import Badge from '../../components/ui/Badge';
 import { getStoredPlatformSession } from '../../lib/auth';
 
 const modules = [
-  { title: 'Engineer Approvals', href: '/engineer', status: 'Live', description: 'Review technician completion evidence, approve finished jobs, or return work for correction.' },
   { title: 'Technicians Management', href: '/management/technicians', status: 'Live', description: 'Add technicians, assign shifts and regions, manage skills, and update availability.' },
-  { title: 'Scheduling', href: '/management/scheduling', status: 'Live', description: 'Daily roster, shifts, dispatch board, and multi-technician job cards.' },
-  { title: 'Maintenance Requests', href: '/management/requests', status: 'Ready', description: 'Request intake, SLA, notes, attachments, reopen and lifecycle control.' },
-  { title: 'Work Orders', href: '/management/work-orders', status: 'Ready', description: 'Assignment, labor, materials, closure controls, and team execution.' },
-  { title: 'Assets', href: '/management/assets', status: 'Ready', description: 'Asset register, QR readiness, warranty, history, and cost accumulation.' },
-  { title: 'Inventory', href: '/management/inventory', status: 'Ready', description: 'Stock, reorder thresholds, issue, return, transfer, supplier and cost tracking.' },
+  { title: 'Scheduling', href: '/management/scheduling', status: 'Live', description: 'Daily roster, shifts, and technician availability planning.' },
   { title: 'EQP Module', href: '/eqp', status: 'Preserved', description: 'Preventive maintenance PDF reports, archive, machine history, and storage.' },
 ];
 
 const kpis = [
-  { label: 'Open Requests', value: '128', tone: 'dark' },
-  { label: 'SLA Compliance', value: '94%' },
-  { label: 'Active Technicians', value: '9' },
-  { label: 'Job Cards Today', value: '3' },
+  { label: 'Core Features', value: '3', tone: 'dark' },
+  { label: 'Technician Admin', value: 'Live' },
+  { label: 'Scheduling', value: 'Live' },
+  { label: 'EQP Reports', value: 'Live' },
 ];
 
 export default function ManagementDashboardPage() {
@@ -35,7 +30,7 @@ export default function ManagementDashboardPage() {
       activePath="/management"
       eyebrow="Dar Al HAI"
       title="Maintenance Command Center"
-      description="Unified operations workspace for requests, scheduling, assets, inventory, work orders, and EQP reporting."
+      description="Focused workspace for technician administration, scheduling, and EQP reporting."
       userLabel={roleLabel}
       actions={!user ? (
         <Link href="/" className="rounded-md bg-yellow-400 px-4 py-2.5 text-sm font-semibold text-zinc-950 hover:bg-yellow-300">

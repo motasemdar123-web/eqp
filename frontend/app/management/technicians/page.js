@@ -131,7 +131,6 @@ export default function TechniciansManagementPage() {
     total: technicians.length,
     available: technicians.filter((technician) => technician.isAvailable).length,
     unavailable: technicians.filter((technician) => !technician.isAvailable).length,
-    activeCards: technicians.reduce((total, technician) => total + (technician.assignments?.length || 0), 0),
   }), [technicians]);
 
   function startCreate() {
@@ -211,7 +210,7 @@ export default function TechniciansManagementPage() {
           <Metric label="Technicians" value={stats.total} tone="dark" />
           <Metric label="Available" value={stats.available} />
           <Metric label="Unavailable" value={stats.unavailable} />
-          <Metric label="Active Cards" value={stats.activeCards} />
+          <Metric label="Shifts" value={shifts.length} />
         </section>
 
         <section className="grid gap-5 xl:grid-cols-[1fr_420px]">

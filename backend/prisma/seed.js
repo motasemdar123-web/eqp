@@ -1,20 +1,28 @@
-const { PrismaClient, RoleCode, PermissionCode } = require('@prisma/client');
+const { PrismaClient, RoleCode } = require('@prisma/client');
 const bcrypt = require('bcryptjs');
 
 const prisma = new PrismaClient();
 
 const rolePermissions = {
-  SUPER_ADMIN: Object.values(PermissionCode),
+  SUPER_ADMIN: ['USERS_MANAGE', 'SCHEDULE_MANAGE', 'REPORTS_READ', 'EQP_MANAGE', 'SYSTEM_CONFIGURE'],
   GENERAL_MANAGER: ['REPORTS_READ'],
-  OPERATIONS_MANAGER: ['REQUESTS_READ', 'REQUESTS_ASSIGN', 'WORK_ORDERS_MANAGE', 'SCHEDULE_MANAGE', 'REPORTS_READ'],
-  MAINTENANCE_SUPERVISOR: ['REQUESTS_READ', 'REQUESTS_ASSIGN', 'WORK_ORDERS_MANAGE', 'WORK_ORDERS_CLOSE', 'SCHEDULE_MANAGE', 'REPORTS_READ', 'EQP_MANAGE'],
-  FIELD_TECHNICIAN: ['REQUESTS_READ', 'WORK_ORDERS_CLOSE'],
-  CALL_CENTER: ['REQUESTS_CREATE', 'REQUESTS_READ'],
-  WAREHOUSE_OFFICER: ['INVENTORY_MANAGE'],
+  OPERATIONS_MANAGER: ['SCHEDULE_MANAGE', 'REPORTS_READ'],
+  MAINTENANCE_SUPERVISOR: ['SCHEDULE_MANAGE', 'REPORTS_READ', 'EQP_MANAGE'],
+  FIELD_TECHNICIAN: ['SCHEDULE_MANAGE'],
+  CALL_CENTER: [],
+  WAREHOUSE_OFFICER: [],
   FINANCE: ['REPORTS_READ'],
-  CLIENT: ['REQUESTS_CREATE', 'REQUESTS_READ'],
+  CLIENT: [],
   SYSTEM_ADMIN: ['USERS_MANAGE', 'SYSTEM_CONFIGURE'],
 };
+
+const activePermissionCodes = [
+  'USERS_MANAGE',
+  'SCHEDULE_MANAGE',
+  'REPORTS_READ',
+  'EQP_MANAGE',
+  'SYSTEM_CONFIGURE',
+];
 
 async function upsertRole(code) {
   return prisma.role.upsert({
@@ -59,21 +67,6 @@ async function removeTechnicianProfileForUser(userId) {
 
   if (!technician) return;
 
-  const activeWorkOrderStatuses = ['DRAFT', 'OPEN', 'ASSIGNED', 'IN_PROGRESS', 'WAITING_PARTS', 'PENDING_APPROVAL'];
-
-  await prisma.workOrder.updateMany({
-    where: {
-      teamLeadTechnicianId: technician.id,
-      status: { in: activeWorkOrderStatuses },
-    },
-    data: { teamLeadTechnicianId: null },
-  });
-  await prisma.workOrderAssignment.deleteMany({
-    where: {
-      technicianId: technician.id,
-      workOrder: { status: { in: activeWorkOrderStatuses } },
-    },
-  });
   await prisma.technicianSchedule.updateMany({
     where: { technicianId: technician.id, deletedAt: null },
     data: { deletedAt: new Date() },
@@ -131,18 +124,6 @@ function dateOnly(dateText) {
   return new Date(`${dateText}T00:00:00.000Z`);
 }
 
-function businessDateTime(dateText, timeText) {
-  return new Date(`${dateText}T${timeText}:00+03:00`);
-}
-
-async function ensureWorkOrderAssignment(workOrderId, technicianId) {
-  await prisma.workOrderAssignment.upsert({
-    where: { workOrderId_technicianId: { workOrderId, technicianId } },
-    update: {},
-    create: { workOrderId, technicianId },
-  });
-}
-
 async function main() {
   const roles = {};
   const permissions = {};
@@ -151,7 +132,7 @@ async function main() {
     roles[code] = await upsertRole(code);
   }
 
-  for (const code of Object.values(PermissionCode)) {
+  for (const code of activePermissionCodes) {
     permissions[code] = await upsertPermission(code);
   }
 
@@ -264,332 +245,6 @@ async function main() {
       floor: '2',
       branchId: branch.id,
       propertyId: property.id,
-    },
-  });
-
-  const hvacCategory = await prisma.assetCategory.upsert({
-    where: { code: 'HVAC' },
-    update: {},
-    create: { code: 'HVAC', name: 'HVAC Equipment', nameAr: 'معدات التكييف' },
-  });
-
-  const asset = await prisma.asset.upsert({
-    where: { assetCode: 'DAH-HVAC-0001' },
-    update: {},
-    create: {
-      assetCode: 'DAH-HVAC-0001',
-      name: 'Rooftop AC Unit 1',
-      serialNumber: 'AC-778899',
-      branchId: branch.id,
-      locationId: location.id,
-      categoryId: hvacCategory.id,
-      lifecycleStatus: 'ACTIVE',
-    },
-  });
-
-  await prisma.qrAsset.upsert({
-    where: { assetId: asset.id },
-    update: {},
-    create: {
-      assetId: asset.id,
-      qrValue: `ASSET:${asset.assetCode}`,
-    },
-  });
-
-  const shiftSeeds = [
-    { name: 'Morning Shift', startsAt: '08:00', endsAt: '16:00' },
-    { name: 'Afternoon Shift', startsAt: '14:00', endsAt: '22:00' },
-    { name: 'Night Shift', startsAt: '22:00', endsAt: '06:00' },
-  ];
-  const shifts = {};
-
-  for (const shiftSeed of shiftSeeds) {
-    shifts[shiftSeed.name] = await prisma.shift.upsert({
-      where: { branchId_name: { branchId: branch.id, name: shiftSeed.name } },
-      update: {
-        startsAt: shiftSeed.startsAt,
-        endsAt: shiftSeed.endsAt,
-      },
-      create: {
-        ...shiftSeed,
-        branchId: branch.id,
-      },
-    });
-  }
-
-  const technicians = [];
-  const scheduleDateText = todayDateText();
-  const scheduleWorkDate = dateOnly(scheduleDateText);
-
-  for (const technicianSeed of technicianSeeds) {
-    const user = await upsertSeedUser({
-      email: technicianSeed.email,
-      userNumber: technicianSeed.userNumber,
-      fullName: technicianSeed.fullName,
-      passwordHash,
-      locale: 'ar',
-    });
-    await ensureUserRole(user.id, roles.FIELD_TECHNICIAN.id);
-    await removeUserRole(user.id, roles.MAINTENANCE_SUPERVISOR.id);
-
-    const assignedShift = shifts[technicianSeed.shiftName];
-    const technician = await prisma.technicianProfile.upsert({
-      where: { userId: user.id },
-      update: {
-        employeeCode: technicianSeed.employeeCode,
-        region: technicianSeed.region,
-        shiftId: assignedShift.id,
-        isAvailable: true,
-        deletedAt: null,
-      },
-      create: {
-        userId: user.id,
-        employeeCode: technicianSeed.employeeCode,
-        region: technicianSeed.region,
-        shiftId: assignedShift.id,
-      },
-    });
-
-    await prisma.technicianSkill.createMany({
-      data: technicianSeed.skills.map(([skill, level]) => ({
-        technicianId: technician.id,
-        skill,
-        level,
-      })),
-      skipDuplicates: true,
-    });
-
-    await prisma.technicianSchedule.upsert({
-      where: { technicianId_workDate: { technicianId: technician.id, workDate: scheduleWorkDate } },
-      update: {
-        shiftId: assignedShift.id,
-        branchId: branch.id,
-        startsAt: assignedShift.startsAt,
-        endsAt: assignedShift.endsAt,
-        status: 'CONFIRMED',
-        notes: `${technicianSeed.region} coverage`,
-        deletedAt: null,
-      },
-      create: {
-        technicianId: technician.id,
-        shiftId: assignedShift.id,
-        branchId: branch.id,
-        workDate: scheduleWorkDate,
-        startsAt: assignedShift.startsAt,
-        endsAt: assignedShift.endsAt,
-        status: 'CONFIRMED',
-        notes: `${technicianSeed.region} coverage`,
-      },
-    });
-
-    technicians.push({ ...technicianSeed, user, profile: technician, shift: assignedShift });
-  }
-
-  const leadTechnician = technicians[0].profile;
-  const hvacSupportTechnician = technicians[3].profile;
-  const plumbingLead = technicians[1].profile;
-  const electricalLead = technicians[2].profile;
-
-  const request = await prisma.maintenanceRequest.upsert({
-    where: { requestNumber: 'REQ-20260514-1001' },
-    update: {
-      status: 'ASSIGNED',
-      branchId: branch.id,
-      locationId: location.id,
-      assetId: asset.id,
-    },
-    create: {
-      requestNumber: 'REQ-20260514-1001',
-      title: 'AC not cooling - Admin Building',
-      description: 'Temperature is above set point in the admin office.',
-      category: 'HVAC',
-      priority: 'HIGH',
-      status: 'ASSIGNED',
-      source: 'CALL_CENTER',
-      branchId: branch.id,
-      locationId: location.id,
-      assetId: asset.id,
-      createdByUserId: manager.id,
-      slaTargetAt: new Date(Date.now() + 4 * 60 * 60 * 1000),
-    },
-  });
-
-  const workOrder = await prisma.workOrder.upsert({
-    where: { workOrderNumber: 'WO-20260514-1001' },
-    update: {
-      requestId: request.id,
-      assetId: asset.id,
-      priority: 'HIGH',
-      status: 'ASSIGNED',
-      jobType: 'Corrective Maintenance',
-      workScope: 'Diagnose cooling performance, inspect filters, verify refrigerant pressure, and restore normal operation.',
-      safetyNotes: 'Lock out electrical panel before opening the rooftop unit. Use roof access harness.',
-      requiredTools: 'Multimeter, manifold gauge, hand tools, filter kit',
-      requiredParts: 'AC filter 24x24 if replacement is required',
-      permitRequired: true,
-      customerContact: 'Facilities Desk +966500000001',
-      estimatedDurationMinutes: 120,
-      teamLeadTechnicianId: leadTechnician.id,
-      scheduledStartAt: businessDateTime(scheduleDateText, '09:00'),
-      scheduledEndAt: businessDateTime(scheduleDateText, '11:00'),
-    },
-    create: {
-      workOrderNumber: 'WO-20260514-1001',
-      title: 'Inspect and repair AC cooling issue',
-      description: 'AC unit is not reaching the required set point in the admin office.',
-      requestId: request.id,
-      assetId: asset.id,
-      priority: 'HIGH',
-      status: 'ASSIGNED',
-      jobType: 'Corrective Maintenance',
-      workScope: 'Diagnose cooling performance, inspect filters, verify refrigerant pressure, and restore normal operation.',
-      safetyNotes: 'Lock out electrical panel before opening the rooftop unit. Use roof access harness.',
-      requiredTools: 'Multimeter, manifold gauge, hand tools, filter kit',
-      requiredParts: 'AC filter 24x24 if replacement is required',
-      permitRequired: true,
-      customerContact: 'Facilities Desk +966500000001',
-      estimatedDurationMinutes: 120,
-      teamLeadTechnicianId: leadTechnician.id,
-      scheduledStartAt: businessDateTime(scheduleDateText, '09:00'),
-      scheduledEndAt: businessDateTime(scheduleDateText, '11:00'),
-    },
-  });
-
-  await ensureWorkOrderAssignment(workOrder.id, leadTechnician.id);
-  await ensureWorkOrderAssignment(workOrder.id, hvacSupportTechnician.id);
-
-  const plumbingJobCard = await prisma.workOrder.upsert({
-    where: { workOrderNumber: 'JC-DAH-DEMO-1002' },
-    update: {
-      status: 'ASSIGNED',
-      jobType: 'Inspection',
-      workScope: 'Inspect domestic water pump set, check pressure fluctuation, verify valve position, and submit findings.',
-      safetyNotes: 'Use eye protection and isolate pump before opening any casing.',
-      requiredTools: 'Pressure gauge, pipe wrench, inspection light',
-      requiredParts: 'Valve gasket set if needed',
-      customerContact: 'Operations Supervisor +966500000002',
-      estimatedDurationMinutes: 90,
-      teamLeadTechnicianId: plumbingLead.id,
-      scheduledStartAt: businessDateTime(scheduleDateText, '10:30'),
-      scheduledEndAt: businessDateTime(scheduleDateText, '12:00'),
-    },
-    create: {
-      workOrderNumber: 'JC-DAH-DEMO-1002',
-      title: 'Water pump pressure inspection',
-      description: 'Pump pressure fluctuation reported by facilities team.',
-      assetId: asset.id,
-      priority: 'MEDIUM',
-      status: 'ASSIGNED',
-      jobType: 'Inspection',
-      workScope: 'Inspect domestic water pump set, check pressure fluctuation, verify valve position, and submit findings.',
-      safetyNotes: 'Use eye protection and isolate pump before opening any casing.',
-      requiredTools: 'Pressure gauge, pipe wrench, inspection light',
-      requiredParts: 'Valve gasket set if needed',
-      customerContact: 'Operations Supervisor +966500000002',
-      estimatedDurationMinutes: 90,
-      teamLeadTechnicianId: plumbingLead.id,
-      scheduledStartAt: businessDateTime(scheduleDateText, '10:30'),
-      scheduledEndAt: businessDateTime(scheduleDateText, '12:00'),
-    },
-  });
-
-  await ensureWorkOrderAssignment(plumbingJobCard.id, plumbingLead.id);
-  await ensureWorkOrderAssignment(plumbingJobCard.id, technicians[8].profile.id);
-
-  const electricalJobCard = await prisma.workOrder.upsert({
-    where: { workOrderNumber: 'JC-DAH-DEMO-1003' },
-    update: {
-      status: 'ASSIGNED',
-      jobType: 'Preventive Maintenance',
-      workScope: 'Inspect DB panel, tighten terminals, check load balance, and record thermal readings.',
-      safetyNotes: 'Follow LOTO procedure and verify absence of voltage before contact.',
-      requiredTools: 'Thermal camera, insulated screwdriver set, clamp meter',
-      requiredParts: 'Cable lugs and labels',
-      permitRequired: true,
-      estimatedDurationMinutes: 120,
-      teamLeadTechnicianId: electricalLead.id,
-      scheduledStartAt: businessDateTime(scheduleDateText, '13:00'),
-      scheduledEndAt: businessDateTime(scheduleDateText, '15:00'),
-    },
-    create: {
-      workOrderNumber: 'JC-DAH-DEMO-1003',
-      title: 'Electrical panel preventive inspection',
-      description: 'Routine preventive inspection for the floor distribution board.',
-      assetId: asset.id,
-      priority: 'MEDIUM',
-      status: 'ASSIGNED',
-      jobType: 'Preventive Maintenance',
-      workScope: 'Inspect DB panel, tighten terminals, check load balance, and record thermal readings.',
-      safetyNotes: 'Follow LOTO procedure and verify absence of voltage before contact.',
-      requiredTools: 'Thermal camera, insulated screwdriver set, clamp meter',
-      requiredParts: 'Cable lugs and labels',
-      permitRequired: true,
-      estimatedDurationMinutes: 120,
-      teamLeadTechnicianId: electricalLead.id,
-      scheduledStartAt: businessDateTime(scheduleDateText, '13:00'),
-      scheduledEndAt: businessDateTime(scheduleDateText, '15:00'),
-    },
-  });
-
-  await ensureWorkOrderAssignment(electricalJobCard.id, electricalLead.id);
-  await ensureWorkOrderAssignment(electricalJobCard.id, technicians[6].profile.id);
-
-  const supplier = await prisma.supplier.upsert({
-    where: { code: 'SUP-HVAC-01' },
-    update: {},
-    create: { code: 'SUP-HVAC-01', name: 'Riyadh HVAC Supplies', phone: '+966500000000' },
-  });
-
-  const filter = await prisma.inventoryItem.upsert({
-    where: { sku: 'FILTER-24X24' },
-    update: {},
-    create: {
-      sku: 'FILTER-24X24',
-      name: 'AC Filter 24x24',
-      unit: 'PCS',
-      quantity: 25,
-      reorderThreshold: 10,
-      averageCost: 35,
-      supplierId: supplier.id,
-    },
-  });
-
-  await prisma.stockMovement.upsert({
-    where: { itemId_reference: { itemId: filter.id, reference: 'SEED-STOCK' } },
-    update: {
-      quantity: 25,
-      unitCost: 35,
-    },
-    create: {
-      itemId: filter.id,
-      type: 'PURCHASE_RECEIPT',
-      quantity: 25,
-      unitCost: 35,
-      reference: 'SEED-STOCK',
-    },
-  });
-
-  const pmPlan = await prisma.preventiveMaintenancePlan.upsert({
-    where: { assetId_name: { assetId: asset.id, name: 'Monthly HVAC Filter Inspection' } },
-    update: {
-      frequency: 'MONTHLY',
-      isActive: true,
-    },
-    create: {
-      name: 'Monthly HVAC Filter Inspection',
-      assetId: asset.id,
-      frequency: 'MONTHLY',
-      isActive: true,
-    },
-  });
-
-  const nextPmDueAt = new Date('2026-06-01T08:00:00.000Z');
-  await prisma.preventiveMaintenanceSchedule.upsert({
-    where: { planId_dueAt: { planId: pmPlan.id, dueAt: nextPmDueAt } },
-    update: {},
-    create: {
-      planId: pmPlan.id,
-      dueAt: nextPmDueAt,
     },
   });
 

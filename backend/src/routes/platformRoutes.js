@@ -16,17 +16,7 @@ router.post('/auth/microsoft/session', asyncHandler(platformController.completeM
 
 router.get('/api/dashboard', requirePlatformAuth, requirePermission('REPORTS_READ'), asyncHandler(platformController.dashboard));
 
-router.get('/api/maintenance-requests', requirePlatformAuth, requirePermission('REQUESTS_READ'), asyncHandler(platformController.listRequests));
-router.post('/api/maintenance-requests', requirePlatformAuth, requirePermission('REQUESTS_CREATE'), asyncHandler(platformController.createRequest));
-router.patch('/api/maintenance-requests/:id/status', requirePlatformAuth, requirePermission('REQUESTS_ASSIGN'), asyncHandler(platformController.updateRequestStatus));
-
-router.get('/api/work-orders', requirePlatformAuth, requirePermission('WORK_ORDERS_MANAGE'), asyncHandler(platformController.listWorkOrders));
-router.post('/api/work-orders', requirePlatformAuth, requirePermission('WORK_ORDERS_MANAGE'), asyncHandler(platformController.createWorkOrder));
-router.post('/api/work-orders/:id/close', requirePlatformAuth, requirePermission('WORK_ORDERS_CLOSE'), asyncHandler(platformController.closeWorkOrder));
 router.get('/api/technician/schedule', requirePlatformAuth, asyncHandler(platformController.technicianSchedule));
-router.post('/api/technician/work-orders/:id/finish', requirePlatformAuth, asyncHandler(platformController.submitTechnicianCompletion));
-router.get('/api/engineer/completion-requests', requirePlatformAuth, requirePermission('WORK_ORDERS_MANAGE'), asyncHandler(platformController.engineerCompletionRequests));
-router.post('/api/engineer/completion-requests/:id/review', requirePlatformAuth, requirePermission('WORK_ORDERS_MANAGE'), asyncHandler(platformController.reviewCompletionRequest));
 
 router.get('/api/technicians', requirePlatformAuth, requirePermission('SCHEDULE_MANAGE'), asyncHandler(platformController.listTechnicians));
 router.post('/api/technicians', requirePlatformAuth, requirePermission('SCHEDULE_MANAGE'), asyncHandler(platformController.createTechnician));
@@ -35,15 +25,8 @@ router.get('/api/shifts', requirePlatformAuth, requirePermission('SCHEDULE_MANAG
 router.post('/api/shifts', requirePlatformAuth, requirePermission('SCHEDULE_MANAGE'), asyncHandler(platformController.createShift));
 router.get('/api/scheduling/board', requirePlatformAuth, requirePermission('SCHEDULE_MANAGE'), asyncHandler(platformController.schedulingBoard));
 router.post('/api/scheduling/technician-schedules', requirePlatformAuth, requirePermission('SCHEDULE_MANAGE'), asyncHandler(platformController.upsertTechnicianSchedule));
-router.post('/api/scheduling/job-cards', requirePlatformAuth, requirePermission('WORK_ORDERS_MANAGE'), asyncHandler(platformController.createJobCard));
 
-router.get('/api/assets', requirePlatformAuth, requirePermission('ASSETS_MANAGE'), asyncHandler(platformController.list('asset', 'assets')));
-router.post('/api/assets', requirePlatformAuth, requirePermission('ASSETS_MANAGE'), asyncHandler(platformController.create('asset', 'asset')));
-
-router.get('/api/spare-parts', requirePlatformAuth, requirePermission('INVENTORY_MANAGE'), asyncHandler(platformController.list('inventoryItem', 'spareParts')));
-router.post('/api/spare-parts', requirePlatformAuth, requirePermission('INVENTORY_MANAGE'), asyncHandler(platformController.create('inventoryItem', 'sparePart')));
-
-router.get('/api/clients', requirePlatformAuth, requirePermission('REQUESTS_READ'), asyncHandler(platformController.list('client', 'clients')));
+router.get('/api/clients', requirePlatformAuth, requirePermission('SYSTEM_CONFIGURE'), asyncHandler(platformController.list('client', 'clients')));
 router.post('/api/clients', requirePlatformAuth, requirePermission('SYSTEM_CONFIGURE'), asyncHandler(platformController.create('client', 'client')));
 
 router.get('/api/notifications', requirePlatformAuth, asyncHandler(platformController.list('notification', 'notifications')));
