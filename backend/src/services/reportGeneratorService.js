@@ -3,6 +3,7 @@ const fs = require('fs-extra');
 const os = require('os');
 const path = require('path');
 const PDFDocument = require('pdfkit');
+const { PDFDocument: PdfLibDocument } = require('pdf-lib');
 const { execFile } = require('child_process');
 const { promisify } = require('util');
 
@@ -20,6 +21,7 @@ const EMUS_PER_PIXEL = 9525;
 const POINTS_TO_PIXELS = 96 / 72;
 const A4_PRINTABLE_WIDTH_PX = 748;
 const A4_PRINTABLE_HEIGHT_PX = 1055;
+const DEFAULT_PDF_PAGE_HEIGHT_RATIO = 0.84;
 
 function converterCommands() {
   return [...new Set([
@@ -92,6 +94,37 @@ async function getPdfConverterStatus() {
 
 function bufferLooksLikePdf(buffer) {
   return Buffer.isBuffer(buffer) && buffer.subarray(0, 4).toString('utf8') === '%PDF';
+}
+
+function pdfPageHeightRatio() {
+  const configuredRatio = Number(process.env.EQP_PDF_PAGE_HEIGHT_RATIO);
+
+  if (Number.isFinite(configuredRatio) && configuredRatio > 0.6 && configuredRatio <= 1) {
+    return configuredRatio;
+  }
+
+  return DEFAULT_PDF_PAGE_HEIGHT_RATIO;
+}
+
+async function cropPdfBottomWhitespace(pdfBuffer) {
+  const ratio = pdfPageHeightRatio();
+  if (ratio >= 1) return pdfBuffer;
+
+  const pdf = await PdfLibDocument.load(pdfBuffer);
+
+  pdf.getPages().forEach((page) => {
+    const { width, height } = page.getSize();
+    const croppedHeight = height * ratio;
+    const cropBottom = height - croppedHeight;
+
+    page.setMediaBox(0, cropBottom, width, croppedHeight);
+    page.setCropBox(0, cropBottom, width, croppedHeight);
+    page.setTrimBox(0, cropBottom, width, croppedHeight);
+    page.setBleedBox(0, cropBottom, width, croppedHeight);
+    page.setArtBox(0, cropBottom, width, croppedHeight);
+  });
+
+  return Buffer.from(await pdf.save());
 }
 
 function escapeHtml(value) {
@@ -561,7 +594,7 @@ async function tryConvertWorkbookToPdf(workbookBuffer) {
 
         if (await fs.pathExists(pdfPath)) {
           const pdfBuffer = await fs.readFile(pdfPath);
-          if (bufferLooksLikePdf(pdfBuffer)) return pdfBuffer;
+          if (bufferLooksLikePdf(pdfBuffer)) return cropPdfBottomWhitespace(pdfBuffer);
         }
       } catch (error) {
         if (process.env.NODE_ENV !== 'test') {
