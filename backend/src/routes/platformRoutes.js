@@ -26,9 +26,4 @@ router.post('/api/shifts', requirePlatformAuth, requirePermission('SCHEDULE_MANA
 router.get('/api/scheduling/board', requirePlatformAuth, requirePermission('SCHEDULE_MANAGE'), asyncHandler(platformController.schedulingBoard));
 router.post('/api/scheduling/technician-schedules', requirePlatformAuth, requirePermission('SCHEDULE_MANAGE'), asyncHandler(platformController.upsertTechnicianSchedule));
 
-router.get('/api/clients', requirePlatformAuth, requirePermission('SYSTEM_CONFIGURE'), asyncHandler(platformController.list('client', 'clients')));
-router.post('/api/clients', requirePlatformAuth, requirePermission('SYSTEM_CONFIGURE'), asyncHandler(platformController.create('client', 'client')));
-
-router.get('/api/notifications', requirePlatformAuth, asyncHandler(platformController.list('notification', 'notifications')));
-
 module.exports = router;

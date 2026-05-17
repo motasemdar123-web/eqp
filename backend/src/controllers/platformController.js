@@ -78,20 +78,6 @@ async function upsertTechnicianSchedule(req, res) {
   res.status(201).json({ success: true, schedule });
 }
 
-function list(modelName, responseKey) {
-  return async (req, res) => {
-    const items = await platformService.listModel(modelName);
-    res.json({ success: true, [responseKey]: items });
-  };
-}
-
-function create(modelName, responseKey) {
-  return async (req, res) => {
-    const item = await platformService.createModel(modelName, req.body);
-    res.status(201).json({ success: true, [responseKey]: item });
-  };
-}
-
 module.exports = {
   login,
   unifiedLogin,
@@ -107,6 +93,4 @@ module.exports = {
   createShift,
   schedulingBoard,
   upsertTechnicianSchedule,
-  list,
-  create,
 };

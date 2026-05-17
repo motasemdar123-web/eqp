@@ -1056,16 +1056,6 @@ async function getSchedulingBoard(dateText) {
   };
 }
 
-async function listModel(modelName) {
-  const prisma = requirePrisma();
-  return prisma[modelName].findMany({ orderBy: { createdAt: 'desc' }, take: 100 });
-}
-
-async function createModel(modelName, payload) {
-  const prisma = requirePrisma();
-  return prisma[modelName].create({ data: payload });
-}
-
 module.exports = {
   login,
   unifiedLogin,
@@ -1082,6 +1072,4 @@ module.exports = {
   createShift,
   upsertTechnicianSchedule,
   getSchedulingBoard,
-  listModel,
-  createModel,
 };

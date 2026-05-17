@@ -13,6 +13,7 @@ enum UserStatus {
   SUSPENDED
   INVITED
 }
+
 enum RoleCode {
   SUPER_ADMIN
   GENERAL_MANAGER
@@ -25,6 +26,7 @@ enum RoleCode {
   CLIENT
   SYSTEM_ADMIN
 }
+
 enum PermissionCode {
   USERS_MANAGE
   REQUESTS_CREATE
@@ -40,123 +42,7 @@ enum PermissionCode {
   EQP_MANAGE
   SYSTEM_CONFIGURE
 }
-enum RequestStatus {
-  NEW
-  TRIAGED
-  ASSIGNED
-  IN_PROGRESS
-  ON_HOLD
-  COMPLETED
-  CLOSED
-  REOPENED
-  CANCELLED
-  MERGED
-}
-enum WorkOrderStatus {
-  DRAFT
-  OPEN
-  ASSIGNED
-  IN_PROGRESS
-  WAITING_PARTS
-  PENDING_APPROVAL
-  COMPLETED
-  CLOSED
-  CANCELLED
-}
-enum Priority {
-  LOW
-  MEDIUM
-  HIGH
-  CRITICAL
-}
-enum RequestSource {
-  PHONE
-  EMAIL
-  WHATSAPP
-  PORTAL
-  CALL_CENTER
-  TECHNICIAN
-  PREVENTIVE_MAINTENANCE
-  MANAGEMENT
-}
-enum Frequency {
-  DAILY
-  WEEKLY
-  MONTHLY
-  QUARTERLY
-  YEARLY
-}
-enum AssetStatus {
-  ACTIVE
-  INACTIVE
-  UNDER_MAINTENANCE
-  RETIRED
-  LOST
-}
-enum InventoryMovementType {
-  ISSUE
-  RETURN
-  TRANSFER
-  ADJUSTMENT
-  PURCHASE_RECEIPT
-  RESERVATION
-}
-enum PurchaseRequestStatus {
-  DRAFT
-  SUBMITTED
-  APPROVED
-  REJECTED
-  ORDERED
-  RECEIVED
-  CANCELLED
-}
-enum NotificationChannel {
-  IN_APP
-  EMAIL
-  SMS
-  WHATSAPP
-}
-enum NotificationStatus {
-  PENDING
-  SENT
-  READ
-  FAILED
-}
-enum AttachmentOwnerType {
-  REQUEST
-  WORK_ORDER
-  ASSET
-  EQP_REPORT
-  COMMENT
-}
-enum CommentVisibility {
-  INTERNAL
-  CUSTOMER
-  TECHNICIAN
-}
-enum ChecklistOwnerType {
-  WORK_ORDER
-  PREVENTIVE_MAINTENANCE
-  ASSET
-}
-enum AttendanceStatus {
-  PRESENT
-  ABSENT
-  LATE
-  ON_LEAVE
-}
-enum SlaTargetType {
-  RESPONSE
-  RESOLUTION
-}
-enum CustomFieldEntity {
-  REQUEST
-  WORK_ORDER
-  ASSET
-  CLIENT
-  BRANCH
-  LOCATION
-}
+
 enum TechnicianScheduleStatus {
   PLANNED
   CONFIRMED
@@ -176,18 +62,14 @@ model User {
   phone        String?
   locale       String     @default("en")
   status       UserStatus @default(ACTIVE)
-  clientId     String?    @map("client_id")
-  client       Client?    @relation(fields: [clientId], references: [id])
   roles        UserRole[]
   technician   TechnicianProfile?
-  auditLogs    AuditLog[] @relation("AuditActor")
   createdAt    DateTime   @default(now()) @map("created_at")
   updatedAt    DateTime   @updatedAt @map("updated_at")
   createdById  String?    @map("created_by")
   updatedById  String?    @map("updated_by")
   deletedAt    DateTime?  @map("deleted_at")
 
-  @@index([clientId])
   @@map("users")
 }
 
@@ -198,11 +80,11 @@ model Role {
   description String?
   users       UserRole[]
   permissions RolePermission[]
-  createdAt   DateTime        @default(now()) @map("created_at")
-  updatedAt   DateTime        @updatedAt @map("updated_at")
-  createdById String?         @map("created_by")
-  updatedById String?         @map("updated_by")
-  deletedAt   DateTime?       @map("deleted_at")
+  createdAt   DateTime         @default(now()) @map("created_at")
+  updatedAt   DateTime         @updatedAt @map("updated_at")
+  createdById String?          @map("created_by")
+  updatedById String?          @map("updated_by")
+  deletedAt   DateTime?        @map("deleted_at")
 
   @@map("roles")
 }
@@ -213,11 +95,11 @@ model Permission {
   name        String
   description String?
   roles       RolePermission[]
-  createdAt   DateTime        @default(now()) @map("created_at")
-  updatedAt   DateTime        @updatedAt @map("updated_at")
-  createdById String?         @map("created_by")
-  updatedById String?         @map("updated_by")
-  deletedAt   DateTime?       @map("deleted_at")
+  createdAt   DateTime         @default(now()) @map("created_at")
+  updatedAt   DateTime         @updatedAt @map("updated_at")
+  createdById String?          @map("created_by")
+  updatedById String?          @map("updated_by")
+  deletedAt   DateTime?        @map("deleted_at")
 
   @@map("permissions")
 }
@@ -250,632 +132,79 @@ model RolePermission {
   @@map("role_permissions")
 }
 
-model AuditLog {
-  id         String   @id @default(uuid())
-  actorId    String?  @map("actor_id")
-  actor      User?    @relation("AuditActor", fields: [actorId], references: [id])
-  action     String
-  entityType String   @map("entity_type")
-  entityId   String?  @map("entity_id")
-  beforeData Json?    @map("before_data")
-  afterData  Json?    @map("after_data")
-  metadata   Json?
-  ipAddress  String?  @map("ip_address")
-  userAgent  String?  @map("user_agent")
-  createdAt  DateTime @default(now()) @map("created_at")
-
-  @@index([actorId])
-  @@index([entityType, entityId])
-  @@index([createdAt])
-  @@map("audit_logs")
-}
-
-model Client {
-  id          String     @id @default(uuid())
-  code        String     @unique
-  name        String
-  nameAr      String?    @map("name_ar")
-  contacts    Json?
-  branches    Branch[]
-  properties  Property[]
-  users       User[]
-  createdAt   DateTime   @default(now()) @map("created_at")
-  updatedAt   DateTime   @updatedAt @map("updated_at")
-  createdById String?    @map("created_by")
-  updatedById String?    @map("updated_by")
-  deletedAt   DateTime?  @map("deleted_at")
-
-  @@map("clients")
-}
-
 model Branch {
-  id          String   @id @default(uuid())
-  clientId    String?  @map("client_id")
-  code        String   @unique
-  name        String
-  nameAr      String?  @map("name_ar")
-  address     String?
-  latitude    Decimal?
-  longitude   Decimal?
-  client      Client?  @relation(fields: [clientId], references: [id])
-  properties  Property[]
-  locations   Location[]
-  assets      Asset[]
-  requests    MaintenanceRequest[]
-  shifts      Shift[]
+  id                  String               @id @default(uuid())
+  code                String               @unique
+  name                String
+  nameAr              String?              @map("name_ar")
+  address             String?
+  shifts              Shift[]
   technicianSchedules TechnicianSchedule[]
-  holidays    Holiday[]
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
-  createdById String?  @map("created_by")
-  updatedById String?  @map("updated_by")
-  deletedAt   DateTime? @map("deleted_at")
+  createdAt           DateTime             @default(now()) @map("created_at")
+  updatedAt           DateTime             @updatedAt @map("updated_at")
+  createdById         String?              @map("created_by")
+  updatedById         String?              @map("updated_by")
+  deletedAt           DateTime?            @map("deleted_at")
 
-  @@index([clientId])
   @@map("branches")
 }
 
-model Property {
-  id          String     @id @default(uuid())
-  clientId    String?    @map("client_id")
-  branchId    String?    @map("branch_id")
-  code        String     @unique
+model Shift {
+  id          String               @id @default(uuid())
+  branchId    String?              @map("branch_id")
   name        String
-  type        String?
-  address     String?
-  client      Client?    @relation(fields: [clientId], references: [id])
-  branch      Branch?    @relation(fields: [branchId], references: [id])
-  locations   Location[]
-  createdAt   DateTime   @default(now()) @map("created_at")
-  updatedAt   DateTime   @updatedAt @map("updated_at")
-  createdById String?    @map("created_by")
-  updatedById String?    @map("updated_by")
-  deletedAt   DateTime?  @map("deleted_at")
-
-  @@index([clientId])
-  @@index([branchId])
-  @@map("properties")
-}
-
-model Location {
-  id          String   @id @default(uuid())
-  branchId    String?  @map("branch_id")
-  propertyId  String?  @map("property_id")
-  code        String?  @unique
-  name        String
-  type        String?
-  floor       String?
-  unit        String?
-  latitude    Decimal?
-  longitude   Decimal?
-  branch      Branch?  @relation(fields: [branchId], references: [id])
-  property    Property? @relation(fields: [propertyId], references: [id])
-  assets      Asset[]
-  requests    MaintenanceRequest[]
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
-  createdById String?  @map("created_by")
-  updatedById String?  @map("updated_by")
-  deletedAt   DateTime? @map("deleted_at")
+  startsAt    String               @map("starts_at")
+  endsAt      String               @map("ends_at")
+  branch      Branch?              @relation(fields: [branchId], references: [id])
+  technicians TechnicianProfile[]
+  schedules   TechnicianSchedule[]
+  createdAt   DateTime             @default(now()) @map("created_at")
+  updatedAt   DateTime             @updatedAt @map("updated_at")
+  createdById String?              @map("created_by")
+  updatedById String?              @map("updated_by")
+  deletedAt   DateTime?            @map("deleted_at")
 
   @@index([branchId])
-  @@index([propertyId])
-  @@map("locations")
-}
-
-model AssetCategory {
-  id          String   @id @default(uuid())
-  code        String   @unique
-  name        String
-  nameAr      String?  @map("name_ar")
-  assets      Asset[]
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
-  createdById String?  @map("created_by")
-  updatedById String?  @map("updated_by")
-  deletedAt   DateTime? @map("deleted_at")
-
-  @@map("asset_categories")
-}
-
-model Asset {
-  id              String      @id @default(uuid())
-  assetCode       String      @unique @map("asset_code")
-  name            String
-  serialNumber    String?     @map("serial_number")
-  branchId        String?     @map("branch_id")
-  propertyId      String?     @map("property_id")
-  locationId      String?     @map("location_id")
-  categoryId      String?     @map("category_id")
-  warrantyUntil   DateTime?   @map("warranty_until")
-  purchaseDate    DateTime?   @map("purchase_date")
-  lifecycleStatus AssetStatus @default(ACTIVE) @map("lifecycle_status")
-  accumulatedCost Decimal     @default(0) @map("accumulated_cost")
-  branch          Branch?     @relation(fields: [branchId], references: [id])
-  location        Location?   @relation(fields: [locationId], references: [id])
-  category        AssetCategory? @relation(fields: [categoryId], references: [id])
-  requests        MaintenanceRequest[]
-  workOrders      WorkOrder[]
-  preventivePlans PreventiveMaintenancePlan[]
-  qrAsset         QrAsset?
-  tags            Tag[]
-  createdAt       DateTime    @default(now()) @map("created_at")
-  updatedAt       DateTime    @updatedAt @map("updated_at")
-  createdById     String?     @map("created_by")
-  updatedById     String?     @map("updated_by")
-  deletedAt       DateTime?   @map("deleted_at")
-
-  @@index([branchId])
-  @@index([locationId])
-  @@index([categoryId])
-  @@index([lifecycleStatus])
-  @@map("assets")
-}
-
-model MaintenanceRequest {
-  id                   String        @id @default(uuid())
-  requestNumber        String        @unique @map("request_number")
-  title                String
-  description          String?
-  category             String
-  priority             Priority      @default(MEDIUM)
-  status               RequestStatus @default(NEW)
-  source               RequestSource @default(PORTAL)
-  slaTargetAt          DateTime?     @map("sla_target_at")
-  branchId             String?       @map("branch_id")
-  locationId           String?       @map("location_id")
-  assetId              String?       @map("asset_id")
-  createdByUserId      String?       @map("created_by_user_id")
-  customerVisibleNotes String?       @map("customer_visible_notes")
-  internalNotes        String?       @map("internal_notes")
-  duplicateOfId        String?       @map("duplicate_of_id")
-  recurringGroupId     String?       @map("recurring_group_id")
-  reopenCount          Int           @default(0) @map("reopen_count")
-  branch               Branch?       @relation(fields: [branchId], references: [id])
-  location             Location?     @relation(fields: [locationId], references: [id])
-  asset                Asset?        @relation(fields: [assetId], references: [id])
-  workOrders           WorkOrder[]
-  comments             Comment[]
-  timeline             ActivityTimeline[]
-  createdAt            DateTime      @default(now()) @map("created_at")
-  updatedAt            DateTime      @updatedAt @map("updated_at")
-  createdById          String?       @map("created_by")
-  updatedById          String?       @map("updated_by")
-  deletedAt            DateTime?     @map("deleted_at")
-
-  @@index([status])
-  @@index([priority])
-  @@index([branchId])
-  @@index([assetId])
-  @@index([slaTargetAt])
-  @@map("maintenance_requests")
-}
-
-model WorkOrder {
-  id              String          @id @default(uuid())
-  workOrderNumber String          @unique @map("work_order_number")
-  requestId       String?         @map("request_id")
-  assetId         String?         @map("asset_id")
-  title           String
-  description     String?
-  status          WorkOrderStatus @default(OPEN)
-  priority        Priority        @default(MEDIUM)
-  scheduledStartAt DateTime?      @map("scheduled_start_at")
-  scheduledEndAt   DateTime?      @map("scheduled_end_at")
-  startedAt       DateTime?       @map("started_at")
-  completedAt     DateTime?       @map("completed_at")
-  jobType         String?         @map("job_type")
-  workScope       String?         @map("work_scope")
-  safetyNotes     String?         @map("safety_notes")
-  requiredTools   String?         @map("required_tools")
-  requiredParts   String?         @map("required_parts")
-  permitRequired  Boolean         @default(false) @map("permit_required")
-  customerContact String?         @map("customer_contact")
-  estimatedDurationMinutes Int?   @map("estimated_duration_minutes")
-  teamLeadTechnicianId String?    @map("team_lead_technician_id")
-  closureNotes    String?         @map("closure_notes")
-  rootCause       String?         @map("root_cause")
-  correctiveAction String?        @map("corrective_action")
-  preventiveAction String?        @map("preventive_action")
-  request         MaintenanceRequest? @relation(fields: [requestId], references: [id])
-  asset           Asset?          @relation(fields: [assetId], references: [id])
-  teamLead        TechnicianProfile? @relation("WorkOrderTeamLead", fields: [teamLeadTechnicianId], references: [id])
-  assignments     WorkOrderAssignment[]
-  stockMovements  StockMovement[]
-  comments        Comment[]
-  checklistResponses ChecklistResponse[]
-  timeline        ActivityTimeline[]
-  createdAt       DateTime        @default(now()) @map("created_at")
-  updatedAt       DateTime        @updatedAt @map("updated_at")
-  createdById     String?         @map("created_by")
-  updatedById     String?         @map("updated_by")
-  deletedAt       DateTime?       @map("deleted_at")
-
-  @@index([requestId])
-  @@index([assetId])
-  @@index([teamLeadTechnicianId])
-  @@index([status])
-  @@index([scheduledStartAt])
-  @@map("work_orders")
-}
-
-model WorkOrderAssignment {
-  id           String   @id @default(uuid())
-  workOrderId  String   @map("work_order_id")
-  technicianId String   @map("technician_id")
-  assignedAt   DateTime @default(now()) @map("assigned_at")
-  acceptedAt   DateTime? @map("accepted_at")
-  workOrder    WorkOrder @relation(fields: [workOrderId], references: [id], onDelete: Cascade)
-  technician   TechnicianProfile @relation(fields: [technicianId], references: [id])
-  createdAt    DateTime @default(now()) @map("created_at")
-  updatedAt    DateTime @updatedAt @map("updated_at")
-  createdById  String?  @map("created_by")
-  updatedById  String?  @map("updated_by")
-
-  @@unique([workOrderId, technicianId])
-  @@index([technicianId])
-  @@map("work_order_assignments")
+  @@unique([branchId, name])
+  @@map("shifts")
 }
 
 model TechnicianProfile {
-  id          String   @id @default(uuid())
-  userId      String   @unique @map("user_id")
-  employeeCode String? @unique @map("employee_code")
-  region      String?
-  shiftId     String?  @map("shift_id")
-  isAvailable Boolean  @default(true) @map("is_available")
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  shift       Shift?   @relation(fields: [shiftId], references: [id])
-  skills      TechnicianSkill[]
-  schedules   TechnicianSchedule[]
-  attendance  TechnicianAttendance[]
-  metrics     TechnicianPerformanceMetric[]
-  assignments WorkOrderAssignment[]
-  leadWorkOrders WorkOrder[] @relation("WorkOrderTeamLead")
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
-  createdById String?  @map("created_by")
-  updatedById String?  @map("updated_by")
-  deletedAt   DateTime? @map("deleted_at")
+  id           String               @id @default(uuid())
+  userId       String               @unique @map("user_id")
+  employeeCode String?              @unique @map("employee_code")
+  region       String?
+  shiftId      String?              @map("shift_id")
+  isAvailable  Boolean              @default(true) @map("is_available")
+  user         User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  shift        Shift?               @relation(fields: [shiftId], references: [id])
+  skills       TechnicianSkill[]
+  schedules    TechnicianSchedule[]
+  createdAt    DateTime             @default(now()) @map("created_at")
+  updatedAt    DateTime             @updatedAt @map("updated_at")
+  createdById  String?              @map("created_by")
+  updatedById  String?              @map("updated_by")
+  deletedAt    DateTime?            @map("deleted_at")
 
   @@index([shiftId])
   @@map("technician_profiles")
 }
 
 model TechnicianSkill {
-  id           String @id @default(uuid())
-  technicianId String @map("technician_id")
-  skill        String
-  level        String?
-  certificateUrl String? @map("certificate_url")
-  technician   TechnicianProfile @relation(fields: [technicianId], references: [id], onDelete: Cascade)
-  createdAt    DateTime @default(now()) @map("created_at")
-  updatedAt    DateTime @updatedAt @map("updated_at")
-  createdById  String?  @map("created_by")
-  updatedById  String?  @map("updated_by")
+  id             String            @id @default(uuid())
+  technicianId   String            @map("technician_id")
+  skill          String
+  level          String?
+  certificateUrl String?           @map("certificate_url")
+  technician     TechnicianProfile @relation(fields: [technicianId], references: [id], onDelete: Cascade)
+  createdAt      DateTime          @default(now()) @map("created_at")
+  updatedAt      DateTime          @updatedAt @map("updated_at")
+  createdById    String?           @map("created_by")
+  updatedById    String?           @map("updated_by")
 
   @@index([skill])
   @@unique([technicianId, skill])
   @@map("technician_skills")
-}
-
-model PreventiveMaintenancePlan {
-  id          String    @id @default(uuid())
-  name        String
-  assetId     String?   @map("asset_id")
-  frequency   Frequency
-  isActive    Boolean   @default(true) @map("is_active")
-  asset       Asset?    @relation(fields: [assetId], references: [id])
-  schedules   PreventiveMaintenanceSchedule[]
-  createdAt   DateTime  @default(now()) @map("created_at")
-  updatedAt   DateTime  @updatedAt @map("updated_at")
-  createdById String?   @map("created_by")
-  updatedById String?   @map("updated_by")
-  deletedAt   DateTime? @map("deleted_at")
-
-  @@index([assetId])
-  @@unique([assetId, name])
-  @@map("preventive_maintenance_plans")
-}
-
-model PreventiveMaintenanceSchedule {
-  id        String   @id @default(uuid())
-  planId    String   @map("plan_id")
-  dueAt     DateTime @map("due_at")
-  generatedWorkOrderId String? @map("generated_work_order_id")
-  isCompleted Boolean @default(false) @map("is_completed")
-  plan      PreventiveMaintenancePlan @relation(fields: [planId], references: [id], onDelete: Cascade)
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-  createdById String? @map("created_by")
-  updatedById String? @map("updated_by")
-
-  @@index([dueAt])
-  @@index([planId])
-  @@unique([planId, dueAt])
-  @@map("preventive_maintenance_schedules")
-}
-
-model InventoryItem {
-  id          String   @id @default(uuid())
-  sku         String   @unique
-  name        String
-  unit        String
-  quantity    Int      @default(0)
-  reorderThreshold Int @default(0) @map("reorder_threshold")
-  averageCost Decimal @default(0) @map("average_cost")
-  supplierId  String? @map("supplier_id")
-  supplier    Supplier? @relation(fields: [supplierId], references: [id])
-  movements   StockMovement[]
-  purchaseRequests PurchaseRequest[]
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
-  createdById String? @map("created_by")
-  updatedById String? @map("updated_by")
-  deletedAt   DateTime? @map("deleted_at")
-
-  @@index([supplierId])
-  @@map("inventory_items")
-}
-
-model StockMovement {
-  id          String @id @default(uuid())
-  itemId      String @map("item_id")
-  workOrderId String? @map("work_order_id")
-  type        InventoryMovementType
-  quantity    Int
-  unitCost    Decimal? @map("unit_cost")
-  reference   String?
-  item        InventoryItem @relation(fields: [itemId], references: [id])
-  workOrder   WorkOrder? @relation(fields: [workOrderId], references: [id])
-  createdAt   DateTime @default(now()) @map("created_at")
-  createdById String? @map("created_by")
-
-  @@index([itemId])
-  @@index([workOrderId])
-  @@index([type])
-  @@unique([itemId, reference])
-  @@map("stock_movements")
-}
-
-model Supplier {
-  id          String @id @default(uuid())
-  code        String @unique
-  name        String
-  phone       String?
-  email       String?
-  items       InventoryItem[]
-  purchaseRequests PurchaseRequest[]
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
-  createdById String? @map("created_by")
-  updatedById String? @map("updated_by")
-  deletedAt   DateTime? @map("deleted_at")
-
-  @@map("suppliers")
-}
-
-model PurchaseRequest {
-  id          String @id @default(uuid())
-  requestNumber String @unique @map("request_number")
-  itemId      String @map("item_id")
-  supplierId  String? @map("supplier_id")
-  quantity    Int
-  status      PurchaseRequestStatus @default(DRAFT)
-  item        InventoryItem @relation(fields: [itemId], references: [id])
-  supplier    Supplier? @relation(fields: [supplierId], references: [id])
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
-  createdById String? @map("created_by")
-  updatedById String? @map("updated_by")
-  deletedAt   DateTime? @map("deleted_at")
-
-  @@index([itemId])
-  @@index([supplierId])
-  @@map("purchase_requests")
-}
-
-model Notification {
-  id        String @id @default(uuid())
-  userId    String? @map("user_id")
-  channel   NotificationChannel @default(IN_APP)
-  status    NotificationStatus @default(PENDING)
-  title     String
-  message   String
-  metadata  Json?
-  readAt    DateTime? @map("read_at")
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-  createdById String? @map("created_by")
-  updatedById String? @map("updated_by")
-
-  @@index([userId])
-  @@index([status])
-  @@map("notifications")
-}
-
-model EscalationRule {
-  id          String @id @default(uuid())
-  name        String
-  triggerType String @map("trigger_type")
-  conditions  Json
-  actions     Json
-  isActive    Boolean @default(true) @map("is_active")
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
-  createdById String? @map("created_by")
-  updatedById String? @map("updated_by")
-  deletedAt   DateTime? @map("deleted_at")
-
-  @@map("escalation_rules")
-}
-
-model SlaConfig {
-  id          String @id @default(uuid())
-  name        String
-  priority    Priority
-  targetType  SlaTargetType @map("target_type")
-  minutes     Int
-  isActive    Boolean @default(true) @map("is_active")
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
-  createdById String? @map("created_by")
-  updatedById String? @map("updated_by")
-  deletedAt   DateTime? @map("deleted_at")
-
-  @@unique([priority, targetType])
-  @@map("sla_configs")
-}
-
-model Attachment {
-  id          String @id @default(uuid())
-  ownerType   AttachmentOwnerType @map("owner_type")
-  ownerId     String @map("owner_id")
-  fileName    String @map("file_name")
-  fileUrl     String @map("file_url")
-  mimeType    String? @map("mime_type")
-  category    String?
-  createdAt   DateTime @default(now()) @map("created_at")
-  createdById String? @map("created_by")
-
-  @@index([ownerType, ownerId])
-  @@map("attachments")
-}
-
-model Comment {
-  id          String @id @default(uuid())
-  requestId   String? @map("request_id")
-  workOrderId String? @map("work_order_id")
-  visibility  CommentVisibility @default(INTERNAL)
-  body        String
-  request     MaintenanceRequest? @relation(fields: [requestId], references: [id], onDelete: Cascade)
-  workOrder   WorkOrder? @relation(fields: [workOrderId], references: [id], onDelete: Cascade)
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
-  createdById String? @map("created_by")
-  updatedById String? @map("updated_by")
-  deletedAt   DateTime? @map("deleted_at")
-
-  @@index([requestId])
-  @@index([workOrderId])
-  @@map("comments")
-}
-
-model Checklist {
-  id          String @id @default(uuid())
-  ownerType   ChecklistOwnerType @map("owner_type")
-  name        String
-  description String?
-  items       ChecklistItem[]
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
-  createdById String? @map("created_by")
-  updatedById String? @map("updated_by")
-  deletedAt   DateTime? @map("deleted_at")
-
-  @@map("checklists")
-}
-
-model ChecklistItem {
-  id          String @id @default(uuid())
-  checklistId String @map("checklist_id")
-  label       String
-  internalKey String? @map("internal_key")
-  isRequired  Boolean @default(false) @map("is_required")
-  sortOrder   Int @default(0) @map("sort_order")
-  checklist   Checklist @relation(fields: [checklistId], references: [id], onDelete: Cascade)
-  responses   ChecklistResponse[]
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
-  createdById String? @map("created_by")
-  updatedById String? @map("updated_by")
-
-  @@index([checklistId])
-  @@map("checklist_items")
-}
-
-model ChecklistResponse {
-  id          String @id @default(uuid())
-  checklistItemId String @map("checklist_item_id")
-  workOrderId String? @map("work_order_id")
-  value       String?
-  notes       String?
-  checklistItem ChecklistItem @relation(fields: [checklistItemId], references: [id])
-  workOrder   WorkOrder? @relation(fields: [workOrderId], references: [id])
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
-  createdById String? @map("created_by")
-  updatedById String? @map("updated_by")
-
-  @@index([workOrderId])
-  @@index([checklistItemId])
-  @@map("checklist_responses")
-}
-
-model ActivityTimeline {
-  id          String @id @default(uuid())
-  requestId   String? @map("request_id")
-  workOrderId String? @map("work_order_id")
-  eventType   String @map("event_type")
-  message     String
-  metadata    Json?
-  request     MaintenanceRequest? @relation(fields: [requestId], references: [id], onDelete: Cascade)
-  workOrder   WorkOrder? @relation(fields: [workOrderId], references: [id], onDelete: Cascade)
-  createdAt   DateTime @default(now()) @map("created_at")
-  createdById String? @map("created_by")
-
-  @@index([requestId])
-  @@index([workOrderId])
-  @@index([createdAt])
-  @@map("activity_timelines")
-}
-
-model Setting {
-  id          String @id @default(uuid())
-  key         String @unique
-  value       Json
-  description String?
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
-  createdById String? @map("created_by")
-  updatedById String? @map("updated_by")
-
-  @@map("settings")
-}
-
-model Holiday {
-  id          String @id @default(uuid())
-  branchId    String? @map("branch_id")
-  name        String
-  date        DateTime
-  branch      Branch? @relation(fields: [branchId], references: [id])
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
-  createdById String? @map("created_by")
-  updatedById String? @map("updated_by")
-
-  @@index([branchId, date])
-  @@map("holidays")
-}
-
-model Shift {
-  id          String @id @default(uuid())
-  branchId    String? @map("branch_id")
-  name        String
-  startsAt    String @map("starts_at")
-  endsAt      String @map("ends_at")
-  branch      Branch? @relation(fields: [branchId], references: [id])
-  technicians TechnicianProfile[]
-  schedules   TechnicianSchedule[]
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
-  createdById String? @map("created_by")
-  updatedById String? @map("updated_by")
-  deletedAt   DateTime? @map("deleted_at")
-
-  @@index([branchId])
-  @@unique([branchId, name])
-  @@map("shifts")
 }
 
 model TechnicianSchedule {
@@ -904,131 +233,48 @@ model TechnicianSchedule {
   @@map("technician_schedules")
 }
 
-model TechnicianAttendance {
-  id          String @id @default(uuid())
-  technicianId String @map("technician_id")
-  date        DateTime
-  status      AttendanceStatus
-  checkInAt   DateTime? @map("check_in_at")
-  checkOutAt  DateTime? @map("check_out_at")
-  technician  TechnicianProfile @relation(fields: [technicianId], references: [id])
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
-  createdById String? @map("created_by")
-  updatedById String? @map("updated_by")
-
-  @@unique([technicianId, date])
-  @@map("technician_attendance")
-}
-
-model TechnicianPerformanceMetric {
-  id          String @id @default(uuid())
-  technicianId String @map("technician_id")
-  periodStart DateTime @map("period_start")
-  periodEnd   DateTime @map("period_end")
-  completedWorkOrders Int @default(0) @map("completed_work_orders")
-  averageResolutionMinutes Int @default(0) @map("average_resolution_minutes")
-  slaCompliance Decimal @default(0) @map("sla_compliance")
-  technician TechnicianProfile @relation(fields: [technicianId], references: [id])
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-  createdById String? @map("created_by")
-  updatedById String? @map("updated_by")
-
-  @@index([technicianId, periodStart])
-  @@map("technician_performance_metrics")
-}
-
-model QrAsset {
-  id          String @id @default(uuid())
-  assetId     String @unique @map("asset_id")
-  qrValue     String @unique @map("qr_value")
-  imageUrl    String? @map("image_url")
-  asset       Asset @relation(fields: [assetId], references: [id], onDelete: Cascade)
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
-  createdById String? @map("created_by")
-  updatedById String? @map("updated_by")
-
-  @@map("qr_assets")
-}
-
-model Tag {
-  id          String @id @default(uuid())
-  name        String
-  color       String?
-  assetId     String? @map("asset_id")
-  asset       Asset? @relation(fields: [assetId], references: [id], onDelete: Cascade)
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
-  createdById String? @map("created_by")
-  updatedById String? @map("updated_by")
-
-  @@index([assetId])
-  @@map("tags")
-}
-
-model CustomField {
-  id          String @id @default(uuid())
-  entity      CustomFieldEntity
-  key         String
-  label       String
-  labelAr     String? @map("label_ar")
-  fieldType   String @map("field_type")
-  options     Json?
-  isRequired  Boolean @default(false) @map("is_required")
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
-  createdById String? @map("created_by")
-  updatedById String? @map("updated_by")
-  deletedAt   DateTime? @map("deleted_at")
-
-  @@unique([entity, key])
-  @@map("custom_fields")
-}
-
 model EqpMachine {
-  id                   Int      @id @default(autoincrement())
-  machineNumber        String   @unique @map("machine_number")
-  engineNumber         String?  @map("engine_number")
-  machineType          String?  @map("machine_type")
-  lastSmr              Int      @default(0) @map("last_smr")
-  smrStep              Int      @default(0) @map("smr_step")
-  reportCounter        Int      @default(0) @map("report_counter")
-  responsibleEngineer  String?  @map("responsible_engineer")
-  reports              EqpReport[]
-  history              EqpMachineHistory[]
-  createdAt            DateTime @default(now()) @map("created_at")
-  updatedAt            DateTime @updatedAt @map("updated_at")
-  createdById          String?  @map("created_by")
-  updatedById          String?  @map("updated_by")
-  deletedAt            DateTime? @map("deleted_at")
+  id                  Int                 @id @default(autoincrement())
+  machineNumber       String              @unique @map("machine_number")
+  engineNumber        String?             @map("engine_number")
+  machineType         String?             @map("machine_type")
+  lastSmr             Int                 @default(0) @map("last_smr")
+  smrStep             Int                 @default(0) @map("smr_step")
+  reportCounter       Int                 @default(0) @map("report_counter")
+  responsibleEngineer String?             @map("responsible_engineer")
+  reports             EqpReport[]
+  history             EqpMachineHistory[]
+  createdAt           DateTime            @default(now()) @map("created_at")
+  updatedAt           DateTime            @updatedAt @map("updated_at")
+  createdById         String?             @map("created_by")
+  updatedById         String?             @map("updated_by")
+  deletedAt           DateTime?           @map("deleted_at")
 
   @@index([machineType])
   @@map("eqp_machines")
 }
 
 model EqpReport {
-  id             Int       @id @default(autoincrement())
-  reportNo       String    @unique @map("report_no")
-  machineType    String?   @map("machine_type")
-  machineId      Int?      @map("machine_id")
-  engineNumber   String?   @map("engine_number")
-  smr            Int?
-  serviceDate    DateTime? @map("service_date")
-  comments       String?
-  createdByName  String?   @map("created_by")
-  machineNumber  String?   @map("machine_number")
-  reportType     String?   @map("report_type")
-  serviceType    String?   @map("service_type")
-  fileName       String?   @map("file_name")
-  fileUrl        String?   @map("file_url")
-  machine        EqpMachine? @relation(fields: [machineId], references: [id])
-  createdAt      DateTime  @default(now()) @map("created_at")
-  updatedAt      DateTime  @updatedAt @map("updated_at")
-  createdById    String?   @map("created_by_user")
-  updatedById    String?   @map("updated_by_user")
-  deletedAt      DateTime? @map("deleted_at")
+  id            Int         @id @default(autoincrement())
+  reportNo      String      @unique @map("report_no")
+  machineType   String?     @map("machine_type")
+  machineId     Int?        @map("machine_id")
+  engineNumber  String?     @map("engine_number")
+  smr           Int?
+  serviceDate   DateTime?   @map("service_date")
+  comments      String?
+  createdByName String?     @map("created_by")
+  machineNumber String?     @map("machine_number")
+  reportType    String?     @map("report_type")
+  serviceType   String?     @map("service_type")
+  fileName      String?     @map("file_name")
+  fileUrl       String?     @map("file_url")
+  machine       EqpMachine? @relation(fields: [machineId], references: [id])
+  createdAt     DateTime    @default(now()) @map("created_at")
+  updatedAt     DateTime    @updatedAt @map("updated_at")
+  createdById   String?     @map("created_by_user")
+  updatedById   String?     @map("updated_by_user")
+  deletedAt     DateTime?   @map("deleted_at")
 
   @@index([machineId])
   @@index([createdAt])
@@ -1037,19 +283,19 @@ model EqpReport {
 }
 
 model EqpMachineHistory {
-  id             Int       @id @default(autoincrement())
-  machineId      Int?      @map("machine_id")
-  operationType  String?   @map("operation_type")
-  reportType     String?   @map("report_type")
-  serviceType    String?   @map("service_type")
-  smr            Int?
-  performedBy    String?   @map("performed_by")
-  operationDate  DateTime? @map("operation_date")
-  machine        EqpMachine? @relation(fields: [machineId], references: [id])
-  createdAt      DateTime  @default(now()) @map("created_at")
-  updatedAt      DateTime  @updatedAt @map("updated_at")
-  createdById    String?   @map("created_by")
-  updatedById    String?   @map("updated_by")
+  id            Int         @id @default(autoincrement())
+  machineId     Int?        @map("machine_id")
+  operationType String?     @map("operation_type")
+  reportType    String?     @map("report_type")
+  serviceType   String?     @map("service_type")
+  smr           Int?
+  performedBy   String?     @map("performed_by")
+  operationDate DateTime?   @map("operation_date")
+  machine       EqpMachine? @relation(fields: [machineId], references: [id])
+  createdAt     DateTime    @default(now()) @map("created_at")
+  updatedAt     DateTime    @updatedAt @map("updated_at")
+  createdById   String?     @map("created_by")
+  updatedById   String?     @map("updated_by")
 
   @@index([machineId])
   @@index([createdAt])

@@ -205,49 +205,16 @@ async function main() {
     { userNumber: 1009, email: 'technician.1009@daralhai.com', fullName: 'Bader Al Dosari', employeeCode: 'TECH-1009', region: 'Riyadh South', shiftName: 'Night Shift', skills: [['Plumbing', 'INTERMEDIATE'], ['Water Treatment', 'SENIOR']] },
   ];
 
-  const client = await prisma.client.upsert({
-    where: { code: 'DAH' },
-    update: {},
-    create: { code: 'DAH', name: 'Dar Al HAI', nameAr: 'دار الحي' },
-  });
-
   const branch = await prisma.branch.upsert({
     where: { code: 'HQ' },
     update: {},
     create: {
       code: 'HQ',
       name: 'Head Office',
-      nameAr: 'المقر الرئيسي',
-      clientId: client.id,
+      nameAr: 'Dar Al HAI HQ',
       address: 'Riyadh, Saudi Arabia',
     },
   });
-
-  const property = await prisma.property.upsert({
-    where: { code: 'HQ-BLDG' },
-    update: {},
-    create: {
-      code: 'HQ-BLDG',
-      name: 'Head Office Building',
-      type: 'Commercial',
-      clientId: client.id,
-      branchId: branch.id,
-    },
-  });
-
-  const location = await prisma.location.upsert({
-    where: { code: 'HQ-F2-MECH' },
-    update: {},
-    create: {
-      code: 'HQ-F2-MECH',
-      name: 'Mechanical Room - Floor 2',
-      type: 'Mechanical',
-      floor: '2',
-      branchId: branch.id,
-      propertyId: property.id,
-    },
-  });
-
   await prisma.eqpMachine.upsert({
     where: { machineNumber: '9582' },
     update: {},
