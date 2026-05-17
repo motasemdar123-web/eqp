@@ -1,4 +1,4 @@
-export const API_BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://eqp.onrender.com';
+export const API_BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://eqp-1.onrender.com';
 
 async function request(path, options = {}) {
   let token = '';
