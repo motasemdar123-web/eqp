@@ -1,5 +1,7 @@
 'use client';
 
+/* eslint-disable @next/next/no-img-element */
+
 import { useEffect, useMemo, useState } from 'react';
 import SystemShell from '../../../components/SystemShell';
 import Card from '../../../components/ui/Card';
@@ -79,6 +81,7 @@ export default function SchedulingPage() {
   const [message, setMessage] = useState('');
   const [editingTaskId, setEditingTaskId] = useState('');
   const [taskForm, setTaskForm] = useState(() => emptyTaskForm());
+  const [viewingTask, setViewingTask] = useState(null);
 
   const headers = useMemo(() => ({
     'Content-Type': 'application/json',
@@ -396,7 +399,7 @@ export default function SchedulingPage() {
               </div>
             </div>
           </div>
-          <ScheduleTable tasks={tasks} emptyText="No tasks scheduled for this day." onEdit={editTask} onDelete={deleteTask} />
+          <ScheduleTable tasks={tasks} emptyText="No tasks scheduled for this day." onView={setViewingTask} onEdit={editTask} onDelete={deleteTask} />
         </Card>
 
         <Card className="overflow-hidden">
@@ -408,15 +411,18 @@ export default function SchedulingPage() {
               <Button type="button" variant="secondary" onClick={() => loadBoard(date, historyFrom, historyTo)} disabled={!token || loading}>Search</Button>
             </div>
           </div>
-          <ScheduleTable tasks={historyTasks} showDate emptyText="No schedule history found for this range." />
+          <ScheduleTable tasks={historyTasks} showDate emptyText="No schedule history found for this range." onView={setViewingTask} />
         </Card>
       </section>
+      {viewingTask && (
+        <ScheduleSlotModal task={viewingTask} onClose={() => setViewingTask(null)} />
+      )}
     </SystemShell>
   );
 }
 
-function ScheduleTable({ tasks, showDate = false, emptyText, onEdit, onDelete }) {
-  const hasActions = Boolean(onEdit || onDelete);
+function ScheduleTable({ tasks, showDate = false, emptyText, onView, onEdit, onDelete }) {
+  const hasActions = Boolean(onView || onEdit || onDelete);
 
   return (
     <div className="overflow-x-auto">
@@ -443,8 +449,18 @@ function ScheduleTable({ tasks, showDate = false, emptyText, onEdit, onDelete })
             <tr key={task.id} className="border-t border-zinc-100 align-top">
               {showDate && <td className="px-5 py-4 text-sm font-semibold text-zinc-700">{formatDate(task.workDate)}</td>}
               <td className="px-5 py-4 text-sm font-semibold text-zinc-700">{task.startsAt} - {task.endsAt}</td>
-              <td className="px-5 py-4">
-                <p className="font-bold text-zinc-950">{task.task}</p>
+                <td className="px-5 py-4">
+                {onView ? (
+                  <button
+                    type="button"
+                    onClick={() => onView(task)}
+                    className="text-left font-bold text-zinc-950 underline-offset-4 hover:text-yellow-700 hover:underline"
+                  >
+                    {task.task}
+                  </button>
+                ) : (
+                  <p className="font-bold text-zinc-950">{task.task}</p>
+                )}
                 <p className="mt-1 max-w-md text-sm leading-6 text-zinc-600">{task.description || '-'}</p>
               </td>
               <td className="px-5 py-4">
@@ -460,6 +476,11 @@ function ScheduleTable({ tasks, showDate = false, emptyText, onEdit, onDelete })
               {hasActions && (
                 <td className="px-5 py-4">
                   <div className="flex flex-wrap gap-2">
+                    {onView && (
+                      <button type="button" onClick={() => onView(task)} className="rounded-md border border-zinc-300 bg-white px-3 py-1.5 text-xs font-bold text-zinc-700 hover:border-zinc-500">
+                        Details
+                      </button>
+                    )}
                     {onEdit && (
                       <button type="button" onClick={() => onEdit(task)} className="rounded-md border border-zinc-300 bg-white px-3 py-1.5 text-xs font-bold text-zinc-700 hover:border-zinc-500">
                         Edit
@@ -477,6 +498,132 @@ function ScheduleTable({ tasks, showDate = false, emptyText, onEdit, onDelete })
           ))}
         </tbody>
       </table>
+    </div>
+  );
+}
+
+function formatDateTime(value) {
+  if (!value) return '-';
+  return new Intl.DateTimeFormat('en', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  }).format(new Date(value));
+}
+
+function ScheduleSlotModal({ task, onClose }) {
+  const photos = Array.isArray(task.photos) ? task.photos : [];
+  const hasCompletion = task.status === 'COMPLETED' || task.summary || task.completedAt || photos.length > 0;
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-zinc-950/60 p-4">
+      <div className="max-h-[90vh] w-full max-w-4xl overflow-y-auto rounded-lg bg-white shadow-2xl">
+        <div className="sticky top-0 z-10 flex items-start justify-between gap-4 border-b border-zinc-100 bg-white px-5 py-4">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-[0.14em] text-zinc-500">Schedule Slot</p>
+            <h3 className="mt-1 text-2xl font-black text-zinc-950">{task.task || 'Scheduled task'}</h3>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded-md border border-zinc-300 bg-white px-3 py-1.5 text-sm font-bold text-zinc-700 hover:border-zinc-500"
+          >
+            Close
+          </button>
+        </div>
+
+        <div className="grid gap-5 p-5">
+          <div className="grid gap-3 md:grid-cols-4">
+            <SlotDetail label="Date" value={formatDate(task.workDate)} />
+            <SlotDetail label="Time" value={`${task.startsAt || '-'} - ${task.endsAt || '-'}`} />
+            <SlotDetail label="Location" value={task.location || '-'} />
+            <div className="rounded-md border border-zinc-200 bg-zinc-50 p-3">
+              <p className="text-xs font-bold uppercase tracking-[0.12em] text-zinc-500">Status</p>
+              <div className="mt-2">
+                <Badge tone={statusTone[task.status] || 'neutral'}>{task.status || 'PLANNED'}</Badge>
+              </div>
+            </div>
+          </div>
+
+          <div className="grid gap-3 md:grid-cols-2">
+            <div className="rounded-md border border-zinc-200 p-4">
+              <p className="text-sm font-black text-zinc-950">Description</p>
+              <p className="mt-2 whitespace-pre-wrap text-sm leading-6 text-zinc-700">{task.description || '-'}</p>
+            </div>
+            <div className="rounded-md border border-zinc-200 p-4">
+              <p className="text-sm font-black text-zinc-950">Technicians</p>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {(task.technicians || []).length === 0 && <p className="text-sm text-zinc-500">No technicians assigned.</p>}
+                {(task.technicians || []).map((technician) => (
+                  <Badge key={technician.id} tone="neutral">{technicianName(technician)}</Badge>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="rounded-md border border-zinc-200 p-4">
+            <p className="text-sm font-black text-zinc-950">Task Notes</p>
+            <p className="mt-2 whitespace-pre-wrap text-sm leading-6 text-zinc-700">{task.notes || '-'}</p>
+          </div>
+
+          <div className="rounded-md border border-zinc-200 bg-zinc-50 p-4">
+            <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+              <p className="text-sm font-black text-zinc-950">Technician Completion</p>
+              <p className="text-xs font-semibold text-zinc-500">Completed: {formatDateTime(task.completedAt)}</p>
+            </div>
+            {hasCompletion ? (
+              <div className="mt-3 grid gap-4">
+                <div className="rounded-md border border-zinc-200 bg-white p-3">
+                  <p className="text-xs font-bold uppercase tracking-[0.12em] text-zinc-500">Summary</p>
+                  <p className="mt-2 whitespace-pre-wrap text-sm leading-6 text-zinc-700">{task.summary || '-'}</p>
+                </div>
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-[0.12em] text-zinc-500">Photos</p>
+                  {photos.length === 0 ? (
+                    <p className="mt-2 text-sm font-semibold text-zinc-500">No photos uploaded.</p>
+                  ) : (
+                    <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                      {photos.map((photo, index) => (
+                        <a
+                          key={`${photo.fileName || 'photo'}-${index}`}
+                          href={photo.dataUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="overflow-hidden rounded-md border border-zinc-200 bg-white"
+                        >
+                          <img
+                            src={photo.dataUrl}
+                            alt={photo.fileName || `Task photo ${index + 1}`}
+                            className="h-44 w-full object-cover"
+                          />
+                          <span className="block truncate px-3 py-2 text-xs font-semibold text-zinc-600">
+                            {photo.fileName || `Photo ${index + 1}`}
+                          </span>
+                        </a>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            ) : (
+              <p className="mt-3 rounded-md border border-yellow-200 bg-yellow-50 px-3 py-2 text-sm font-semibold text-yellow-800">
+                No technician completion has been submitted for this slot yet.
+              </p>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function SlotDetail({ label, value }) {
+  return (
+    <div className="rounded-md border border-zinc-200 bg-zinc-50 p-3">
+      <p className="text-xs font-bold uppercase tracking-[0.12em] text-zinc-500">{label}</p>
+      <p className="mt-2 text-sm font-bold text-zinc-900">{value}</p>
     </div>
   );
 }
