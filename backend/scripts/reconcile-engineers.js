@@ -15,31 +15,60 @@ const defaultEngineers = [
 
 const replacementTechnicians = [
   {
-    email: 'technician.1001@daralhai.com',
+    email: 'alikomatsu223@gmail.com',
     userNumber: 1001,
     employeeCode: 'TECH-1001',
-    fullName: 'Nasser Al Harbi',
-    region: 'Riyadh North',
-    shiftName: 'Morning Shift',
-    skills: [['HVAC', 'SENIOR'], ['Electrical Safety', 'INTERMEDIATE']],
+    fullName: 'Ali Sabri',
+    region: null,
+    skills: [],
   },
   {
-    email: 'technician.1002@daralhai.com',
+    email: 'mhmaad600042@gmail.com',
     userNumber: 1002,
     employeeCode: 'TECH-1002',
-    fullName: 'Ahmad Al Harbi',
-    region: 'Riyadh North',
-    shiftName: 'Morning Shift',
-    skills: [['Plumbing', 'SENIOR'], ['Leak Detection', 'SENIOR']],
+    fullName: 'Mohammad Alharsa',
+    region: null,
+    skills: [],
   },
   {
-    email: 'technician.1003@daralhai.com',
+    email: 'smm198071@gmail.com',
     userNumber: 1003,
     employeeCode: 'TECH-1003',
-    fullName: 'Omar Al Qahtani',
-    region: 'Riyadh East',
-    shiftName: 'Morning Shift',
-    skills: [['Electrical', 'SENIOR'], ['Generator', 'INTERMEDIATE']],
+    fullName: 'Sameer Almuji',
+    region: null,
+    skills: [],
+  },
+  {
+    email: 'ahmadaljawawdi99@gmail.com',
+    userNumber: 1004,
+    employeeCode: 'TECH-1004',
+    fullName: 'Ahmad Jawawdeh',
+    region: null,
+    skills: [],
+  },
+  {
+    email: 'lutfimutaz@gmail.com',
+    userNumber: 1005,
+    employeeCode: 'TECH-1005',
+    fullName: 'Mutazz Lutfi',
+    region: null,
+    skills: [],
+  },
+  {
+    email: 'aliaboalheki@gmail.com',
+    userNumber: 1006,
+    employeeCode: 'TECH-1006',
+    fullName: 'Ali Sayed Alheki',
+    region: null,
+    skills: [],
+  },
+  {
+    email: 'barh507@gmail.com',
+    userNumber: 1007,
+    employeeCode: 'TECH-1007',
+    fullName: 'Ibrahim Abdulrazzaq',
+    region: null,
+    skills: [],
   },
 ];
 
@@ -315,11 +344,6 @@ async function ensureReplacementTechnician(seed, engineerRole, technicianRole) {
     },
   });
 
-  const morningShift = await prisma.shift.findFirst({
-    where: { name: seed.shiftName, deletedAt: null },
-    orderBy: { createdAt: 'asc' },
-  });
-
   const existingCodeOwner = await prisma.technicianProfile.findFirst({
     where: {
       employeeCode: seed.employeeCode,
@@ -343,7 +367,7 @@ async function ensureReplacementTechnician(seed, engineerRole, technicianRole) {
     update: {
       employeeCode: seed.employeeCode,
       region: seed.region,
-      shiftId: morningShift?.id || null,
+      shiftId: null,
       isAvailable: true,
       deletedAt: null,
     },
@@ -351,7 +375,7 @@ async function ensureReplacementTechnician(seed, engineerRole, technicianRole) {
       userId: user.id,
       employeeCode: seed.employeeCode,
       region: seed.region,
-      shiftId: morningShift?.id || null,
+      shiftId: null,
       isAvailable: true,
     },
   });
@@ -410,6 +434,19 @@ async function main() {
   for (const replacementTechnician of replacementTechnicians) {
     await ensureReplacementTechnician(replacementTechnician, engineerRole, technicianRole);
   }
+
+  await prisma.technicianProfile.updateMany({
+    where: {
+      deletedAt: null,
+      employeeCode: {
+        notIn: replacementTechnicians.map((technician) => technician.employeeCode),
+      },
+    },
+    data: {
+      isAvailable: false,
+      deletedAt: new Date(),
+    },
+  });
 }
 
 main()

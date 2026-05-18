@@ -194,15 +194,13 @@ async function main() {
   }
 
   const technicianSeeds = [
-    { userNumber: 1001, email: 'technician.1001@daralhai.com', fullName: 'Nasser Al Harbi', employeeCode: 'TECH-1001', region: 'Riyadh North', shiftName: 'Morning Shift', skills: [['HVAC', 'SENIOR'], ['Electrical Safety', 'INTERMEDIATE']] },
-    { userNumber: 1002, email: 'technician.1002@daralhai.com', fullName: 'Ahmad Al Harbi', employeeCode: 'TECH-1002', region: 'Riyadh North', shiftName: 'Morning Shift', skills: [['Plumbing', 'SENIOR'], ['Leak Detection', 'SENIOR']] },
-    { userNumber: 1003, email: 'technician.1003@daralhai.com', fullName: 'Omar Al Qahtani', employeeCode: 'TECH-1003', region: 'Riyadh East', shiftName: 'Morning Shift', skills: [['Electrical', 'SENIOR'], ['Generator', 'INTERMEDIATE']] },
-    { userNumber: 1004, email: 'technician.1004@daralhai.com', fullName: 'Khaled Mansour', employeeCode: 'TECH-1004', region: 'Riyadh Central', shiftName: 'Afternoon Shift', skills: [['HVAC', 'INTERMEDIATE'], ['BMS', 'INTERMEDIATE']] },
-    { userNumber: 1005, email: 'technician.1005@daralhai.com', fullName: 'Yousef Nasser', employeeCode: 'TECH-1005', region: 'Riyadh Central', shiftName: 'Afternoon Shift', skills: [['Civil Works', 'SENIOR'], ['Painting', 'INTERMEDIATE']] },
-    { userNumber: 1006, email: 'technician.1006@daralhai.com', fullName: 'Fahad Al Mutairi', employeeCode: 'TECH-1006', region: 'Riyadh South', shiftName: 'Afternoon Shift', skills: [['Fire Safety', 'SENIOR'], ['Pump Systems', 'INTERMEDIATE']] },
-    { userNumber: 1007, email: 'technician.1007@daralhai.com', fullName: 'Saeed Al Otaibi', employeeCode: 'TECH-1007', region: 'Riyadh West', shiftName: 'Night Shift', skills: [['Electrical', 'INTERMEDIATE'], ['Emergency Response', 'SENIOR']] },
-    { userNumber: 1008, email: 'technician.1008@daralhai.com', fullName: 'Nawaf Saleh', employeeCode: 'TECH-1008', region: 'Riyadh West', shiftName: 'Night Shift', skills: [['HVAC', 'INTERMEDIATE'], ['Refrigeration', 'INTERMEDIATE']] },
-    { userNumber: 1009, email: 'technician.1009@daralhai.com', fullName: 'Bader Al Dosari', employeeCode: 'TECH-1009', region: 'Riyadh South', shiftName: 'Night Shift', skills: [['Plumbing', 'INTERMEDIATE'], ['Water Treatment', 'SENIOR']] },
+    { userNumber: 1001, email: 'alikomatsu223@gmail.com', fullName: 'Ali Sabri', employeeCode: 'TECH-1001', region: null, skills: [] },
+    { userNumber: 1002, email: 'mhmaad600042@gmail.com', fullName: 'Mohammad Alharsa', employeeCode: 'TECH-1002', region: null, skills: [] },
+    { userNumber: 1003, email: 'smm198071@gmail.com', fullName: 'Sameer Almuji', employeeCode: 'TECH-1003', region: null, skills: [] },
+    { userNumber: 1004, email: 'ahmadaljawawdi99@gmail.com', fullName: 'Ahmad Jawawdeh', employeeCode: 'TECH-1004', region: null, skills: [] },
+    { userNumber: 1005, email: 'lutfimutaz@gmail.com', fullName: 'Mutazz Lutfi', employeeCode: 'TECH-1005', region: null, skills: [] },
+    { userNumber: 1006, email: 'aliaboalheki@gmail.com', fullName: 'Ali Sayed Alheki', employeeCode: 'TECH-1006', region: null, skills: [] },
+    { userNumber: 1007, email: 'barh507@gmail.com', fullName: 'Ibrahim Abdulrazzaq', employeeCode: 'TECH-1007', region: null, skills: [] },
   ];
 
   const branch = await prisma.branch.upsert({
@@ -231,7 +229,7 @@ async function main() {
       where: { userId: technicianUser.id },
       update: {
         employeeCode: technicianSeed.employeeCode,
-        region: technicianSeed.region,
+        region: technicianSeed.region || null,
         shiftId: null,
         isAvailable: true,
         deletedAt: null,
@@ -257,6 +255,19 @@ async function main() {
       skipDuplicates: true,
     });
   }
+
+  await prisma.technicianProfile.updateMany({
+    where: {
+      deletedAt: null,
+      employeeCode: {
+        notIn: technicianSeeds.map((technician) => technician.employeeCode),
+      },
+    },
+    data: {
+      isAvailable: false,
+      deletedAt: new Date(),
+    },
+  });
 
   await prisma.eqpMachine.upsert({
     where: { machineNumber: '9582' },
