@@ -7,9 +7,11 @@ const reportRoutes = require('./reportRoutes');
 const analyticsRoutes = require('./analyticsRoutes');
 const platformRoutes = require('./platformRoutes');
 const eqpModuleRoutes = require('./eqpModuleRoutes');
+const { requireInternalApiAuth } = require('../middleware/internalApiAuthMiddleware');
 
 const router = Router();
 
+router.use(requireInternalApiAuth);
 router.use(healthRoutes);
 router.use(userRoutes);
 router.use(machineRoutes);
