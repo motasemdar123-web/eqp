@@ -1471,6 +1471,16 @@ function cleanManualTitle(value) {
     .slice(0, 180);
 }
 
+function normalizeManualMatchText(value) {
+  return String(value || '')
+    .toLowerCase()
+    .replace(/[\u0000-\u001f\u007f-\u009f]/g, ' ')
+    .replace(/\.{3,}/g, ' ')
+    .replace(/[^a-z0-9\u0600-\u06ff]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
 function isGenericManualLine(value) {
   const line = String(value || '').trim();
   if (!line || line.length < 6) return true;
@@ -1594,6 +1604,29 @@ function scoreManualCandidateForIntent(candidate, intent) {
   if (intent.adjustCheck && /(adjust|adjusting|clearance|testing|inspection|check)/i.test(title)) score += 20;
   if (/^removal and installation/i.test(title)) score += 8;
   if (/assembly/i.test(title)) score += 5;
+
+  return score;
+}
+
+function scoreChunkForManualTitle(chunk, candidate) {
+  const title = normalizeManualMatchText(candidate?.title);
+  if (!title) return 0;
+
+  const section = normalizeManualMatchText(chunk.section);
+  const content = normalizeManualMatchText(chunk.content);
+  const haystack = `${section} ${content}`;
+  const tokens = title.split(' ').filter((token) => token.length >= 3);
+  const tokenMatches = tokens.filter((token) => haystack.includes(token)).length;
+  let score = tokenMatches * 8;
+
+  if (haystack.includes(title)) score += 120;
+  if (section.includes(title)) score += 60;
+  if (/special tools/i.test(chunk.content || '')) score += 25;
+  if (/\bremoval\b/i.test(chunk.content || '')) score += 20;
+  if (/\binstallation\b/i.test(chunk.content || '')) score += 15;
+  if (/\b1\.\s|\b2\.\s|\b3\.\s/.test(chunk.content || '')) score += 10;
+  if (/index and foreword/i.test(chunk.section || '') || /index and foreword/i.test(chunk.content || '')) score -= 90;
+  if ((String(chunk.content || '').match(/\.{8,}/g) || []).length >= 3) score -= 70;
 
   return score;
 }
@@ -1738,11 +1771,35 @@ async function findManualChunksForIndexSelection(machineModel, selectedCandidate
     orderBy: [{ manualId: 'asc' }, { pageNumber: 'asc' }, { createdAt: 'asc' }],
   });
   const selectedKeys = new Set();
+  const anchorScores = [];
 
   for (const candidate of selectedCandidates) {
-    if (!candidate?.manualId || !Number.isFinite(candidate.page)) continue;
-    for (let page = candidate.page - 1; page <= candidate.page + 4; page += 1) {
-      selectedKeys.add(`${candidate.manualId}:${page}`);
+    if (!candidate?.manualId) continue;
+    for (const chunk of chunks.filter((item) => item.manualId === candidate.manualId)) {
+      const score = scoreChunkForManualTitle(chunk, candidate);
+      if (score > 80 && Number.isFinite(chunk.pageNumber)) {
+        anchorScores.push({ chunk, score, candidate });
+      }
+    }
+  }
+
+  const anchors = anchorScores
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 3);
+
+  for (const anchor of anchors) {
+    const pageNumber = anchor.chunk.pageNumber;
+    for (let page = pageNumber; page <= pageNumber + 6; page += 1) {
+      selectedKeys.add(`${anchor.chunk.manualId}:${page}`);
+    }
+  }
+
+  if (selectedKeys.size === 0) {
+    for (const candidate of selectedCandidates) {
+      if (!candidate?.manualId || !Number.isFinite(candidate.page)) continue;
+      for (let page = candidate.page - 1; page <= candidate.page + 4; page += 1) {
+        selectedKeys.add(`${candidate.manualId}:${page}`);
+      }
     }
   }
 
@@ -1796,6 +1853,87 @@ function parseJsonFromModel(text) {
   const value = String(text || '').trim();
   const match = value.match(/\{[\s\S]*\}/);
   return JSON.parse(match ? match[0] : value);
+}
+
+function toCleanArray(value) {
+  return Array.isArray(value)
+    ? value.map((item) => String(item || '').trim()).filter(Boolean)
+    : [];
+}
+
+function extractManualProcedureFallback(chunks) {
+  const lines = chunks
+    .flatMap((chunk) => String(chunk.content || '').split('\n'))
+    .map((line) => line.replace(/[\u0000-\u001f\u007f-\u009f]/g, ' ').replace(/\s+/g, ' ').trim())
+    .filter((line) => line.length >= 8)
+    .filter((line) => !/^\d+$/.test(line))
+    .filter((line) => !/\.{5,}/.test(line))
+    .filter((line) => !/^-- \d+ of \d+ --$/.test(line));
+  const useful = lines.filter((line) => (
+    /^(removal|installation|special tools|preparation)$/i.test(line)
+    || /^\d+\.\s/.test(line)
+    || /^a\s/i.test(line)
+    || /\b(tool|remove|disconnect|install|tighten|loosen|sling|replace|check|never|be sure)\b/i.test(line)
+  ));
+
+  return useful.slice(0, 10);
+}
+
+function extractManualToolFallback(chunks) {
+  const text = chunks.map((chunk) => chunk.content || '').join('\n');
+  const tools = [];
+  const patterns = [
+    /standard puller/i,
+    /hydraulic pump/i,
+    /hydraulic jack/i,
+    /floor jack/i,
+    /wire rope/i,
+    /\bblocks?\b/i,
+    /\bstands?\b/i,
+    /\bsling\b/i,
+    /\bpuller\b/i,
+    /\binstaller\b/i,
+    /\boil pump\b/i,
+  ];
+
+  for (const pattern of patterns) {
+    const match = text.match(pattern);
+    if (match) tools.push(match[0].replace(/\b\w/g, (letter) => letter.toUpperCase()));
+  }
+
+  return [...new Set(tools)];
+}
+
+function extractManualWarningsFallback(chunks) {
+  const lines = chunks
+    .flatMap((chunk) => String(chunk.content || '').split('\n'))
+    .map((line) => line.replace(/[\u0000-\u001f\u007f-\u009f]/g, ' ').replace(/\s+/g, ' ').trim())
+    .filter((line) => /never|be sure|care|prevent|warning|pressure|fall|damage/i.test(line));
+  return [...new Set(lines)].slice(0, 6);
+}
+
+function completeManualSuggestionFromChunks(suggestion, chunks) {
+  const procedureSummary = toCleanArray(suggestion.procedureSummary);
+  const requiredTools = toCleanArray(suggestion.requiredTools);
+  const warnings = toCleanArray(suggestion.warnings);
+  const sources = Array.isArray(suggestion.sources) && suggestion.sources.length
+    ? suggestion.sources
+    : chunks.slice(0, 6).map((chunk) => ({
+      manual: chunk.manual?.title,
+      machineModel: chunk.machineModel,
+      page: chunk.pageNumber,
+      section: chunk.section,
+    }));
+
+  return {
+    ...suggestion,
+    requiredTools: requiredTools.length ? requiredTools : extractManualToolFallback(chunks),
+    ppe: toCleanArray(suggestion.ppe),
+    consumables: toCleanArray(suggestion.consumables),
+    warnings: warnings.length ? warnings : extractManualWarningsFallback(chunks),
+    procedureSummary: procedureSummary.length ? procedureSummary : extractManualProcedureFallback(chunks),
+    sources,
+  };
 }
 
 async function generateManualSuggestionWithAi(payload, chunks) {
@@ -1853,14 +1991,14 @@ async function generateManualSuggestionWithAi(payload, chunks) {
 
     if (!response.ok) return null;
     const data = await response.json();
-    return {
+    return completeManualSuggestionFromChunks({
       ...parseJsonFromModel(data.choices?.[0]?.message?.content),
       generatedBy: 'openai',
       task: payload.task,
       interpretedTask: payload.searchProfile?.interpretedTask || payload.task,
       interpretationNotes: payload.searchProfile?.assumptions || [],
       selectedManualTitles: payload.searchProfile?.selectedManualTitles || [],
-    };
+    }, chunks);
   } catch {
     return null;
   }
