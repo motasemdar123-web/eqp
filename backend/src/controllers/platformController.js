@@ -11,6 +11,12 @@ async function unifiedLogin(req, res) {
   res.json({ success: true, ...result });
 }
 
+async function technicianLogin(req, res) {
+  requireFields(req.body, ['email', 'employeeCode']);
+  const result = await platformService.technicianLogin(req.body);
+  res.json({ success: true, ...result });
+}
+
 async function startMicrosoftLogin(req, res) {
   res.redirect(platformService.buildMicrosoftLoginUrl(req, req.query));
 }
@@ -114,6 +120,7 @@ async function upsertTechnicianSchedule(req, res) {
 module.exports = {
   login,
   unifiedLogin,
+  technicianLogin,
   startMicrosoftLogin,
   microsoftCallback,
   completeMicrosoftLogin,

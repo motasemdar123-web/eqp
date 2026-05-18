@@ -7,6 +7,7 @@ const router = Router();
 
 router.post('/api/auth/login', asyncHandler(platformController.login));
 router.post('/api/auth/unified-login', asyncHandler(platformController.unifiedLogin));
+router.post('/api/auth/technician-login', asyncHandler(platformController.technicianLogin));
 router.get('/api/auth/microsoft/start', asyncHandler(platformController.startMicrosoftLogin));
 router.get('/api/auth/microsoft/callback', asyncHandler(platformController.microsoftCallback));
 router.post('/api/auth/microsoft/session', asyncHandler(platformController.completeMicrosoftLogin));

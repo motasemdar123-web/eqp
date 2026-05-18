@@ -90,6 +90,37 @@ async function unifiedLogin() {
   throw new ApiError(410, 'Microsoft authentication is required.');
 }
 
+async function technicianLogin(payload) {
+  const prisma = requirePrisma();
+  const email = String(payload.email || '').trim().toLowerCase();
+  const employeeCode = String(payload.employeeCode || payload.employee_code || '').trim().toUpperCase();
+
+  if (!email || !employeeCode) {
+    throw new ApiError(400, 'Email and technician code are required.');
+  }
+
+  const technician = await prisma.technicianProfile.findFirst({
+    where: {
+      employeeCode,
+      deletedAt: null,
+      user: {
+        email,
+        deletedAt: null,
+        status: 'ACTIVE',
+      },
+    },
+    include: {
+      user: true,
+    },
+  });
+
+  if (!technician) {
+    throw new ApiError(401, 'Invalid technician email or code.');
+  }
+
+  return buildPlatformAuthResult(prisma, technician.user, 'technician', 'TECHNICIAN');
+}
+
 const MICROSOFT_SCOPE = 'openid profile email User.Read';
 const MICROSOFT_STATE_TTL_MS = 10 * 60 * 1000;
 const microsoftStates = new Map();
@@ -1347,6 +1378,7 @@ async function getSchedulingBoard(dateText, historyFromText, historyToText) {
 module.exports = {
   login,
   unifiedLogin,
+  technicianLogin,
   buildMicrosoftLoginUrl,
   finishMicrosoftCallback,
   completeMicrosoftLogin,

@@ -6,8 +6,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import Button from '../../components/ui/Button';
 import Card from '../../components/ui/Card';
 import Badge from '../../components/ui/Badge';
-import { clearStoredUser, getStoredPlatformSession } from '../../lib/auth';
-import { getMicrosoftLoginUrl } from '../../lib/api';
+import { clearStoredUser, getStoredPlatformSession, setStoredPlatformSession, setStoredUser } from '../../lib/auth';
 
 const API_BASE = process.env.NEXT_PUBLIC_BACKEND_URL || process.env.NEXT_PUBLIC_API_BASE_URL || 'https://eqp-1.onrender.com';
 const CACHE_KEY = 'technicianTasksCache';
@@ -75,6 +74,7 @@ export default function TechnicianAppPage() {
   const [technician, setTechnician] = useState(null);
   const [drafts, setDrafts] = useState(() => readJson(DRAFT_KEY, {}));
   const [selectedTaskId, setSelectedTaskId] = useState('');
+  const [loginForm, setLoginForm] = useState({ email: '', employeeCode: '' });
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [online, setOnline] = useState(() => (typeof navigator === 'undefined' ? true : navigator.onLine));
@@ -181,8 +181,26 @@ export default function TechnicianAppPage() {
     return () => clearTimeout(timer);
   }, [syncDrafts]);
 
-  function signIn() {
-    window.location.href = getMicrosoftLoginUrl('/technician');
+  async function signIn(event) {
+    event.preventDefault();
+    setLoading(true);
+    setMessage('');
+    try {
+      const response = await fetch(`${API_BASE}/api/auth/technician-login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(loginForm),
+      });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(data.error || data.message || 'تعذر تسجيل الدخول');
+      setStoredPlatformSession(data.token, data.user);
+      if (data.user?.sessionToken) setStoredUser(data.user);
+      window.location.reload();
+    } catch (error) {
+      setMessage(error.message);
+    } finally {
+      setLoading(false);
+    }
   }
 
   function logout() {
@@ -278,7 +296,25 @@ export default function TechnicianAppPage() {
         <Card className="w-full max-w-sm p-6 text-center">
           <div className="mx-auto grid h-14 w-14 place-items-center rounded-md bg-yellow-400 text-xl font-black text-zinc-950">DH</div>
           <h1 className="mt-5 text-2xl font-black">تطبيق الفني</h1>
-          <Button type="button" className="mt-6 w-full py-4 text-base" onClick={signIn}>تسجيل الدخول</Button>
+          <p className="mt-2 text-sm font-semibold text-zinc-600">ادخل بالإيميل ورقم الفني</p>
+          {message && <div className="mt-4 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm font-bold text-red-700">{message}</div>}
+          <form onSubmit={signIn} className="mt-5 grid gap-3 text-right">
+            <input
+              type="email"
+              inputMode="email"
+              value={loginForm.email}
+              onChange={(event) => setLoginForm((current) => ({ ...current, email: event.target.value }))}
+              placeholder="الإيميل"
+              className="h-12 rounded-md border border-zinc-300 bg-white px-3 text-base font-semibold outline-none focus:border-yellow-400 focus:ring-2 focus:ring-yellow-100"
+            />
+            <input
+              value={loginForm.employeeCode}
+              onChange={(event) => setLoginForm((current) => ({ ...current, employeeCode: event.target.value.toUpperCase() }))}
+              placeholder="رقم الفني مثال TECH-1005"
+              className="h-12 rounded-md border border-zinc-300 bg-white px-3 text-base font-semibold uppercase outline-none focus:border-yellow-400 focus:ring-2 focus:ring-yellow-100"
+            />
+            <Button type="submit" className="w-full py-4 text-base" disabled={loading}>تسجيل الدخول</Button>
+          </form>
         </Card>
       </main>
     );
