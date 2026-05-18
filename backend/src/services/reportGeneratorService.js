@@ -1197,6 +1197,7 @@ async function generateReports(payload) {
         serviceType: payload.serviceType,
         fileName,
         fileUrl,
+        createdById: payload.userId,
       });
 
       await machineRepository.updateCounters(machine.id, {

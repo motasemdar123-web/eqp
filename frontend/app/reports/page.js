@@ -19,8 +19,10 @@ export default function ReportsPage() {
   const [sortConfig, setSortConfig] = useState({ key: 'created_at', direction: 'desc' });
   const [toast, setToast] = useState(null);
   const [reportToDelete, setReportToDelete] = useState(null);
+  const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false);
   const [renamingReport, setRenamingReport] = useState(null);
   const [renameValue, setRenameValue] = useState('');
+  const [selectedReportIds, setSelectedReportIds] = useState([]);
 
   useEffect(() => {
     const platformSession = getStoredPlatformSession();
@@ -40,6 +42,7 @@ export default function ReportsPage() {
       setError('');
       const data = await getReports();
       setReports(data);
+      setSelectedReportIds([]);
       setToast({ type: 'info', message: 'Reports archive refreshed.' });
     } catch (loadError) {
       setError(loadError.message || 'Failed to load reports');
@@ -89,6 +92,14 @@ export default function ReportsPage() {
     };
   }, [reports]);
 
+  const selectedReports = useMemo(() => (
+    reports.filter((report) => selectedReportIds.includes(String(report.id)))
+  ), [reports, selectedReportIds]);
+
+  const allVisibleSelected = filteredReports.length > 0 && filteredReports.every((report) => (
+    selectedReportIds.includes(String(report.id))
+  ));
+
   function changeSort(key) {
     setSortConfig((previous) => ({
       key,
@@ -99,6 +110,53 @@ export default function ReportsPage() {
   function openRename(report) {
     setRenamingReport(report);
     setRenameValue(report.file_name || '');
+  }
+
+  function toggleReportSelection(reportId) {
+    const id = String(reportId);
+    setSelectedReportIds((current) => (
+      current.includes(id) ? current.filter((value) => value !== id) : [...current, id]
+    ));
+  }
+
+  function toggleVisibleSelection() {
+    const visibleIds = filteredReports.map((report) => String(report.id));
+    setSelectedReportIds((current) => {
+      if (visibleIds.every((id) => current.includes(id))) {
+        return current.filter((id) => !visibleIds.includes(id));
+      }
+      return [...new Set([...current, ...visibleIds])];
+    });
+  }
+
+  function downloadReports(targetReports) {
+    targetReports.forEach((report, index) => {
+      setTimeout(() => {
+        const link = document.createElement('a');
+        link.href = report.file_url;
+        link.target = '_blank';
+        link.rel = 'noreferrer';
+        link.download = report.file_name || `report-${report.id}.pdf`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }, index * 350);
+    });
+    setToast({ type: 'info', message: `Starting ${targetReports.length} downloads.` });
+  }
+
+  async function handleBulkDeleteReports() {
+    if (selectedReports.length === 0) return;
+
+    try {
+      await Promise.all(selectedReports.map((report) => deleteReport(report.id)));
+      setToast({ type: 'success', message: `${selectedReports.length} reports deleted.` });
+      setBulkDeleteOpen(false);
+      await loadReports();
+    } catch (deleteError) {
+      setError(deleteError.message || 'Failed to delete selected reports');
+      setToast({ type: 'error', message: deleteError.message || 'Failed to delete selected reports.' });
+    }
   }
 
   async function handleDeleteReport() {
@@ -171,7 +229,14 @@ export default function ReportsPage() {
                 />
                 <div className="flex flex-wrap items-center gap-2">
                   <Badge tone="neutral">{filteredReports.length} visible</Badge>
+                  {selectedReportIds.length > 0 && <Badge tone="yellow">{selectedReportIds.length} selected</Badge>}
                   <Button variant="ghost" onClick={() => setSearchTerm('')}>Clear Search</Button>
+                  <Button variant="secondary" onClick={() => downloadReports(selectedReports.length ? selectedReports : filteredReports)} disabled={filteredReports.length === 0}>
+                    Download {selectedReports.length ? 'Selected' : 'All Visible'}
+                  </Button>
+                  <Button variant="danger" onClick={() => setBulkDeleteOpen(true)} disabled={selectedReports.length === 0}>
+                    Delete Selected
+                  </Button>
                 </div>
               </div>
             </div>
@@ -179,6 +244,9 @@ export default function ReportsPage() {
               <table className="w-full min-w-[960px]">
                 <thead className="bg-zinc-50 text-xs uppercase tracking-[0.12em] text-zinc-500">
                   <tr>
+                    <th className="px-5 py-4 text-left">
+                      <input type="checkbox" checked={allVisibleSelected} onChange={toggleVisibleSelection} aria-label="Select all visible reports" />
+                    </th>
                     <SortableHeader label="Report" column="file_name" sortConfig={sortConfig} onSort={changeSort} />
                     <SortableHeader label="Machine" column="machine_number" sortConfig={sortConfig} onSort={changeSort} />
                     <SortableHeader label="Service" column="service_type" sortConfig={sortConfig} onSort={changeSort} />
@@ -189,6 +257,14 @@ export default function ReportsPage() {
                 <tbody>
                   {filteredReports.map((report) => (
                     <tr key={report.id} className="border-t border-zinc-100 transition hover:bg-yellow-50/60">
+                      <td className="px-5 py-4">
+                        <input
+                          type="checkbox"
+                          checked={selectedReportIds.includes(String(report.id))}
+                          onChange={() => toggleReportSelection(report.id)}
+                          aria-label={`Select ${report.file_name}`}
+                        />
+                      </td>
                       <td className="px-5 py-4">
                         <div className="font-semibold text-zinc-950">{report.file_name}</div>
                         {report.report_no && <div className="mt-1 font-mono text-xs text-zinc-500">{report.report_no}</div>}
@@ -234,6 +310,16 @@ export default function ReportsPage() {
           confirmLabel="Delete Report"
           onCancel={() => setReportToDelete(null)}
           onConfirm={handleDeleteReport}
+        />
+      )}
+
+      {bulkDeleteOpen && (
+        <ConfirmDialog
+          title="Delete selected reports?"
+          description={`This will remove ${selectedReports.length} selected reports from your archive and storage bucket.`}
+          confirmLabel="Delete Selected"
+          onCancel={() => setBulkDeleteOpen(false)}
+          onConfirm={handleBulkDeleteReports}
         />
       )}
 

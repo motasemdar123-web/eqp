@@ -7,7 +7,7 @@ const {
 } = require('../utils/validation');
 
 async function listReports(req, res) {
-  const reports = await reportService.listReports();
+  const reports = await reportService.listReports(req.user.sub, req.user.fullName);
 
   res.json(reports);
 }
@@ -15,13 +15,13 @@ async function listReports(req, res) {
 async function renameReport(req, res) {
   requireFields(req.body, ['file_name']);
 
-  const report = await reportService.renameReport(req.params.id, req.body.file_name.trim());
+  const report = await reportService.renameReport(req.params.id, req.body.file_name.trim(), req.user.sub, req.user.fullName);
 
   res.json(report);
 }
 
 async function deleteReport(req, res) {
-  const result = await reportService.deleteReport(req.params.id);
+  const result = await reportService.deleteReport(req.params.id, req.user.sub, req.user.fullName);
 
   res.json(result);
 }
