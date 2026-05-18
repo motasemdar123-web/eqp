@@ -1155,6 +1155,38 @@ function tokenizeSearchText(value) {
     .filter((token) => token.length >= 3))];
 }
 
+function expandManualSearchTerms(values) {
+  const baseTerms = [...new Set(values.map((value) => String(value || '').toLowerCase()).filter(Boolean))];
+  const expanded = new Set(baseTerms);
+  const expansions = {
+    remove: ['removal', 'removing', 'disassembly', 'disassemble'],
+    removal: ['remove', 'removing', 'disassembly', 'disassemble'],
+    replace: ['replacement', 'installation', 'install', 'assembly'],
+    replacement: ['replace', 'installation', 'install', 'assembly'],
+    install: ['installation', 'installing', 'assembly'],
+    installation: ['install', 'installing', 'assembly'],
+    disassemble: ['disassembly', 'remove', 'removal'],
+    disassembly: ['disassemble', 'remove', 'removal'],
+    assemble: ['assembly', 'install', 'installation'],
+    assembly: ['assemble', 'install', 'installation'],
+    left: ['LH', 'left-hand'],
+    right: ['RH', 'right-hand'],
+  };
+
+  for (const term of baseTerms) {
+    const tokens = tokenizeSearchText(term);
+    for (const token of tokens) {
+      if (expansions[token]) {
+        for (const expansion of expansions[token]) expanded.add(expansion);
+      }
+      if (token.endsWith('e')) expanded.add(`${token.slice(0, -1)}al`);
+      if (token.endsWith('al')) expanded.add(token.slice(0, -2));
+    }
+  }
+
+  return [...expanded];
+}
+
 const localTaskSearchMap = [
   {
     pattern: /(ديزل|مازوت|سولار|fuel|diesel|فلتر|فلتره|filter|هوا|هواء|نسحب|نفضي|تنفيس|تنسيم|bleed|bleeding)/i,
@@ -1395,7 +1427,11 @@ function scoreManualChunk(chunk, terms) {
   const haystack = `${chunk.section || ''} ${chunk.content || ''}`.toLowerCase();
   return terms.reduce((score, term) => {
     if (!term) return score;
-    if (haystack.includes(term)) return score + (String(term).includes(' ') ? 5 : 1);
+    const value = String(term).toLowerCase();
+    if (haystack.includes(value)) return score + (value.includes(' ') ? 8 : 2);
+    const tokens = tokenizeSearchText(value);
+    const tokenMatches = tokens.filter((token) => haystack.includes(token)).length;
+    if (tokens.length > 1 && tokenMatches > 0) return score + tokenMatches;
     return score;
   }, 0);
 }
@@ -1407,6 +1443,7 @@ async function findRelevantManualChunks(machineModel, searchProfile) {
     ...(searchProfile.searchPhrases || []).map((phrase) => String(phrase).toLowerCase()),
     ...(searchProfile.keywords || []).map((keyword) => String(keyword).toLowerCase()),
   ].filter(Boolean))];
+  const expandedTerms = expandManualSearchTerms(terms);
 
   const chunks = await prisma.shopManualChunk.findMany({
     where: normalizedModel ? { machineModel: normalizedModel } : {},
@@ -1418,10 +1455,234 @@ async function findRelevantManualChunks(machineModel, searchProfile) {
   });
 
   return chunks
-    .map((chunk) => ({ ...chunk, score: scoreManualChunk(chunk, terms) }))
-    .filter((chunk) => chunk.score > 0 || terms.length === 0)
+    .map((chunk) => ({ ...chunk, score: scoreManualChunk(chunk, expandedTerms) }))
+    .filter((chunk) => chunk.score > 0 || expandedTerms.length === 0)
     .sort((a, b) => b.score - a.score)
-    .slice(0, 6);
+    .slice(0, 10);
+}
+
+function cleanManualTitle(value) {
+  return String(value || '')
+    .replace(/\.{3,}\s*\d*$/g, '')
+    .replace(/\s+/g, ' ')
+    .replace(/^[\d.\-\s]+/, '')
+    .replace(/\s+\d+$/g, '')
+    .trim()
+    .slice(0, 180);
+}
+
+function isGenericManualLine(value) {
+  const line = String(value || '').trim();
+  if (!line || line.length < 6) return true;
+  if (/^\d+$/.test(line)) return true;
+  if (/^SEN\d+/i.test(line)) return true;
+  if (/^D155A-\d+$/i.test(line)) return true;
+  if (/^(page|contents|index|testing and adjusting|disassembly and assembly)$/i.test(line)) return true;
+  return false;
+}
+
+function looksLikeManualHeading(value) {
+  const line = String(value || '').trim();
+  if (isGenericManualLine(line)) return false;
+  if (/\.{3,}\s*\d+\s*$/.test(line)) return true;
+  if (/^(removal|installation|removal and installation|disassembly|assembly|testing|adjusting|bleeding|inspection|check|replace|replacement|maintenance|troubleshooting)\b/i.test(line)) {
+    return true;
+  }
+  if (/\b(idler|roller|sprocket|track|fuel|hydraulic|pump|engine|blade|circuit|filter|brake|cooling|radiator|transmission|valve|cylinder|hose|motor|alternator|starter)\b/i.test(line) && line.length <= 120) {
+    return true;
+  }
+  return false;
+}
+
+function extractManualIndexCandidatesFromChunk(chunk) {
+  const candidates = [];
+  const lines = String(chunk.content || '')
+    .split('\n')
+    .map((line) => line.trim())
+    .filter(Boolean);
+
+  if (chunk.section && looksLikeManualHeading(chunk.section)) {
+    candidates.push({
+      title: cleanManualTitle(chunk.section),
+      sourceType: 'section',
+    });
+  }
+
+  for (let index = 0; index < lines.length; index += 1) {
+    const line = lines[index];
+    const nextLine = lines[index + 1] || '';
+    const tocMatch = line.match(/^(.{6,180}?)\.{3,}\s*(\d+)?$/);
+    if (tocMatch) {
+      candidates.push({
+        title: cleanManualTitle(tocMatch[1]),
+        sourceType: 'index',
+      });
+      continue;
+    }
+
+    const combined = looksLikeManualHeading(line) && /^[a-z][a-z0-9\s-]{2,40}$/i.test(nextLine)
+      ? `${line} ${nextLine}`
+      : line;
+
+    if (looksLikeManualHeading(combined)) {
+      candidates.push({
+        title: cleanManualTitle(combined),
+        sourceType: 'heading',
+      });
+    }
+  }
+
+  return candidates.filter((candidate) => candidate.title && !isGenericManualLine(candidate.title));
+}
+
+async function buildManualIndexCandidates(machineModel) {
+  const prisma = requirePrisma();
+  const normalizedModel = normalizeMachineModel(machineModel);
+  const chunks = await prisma.shopManualChunk.findMany({
+    where: normalizedModel ? { machineModel: normalizedModel } : {},
+    include: { manual: true },
+    take: 1500,
+    orderBy: [{ manualId: 'asc' }, { pageNumber: 'asc' }, { createdAt: 'asc' }],
+  });
+  const seen = new Set();
+  const candidates = [];
+
+  for (const chunk of chunks) {
+    for (const candidate of extractManualIndexCandidatesFromChunk(chunk)) {
+      const key = `${chunk.manualId}:${candidate.title.toLowerCase()}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      candidates.push({
+        id: `M${candidates.length + 1}`,
+        chunkId: chunk.id,
+        manualId: chunk.manualId,
+        manual: chunk.manual?.title,
+        machineModel: chunk.machineModel,
+        page: chunk.pageNumber,
+        title: candidate.title,
+        sourceType: candidate.sourceType,
+      });
+    }
+  }
+
+  return candidates.slice(0, 400);
+}
+
+async function chooseManualIndexWithAi(payload, candidates) {
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey) {
+    return {
+      ok: false,
+      missingKey: true,
+      errorMessage: 'OPENAI_API_KEY is not configured on the backend.',
+    };
+  }
+  if (candidates.length === 0) {
+    return {
+      ok: false,
+      errorMessage: 'No manual index headings were found for this machine model.',
+    };
+  }
+
+  try {
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: process.env.OPENAI_MANUAL_MODEL || 'gpt-4o-mini',
+        response_format: { type: 'json_object' },
+        temperature: 0.05,
+        messages: [
+          {
+            role: 'system',
+            content: 'You match messy Arabic/English field technician task wording to the best shop manual index or section titles. Choose only from the provided candidates. Return JSON only. Do not provide tools, PPE, or procedure details.',
+          },
+          {
+            role: 'user',
+            content: JSON.stringify({
+              machineModel: payload.machineModel,
+              task: payload.task,
+              description: payload.description,
+              notes: payload.notes,
+              candidates: candidates.map((candidate) => ({
+                id: candidate.id,
+                title: candidate.title,
+                page: candidate.page,
+                manual: candidate.manual,
+              })),
+              requiredJsonShape: {
+                interpretedTask: 'best technical English interpretation',
+                selectedCandidateIds: ['M1'],
+                searchPhrases: ['extra search phrase if useful'],
+                keywords: ['component', 'action'],
+                assumptions: ['short reason for the chosen heading'],
+                confidence: 'high | medium | low',
+              },
+            }),
+          },
+        ],
+      }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      return {
+        ok: false,
+        errorMessage: `OpenAI index selection failed (${response.status}): ${errorData.error?.message || response.statusText || 'Unknown error'}`,
+      };
+    }
+
+    const data = await response.json();
+    const parsed = parseJsonFromModel(data.choices?.[0]?.message?.content);
+    const candidateMap = new Map(candidates.map((candidate) => [candidate.id, candidate]));
+    const selectedIds = Array.isArray(parsed.selectedCandidateIds) ? parsed.selectedCandidateIds : [];
+    const selectedCandidates = selectedIds
+      .map((id) => candidateMap.get(String(id)))
+      .filter(Boolean)
+      .slice(0, 5);
+
+    return {
+      ok: true,
+      interpretedTask: parsed.interpretedTask || payload.task,
+      searchPhrases: Array.isArray(parsed.searchPhrases) ? parsed.searchPhrases.filter(Boolean) : [],
+      keywords: Array.isArray(parsed.keywords) ? parsed.keywords.filter(Boolean) : [],
+      assumptions: Array.isArray(parsed.assumptions) ? parsed.assumptions.filter(Boolean) : [],
+      confidence: parsed.confidence || 'low',
+      selectedCandidates,
+    };
+  } catch (error) {
+    return {
+      ok: false,
+      errorMessage: `OpenAI index selection failed: ${error.message}`,
+    };
+  }
+}
+
+async function findManualChunksForIndexSelection(machineModel, selectedCandidates, searchProfile) {
+  const prisma = requirePrisma();
+  const normalizedModel = normalizeMachineModel(machineModel);
+  const chunks = await prisma.shopManualChunk.findMany({
+    where: normalizedModel ? { machineModel: normalizedModel } : {},
+    include: { manual: true },
+    take: 1500,
+    orderBy: [{ manualId: 'asc' }, { pageNumber: 'asc' }, { createdAt: 'asc' }],
+  });
+  const selectedKeys = new Set();
+
+  for (const candidate of selectedCandidates) {
+    if (!candidate?.manualId || !Number.isFinite(candidate.page)) continue;
+    for (let page = candidate.page - 1; page <= candidate.page + 4; page += 1) {
+      selectedKeys.add(`${candidate.manualId}:${page}`);
+    }
+  }
+
+  const selectedChunks = chunks.filter((chunk) => selectedKeys.has(`${chunk.manualId}:${chunk.pageNumber}`));
+  if (selectedChunks.length > 0) return selectedChunks.slice(0, 12);
+
+  return findRelevantManualChunks(machineModel, searchProfile);
 }
 
 function fallbackManualSuggestion(payload, chunks) {
@@ -1499,6 +1760,7 @@ async function generateManualSuggestionWithAi(payload, chunks) {
               machineModel: payload.machineModel,
               interpretedTask: payload.searchProfile?.interpretedTask,
               searchAssumptions: payload.searchProfile?.assumptions,
+              selectedManualTitles: payload.searchProfile?.selectedManualTitles,
               excerpts: chunks.map((chunk) => ({
                 manual: chunk.manual?.title,
                 page: chunk.pageNumber,
@@ -1530,6 +1792,7 @@ async function generateManualSuggestionWithAi(payload, chunks) {
       task: payload.task,
       interpretedTask: payload.searchProfile?.interpretedTask || payload.task,
       interpretationNotes: payload.searchProfile?.assumptions || [],
+      selectedManualTitles: payload.searchProfile?.selectedManualTitles || [],
     };
   } catch {
     return null;
@@ -1545,26 +1808,56 @@ async function suggestManualTools(payload) {
     throw new ApiError(400, 'task is required.');
   }
 
-  const searchProfile = await buildTaskSearchProfile({ ...payload, machineModel });
-  if (searchProfile.generatedBy !== 'openai') {
+  const indexCandidates = await buildManualIndexCandidates(machineModel);
+  const indexChoice = await chooseManualIndexWithAi({ ...payload, machineModel }, indexCandidates);
+  if (!indexChoice.ok) {
     return {
       requiredTools: [],
       ppe: [],
       consumables: [],
-      warnings: ['AI task interpretation is required for intelligent manual search. Configure OPENAI_API_KEY on the backend and try again.'],
+      warnings: [indexChoice.errorMessage || 'AI manual index selection failed.'],
       procedureSummary: [],
       sources: [],
       confidence: 'low',
-      generatedBy: searchProfile.generatedBy,
+      generatedBy: indexChoice.missingKey ? 'missing-openai-key' : 'openai-index-error',
       task: payload.task,
-      interpretedTask: searchProfile.interpretedTask,
-      interpretationNotes: searchProfile.assumptions,
-      searchPhrases: searchProfile.searchPhrases,
+      interpretedTask: payload.task,
+      interpretationNotes: [indexChoice.errorMessage || 'The system could not choose a manual index heading for this task.'],
+      searchPhrases: [],
+      selectedManualTitles: [],
     };
   }
 
+  const searchProfile = {
+    interpretedTask: indexChoice.interpretedTask || payload.task,
+    searchPhrases: [...new Set([
+      indexChoice.interpretedTask,
+      ...(indexChoice.searchPhrases || []),
+      ...(indexChoice.selectedCandidates || []).map((candidate) => candidate.title),
+      payload.task,
+      payload.description,
+      payload.notes,
+    ].filter(Boolean))],
+    keywords: [...new Set([
+      ...(indexChoice.keywords || []).map((keyword) => String(keyword).toLowerCase()),
+      ...tokenizeSearchText([
+        indexChoice.interpretedTask,
+        ...(indexChoice.searchPhrases || []),
+        ...(indexChoice.selectedCandidates || []).map((candidate) => candidate.title),
+      ].join(' ')),
+    ].filter(Boolean))],
+    assumptions: [...new Set(indexChoice.assumptions || [])],
+    generatedBy: 'openai-index',
+    selectedManualTitles: (indexChoice.selectedCandidates || []).map((candidate) => ({
+      title: candidate.title,
+      manual: candidate.manual,
+      page: candidate.page,
+      sourceType: candidate.sourceType,
+      confidence: indexChoice.confidence,
+    })),
+  };
   const enrichedPayload = { ...payload, machineModel, searchProfile };
-  const chunks = await findRelevantManualChunks(machineModel, searchProfile);
+  const chunks = await findManualChunksForIndexSelection(machineModel, indexChoice.selectedCandidates || [], searchProfile);
   if (chunks.length === 0) {
     return {
       requiredTools: [],
@@ -1579,6 +1872,7 @@ async function suggestManualTools(payload) {
       interpretedTask: searchProfile.interpretedTask,
       interpretationNotes: searchProfile.assumptions,
       searchPhrases: searchProfile.searchPhrases,
+      selectedManualTitles: searchProfile.selectedManualTitles,
     };
   }
 
@@ -1602,6 +1896,7 @@ async function suggestManualTools(payload) {
       interpretedTask: searchProfile.interpretedTask,
       interpretationNotes: searchProfile.assumptions,
       searchPhrases: searchProfile.searchPhrases,
+      selectedManualTitles: searchProfile.selectedManualTitles,
     };
   }
 
@@ -1610,6 +1905,7 @@ async function suggestManualTools(payload) {
     interpretedTask: suggestion.interpretedTask || searchProfile.interpretedTask,
     interpretationNotes: suggestion.interpretationNotes || searchProfile.assumptions,
     searchPhrases: searchProfile.searchPhrases,
+    selectedManualTitles: suggestion.selectedManualTitles || searchProfile.selectedManualTitles,
   };
 }
 

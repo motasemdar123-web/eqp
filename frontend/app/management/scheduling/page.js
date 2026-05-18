@@ -602,6 +602,12 @@ function ManualAdvicePanel({ advice, onClear }) {
           {advice.interpretedTask && (
             <p className="mt-2 text-sm font-bold text-zinc-800">Interpreted as: {advice.interpretedTask}</p>
           )}
+          {(advice.selectedManualTitles || []).length > 0 && (
+            <div className="mt-2 text-sm font-semibold text-zinc-700">
+              <span className="font-black text-zinc-900">Manual match:</span>{' '}
+              {advice.selectedManualTitles.map((item) => `${item.title || 'Untitled'}${item.page ? ` (p.${item.page})` : ''}`).join(', ')}
+            </div>
+          )}
         </div>
         {onClear && (
           <button type="button" onClick={onClear} className="rounded-md border border-yellow-300 bg-white px-3 py-1.5 text-xs font-bold text-zinc-700">
