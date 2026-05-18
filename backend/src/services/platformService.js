@@ -1557,29 +1557,41 @@ function cleanManualLine(value) {
     .trim();
 }
 
-function extractCleanSectionTitleFromChunks(chunks) {
+function findManualSectionTitleInLines(lines, preferredTitle = '') {
+  const preferred = normalizeManualMatchText(preferredTitle);
+  for (let index = 0; index < lines.length; index += 1) {
+    const line = lines[index];
+    if (/\.{3,}/.test(line) || isGenericManualLine(line)) continue;
+    if (!/^(removal|installation|removal and installation|disassembly|assembly|testing|adjusting|bleeding|inspection|check|replacement|spreading)\b/i.test(line)) {
+      continue;
+    }
+
+    const nextLine = lines[index + 1] || '';
+    const shouldJoinNext = nextLine
+      && !/\.{3,}/.test(nextLine)
+      && !isGenericManualLine(nextLine)
+      && !/^(special tools|removal|installation|preparation)$/i.test(nextLine)
+      && nextLine.length <= 70;
+    const title = cleanManualTitle(shouldJoinNext ? `${line} ${nextLine}` : line);
+    if (!title || isGenericManualLine(title)) continue;
+    if (preferred) {
+      const normalizedTitle = normalizeManualMatchText(title);
+      if (!normalizedTitle.includes(preferred) && !preferred.includes(normalizedTitle)) continue;
+    }
+    return { title, index, nextLineUsed: shouldJoinNext };
+  }
+  return null;
+}
+
+function extractCleanSectionTitleFromChunks(chunks, preferredTitle = '') {
   for (const chunk of chunks) {
     const lines = String(chunk.content || '')
       .split('\n')
       .map(cleanManualLine)
       .filter(Boolean);
 
-    for (let index = 0; index < lines.length; index += 1) {
-      const line = lines[index];
-      if (/\.{3,}/.test(line) || isGenericManualLine(line)) continue;
-      if (!/^(removal|installation|removal and installation|disassembly|assembly|testing|adjusting|bleeding|inspection|check|replacement)\b/i.test(line)) {
-        continue;
-      }
-
-      const nextLine = lines[index + 1] || '';
-      const shouldJoinNext = nextLine
-        && !/\.{3,}/.test(nextLine)
-        && !isGenericManualLine(nextLine)
-        && !/^(special tools|removal|installation|preparation)$/i.test(nextLine)
-        && nextLine.length <= 70;
-      const title = cleanManualTitle(shouldJoinNext ? `${line} ${nextLine}` : line);
-      if (title && !isGenericManualLine(title)) return title;
-    }
+    const match = findManualSectionTitleInLines(lines, preferredTitle);
+    if (match?.title) return match.title;
   }
 
   return null;
@@ -1901,14 +1913,44 @@ function toCleanArray(value) {
     : [];
 }
 
-function getManualContentLines(chunks) {
-  return chunks
+function isMajorManualSectionHeading(line) {
+  if (!line || /\.{3,}/.test(line) || isGenericManualLine(line)) return false;
+  return /^(removal and installation|disassembly and assembly|spreading and installation|general disassembly|removal|installation|disassembly|assembly|testing|adjusting|bleeding|inspection|check|replacement)\b/i.test(line);
+}
+
+function getManualContentLines(chunks, preferredTitle = '') {
+  const lines = chunks
     .flatMap((chunk) => String(chunk.content || '').split('\n'))
     .map((line) => line.replace(/[\u0000-\u001f\u007f-\u009f]/g, ' ').replace(/\s+/g, ' ').trim())
     .filter((line) => line.length >= 8)
     .filter((line) => !/^\d+$/.test(line))
     .filter((line) => !/\.{5,}/.test(line))
     .filter((line) => !/^-- \d+ of \d+ --$/.test(line));
+
+  const preferred = cleanManualTitle(preferredTitle);
+  if (!preferred) return lines;
+
+  const start = findManualSectionTitleInLines(lines, preferred);
+  if (!start) return lines;
+
+  const scoped = [];
+  const startIndex = start.index + (start.nextLineUsed ? 2 : 1);
+  scoped.push(start.title);
+
+  for (let index = startIndex; index < lines.length; index += 1) {
+    const line = lines[index];
+    const nextLine = lines[index + 1] || '';
+    const combinedTitle = cleanManualTitle(nextLine && nextLine.length <= 70 ? `${line} ${nextLine}` : line);
+    const normalizedCombined = normalizeManualMatchText(combinedTitle);
+    const normalizedPreferred = normalizeManualMatchText(preferred);
+
+    if (isMajorManualSectionHeading(line) && normalizedCombined && !normalizedCombined.includes(normalizedPreferred) && !normalizedPreferred.includes(normalizedCombined)) {
+      break;
+    }
+    scoped.push(line);
+  }
+
+  return scoped;
 }
 
 function mergeUniqueManualItems(...groups) {
@@ -1927,8 +1969,8 @@ function mergeUniqueManualItems(...groups) {
   return values;
 }
 
-function extractManualProcedureFallback(chunks) {
-  const lines = getManualContentLines(chunks);
+function extractManualProcedureFallback(chunks, matchedSectionTitle = '') {
+  const lines = getManualContentLines(chunks, matchedSectionTitle);
   const procedure = [];
   let current = null;
   let inProcedure = false;
@@ -1967,8 +2009,8 @@ function extractManualProcedureFallback(chunks) {
   return mergeUniqueManualItems(procedure).slice(0, 14);
 }
 
-function extractManualToolFallback(chunks) {
-  const lines = getManualContentLines(chunks);
+function extractManualToolFallback(chunks, matchedSectionTitle = '') {
+  const lines = getManualContentLines(chunks, matchedSectionTitle);
   const tools = [];
   let inSpecialTools = false;
 
@@ -1988,7 +2030,7 @@ function extractManualToolFallback(chunks) {
     }
   }
 
-  const text = chunks.map((chunk) => chunk.content || '').join('\n');
+  const text = lines.join('\n');
   const patterns = [
     /standard puller/i,
     /hydraulic pump/i,
@@ -2011,8 +2053,8 @@ function extractManualToolFallback(chunks) {
   return mergeUniqueManualItems(tools).slice(0, 12);
 }
 
-function extractManualConsumablesFallback(chunks) {
-  const lines = getManualContentLines(chunks);
+function extractManualConsumablesFallback(chunks, matchedSectionTitle = '') {
+  const lines = getManualContentLines(chunks, matchedSectionTitle);
   const consumables = [];
 
   for (const line of lines) {
@@ -2024,8 +2066,8 @@ function extractManualConsumablesFallback(chunks) {
   return mergeUniqueManualItems(consumables).slice(0, 8);
 }
 
-function extractManualWarningsFallback(chunks) {
-  const lines = getManualContentLines(chunks)
+function extractManualWarningsFallback(chunks, matchedSectionTitle = '') {
+  const lines = getManualContentLines(chunks, matchedSectionTitle)
     .filter((line) => /never|be sure|care|prevent|warning|pressure|fall|damage|misaligned|leakage|disconnect the cable|negative/i.test(line));
   return mergeUniqueManualItems(lines).slice(0, 8);
 }
@@ -2035,26 +2077,22 @@ function completeManualSuggestionFromChunks(suggestion, chunks) {
   const requiredTools = toCleanArray(suggestion.requiredTools);
   const warnings = toCleanArray(suggestion.warnings);
   const consumables = toCleanArray(suggestion.consumables);
-  const manualTools = extractManualToolFallback(chunks);
-  const manualWarnings = extractManualWarningsFallback(chunks);
-  const manualConsumables = extractManualConsumablesFallback(chunks);
-  const manualProcedure = extractManualProcedureFallback(chunks);
-  const matchedSectionTitle = cleanManualTitle(suggestion.matchedSectionTitle)
+  const preferredSectionTitle = cleanManualTitle(suggestion.selectedManualTitles?.[0]?.title)
+    || cleanManualTitle(suggestion.matchedSectionTitle);
+  const matchedSectionTitle = extractCleanSectionTitleFromChunks(chunks, preferredSectionTitle)
     || extractCleanSectionTitleFromChunks(chunks)
-    || cleanManualTitle(suggestion.selectedManualTitles?.[0]?.title);
-  const sources = Array.isArray(suggestion.sources) && suggestion.sources.length
-    ? suggestion.sources.map((source) => ({
-      ...source,
-      section: cleanManualTitle(source.section) || matchedSectionTitle,
-      matchedSectionTitle,
-    }))
-    : chunks.slice(0, 6).map((chunk) => ({
-      manual: chunk.manual?.title,
-      machineModel: chunk.machineModel,
-      page: chunk.pageNumber,
-      section: matchedSectionTitle || cleanManualTitle(chunk.section),
-      matchedSectionTitle,
-    }));
+    || preferredSectionTitle;
+  const manualTools = extractManualToolFallback(chunks, matchedSectionTitle);
+  const manualWarnings = extractManualWarningsFallback(chunks, matchedSectionTitle);
+  const manualConsumables = extractManualConsumablesFallback(chunks, matchedSectionTitle);
+  const manualProcedure = extractManualProcedureFallback(chunks, matchedSectionTitle);
+  const sources = chunks.slice(0, 6).map((chunk) => ({
+    manual: chunk.manual?.title,
+    machineModel: chunk.machineModel,
+    page: chunk.pageNumber,
+    section: matchedSectionTitle || cleanManualTitle(chunk.section),
+    matchedSectionTitle,
+  }));
 
   return {
     ...suggestion,
@@ -2071,6 +2109,7 @@ function completeManualSuggestionFromChunks(suggestion, chunks) {
 async function generateManualSuggestionWithAi(payload, chunks) {
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey || chunks.length === 0) return null;
+  const scopedManualContent = getManualContentLines(chunks, payload.searchProfile?.matchedSectionTitle).join('\n');
 
   try {
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -2098,12 +2137,12 @@ async function generateManualSuggestionWithAi(payload, chunks) {
               interpretedTask: payload.searchProfile?.interpretedTask,
               searchAssumptions: payload.searchProfile?.assumptions,
               selectedManualTitles: payload.searchProfile?.selectedManualTitles,
-              excerpts: chunks.map((chunk) => ({
-                manual: chunk.manual?.title,
-                page: chunk.pageNumber,
-                section: chunk.section,
-                content: chunk.content.slice(0, 2600),
-              })),
+              excerpts: [{
+                manual: chunks[0]?.manual?.title,
+                page: chunks[0]?.pageNumber,
+                section: payload.searchProfile?.matchedSectionTitle || chunks[0]?.section,
+                content: scopedManualContent.slice(0, 5200),
+              }],
               extractionRules: [
                 'Use Special tools table rows for requiredTools, including part numbers where readable.',
                 'Use warning/note lines beginning with a, never, be sure, prevent, pressure, fall, or damage for warnings.',
