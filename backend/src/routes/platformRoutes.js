@@ -16,6 +16,10 @@ router.post('/auth/microsoft/session', asyncHandler(platformController.completeM
 
 router.get('/api/dashboard', requirePlatformAuth, requirePermission('REPORTS_READ'), asyncHandler(platformController.dashboard));
 
+router.get('/api/technician/tasks', requirePlatformAuth, asyncHandler(platformController.myDailyScheduleTasks));
+router.post('/api/technician/tasks/:id/start', requirePlatformAuth, asyncHandler(platformController.startMyDailyScheduleTask));
+router.post('/api/technician/tasks/:id/complete', requirePlatformAuth, asyncHandler(platformController.completeMyDailyScheduleTask));
+
 router.get('/api/technicians', requirePlatformAuth, requirePermission('SCHEDULE_MANAGE'), asyncHandler(platformController.listTechnicians));
 router.post('/api/technicians', requirePlatformAuth, requirePermission('SCHEDULE_MANAGE'), asyncHandler(platformController.createTechnician));
 router.patch('/api/technicians/:id', requirePlatformAuth, requirePermission('SCHEDULE_MANAGE'), asyncHandler(platformController.updateTechnician));

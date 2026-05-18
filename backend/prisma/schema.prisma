@@ -244,6 +244,10 @@ model DailyScheduleTask {
   endsAt      String                        @map("ends_at")
   status      TechnicianScheduleStatus      @default(CONFIRMED)
   notes       String?
+  startedAt   DateTime?                     @map("started_at")
+  completedAt DateTime?                     @map("completed_at")
+  summary     String?
+  photos      Json?
   technicians DailyScheduleTaskTechnician[]
   createdAt   DateTime                      @default(now()) @map("created_at")
   updatedAt   DateTime                      @updatedAt @map("updated_at")

@@ -84,6 +84,22 @@ async function deleteDailyScheduleTask(req, res) {
   res.json({ success: true });
 }
 
+async function myDailyScheduleTasks(req, res) {
+  const data = await platformService.listMyDailyScheduleTasks(req.platformUser, req.query.date);
+  res.json({ success: true, ...data });
+}
+
+async function startMyDailyScheduleTask(req, res) {
+  const task = await platformService.startMyDailyScheduleTask(req.platformUser, req.params.id);
+  res.json({ success: true, task });
+}
+
+async function completeMyDailyScheduleTask(req, res) {
+  requireFields(req.body, ['summary']);
+  const task = await platformService.completeMyDailyScheduleTask(req.platformUser, req.params.id, req.body);
+  res.json({ success: true, task });
+}
+
 async function listDailyScheduleTasks(req, res) {
   const history = await platformService.listDailyScheduleTasks(req.query.from || req.query.date, req.query.to);
   res.json({ success: true, history });
@@ -111,6 +127,9 @@ module.exports = {
   createDailyScheduleTask,
   updateDailyScheduleTask,
   deleteDailyScheduleTask,
+  myDailyScheduleTasks,
+  startMyDailyScheduleTask,
+  completeMyDailyScheduleTask,
   listDailyScheduleTasks,
   upsertTechnicianSchedule,
 };

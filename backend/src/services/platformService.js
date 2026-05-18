@@ -303,13 +303,17 @@ function isConfiguredEngineer(email, profile) {
 
 async function findOrCreateMicrosoftUser(prisma, profile) {
   const email = normalizeMicrosoftEmail(profile);
-  assertAllowedMicrosoftEmail(email);
+  if (!email || !email.includes('@')) {
+    throw new ApiError(403, 'Microsoft account does not expose a valid email address.');
+  }
 
   let user = await prisma.user.findUnique({ where: { email } });
   const isConfiguredAdmin = env.microsoft.adminEmails.includes(email);
   const isEngineer = isConfiguredEngineer(email, profile);
 
   if (!user) {
+    assertAllowedMicrosoftEmail(email);
+
     if (!isConfiguredAdmin && !isEngineer && !env.microsoft.autoProvision) {
       throw new ApiError(403, 'Microsoft account verified, but no platform user exists. Ask an administrator to create your user or enable MICROSOFT_AUTO_PROVISION.');
     }
@@ -946,6 +950,7 @@ function normalizeDailyScheduleTask(task) {
   return {
     ...task,
     technicians: (task.technicians || []).map((assignment) => assignment.technician),
+    photos: Array.isArray(task.photos) ? task.photos : [],
   };
 }
 
@@ -1125,6 +1130,129 @@ async function deleteDailyScheduleTask(id, actorId) {
   });
 }
 
+async function findTechnicianProfileForActor(prisma, actor) {
+  if (!actor?.sub) {
+    throw new ApiError(401, 'Authentication required.');
+  }
+
+  const technician = await prisma.technicianProfile.findFirst({
+    where: {
+      userId: actor.sub,
+      deletedAt: null,
+    },
+    include: {
+      user: { select: publicUserSelect },
+      skills: true,
+    },
+  });
+
+  if (!technician) {
+    throw new ApiError(403, 'Technician profile is required.');
+  }
+
+  return technician;
+}
+
+async function listMyDailyScheduleTasks(actor, dateText) {
+  const prisma = requirePrisma();
+  const technician = await findTechnicianProfileForActor(prisma, actor);
+  const { date, workDate } = schedulingRange(dateText);
+  const tasks = await prisma.dailyScheduleTask.findMany({
+    where: {
+      workDate,
+      deletedAt: null,
+      technicians: {
+        some: {
+          technicianId: technician.id,
+        },
+      },
+    },
+    include: dailyScheduleTaskInclude,
+    orderBy: { startsAt: 'asc' },
+  });
+
+  return {
+    date,
+    technician,
+    tasks: tasks.map(normalizeDailyScheduleTask),
+  };
+}
+
+async function ensureTaskBelongsToTechnician(prisma, taskId, technicianId) {
+  const task = await prisma.dailyScheduleTask.findFirst({
+    where: {
+      id: taskId,
+      deletedAt: null,
+      technicians: {
+        some: {
+          technicianId,
+        },
+      },
+    },
+    include: dailyScheduleTaskInclude,
+  });
+
+  if (!task) {
+    throw new ApiError(404, 'Task not found for this technician.');
+  }
+
+  return task;
+}
+
+async function startMyDailyScheduleTask(actor, taskId) {
+  const prisma = requirePrisma();
+  const technician = await findTechnicianProfileForActor(prisma, actor);
+  await ensureTaskBelongsToTechnician(prisma, taskId, technician.id);
+
+  const task = await prisma.dailyScheduleTask.update({
+    where: { id: taskId },
+    data: {
+      status: 'ON_DUTY',
+      startedAt: new Date(),
+      updatedById: actor.sub,
+    },
+    include: dailyScheduleTaskInclude,
+  });
+
+  return normalizeDailyScheduleTask(task);
+}
+
+function normalizeTaskPhotos(photos) {
+  if (!Array.isArray(photos)) return [];
+  return photos.slice(0, 8).map((photo) => ({
+    fileName: String(photo.fileName || photo.name || 'photo.jpg').slice(0, 180),
+    mimeType: String(photo.mimeType || photo.type || 'image/jpeg').slice(0, 80),
+    dataUrl: String(photo.dataUrl || '').slice(0, 8_000_000),
+    createdAt: new Date().toISOString(),
+  })).filter((photo) => photo.dataUrl.startsWith('data:image/'));
+}
+
+async function completeMyDailyScheduleTask(actor, taskId, payload) {
+  const prisma = requirePrisma();
+  const technician = await findTechnicianProfileForActor(prisma, actor);
+  await ensureTaskBelongsToTechnician(prisma, taskId, technician.id);
+
+  const summary = String(payload.summary || '').trim();
+  if (!summary) {
+    throw new ApiError(400, 'Summary is required.');
+  }
+
+  const task = await prisma.dailyScheduleTask.update({
+    where: { id: taskId },
+    data: {
+      status: 'COMPLETED',
+      completedAt: new Date(),
+      summary,
+      notes: payload.notes || null,
+      photos: normalizeTaskPhotos(payload.photos),
+      updatedById: actor.sub,
+    },
+    include: dailyScheduleTaskInclude,
+  });
+
+  return normalizeDailyScheduleTask(task);
+}
+
 async function listDailyScheduleTasks(fromText, toText) {
   const prisma = requirePrisma();
   const { from, to, fromDate, toDate } = dailyScheduleDateRange(fromText, toText);
@@ -1233,6 +1361,9 @@ module.exports = {
   createDailyScheduleTask,
   updateDailyScheduleTask,
   deleteDailyScheduleTask,
+  listMyDailyScheduleTasks,
+  startMyDailyScheduleTask,
+  completeMyDailyScheduleTask,
   listDailyScheduleTasks,
   getSchedulingBoard,
 };
