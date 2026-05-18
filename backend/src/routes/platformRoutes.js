@@ -2,6 +2,7 @@ const { Router } = require('express');
 const platformController = require('../controllers/platformController');
 const { asyncHandler } = require('../utils/asyncHandler');
 const { requirePlatformAuth, requirePermission } = require('../middleware/platformAuthMiddleware');
+const { manualUpload } = require('../middleware/uploadMiddleware');
 
 const router = Router();
 
@@ -25,6 +26,7 @@ router.post('/api/technician/tasks/:id/complete', requirePlatformAuth, asyncHand
 router.get('/api/technicians', requirePlatformAuth, requirePermission('SCHEDULE_MANAGE'), asyncHandler(platformController.listTechnicians));
 router.get('/api/shop-manuals', requirePlatformAuth, requirePermission('SCHEDULE_MANAGE'), asyncHandler(platformController.listShopManuals));
 router.post('/api/shop-manuals', requirePlatformAuth, requirePermission('SCHEDULE_MANAGE'), asyncHandler(platformController.uploadShopManual));
+router.post('/api/shop-manuals/upload', requirePlatformAuth, requirePermission('SCHEDULE_MANAGE'), manualUpload.single('manual'), asyncHandler(platformController.uploadShopManualFile));
 router.post('/api/shop-manuals/suggest-tools', requirePlatformAuth, requirePermission('SCHEDULE_MANAGE'), asyncHandler(platformController.suggestManualTools));
 router.post('/api/technicians', requirePlatformAuth, requirePermission('SCHEDULE_MANAGE'), asyncHandler(platformController.createTechnician));
 router.patch('/api/technicians/:id', requirePlatformAuth, requirePermission('SCHEDULE_MANAGE'), asyncHandler(platformController.updateTechnician));

@@ -1,4 +1,5 @@
 const crypto = require('crypto');
+const fs = require('fs/promises');
 const { getPrisma } = require('../config/prisma');
 const { env } = require('../config/env');
 const { ApiError } = require('../utils/ApiError');
@@ -1043,7 +1044,19 @@ async function extractManualText(payload) {
   }
 }
 
-async function uploadShopManual(payload, actorId) {
+async function extractManualTextFromFile(filePath) {
+  const { PDFParse } = require('pdf-parse');
+  const buffer = await fs.readFile(filePath);
+  const parser = new PDFParse({ data: buffer });
+  try {
+    const parsed = await parser.getText();
+    return parsed.text || '';
+  } finally {
+    await parser.destroy();
+  }
+}
+
+async function createIndexedShopManual(payload, text, actorId) {
   const prisma = requirePrisma();
   const machineModel = normalizeMachineModel(payload.machineModel);
   const title = String(payload.title || payload.fileName || '').trim();
@@ -1052,7 +1065,6 @@ async function uploadShopManual(payload, actorId) {
     throw new ApiError(400, 'machineModel and title are required.');
   }
 
-  const text = await extractManualText(payload);
   const chunks = chunkText(text);
   if (chunks.length === 0) {
     throw new ApiError(400, 'No readable text was found in this manual.');
@@ -1064,27 +1076,55 @@ async function uploadShopManual(payload, actorId) {
         machineModel,
         title,
         fileName: payload.fileName || null,
-        sourceType: payload.fileBase64 ? 'PDF' : 'TEXT',
+        sourceType: payload.sourceType || 'PDF',
         status: 'INDEXED',
         createdById: actorId,
       },
     });
 
-    await tx.shopManualChunk.createMany({
-      data: chunks.slice(0, 1200).map((content, index) => ({
-        manualId: manual.id,
-        machineModel,
-        pageNumber: index + 1,
-        section: inferSectionTitle(content),
-        content,
-      })),
-    });
+    for (let index = 0; index < chunks.slice(0, 1200).length; index += 200) {
+      const batch = chunks.slice(0, 1200).slice(index, index + 200);
+      await tx.shopManualChunk.createMany({
+        data: batch.map((content, offset) => ({
+          manualId: manual.id,
+          machineModel,
+          pageNumber: index + offset + 1,
+          section: inferSectionTitle(content),
+          content,
+        })),
+      });
+    }
 
     return {
       ...manual,
       chunks: chunks.length,
     };
-  });
+  }, { timeout: 120000 });
+}
+
+async function uploadShopManual(payload, actorId) {
+  const text = await extractManualText(payload);
+  return createIndexedShopManual({
+    ...payload,
+    sourceType: payload.fileBase64 ? 'PDF' : 'TEXT',
+  }, text, actorId);
+}
+
+async function uploadShopManualFile(payload, file, actorId) {
+  if (!file?.path) {
+    throw new ApiError(400, 'PDF manual file is required.');
+  }
+
+  try {
+    const text = await extractManualTextFromFile(file.path);
+    return await createIndexedShopManual({
+      ...payload,
+      fileName: file.originalname,
+      sourceType: 'PDF',
+    }, text, actorId);
+  } finally {
+    await fs.unlink(file.path).catch(() => {});
+  }
 }
 
 function inferSectionTitle(content) {
@@ -1947,6 +1987,7 @@ module.exports = {
   listTechnicians,
   listShopManuals,
   uploadShopManual,
+  uploadShopManualFile,
   suggestManualTools,
   createTechnician,
   updateTechnician,

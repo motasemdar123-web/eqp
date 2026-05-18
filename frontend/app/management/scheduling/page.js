@@ -84,7 +84,7 @@ export default function SchedulingPage() {
   const [editingTaskId, setEditingTaskId] = useState('');
   const [taskForm, setTaskForm] = useState(() => emptyTaskForm());
   const [viewingTask, setViewingTask] = useState(null);
-  const [manualUpload, setManualUpload] = useState({ machineModel: '', title: '', fileName: '', fileBase64: '' });
+  const [manualUpload, setManualUpload] = useState({ machineModel: '', title: '', file: null });
   const [manualBusy, setManualBusy] = useState(false);
 
   const headers = useMemo(() => ({
@@ -93,10 +93,11 @@ export default function SchedulingPage() {
   }), [token]);
 
   async function request(path, options = {}) {
+    const isFormData = typeof FormData !== 'undefined' && options.body instanceof FormData;
     const response = await fetch(`${API_BASE}${path}`, {
       ...options,
       headers: {
-        ...headers,
+        ...(isFormData ? { Authorization: headers.Authorization } : headers),
         ...(options.headers || {}),
       },
     });
@@ -222,23 +223,12 @@ export default function SchedulingPage() {
     }
   }
 
-  function readManualFile(file) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(String(reader.result || ''));
-      reader.onerror = reject;
-      reader.readAsDataURL(file);
-    });
-  }
-
-  async function handleManualFile(file) {
+  function handleManualFile(file) {
     if (!file) return;
-    const fileBase64 = await readManualFile(file);
     setManualUpload((current) => ({
       ...current,
-      fileName: file.name,
       title: current.title || file.name.replace(/\.pdf$/i, ''),
-      fileBase64,
+      file,
     }));
   }
 
@@ -246,12 +236,18 @@ export default function SchedulingPage() {
     setManualBusy(true);
     setMessage('');
     try {
-      await request('/api/shop-manuals', {
+      const form = new FormData();
+      form.set('machineModel', manualUpload.machineModel);
+      form.set('title', manualUpload.title);
+      form.set('manual', manualUpload.file);
+
+      await request('/api/shop-manuals/upload', {
         method: 'POST',
-        body: JSON.stringify(manualUpload),
+        headers: {},
+        body: form,
       });
       setMessage('Shop manual uploaded and indexed');
-      setManualUpload({ machineModel: manualUpload.machineModel, title: '', fileName: '', fileBase64: '' });
+      setManualUpload({ machineModel: manualUpload.machineModel, title: '', file: null });
     } catch (error) {
       setMessage(error.message);
     } finally {
@@ -446,8 +442,8 @@ export default function SchedulingPage() {
               <input className="h-11 rounded-md border border-zinc-300 px-3" placeholder="Manual title" value={manualUpload.title} onChange={(event) => setManualUpload((current) => ({ ...current, title: event.target.value }))} />
               <input type="file" accept="application/pdf" className="rounded-md border border-zinc-300 bg-white p-3 text-sm md:col-span-2" onChange={(event) => handleManualFile(event.target.files?.[0])} />
             </div>
-            <Button type="button" className="mt-3" onClick={uploadManual} disabled={manualBusy || !manualUpload.machineModel || !manualUpload.title || !manualUpload.fileBase64}>
-              Upload and Index Manual
+            <Button type="button" className="mt-3" onClick={uploadManual} disabled={manualBusy || !manualUpload.machineModel || !manualUpload.title || !manualUpload.file}>
+              {manualBusy ? 'Indexing Manual...' : 'Upload and Index Manual'}
             </Button>
           </Card>
         </div>
