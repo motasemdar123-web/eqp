@@ -3,7 +3,7 @@ export default function manifest() {
     name: 'تطبيق فني دار الحي',
     short_name: 'فني دار الحي',
     description: 'جدول الفني اليومي وإنهاء المهام',
-    start_url: '/technician',
+    start_url: '/technician?direct=1',
     scope: '/',
     display: 'standalone',
     background_color: '#edf1ea',
