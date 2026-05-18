@@ -1463,9 +1463,14 @@ async function findRelevantManualChunks(machineModel, searchProfile) {
 
 function cleanManualTitle(value) {
   return String(value || '')
+    .replace(/[\u0000-\u001f\u007f-\u009f]/g, ' ')
     .replace(/\.{3,}\s*\d*$/g, '')
+    .replace(/\bSEN\d{5}-\d{2}\b/gi, '')
+    .replace(/\bD155A-\d+\b/gi, '')
+    .replace(/\b\d+\s+(Structure|Testing|Disassembly|Index)\b.*$/gi, '')
     .replace(/\s+/g, ' ')
     .replace(/^[\d.\-\s]+/, '')
+    .replace(/\b1SHOP MANUAL\b/gi, 'Shop Manual')
     .replace(/\s+\d+$/g, '')
     .trim()
     .slice(0, 180);
@@ -1543,6 +1548,41 @@ function extractManualIndexCandidatesFromChunk(chunk) {
   }
 
   return candidates.filter((candidate) => candidate.title && !isGenericManualLine(candidate.title));
+}
+
+function cleanManualLine(value) {
+  return String(value || '')
+    .replace(/[\u0000-\u001f\u007f-\u009f]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function extractCleanSectionTitleFromChunks(chunks) {
+  for (const chunk of chunks) {
+    const lines = String(chunk.content || '')
+      .split('\n')
+      .map(cleanManualLine)
+      .filter(Boolean);
+
+    for (let index = 0; index < lines.length; index += 1) {
+      const line = lines[index];
+      if (/\.{3,}/.test(line) || isGenericManualLine(line)) continue;
+      if (!/^(removal|installation|removal and installation|disassembly|assembly|testing|adjusting|bleeding|inspection|check|replacement)\b/i.test(line)) {
+        continue;
+      }
+
+      const nextLine = lines[index + 1] || '';
+      const shouldJoinNext = nextLine
+        && !/\.{3,}/.test(nextLine)
+        && !isGenericManualLine(nextLine)
+        && !/^(special tools|removal|installation|preparation)$/i.test(nextLine)
+        && nextLine.length <= 70;
+      const title = cleanManualTitle(shouldJoinNext ? `${line} ${nextLine}` : line);
+      if (title && !isGenericManualLine(title)) return title;
+    }
+  }
+
+  return null;
 }
 
 async function buildManualIndexCandidates(machineModel) {
@@ -1916,17 +1956,26 @@ function completeManualSuggestionFromChunks(suggestion, chunks) {
   const procedureSummary = toCleanArray(suggestion.procedureSummary);
   const requiredTools = toCleanArray(suggestion.requiredTools);
   const warnings = toCleanArray(suggestion.warnings);
+  const matchedSectionTitle = cleanManualTitle(suggestion.matchedSectionTitle)
+    || extractCleanSectionTitleFromChunks(chunks)
+    || cleanManualTitle(suggestion.selectedManualTitles?.[0]?.title);
   const sources = Array.isArray(suggestion.sources) && suggestion.sources.length
-    ? suggestion.sources
+    ? suggestion.sources.map((source) => ({
+      ...source,
+      section: cleanManualTitle(source.section) || matchedSectionTitle,
+      matchedSectionTitle,
+    }))
     : chunks.slice(0, 6).map((chunk) => ({
       manual: chunk.manual?.title,
       machineModel: chunk.machineModel,
       page: chunk.pageNumber,
-      section: chunk.section,
+      section: matchedSectionTitle || cleanManualTitle(chunk.section),
+      matchedSectionTitle,
     }));
 
   return {
     ...suggestion,
+    matchedSectionTitle,
     requiredTools: requiredTools.length ? requiredTools : extractManualToolFallback(chunks),
     ppe: toCleanArray(suggestion.ppe),
     consumables: toCleanArray(suggestion.consumables),
@@ -1979,6 +2028,7 @@ async function generateManualSuggestionWithAi(payload, chunks) {
                 warnings: [],
                 procedureSummary: [],
                 sources: [],
+                matchedSectionTitle: 'clean manual section title only',
                 interpretedTask: '',
                 interpretationNotes: [],
                 confidence: 'high | medium | low',
@@ -1998,6 +2048,7 @@ async function generateManualSuggestionWithAi(payload, chunks) {
       interpretedTask: payload.searchProfile?.interpretedTask || payload.task,
       interpretationNotes: payload.searchProfile?.assumptions || [],
       selectedManualTitles: payload.searchProfile?.selectedManualTitles || [],
+      matchedSectionTitle: payload.searchProfile?.matchedSectionTitle,
     }, chunks);
   } catch {
     return null;
@@ -2053,6 +2104,7 @@ async function suggestManualTools(payload) {
     ].filter(Boolean))],
     assumptions: [...new Set(indexChoice.assumptions || [])],
     generatedBy: 'openai-index',
+    matchedSectionTitle: cleanManualTitle(indexChoice.selectedCandidates?.[0]?.title),
     selectedManualTitles: (indexChoice.selectedCandidates || []).map((candidate) => ({
       title: candidate.title,
       manual: candidate.manual,
@@ -2077,6 +2129,7 @@ async function suggestManualTools(payload) {
       interpretedTask: searchProfile.interpretedTask,
       interpretationNotes: searchProfile.assumptions,
       searchPhrases: searchProfile.searchPhrases,
+      matchedSectionTitle: searchProfile.matchedSectionTitle,
       selectedManualTitles: searchProfile.selectedManualTitles,
     };
   }
@@ -2101,6 +2154,7 @@ async function suggestManualTools(payload) {
       interpretedTask: searchProfile.interpretedTask,
       interpretationNotes: searchProfile.assumptions,
       searchPhrases: searchProfile.searchPhrases,
+      matchedSectionTitle: searchProfile.matchedSectionTitle,
       selectedManualTitles: searchProfile.selectedManualTitles,
     };
   }
@@ -2110,6 +2164,7 @@ async function suggestManualTools(payload) {
     interpretedTask: suggestion.interpretedTask || searchProfile.interpretedTask,
     interpretationNotes: suggestion.interpretationNotes || searchProfile.assumptions,
     searchPhrases: searchProfile.searchPhrases,
+    matchedSectionTitle: suggestion.matchedSectionTitle || searchProfile.matchedSectionTitle,
     selectedManualTitles: suggestion.selectedManualTitles || searchProfile.selectedManualTitles,
   };
 }

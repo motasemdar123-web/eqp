@@ -602,7 +602,11 @@ function ManualAdvicePanel({ advice, onClear }) {
           {advice.interpretedTask && (
             <p className="mt-2 text-sm font-bold text-zinc-800">Interpreted as: {advice.interpretedTask}</p>
           )}
-          {(advice.selectedManualTitles || []).length > 0 && (
+          {advice.matchedSectionTitle ? (
+            <div className="mt-2 text-sm font-semibold text-zinc-700">
+              <span className="font-black text-zinc-900">Matched section:</span> {advice.matchedSectionTitle}
+            </div>
+          ) : (advice.selectedManualTitles || []).length > 0 && (
             <div className="mt-2 text-sm font-semibold text-zinc-700">
               <span className="font-black text-zinc-900">Manual match:</span>{' '}
               {advice.selectedManualTitles.map((item) => `${item.title || 'Untitled'}${item.page ? ` (p.${item.page})` : ''}`).join(', ')}
@@ -641,7 +645,7 @@ function ManualAdvicePanel({ advice, onClear }) {
         <div className="mt-3 rounded-md bg-white p-3">
           <p className="text-xs font-bold uppercase tracking-[0.12em] text-zinc-500">Sources</p>
           <p className="mt-2 text-sm font-semibold text-zinc-700">
-            {advice.sources.map((source) => `${source.manual || source.machineModel || 'Manual'} p.${source.page || '-'}`).join(', ')}
+            {advice.sources.map((source) => `${source.manual || source.machineModel || 'Manual'}${source.matchedSectionTitle || source.section ? ` - ${source.matchedSectionTitle || source.section}` : ''} p.${source.page || '-'}`).join(', ')}
           </p>
         </div>
       )}
