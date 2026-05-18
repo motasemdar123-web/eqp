@@ -453,6 +453,18 @@ const publicUserSelect = {
   status: true,
 };
 
+const defaultTechnicianSeeds = [
+  { email: 'technician.1001@daralhai.com', fullName: 'Nasser Al Harbi', employeeCode: 'TECH-1001', region: 'Riyadh North', skills: [['HVAC', 'SENIOR'], ['Electrical Safety', 'INTERMEDIATE']] },
+  { email: 'technician.1002@daralhai.com', fullName: 'Ahmad Al Harbi', employeeCode: 'TECH-1002', region: 'Riyadh North', skills: [['Plumbing', 'SENIOR'], ['Leak Detection', 'SENIOR']] },
+  { email: 'technician.1003@daralhai.com', fullName: 'Omar Al Qahtani', employeeCode: 'TECH-1003', region: 'Riyadh East', skills: [['Electrical', 'SENIOR'], ['Generator', 'INTERMEDIATE']] },
+  { email: 'technician.1004@daralhai.com', fullName: 'Khaled Mansour', employeeCode: 'TECH-1004', region: 'Riyadh Central', skills: [['HVAC', 'INTERMEDIATE'], ['BMS', 'INTERMEDIATE']] },
+  { email: 'technician.1005@daralhai.com', fullName: 'Yousef Nasser', employeeCode: 'TECH-1005', region: 'Riyadh Central', skills: [['Civil Works', 'SENIOR'], ['Painting', 'INTERMEDIATE']] },
+  { email: 'technician.1006@daralhai.com', fullName: 'Fahad Al Mutairi', employeeCode: 'TECH-1006', region: 'Riyadh South', skills: [['Fire Safety', 'SENIOR'], ['Pump Systems', 'INTERMEDIATE']] },
+  { email: 'technician.1007@daralhai.com', fullName: 'Saeed Al Otaibi', employeeCode: 'TECH-1007', region: 'Riyadh West', skills: [['Electrical', 'INTERMEDIATE'], ['Emergency Response', 'SENIOR']] },
+  { email: 'technician.1008@daralhai.com', fullName: 'Nawaf Saleh', employeeCode: 'TECH-1008', region: 'Riyadh West', skills: [['HVAC', 'INTERMEDIATE'], ['Refrigeration', 'INTERMEDIATE']] },
+  { email: 'technician.1009@daralhai.com', fullName: 'Bader Al Dosari', employeeCode: 'TECH-1009', region: 'Riyadh South', skills: [['Plumbing', 'INTERMEDIATE'], ['Water Treatment', 'SENIOR']] },
+];
+
 const dailyScheduleTaskInclude = {
   technicians: {
     include: {
@@ -467,6 +479,97 @@ const dailyScheduleTaskInclude = {
     orderBy: { createdAt: 'asc' },
   },
 };
+
+async function ensureDefaultTechnicians(prisma) {
+  const activeTechnicians = await prisma.technicianProfile.count({ where: { deletedAt: null } });
+  if (activeTechnicians > 0) return;
+
+  await prisma.$transaction(async (tx) => {
+    const role = await tx.role.upsert({
+      where: { code: 'FIELD_TECHNICIAN' },
+      update: {},
+      create: {
+        code: 'FIELD_TECHNICIAN',
+        name: 'Field Technician',
+      },
+    });
+
+    for (const seed of defaultTechnicianSeeds) {
+      const user = await tx.user.upsert({
+        where: { email: seed.email },
+        update: {
+          fullName: seed.fullName,
+          status: 'ACTIVE',
+          deletedAt: null,
+        },
+        create: {
+          email: seed.email,
+          fullName: seed.fullName,
+          passwordHash: `MICROSOFT_SSO_ONLY:${randomToken()}`,
+          locale: 'en',
+          status: 'ACTIVE',
+        },
+      });
+
+      await tx.userRole.upsert({
+        where: {
+          userId_roleId: {
+            userId: user.id,
+            roleId: role.id,
+          },
+        },
+        update: {},
+        create: {
+          userId: user.id,
+          roleId: role.id,
+        },
+      });
+
+      const existingProfile = await tx.technicianProfile.findFirst({
+        where: {
+          OR: [
+            { userId: user.id },
+            { employeeCode: seed.employeeCode },
+          ],
+        },
+      });
+
+      const technician = existingProfile
+        ? await tx.technicianProfile.update({
+          where: { id: existingProfile.id },
+          data: {
+            userId: user.id,
+            employeeCode: seed.employeeCode,
+            region: seed.region,
+            shiftId: null,
+            isAvailable: true,
+            deletedAt: null,
+          },
+        })
+        : await tx.technicianProfile.create({
+          data: {
+            userId: user.id,
+            employeeCode: seed.employeeCode,
+            region: seed.region,
+            isAvailable: true,
+          },
+        });
+
+      await tx.technicianSkill.deleteMany({
+        where: { technicianId: technician.id },
+      });
+
+      await tx.technicianSkill.createMany({
+        data: seed.skills.map(([skill, level]) => ({
+          technicianId: technician.id,
+          skill,
+          level,
+        })),
+        skipDuplicates: true,
+      });
+    }
+  });
+}
 
 async function listDashboard() {
   const prisma = requirePrisma();
@@ -495,6 +598,7 @@ async function listDashboard() {
 
 async function listTechnicians() {
   const prisma = requirePrisma();
+  await ensureDefaultTechnicians(prisma);
 
   return prisma.technicianProfile.findMany({
     where: { deletedAt: null },
@@ -940,6 +1044,7 @@ async function listDailyScheduleTasks(fromText, toText) {
 
 async function getSchedulingBoard(dateText, historyFromText, historyToText) {
   const prisma = requirePrisma();
+  await ensureDefaultTechnicians(prisma);
   const { date, workDate } = schedulingRange(dateText);
   const historyRange = dailyScheduleDateRange(historyFromText || date, historyToText || historyFromText || date);
 
