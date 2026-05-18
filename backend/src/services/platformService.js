@@ -1155,19 +1155,226 @@ function tokenizeSearchText(value) {
     .filter((token) => token.length >= 3))];
 }
 
-function scoreManualChunk(chunk, terms) {
-  const haystack = `${chunk.section || ''} ${chunk.content || ''}`.toLowerCase();
-  return terms.reduce((score, term) => score + (haystack.includes(term) ? 1 : 0), 0);
-}
+const localTaskSearchMap = [
+  {
+    pattern: /(ديزل|مازوت|سولار|fuel|diesel|فلتر|فلتره|filter|هوا|هواء|نسحب|نفضي|تنفيس|تنسيم|bleed|bleeding)/i,
+    phrases: [
+      'bleeding air from fuel circuit',
+      'fuel filter replacement',
+      'fuel circuit air bleeding',
+      'electric priming pump',
+      'air bleeding plug',
+      'fuel piping',
+      'fuel filter',
+    ],
+  },
+  {
+    pattern: /(هيدروليك|هايدروليك|زيت|تهريب|leak|oil|hydraulic|hose|خرطوم|سلندر|cylinder)/i,
+    phrases: [
+      'hydraulic oil leak',
+      'hydraulic hose',
+      'hydraulic cylinder',
+      'oil leakage',
+      'hydraulic circuit',
+      'bleeding hydraulic circuit',
+    ],
+  },
+  {
+    pattern: /(كهرب|بطارية|حساس|سنسور|wire|wiring|electric|electrical|battery|sensor|لمبة|lamp|switch|سويتش)/i,
+    phrases: [
+      'electrical troubleshooting',
+      'wiring harness',
+      'sensor inspection',
+      'battery circuit',
+      'switch inspection',
+      'lamp indicator',
+    ],
+  },
+  {
+    pattern: /(تبريد|راديتر|ماء|حرارة|coolant|radiator|overheat|سخونة|temperature)/i,
+    phrases: [
+      'cooling system',
+      'radiator coolant',
+      'engine overheating',
+      'coolant level',
+      'thermostat inspection',
+    ],
+  },
+  {
+    pattern: /(جنزير|track|undercarriage|رولر|roller|sprocket|idler|سلسلة)/i,
+    phrases: [
+      'undercarriage inspection',
+      'track tension',
+      'track roller',
+      'sprocket',
+      'idler',
+    ],
+  },
+  {
+    pattern: /(بريك|فرامل|brake|steering|دركسون|توجيه)/i,
+    phrases: [
+      'brake system',
+      'steering system',
+      'brake pedal',
+      'steering clutch',
+    ],
+  },
+];
 
-async function findRelevantManualChunks(machineModel, payload) {
-  const prisma = requirePrisma();
-  const normalizedModel = normalizeMachineModel(machineModel);
-  const terms = tokenizeSearchText([
+const localTaskSearchMapSafe = [
+  {
+    pattern: /(\u062f\u064a\u0632\u0644|\u0645\u0627\u0632\u0648\u062a|\u0633\u0648\u0644\u0627\u0631|fuel|diesel|\u0641\u0644\u062a\u0631|\u0641\u0644\u062a\u0631\u0647|filter|\u0647\u0648\u0627|\u0647\u0648\u0627\u0621|\u0646\u0633\u062d\u0628|\u0646\u0641\u0636\u064a|\u062a\u0646\u0641\u064a\u0633|\u062a\u0646\u0633\u064a\u0645|\u0637\u0631\u0645\u0628\u0629|\u0628\u0645\u0628|bleed|bleeding|tanfees|diesal|deezel)/i,
+    phrases: ['bleeding air from fuel circuit', 'fuel filter replacement', 'fuel circuit air bleeding', 'electric priming pump', 'air bleeding plug', 'fuel piping', 'fuel filter'],
+  },
+  {
+    pattern: /(\u0647\u064a\u062f\u0631\u0648\u0644\u064a\u0643|\u0647\u0627\u064a\u062f\u0631\u0648\u0644\u064a\u0643|\u0632\u064a\u062a|\u062a\u0647\u0631\u064a\u0628|leak|oil|hydraulic|hose|\u062e\u0631\u0637\u0648\u0645|\u0633\u0644\u0646\u062f\u0631|cylinder|hydrulik|hydrolic)/i,
+    phrases: ['hydraulic oil leak', 'hydraulic hose', 'hydraulic cylinder', 'oil leakage', 'hydraulic circuit', 'bleeding hydraulic circuit'],
+  },
+  {
+    pattern: /(\u0643\u0647\u0631\u0628|\u0628\u0637\u0627\u0631\u064a\u0629|\u062d\u0633\u0627\u0633|\u0633\u0646\u0633\u0648\u0631|wire|wiring|electric|electrical|battery|sensor|\u0644\u0645\u0628\u0629|lamp|switch|\u0633\u0648\u064a\u062a\u0634|kahraba)/i,
+    phrases: ['electrical troubleshooting', 'wiring harness', 'sensor inspection', 'battery circuit', 'switch inspection', 'lamp indicator'],
+  },
+  {
+    pattern: /(\u062a\u0628\u0631\u064a\u062f|\u0631\u0627\u062f\u064a\u062a\u0631|\u0645\u0627\u0621|\u062d\u0631\u0627\u0631\u0629|coolant|radiator|overheat|\u0633\u062e\u0648\u0646\u0629|temperature)/i,
+    phrases: ['cooling system', 'radiator coolant', 'engine overheating', 'coolant level', 'thermostat inspection'],
+  },
+  {
+    pattern: /(\u062c\u0646\u0632\u064a\u0631|track|undercarriage|\u0631\u0648\u0644\u0631|roller|sprocket|idler|\u0633\u0644\u0633\u0644\u0629)/i,
+    phrases: ['undercarriage inspection', 'track tension', 'track roller', 'sprocket', 'idler'],
+  },
+  {
+    pattern: /(\u0628\u0631\u064a\u0643|\u0641\u0631\u0627\u0645\u0644|brake|steering|\u062f\u0631\u0643\u0633\u0648\u0646|\u062a\u0648\u062c\u064a\u0647)/i,
+    phrases: ['brake system', 'steering system', 'brake pedal', 'steering clutch'],
+  },
+];
+
+function localTaskSearchProfile(payload) {
+  const rawText = [
     payload.task,
     payload.description,
     payload.notes,
-  ].filter(Boolean).join(' '));
+  ].filter(Boolean).join(' ');
+  const phrases = [];
+
+  for (const item of [...localTaskSearchMap, ...localTaskSearchMapSafe]) {
+    if (item.pattern.test(rawText)) {
+      phrases.push(...item.phrases);
+    }
+  }
+
+  return {
+    interpretedTask: phrases[0] || String(payload.task || '').trim(),
+    searchPhrases: [...new Set([
+      rawText,
+      payload.task,
+      payload.description,
+      payload.notes,
+      ...phrases,
+    ].filter(Boolean))],
+    keywords: tokenizeSearchText([rawText, ...phrases].join(' ')),
+    assumptions: phrases.length
+      ? [`Expanded local task wording into ${phrases.length} technical manual search phrases.`]
+      : ['Used the task text as written because no local synonym pattern matched.'],
+    generatedBy: 'local-rules',
+  };
+}
+
+async function generateTaskSearchProfileWithAi(payload) {
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey) return null;
+
+  try {
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: process.env.OPENAI_MANUAL_MODEL || 'gpt-4o-mini',
+        response_format: { type: 'json_object' },
+        temperature: 0.1,
+        messages: [
+          {
+            role: 'system',
+            content: 'You convert messy Arabic/English field technician task wording into shop manual search language. Return JSON only. Include likely English technical task names, component names, synonyms, and uncertainty notes. Do not invent procedure details.',
+          },
+          {
+            role: 'user',
+            content: JSON.stringify({
+              machineModel: payload.machineModel,
+              task: payload.task,
+              description: payload.description,
+              notes: payload.notes,
+              requiredJsonShape: {
+                interpretedTask: 'best technical English interpretation',
+                searchPhrases: ['manual search phrase 1', 'manual search phrase 2'],
+                keywords: ['component', 'action'],
+                assumptions: ['why you interpreted it this way'],
+              },
+            }),
+          },
+        ],
+      }),
+    });
+
+    if (!response.ok) return null;
+    const data = await response.json();
+    const parsed = parseJsonFromModel(data.choices?.[0]?.message?.content);
+    return {
+      interpretedTask: parsed.interpretedTask || payload.task,
+      searchPhrases: Array.isArray(parsed.searchPhrases) ? parsed.searchPhrases.filter(Boolean) : [],
+      keywords: Array.isArray(parsed.keywords) ? parsed.keywords.filter(Boolean) : [],
+      assumptions: Array.isArray(parsed.assumptions) ? parsed.assumptions.filter(Boolean) : [],
+      generatedBy: 'openai',
+    };
+  } catch {
+    return null;
+  }
+}
+
+async function buildTaskSearchProfile(payload) {
+  const localProfile = localTaskSearchProfile(payload);
+  const aiProfile = await generateTaskSearchProfileWithAi(payload);
+
+  if (!aiProfile) return localProfile;
+
+  const searchPhrases = [...new Set([
+    ...localProfile.searchPhrases,
+    aiProfile.interpretedTask,
+    ...aiProfile.searchPhrases,
+  ].filter(Boolean))];
+  const keywords = [...new Set([
+    ...localProfile.keywords,
+    ...tokenizeSearchText(searchPhrases.join(' ')),
+    ...aiProfile.keywords.map((keyword) => String(keyword).toLowerCase()),
+  ].filter(Boolean))];
+
+  return {
+    interpretedTask: aiProfile.interpretedTask || localProfile.interpretedTask,
+    searchPhrases,
+    keywords,
+    assumptions: [...new Set([...localProfile.assumptions, ...aiProfile.assumptions])],
+    generatedBy: 'openai+local-rules',
+  };
+}
+
+function scoreManualChunk(chunk, terms) {
+  const haystack = `${chunk.section || ''} ${chunk.content || ''}`.toLowerCase();
+  return terms.reduce((score, term) => {
+    if (!term) return score;
+    if (haystack.includes(term)) return score + (String(term).includes(' ') ? 5 : 1);
+    return score;
+  }, 0);
+}
+
+async function findRelevantManualChunks(machineModel, searchProfile) {
+  const prisma = requirePrisma();
+  const normalizedModel = normalizeMachineModel(machineModel);
+  const terms = [...new Set([
+    ...(searchProfile.searchPhrases || []).map((phrase) => String(phrase).toLowerCase()),
+    ...(searchProfile.keywords || []).map((keyword) => String(keyword).toLowerCase()),
+  ].filter(Boolean))];
 
   const chunks = await prisma.shopManualChunk.findMany({
     where: normalizedModel ? { machineModel: normalizedModel } : {},
@@ -1220,6 +1427,8 @@ function fallbackManualSuggestion(payload, chunks) {
     confidence: chunks.length ? 'medium' : 'low',
     generatedBy: 'rules',
     task: payload.task,
+    interpretedTask: payload.searchProfile?.interpretedTask || payload.task,
+    interpretationNotes: payload.searchProfile?.assumptions || [],
   };
 }
 
@@ -1256,6 +1465,8 @@ async function generateManualSuggestionWithAi(payload, chunks) {
               description: payload.description,
               notes: payload.notes,
               machineModel: payload.machineModel,
+              interpretedTask: payload.searchProfile?.interpretedTask,
+              searchAssumptions: payload.searchProfile?.assumptions,
               excerpts: chunks.map((chunk) => ({
                 manual: chunk.manual?.title,
                 page: chunk.pageNumber,
@@ -1269,6 +1480,8 @@ async function generateManualSuggestionWithAi(payload, chunks) {
                 warnings: [],
                 procedureSummary: [],
                 sources: [],
+                interpretedTask: '',
+                interpretationNotes: [],
                 confidence: 'high | medium | low',
               },
             }),
@@ -1283,6 +1496,8 @@ async function generateManualSuggestionWithAi(payload, chunks) {
       ...parseJsonFromModel(data.choices?.[0]?.message?.content),
       generatedBy: 'openai',
       task: payload.task,
+      interpretedTask: payload.searchProfile?.interpretedTask || payload.task,
+      interpretationNotes: payload.searchProfile?.assumptions || [],
     };
   } catch {
     return null;
@@ -1298,7 +1513,9 @@ async function suggestManualTools(payload) {
     throw new ApiError(400, 'task is required.');
   }
 
-  const chunks = await findRelevantManualChunks(machineModel, payload);
+  const searchProfile = await buildTaskSearchProfile({ ...payload, machineModel });
+  const enrichedPayload = { ...payload, machineModel, searchProfile };
+  const chunks = await findRelevantManualChunks(machineModel, searchProfile);
   if (chunks.length === 0) {
     return {
       requiredTools: [],
@@ -1310,10 +1527,19 @@ async function suggestManualTools(payload) {
       confidence: 'low',
       generatedBy: 'none',
       task: payload.task,
+      interpretedTask: searchProfile.interpretedTask,
+      interpretationNotes: searchProfile.assumptions,
+      searchPhrases: searchProfile.searchPhrases,
     };
   }
 
-  return (await generateManualSuggestionWithAi(payload, chunks)) || fallbackManualSuggestion(payload, chunks);
+  const suggestion = (await generateManualSuggestionWithAi(enrichedPayload, chunks)) || fallbackManualSuggestion(enrichedPayload, chunks);
+  return {
+    ...suggestion,
+    interpretedTask: suggestion.interpretedTask || searchProfile.interpretedTask,
+    interpretationNotes: suggestion.interpretationNotes || searchProfile.assumptions,
+    searchPhrases: searchProfile.searchPhrases,
+  };
 }
 
 function dailyScheduleDateRange(fromText, toText) {

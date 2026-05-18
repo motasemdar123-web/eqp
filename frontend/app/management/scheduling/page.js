@@ -599,6 +599,9 @@ function ManualAdvicePanel({ advice, onClear }) {
         <div>
           <p className="text-sm font-black text-zinc-950">Manual Suggestions</p>
           <p className="mt-1 text-xs font-semibold text-zinc-600">Confidence: {advice.confidence || 'unknown'} · Source: {advice.generatedBy || 'manual search'}</p>
+          {advice.interpretedTask && (
+            <p className="mt-2 text-sm font-bold text-zinc-800">Interpreted as: {advice.interpretedTask}</p>
+          )}
         </div>
         {onClear && (
           <button type="button" onClick={onClear} className="rounded-md border border-yellow-300 bg-white px-3 py-1.5 text-xs font-bold text-zinc-700">
@@ -620,6 +623,14 @@ function ManualAdvicePanel({ advice, onClear }) {
           </div>
         ))}
       </div>
+      {(advice.interpretationNotes || []).length > 0 && (
+        <div className="mt-3 rounded-md bg-white p-3">
+          <p className="text-xs font-bold uppercase tracking-[0.12em] text-zinc-500">Interpretation Notes</p>
+          <ul className="mt-2 grid gap-1 text-sm font-semibold text-zinc-700">
+            {advice.interpretationNotes.map((note) => <li key={note}>- {note}</li>)}
+          </ul>
+        </div>
+      )}
       {(advice.sources || []).length > 0 && (
         <div className="mt-3 rounded-md bg-white p-3">
           <p className="text-xs font-bold uppercase tracking-[0.12em] text-zinc-500">Sources</p>
