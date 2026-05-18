@@ -1281,7 +1281,13 @@ function localTaskSearchProfile(payload) {
 
 async function generateTaskSearchProfileWithAi(payload) {
   const apiKey = process.env.OPENAI_API_KEY;
-  if (!apiKey) return null;
+  if (!apiKey) {
+    return {
+      ok: false,
+      missingKey: true,
+      errorMessage: 'OPENAI_API_KEY is not configured on the backend.',
+    };
+  }
 
   try {
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -1318,25 +1324,35 @@ async function generateTaskSearchProfileWithAi(payload) {
       }),
     });
 
-    if (!response.ok) return null;
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      return {
+        ok: false,
+        errorMessage: `OpenAI request failed (${response.status}): ${errorData.error?.message || response.statusText || 'Unknown error'}`,
+      };
+    }
     const data = await response.json();
     const parsed = parseJsonFromModel(data.choices?.[0]?.message?.content);
     return {
+      ok: true,
       interpretedTask: parsed.interpretedTask || payload.task,
       searchPhrases: Array.isArray(parsed.searchPhrases) ? parsed.searchPhrases.filter(Boolean) : [],
       keywords: Array.isArray(parsed.keywords) ? parsed.keywords.filter(Boolean) : [],
       assumptions: Array.isArray(parsed.assumptions) ? parsed.assumptions.filter(Boolean) : [],
       generatedBy: 'openai',
     };
-  } catch {
-    return null;
+  } catch (error) {
+    return {
+      ok: false,
+      errorMessage: `OpenAI request failed: ${error.message}`,
+    };
   }
 }
 
 async function buildTaskSearchProfile(payload) {
   const aiProfile = await generateTaskSearchProfileWithAi(payload);
 
-  if (!aiProfile) {
+  if (!aiProfile?.ok) {
     const rawText = [
       payload.task,
       payload.description,
@@ -1348,11 +1364,9 @@ async function buildTaskSearchProfile(payload) {
       searchPhrases: [rawText, payload.task, payload.description, payload.notes].filter(Boolean),
       keywords: tokenizeSearchText(rawText),
       assumptions: [
-        process.env.OPENAI_API_KEY
-          ? 'AI task interpretation failed. The system did not make a confident technical interpretation.'
-          : 'AI task interpretation is not configured. Set OPENAI_API_KEY on the backend to understand Arabic/local task wording automatically.',
+        aiProfile?.errorMessage || 'AI task interpretation failed. The system did not make a confident technical interpretation.',
       ],
-      generatedBy: 'basic-text',
+      generatedBy: aiProfile?.missingKey ? 'missing-openai-key' : 'openai-error',
     };
   }
 
