@@ -987,6 +987,30 @@ async function createDailyScheduleTask(payload, actorId) {
     throw new ApiError(400, 'One or more selected technicians are not available.');
   }
 
+  const existingAssignments = await prisma.dailyScheduleTaskTechnician.findMany({
+    where: {
+      technicianId: { in: technicianIds },
+      task: {
+        workDate,
+        deletedAt: null,
+      },
+    },
+    include: {
+      technician: {
+        include: {
+          user: { select: publicUserSelect },
+        },
+      },
+    },
+  });
+
+  if (existingAssignments.length > 0) {
+    const names = existingAssignments
+      .map((assignment) => assignment.technician.user.fullName || assignment.technician.employeeCode)
+      .join(', ');
+    throw new ApiError(409, `Already assigned for this day: ${names}`);
+  }
+
   return prisma.$transaction(async (tx) => {
     const createdTask = await tx.dailyScheduleTask.create({
       data: {
