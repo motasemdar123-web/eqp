@@ -100,7 +100,16 @@ export default function SchedulingPage() {
         historyTo: nextTo,
       });
       const data = await request(`/api/scheduling/board?${params.toString()}`);
-      setBoard(data.board || emptyBoard);
+      const nextBoard = data.board || emptyBoard;
+      if ((nextBoard.technicians || []).length === 0) {
+        const technicianData = await request('/api/technicians');
+        nextBoard.technicians = technicianData.technicians || [];
+        nextBoard.kpis = {
+          ...(nextBoard.kpis || {}),
+          technicians: nextBoard.technicians.length,
+        };
+      }
+      setBoard(nextBoard);
       setDate(nextDate);
       setHistoryFrom(nextFrom);
       setHistoryTo(nextTo);
