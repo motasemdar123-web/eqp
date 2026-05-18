@@ -1897,31 +1897,98 @@ function parseJsonFromModel(text) {
 
 function toCleanArray(value) {
   return Array.isArray(value)
-    ? value.map((item) => String(item || '').trim()).filter(Boolean)
+    ? value.map((item) => String(item || '').trim()).filter((item) => item && item !== '-')
     : [];
 }
 
-function extractManualProcedureFallback(chunks) {
-  const lines = chunks
+function getManualContentLines(chunks) {
+  return chunks
     .flatMap((chunk) => String(chunk.content || '').split('\n'))
     .map((line) => line.replace(/[\u0000-\u001f\u007f-\u009f]/g, ' ').replace(/\s+/g, ' ').trim())
     .filter((line) => line.length >= 8)
     .filter((line) => !/^\d+$/.test(line))
     .filter((line) => !/\.{5,}/.test(line))
     .filter((line) => !/^-- \d+ of \d+ --$/.test(line));
-  const useful = lines.filter((line) => (
-    /^(removal|installation|special tools|preparation)$/i.test(line)
-    || /^\d+\.\s/.test(line)
-    || /^a\s/i.test(line)
-    || /\b(tool|remove|disconnect|install|tighten|loosen|sling|replace|check|never|be sure)\b/i.test(line)
-  ));
+}
 
-  return useful.slice(0, 10);
+function mergeUniqueManualItems(...groups) {
+  const seen = new Set();
+  const values = [];
+  for (const group of groups) {
+    for (const item of group || []) {
+      const value = String(item || '').replace(/\s+/g, ' ').trim();
+      if (!value || value === '-') continue;
+      const key = value.toLowerCase();
+      if (seen.has(key)) continue;
+      seen.add(key);
+      values.push(value);
+    }
+  }
+  return values;
+}
+
+function extractManualProcedureFallback(chunks) {
+  const lines = getManualContentLines(chunks);
+  const procedure = [];
+  let current = null;
+  let inProcedure = false;
+
+  for (const line of lines) {
+    if (/^(removal|installation|preparation)$/i.test(line)) {
+      inProcedure = true;
+      current = null;
+      procedure.push(line);
+      continue;
+    }
+    if (/^(special tools|sym-?bol|part no\.?|necessity|sketch)$/i.test(line)) continue;
+    if (/^(sources?|form no\.?|machine model|serial number)/i.test(line)) continue;
+
+    if (/^\d+\.\s/.test(line)) {
+      if (current) procedure.push(current);
+      current = line;
+      continue;
+    }
+
+    if (current && !/^\d+\)|^\d+\./.test(line) && !/^(removal|installation|special tools)$/i.test(line)) {
+      current = `${current} ${line}`.slice(0, 320);
+      continue;
+    }
+
+    if (inProcedure && (
+      /^a\s/i.test(line)
+      || /\b(remove|disconnect|install|tighten|loosen|sling|replace|check|never|be sure|align|apply|drain|open)\b/i.test(line)
+    )) {
+      procedure.push(line);
+    }
+  }
+
+  if (current) procedure.push(current);
+
+  return mergeUniqueManualItems(procedure).slice(0, 14);
 }
 
 function extractManualToolFallback(chunks) {
-  const text = chunks.map((chunk) => chunk.content || '').join('\n');
+  const lines = getManualContentLines(chunks);
   const tools = [];
+  let inSpecialTools = false;
+
+  for (const line of lines) {
+    if (/^special tools$/i.test(line)) {
+      inSpecialTools = true;
+      continue;
+    }
+    if (inSpecialTools && /^(removal|installation|preparation)$/i.test(line)) {
+      inSpecialTools = false;
+    }
+    if (!inSpecialTools) continue;
+
+    const match = line.match(/(\d{3}-\d{3}-\d{4}|\d{5}-\d{5})\s+([A-Za-z][A-Za-z0-9 /().-]{1,60}?)(?:\s+\d+)?$/);
+    if (match) {
+      tools.push(`${match[2].trim()} (${match[1]})`);
+    }
+  }
+
+  const text = chunks.map((chunk) => chunk.content || '').join('\n');
   const patterns = [
     /standard puller/i,
     /hydraulic pump/i,
@@ -1941,21 +2008,37 @@ function extractManualToolFallback(chunks) {
     if (match) tools.push(match[0].replace(/\b\w/g, (letter) => letter.toUpperCase()));
   }
 
-  return [...new Set(tools)];
+  return mergeUniqueManualItems(tools).slice(0, 12);
+}
+
+function extractManualConsumablesFallback(chunks) {
+  const lines = getManualContentLines(chunks);
+  const consumables = [];
+
+  for (const line of lines) {
+    if (/\b(grease|oil|adhesive|LT-\d|EO-\d|coolant|washer|bolt|gasket|seal|O-ring|packing|fuel high-pressure pipe)\b/i.test(line)) {
+      consumables.push(line);
+    }
+  }
+
+  return mergeUniqueManualItems(consumables).slice(0, 8);
 }
 
 function extractManualWarningsFallback(chunks) {
-  const lines = chunks
-    .flatMap((chunk) => String(chunk.content || '').split('\n'))
-    .map((line) => line.replace(/[\u0000-\u001f\u007f-\u009f]/g, ' ').replace(/\s+/g, ' ').trim())
-    .filter((line) => /never|be sure|care|prevent|warning|pressure|fall|damage/i.test(line));
-  return [...new Set(lines)].slice(0, 6);
+  const lines = getManualContentLines(chunks)
+    .filter((line) => /never|be sure|care|prevent|warning|pressure|fall|damage|misaligned|leakage|disconnect the cable|negative/i.test(line));
+  return mergeUniqueManualItems(lines).slice(0, 8);
 }
 
 function completeManualSuggestionFromChunks(suggestion, chunks) {
   const procedureSummary = toCleanArray(suggestion.procedureSummary);
   const requiredTools = toCleanArray(suggestion.requiredTools);
   const warnings = toCleanArray(suggestion.warnings);
+  const consumables = toCleanArray(suggestion.consumables);
+  const manualTools = extractManualToolFallback(chunks);
+  const manualWarnings = extractManualWarningsFallback(chunks);
+  const manualConsumables = extractManualConsumablesFallback(chunks);
+  const manualProcedure = extractManualProcedureFallback(chunks);
   const matchedSectionTitle = cleanManualTitle(suggestion.matchedSectionTitle)
     || extractCleanSectionTitleFromChunks(chunks)
     || cleanManualTitle(suggestion.selectedManualTitles?.[0]?.title);
@@ -1976,11 +2059,11 @@ function completeManualSuggestionFromChunks(suggestion, chunks) {
   return {
     ...suggestion,
     matchedSectionTitle,
-    requiredTools: requiredTools.length ? requiredTools : extractManualToolFallback(chunks),
+    requiredTools: mergeUniqueManualItems(manualTools, requiredTools).slice(0, 12),
     ppe: toCleanArray(suggestion.ppe),
-    consumables: toCleanArray(suggestion.consumables),
-    warnings: warnings.length ? warnings : extractManualWarningsFallback(chunks),
-    procedureSummary: procedureSummary.length ? procedureSummary : extractManualProcedureFallback(chunks),
+    consumables: mergeUniqueManualItems(manualConsumables, consumables).slice(0, 10),
+    warnings: mergeUniqueManualItems(manualWarnings, warnings).slice(0, 10),
+    procedureSummary: mergeUniqueManualItems(manualProcedure, procedureSummary).slice(0, 14),
     sources,
   };
 }
@@ -2003,7 +2086,7 @@ async function generateManualSuggestionWithAi(payload, chunks) {
         messages: [
           {
             role: 'system',
-            content: 'You extract required tools, PPE, consumables, warnings, and a short procedure summary from shop manual excerpts. Answer only using the supplied excerpts. If evidence is weak, say so in confidence.',
+            content: 'You extract required tools, PPE, consumables, warnings, and a short procedure summary from Komatsu disassembly/assembly shop manual excerpts. These manuals usually contain a clean section title, warning/note lines, a Special tools table, then Removal/Installation steps. Answer only using the supplied excerpts. Do not invent tools. Preserve part numbers when listed. If the text is OCR-damaged, extract only the readable technical lines.',
           },
           {
             role: 'user',
@@ -2021,6 +2104,13 @@ async function generateManualSuggestionWithAi(payload, chunks) {
                 section: chunk.section,
                 content: chunk.content.slice(0, 2600),
               })),
+              extractionRules: [
+                'Use Special tools table rows for requiredTools, including part numbers where readable.',
+                'Use warning/note lines beginning with a, never, be sure, prevent, pressure, fall, or damage for warnings.',
+                'Use Removal, Installation, and numbered steps for procedureSummary.',
+                'Use oils, grease, adhesive, seals, gaskets, replacement bolts/washers, and specified pipes as consumables.',
+                'Do not use index/table-of-contents lines as procedure evidence.',
+              ],
               requiredJsonShape: {
                 requiredTools: [],
                 ppe: [],
