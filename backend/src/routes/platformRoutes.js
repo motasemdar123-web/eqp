@@ -23,6 +23,9 @@ router.post('/api/technician/tasks/:id/start', requirePlatformAuth, asyncHandler
 router.post('/api/technician/tasks/:id/complete', requirePlatformAuth, asyncHandler(platformController.completeMyDailyScheduleTask));
 
 router.get('/api/technicians', requirePlatformAuth, requirePermission('SCHEDULE_MANAGE'), asyncHandler(platformController.listTechnicians));
+router.get('/api/shop-manuals', requirePlatformAuth, requirePermission('SCHEDULE_MANAGE'), asyncHandler(platformController.listShopManuals));
+router.post('/api/shop-manuals', requirePlatformAuth, requirePermission('SCHEDULE_MANAGE'), asyncHandler(platformController.uploadShopManual));
+router.post('/api/shop-manuals/suggest-tools', requirePlatformAuth, requirePermission('SCHEDULE_MANAGE'), asyncHandler(platformController.suggestManualTools));
 router.post('/api/technicians', requirePlatformAuth, requirePermission('SCHEDULE_MANAGE'), asyncHandler(platformController.createTechnician));
 router.patch('/api/technicians/:id', requirePlatformAuth, requirePermission('SCHEDULE_MANAGE'), asyncHandler(platformController.updateTechnician));
 router.get('/api/shifts', requirePlatformAuth, requirePermission('SCHEDULE_MANAGE'), asyncHandler(platformController.listShifts));

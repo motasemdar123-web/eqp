@@ -46,6 +46,23 @@ async function listTechnicians(req, res) {
   res.json({ success: true, technicians });
 }
 
+async function listShopManuals(req, res) {
+  const manuals = await platformService.listShopManuals();
+  res.json({ success: true, manuals });
+}
+
+async function uploadShopManual(req, res) {
+  requireFields(req.body, ['machineModel', 'title']);
+  const manual = await platformService.uploadShopManual(req.body, req.platformUser?.sub);
+  res.status(201).json({ success: true, manual });
+}
+
+async function suggestManualTools(req, res) {
+  requireFields(req.body, ['machineModel', 'task']);
+  const suggestion = await platformService.suggestManualTools(req.body);
+  res.json({ success: true, suggestion });
+}
+
 async function createTechnician(req, res) {
   requireFields(req.body, ['fullName', 'email', 'employeeCode']);
   const technician = await platformService.createTechnician(req.body, req.platformUser?.sub);
@@ -131,6 +148,9 @@ module.exports = {
   completeMicrosoftLogin,
   dashboard,
   listTechnicians,
+  listShopManuals,
+  uploadShopManual,
+  suggestManualTools,
   createTechnician,
   updateTechnician,
   listShifts,

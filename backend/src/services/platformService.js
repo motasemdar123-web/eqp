@@ -986,6 +986,296 @@ function normalizeDailyScheduleTask(task) {
   };
 }
 
+function normalizeMachineModel(value) {
+  return String(value || '').trim().toUpperCase();
+}
+
+function decodeBase64Payload(value) {
+  const content = String(value || '');
+  const [, base64 = content] = content.match(/^data:.*?;base64,(.*)$/) || [];
+  return Buffer.from(base64, 'base64');
+}
+
+function chunkText(text, maxLength = 2800) {
+  const clean = String(text || '')
+    .replace(/\r/g, '')
+    .replace(/[ \t]+/g, ' ')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
+  if (!clean) return [];
+
+  const paragraphs = clean.split(/\n\s*\n/);
+  const chunks = [];
+  let current = '';
+
+  for (const paragraph of paragraphs) {
+    const next = current ? `${current}\n\n${paragraph}` : paragraph;
+    if (next.length > maxLength && current) {
+      chunks.push(current);
+      current = paragraph;
+    } else {
+      current = next;
+    }
+  }
+
+  if (current) chunks.push(current);
+  return chunks;
+}
+
+async function extractManualText(payload) {
+  if (payload.text) return String(payload.text);
+  if (!payload.fileBase64) {
+    throw new ApiError(400, 'Manual text or fileBase64 is required.');
+  }
+
+  const buffer = decodeBase64Payload(payload.fileBase64);
+  if (buffer.length > 35 * 1024 * 1024) {
+    throw new ApiError(413, 'Manual file is too large. Keep uploads under 35 MB.');
+  }
+
+  const { PDFParse } = require('pdf-parse');
+  const parser = new PDFParse({ data: buffer });
+  try {
+    const parsed = await parser.getText();
+    return parsed.text || '';
+  } finally {
+    await parser.destroy();
+  }
+}
+
+async function uploadShopManual(payload, actorId) {
+  const prisma = requirePrisma();
+  const machineModel = normalizeMachineModel(payload.machineModel);
+  const title = String(payload.title || payload.fileName || '').trim();
+
+  if (!machineModel || !title) {
+    throw new ApiError(400, 'machineModel and title are required.');
+  }
+
+  const text = await extractManualText(payload);
+  const chunks = chunkText(text);
+  if (chunks.length === 0) {
+    throw new ApiError(400, 'No readable text was found in this manual.');
+  }
+
+  return prisma.$transaction(async (tx) => {
+    const manual = await tx.shopManual.create({
+      data: {
+        machineModel,
+        title,
+        fileName: payload.fileName || null,
+        sourceType: payload.fileBase64 ? 'PDF' : 'TEXT',
+        status: 'INDEXED',
+        createdById: actorId,
+      },
+    });
+
+    await tx.shopManualChunk.createMany({
+      data: chunks.slice(0, 1200).map((content, index) => ({
+        manualId: manual.id,
+        machineModel,
+        pageNumber: index + 1,
+        section: inferSectionTitle(content),
+        content,
+      })),
+    });
+
+    return {
+      ...manual,
+      chunks: chunks.length,
+    };
+  });
+}
+
+function inferSectionTitle(content) {
+  const line = String(content || '').split('\n').find((item) => item.trim().length > 4);
+  return line ? line.trim().slice(0, 160) : null;
+}
+
+async function listShopManuals() {
+  const prisma = requirePrisma();
+  const manuals = await prisma.shopManual.findMany({
+    where: { deletedAt: null },
+    include: { _count: { select: { chunks: true } } },
+    orderBy: [{ machineModel: 'asc' }, { createdAt: 'desc' }],
+  });
+
+  return manuals.map((manual) => ({
+    ...manual,
+    chunkCount: manual._count.chunks,
+    _count: undefined,
+  }));
+}
+
+function tokenizeSearchText(value) {
+  return [...new Set(String(value || '')
+    .toLowerCase()
+    .replace(/[^a-z0-9\u0600-\u06ff]+/g, ' ')
+    .split(/\s+/)
+    .filter((token) => token.length >= 3))];
+}
+
+function scoreManualChunk(chunk, terms) {
+  const haystack = `${chunk.section || ''} ${chunk.content || ''}`.toLowerCase();
+  return terms.reduce((score, term) => score + (haystack.includes(term) ? 1 : 0), 0);
+}
+
+async function findRelevantManualChunks(machineModel, payload) {
+  const prisma = requirePrisma();
+  const normalizedModel = normalizeMachineModel(machineModel);
+  const terms = tokenizeSearchText([
+    payload.task,
+    payload.description,
+    payload.notes,
+  ].filter(Boolean).join(' '));
+
+  const chunks = await prisma.shopManualChunk.findMany({
+    where: normalizedModel ? { machineModel: normalizedModel } : {},
+    include: {
+      manual: true,
+    },
+    take: 1500,
+    orderBy: { createdAt: 'asc' },
+  });
+
+  return chunks
+    .map((chunk) => ({ ...chunk, score: scoreManualChunk(chunk, terms) }))
+    .filter((chunk) => chunk.score > 0 || terms.length === 0)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 6);
+}
+
+function fallbackManualSuggestion(payload, chunks) {
+  const combined = chunks.map((chunk) => chunk.content).join('\n').toLowerCase();
+  const warnings = [];
+  const tools = ['Basic hand tools', 'Work light'];
+  const ppe = ['Safety glasses', 'Work gloves', 'Safety shoes'];
+
+  if (/fuel|diesel|bleed|filter/.test(combined)) {
+    tools.push('Fuel spill tray', 'Absorbent rags');
+    ppe.push('Fuel-resistant gloves');
+    warnings.push('Fuel may be pressurized. Do not loosen plugs or lines while the pump is operating.');
+  }
+  if (/hydraulic|oil|lubricat|grease/.test(combined)) {
+    tools.push('Oil absorbent pads', 'Drain pan');
+    ppe.push('Oil-resistant gloves');
+  }
+  if (/electric|battery|wiring|sensor|lamp|switch/.test(combined)) {
+    tools.push('Multimeter');
+    warnings.push('Keep connectors and test equipment dry and isolate power where required.');
+  }
+
+  return {
+    requiredTools: [...new Set(tools)],
+    ppe: [...new Set(ppe)],
+    consumables: [],
+    warnings: warnings.length ? warnings : ['Review the referenced manual pages before starting work.'],
+    procedureSummary: chunks.slice(0, 2).map((chunk) => chunk.section || chunk.content.slice(0, 120)),
+    sources: chunks.map((chunk) => ({
+      manual: chunk.manual?.title,
+      machineModel: chunk.machineModel,
+      page: chunk.pageNumber,
+      section: chunk.section,
+    })),
+    confidence: chunks.length ? 'medium' : 'low',
+    generatedBy: 'rules',
+    task: payload.task,
+  };
+}
+
+function parseJsonFromModel(text) {
+  const value = String(text || '').trim();
+  const match = value.match(/\{[\s\S]*\}/);
+  return JSON.parse(match ? match[0] : value);
+}
+
+async function generateManualSuggestionWithAi(payload, chunks) {
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey || chunks.length === 0) return null;
+
+  try {
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: process.env.OPENAI_MANUAL_MODEL || 'gpt-4o-mini',
+        response_format: { type: 'json_object' },
+        temperature: 0.1,
+        messages: [
+          {
+            role: 'system',
+            content: 'You extract required tools, PPE, consumables, warnings, and a short procedure summary from shop manual excerpts. Answer only using the supplied excerpts. If evidence is weak, say so in confidence.',
+          },
+          {
+            role: 'user',
+            content: JSON.stringify({
+              task: payload.task,
+              description: payload.description,
+              notes: payload.notes,
+              machineModel: payload.machineModel,
+              excerpts: chunks.map((chunk) => ({
+                manual: chunk.manual?.title,
+                page: chunk.pageNumber,
+                section: chunk.section,
+                content: chunk.content.slice(0, 2600),
+              })),
+              requiredJsonShape: {
+                requiredTools: [],
+                ppe: [],
+                consumables: [],
+                warnings: [],
+                procedureSummary: [],
+                sources: [],
+                confidence: 'high | medium | low',
+              },
+            }),
+          },
+        ],
+      }),
+    });
+
+    if (!response.ok) return null;
+    const data = await response.json();
+    return {
+      ...parseJsonFromModel(data.choices?.[0]?.message?.content),
+      generatedBy: 'openai',
+      task: payload.task,
+    };
+  } catch {
+    return null;
+  }
+}
+
+async function suggestManualTools(payload) {
+  const machineModel = normalizeMachineModel(payload.machineModel);
+  if (!machineModel) {
+    throw new ApiError(400, 'machineModel is required to search shop manuals.');
+  }
+  if (!String(payload.task || '').trim()) {
+    throw new ApiError(400, 'task is required.');
+  }
+
+  const chunks = await findRelevantManualChunks(machineModel, payload);
+  if (chunks.length === 0) {
+    return {
+      requiredTools: [],
+      ppe: [],
+      consumables: [],
+      warnings: ['No matching manual section was found for this task and machine model.'],
+      procedureSummary: [],
+      sources: [],
+      confidence: 'low',
+      generatedBy: 'none',
+      task: payload.task,
+    };
+  }
+
+  return (await generateManualSuggestionWithAi(payload, chunks)) || fallbackManualSuggestion(payload, chunks);
+}
+
 function dailyScheduleDateRange(fromText, toText) {
   const from = normalizeDateText(fromText);
   const to = normalizeDateText(toText || from);
@@ -1057,6 +1347,8 @@ async function createDailyScheduleTask(payload, actorId) {
         workDate,
         task,
         description: payload.description || null,
+        machineModel: payload.machineModel ? normalizeMachineModel(payload.machineModel) : null,
+        manualAdvice: payload.manualAdvice || null,
         location: payload.location || null,
         startsAt: payload.startsAt,
         endsAt: payload.endsAt,
@@ -1115,6 +1407,8 @@ async function updateDailyScheduleTask(id, payload, actorId) {
         workDate,
         task,
         description: payload.description || null,
+        machineModel: payload.machineModel ? normalizeMachineModel(payload.machineModel) : null,
+        manualAdvice: payload.manualAdvice || existingTask.manualAdvice || null,
         location: payload.location || null,
         startsAt: payload.startsAt,
         endsAt: payload.endsAt,
@@ -1651,6 +1945,9 @@ module.exports = {
   microsoftErrorRedirect,
   listDashboard,
   listTechnicians,
+  listShopManuals,
+  uploadShopManual,
+  suggestManualTools,
   createTechnician,
   updateTechnician,
   listShifts,

@@ -235,29 +235,64 @@ model TechnicianSchedule {
 }
 
 model DailyScheduleTask {
-  id          String                        @id @default(uuid())
-  workDate    DateTime                      @map("work_date") @db.Date
-  task        String
-  description String?
-  location    String?
-  startsAt    String                        @map("starts_at")
-  endsAt      String                        @map("ends_at")
-  status      TechnicianScheduleStatus      @default(CONFIRMED)
-  notes       String?
-  startedAt   DateTime?                     @map("started_at")
-  completedAt DateTime?                     @map("completed_at")
-  summary     String?
-  photos      Json?
-  technicians DailyScheduleTaskTechnician[]
-  createdAt   DateTime                      @default(now()) @map("created_at")
-  updatedAt   DateTime                      @updatedAt @map("updated_at")
-  createdById String?                       @map("created_by")
-  updatedById String?                       @map("updated_by")
-  deletedAt   DateTime?                     @map("deleted_at")
+  id           String                        @id @default(uuid())
+  workDate     DateTime                      @map("work_date") @db.Date
+  task         String
+  description  String?
+  machineModel String?                       @map("machine_model")
+  manualAdvice Json?                         @map("manual_advice")
+  location     String?
+  startsAt     String                        @map("starts_at")
+  endsAt       String                        @map("ends_at")
+  status       TechnicianScheduleStatus      @default(CONFIRMED)
+  notes        String?
+  startedAt    DateTime?                     @map("started_at")
+  completedAt  DateTime?                     @map("completed_at")
+  summary      String?
+  photos       Json?
+  technicians  DailyScheduleTaskTechnician[]
+  createdAt    DateTime                      @default(now()) @map("created_at")
+  updatedAt    DateTime                      @updatedAt @map("updated_at")
+  createdById  String?                       @map("created_by")
+  updatedById  String?                       @map("updated_by")
+  deletedAt    DateTime?                     @map("deleted_at")
 
   @@index([workDate])
   @@index([status])
   @@map("daily_schedule_tasks")
+}
+
+model ShopManual {
+  id           String            @id @default(uuid())
+  machineModel String            @map("machine_model")
+  title        String
+  fileName     String?           @map("file_name")
+  sourceType   String            @default("PDF") @map("source_type")
+  status       String            @default("INDEXED")
+  chunks       ShopManualChunk[]
+  createdAt    DateTime          @default(now()) @map("created_at")
+  updatedAt    DateTime          @updatedAt @map("updated_at")
+  createdById  String?           @map("created_by")
+  updatedById  String?           @map("updated_by")
+  deletedAt    DateTime?         @map("deleted_at")
+
+  @@index([machineModel])
+  @@map("shop_manuals")
+}
+
+model ShopManualChunk {
+  id           String     @id @default(uuid())
+  manualId     String     @map("manual_id")
+  machineModel String     @map("machine_model")
+  pageNumber   Int?       @map("page_number")
+  section      String?
+  content      String
+  manual       ShopManual @relation(fields: [manualId], references: [id], onDelete: Cascade)
+  createdAt    DateTime   @default(now()) @map("created_at")
+
+  @@index([manualId])
+  @@index([machineModel])
+  @@map("shop_manual_chunks")
 }
 
 model DailyScheduleTaskTechnician {

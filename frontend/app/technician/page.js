@@ -409,6 +409,8 @@ export default function TechnicianAppPage() {
               <Info label="الملاحظات" value={selectedTask.notes || '-'} />
             </div>
 
+            {selectedTask.manualAdvice && <TechnicianManualAdvice advice={selectedTask.manualAdvice} />}
+
             {selectedTask.status !== 'COMPLETED' && (
               <div className="mt-5 grid gap-3">
                 {selectedTask.status !== 'ON_DUTY' && (
@@ -506,6 +508,30 @@ function WeatherAdviceCard({ items, loading }) {
         ))}
       </div>
     </Card>
+  );
+}
+
+function TechnicianManualAdvice({ advice }) {
+  const rows = [
+    ['Ø§Ù„Ø£Ø¯ÙˆØ§Øª', advice.requiredTools],
+    ['Ù…Ø¹Ø¯Ø§Øª Ø§Ù„Ø³Ù„Ø§Ù…Ø©', advice.ppe],
+    ['ØªØ­Ø°ÙŠØ±Ø§Øª', advice.warnings],
+  ];
+
+  return (
+    <div className="mt-4 rounded-md border border-yellow-200 bg-yellow-50 p-4">
+      <p className="text-sm font-black text-zinc-950">Ø£Ø¯ÙˆØ§Øª ÙˆØªØ­Ø°ÙŠØ±Ø§Øª Ù…Ù† Ø§Ù„ÙƒØªØ§Ù„ÙˆØ¬</p>
+      <div className="mt-3 grid gap-3">
+        {rows.map(([label, values]) => (
+          <div key={label} className="rounded-md bg-white p-3">
+            <p className="text-xs font-bold text-zinc-500">{label}</p>
+            <ul className="mt-2 grid gap-1 text-sm font-bold text-zinc-800">
+              {(values || ['-']).map((value) => <li key={value}>- {value}</li>)}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }
 

@@ -61,6 +61,8 @@ function emptyTaskForm(workDate = today()) {
     workDate,
     task: '',
     description: '',
+    machineModel: '',
+    manualAdvice: null,
     location: '',
     startsAt: '08:00',
     endsAt: '16:00',
@@ -82,6 +84,8 @@ export default function SchedulingPage() {
   const [editingTaskId, setEditingTaskId] = useState('');
   const [taskForm, setTaskForm] = useState(() => emptyTaskForm());
   const [viewingTask, setViewingTask] = useState(null);
+  const [manualUpload, setManualUpload] = useState({ machineModel: '', title: '', fileName: '', fileBase64: '' });
+  const [manualBusy, setManualBusy] = useState(false);
 
   const headers = useMemo(() => ({
     'Content-Type': 'application/json',
@@ -170,6 +174,8 @@ export default function SchedulingPage() {
       workDate: formatDate(task.workDate),
       task: task.task || '',
       description: task.description || '',
+      machineModel: task.machineModel || '',
+      manualAdvice: task.manualAdvice || null,
       location: task.location || '',
       startsAt: task.startsAt || '08:00',
       endsAt: task.endsAt || '16:00',
@@ -213,6 +219,65 @@ export default function SchedulingPage() {
       setMessage(error.message);
     } finally {
       setLoading(false);
+    }
+  }
+
+  function readManualFile(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(String(reader.result || ''));
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  async function handleManualFile(file) {
+    if (!file) return;
+    const fileBase64 = await readManualFile(file);
+    setManualUpload((current) => ({
+      ...current,
+      fileName: file.name,
+      title: current.title || file.name.replace(/\.pdf$/i, ''),
+      fileBase64,
+    }));
+  }
+
+  async function uploadManual() {
+    setManualBusy(true);
+    setMessage('');
+    try {
+      await request('/api/shop-manuals', {
+        method: 'POST',
+        body: JSON.stringify(manualUpload),
+      });
+      setMessage('Shop manual uploaded and indexed');
+      setManualUpload({ machineModel: manualUpload.machineModel, title: '', fileName: '', fileBase64: '' });
+    } catch (error) {
+      setMessage(error.message);
+    } finally {
+      setManualBusy(false);
+    }
+  }
+
+  async function suggestManualAdvice() {
+    setManualBusy(true);
+    setMessage('');
+    try {
+      const data = await request('/api/shop-manuals/suggest-tools', {
+        method: 'POST',
+        body: JSON.stringify({
+          machineModel: taskForm.machineModel,
+          task: taskForm.task,
+          description: taskForm.description,
+          notes: taskForm.notes,
+        }),
+      });
+      setTaskForm((current) => ({ ...current, manualAdvice: data.suggestion }));
+      setMessage('Manual suggestions added. Review them before saving the task.');
+    } catch (error) {
+      setMessage(error.message);
+    } finally {
+      setManualBusy(false);
     }
   }
 
@@ -302,12 +367,21 @@ export default function SchedulingPage() {
                 <input type="date" className="h-11 rounded-md border border-zinc-300 px-3" value={taskForm.workDate} onChange={(event) => loadBoard(event.target.value, historyFrom, historyTo)} />
                 <input className="h-11 rounded-md border border-zinc-300 px-3" placeholder="Location" value={taskForm.location} onChange={(event) => setTaskForm((current) => ({ ...current, location: event.target.value }))} />
               </div>
+              <div className="grid gap-3 md:grid-cols-[1fr_auto]">
+                <input className="h-11 rounded-md border border-zinc-300 px-3 uppercase" placeholder="Machine model, e.g. D155A-6" value={taskForm.machineModel} onChange={(event) => setTaskForm((current) => ({ ...current, machineModel: event.target.value.toUpperCase() }))} />
+                <Button type="button" variant="secondary" onClick={suggestManualAdvice} disabled={manualBusy || !taskForm.machineModel || !taskForm.task}>
+                  Suggest Tools
+                </Button>
+              </div>
               <div className="grid grid-cols-2 gap-3">
                 <input type="time" className="h-11 rounded-md border border-zinc-300 px-3" value={taskForm.startsAt} onChange={(event) => setTaskForm((current) => ({ ...current, startsAt: event.target.value }))} />
                 <input type="time" className="h-11 rounded-md border border-zinc-300 px-3" value={taskForm.endsAt} onChange={(event) => setTaskForm((current) => ({ ...current, endsAt: event.target.value }))} />
               </div>
               <input className="h-11 rounded-md border border-zinc-300 px-3" placeholder="Task" value={taskForm.task} onChange={(event) => setTaskForm((current) => ({ ...current, task: event.target.value }))} />
               <textarea rows={3} className="rounded-md border border-zinc-300 px-3 py-2" placeholder="Description" value={taskForm.description} onChange={(event) => setTaskForm((current) => ({ ...current, description: event.target.value }))} />
+              {taskForm.manualAdvice && (
+                <ManualAdvicePanel advice={taskForm.manualAdvice} onClear={() => setTaskForm((current) => ({ ...current, manualAdvice: null }))} />
+              )}
               <div className="rounded-md border border-zinc-200 bg-zinc-50 p-3">
                 <p className="text-sm font-bold text-zinc-950">Technicians</p>
                 {technicians.length === 0 && (
@@ -363,6 +437,18 @@ export default function SchedulingPage() {
                 {editingTaskId ? 'Update Daily Task' : 'Save Daily Task'}
               </Button>
             </form>
+          </Card>
+
+          <Card className="p-5">
+            <h2 className="text-xl font-bold text-zinc-950">Shop Manual Library</h2>
+            <div className="mt-4 grid gap-3 md:grid-cols-2">
+              <input className="h-11 rounded-md border border-zinc-300 px-3 uppercase" placeholder="Machine model" value={manualUpload.machineModel} onChange={(event) => setManualUpload((current) => ({ ...current, machineModel: event.target.value.toUpperCase() }))} />
+              <input className="h-11 rounded-md border border-zinc-300 px-3" placeholder="Manual title" value={manualUpload.title} onChange={(event) => setManualUpload((current) => ({ ...current, title: event.target.value }))} />
+              <input type="file" accept="application/pdf" className="rounded-md border border-zinc-300 bg-white p-3 text-sm md:col-span-2" onChange={(event) => handleManualFile(event.target.files?.[0])} />
+            </div>
+            <Button type="button" className="mt-3" onClick={uploadManual} disabled={manualBusy || !manualUpload.machineModel || !manualUpload.title || !manualUpload.fileBase64}>
+              Upload and Index Manual
+            </Button>
           </Card>
         </div>
 
@@ -502,6 +588,54 @@ function ScheduleTable({ tasks, showDate = false, emptyText, onView, onEdit, onD
   );
 }
 
+function ManualAdvicePanel({ advice, onClear }) {
+  const sections = [
+    ['Tools', advice.requiredTools],
+    ['PPE', advice.ppe],
+    ['Consumables', advice.consumables],
+    ['Warnings', advice.warnings],
+    ['Procedure', advice.procedureSummary],
+  ];
+
+  return (
+    <div className="rounded-md border border-yellow-200 bg-yellow-50 p-4">
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <p className="text-sm font-black text-zinc-950">Manual Suggestions</p>
+          <p className="mt-1 text-xs font-semibold text-zinc-600">Confidence: {advice.confidence || 'unknown'} · Source: {advice.generatedBy || 'manual search'}</p>
+        </div>
+        {onClear && (
+          <button type="button" onClick={onClear} className="rounded-md border border-yellow-300 bg-white px-3 py-1.5 text-xs font-bold text-zinc-700">
+            Clear
+          </button>
+        )}
+      </div>
+      <div className="mt-3 grid gap-3 md:grid-cols-2">
+        {sections.map(([label, values]) => (
+          <div key={label} className="rounded-md bg-white p-3">
+            <p className="text-xs font-bold uppercase tracking-[0.12em] text-zinc-500">{label}</p>
+            {(values || []).length === 0 ? (
+              <p className="mt-2 text-sm text-zinc-500">-</p>
+            ) : (
+              <ul className="mt-2 grid gap-1 text-sm font-semibold text-zinc-700">
+                {values.map((value) => <li key={value}>- {value}</li>)}
+              </ul>
+            )}
+          </div>
+        ))}
+      </div>
+      {(advice.sources || []).length > 0 && (
+        <div className="mt-3 rounded-md bg-white p-3">
+          <p className="text-xs font-bold uppercase tracking-[0.12em] text-zinc-500">Sources</p>
+          <p className="mt-2 text-sm font-semibold text-zinc-700">
+            {advice.sources.map((source) => `${source.manual || source.machineModel || 'Manual'} p.${source.page || '-'}`).join(', ')}
+          </p>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function formatDateTime(value) {
   if (!value) return '-';
   return new Intl.DateTimeFormat('en', {
@@ -567,6 +701,8 @@ function ScheduleSlotModal({ task, onClose }) {
             <p className="text-sm font-black text-zinc-950">Task Notes</p>
             <p className="mt-2 whitespace-pre-wrap text-sm leading-6 text-zinc-700">{task.notes || '-'}</p>
           </div>
+
+          {task.manualAdvice && <ManualAdvicePanel advice={task.manualAdvice} />}
 
           <div className="rounded-md border border-zinc-200 bg-zinc-50 p-4">
             <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
