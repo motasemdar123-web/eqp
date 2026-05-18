@@ -1568,6 +1568,71 @@ async function buildManualIndexCandidates(machineModel) {
   return candidates.slice(0, 400);
 }
 
+function inferManualTaskIntent(payload, interpretedTask = '') {
+  const text = [
+    payload.task,
+    payload.description,
+    payload.notes,
+    interpretedTask,
+  ].filter(Boolean).join(' ').toLowerCase();
+  return {
+    removeInstall: /(remove|removal|replace|replacement|install|installation|disassembl|assembl|فك|تبديل|تغيير|استبدال)/i.test(text),
+    adjustCheck: /(adjust|adjusting|clearance|check|inspect|measure|قياس|تشييك|فحص|ضبط|تعديل)/i.test(text),
+    idler: /(idler|ايدلر|آيدلر|الايدلر|الآيدلر)/i.test(text),
+    track: /(track|undercarriage|جنزير|شوز|سلسلة)/i.test(text),
+  };
+}
+
+function scoreManualCandidateForIntent(candidate, intent) {
+  const title = String(candidate?.title || '').toLowerCase();
+  let score = 0;
+
+  if (intent.idler && title.includes('idler')) score += 40;
+  if (intent.track && /(track|undercarriage)/i.test(title)) score += 10;
+  if (intent.removeInstall && /(removal and installation|removal|installation|disassembly|assembly)/i.test(title)) score += 35;
+  if (intent.removeInstall && /(adjust|adjusting|clearance|testing)/i.test(title)) score -= 35;
+  if (intent.adjustCheck && /(adjust|adjusting|clearance|testing|inspection|check)/i.test(title)) score += 20;
+  if (/^removal and installation/i.test(title)) score += 8;
+  if (/assembly/i.test(title)) score += 5;
+
+  return score;
+}
+
+function rankManualCandidatesForTask(payload, candidates, interpretedTask = '') {
+  const intent = inferManualTaskIntent(payload, interpretedTask);
+  return [...candidates]
+    .map((candidate) => ({
+      ...candidate,
+      taskScore: scoreManualCandidateForIntent(candidate, intent),
+    }))
+    .sort((a, b) => {
+      if (b.taskScore !== a.taskScore) return b.taskScore - a.taskScore;
+      return String(a.title).localeCompare(String(b.title));
+    });
+}
+
+function improveSelectedManualCandidates(payload, candidates, selectedCandidates, interpretedTask = '') {
+  const intent = inferManualTaskIntent(payload, interpretedTask);
+  if (!intent.removeInstall) return selectedCandidates;
+
+  const selectedHasRemoval = selectedCandidates.some((candidate) => (
+    /removal|installation|disassembly|assembly/i.test(candidate.title || '')
+  ));
+  if (selectedHasRemoval) return selectedCandidates;
+
+  const ranked = rankManualCandidatesForTask(payload, candidates, interpretedTask);
+  const strongerMatch = ranked.find((candidate) => (
+    candidate.taskScore >= 60
+    && /removal|installation|disassembly|assembly/i.test(candidate.title || '')
+  ));
+
+  if (!strongerMatch) return selectedCandidates;
+  return [
+    strongerMatch,
+    ...selectedCandidates.filter((candidate) => candidate.id !== strongerMatch.id),
+  ].slice(0, 5);
+}
+
 async function chooseManualIndexWithAi(payload, candidates) {
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) {
@@ -1585,6 +1650,7 @@ async function chooseManualIndexWithAi(payload, candidates) {
   }
 
   try {
+    const rankedCandidates = rankManualCandidatesForTask(payload, candidates).slice(0, 180);
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -1598,7 +1664,7 @@ async function chooseManualIndexWithAi(payload, candidates) {
         messages: [
           {
             role: 'system',
-            content: 'You match messy Arabic/English field technician task wording to the best shop manual index or section titles. Choose only from the provided candidates. Return JSON only. Do not provide tools, PPE, or procedure details.',
+            content: 'You match messy Arabic/English field technician task wording to the best shop manual index or section titles. Choose only from the provided candidates. Return JSON only. Do not provide tools, PPE, or procedure details. If the task means remove, replace, install, or disassemble a component, strongly prefer Removal/Installation or Disassembly/Assembly sections over Adjusting/Testing sections for the same component.',
           },
           {
             role: 'user',
@@ -1607,11 +1673,12 @@ async function chooseManualIndexWithAi(payload, candidates) {
               task: payload.task,
               description: payload.description,
               notes: payload.notes,
-              candidates: candidates.map((candidate) => ({
+              candidates: rankedCandidates.map((candidate) => ({
                 id: candidate.id,
                 title: candidate.title,
                 page: candidate.page,
                 manual: candidate.manual,
+                taskScore: candidate.taskScore,
               })),
               requiredJsonShape: {
                 interpretedTask: 'best technical English interpretation',
@@ -1639,10 +1706,10 @@ async function chooseManualIndexWithAi(payload, candidates) {
     const parsed = parseJsonFromModel(data.choices?.[0]?.message?.content);
     const candidateMap = new Map(candidates.map((candidate) => [candidate.id, candidate]));
     const selectedIds = Array.isArray(parsed.selectedCandidateIds) ? parsed.selectedCandidateIds : [];
-    const selectedCandidates = selectedIds
+    const selectedCandidates = improveSelectedManualCandidates(payload, candidates, selectedIds
       .map((id) => candidateMap.get(String(id)))
       .filter(Boolean)
-      .slice(0, 5);
+      .slice(0, 5), parsed.interpretedTask || payload.task);
 
     return {
       ok: true,
