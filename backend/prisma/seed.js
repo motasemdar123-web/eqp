@@ -215,6 +215,49 @@ async function main() {
       address: 'Riyadh, Saudi Arabia',
     },
   });
+
+  for (const technicianSeed of technicianSeeds) {
+    const technicianUser = await upsertSeedUser({
+      email: technicianSeed.email,
+      userNumber: technicianSeed.userNumber,
+      fullName: technicianSeed.fullName,
+      passwordHash,
+      locale: 'en',
+    });
+
+    await ensureUserRole(technicianUser.id, roles.FIELD_TECHNICIAN.id);
+
+    const technician = await prisma.technicianProfile.upsert({
+      where: { userId: technicianUser.id },
+      update: {
+        employeeCode: technicianSeed.employeeCode,
+        region: technicianSeed.region,
+        shiftId: null,
+        isAvailable: true,
+        deletedAt: null,
+      },
+      create: {
+        userId: technicianUser.id,
+        employeeCode: technicianSeed.employeeCode,
+        region: technicianSeed.region,
+        isAvailable: true,
+      },
+    });
+
+    await prisma.technicianSkill.deleteMany({
+      where: { technicianId: technician.id },
+    });
+
+    await prisma.technicianSkill.createMany({
+      data: technicianSeed.skills.map(([skill, level]) => ({
+        technicianId: technician.id,
+        skill,
+        level,
+      })),
+      skipDuplicates: true,
+    });
+  }
+
   await prisma.eqpMachine.upsert({
     where: { machineNumber: '9582' },
     update: {},

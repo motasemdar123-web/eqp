@@ -12,8 +12,6 @@ const API_BASE = process.env.NEXT_PUBLIC_BACKEND_URL || process.env.NEXT_PUBLIC_
 const emptyBoard = {
   kpis: {},
   technicians: [],
-  shifts: [],
-  branches: [],
   tasks: [],
   history: { tasks: [] },
 };
@@ -70,12 +68,6 @@ export default function SchedulingPage() {
     notes: '',
     status: 'CONFIRMED',
   });
-  const [shiftForm, setShiftForm] = useState({
-    name: '',
-    startsAt: '08:00',
-    endsAt: '16:00',
-    branchId: '',
-  });
 
   const headers = useMemo(() => ({
     'Content-Type': 'application/json',
@@ -124,38 +116,18 @@ export default function SchedulingPage() {
     window.location.href = getMicrosoftLoginUrl('/management/scheduling');
   }
 
-  function toggleTechnician(technicianId) {
-    setTaskForm((current) => {
-      const hasTechnician = current.technicianIds.includes(technicianId);
-      return {
-        ...current,
-        technicianIds: hasTechnician
-          ? current.technicianIds.filter((id) => id !== technicianId)
-          : [...current.technicianIds, technicianId],
-      };
-    });
+  function setSelectedTechnicians(selectedOptions) {
+    const technicianIds = Array.from(selectedOptions).map((option) => option.value);
+    setTaskForm((current) => ({ ...current, technicianIds }));
   }
 
-  async function saveShift(event) {
-    event.preventDefault();
-    setLoading(true);
-    setMessage('');
-    try {
-      await request('/api/shifts', {
-        method: 'POST',
-        body: JSON.stringify({
-          ...shiftForm,
-          branchId: shiftForm.branchId || null,
-        }),
-      });
-      setShiftForm({ name: '', startsAt: '08:00', endsAt: '16:00', branchId: '' });
-      setMessage('Shift saved');
-      await loadBoard();
-    } catch (error) {
-      setMessage(error.message);
-    } finally {
-      setLoading(false);
-    }
+  function removeTechnician(technicianId) {
+    setTaskForm((current) => {
+      return {
+        ...current,
+        technicianIds: current.technicianIds.filter((id) => id !== technicianId),
+      };
+    });
   }
 
   async function saveDailyTask(event) {
@@ -192,7 +164,6 @@ export default function SchedulingPage() {
   }, [token]);
 
   const technicians = board.technicians || [];
-  const branches = board.branches || [];
   const tasks = board.tasks || [];
   const historyTasks = board.history?.tasks || [];
 
@@ -246,23 +217,7 @@ export default function SchedulingPage() {
           ))}
         </div>
 
-        <div className="grid gap-5 xl:grid-cols-[0.9fr_1.1fr]">
-          <Card className="p-5">
-            <h2 className="text-xl font-bold text-zinc-950">Add Shift</h2>
-            <form onSubmit={saveShift} className="mt-4 grid gap-3">
-              <input className="h-11 rounded-md border border-zinc-300 px-3" placeholder="Shift name" value={shiftForm.name} onChange={(event) => setShiftForm((current) => ({ ...current, name: event.target.value }))} />
-              <div className="grid grid-cols-2 gap-3">
-                <input type="time" className="h-11 rounded-md border border-zinc-300 px-3" value={shiftForm.startsAt} onChange={(event) => setShiftForm((current) => ({ ...current, startsAt: event.target.value }))} />
-                <input type="time" className="h-11 rounded-md border border-zinc-300 px-3" value={shiftForm.endsAt} onChange={(event) => setShiftForm((current) => ({ ...current, endsAt: event.target.value }))} />
-              </div>
-              <select className="h-11 rounded-md border border-zinc-300 px-3" value={shiftForm.branchId} onChange={(event) => setShiftForm((current) => ({ ...current, branchId: event.target.value }))}>
-                <option value="">All branches</option>
-                {branches.map((branch) => <option key={branch.id} value={branch.id}>{branch.name}</option>)}
-              </select>
-              <Button type="submit" disabled={!token || loading}>Save Shift</Button>
-            </form>
-          </Card>
-
+        <div className="grid gap-5">
           <Card className="p-5">
             <h2 className="text-xl font-bold text-zinc-950">Add Daily Schedule Task</h2>
             <form onSubmit={saveDailyTask} className="mt-4 grid gap-3">
@@ -279,17 +234,43 @@ export default function SchedulingPage() {
               <div className="rounded-md border border-zinc-200 bg-zinc-50 p-3">
                 <p className="text-sm font-bold text-zinc-950">Technicians</p>
                 <p className="mt-1 text-xs text-zinc-500">{selectedTechnicianSummary(technicians, taskForm.technicianIds)}</p>
-                <div className="mt-3 grid max-h-52 gap-2 overflow-y-auto pr-1 sm:grid-cols-2">
+                <select
+                  multiple
+                  size={Math.min(Math.max(technicians.length, 4), 9)}
+                  value={taskForm.technicianIds}
+                  onChange={(event) => setSelectedTechnicians(event.target.selectedOptions)}
+                  className="mt-3 min-h-36 w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm font-semibold text-zinc-800 outline-none focus:border-yellow-400 focus:ring-2 focus:ring-yellow-100"
+                >
                   {technicians.map((technician) => (
-                    <label key={technician.id} className="flex items-center gap-2 rounded-md border border-zinc-200 bg-white px-3 py-2 text-sm font-semibold text-zinc-700">
-                      <input type="checkbox" checked={taskForm.technicianIds.includes(technician.id)} onChange={() => toggleTechnician(technician.id)} />
-                      <span>{technicianName(technician)} <span className="font-mono text-xs text-zinc-400">{technician.employeeCode}</span></span>
-                    </label>
+                    <option key={technician.id} value={technician.id}>
+                      {technicianName(technician)} {technician.employeeCode ? `- ${technician.employeeCode}` : ''}
+                    </option>
                   ))}
-                </div>
+                </select>
+                {technicians.length === 0 && (
+                  <p className="mt-3 rounded-md border border-yellow-200 bg-yellow-50 px-3 py-2 text-sm font-semibold text-yellow-800">
+                    No technicians found. Add technicians in Technicians Management or run the seed script on the backend.
+                  </p>
+                )}
+                {taskForm.technicianIds.length > 0 && (
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {technicians
+                      .filter((technician) => taskForm.technicianIds.includes(technician.id))
+                      .map((technician) => (
+                        <button
+                          key={technician.id}
+                          type="button"
+                          onClick={() => removeTechnician(technician.id)}
+                          className="rounded-md border border-zinc-300 bg-white px-3 py-1.5 text-xs font-bold text-zinc-700 hover:border-zinc-500"
+                        >
+                          {technicianName(technician)} x
+                        </button>
+                      ))}
+                  </div>
+                )}
               </div>
               <textarea rows={2} className="rounded-md border border-zinc-300 px-3 py-2" placeholder="Notes" value={taskForm.notes} onChange={(event) => setTaskForm((current) => ({ ...current, notes: event.target.value }))} />
-              <Button type="submit" disabled={!token || loading}>Save Daily Task</Button>
+              <Button type="submit" disabled={!token || loading || taskForm.technicianIds.length === 0}>Save Daily Task</Button>
             </form>
           </Card>
         </div>

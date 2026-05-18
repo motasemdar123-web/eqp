@@ -945,8 +945,6 @@ async function getSchedulingBoard(dateText, historyFromText, historyToText) {
 
   const [
     technicians,
-    shifts,
-    branches,
     dayTasks,
     historyTasks,
   ] = await Promise.all([
@@ -963,8 +961,6 @@ async function getSchedulingBoard(dateText, historyFromText, historyToText) {
       },
       orderBy: { employeeCode: 'asc' },
     }),
-    prisma.shift.findMany({ where: { deletedAt: null }, include: { branch: true }, orderBy: { startsAt: 'asc' } }),
-    prisma.branch.findMany({ where: { deletedAt: null }, orderBy: { name: 'asc' } }),
     prisma.dailyScheduleTask.findMany({
       where: { workDate, deletedAt: null },
       include: dailyScheduleTaskInclude,
@@ -998,12 +994,9 @@ async function getSchedulingBoard(dateText, historyFromText, historyToText) {
       technicians: technicians.length,
       scheduledTechnicians,
       availableTechnicians,
-      shifts: shifts.length,
       dailyTasks: dayTasks.length,
     },
     technicians,
-    shifts,
-    branches,
     tasks: dayTasks.map(normalizeDailyScheduleTask),
     history: {
       from: historyRange.from,
