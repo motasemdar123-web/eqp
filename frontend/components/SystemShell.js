@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import Button from './ui/Button';
 import { clearStoredUser, getStoredPlatformSession, getStoredUser } from '../lib/auth';
@@ -52,8 +52,10 @@ export default function SystemShell({
   onLogout,
   userLabel,
   contentClassName = '',
+  requireAuth = true,
 }) {
   const pathname = usePathname();
+  const router = useRouter();
   const [user, setUser] = useState(null);
   const [hasHydrated, setHasHydrated] = useState(false);
 
@@ -65,6 +67,13 @@ export default function SystemShell({
 
     return () => clearTimeout(timer);
   }, []);
+
+  useEffect(() => {
+    if (!requireAuth || !hasHydrated || user) return;
+
+    const returnTo = pathname || '/management';
+    router.replace(`/?returnTo=${encodeURIComponent(returnTo)}`);
+  }, [hasHydrated, pathname, requireAuth, router, user]);
 
   const roleLabel = useMemo(() => {
     if (userLabel) return userLabel;
@@ -81,6 +90,16 @@ export default function SystemShell({
 
     clearStoredUser();
     window.location.href = '/';
+  }
+
+  if (requireAuth && hasHydrated && !user) {
+    return (
+      <main className="grid min-h-screen place-items-center bg-[#edf1ea] px-5 text-zinc-950">
+        <div className="rounded-lg border border-zinc-200 bg-white px-5 py-4 text-sm font-semibold shadow-sm">
+          Redirecting to sign in...
+        </div>
+      </main>
+    );
   }
 
   return (

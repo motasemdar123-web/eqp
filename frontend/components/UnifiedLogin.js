@@ -1,15 +1,18 @@
 'use client';
 
 import { useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import Button from './ui/Button';
 import { getMicrosoftLoginUrl } from '../lib/api';
 
 export default function UnifiedLogin({ preferredModule = 'auto' }) {
   const [loading, setLoading] = useState(false);
+  const searchParams = useSearchParams();
 
   function startMicrosoftLogin() {
     setLoading(true);
-    window.location.href = getMicrosoftLoginUrl(preferredModule === 'eqp' ? '/eqp' : undefined);
+    const returnTo = searchParams.get('returnTo') || (preferredModule === 'eqp' ? '/eqp' : undefined);
+    window.location.href = getMicrosoftLoginUrl(returnTo);
   }
 
   return (
