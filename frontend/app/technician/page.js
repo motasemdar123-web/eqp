@@ -29,7 +29,15 @@ const statusLabels = {
 };
 
 function today() {
-  return new Date().toISOString().slice(0, 10);
+  const value = new Date();
+  if (value.getHours() >= 18) {
+    value.setDate(value.getDate() + 1);
+  }
+  return [
+    value.getFullYear(),
+    String(value.getMonth() + 1).padStart(2, '0'),
+    String(value.getDate()).padStart(2, '0'),
+  ].join('-');
 }
 
 function taskSpeech(task) {
