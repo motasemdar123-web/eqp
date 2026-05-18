@@ -963,19 +963,7 @@ function dailyScheduleDateRange(fromText, toText) {
   };
 }
 
-async function createDailyScheduleTask(payload, actorId) {
-  const prisma = requirePrisma();
-  const technicianIds = uniqueIds(toIdArray(payload.technicianIds));
-  const task = String(payload.task || '').trim();
-  const workDate = toWorkDate(payload.workDate || payload.date);
-
-  if (!task || !payload.startsAt || !payload.endsAt) {
-    throw new ApiError(400, 'task, startsAt, and endsAt are required.');
-  }
-  if (technicianIds.length === 0) {
-    throw new ApiError(400, 'At least one technician is required.');
-  }
-
+async function assertDailyScheduleTechniciansAvailable(prisma, technicianIds, workDate, excludeTaskId = null) {
   const technicians = await prisma.technicianProfile.findMany({
     where: { id: { in: technicianIds }, deletedAt: null },
     select: { id: true },
@@ -991,6 +979,7 @@ async function createDailyScheduleTask(payload, actorId) {
       task: {
         workDate,
         deletedAt: null,
+        ...(excludeTaskId ? { id: { not: excludeTaskId } } : {}),
       },
     },
     include: {
@@ -1008,6 +997,22 @@ async function createDailyScheduleTask(payload, actorId) {
       .join(', ');
     throw new ApiError(409, `Already assigned for this day: ${names}`);
   }
+}
+
+async function createDailyScheduleTask(payload, actorId) {
+  const prisma = requirePrisma();
+  const technicianIds = uniqueIds(toIdArray(payload.technicianIds));
+  const task = String(payload.task || '').trim();
+  const workDate = toWorkDate(payload.workDate || payload.date);
+
+  if (!task || !payload.startsAt || !payload.endsAt) {
+    throw new ApiError(400, 'task, startsAt, and endsAt are required.');
+  }
+  if (technicianIds.length === 0) {
+    throw new ApiError(400, 'At least one technician is required.');
+  }
+
+  await assertDailyScheduleTechniciansAvailable(prisma, technicianIds, workDate);
 
   return prisma.$transaction(async (tx) => {
     const createdTask = await tx.dailyScheduleTask.create({
@@ -1039,6 +1044,84 @@ async function createDailyScheduleTask(payload, actorId) {
     });
 
     return normalizeDailyScheduleTask(fullTask);
+  });
+}
+
+async function updateDailyScheduleTask(id, payload, actorId) {
+  const prisma = requirePrisma();
+  const existingTask = await prisma.dailyScheduleTask.findUnique({
+    where: { id },
+    include: dailyScheduleTaskInclude,
+  });
+
+  if (!existingTask || existingTask.deletedAt) {
+    throw new ApiError(404, 'Schedule task not found.');
+  }
+
+  const technicianIds = uniqueIds(toIdArray(payload.technicianIds));
+  const task = String(payload.task || '').trim();
+  const workDate = toWorkDate(payload.workDate || payload.date || existingTask.workDate.toISOString().slice(0, 10));
+
+  if (!task || !payload.startsAt || !payload.endsAt) {
+    throw new ApiError(400, 'task, startsAt, and endsAt are required.');
+  }
+  if (technicianIds.length === 0) {
+    throw new ApiError(400, 'At least one technician is required.');
+  }
+
+  await assertDailyScheduleTechniciansAvailable(prisma, technicianIds, workDate, id);
+
+  return prisma.$transaction(async (tx) => {
+    await tx.dailyScheduleTask.update({
+      where: { id },
+      data: {
+        workDate,
+        task,
+        description: payload.description || null,
+        location: payload.location || null,
+        startsAt: payload.startsAt,
+        endsAt: payload.endsAt,
+        status: payload.status || existingTask.status || 'CONFIRMED',
+        notes: payload.notes || null,
+        updatedById: actorId,
+      },
+    });
+
+    await tx.dailyScheduleTaskTechnician.deleteMany({
+      where: { taskId: id },
+    });
+    await tx.dailyScheduleTaskTechnician.createMany({
+      data: technicianIds.map((technicianId) => ({
+        taskId: id,
+        technicianId,
+        createdById: actorId,
+      })),
+      skipDuplicates: true,
+    });
+
+    const updatedTask = await tx.dailyScheduleTask.findUnique({
+      where: { id },
+      include: dailyScheduleTaskInclude,
+    });
+
+    return normalizeDailyScheduleTask(updatedTask);
+  });
+}
+
+async function deleteDailyScheduleTask(id, actorId) {
+  const prisma = requirePrisma();
+  const existingTask = await prisma.dailyScheduleTask.findUnique({ where: { id } });
+
+  if (!existingTask || existingTask.deletedAt) {
+    throw new ApiError(404, 'Schedule task not found.');
+  }
+
+  await prisma.dailyScheduleTask.update({
+    where: { id },
+    data: {
+      deletedAt: new Date(),
+      updatedById: actorId,
+    },
   });
 }
 
@@ -1148,6 +1231,8 @@ module.exports = {
   createShift,
   upsertTechnicianSchedule,
   createDailyScheduleTask,
+  updateDailyScheduleTask,
+  deleteDailyScheduleTask,
   listDailyScheduleTasks,
   getSchedulingBoard,
 };

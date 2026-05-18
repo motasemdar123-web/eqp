@@ -30,13 +30,41 @@ function today() {
   return new Date().toISOString().slice(0, 10);
 }
 
+function addDays(dateText, amount) {
+  const value = new Date(`${dateText}T00:00:00.000Z`);
+  value.setUTCDate(value.getUTCDate() + amount);
+  return value.toISOString().slice(0, 10);
+}
+
 function formatDate(value) {
   if (!value) return '-';
   return new Date(value).toISOString().slice(0, 10);
 }
 
+function formatDayLabel(value) {
+  return new Intl.DateTimeFormat('en', {
+    weekday: 'short',
+    month: 'short',
+    day: 'numeric',
+  }).format(new Date(`${value}T00:00:00.000Z`));
+}
+
 function technicianName(technician) {
   return technician?.user?.fullName || technician?.user?.full_name || technician?.employeeCode || 'Technician';
+}
+
+function emptyTaskForm(workDate = today()) {
+  return {
+    technicianIds: [],
+    workDate,
+    task: '',
+    description: '',
+    location: '',
+    startsAt: '08:00',
+    endsAt: '16:00',
+    notes: '',
+    status: 'CONFIRMED',
+  };
 }
 
 export default function SchedulingPage() {
@@ -49,17 +77,8 @@ export default function SchedulingPage() {
   const [board, setBoard] = useState(emptyBoard);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
-  const [taskForm, setTaskForm] = useState({
-    technicianIds: [],
-    workDate: today(),
-    task: '',
-    description: '',
-    location: '',
-    startsAt: '08:00',
-    endsAt: '16:00',
-    notes: '',
-    status: 'CONFIRMED',
-  });
+  const [editingTaskId, setEditingTaskId] = useState('');
+  const [taskForm, setTaskForm] = useState(() => emptyTaskForm());
 
   const headers = useMemo(() => ({
     'Content-Type': 'application/json',
@@ -136,24 +155,56 @@ export default function SchedulingPage() {
     });
   }
 
+  function resetTaskForm(workDate = date) {
+    setEditingTaskId('');
+    setTaskForm(emptyTaskForm(workDate));
+  }
+
+  function editTask(task) {
+    setEditingTaskId(task.id);
+    setTaskForm({
+      technicianIds: (task.technicians || []).map((technician) => technician.id),
+      workDate: formatDate(task.workDate),
+      task: task.task || '',
+      description: task.description || '',
+      location: task.location || '',
+      startsAt: task.startsAt || '08:00',
+      endsAt: task.endsAt || '16:00',
+      notes: task.notes || '',
+      status: task.status || 'CONFIRMED',
+    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  async function deleteTask(task) {
+    const confirmed = window.confirm(`Delete "${task.task}" from ${formatDate(task.workDate)}?`);
+    if (!confirmed) return;
+
+    setLoading(true);
+    setMessage('');
+    try {
+      await request(`/api/scheduling/tasks/${task.id}`, { method: 'DELETE' });
+      setMessage('Daily schedule task deleted');
+      if (editingTaskId === task.id) resetTaskForm(date);
+      await loadBoard(date, historyFrom, historyTo);
+    } catch (error) {
+      setMessage(error.message);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   async function saveDailyTask(event) {
     event.preventDefault();
     setLoading(true);
     setMessage('');
     try {
-      await request('/api/scheduling/tasks', {
-        method: 'POST',
+      await request(editingTaskId ? `/api/scheduling/tasks/${editingTaskId}` : '/api/scheduling/tasks', {
+        method: editingTaskId ? 'PATCH' : 'POST',
         body: JSON.stringify(taskForm),
       });
-      setMessage('Daily schedule task saved');
-      setTaskForm((current) => ({
-        ...current,
-        technicianIds: [],
-        task: '',
-        description: '',
-        location: '',
-        notes: '',
-      }));
+      setMessage(editingTaskId ? 'Daily schedule task updated' : 'Daily schedule task saved');
+      resetTaskForm(taskForm.workDate);
       await loadBoard(taskForm.workDate, historyFrom, historyTo);
     } catch (error) {
       setMessage(error.message);
@@ -172,8 +223,11 @@ export default function SchedulingPage() {
   const technicians = board.technicians || [];
   const tasks = board.tasks || [];
   const historyTasks = board.history?.tasks || [];
+  const dayWindow = Array.from({ length: 11 }, (_, index) => addDays(date, index - 5));
   const assignedTechnicianIds = new Set(
-    tasks.flatMap((task) => (task.technicians || []).map((technician) => technician.id)),
+    tasks
+      .filter((task) => task.id !== editingTaskId)
+      .flatMap((task) => (task.technicians || []).map((technician) => technician.id)),
   );
   const selectedTechnicians = technicians.filter((technician) => taskForm.technicianIds.includes(technician.id));
   const availableTechnicians = technicians.filter((technician) => (
@@ -232,7 +286,14 @@ export default function SchedulingPage() {
 
         <div className="grid gap-5">
           <Card className="p-5">
-            <h2 className="text-xl font-bold text-zinc-950">Add Daily Schedule Task</h2>
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+              <h2 className="text-xl font-bold text-zinc-950">{editingTaskId ? 'Edit Daily Schedule Task' : 'Add Daily Schedule Task'}</h2>
+              {editingTaskId && (
+                <Button type="button" variant="secondary" onClick={() => resetTaskForm(date)}>
+                  Cancel Edit
+                </Button>
+              )}
+            </div>
             <form onSubmit={saveDailyTask} className="mt-4 grid gap-3">
               <div className="grid gap-3 md:grid-cols-2">
                 <input type="date" className="h-11 rounded-md border border-zinc-300 px-3" value={taskForm.workDate} onChange={(event) => loadBoard(event.target.value, historyFrom, historyTo)} />
@@ -295,16 +356,47 @@ export default function SchedulingPage() {
                 </div>
               </div>
               <textarea rows={2} className="rounded-md border border-zinc-300 px-3 py-2" placeholder="Notes" value={taskForm.notes} onChange={(event) => setTaskForm((current) => ({ ...current, notes: event.target.value }))} />
-              <Button type="submit" disabled={!token || loading || taskForm.technicianIds.length === 0}>Save Daily Task</Button>
+              <Button type="submit" disabled={!token || loading || taskForm.technicianIds.length === 0}>
+                {editingTaskId ? 'Update Daily Task' : 'Save Daily Task'}
+              </Button>
             </form>
           </Card>
         </div>
 
         <Card className="overflow-hidden">
           <div className="border-b border-zinc-100 px-5 py-4">
-            <h2 className="text-xl font-bold text-zinc-950">Daily Schedule</h2>
+            <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+              <h2 className="text-xl font-bold text-zinc-950">Daily Schedule</h2>
+              <div className="flex items-center gap-2">
+                <Button type="button" variant="secondary" onClick={() => loadBoard(addDays(date, -1), historyFrom, historyTo)} disabled={!token || loading}>
+                  Previous
+                </Button>
+                <Button type="button" variant="secondary" onClick={() => loadBoard(addDays(date, 1), historyFrom, historyTo)} disabled={!token || loading}>
+                  Next
+                </Button>
+              </div>
+            </div>
+            <div className="mt-4 overflow-x-auto pb-2">
+              <div className="flex min-w-max gap-2">
+                {dayWindow.map((day) => (
+                  <button
+                    key={day}
+                    type="button"
+                    onClick={() => loadBoard(day, historyFrom, historyTo)}
+                    className={`min-w-32 rounded-md border px-4 py-3 text-left text-sm font-bold ${
+                      day === date
+                        ? 'border-zinc-950 bg-zinc-950 text-white'
+                        : 'border-zinc-200 bg-white text-zinc-700 hover:border-yellow-400 hover:bg-yellow-50'
+                    }`}
+                  >
+                    <span className="block">{formatDayLabel(day)}</span>
+                    <span className={`mt-1 block font-mono text-xs ${day === date ? 'text-zinc-300' : 'text-zinc-400'}`}>{day}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
-          <ScheduleTable tasks={tasks} emptyText="No tasks scheduled for this day." />
+          <ScheduleTable tasks={tasks} emptyText="No tasks scheduled for this day." onEdit={editTask} onDelete={deleteTask} />
         </Card>
 
         <Card className="overflow-hidden">
@@ -323,7 +415,9 @@ export default function SchedulingPage() {
   );
 }
 
-function ScheduleTable({ tasks, showDate = false, emptyText }) {
+function ScheduleTable({ tasks, showDate = false, emptyText, onEdit, onDelete }) {
+  const hasActions = Boolean(onEdit || onDelete);
+
   return (
     <div className="overflow-x-auto">
       <table className="w-full min-w-[980px]">
@@ -336,12 +430,13 @@ function ScheduleTable({ tasks, showDate = false, emptyText }) {
             <th className="px-5 py-4 text-left">Location</th>
             <th className="px-5 py-4 text-left">Notes</th>
             <th className="px-5 py-4 text-left">Status</th>
+            {hasActions && <th className="px-5 py-4 text-left">Actions</th>}
           </tr>
         </thead>
         <tbody>
           {tasks.length === 0 && (
             <tr>
-              <td colSpan={showDate ? 7 : 6} className="px-5 py-8 text-center text-sm font-semibold text-zinc-500">{emptyText}</td>
+              <td colSpan={(showDate ? 7 : 6) + (hasActions ? 1 : 0)} className="px-5 py-8 text-center text-sm font-semibold text-zinc-500">{emptyText}</td>
             </tr>
           )}
           {tasks.map((task) => (
@@ -362,6 +457,22 @@ function ScheduleTable({ tasks, showDate = false, emptyText }) {
               <td className="px-5 py-4 text-sm text-zinc-600">{task.location || '-'}</td>
               <td className="px-5 py-4 text-sm text-zinc-600">{task.notes || '-'}</td>
               <td className="px-5 py-4"><Badge tone={statusTone[task.status] || 'neutral'}>{task.status}</Badge></td>
+              {hasActions && (
+                <td className="px-5 py-4">
+                  <div className="flex flex-wrap gap-2">
+                    {onEdit && (
+                      <button type="button" onClick={() => onEdit(task)} className="rounded-md border border-zinc-300 bg-white px-3 py-1.5 text-xs font-bold text-zinc-700 hover:border-zinc-500">
+                        Edit
+                      </button>
+                    )}
+                    {onDelete && (
+                      <button type="button" onClick={() => onDelete(task)} className="rounded-md border border-red-200 bg-red-50 px-3 py-1.5 text-xs font-bold text-red-700 hover:border-red-400">
+                        Delete
+                      </button>
+                    )}
+                  </div>
+                </td>
+              )}
             </tr>
           ))}
         </tbody>

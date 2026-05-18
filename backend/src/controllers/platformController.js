@@ -73,6 +73,17 @@ async function createDailyScheduleTask(req, res) {
   res.status(201).json({ success: true, task });
 }
 
+async function updateDailyScheduleTask(req, res) {
+  requireFields(req.body, ['technicianIds', 'workDate', 'task', 'startsAt', 'endsAt']);
+  const task = await platformService.updateDailyScheduleTask(req.params.id, req.body, req.platformUser?.sub);
+  res.json({ success: true, task });
+}
+
+async function deleteDailyScheduleTask(req, res) {
+  await platformService.deleteDailyScheduleTask(req.params.id, req.platformUser?.sub);
+  res.json({ success: true });
+}
+
 async function listDailyScheduleTasks(req, res) {
   const history = await platformService.listDailyScheduleTasks(req.query.from || req.query.date, req.query.to);
   res.json({ success: true, history });
@@ -98,6 +109,8 @@ module.exports = {
   createShift,
   schedulingBoard,
   createDailyScheduleTask,
+  updateDailyScheduleTask,
+  deleteDailyScheduleTask,
   listDailyScheduleTasks,
   upsertTechnicianSchedule,
 };

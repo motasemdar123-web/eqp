@@ -24,6 +24,8 @@ router.post('/api/shifts', requirePlatformAuth, requirePermission('SCHEDULE_MANA
 router.get('/api/scheduling/board', requirePlatformAuth, requirePermission('SCHEDULE_MANAGE'), asyncHandler(platformController.schedulingBoard));
 router.get('/api/scheduling/tasks', requirePlatformAuth, requirePermission('SCHEDULE_MANAGE'), asyncHandler(platformController.listDailyScheduleTasks));
 router.post('/api/scheduling/tasks', requirePlatformAuth, requirePermission('SCHEDULE_MANAGE'), asyncHandler(platformController.createDailyScheduleTask));
+router.patch('/api/scheduling/tasks/:id', requirePlatformAuth, requirePermission('SCHEDULE_MANAGE'), asyncHandler(platformController.updateDailyScheduleTask));
+router.delete('/api/scheduling/tasks/:id', requirePlatformAuth, requirePermission('SCHEDULE_MANAGE'), asyncHandler(platformController.deleteDailyScheduleTask));
 router.post('/api/scheduling/technician-schedules', requirePlatformAuth, requirePermission('SCHEDULE_MANAGE'), asyncHandler(platformController.upsertTechnicianSchedule));
 
 module.exports = router;
