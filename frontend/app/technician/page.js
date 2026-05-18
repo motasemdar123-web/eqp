@@ -20,17 +20,25 @@ const statusTone = {
   CANCELLED: 'red',
 };
 
+const statusLabels = {
+  CONFIRMED: 'مؤكدة',
+  ON_DUTY: 'قيد التنفيذ',
+  COMPLETED: 'مكتملة',
+  CANCELLED: 'ملغاة',
+  PLANNED: 'مخططة',
+};
+
 function today() {
   return new Date().toISOString().slice(0, 10);
 }
 
 function taskSpeech(task) {
   return [
-    `Task: ${task.task}`,
-    task.location ? `Location: ${task.location}` : '',
-    `Time: ${task.startsAt} to ${task.endsAt}`,
-    task.description ? `Description: ${task.description}` : '',
-    task.notes ? `Notes: ${task.notes}` : '',
+    `المهمة: ${task.task}`,
+    task.location ? `الموقع: ${task.location}` : '',
+    `الوقت: من ${task.startsAt} إلى ${task.endsAt}`,
+    task.description ? `الوصف: ${task.description}` : '',
+    task.notes ? `الملاحظات: ${task.notes}` : '',
   ].filter(Boolean).join('. ');
 }
 
@@ -86,7 +94,7 @@ export default function TechnicianAppPage() {
       },
     });
     const data = await response.json().catch(() => ({}));
-    if (!response.ok) throw new Error(data.error || data.message || 'Request failed');
+    if (!response.ok) throw new Error(data.error || data.message || 'فشل الطلب');
     return data;
   }, [token]);
 
@@ -106,7 +114,7 @@ export default function TechnicianAppPage() {
         setDate(cached.date || nextDate);
         setTasks(cached.tasks);
         setTechnician(cached.technician || null);
-        setMessage('Offline mode: showing the last saved schedule.');
+        setMessage('وضع بدون إنترنت: يتم عرض آخر جدول محفوظ على الجهاز.');
       } else {
         setMessage(error.message);
       }
@@ -136,7 +144,7 @@ export default function TechnicianAppPage() {
     writeJson(DRAFT_KEY, currentDrafts);
     setDrafts(currentDrafts);
     await loadTasks(date);
-    setMessage('Offline submissions synced.');
+    setMessage('تم إرسال المهام المحفوظة بعد عودة الإنترنت.');
   }, [date, loadTasks, online, request, token]);
 
   useEffect(() => {
@@ -184,12 +192,12 @@ export default function TechnicianAppPage() {
 
   function speak(task) {
     if (!task || typeof window === 'undefined' || !window.speechSynthesis) {
-      setMessage('Audio reading is not supported on this phone.');
+      setMessage('قراءة الصوت غير مدعومة على هذا الهاتف.');
       return;
     }
     window.speechSynthesis.cancel();
     const utterance = new SpeechSynthesisUtterance(taskSpeech(task));
-    utterance.lang = 'en-US';
+    utterance.lang = 'ar-SA';
     utterance.rate = 0.9;
     window.speechSynthesis.speak(utterance);
   }
@@ -231,7 +239,7 @@ export default function TechnicianAppPage() {
   async function completeTask(taskId) {
     const draft = drafts[taskId] || {};
     if (!draft.summary?.trim()) {
-      setMessage('Write a short summary before submitting.');
+      setMessage('اكتب ملخصاً قصيراً قبل الإرسال.');
       return;
     }
 
@@ -239,7 +247,7 @@ export default function TechnicianAppPage() {
     updateDraft(taskId, nextDraft);
 
     if (!online) {
-      setMessage('Saved offline. It will sync when internet returns.');
+      setMessage('تم الحفظ بدون إنترنت. سيتم الإرسال عند عودة الاتصال.');
       return;
     }
 
@@ -254,11 +262,11 @@ export default function TechnicianAppPage() {
       delete nextDrafts[taskId];
       setDrafts(nextDrafts);
       writeJson(DRAFT_KEY, nextDrafts);
-      setMessage('Task submitted.');
+      setMessage('تم إرسال المهمة.');
       await loadTasks(date);
     } catch (error) {
       updateDraft(taskId, nextDraft);
-      setMessage('Saved offline. It will sync when internet returns.');
+      setMessage('تم الحفظ بدون إنترنت. سيتم الإرسال عند عودة الاتصال.');
     } finally {
       setLoading(false);
     }
@@ -266,37 +274,37 @@ export default function TechnicianAppPage() {
 
   if (!token) {
     return (
-      <main className="grid min-h-screen place-items-center bg-[#edf1ea] px-5 text-zinc-950">
+      <main dir="rtl" className="grid min-h-screen place-items-center bg-[#edf1ea] px-5 text-zinc-950">
         <Card className="w-full max-w-sm p-6 text-center">
           <div className="mx-auto grid h-14 w-14 place-items-center rounded-md bg-yellow-400 text-xl font-black text-zinc-950">DH</div>
-          <h1 className="mt-5 text-2xl font-black">Technician App</h1>
-          <Button type="button" className="mt-6 w-full py-4 text-base" onClick={signIn}>Sign in</Button>
+          <h1 className="mt-5 text-2xl font-black">تطبيق الفني</h1>
+          <Button type="button" className="mt-6 w-full py-4 text-base" onClick={signIn}>تسجيل الدخول</Button>
         </Card>
       </main>
     );
   }
 
   return (
-    <main className="min-h-screen bg-[#edf1ea] text-zinc-950">
+    <main dir="rtl" className="min-h-screen bg-[#edf1ea] text-zinc-950">
       <header className="sticky top-0 z-10 border-b border-zinc-200 bg-white/95 px-4 py-4 shadow-sm backdrop-blur">
         <div className="mx-auto flex max-w-lg items-center justify-between gap-3">
           <div>
-            <p className="text-xs font-bold uppercase tracking-[0.16em] text-zinc-500">Technician App</p>
-            <h1 className="text-xl font-black">{technician?.user?.fullName || session.user?.fullName || 'Daily Schedule'}</h1>
+            <p className="text-xs font-bold uppercase tracking-[0.16em] text-zinc-500">تطبيق الفني</p>
+            <h1 className="text-xl font-black">{technician?.user?.fullName || session.user?.fullName || 'جدول اليوم'}</h1>
           </div>
-          <Button type="button" variant="ghost" onClick={logout}>Logout</Button>
+          <Button type="button" variant="ghost" onClick={logout}>خروج</Button>
         </div>
       </header>
 
       <section className="mx-auto grid max-w-lg gap-4 px-4 py-4">
         <div className="flex items-center gap-2">
           <input type="date" value={date} onChange={(event) => loadTasks(event.target.value)} className="h-11 flex-1 rounded-md border border-zinc-300 bg-white px-3 text-sm font-bold" />
-          <Button type="button" variant="secondary" onClick={() => loadTasks(date)} disabled={loading}>Refresh</Button>
+          <Button type="button" variant="secondary" onClick={() => loadTasks(date)} disabled={loading}>تحديث</Button>
         </div>
 
         <div className="flex flex-wrap gap-2">
-          <Badge tone={online ? 'green' : 'red'}>{online ? 'Online' : 'Offline'}</Badge>
-          {pendingCount > 0 && <Badge tone="yellow">{pendingCount} pending sync</Badge>}
+          <Badge tone={online ? 'green' : 'red'}>{online ? 'متصل' : 'بدون إنترنت'}</Badge>
+          {pendingCount > 0 && <Badge tone="yellow">{pendingCount} بانتظار الإرسال</Badge>}
         </div>
 
         {message && <div className="rounded-md border border-zinc-200 bg-white px-4 py-3 text-sm font-bold text-zinc-700">{message}</div>}
@@ -304,7 +312,7 @@ export default function TechnicianAppPage() {
         <div className="grid gap-3">
           {tasks.length === 0 && (
             <Card className="p-6 text-center">
-              <p className="text-lg font-black">No tasks for this day</p>
+              <p className="text-lg font-black">لا توجد مهام لهذا اليوم</p>
             </Card>
           )}
           {tasks.map((task) => (
@@ -312,14 +320,14 @@ export default function TechnicianAppPage() {
               key={task.id}
               type="button"
               onClick={() => setSelectedTaskId(task.id)}
-              className={`rounded-md border bg-white p-4 text-left shadow-sm ${selectedTask?.id === task.id ? 'border-zinc-950' : 'border-zinc-200'}`}
+              className={`rounded-md border bg-white p-4 text-right shadow-sm ${selectedTask?.id === task.id ? 'border-zinc-950' : 'border-zinc-200'}`}
             >
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <p className="text-lg font-black">{task.task}</p>
                   <p className="mt-1 text-sm font-semibold text-zinc-600">{task.startsAt} - {task.endsAt}</p>
                 </div>
-                <Badge tone={statusTone[task.status] || 'neutral'}>{task.status}</Badge>
+                <Badge tone={statusTone[task.status] || 'neutral'}>{statusLabels[task.status] || task.status}</Badge>
               </div>
               {task.location && <p className="mt-2 text-sm font-bold text-zinc-700">{task.location}</p>}
             </button>
@@ -333,38 +341,38 @@ export default function TechnicianAppPage() {
                 <h2 className="text-2xl font-black">{selectedTask.task}</h2>
                 <p className="mt-1 text-sm font-bold text-zinc-500">{selectedTask.startsAt} - {selectedTask.endsAt}</p>
               </div>
-              <Button type="button" variant="secondary" onClick={() => speak(selectedTask)}>Listen</Button>
+              <Button type="button" variant="secondary" onClick={() => speak(selectedTask)}>استماع</Button>
             </div>
 
             <div className="mt-4 grid gap-3 text-sm text-zinc-700">
-              {selectedTask.location && <Info label="Location" value={selectedTask.location} />}
-              <Info label="Description" value={selectedTask.description || '-'} />
-              <Info label="Notes" value={selectedTask.notes || '-'} />
+              {selectedTask.location && <Info label="الموقع" value={selectedTask.location} />}
+              <Info label="الوصف" value={selectedTask.description || '-'} />
+              <Info label="الملاحظات" value={selectedTask.notes || '-'} />
             </div>
 
             {selectedTask.status !== 'COMPLETED' && (
               <div className="mt-5 grid gap-3">
                 {selectedTask.status !== 'ON_DUTY' && (
                   <Button type="button" variant="secondary" onClick={() => startTask(selectedTask.id)} disabled={loading || !online}>
-                    Start Task
+                    بدء المهمة
                   </Button>
                 )}
                 <textarea
                   rows={4}
-                  placeholder="Summary of work done"
+                  placeholder="ملخص العمل المنجز"
                   value={selectedDraft.summary || ''}
                   onChange={(event) => updateDraft(selectedTask.id, { summary: event.target.value })}
                   className="rounded-md border border-zinc-300 bg-white px-3 py-3 text-base outline-none focus:border-yellow-400 focus:ring-2 focus:ring-yellow-100"
                 />
                 <textarea
                   rows={2}
-                  placeholder="Extra notes"
+                  placeholder="ملاحظات إضافية"
                   value={selectedDraft.notes || ''}
                   onChange={(event) => updateDraft(selectedTask.id, { notes: event.target.value })}
                   className="rounded-md border border-zinc-300 bg-white px-3 py-3 text-base outline-none focus:border-yellow-400 focus:ring-2 focus:ring-yellow-100"
                 />
                 <label className="grid gap-2 text-sm font-bold text-zinc-700">
-                  Photos
+                  الصور
                   <input type="file" accept="image/*" capture="environment" multiple onChange={(event) => handlePhotos(selectedTask.id, event.target.files)} className="rounded-md border border-zinc-300 bg-white p-3 text-sm" />
                 </label>
                 {(selectedDraft.photos || []).length > 0 && (
@@ -375,14 +383,14 @@ export default function TechnicianAppPage() {
                   </div>
                 )}
                 <Button type="button" onClick={() => completeTask(selectedTask.id)} disabled={loading}>
-                  Submit Task
+                  إرسال المهمة
                 </Button>
               </div>
             )}
 
             {selectedTask.status === 'COMPLETED' && (
               <div className="mt-5 rounded-md border border-green-200 bg-green-50 px-4 py-3 text-sm font-bold text-green-800">
-                Completed: {selectedTask.summary || 'Submitted'}
+                مكتملة: {selectedTask.summary || 'تم الإرسال'}
               </div>
             )}
           </Card>

@@ -1,8 +1,8 @@
 export default function manifest() {
   return {
-    name: 'Dar Al HAI Technician',
-    short_name: 'DH Tech',
-    description: 'Daily technician schedule and task completion app',
+    name: 'تطبيق فني دار الحي',
+    short_name: 'فني دار الحي',
+    description: 'جدول الفني اليومي وإنهاء المهام',
     start_url: '/technician',
     scope: '/',
     display: 'standalone',
