@@ -95,6 +95,11 @@ async function myDailyScheduleTasks(req, res) {
   res.json({ success: true, ...data });
 }
 
+async function myWeatherAdvice(req, res) {
+  const data = await platformService.getMyWeatherAdvice(req.platformUser, req.query.date);
+  res.json({ success: true, ...data });
+}
+
 async function startMyDailyScheduleTask(req, res) {
   const task = await platformService.startMyDailyScheduleTask(req.platformUser, req.params.id);
   res.json({ success: true, task });
@@ -135,6 +140,7 @@ module.exports = {
   updateDailyScheduleTask,
   deleteDailyScheduleTask,
   myDailyScheduleTasks,
+  myWeatherAdvice,
   startMyDailyScheduleTask,
   completeMyDailyScheduleTask,
   listDailyScheduleTasks,

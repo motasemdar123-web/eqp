@@ -11,6 +11,7 @@ import { clearStoredUser, getStoredPlatformSession, setStoredPlatformSession, se
 const API_BASE = process.env.NEXT_PUBLIC_BACKEND_URL || process.env.NEXT_PUBLIC_API_BASE_URL || 'https://eqp-1.onrender.com';
 const CACHE_KEY = 'technicianTasksCache';
 const DRAFT_KEY = 'technicianTaskDrafts';
+const WEATHER_CACHE_KEY = 'technicianWeatherCache';
 
 const statusTone = {
   CONFIRMED: 'green',
@@ -72,10 +73,12 @@ export default function TechnicianAppPage() {
   const [date, setDate] = useState(today());
   const [tasks, setTasks] = useState([]);
   const [technician, setTechnician] = useState(null);
+  const [weatherAdvice, setWeatherAdvice] = useState([]);
   const [drafts, setDrafts] = useState(() => readJson(DRAFT_KEY, {}));
   const [selectedTaskId, setSelectedTaskId] = useState('');
   const [loginForm, setLoginForm] = useState({ email: '', employeeCode: '' });
   const [loading, setLoading] = useState(false);
+  const [weatherLoading, setWeatherLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [online, setOnline] = useState(() => (typeof navigator === 'undefined' ? true : navigator.onLine));
 
@@ -98,6 +101,21 @@ export default function TechnicianAppPage() {
     return data;
   }, [token]);
 
+  const loadWeatherAdvice = useCallback(async (nextDate = date) => {
+    if (!token) return;
+    setWeatherLoading(true);
+    try {
+      const data = await request(`/api/technician/weather?date=${encodeURIComponent(nextDate)}`);
+      setWeatherAdvice(data.items || []);
+      writeJson(WEATHER_CACHE_KEY, { date: nextDate, items: data.items || [] });
+    } catch {
+      const cached = readJson(WEATHER_CACHE_KEY, null);
+      setWeatherAdvice(cached?.date === nextDate ? cached.items || [] : []);
+    } finally {
+      setWeatherLoading(false);
+    }
+  }, [date, request, token]);
+
   const loadTasks = useCallback(async (nextDate = date) => {
     if (!token) return;
     setLoading(true);
@@ -108,12 +126,15 @@ export default function TechnicianAppPage() {
       setTasks(data.tasks || []);
       setTechnician(data.technician || null);
       writeJson(CACHE_KEY, { date: nextDate, tasks: data.tasks || [], technician: data.technician || null });
+      await loadWeatherAdvice(nextDate);
     } catch (error) {
       const cached = readJson(CACHE_KEY, null);
       if (cached?.tasks) {
         setDate(cached.date || nextDate);
         setTasks(cached.tasks);
         setTechnician(cached.technician || null);
+        const cachedWeather = readJson(WEATHER_CACHE_KEY, null);
+        setWeatherAdvice(cachedWeather?.date === (cached.date || nextDate) ? cachedWeather.items || [] : []);
         setMessage('وضع بدون إنترنت: يتم عرض آخر جدول محفوظ على الجهاز.');
       } else {
         setMessage(error.message);
@@ -121,7 +142,7 @@ export default function TechnicianAppPage() {
     } finally {
       setLoading(false);
     }
-  }, [date, request, token]);
+  }, [date, loadWeatherAdvice, request, token]);
 
   const syncDrafts = useCallback(async () => {
     if (!token || !online) return;
@@ -345,6 +366,8 @@ export default function TechnicianAppPage() {
 
         {message && <div className="rounded-md border border-zinc-200 bg-white px-4 py-3 text-sm font-bold text-zinc-700">{message}</div>}
 
+        <WeatherAdviceCard items={weatherAdvice} loading={weatherLoading} />
+
         <div className="grid gap-3">
           {tasks.length === 0 && (
             <Card className="p-6 text-center">
@@ -433,6 +456,56 @@ export default function TechnicianAppPage() {
         )}
       </section>
     </main>
+  );
+}
+
+function WeatherAdviceCard({ items, loading }) {
+  if (loading && items.length === 0) {
+    return (
+      <Card className="p-4">
+        <p className="text-sm font-black text-zinc-950">الطقس ونصائح السلامة</p>
+        <p className="mt-2 text-sm font-semibold text-zinc-500">جاري تحميل توقعات الطقس للموقع...</p>
+      </Card>
+    );
+  }
+
+  if (!loading && items.length === 0) {
+    return null;
+  }
+
+  return (
+    <Card className="overflow-hidden border-yellow-200 bg-yellow-50">
+      <div className="border-b border-yellow-200 px-4 py-3">
+        <p className="text-sm font-black text-zinc-950">الطقس ونصائح السلامة</p>
+        <p className="mt-1 text-xs font-semibold text-zinc-600">حسب موقع ووقت كل مهمة</p>
+      </div>
+      <div className="grid gap-3 p-4">
+        {items.map((item) => (
+          <div key={item.taskId} className="rounded-md border border-yellow-200 bg-white p-3">
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <p className="text-sm font-black text-zinc-950">{item.task}</p>
+                <p className="mt-1 text-xs font-semibold text-zinc-500">{item.location || item.resolvedLocation}</p>
+              </div>
+              <div className="rounded-md bg-zinc-950 px-3 py-2 text-center text-white">
+                <p className="text-xl font-black">{item.maxTemperatureC ?? '-'}</p>
+                <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-zinc-300">MAX C</p>
+              </div>
+            </div>
+            <div className="mt-3 grid grid-cols-3 gap-2 text-center text-xs font-bold text-zinc-700">
+              <span className="rounded bg-zinc-50 px-2 py-2">{item.condition || '-'}</span>
+              <span className="rounded bg-zinc-50 px-2 py-2">مطر {item.maxRainChance ?? '-'}%</span>
+              <span className="rounded bg-zinc-50 px-2 py-2">رياح {item.maxWindKph ?? '-'} كم/س</span>
+            </div>
+            <ul className="mt-3 grid gap-2 text-sm font-semibold leading-6 text-zinc-800">
+              {(item.advice || []).map((line) => (
+                <li key={line} className="rounded-md bg-yellow-50 px-3 py-2">{line}</li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </Card>
   );
 }
 

@@ -1210,6 +1210,271 @@ async function listMyDailyScheduleTasks(actor, dateText) {
   };
 }
 
+function taskWeatherText(task) {
+  return [
+    task.task,
+    task.description,
+    task.notes,
+  ].filter(Boolean).join(' ').toLowerCase();
+}
+
+function hasAnyWord(value, words) {
+  return words.some((word) => value.includes(word));
+}
+
+function weatherCodeLabel(code) {
+  const numericCode = Number(code);
+  if ([0].includes(numericCode)) return 'clear';
+  if ([1, 2, 3].includes(numericCode)) return 'partly cloudy';
+  if ([45, 48].includes(numericCode)) return 'fog';
+  if ([51, 53, 55, 56, 57].includes(numericCode)) return 'drizzle';
+  if ([61, 63, 65, 66, 67, 80, 81, 82].includes(numericCode)) return 'rain';
+  if ([95, 96, 99].includes(numericCode)) return 'thunderstorm';
+  return 'cloudy';
+}
+
+function shiftHourRange(startsAt, endsAt) {
+  const start = Number(String(startsAt || '08:00').split(':')[0]);
+  const end = Number(String(endsAt || '16:00').split(':')[0]);
+  const safeStart = Number.isFinite(start) ? Math.max(0, Math.min(23, start)) : 8;
+  const safeEnd = Number.isFinite(end) ? Math.max(0, Math.min(23, end)) : 16;
+  return { start: safeStart, end: safeEnd <= safeStart ? 23 : safeEnd };
+}
+
+async function fetchJson(url, timeoutMs = 8000) {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), timeoutMs);
+
+  try {
+    const response = await fetch(url, { signal: controller.signal });
+    if (!response.ok) throw new Error(`Request failed with ${response.status}`);
+    return response.json();
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+function normalizeWorkLocation(location) {
+  const value = String(location || '').trim();
+  if (!value) return 'Kuwait City, Kuwait';
+  if (/kuwait/i.test(value)) return value;
+  return `${value}, Kuwait`;
+}
+
+async function geocodeLocation(location) {
+  const query = normalizeWorkLocation(location);
+  const url = new URL('https://geocoding-api.open-meteo.com/v1/search');
+  url.searchParams.set('name', query);
+  url.searchParams.set('count', '1');
+  url.searchParams.set('language', 'en');
+  url.searchParams.set('format', 'json');
+
+  const data = await fetchJson(url);
+  const result = data.results?.[0];
+
+  if (!result) {
+    return {
+      name: query,
+      latitude: 29.3759,
+      longitude: 47.9774,
+      country: 'Kuwait',
+      fallback: true,
+    };
+  }
+
+  return {
+    name: [result.name, result.admin1, result.country].filter(Boolean).join(', '),
+    latitude: result.latitude,
+    longitude: result.longitude,
+    country: result.country,
+    fallback: false,
+  };
+}
+
+function summarizeShiftWeather(forecast, date, task) {
+  const { start, end } = shiftHourRange(task.startsAt, task.endsAt);
+  const hourly = forecast.hourly || {};
+  const times = hourly.time || [];
+  const temperatures = hourly.temperature_2m || [];
+  const precipitation = hourly.precipitation_probability || [];
+  const windSpeeds = hourly.wind_speed_10m || [];
+  const weatherCodes = hourly.weather_code || [];
+  const shiftIndexes = times
+    .map((time, index) => ({ time, index, hour: Number(String(time).slice(11, 13)) }))
+    .filter((entry) => String(entry.time).startsWith(date) && entry.hour >= start && entry.hour <= end)
+    .map((entry) => entry.index);
+  const indexes = shiftIndexes.length ? shiftIndexes : times
+    .map((time, index) => ({ time, index }))
+    .filter((entry) => String(entry.time).startsWith(date))
+    .map((entry) => entry.index);
+
+  const maxTemperatureC = Math.max(...indexes.map((index) => Number(temperatures[index])).filter(Number.isFinite));
+  const maxRainChance = Math.max(...indexes.map((index) => Number(precipitation[index])).filter(Number.isFinite), 0);
+  const maxWindKph = Math.max(...indexes.map((index) => Number(windSpeeds[index])).filter(Number.isFinite), 0);
+  const codes = indexes.map((index) => weatherCodes[index]).filter((code) => code !== undefined);
+  const condition = weatherCodeLabel(codes.sort((a, b) => Number(b) - Number(a))[0] || 0);
+
+  return {
+    maxTemperatureC: Number.isFinite(maxTemperatureC) ? Math.round(maxTemperatureC) : null,
+    maxRainChance,
+    maxWindKph: Math.round(maxWindKph),
+    condition,
+  };
+}
+
+function buildWeatherAdvice(task, weather) {
+  const text = taskWeatherText(task);
+  const advice = [];
+  const maxTemperature = weather.maxTemperatureC || 0;
+
+  if (maxTemperature >= 42) {
+    advice.push('حرارة شديدة: استخدم ملابس قطنية خفيفة، قبعة أو غطاء للرأس، وماء بارد كاف. خذ استراحة قصيرة كل 30-45 دقيقة.');
+  } else if (maxTemperature >= 35) {
+    advice.push('الجو حار: ارتد ملابس خفيفة، وخذ ماء كاف، وتجنب الوقوف الطويل تحت الشمس.');
+  } else if (maxTemperature <= 12) {
+    advice.push('الجو بارد نسبياً: خذ جاكيت خفيف وقفازات إذا كان العمل خارجياً.');
+  }
+
+  if (weather.maxRainChance >= 60 || ['rain', 'drizzle', 'thunderstorm'].includes(weather.condition)) {
+    advice.push('احتمال المطر عالي: خذ مظلة أو معطف مطر، واحمِ الأجهزة الكهربائية ونقاط الفحص من البلل.');
+  } else if (weather.maxRainChance >= 30) {
+    advice.push('يوجد احتمال مطر: احتفظ بمظلة صغيرة وغطاء للأدوات الحساسة.');
+  }
+
+  if (weather.maxWindKph >= 35) {
+    advice.push('الرياح قوية: ثبّت الأوراق والأدوات الخفيفة، وتجنب العمل قرب أغطية أو أجزاء غير مثبتة.');
+  }
+
+  if (hasAnyWord(text, ['electrical', 'electric', 'battery', 'sensor', 'wiring', 'diagnostic', 'komtrax'])) {
+    advice.push('بسبب طبيعة المهمة الكهربائية، أبقِ أجهزة الفحص والفيش جافة ونظيفة، ولا تفحص الدوائر المكشوفة أثناء المطر.');
+  }
+
+  if (hasAnyWord(text, ['oil', 'hydraulic', 'lubrication', 'fuel', 'leak'])) {
+    advice.push('لأعمال الزيت أو الهيدروليك، خذ قفازات مقاومة للزيوت ومناديل تنظيف، وانتبه أن الحرارة تزيد ضغط السوائل.');
+  }
+
+  if (hasAnyWord(text, ['outdoor', 'site', 'field', 'yard', 'inspection', 'machine', 'dozer', 'shovel'])) {
+    advice.push('العمل ميداني: خذ حذاء سلامة، نظارة حماية، وواقي شمس إذا كان الموقع مكشوفاً.');
+  }
+
+  if (advice.length === 0) {
+    advice.push('الطقس مناسب عموماً. خذ معدات السلامة الأساسية وماء كاف، وراجع الموقع قبل بدء العمل.');
+  }
+
+  return advice.slice(0, 5);
+}
+
+async function generateAiWeatherAdvice(task, weather, location) {
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey) return null;
+
+  try {
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: process.env.OPENAI_WEATHER_MODEL || 'gpt-4o-mini',
+        messages: [
+          {
+            role: 'system',
+            content: 'You write short, practical Arabic safety advice for field technicians. Return 3 to 5 concise bullet points only.',
+          },
+          {
+            role: 'user',
+            content: JSON.stringify({
+              task: task.task,
+              description: task.description,
+              notes: task.notes,
+              location,
+              shift: `${task.startsAt}-${task.endsAt}`,
+              weather,
+            }),
+          },
+        ],
+        temperature: 0.2,
+        max_tokens: 300,
+      }),
+    });
+
+    if (!response.ok) return null;
+    const data = await response.json();
+    const text = data.choices?.[0]?.message?.content || '';
+    return text
+      .split('\n')
+      .map((line) => line.replace(/^[-*\d.\s]+/, '').trim())
+      .filter(Boolean)
+      .slice(0, 5);
+  } catch {
+    return null;
+  }
+}
+
+async function buildTaskWeatherAdvice(task) {
+  const date = formatDateForResponse(task.workDate);
+  const place = await geocodeLocation(task.location);
+  const url = new URL('https://api.open-meteo.com/v1/forecast');
+  url.searchParams.set('latitude', String(place.latitude));
+  url.searchParams.set('longitude', String(place.longitude));
+  url.searchParams.set('hourly', 'temperature_2m,precipitation_probability,weather_code,wind_speed_10m');
+  url.searchParams.set('timezone', 'auto');
+  url.searchParams.set('start_date', date);
+  url.searchParams.set('end_date', date);
+
+  const forecast = await fetchJson(url);
+  const weather = summarizeShiftWeather(forecast, date, task);
+  const aiAdvice = await generateAiWeatherAdvice(task, weather, place.name);
+
+  return {
+    taskId: task.id,
+    task: task.task,
+    location: task.location || place.name,
+    resolvedLocation: place.name,
+    startsAt: task.startsAt,
+    endsAt: task.endsAt,
+    ...weather,
+    advice: aiAdvice?.length ? aiAdvice : buildWeatherAdvice(task, weather),
+    generatedBy: aiAdvice?.length ? 'openai' : 'rules',
+  };
+}
+
+function formatDateForResponse(value) {
+  if (!value) return null;
+  return new Date(value).toISOString().slice(0, 10);
+}
+
+async function getMyWeatherAdvice(actor, dateText) {
+  const scheduled = await listMyDailyScheduleTasks(actor, dateText);
+  const items = [];
+
+  for (const task of scheduled.tasks) {
+    try {
+      items.push(await buildTaskWeatherAdvice(task));
+    } catch {
+      items.push({
+        taskId: task.id,
+        task: task.task,
+        location: task.location || 'Kuwait',
+        startsAt: task.startsAt,
+        endsAt: task.endsAt,
+        maxTemperatureC: null,
+        maxRainChance: null,
+        maxWindKph: null,
+        condition: 'unavailable',
+        advice: ['تعذر جلب الطقس حالياً. استخدم معدات السلامة الأساسية وخذ ماء كاف قبل التوجه للموقع.'],
+        generatedBy: 'fallback',
+      });
+    }
+  }
+
+  return {
+    date: scheduled.date,
+    items,
+  };
+}
+
 async function ensureTaskBelongsToTechnician(prisma, taskId, technicianId) {
   const task = await prisma.dailyScheduleTask.findFirst({
     where: {
@@ -1395,6 +1660,7 @@ module.exports = {
   updateDailyScheduleTask,
   deleteDailyScheduleTask,
   listMyDailyScheduleTasks,
+  getMyWeatherAdvice,
   startMyDailyScheduleTask,
   completeMyDailyScheduleTask,
   listDailyScheduleTasks,
