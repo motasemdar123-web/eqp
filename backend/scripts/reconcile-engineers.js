@@ -70,6 +70,14 @@ const replacementTechnicians = [
     region: null,
     skills: [],
   },
+  {
+    email: 'test@gmail.com',
+    userNumber: 1015,
+    employeeCode: 'TEST-1015',
+    fullName: 'Test Technician',
+    region: null,
+    skills: [],
+  },
 ];
 
 const engineerPermissionCodes = [
