@@ -1334,28 +1334,46 @@ async function generateTaskSearchProfileWithAi(payload) {
 }
 
 async function buildTaskSearchProfile(payload) {
-  const localProfile = localTaskSearchProfile(payload);
   const aiProfile = await generateTaskSearchProfileWithAi(payload);
 
-  if (!aiProfile) return localProfile;
+  if (!aiProfile) {
+    const rawText = [
+      payload.task,
+      payload.description,
+      payload.notes,
+    ].filter(Boolean).join(' ');
+
+    return {
+      interpretedTask: String(payload.task || '').trim(),
+      searchPhrases: [rawText, payload.task, payload.description, payload.notes].filter(Boolean),
+      keywords: tokenizeSearchText(rawText),
+      assumptions: [
+        process.env.OPENAI_API_KEY
+          ? 'AI task interpretation failed. The system did not make a confident technical interpretation.'
+          : 'AI task interpretation is not configured. Set OPENAI_API_KEY on the backend to understand Arabic/local task wording automatically.',
+      ],
+      generatedBy: 'basic-text',
+    };
+  }
 
   const searchPhrases = [...new Set([
-    ...localProfile.searchPhrases,
     aiProfile.interpretedTask,
     ...aiProfile.searchPhrases,
+    payload.task,
+    payload.description,
+    payload.notes,
   ].filter(Boolean))];
   const keywords = [...new Set([
-    ...localProfile.keywords,
     ...tokenizeSearchText(searchPhrases.join(' ')),
     ...aiProfile.keywords.map((keyword) => String(keyword).toLowerCase()),
   ].filter(Boolean))];
 
   return {
-    interpretedTask: aiProfile.interpretedTask || localProfile.interpretedTask,
+    interpretedTask: aiProfile.interpretedTask || payload.task,
     searchPhrases,
     keywords,
-    assumptions: [...new Set([...localProfile.assumptions, ...aiProfile.assumptions])],
-    generatedBy: 'openai+local-rules',
+    assumptions: [...new Set(aiProfile.assumptions)],
+    generatedBy: 'openai',
   };
 }
 
@@ -1514,6 +1532,23 @@ async function suggestManualTools(payload) {
   }
 
   const searchProfile = await buildTaskSearchProfile({ ...payload, machineModel });
+  if (searchProfile.generatedBy !== 'openai') {
+    return {
+      requiredTools: [],
+      ppe: [],
+      consumables: [],
+      warnings: ['AI task interpretation is required for intelligent manual search. Configure OPENAI_API_KEY on the backend and try again.'],
+      procedureSummary: [],
+      sources: [],
+      confidence: 'low',
+      generatedBy: searchProfile.generatedBy,
+      task: payload.task,
+      interpretedTask: searchProfile.interpretedTask,
+      interpretationNotes: searchProfile.assumptions,
+      searchPhrases: searchProfile.searchPhrases,
+    };
+  }
+
   const enrichedPayload = { ...payload, machineModel, searchProfile };
   const chunks = await findRelevantManualChunks(machineModel, searchProfile);
   if (chunks.length === 0) {
@@ -1533,7 +1568,29 @@ async function suggestManualTools(payload) {
     };
   }
 
-  const suggestion = (await generateManualSuggestionWithAi(enrichedPayload, chunks)) || fallbackManualSuggestion(enrichedPayload, chunks);
+  const suggestion = await generateManualSuggestionWithAi(enrichedPayload, chunks);
+  if (!suggestion) {
+    return {
+      requiredTools: [],
+      ppe: [],
+      consumables: [],
+      warnings: ['Matching manual sections were found, but AI could not generate verified advice from them. Try again or refine the task description.'],
+      procedureSummary: [],
+      sources: chunks.map((chunk) => ({
+        manual: chunk.manual?.title,
+        machineModel: chunk.machineModel,
+        page: chunk.pageNumber,
+        section: chunk.section,
+      })),
+      confidence: 'low',
+      generatedBy: 'openai-failed',
+      task: payload.task,
+      interpretedTask: searchProfile.interpretedTask,
+      interpretationNotes: searchProfile.assumptions,
+      searchPhrases: searchProfile.searchPhrases,
+    };
+  }
+
   return {
     ...suggestion,
     interpretedTask: suggestion.interpretedTask || searchProfile.interpretedTask,
