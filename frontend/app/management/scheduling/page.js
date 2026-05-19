@@ -759,7 +759,7 @@ function ManualProgressOverlay({ phase, visible }) {
     {
       id: 'generating',
       title: 'Generating verified suggestions',
-      description: 'Extracting tools, warnings, consumables, and procedure steps from the selected section.',
+      description: 'Building a selected-section PDF and extracting a structured answer from it.',
     },
   ];
   const activeIndex = Math.max(0, steps.findIndex((step) => step.id === phase));

@@ -14,6 +14,8 @@ const MANUAL_CONTEXT_PAGES_AFTER = Number(process.env.MANUAL_CONTEXT_PAGES_AFTER
 const MANUAL_CONTEXT_CHUNK_LIMIT = Number(process.env.MANUAL_CONTEXT_CHUNK_LIMIT || 18);
 const MANUAL_AI_CONTEXT_CHARS = Number(process.env.MANUAL_AI_CONTEXT_CHARS || 18000);
 const MANUAL_INDEX_CHUNK_LIMIT = Number(process.env.MANUAL_INDEX_CHUNK_LIMIT || 2500);
+const MANUAL_PDF_PAGE_LIMIT = Number(process.env.MANUAL_PDF_PAGE_LIMIT || 12);
+const MANUAL_PDF_CONTEXT_CHARS = Number(process.env.MANUAL_PDF_CONTEXT_CHARS || 30000);
 
 function requirePrisma() {
   const prisma = getPrisma();
@@ -48,6 +50,10 @@ function buildManualChatCompletionBody({ temperature, messages }) {
   }
 
   return body;
+}
+
+function getManualPdfModel() {
+  return process.env.OPENAI_MANUAL_PDF_MODEL || getManualModel();
 }
 
 async function buildPlatformAuthResult(prisma, user, preferredModule, authType = 'PLATFORM') {
@@ -2277,6 +2283,213 @@ function buildManualExcerptsForAi(chunks, matchedSectionTitle = '') {
   });
 }
 
+function groupManualChunksByPage(chunks) {
+  const groups = new Map();
+
+  for (const chunk of chunks || []) {
+    const key = `${chunk.manualId || chunk.manual?.id || 'manual'}:${chunk.pageNumber || groups.size + 1}`;
+    if (!groups.has(key)) {
+      groups.set(key, {
+        manual: chunk.manual?.title,
+        machineModel: chunk.machineModel,
+        page: chunk.pageNumber,
+        section: cleanManualTitle(chunk.section),
+        lines: [],
+      });
+    }
+    groups.get(key).lines.push(String(chunk.content || ''));
+  }
+
+  return [...groups.values()]
+    .sort((a, b) => {
+      const pageA = Number.isFinite(a.page) ? a.page : 0;
+      const pageB = Number.isFinite(b.page) ? b.page : 0;
+      return pageA - pageB;
+    });
+}
+
+function createManualSectionPdfBuffer(payload, chunks, matchedSectionTitle = '') {
+  return new Promise((resolve, reject) => {
+    const PDFDocument = require('pdfkit');
+    const pages = groupManualChunksByPage(chunks).slice(0, MANUAL_PDF_PAGE_LIMIT);
+    const doc = new PDFDocument({
+      size: 'A4',
+      margin: 42,
+      bufferPages: false,
+      info: {
+        Title: `Manual section - ${matchedSectionTitle || payload.task || 'selected section'}`,
+        Author: 'EQP Manual Assistant',
+      },
+    });
+    const buffers = [];
+    let writtenChars = 0;
+
+    doc.on('data', (chunk) => buffers.push(chunk));
+    doc.on('end', () => resolve(Buffer.concat(buffers)));
+    doc.on('error', reject);
+
+    doc.font('Helvetica-Bold').fontSize(15).text('Selected Shop Manual Section', { align: 'center' });
+    doc.moveDown(0.5);
+    doc.font('Helvetica').fontSize(9).text(`Machine model: ${payload.machineModel || '-'}`);
+    doc.text(`Task: ${payload.task || '-'}`);
+    doc.text(`Selected section: ${matchedSectionTitle || '-'}`);
+    doc.text('Generated for AI extraction from indexed manual text.');
+    doc.moveDown();
+
+    for (const [index, page] of pages.entries()) {
+      if (index > 0) doc.addPage();
+      const header = [
+        page.manual || 'Manual',
+        page.machineModel || payload.machineModel,
+        page.page ? `page ${page.page}` : '',
+        matchedSectionTitle || page.section || '',
+      ].filter(Boolean).join(' | ');
+      const remaining = MANUAL_PDF_CONTEXT_CHARS - writtenChars;
+      if (remaining <= 0) break;
+      const content = page.lines.join('\n\n').slice(0, remaining);
+      writtenChars += content.length;
+
+      doc.font('Helvetica-Bold').fontSize(11).text(header || `Manual excerpt ${index + 1}`);
+      doc.moveDown(0.5);
+      doc.font('Helvetica').fontSize(8.5).text(content || '-', {
+        align: 'left',
+        lineGap: 2,
+      });
+    }
+
+    doc.end();
+  });
+}
+
+const manualSuggestionJsonSchema = {
+  type: 'object',
+  additionalProperties: false,
+  required: [
+    'schemaVersion',
+    'matchedSectionTitle',
+    'interpretedTask',
+    'confidence',
+    'sourceQuality',
+    'requiredTools',
+    'ppe',
+    'consumables',
+    'warnings',
+    'procedureSummary',
+    'interpretationNotes',
+    'missingInformation',
+  ],
+  properties: {
+    schemaVersion: { type: 'string' },
+    matchedSectionTitle: { type: 'string' },
+    interpretedTask: { type: 'string' },
+    confidence: { type: 'string', enum: ['high', 'medium', 'low'] },
+    sourceQuality: { type: 'string', enum: ['exact_section', 'related_section', 'partial_ocr', 'insufficient'] },
+    requiredTools: { type: 'array', items: { type: 'string' } },
+    ppe: { type: 'array', items: { type: 'string' } },
+    consumables: { type: 'array', items: { type: 'string' } },
+    warnings: { type: 'array', items: { type: 'string' } },
+    procedureSummary: { type: 'array', items: { type: 'string' } },
+    interpretationNotes: { type: 'array', items: { type: 'string' } },
+    missingInformation: { type: 'array', items: { type: 'string' } },
+  },
+};
+
+function extractResponsesOutputText(data) {
+  if (typeof data?.output_text === 'string') return data.output_text;
+
+  for (const item of data?.output || []) {
+    for (const content of item.content || []) {
+      if (typeof content.text === 'string') return content.text;
+      if (typeof content.output_text === 'string') return content.output_text;
+    }
+  }
+
+  return '';
+}
+
+async function generateManualSuggestionWithPdfAi(payload, chunks) {
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey || chunks.length === 0) return null;
+
+  const matchedSectionTitle = payload.searchProfile?.matchedSectionTitle
+    || cleanManualTitle(payload.searchProfile?.selectedManualTitles?.[0]?.title)
+    || cleanManualTitle(chunks[0]?.section);
+  const pdfBuffer = await createManualSectionPdfBuffer(payload, chunks, matchedSectionTitle);
+
+  try {
+    const response = await fetch('https://api.openai.com/v1/responses', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: getManualPdfModel(),
+        input: [
+          {
+            role: 'user',
+            content: [
+              {
+                type: 'input_file',
+                filename: `${normalizeMachineModel(payload.machineModel) || 'manual'}-selected-section.pdf`,
+                file_data: pdfBuffer.toString('base64'),
+              },
+              {
+                type: 'input_text',
+                text: JSON.stringify({
+                  instruction: [
+                    'Read the attached PDF section like a senior Komatsu shop manual advisor.',
+                    'Return only information supported by the PDF.',
+                    'If a tool, warning, consumable, or step is not visible in the PDF, leave it out and mention it in missingInformation.',
+                    'Keep procedureSummary practical and ordered for a field technician.',
+                    'Preserve readable part numbers exactly.',
+                  ],
+                  machineModel: payload.machineModel,
+                  task: payload.task,
+                  description: payload.description,
+                  notes: payload.notes,
+                  selectedManualTitles: payload.searchProfile?.selectedManualTitles,
+                  matchedSectionTitle,
+                  requiredOutput: 'JSON matching the provided schema.',
+                }),
+              },
+            ],
+          },
+        ],
+        text: {
+          format: {
+            type: 'json_schema',
+            name: 'manual_suggestion',
+            strict: true,
+            schema: manualSuggestionJsonSchema,
+          },
+        },
+      }),
+    });
+
+    if (!response.ok) return null;
+    const data = await response.json();
+    const parsed = parseJsonFromModel(extractResponsesOutputText(data));
+
+    return completeManualSuggestionFromChunks({
+      ...parsed,
+      generatedBy: 'openai-pdf',
+      task: payload.task,
+      interpretedTask: parsed.interpretedTask || payload.searchProfile?.interpretedTask || payload.task,
+      interpretationNotes: [
+        ...(payload.searchProfile?.assumptions || []),
+        ...toCleanArray(parsed.interpretationNotes),
+        ...toCleanArray(parsed.missingInformation).map((item) => `Missing from selected PDF: ${item}`),
+      ],
+      selectedManualTitles: payload.searchProfile?.selectedManualTitles || [],
+      alternatives: payload.searchProfile?.manualAlternatives || [],
+      matchedSectionTitle: parsed.matchedSectionTitle || matchedSectionTitle,
+    }, chunks);
+  } catch {
+    return null;
+  }
+}
+
 function buildManualOption(option, fallback = {}) {
   return {
     id: option.id || fallback.id,
@@ -2724,7 +2937,8 @@ async function suggestManualTools(payload) {
     };
   }
 
-  const suggestion = await generateManualSuggestionWithAi(enrichedPayload, chunks);
+  const suggestion = await generateManualSuggestionWithPdfAi(enrichedPayload, chunks)
+    || await generateManualSuggestionWithAi(enrichedPayload, chunks);
   if (!suggestion) {
     return completeManualSuggestionFromChunks({
       requiredTools: [],
