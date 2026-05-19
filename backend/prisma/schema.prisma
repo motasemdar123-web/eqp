@@ -263,18 +263,22 @@ model DailyScheduleTask {
 }
 
 model ShopManual {
-  id           String            @id @default(uuid())
-  machineModel String            @map("machine_model")
-  title        String
-  fileName     String?           @map("file_name")
-  sourceType   String            @default("PDF") @map("source_type")
-  status       String            @default("INDEXED")
-  chunks       ShopManualChunk[]
-  createdAt    DateTime          @default(now()) @map("created_at")
-  updatedAt    DateTime          @updatedAt @map("updated_at")
-  createdById  String?           @map("created_by")
-  updatedById  String?           @map("updated_by")
-  deletedAt    DateTime?         @map("deleted_at")
+  id                     String            @id @default(uuid())
+  machineModel           String            @map("machine_model")
+  title                  String
+  fileName               String?           @map("file_name")
+  sourceType             String            @default("PDF") @map("source_type")
+  status                 String            @default("INDEXED")
+  originalPdf            Bytes?            @map("original_pdf")
+  originalPdfSize        Int?              @map("original_pdf_size")
+  originalPdfContentType String?           @map("original_pdf_content_type")
+  originalStoredAt       DateTime?         @map("original_stored_at")
+  chunks                 ShopManualChunk[]
+  createdAt              DateTime          @default(now()) @map("created_at")
+  updatedAt              DateTime          @updatedAt @map("updated_at")
+  createdById            String?           @map("created_by")
+  updatedById            String?           @map("updated_by")
+  deletedAt              DateTime?         @map("deleted_at")
 
   @@index([machineModel])
   @@map("shop_manuals")

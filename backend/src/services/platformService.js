@@ -531,6 +531,29 @@ const publicUserSelect = {
   status: true,
 };
 
+const shopManualMetadataSelect = {
+  id: true,
+  machineModel: true,
+  title: true,
+  fileName: true,
+  sourceType: true,
+  status: true,
+  originalPdfSize: true,
+  originalPdfContentType: true,
+  originalStoredAt: true,
+  createdAt: true,
+  updatedAt: true,
+  createdById: true,
+  updatedById: true,
+  deletedAt: true,
+};
+
+const shopManualChunkInclude = {
+  manual: {
+    select: shopManualMetadataSelect,
+  },
+};
+
 const defaultTechnicianSeeds = [
   { email: 'alikomatsu223@gmail.com', fullName: 'Ali Sabri', employeeCode: 'TECH-1001', region: null, skills: [] },
   { email: 'mhmaad600042@gmail.com', fullName: 'Mohammad Alharsa', employeeCode: 'TECH-1002', region: null, skills: [] },
@@ -1041,25 +1064,23 @@ function localManualPath(manualId) {
   return path.join(LOCAL_MANUAL_STORAGE_DIR, manualStorageKey(manualId));
 }
 
-async function storeOriginalManualPdf(manualId, buffer) {
-  if (!manualId || !buffer?.length) return false;
-
-  const key = manualStorageKey(manualId);
-
-  try {
-    await storageService.uploadManual(key, buffer, 'application/pdf');
-    return true;
-  } catch (error) {
-    console.warn(`Supabase manual storage unavailable, saving manual locally: ${error.message}`);
-  }
-
-  await fs.mkdir(LOCAL_MANUAL_STORAGE_DIR, { recursive: true });
-  await fs.writeFile(localManualPath(manualId), buffer);
-  return true;
-}
-
 async function readOriginalManualPdf(manualId) {
   if (!manualId) return null;
+
+  const prisma = requirePrisma();
+  const manual = await prisma.shopManual.findFirst({
+    where: {
+      id: String(manualId),
+      deletedAt: null,
+    },
+    select: {
+      originalPdf: true,
+    },
+  });
+
+  if (manual?.originalPdf) {
+    return Buffer.from(manual.originalPdf);
+  }
 
   const key = manualStorageKey(manualId);
 
@@ -1202,6 +1223,14 @@ async function createIndexedShopManual(payload, document, actorId, originalPdfBu
   }
 
   const manualId = crypto.randomUUID();
+  const originalPdfData = originalPdfBuffer?.length
+    ? {
+      originalPdf: originalPdfBuffer,
+      originalPdfSize: originalPdfBuffer.length,
+      originalPdfContentType: 'application/pdf',
+      originalStoredAt: new Date(),
+    }
+    : {};
   const manual = await prisma.$transaction(async (tx) => {
     const manual = await tx.shopManual.create({
       data: {
@@ -1212,7 +1241,9 @@ async function createIndexedShopManual(payload, document, actorId, originalPdfBu
         sourceType: payload.sourceType || 'PDF',
         status: 'INDEXED',
         createdById: actorId,
+        ...originalPdfData,
       },
+      select: shopManualMetadataSelect,
     });
 
     const indexedChunks = chunks.slice(0, MANUAL_INDEX_CHUNK_LIMIT);
@@ -1235,18 +1266,9 @@ async function createIndexedShopManual(payload, document, actorId, originalPdfBu
     };
   }, { timeout: 120000 });
 
-  let originalAvailable = false;
-  if (originalPdfBuffer?.length) {
-    originalAvailable = await storeOriginalManualPdf(manual.id, originalPdfBuffer)
-      .catch((error) => {
-        console.warn(`Could not store original shop manual PDF: ${error.message}`);
-        return false;
-      });
-  }
-
   return {
     ...manual,
-    originalAvailable,
+    originalAvailable: Boolean(manual.originalPdfSize),
   };
 }
 
@@ -1302,12 +1324,16 @@ async function listShopManuals() {
   const prisma = requirePrisma();
   const manuals = await prisma.shopManual.findMany({
     where: { deletedAt: null },
-    include: { _count: { select: { chunks: true } } },
+    select: {
+      ...shopManualMetadataSelect,
+      _count: { select: { chunks: true } },
+    },
     orderBy: [{ machineModel: 'asc' }, { createdAt: 'desc' }],
   });
 
   return manuals.map((manual) => ({
     ...manual,
+    originalAvailable: Boolean(manual.originalPdfSize),
     chunkCount: manual._count.chunks,
     _count: undefined,
   }));
@@ -1320,6 +1346,7 @@ async function findShopManualById(manualId) {
       id: String(manualId || ''),
       deletedAt: null,
     },
+    select: shopManualMetadataSelect,
   });
 
   if (!manual) {
@@ -1755,9 +1782,7 @@ async function findRelevantManualChunks(machineModel, searchProfile) {
 
   const chunks = await prisma.shopManualChunk.findMany({
     where: buildManualChunkWhere(normalizedModel),
-    include: {
-      manual: true,
-    },
+    include: shopManualChunkInclude,
     take: MANUAL_CHUNK_READ_LIMIT,
     orderBy: { createdAt: 'asc' },
   });
@@ -1947,7 +1972,7 @@ async function buildManualIndexCandidates(machineModel) {
   const normalizedModel = normalizeMachineModel(machineModel);
   const chunks = await prisma.shopManualChunk.findMany({
     where: buildManualChunkWhere(normalizedModel),
-    include: { manual: true },
+    include: shopManualChunkInclude,
     take: MANUAL_CHUNK_READ_LIMIT,
     orderBy: [{ manualId: 'asc' }, { pageNumber: 'asc' }, { createdAt: 'asc' }],
   });
@@ -2223,7 +2248,7 @@ async function findManualChunksForIndexSelection(machineModel, selectedCandidate
   const normalizedModel = normalizeMachineModel(machineModel);
   const chunks = await prisma.shopManualChunk.findMany({
     where: buildManualChunkWhere(normalizedModel),
-    include: { manual: true },
+    include: shopManualChunkInclude,
     take: MANUAL_CHUNK_READ_LIMIT,
     orderBy: [{ manualId: 'asc' }, { pageNumber: 'asc' }, { createdAt: 'asc' }],
   });
