@@ -18,6 +18,14 @@ const emptyBoard = {
   history: { tasks: [] },
 };
 
+const emptyManualAssistant = {
+  phase: 'idle',
+  options: [],
+  selectedIds: [],
+  context: null,
+  error: '',
+};
+
 const statusTone = {
   PLANNED: 'yellow',
   CONFIRMED: 'green',
@@ -86,6 +94,7 @@ export default function SchedulingPage() {
   const [viewingTask, setViewingTask] = useState(null);
   const [manualUpload, setManualUpload] = useState({ machineModel: '', title: '', file: null });
   const [manualBusy, setManualBusy] = useState(false);
+  const [manualAssistant, setManualAssistant] = useState(emptyManualAssistant);
 
   const headers = useMemo(() => ({
     'Content-Type': 'application/json',
@@ -166,10 +175,12 @@ export default function SchedulingPage() {
   function resetTaskForm(workDate = date) {
     setEditingTaskId('');
     setTaskForm(emptyTaskForm(workDate));
+    setManualAssistant(emptyManualAssistant);
   }
 
   function editTask(task) {
     setEditingTaskId(task.id);
+    setManualAssistant(emptyManualAssistant);
     setTaskForm({
       technicianIds: (task.technicians || []).map((technician) => technician.id),
       workDate: formatDate(task.workDate),
@@ -255,11 +266,15 @@ export default function SchedulingPage() {
     }
   }
 
-  async function suggestManualAdvice() {
+  async function findManualOptions() {
     setManualBusy(true);
     setMessage('');
+    setManualAssistant({
+      ...emptyManualAssistant,
+      phase: 'searching',
+    });
     try {
-      const data = await request('/api/shop-manuals/suggest-tools', {
+      const data = await request('/api/shop-manuals/suggest-options', {
         method: 'POST',
         body: JSON.stringify({
           machineModel: taskForm.machineModel,
@@ -268,10 +283,76 @@ export default function SchedulingPage() {
           notes: taskForm.notes,
         }),
       });
-      setTaskForm((current) => ({ ...current, manualAdvice: data.suggestion }));
-      setMessage('Manual suggestions added. Review them before saving the task.');
+      const options = data.options || [];
+      setManualAssistant({
+        phase: 'options',
+        options,
+        selectedIds: options[0]?.id ? [options[0].id] : [],
+        context: {
+          interpretedTask: data.interpretedTask,
+          interpretationNotes: data.interpretationNotes || [],
+          searchPhrases: data.searchPhrases || [],
+          confidence: data.confidence,
+          generatedBy: data.generatedBy,
+        },
+        error: options.length ? '' : 'No close manual matches were found. Refine the task wording or upload a more specific manual.',
+      });
+      if (!options.length) {
+        setMessage('No close manual matches were found. Refine the task wording or upload a more specific manual.');
+      }
     } catch (error) {
       setMessage(error.message);
+      setManualAssistant({
+        ...emptyManualAssistant,
+        phase: 'idle',
+        error: error.message,
+      });
+    } finally {
+      setManualBusy(false);
+    }
+  }
+
+  async function generateManualAdvice() {
+    if (manualAssistant.selectedIds.length === 0) {
+      setMessage('Choose the closest manual section before generating suggestions.');
+      return;
+    }
+
+    setManualBusy(true);
+    setMessage('');
+    setManualAssistant((current) => ({
+      ...current,
+      phase: 'generating',
+      error: '',
+    }));
+    try {
+      const data = await request('/api/shop-manuals/suggest-tools', {
+        method: 'POST',
+        body: JSON.stringify({
+          machineModel: taskForm.machineModel,
+          task: taskForm.task,
+          description: taskForm.description,
+          notes: taskForm.notes,
+          selectedManualCandidateIds: manualAssistant.selectedIds,
+          manualOptions: manualAssistant.options,
+          interpretedTask: manualAssistant.context?.interpretedTask,
+          interpretationNotes: manualAssistant.context?.interpretationNotes,
+          searchPhrases: manualAssistant.context?.searchPhrases,
+        }),
+      });
+      setTaskForm((current) => ({ ...current, manualAdvice: data.suggestion }));
+      setManualAssistant((current) => ({
+        ...current,
+        phase: 'done',
+      }));
+      setMessage('Manual suggestions generated from the selected manual section. Review them before saving the task.');
+    } catch (error) {
+      setMessage(error.message);
+      setManualAssistant((current) => ({
+        ...current,
+        phase: 'options',
+        error: error.message,
+      }));
     } finally {
       setManualBusy(false);
     }
@@ -365,8 +446,8 @@ export default function SchedulingPage() {
               </div>
               <div className="grid gap-3 md:grid-cols-[1fr_auto]">
                 <input className="h-11 rounded-md border border-zinc-300 px-3 uppercase" placeholder="Machine model, e.g. D155A-6" value={taskForm.machineModel} onChange={(event) => setTaskForm((current) => ({ ...current, machineModel: event.target.value.toUpperCase() }))} />
-                <Button type="button" variant="secondary" onClick={suggestManualAdvice} disabled={manualBusy || !taskForm.machineModel || !taskForm.task}>
-                  Suggest Tools
+                <Button type="button" variant="secondary" onClick={findManualOptions} disabled={manualBusy || !taskForm.machineModel || !taskForm.task}>
+                  Find Manual Matches
                 </Button>
               </div>
               <div className="grid grid-cols-2 gap-3">
@@ -375,6 +456,13 @@ export default function SchedulingPage() {
               </div>
               <input className="h-11 rounded-md border border-zinc-300 px-3" placeholder="Task" value={taskForm.task} onChange={(event) => setTaskForm((current) => ({ ...current, task: event.target.value }))} />
               <textarea rows={3} className="rounded-md border border-zinc-300 px-3 py-2" placeholder="Description" value={taskForm.description} onChange={(event) => setTaskForm((current) => ({ ...current, description: event.target.value }))} />
+              <ManualOptionChooser
+                state={manualAssistant}
+                busy={manualBusy}
+                onSelect={(id) => setManualAssistant((current) => ({ ...current, selectedIds: [id] }))}
+                onGenerate={generateManualAdvice}
+                onRestart={findManualOptions}
+              />
               {taskForm.manualAdvice && (
                 <ManualAdvicePanel advice={taskForm.manualAdvice} onClear={() => setTaskForm((current) => ({ ...current, manualAdvice: null }))} />
               )}
@@ -499,6 +587,7 @@ export default function SchedulingPage() {
       {viewingTask && (
         <ScheduleSlotModal task={viewingTask} onClose={() => setViewingTask(null)} />
       )}
+      <ManualProgressOverlay phase={manualAssistant.phase} visible={manualBusy && ['searching', 'generating'].includes(manualAssistant.phase)} />
     </SystemShell>
   );
 }
@@ -580,6 +669,130 @@ function ScheduleTable({ tasks, showDate = false, emptyText, onView, onEdit, onD
           ))}
         </tbody>
       </table>
+    </div>
+  );
+}
+
+function ManualOptionChooser({ state, busy, onSelect, onGenerate, onRestart }) {
+  if (!['options', 'generating', 'done'].includes(state.phase) && !state.error) return null;
+
+  return (
+    <div className="rounded-md border border-yellow-200 bg-yellow-50 p-4">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+        <div>
+          <p className="text-sm font-black text-zinc-950">Manual Match Confirmation</p>
+          <p className="mt-1 text-sm font-semibold text-zinc-700">
+            Choose the closest manual section first. Suggestions will be generated only from your selected section.
+          </p>
+          {state.context?.interpretedTask && (
+            <p className="mt-2 text-sm font-bold text-zinc-800">Interpreted as: {state.context.interpretedTask}</p>
+          )}
+        </div>
+        <Button type="button" variant="secondary" onClick={onRestart} disabled={busy}>
+          Search Again
+        </Button>
+      </div>
+
+      {state.error && (
+        <div className="mt-3 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm font-bold text-red-700">
+          {state.error}
+        </div>
+      )}
+
+      {state.options.length > 0 && (
+        <div className="mt-4 grid gap-2">
+          {state.options.map((option, index) => {
+            const selected = state.selectedIds.includes(option.id);
+            return (
+              <button
+                key={option.id || `${option.title}-${index}`}
+                type="button"
+                onClick={() => onSelect(option.id)}
+                className={`group relative overflow-hidden rounded-md border px-4 py-3 text-left transition duration-200 ${
+                  selected
+                    ? 'border-yellow-500 bg-white shadow-sm ring-2 ring-yellow-200'
+                    : 'border-yellow-100 bg-white/80 hover:border-yellow-400 hover:bg-white'
+                }`}
+              >
+                {selected && <span className="absolute inset-y-0 left-0 w-1 animate-pulse bg-yellow-400" />}
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <p className="text-sm font-black text-zinc-950">{option.title || 'Untitled section'}</p>
+                    <p className="mt-1 text-xs font-semibold text-zinc-500">
+                      {option.manual || 'Manual'}{option.page ? ` - p.${option.page}` : ''}{option.sourceType ? ` - ${option.sourceType}` : ''}
+                    </p>
+                    {option.reason && <p className="mt-2 text-sm font-semibold leading-6 text-zinc-700">{option.reason}</p>}
+                  </div>
+                  <span className={`shrink-0 rounded-md px-2.5 py-1 text-xs font-black ${selected ? 'bg-yellow-400 text-zinc-950' : 'bg-zinc-100 text-zinc-600'}`}>
+                    {selected ? 'Selected' : option.confidence || 'Option'}
+                  </span>
+                </div>
+              </button>
+            );
+          })}
+        </div>
+      )}
+
+      {state.options.length > 0 && (
+        <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-xs font-semibold text-zinc-600">
+            This confirmation step improves accuracy by anchoring the advice to a specific manual section.
+          </p>
+          <Button type="button" onClick={onGenerate} disabled={busy || state.selectedIds.length === 0}>
+            Generate From Selected Section
+          </Button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function ManualProgressOverlay({ phase, visible }) {
+  if (!visible) return null;
+
+  const steps = [
+    {
+      id: 'searching',
+      title: 'Matching manual sections',
+      description: 'Reading index headings and ranking possible maintenance sections.',
+    },
+    {
+      id: 'generating',
+      title: 'Generating verified suggestions',
+      description: 'Extracting tools, warnings, consumables, and procedure steps from the selected section.',
+    },
+  ];
+  const activeIndex = Math.max(0, steps.findIndex((step) => step.id === phase));
+
+  return (
+    <div className="fixed inset-0 z-50 grid place-items-center bg-zinc-950/60 px-4 backdrop-blur-sm">
+      <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-2xl">
+        <div className="mx-auto grid h-14 w-14 place-items-center rounded-full border-4 border-yellow-100 border-t-yellow-400">
+          <div className="h-7 w-7 animate-spin rounded-full border-4 border-zinc-200 border-t-zinc-950" />
+        </div>
+        <p className="mt-5 text-center text-lg font-black text-zinc-950">{steps[activeIndex]?.title || 'Working'}</p>
+        <p className="mt-2 text-center text-sm font-semibold leading-6 text-zinc-600">{steps[activeIndex]?.description}</p>
+        <div className="mt-5 grid gap-3">
+          {steps.map((step, index) => {
+            const active = index === activeIndex;
+            const done = index < activeIndex;
+            return (
+              <div key={step.id} className="flex items-center gap-3">
+                <span className={`grid h-8 w-8 place-items-center rounded-full text-xs font-black ${
+                  done ? 'bg-green-600 text-white' : active ? 'animate-pulse bg-yellow-400 text-zinc-950' : 'bg-zinc-100 text-zinc-400'
+                }`}
+                >
+                  {index + 1}
+                </span>
+                <div>
+                  <p className={`text-sm font-black ${active || done ? 'text-zinc-950' : 'text-zinc-400'}`}>{step.title}</p>
+                  <p className="text-xs font-semibold text-zinc-500">{done ? 'Complete' : active ? 'In progress' : 'Waiting'}</p>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
     </div>
   );
 }

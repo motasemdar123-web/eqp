@@ -69,6 +69,12 @@ async function suggestManualTools(req, res) {
   res.json({ success: true, suggestion });
 }
 
+async function suggestManualOptions(req, res) {
+  requireFields(req.body, ['machineModel', 'task']);
+  const result = await platformService.suggestManualOptions(req.body);
+  res.json({ success: true, ...result });
+}
+
 async function createTechnician(req, res) {
   requireFields(req.body, ['fullName', 'email', 'employeeCode']);
   const technician = await platformService.createTechnician(req.body, req.platformUser?.sub);
@@ -157,6 +163,7 @@ module.exports = {
   listShopManuals,
   uploadShopManual,
   uploadShopManualFile,
+  suggestManualOptions,
   suggestManualTools,
   createTechnician,
   updateTechnician,

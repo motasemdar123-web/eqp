@@ -2277,6 +2277,131 @@ function buildManualExcerptsForAi(chunks, matchedSectionTitle = '') {
   });
 }
 
+function buildManualOption(option, fallback = {}) {
+  return {
+    id: option.id || fallback.id,
+    title: option.title || fallback.title,
+    manual: option.manual || fallback.manual,
+    page: option.page || fallback.page,
+    sourceType: option.sourceType || fallback.sourceType,
+    taskScore: option.taskScore ?? fallback.taskScore,
+    reason: option.reason || fallback.reason || '',
+    confidence: option.confidence || fallback.confidence || 'medium',
+  };
+}
+
+function uniqueManualOptions(options) {
+  const seen = new Set();
+  const values = [];
+
+  for (const option of options || []) {
+    const value = buildManualOption(option);
+    if (!value.id && !value.title) continue;
+    const key = `${value.id || ''}:${value.manual || ''}:${value.title || ''}`.toLowerCase();
+    if (seen.has(key)) continue;
+    seen.add(key);
+    values.push(value);
+  }
+
+  return values;
+}
+
+function buildManualSuggestionSearchProfile(payload, machineModel, indexChoice) {
+  return {
+    interpretedTask: indexChoice.interpretedTask || payload.task,
+    searchPhrases: [...new Set([
+      indexChoice.interpretedTask,
+      ...(indexChoice.searchPhrases || []),
+      ...(indexChoice.selectedCandidates || []).map((candidate) => candidate.title),
+      payload.task,
+      payload.description,
+      payload.notes,
+    ].filter(Boolean))],
+    keywords: [...new Set([
+      ...(indexChoice.keywords || []).map((keyword) => String(keyword).toLowerCase()),
+      ...tokenizeSearchText([
+        indexChoice.interpretedTask,
+        ...(indexChoice.searchPhrases || []),
+        ...(indexChoice.selectedCandidates || []).map((candidate) => candidate.title),
+      ].join(' ')),
+    ].filter(Boolean))],
+    assumptions: [...new Set(indexChoice.assumptions || [])],
+    generatedBy: indexChoice.generatedBy || 'openai-index',
+    matchedSectionTitle: cleanManualTitle(indexChoice.selectedCandidates?.[0]?.title),
+    selectedManualTitles: (indexChoice.selectedCandidates || []).map((candidate) => ({
+      title: candidate.title,
+      manual: candidate.manual,
+      page: candidate.page,
+      sourceType: candidate.sourceType,
+      confidence: indexChoice.confidence,
+    })),
+    manualAlternatives: indexChoice.alternatives || [],
+  };
+}
+
+function buildManualOptionsFromIndexChoice(payload, candidates, indexChoice) {
+  const selectedOptions = (indexChoice.selectedCandidates || []).map((candidate) => {
+    const alternative = (indexChoice.alternatives || []).find((item) => item.id === candidate.id) || {};
+    return buildManualOption(candidate, {
+      reason: alternative.reason || 'Best match selected from the manual index.',
+      confidence: alternative.confidence || indexChoice.confidence,
+    });
+  });
+  const rankedOptions = rankManualCandidatesForTask(payload, candidates, indexChoice.interpretedTask || payload.task)
+    .slice(0, 12)
+    .map((candidate) => buildManualOption(candidate, {
+      reason: candidate.taskScore > 0 ? 'Related section found by task keyword and intent scoring.' : 'Nearby manual section candidate.',
+      confidence: candidate.taskScore >= 40 ? 'medium' : 'low',
+    }));
+
+  return uniqueManualOptions([
+    ...(indexChoice.alternatives || []),
+    ...selectedOptions,
+    ...rankedOptions,
+  ]).slice(0, 8);
+}
+
+function buildSelectedManualIndexChoice(payload, candidates) {
+  const selectedIds = Array.isArray(payload.selectedManualCandidateIds)
+    ? payload.selectedManualCandidateIds.map((id) => String(id))
+    : [];
+  const candidateMap = new Map(candidates.map((candidate) => [candidate.id, candidate]));
+  const selectedCandidates = selectedIds
+    .map((id) => candidateMap.get(id))
+    .filter(Boolean)
+    .slice(0, 5);
+
+  if (selectedCandidates.length === 0) return null;
+
+  const options = Array.isArray(payload.manualOptions) ? payload.manualOptions : [];
+  const optionMap = new Map(options.map((option) => [String(option.id), option]));
+  const alternatives = uniqueManualOptions([
+    ...selectedCandidates.map((candidate) => buildManualOption(candidate, optionMap.get(candidate.id) || {})),
+    ...options,
+  ]);
+
+  return {
+    ok: true,
+    generatedBy: 'manual-user-selection',
+    interpretedTask: payload.interpretedTask || payload.task,
+    searchPhrases: Array.isArray(payload.searchPhrases) ? payload.searchPhrases : [],
+    keywords: tokenizeSearchText([
+      payload.task,
+      payload.description,
+      payload.notes,
+      payload.interpretedTask,
+      ...selectedCandidates.map((candidate) => candidate.title),
+    ].filter(Boolean).join(' ')),
+    assumptions: [
+      'The user selected the closest manual section before generating advice.',
+      ...(Array.isArray(payload.interpretationNotes) ? payload.interpretationNotes : []),
+    ],
+    confidence: 'high',
+    selectedCandidates,
+    alternatives,
+  };
+}
+
 function extractManualProcedureFallback(chunks, matchedSectionTitle = '') {
   const lines = getManualContentLines(chunks, matchedSectionTitle);
   const procedure = [];
@@ -2493,6 +2618,56 @@ async function generateManualSuggestionWithAi(payload, chunks) {
   }
 }
 
+async function suggestManualOptions(payload) {
+  const machineModel = normalizeMachineModel(payload.machineModel);
+  if (!machineModel) {
+    throw new ApiError(400, 'machineModel is required to search shop manuals.');
+  }
+  if (!String(payload.task || '').trim()) {
+    throw new ApiError(400, 'task is required.');
+  }
+
+  const candidates = await buildManualIndexCandidates(machineModel);
+  const indexChoice = await chooseManualIndexWithAi({ ...payload, machineModel }, candidates);
+
+  if (!indexChoice.ok) {
+    const options = rankManualCandidatesForTask({ ...payload, machineModel }, candidates, payload.task)
+      .slice(0, 8)
+      .map((candidate) => buildManualOption(candidate, {
+        reason: 'Local fallback match from manual title and task keywords.',
+        confidence: candidate.taskScore >= 40 ? 'medium' : 'low',
+      }));
+
+    return {
+      machineModel,
+      task: payload.task,
+      interpretedTask: payload.task,
+      interpretationNotes: [indexChoice.errorMessage || 'The system could not choose manual options for this task.'],
+      searchPhrases: [],
+      confidence: options.length ? 'medium' : 'low',
+      generatedBy: indexChoice.missingKey ? 'missing-openai-key' : 'openai-index-error',
+      options,
+    };
+  }
+
+  return {
+    machineModel,
+    task: payload.task,
+    interpretedTask: indexChoice.interpretedTask || payload.task,
+    interpretationNotes: [...new Set(indexChoice.assumptions || [])],
+    searchPhrases: [...new Set([
+      indexChoice.interpretedTask,
+      ...(indexChoice.searchPhrases || []),
+      payload.task,
+      payload.description,
+      payload.notes,
+    ].filter(Boolean))],
+    confidence: indexChoice.confidence || 'medium',
+    generatedBy: 'openai-index',
+    options: buildManualOptionsFromIndexChoice({ ...payload, machineModel }, candidates, indexChoice),
+  };
+}
+
 async function suggestManualTools(payload) {
   const machineModel = normalizeMachineModel(payload.machineModel);
   if (!machineModel) {
@@ -2503,7 +2678,8 @@ async function suggestManualTools(payload) {
   }
 
   const indexCandidates = await buildManualIndexCandidates(machineModel);
-  const indexChoice = await chooseManualIndexWithAi({ ...payload, machineModel }, indexCandidates);
+  const selectedIndexChoice = buildSelectedManualIndexChoice({ ...payload, machineModel }, indexCandidates);
+  const indexChoice = selectedIndexChoice || await chooseManualIndexWithAi({ ...payload, machineModel }, indexCandidates);
   if (!indexChoice.ok) {
     return {
       requiredTools: [],
@@ -2524,36 +2700,7 @@ async function suggestManualTools(payload) {
     };
   }
 
-  const searchProfile = {
-    interpretedTask: indexChoice.interpretedTask || payload.task,
-    searchPhrases: [...new Set([
-      indexChoice.interpretedTask,
-      ...(indexChoice.searchPhrases || []),
-      ...(indexChoice.selectedCandidates || []).map((candidate) => candidate.title),
-      payload.task,
-      payload.description,
-      payload.notes,
-    ].filter(Boolean))],
-    keywords: [...new Set([
-      ...(indexChoice.keywords || []).map((keyword) => String(keyword).toLowerCase()),
-      ...tokenizeSearchText([
-        indexChoice.interpretedTask,
-        ...(indexChoice.searchPhrases || []),
-        ...(indexChoice.selectedCandidates || []).map((candidate) => candidate.title),
-      ].join(' ')),
-    ].filter(Boolean))],
-    assumptions: [...new Set(indexChoice.assumptions || [])],
-    generatedBy: 'openai-index',
-    matchedSectionTitle: cleanManualTitle(indexChoice.selectedCandidates?.[0]?.title),
-    selectedManualTitles: (indexChoice.selectedCandidates || []).map((candidate) => ({
-      title: candidate.title,
-      manual: candidate.manual,
-      page: candidate.page,
-      sourceType: candidate.sourceType,
-      confidence: indexChoice.confidence,
-    })),
-    manualAlternatives: indexChoice.alternatives || [],
-  };
+  const searchProfile = buildManualSuggestionSearchProfile(payload, machineModel, indexChoice);
   const enrichedPayload = { ...payload, machineModel, searchProfile };
   const chunks = await findManualChunksForIndexSelection(machineModel, indexChoice.selectedCandidates || [], searchProfile);
   if (chunks.length === 0) {
@@ -2579,20 +2726,14 @@ async function suggestManualTools(payload) {
 
   const suggestion = await generateManualSuggestionWithAi(enrichedPayload, chunks);
   if (!suggestion) {
-    return {
+    return completeManualSuggestionFromChunks({
       requiredTools: [],
       ppe: [],
       consumables: [],
-      warnings: ['Matching manual sections were found, but AI could not generate verified advice from them. Try again or refine the task description.'],
+      warnings: ['AI extraction was unavailable, so the system used readable lines from the selected manual section only.'],
       procedureSummary: [],
-      sources: chunks.map((chunk) => ({
-        manual: chunk.manual?.title,
-        machineModel: chunk.machineModel,
-        page: chunk.pageNumber,
-        section: chunk.section,
-      })),
       confidence: 'low',
-      generatedBy: 'openai-failed',
+      generatedBy: 'rules-extraction',
       task: payload.task,
       interpretedTask: searchProfile.interpretedTask,
       interpretationNotes: searchProfile.assumptions,
@@ -2601,7 +2742,7 @@ async function suggestManualTools(payload) {
       selectedManualTitles: searchProfile.selectedManualTitles,
       alternatives: searchProfile.manualAlternatives,
       evidence: {},
-    };
+    }, chunks);
   }
 
   return {
@@ -3444,6 +3585,7 @@ module.exports = {
   listShopManuals,
   uploadShopManual,
   uploadShopManualFile,
+  suggestManualOptions,
   suggestManualTools,
   createTechnician,
   updateTechnician,
