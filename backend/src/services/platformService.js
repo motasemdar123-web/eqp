@@ -1,11 +1,13 @@
 const crypto = require('crypto');
 const fs = require('fs/promises');
+const path = require('path');
 const { getPrisma } = require('../config/prisma');
 const { env } = require('../config/env');
 const { ApiError } = require('../utils/ApiError');
 const { signJwt } = require('../middleware/platformAuthMiddleware');
 const { normalizeArabicStatus } = require('../utils/platformEnums');
 const { createSessionToken } = require('../utils/sessionToken');
+const storageService = require('./storageService');
 
 const DEFAULT_OPENAI_MANUAL_MODEL = 'gpt-5.4-mini';
 const MANUAL_CHUNK_READ_LIMIT = Number(process.env.MANUAL_CHUNK_READ_LIMIT || 5000);
@@ -16,6 +18,7 @@ const MANUAL_AI_CONTEXT_CHARS = Number(process.env.MANUAL_AI_CONTEXT_CHARS || 18
 const MANUAL_INDEX_CHUNK_LIMIT = Number(process.env.MANUAL_INDEX_CHUNK_LIMIT || 2500);
 const MANUAL_PDF_PAGE_LIMIT = Number(process.env.MANUAL_PDF_PAGE_LIMIT || 12);
 const MANUAL_PDF_CONTEXT_CHARS = Number(process.env.MANUAL_PDF_CONTEXT_CHARS || 30000);
+const LOCAL_MANUAL_STORAGE_DIR = process.env.MANUAL_STORAGE_DIR || path.join(process.cwd(), 'storage', 'shop-manuals');
 
 function requirePrisma() {
   const prisma = getPrisma();
@@ -1030,6 +1033,49 @@ function normalizeMachineModel(value) {
   return String(value || '').trim().toUpperCase();
 }
 
+function manualStorageKey(manualId) {
+  return `${String(manualId || '').replace(/[^a-z0-9-]/gi, '')}.pdf`;
+}
+
+function localManualPath(manualId) {
+  return path.join(LOCAL_MANUAL_STORAGE_DIR, manualStorageKey(manualId));
+}
+
+async function storeOriginalManualPdf(manualId, buffer) {
+  if (!manualId || !buffer?.length) return false;
+
+  const key = manualStorageKey(manualId);
+
+  try {
+    await storageService.uploadManual(key, buffer, 'application/pdf');
+    return true;
+  } catch (error) {
+    console.warn(`Supabase manual storage unavailable, saving manual locally: ${error.message}`);
+  }
+
+  await fs.mkdir(LOCAL_MANUAL_STORAGE_DIR, { recursive: true });
+  await fs.writeFile(localManualPath(manualId), buffer);
+  return true;
+}
+
+async function readOriginalManualPdf(manualId) {
+  if (!manualId) return null;
+
+  const key = manualStorageKey(manualId);
+
+  try {
+    return await storageService.downloadManual(key);
+  } catch {
+    // Local storage is a fallback for development or environments without Supabase storage.
+  }
+
+  try {
+    return await fs.readFile(localManualPath(manualId));
+  } catch {
+    return null;
+  }
+}
+
 function decodeBase64Payload(value) {
   const content = String(value || '');
   const [, base64 = content] = content.match(/^data:.*?;base64,(.*)$/) || [];
@@ -1141,7 +1187,7 @@ function chunkManualDocument(document, maxLength = 3200) {
   }));
 }
 
-async function createIndexedShopManual(payload, document, actorId) {
+async function createIndexedShopManual(payload, document, actorId, originalPdfBuffer = null) {
   const prisma = requirePrisma();
   const machineModel = normalizeMachineModel(payload.machineModel);
   const title = String(payload.title || payload.fileName || '').trim();
@@ -1155,9 +1201,11 @@ async function createIndexedShopManual(payload, document, actorId) {
     throw new ApiError(400, 'No readable text was found in this manual.');
   }
 
-  return prisma.$transaction(async (tx) => {
+  const manualId = crypto.randomUUID();
+  const manual = await prisma.$transaction(async (tx) => {
     const manual = await tx.shopManual.create({
       data: {
+        id: manualId,
         machineModel,
         title,
         fileName: payload.fileName || null,
@@ -1186,14 +1234,40 @@ async function createIndexedShopManual(payload, document, actorId) {
       chunks: indexedChunks.length,
     };
   }, { timeout: 120000 });
+
+  let originalAvailable = false;
+  if (originalPdfBuffer?.length) {
+    originalAvailable = await storeOriginalManualPdf(manual.id, originalPdfBuffer)
+      .catch((error) => {
+        console.warn(`Could not store original shop manual PDF: ${error.message}`);
+        return false;
+      });
+  }
+
+  return {
+    ...manual,
+    originalAvailable,
+  };
 }
 
 async function uploadShopManual(payload, actorId) {
-  const document = await extractManualDocument(payload);
+  let originalPdfBuffer = null;
+  let document;
+
+  if (payload.fileBase64 && !payload.text) {
+    originalPdfBuffer = decodeBase64Payload(payload.fileBase64);
+    if (originalPdfBuffer.length > 35 * 1024 * 1024) {
+      throw new ApiError(413, 'Manual file is too large. Keep uploads under 35 MB.');
+    }
+    document = await extractManualDocumentFromBuffer(originalPdfBuffer);
+  } else {
+    document = await extractManualDocument(payload);
+  }
+
   return createIndexedShopManual({
     ...payload,
     sourceType: payload.fileBase64 ? 'PDF' : 'TEXT',
-  }, document, actorId);
+  }, document, actorId, originalPdfBuffer);
 }
 
 async function uploadShopManualFile(payload, file, actorId) {
@@ -1202,12 +1276,13 @@ async function uploadShopManualFile(payload, file, actorId) {
   }
 
   try {
-    const document = await extractManualDocumentFromFile(file.path);
+    const originalPdfBuffer = await fs.readFile(file.path);
+    const document = await extractManualDocumentFromBuffer(originalPdfBuffer);
     return await createIndexedShopManual({
       ...payload,
       fileName: file.originalname,
       sourceType: 'PDF',
-    }, document, actorId);
+    }, document, actorId, originalPdfBuffer);
   } finally {
     await fs.unlink(file.path).catch(() => {});
   }
@@ -1236,6 +1311,142 @@ async function listShopManuals() {
     chunkCount: manual._count.chunks,
     _count: undefined,
   }));
+}
+
+async function findShopManualById(manualId) {
+  const prisma = requirePrisma();
+  const manual = await prisma.shopManual.findFirst({
+    where: {
+      id: String(manualId || ''),
+      deletedAt: null,
+    },
+  });
+
+  if (!manual) {
+    throw new ApiError(404, 'Shop manual was not found.');
+  }
+
+  return manual;
+}
+
+function safePdfFileName(value, fallback = 'shop-manual.pdf') {
+  const clean = String(value || fallback)
+    .replace(/\.pdf$/i, '')
+    .replace(/[^a-z0-9._-]+/gi, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 120);
+  return `${clean || fallback.replace(/\.pdf$/i, '')}.pdf`;
+}
+
+async function getShopManualFile(manualId) {
+  const manual = await findShopManualById(manualId);
+  const buffer = await readOriginalManualPdf(manual.id);
+
+  if (!buffer) {
+    throw new ApiError(404, 'Original PDF is not available for this manual. Open a page PDF from indexed text instead.');
+  }
+
+  return {
+    buffer,
+    contentType: 'application/pdf',
+    fileName: safePdfFileName(manual.fileName || manual.title),
+    sourceType: 'original',
+  };
+}
+
+async function extractOriginalManualPagePdf(buffer, pageNumber) {
+  const { PDFDocument: PdfLibDocument } = require('pdf-lib');
+  const sourcePdf = await PdfLibDocument.load(buffer, { ignoreEncryption: true });
+  const pageCount = sourcePdf.getPageCount();
+  const pageIndex = Number(pageNumber) - 1;
+
+  if (pageIndex < 0 || pageIndex >= pageCount) {
+    throw new ApiError(404, `Page ${pageNumber} is outside this manual PDF.`);
+  }
+
+  const outputPdf = await PdfLibDocument.create();
+  const [page] = await outputPdf.copyPages(sourcePdf, [pageIndex]);
+  outputPdf.addPage(page);
+  return Buffer.from(await outputPdf.save());
+}
+
+async function createManualPageTextPdfBuffer(manual, chunks, pageNumber) {
+  const PDFDocument = require('pdfkit');
+
+  return new Promise((resolve, reject) => {
+    const doc = new PDFDocument({
+      size: 'A4',
+      margin: 42,
+      info: {
+        Title: `${manual.title} - page ${pageNumber}`,
+        Author: 'EQP Manual Assistant',
+      },
+    });
+    const buffers = [];
+    const content = chunks
+      .map((chunk) => String(chunk.content || '').trim())
+      .filter(Boolean)
+      .join('\n\n');
+
+    doc.on('data', (chunk) => buffers.push(chunk));
+    doc.on('end', () => resolve(Buffer.concat(buffers)));
+    doc.on('error', reject);
+
+    doc.font('Helvetica-Bold').fontSize(15).text(manual.title || 'Shop Manual', { align: 'center' });
+    doc.moveDown(0.35);
+    doc.font('Helvetica').fontSize(9).text(`Machine model: ${manual.machineModel || '-'}`);
+    doc.text(`Indexed page: ${pageNumber}`);
+    doc.text('Original PDF was not available; this page was rebuilt from indexed manual text.');
+    doc.moveDown();
+    doc.font('Helvetica').fontSize(8.5).text(content || 'No indexed text was found for this page.', {
+      align: 'left',
+      lineGap: 2,
+    });
+    doc.end();
+  });
+}
+
+async function getShopManualPagePdf(manualId, pageNumberText) {
+  const manual = await findShopManualById(manualId);
+  const pageNumber = Number(pageNumberText);
+
+  if (!Number.isInteger(pageNumber) || pageNumber < 1) {
+    throw new ApiError(400, 'A valid manual page number is required.');
+  }
+
+  const originalBuffer = await readOriginalManualPdf(manual.id);
+  if (originalBuffer) {
+    try {
+      return {
+        buffer: await extractOriginalManualPagePdf(originalBuffer, pageNumber),
+        contentType: 'application/pdf',
+        fileName: safePdfFileName(`${manual.title}-p${pageNumber}`),
+        sourceType: 'original-page',
+      };
+    } catch (error) {
+      if (error instanceof ApiError) throw error;
+    }
+  }
+
+  const prisma = requirePrisma();
+  const chunks = await prisma.shopManualChunk.findMany({
+    where: {
+      manualId: manual.id,
+      pageNumber,
+    },
+    orderBy: [{ pageNumber: 'asc' }, { createdAt: 'asc' }],
+  });
+
+  if (chunks.length === 0) {
+    throw new ApiError(404, `No indexed content was found for manual page ${pageNumber}.`);
+  }
+
+  return {
+    buffer: await createManualPageTextPdfBuffer(manual, chunks, pageNumber),
+    contentType: 'application/pdf',
+    fileName: safePdfFileName(`${manual.title}-indexed-p${pageNumber}`),
+    sourceType: 'indexed-page',
+  };
 }
 
 function tokenizeSearchText(value) {
@@ -2113,12 +2324,7 @@ function fallbackManualSuggestion(payload, chunks) {
     consumables: [],
     warnings: warnings.length ? warnings : ['Review the referenced manual pages before starting work.'],
     procedureSummary: chunks.slice(0, 2).map((chunk) => chunk.section || chunk.content.slice(0, 120)),
-    sources: chunks.map((chunk) => ({
-      manual: chunk.manual?.title,
-      machineModel: chunk.machineModel,
-      page: chunk.pageNumber,
-      section: chunk.section,
-    })),
+    sources: chunks.map((chunk) => buildManualSourceFromChunk(chunk)),
     confidence: chunks.length ? 'medium' : 'low',
     generatedBy: 'rules',
     task: payload.task,
@@ -2209,11 +2415,21 @@ function mergeUniqueManualItems(...groups) {
 }
 
 function buildManualSourceFromChunk(chunk, matchedSectionTitle = '') {
+  const manualId = chunk?.manualId || chunk?.manual?.id;
+  const page = chunk?.pageNumber;
+  const pagePdfUrl = manualId && page
+    ? `/api/shop-manuals/${manualId}/pages/${page}/pdf`
+    : null;
+
   return {
+    manualId,
+    chunkId: chunk?.id,
     manual: chunk?.manual?.title,
     machineModel: chunk?.machineModel,
-    page: chunk?.pageNumber,
+    page,
     section: matchedSectionTitle || cleanManualTitle(chunk?.section),
+    pagePdfUrl,
+    manualPdfUrl: manualId ? `/api/shop-manuals/${manualId}/file` : null,
   };
 }
 
@@ -3915,6 +4131,8 @@ module.exports = {
   listDashboard,
   listTechnicians,
   listShopManuals,
+  getShopManualFile,
+  getShopManualPagePdf,
   uploadShopManual,
   uploadShopManualFile,
   suggestManualOptions,

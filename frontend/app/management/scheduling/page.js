@@ -358,6 +358,59 @@ export default function SchedulingPage() {
     }
   }
 
+  async function openManualSource(source, mode = 'open') {
+    const pageUrl = source?.pagePdfUrl
+      || (source?.manualId && source?.page ? `/api/shop-manuals/${source.manualId}/pages/${source.page}/pdf` : '');
+    const manualUrl = source?.manualPdfUrl
+      || (source?.manualId ? `/api/shop-manuals/${source.manualId}/file` : '');
+    const requestUrl = mode === 'manual' && manualUrl ? manualUrl : pageUrl;
+    if (!pageUrl) {
+      setMessage('No manual page link is available for this source.');
+      return;
+    }
+
+    try {
+      let response = await fetch(`${API_BASE}${requestUrl}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      let openMode = mode;
+      if (!response.ok && mode === 'manual' && requestUrl !== pageUrl) {
+        response = await fetch(`${API_BASE}${pageUrl}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        openMode = 'open';
+      }
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}));
+        throw new Error(data.message || data.error || 'Could not open manual page.');
+      }
+
+      const blob = await response.blob();
+      const blobUrl = URL.createObjectURL(blob);
+      const fileName = `${source.manual || source.machineModel || 'shop-manual'}${openMode === 'manual' ? '' : `-p${source.page || 'page'}`}.pdf`
+        .replace(/[^a-z0-9._-]+/gi, '-');
+
+      if (openMode === 'download') {
+        const link = document.createElement('a');
+        link.href = blobUrl;
+        link.download = fileName;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+      } else {
+        window.open(openMode === 'manual' && source.page ? `${blobUrl}#page=${source.page}` : blobUrl, '_blank', 'noopener,noreferrer');
+      }
+
+      setTimeout(() => URL.revokeObjectURL(blobUrl), 60000);
+    } catch (error) {
+      setMessage(error.message);
+    }
+  }
+
   useEffect(() => {
     if (!token) return undefined;
     const timer = setTimeout(() => loadBoard(date), 0);
@@ -464,7 +517,7 @@ export default function SchedulingPage() {
                 onRestart={findManualOptions}
               />
               {taskForm.manualAdvice && (
-                <ManualAdvicePanel advice={taskForm.manualAdvice} onClear={() => setTaskForm((current) => ({ ...current, manualAdvice: null }))} />
+                <ManualAdvicePanel advice={taskForm.manualAdvice} onClear={() => setTaskForm((current) => ({ ...current, manualAdvice: null }))} onOpenSource={openManualSource} />
               )}
               <div className="rounded-md border border-zinc-200 bg-zinc-50 p-3">
                 <p className="text-sm font-bold text-zinc-950">Technicians</p>
@@ -585,7 +638,7 @@ export default function SchedulingPage() {
         </Card>
       </section>
       {viewingTask && (
-        <ScheduleSlotModal task={viewingTask} onClose={() => setViewingTask(null)} />
+        <ScheduleSlotModal task={viewingTask} onClose={() => setViewingTask(null)} onOpenManualSource={openManualSource} />
       )}
       <ManualProgressOverlay phase={manualAssistant.phase} visible={manualBusy && ['searching', 'generating'].includes(manualAssistant.phase)} />
     </SystemShell>
@@ -797,7 +850,7 @@ function ManualProgressOverlay({ phase, visible }) {
   );
 }
 
-function ManualAdvicePanel({ advice, onClear }) {
+function ManualAdvicePanel({ advice, onClear, onOpenSource }) {
   const sections = [
     ['Tools', advice.requiredTools],
     ['PPE', advice.ppe],
@@ -872,9 +925,15 @@ function ManualAdvicePanel({ advice, onClear }) {
       {(advice.sources || []).length > 0 && (
         <div className="mt-3 rounded-md bg-white p-3">
           <p className="text-xs font-bold uppercase tracking-[0.12em] text-zinc-500">Sources</p>
-          <p className="mt-2 text-sm font-semibold text-zinc-700">
-            {advice.sources.map((source) => `${source.manual || source.machineModel || 'Manual'}${source.matchedSectionTitle || source.section ? ` - ${source.matchedSectionTitle || source.section}` : ''} p.${source.page || '-'}`).join(', ')}
-          </p>
+          <div className="mt-2 grid gap-2">
+            {advice.sources.map((source, index) => (
+              <ManualSourceRow
+                key={`${source.manualId || source.manual || 'manual'}-${source.page || index}-${source.section || index}`}
+                source={source}
+                onOpenSource={onOpenSource}
+              />
+            ))}
+          </div>
         </div>
       )}
       {evidenceItems.length > 0 && (
@@ -890,9 +949,54 @@ function ManualAdvicePanel({ advice, onClear }) {
                   {item.source.section ? ` - ${item.source.section}` : ''}
                   {item.source.excerpt ? ` - "${item.source.excerpt}"` : ''}
                 </span>
+                {item.source.pagePdfUrl && onOpenSource && (
+                  <button
+                    type="button"
+                    onClick={() => onOpenSource(item.source, 'open')}
+                    className="mt-1 rounded-md border border-yellow-300 bg-yellow-50 px-2.5 py-1 text-xs font-black text-zinc-800 hover:border-yellow-500"
+                  >
+                    Open page
+                  </button>
+                )}
               </li>
             ))}
           </ul>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function ManualSourceRow({ source, onOpenSource }) {
+  const label = `${source.manual || source.machineModel || 'Manual'}${source.matchedSectionTitle || source.section ? ` - ${source.matchedSectionTitle || source.section}` : ''} p.${source.page || '-'}`;
+  const canOpen = Boolean(onOpenSource && (source.pagePdfUrl || (source.manualId && source.page)));
+
+  return (
+    <div className="flex flex-col gap-2 rounded-md border border-zinc-100 bg-zinc-50 px-3 py-2 sm:flex-row sm:items-center sm:justify-between">
+      <p className="text-sm font-semibold text-zinc-700">{label}</p>
+      {canOpen && (
+        <div className="flex shrink-0 gap-2">
+          <button
+            type="button"
+            onClick={() => onOpenSource(source, 'open')}
+            className="rounded-md border border-yellow-300 bg-white px-2.5 py-1 text-xs font-black text-zinc-800 hover:border-yellow-500"
+          >
+            Open page
+          </button>
+          <button
+            type="button"
+            onClick={() => onOpenSource(source, 'manual')}
+            className="rounded-md border border-yellow-300 bg-yellow-50 px-2.5 py-1 text-xs font-black text-zinc-800 hover:border-yellow-500"
+          >
+            Open manual
+          </button>
+          <button
+            type="button"
+            onClick={() => onOpenSource(source, 'download')}
+            className="rounded-md border border-zinc-300 bg-white px-2.5 py-1 text-xs font-black text-zinc-700 hover:border-zinc-500"
+          >
+            Download
+          </button>
         </div>
       )}
     </div>
@@ -910,7 +1014,7 @@ function formatDateTime(value) {
   }).format(new Date(value));
 }
 
-function ScheduleSlotModal({ task, onClose }) {
+function ScheduleSlotModal({ task, onClose, onOpenManualSource }) {
   const photos = Array.isArray(task.photos) ? task.photos : [];
   const hasCompletion = task.status === 'COMPLETED' || task.summary || task.completedAt || photos.length > 0;
 
@@ -965,7 +1069,7 @@ function ScheduleSlotModal({ task, onClose }) {
             <p className="mt-2 whitespace-pre-wrap text-sm leading-6 text-zinc-700">{task.notes || '-'}</p>
           </div>
 
-          {task.manualAdvice && <ManualAdvicePanel advice={task.manualAdvice} />}
+          {task.manualAdvice && <ManualAdvicePanel advice={task.manualAdvice} onOpenSource={onOpenManualSource} />}
 
           <div className="rounded-md border border-zinc-200 bg-zinc-50 p-4">
             <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">

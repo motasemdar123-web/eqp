@@ -63,6 +63,23 @@ async function uploadShopManualFile(req, res) {
   res.status(201).json({ success: true, manual });
 }
 
+function sendPdf(res, document) {
+  res.setHeader('Content-Type', document.contentType || 'application/pdf');
+  res.setHeader('Content-Disposition', `inline; filename="${document.fileName || 'shop-manual.pdf'}"`);
+  res.setHeader('Cache-Control', 'private, max-age=300');
+  res.send(document.buffer);
+}
+
+async function getShopManualFile(req, res) {
+  const document = await platformService.getShopManualFile(req.params.id);
+  sendPdf(res, document);
+}
+
+async function getShopManualPagePdf(req, res) {
+  const document = await platformService.getShopManualPagePdf(req.params.id, req.params.page);
+  sendPdf(res, document);
+}
+
 async function suggestManualTools(req, res) {
   requireFields(req.body, ['machineModel', 'task']);
   const suggestion = await platformService.suggestManualTools(req.body);
@@ -163,6 +180,8 @@ module.exports = {
   listShopManuals,
   uploadShopManual,
   uploadShopManualFile,
+  getShopManualFile,
+  getShopManualPagePdf,
   suggestManualOptions,
   suggestManualTools,
   createTechnician,

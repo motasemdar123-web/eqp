@@ -11,6 +11,7 @@ const env = {
     url: process.env.SUPABASE_URL,
     serviceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY,
     reportsBucket: process.env.SUPABASE_REPORTS_BUCKET || 'reports',
+    manualsBucket: process.env.SUPABASE_MANUALS_BUCKET || 'shop-manuals',
   },
   security: {
     appSecret: process.env.APP_SECRET,

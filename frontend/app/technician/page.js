@@ -155,6 +155,59 @@ export default function TechnicianAppPage() {
     }
   }, [date, loadWeatherAdvice, request, token]);
 
+  async function openManualSource(source, mode = 'open') {
+    const pageUrl = source?.pagePdfUrl
+      || (source?.manualId && source?.page ? `/api/shop-manuals/${source.manualId}/pages/${source.page}/pdf` : '');
+    const manualUrl = source?.manualPdfUrl
+      || (source?.manualId ? `/api/shop-manuals/${source.manualId}/file` : '');
+    const requestUrl = mode === 'manual' && manualUrl ? manualUrl : pageUrl;
+    if (!pageUrl) {
+      setMessage('No manual page link is available for this source.');
+      return;
+    }
+
+    try {
+      let response = await fetch(`${API_BASE}${requestUrl}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      let openMode = mode;
+      if (!response.ok && mode === 'manual' && requestUrl !== pageUrl) {
+        response = await fetch(`${API_BASE}${pageUrl}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        openMode = 'open';
+      }
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}));
+        throw new Error(data.message || data.error || 'Could not open manual page.');
+      }
+
+      const blob = await response.blob();
+      const blobUrl = URL.createObjectURL(blob);
+      const fileName = `${source.manual || source.machineModel || 'shop-manual'}${openMode === 'manual' ? '' : `-p${source.page || 'page'}`}.pdf`
+        .replace(/[^a-z0-9._-]+/gi, '-');
+
+      if (openMode === 'download') {
+        const link = document.createElement('a');
+        link.href = blobUrl;
+        link.download = fileName;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+      } else {
+        window.open(openMode === 'manual' && source.page ? `${blobUrl}#page=${source.page}` : blobUrl, '_blank', 'noopener,noreferrer');
+      }
+
+      setTimeout(() => URL.revokeObjectURL(blobUrl), 60000);
+    } catch (error) {
+      setMessage(error.message || 'Could not open manual page.');
+    }
+  }
+
   const syncDrafts = useCallback(async () => {
     if (!token || !online) return;
     const currentDrafts = readJson(DRAFT_KEY, {});
@@ -420,7 +473,7 @@ export default function TechnicianAppPage() {
               <Info label="الملاحظات" value={selectedTask.notes || '-'} />
             </div>
 
-            {selectedTask.manualAdvice && <TechnicianManualAdvice advice={selectedTask.manualAdvice} />}
+            {selectedTask.manualAdvice && <TechnicianManualAdvice advice={selectedTask.manualAdvice} onOpenSource={openManualSource} />}
 
             {selectedTask.status !== 'COMPLETED' && (
               <div className="mt-5 grid gap-3">
@@ -536,12 +589,13 @@ function WeatherAdviceCard({ items, loading, error }) {
   );
 }
 
-function TechnicianManualAdvice({ advice }) {
+function TechnicianManualAdvice({ advice, onOpenSource }) {
   const rows = [
     ['Ø§Ù„Ø£Ø¯ÙˆØ§Øª', advice.requiredTools],
     ['Ù…Ø¹Ø¯Ø§Øª Ø§Ù„Ø³Ù„Ø§Ù…Ø©', advice.ppe],
     ['ØªØ­Ø°ÙŠØ±Ø§Øª', advice.warnings],
   ];
+  const sources = advice.sources || [];
 
   return (
     <div className="mt-4 rounded-md border border-yellow-200 bg-yellow-50 p-4">
@@ -555,7 +609,57 @@ function TechnicianManualAdvice({ advice }) {
             </ul>
           </div>
         ))}
+        {sources.length > 0 && (
+          <div className="rounded-md bg-white p-3">
+            <p className="text-xs font-bold text-zinc-500">Manual pages</p>
+            <div className="mt-2 grid gap-2">
+              {sources.map((source, index) => (
+                <TechnicianManualSource
+                  key={`${source.manualId || source.manual || 'manual'}-${source.page || index}-${source.section || index}`}
+                  source={source}
+                  onOpenSource={onOpenSource}
+                />
+              ))}
+            </div>
+          </div>
+        )}
       </div>
+    </div>
+  );
+}
+
+function TechnicianManualSource({ source, onOpenSource }) {
+  const label = `${source.manual || source.machineModel || 'Manual'}${source.section ? ` - ${source.section}` : ''} p.${source.page || '-'}`;
+  const canOpen = Boolean(onOpenSource && (source.pagePdfUrl || (source.manualId && source.page)));
+
+  return (
+    <div className="rounded-md border border-zinc-100 bg-zinc-50 px-3 py-2">
+      <p className="text-sm font-bold text-zinc-800">{label}</p>
+      {canOpen && (
+        <div className="mt-2 flex flex-wrap gap-2">
+          <button
+            type="button"
+            onClick={() => onOpenSource(source, 'open')}
+            className="rounded-md border border-yellow-300 bg-white px-3 py-1.5 text-xs font-black text-zinc-800"
+          >
+            Open page
+          </button>
+          <button
+            type="button"
+            onClick={() => onOpenSource(source, 'manual')}
+            className="rounded-md border border-yellow-300 bg-yellow-50 px-3 py-1.5 text-xs font-black text-zinc-800"
+          >
+            Open manual
+          </button>
+          <button
+            type="button"
+            onClick={() => onOpenSource(source, 'download')}
+            className="rounded-md border border-zinc-300 bg-white px-3 py-1.5 text-xs font-black text-zinc-700"
+          >
+            Download
+          </button>
+        </div>
+      )}
     </div>
   );
 }
