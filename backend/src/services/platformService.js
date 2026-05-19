@@ -1606,6 +1606,19 @@ function looksLikeManualHeading(value) {
   return false;
 }
 
+function isProceduralManualTitle(value) {
+  return /\b(removal and installation|disassembly and assembly|spreading and installation|general disassembly|removal|installation|disassembly|assembly|testing|adjusting|bleeding|inspection|check|replacement|troubleshooting)\b/i.test(String(value || '').trim());
+}
+
+function hasProcedureLikeManualContent(chunks) {
+  const text = (chunks || []).map((chunk) => chunk.content || '').join('\n');
+  return /^(removal|installation|preparation)\s*$/im.test(text)
+    || (
+      /\b(special tools|required tools|removal|installation)\b/i.test(text)
+      && /\b1\.\s+|\b2\.\s+|\b3\.\s+/i.test(text)
+    );
+}
+
 function extractManualIndexCandidatesFromChunk(chunk) {
   const candidates = [];
   const lines = String(chunk.content || '')
@@ -1659,6 +1672,30 @@ function findManualSectionTitleInLines(lines, preferredTitle = '') {
   for (let index = 0; index < lines.length; index += 1) {
     const line = lines[index];
     if (/\.{3,}/.test(line) || isGenericManualLine(line)) continue;
+
+    if (preferred) {
+      const normalizedLine = normalizeManualMatchText(line);
+      const nextLine = lines[index + 1] || '';
+      const combined = nextLine && nextLine.length <= 70
+        ? cleanManualTitle(`${line} ${nextLine}`)
+        : cleanManualTitle(line);
+      const normalizedCombined = normalizeManualMatchText(combined);
+      const lineMatchesPreferred = normalizedLine === preferred || normalizedLine.includes(preferred);
+      const combinedMatchesPreferred = normalizedCombined === preferred || normalizedCombined.includes(preferred);
+      if (
+        normalizedLine
+        && line.length <= 180
+        && (lineMatchesPreferred || combinedMatchesPreferred)
+      ) {
+        return {
+          title: combinedMatchesPreferred && normalizedCombined !== normalizedLine ? combined : cleanManualTitle(line),
+          index,
+          nextLineUsed: combinedMatchesPreferred && normalizedCombined !== normalizedLine,
+          exactPreferred: true,
+        };
+      }
+    }
+
     if (!/^(removal|installation|removal and installation|disassembly|assembly|testing|adjusting|bleeding|inspection|check|replacement|spreading)\b/i.test(line)) {
       continue;
     }
@@ -1981,6 +2018,31 @@ async function findManualChunksForIndexSelection(machineModel, selectedCandidate
   });
   const selectedKeys = new Set();
   const anchorScores = [];
+  const selectedChunkIds = new Set((selectedCandidates || [])
+    .map((candidate) => candidate?.chunkId)
+    .filter(Boolean)
+    .map((id) => String(id)));
+  const userSelected = Boolean(searchProfile?.userSelected);
+  const selectedOptionIsProcedural = Boolean(searchProfile?.selectedOptionIsProcedural)
+    || (selectedCandidates || []).some((candidate) => isProceduralManualTitle(candidate?.title));
+  const narrowToSelectedPage = userSelected && !selectedOptionIsProcedural;
+
+  if (narrowToSelectedPage) {
+    for (const candidate of selectedCandidates) {
+      if (candidate?.manualId && Number.isFinite(candidate.page)) {
+        selectedKeys.add(`${candidate.manualId}:${candidate.page}`);
+      }
+    }
+
+    const exactChunks = chunks.filter((chunk) => (
+      selectedChunkIds.has(String(chunk.id))
+      || selectedKeys.has(`${chunk.manualId}:${chunk.pageNumber}`)
+    ));
+    if (exactChunks.length > 0) {
+      return exactChunks.slice(0, Math.min(MANUAL_CONTEXT_CHUNK_LIMIT, 4));
+    }
+    selectedKeys.clear();
+  }
 
   for (const candidate of selectedCandidates) {
     if (!candidate?.manualId) continue;
@@ -1998,7 +2060,9 @@ async function findManualChunksForIndexSelection(machineModel, selectedCandidate
 
   for (const anchor of anchors) {
     const pageNumber = anchor.chunk.pageNumber;
-    for (let page = pageNumber - MANUAL_CONTEXT_PAGES_BEFORE; page <= pageNumber + MANUAL_CONTEXT_PAGES_AFTER; page += 1) {
+    const pagesBefore = narrowToSelectedPage ? 0 : MANUAL_CONTEXT_PAGES_BEFORE;
+    const pagesAfter = narrowToSelectedPage ? 0 : MANUAL_CONTEXT_PAGES_AFTER;
+    for (let page = pageNumber - pagesBefore; page <= pageNumber + pagesAfter; page += 1) {
       if (page < 1) continue;
       selectedKeys.add(`${anchor.chunk.manualId}:${page}`);
     }
@@ -2007,7 +2071,9 @@ async function findManualChunksForIndexSelection(machineModel, selectedCandidate
   if (selectedKeys.size === 0) {
     for (const candidate of selectedCandidates) {
       if (!candidate?.manualId || !Number.isFinite(candidate.page)) continue;
-      for (let page = candidate.page - MANUAL_CONTEXT_PAGES_BEFORE; page <= candidate.page + MANUAL_CONTEXT_PAGES_AFTER; page += 1) {
+      const pagesBefore = narrowToSelectedPage ? 0 : MANUAL_CONTEXT_PAGES_BEFORE;
+      const pagesAfter = narrowToSelectedPage ? 0 : MANUAL_CONTEXT_PAGES_AFTER;
+      for (let page = candidate.page - pagesBefore; page <= candidate.page + pagesAfter; page += 1) {
         if (page < 1) continue;
         selectedKeys.add(`${candidate.manualId}:${page}`);
       }
@@ -2016,6 +2082,7 @@ async function findManualChunksForIndexSelection(machineModel, selectedCandidate
 
   const selectedChunks = chunks.filter((chunk) => selectedKeys.has(`${chunk.manualId}:${chunk.pageNumber}`));
   if (selectedChunks.length > 0) return selectedChunks.slice(0, MANUAL_CONTEXT_CHUNK_LIMIT);
+  if (narrowToSelectedPage) return [];
 
   return findRelevantManualChunks(machineModel, searchProfile);
 }
@@ -2441,6 +2508,7 @@ async function generateManualSuggestionWithPdfAi(payload, chunks) {
                     'Read the attached PDF section like a senior Komatsu shop manual advisor.',
                     'Return only information supported by the PDF.',
                     'If a tool, warning, consumable, or step is not visible in the PDF, leave it out and mention it in missingInformation.',
+                    'If the selected section is only a parts list, specification line, index entry, or component listing, set sourceQuality to insufficient and do not infer removal or installation steps from nearby unrelated sections.',
                     'Keep procedureSummary practical and ordered for a field technician.',
                     'Preserve readable part numbers exactly.',
                   ],
@@ -2484,6 +2552,9 @@ async function generateManualSuggestionWithPdfAi(payload, chunks) {
       selectedManualTitles: payload.searchProfile?.selectedManualTitles || [],
       alternatives: payload.searchProfile?.manualAlternatives || [],
       matchedSectionTitle: parsed.matchedSectionTitle || matchedSectionTitle,
+      selectionMode: payload.searchProfile?.generatedBy,
+      userSelected: payload.searchProfile?.userSelected,
+      selectedOptionIsProcedural: payload.searchProfile?.selectedOptionIsProcedural,
     }, chunks);
   } catch {
     return null;
@@ -2520,6 +2591,18 @@ function uniqueManualOptions(options) {
 }
 
 function buildManualSuggestionSearchProfile(payload, machineModel, indexChoice) {
+  const selectedManualTitles = (indexChoice.selectedCandidates || []).map((candidate) => ({
+    title: candidate.title,
+    manual: candidate.manual,
+    page: candidate.page,
+    sourceType: candidate.sourceType,
+    confidence: indexChoice.confidence,
+    isProcedural: isProceduralManualTitle(candidate.title),
+    userSelected: indexChoice.generatedBy === 'manual-user-selection',
+  }));
+  const taskIntent = inferManualTaskIntent(payload, indexChoice.interpretedTask || payload.task);
+  const selectedOptionIsProcedural = selectedManualTitles.some((candidate) => candidate.isProcedural);
+
   return {
     interpretedTask: indexChoice.interpretedTask || payload.task,
     searchPhrases: [...new Set([
@@ -2540,35 +2623,44 @@ function buildManualSuggestionSearchProfile(payload, machineModel, indexChoice) 
     ].filter(Boolean))],
     assumptions: [...new Set(indexChoice.assumptions || [])],
     generatedBy: indexChoice.generatedBy || 'openai-index',
+    userSelected: indexChoice.generatedBy === 'manual-user-selection',
+    taskNeedsProcedure: Boolean(taskIntent.removeInstall || taskIntent.adjustCheck),
+    selectedOptionIsProcedural,
     matchedSectionTitle: cleanManualTitle(indexChoice.selectedCandidates?.[0]?.title),
-    selectedManualTitles: (indexChoice.selectedCandidates || []).map((candidate) => ({
-      title: candidate.title,
-      manual: candidate.manual,
-      page: candidate.page,
-      sourceType: candidate.sourceType,
-      confidence: indexChoice.confidence,
-    })),
+    selectedManualTitles,
     manualAlternatives: indexChoice.alternatives || [],
   };
 }
 
 function buildManualOptionsFromIndexChoice(payload, candidates, indexChoice) {
+  const taskIntent = inferManualTaskIntent(payload, indexChoice.interpretedTask || payload.task);
+  const taskNeedsProcedure = Boolean(taskIntent.removeInstall || taskIntent.adjustCheck);
+  const decorateOption = (option) => {
+    if (!taskNeedsProcedure || isProceduralManualTitle(option.title)) return option;
+    return {
+      ...option,
+      confidence: option.confidence === 'high' ? 'medium' : option.confidence,
+      reason: option.reason
+        ? `${option.reason} This looks like a parts/spec listing, so final advice may be limited.`
+        : 'This looks like a parts/spec listing, so final advice may be limited.',
+    };
+  };
   const selectedOptions = (indexChoice.selectedCandidates || []).map((candidate) => {
     const alternative = (indexChoice.alternatives || []).find((item) => item.id === candidate.id) || {};
-    return buildManualOption(candidate, {
+    return decorateOption(buildManualOption(candidate, {
       reason: alternative.reason || 'Best match selected from the manual index.',
       confidence: alternative.confidence || indexChoice.confidence,
-    });
+    }));
   });
   const rankedOptions = rankManualCandidatesForTask(payload, candidates, indexChoice.interpretedTask || payload.task)
     .slice(0, 12)
-    .map((candidate) => buildManualOption(candidate, {
+    .map((candidate) => decorateOption(buildManualOption(candidate, {
       reason: candidate.taskScore > 0 ? 'Related section found by task keyword and intent scoring.' : 'Nearby manual section candidate.',
       confidence: candidate.taskScore >= 40 ? 'medium' : 'low',
-    }));
+    })));
 
   return uniqueManualOptions([
-    ...(indexChoice.alternatives || []),
+    ...(indexChoice.alternatives || []).map((option) => decorateOption(buildManualOption(option))),
     ...selectedOptions,
     ...rankedOptions,
   ]).slice(0, 8);
@@ -2723,23 +2815,42 @@ function completeManualSuggestionFromChunks(suggestion, chunks) {
   const requiredTools = toCleanArray(suggestion.requiredTools);
   const warnings = toCleanArray(suggestion.warnings);
   const consumables = toCleanArray(suggestion.consumables);
+  const selectedManualTitle = suggestion.selectedManualTitles?.[0] || {};
   const preferredSectionTitle = cleanManualTitle(suggestion.selectedManualTitles?.[0]?.title)
     || cleanManualTitle(suggestion.matchedSectionTitle);
+  const userSelected = Boolean(
+    suggestion.userSelected
+    || suggestion.selectionMode === 'manual-user-selection'
+    || selectedManualTitle.userSelected
+  );
+  const selectedTitleIsProcedural = Boolean(selectedManualTitle.isProcedural)
+    || isProceduralManualTitle(preferredSectionTitle);
+  const procedureContentAvailable = hasProcedureLikeManualContent(chunks);
+  const lockedNonProceduralSelection = userSelected && !selectedTitleIsProcedural && !procedureContentAvailable;
   const matchedSectionTitle = extractCleanSectionTitleFromChunks(chunks, preferredSectionTitle)
-    || extractCleanSectionTitleFromChunks(chunks)
+    || (userSelected && preferredSectionTitle ? preferredSectionTitle : extractCleanSectionTitleFromChunks(chunks))
     || preferredSectionTitle;
-  const manualTools = extractManualToolFallback(chunks, matchedSectionTitle);
-  const manualWarnings = extractManualWarningsFallback(chunks, matchedSectionTitle);
-  const manualConsumables = extractManualConsumablesFallback(chunks, matchedSectionTitle);
-  const manualProcedure = extractManualProcedureFallback(chunks, matchedSectionTitle);
+  const manualTools = lockedNonProceduralSelection ? [] : extractManualToolFallback(chunks, matchedSectionTitle);
+  const manualWarnings = lockedNonProceduralSelection ? [] : extractManualWarningsFallback(chunks, matchedSectionTitle);
+  const manualConsumables = lockedNonProceduralSelection ? [] : extractManualConsumablesFallback(chunks, matchedSectionTitle);
+  const manualProcedure = lockedNonProceduralSelection ? [] : extractManualProcedureFallback(chunks, matchedSectionTitle);
+  const sourceQualityNote = lockedNonProceduralSelection
+    ? 'Selected manual section appears to be a parts/specification listing, not a removal/installation procedure. Choose a removal/installation section for procedure steps.'
+    : null;
   const completed = {
     ...suggestion,
     matchedSectionTitle,
     requiredTools: mergeUniqueManualItems(manualTools, requiredTools).slice(0, 12),
     ppe: toCleanArray(suggestion.ppe),
     consumables: mergeUniqueManualItems(manualConsumables, consumables).slice(0, 10),
-    warnings: mergeUniqueManualItems(manualWarnings, warnings).slice(0, 10),
+    warnings: mergeUniqueManualItems(sourceQualityNote ? [sourceQualityNote] : [], manualWarnings, warnings).slice(0, 10),
     procedureSummary: mergeUniqueManualItems(manualProcedure, procedureSummary).slice(0, 14),
+    confidence: lockedNonProceduralSelection ? 'low' : suggestion.confidence,
+    sourceQuality: lockedNonProceduralSelection ? 'insufficient' : suggestion.sourceQuality,
+    interpretationNotes: mergeUniqueManualItems(
+      toCleanArray(suggestion.interpretationNotes),
+      sourceQualityNote ? [sourceQualityNote] : [],
+    ),
     sources: buildManualSources(chunks, matchedSectionTitle).slice(0, 10),
   };
 
@@ -2794,6 +2905,7 @@ async function generateManualSuggestionWithAi(payload, chunks) {
                 'Use Removal, Installation, and numbered steps for procedureSummary.',
                 'Use oils, grease, adhesive, seals, gaskets, replacement bolts/washers, and specified pipes as consumables.',
                 'Do not use index/table-of-contents lines as procedure evidence.',
+                'If the selected title is a parts/specification listing instead of a procedure section, return insufficient information instead of borrowing steps from another heading.',
                 'Prefer items that can be tied to a supplied page/section excerpt.',
               ],
               requiredJsonShape: {
@@ -2825,6 +2937,9 @@ async function generateManualSuggestionWithAi(payload, chunks) {
       selectedManualTitles: payload.searchProfile?.selectedManualTitles || [],
       alternatives: payload.searchProfile?.manualAlternatives || [],
       matchedSectionTitle: payload.searchProfile?.matchedSectionTitle,
+      selectionMode: payload.searchProfile?.generatedBy,
+      userSelected: payload.searchProfile?.userSelected,
+      selectedOptionIsProcedural: payload.searchProfile?.selectedOptionIsProcedural,
     }, chunks);
   } catch {
     return null;
@@ -2955,6 +3070,9 @@ async function suggestManualTools(payload) {
       matchedSectionTitle: searchProfile.matchedSectionTitle,
       selectedManualTitles: searchProfile.selectedManualTitles,
       alternatives: searchProfile.manualAlternatives,
+      selectionMode: searchProfile.generatedBy,
+      userSelected: searchProfile.userSelected,
+      selectedOptionIsProcedural: searchProfile.selectedOptionIsProcedural,
       evidence: {},
     }, chunks);
   }
