@@ -87,6 +87,7 @@ export default function TechnicianAppPage() {
   const [loginForm, setLoginForm] = useState({ email: '', employeeCode: '' });
   const [loading, setLoading] = useState(false);
   const [weatherLoading, setWeatherLoading] = useState(false);
+  const [weatherError, setWeatherError] = useState('');
   const [message, setMessage] = useState('');
   const [online, setOnline] = useState(() => (typeof navigator === 'undefined' ? true : navigator.onLine));
 
@@ -112,13 +113,15 @@ export default function TechnicianAppPage() {
   const loadWeatherAdvice = useCallback(async (nextDate = date) => {
     if (!token) return;
     setWeatherLoading(true);
+    setWeatherError('');
     try {
       const data = await request(`/api/technician/weather?date=${encodeURIComponent(nextDate)}`);
       setWeatherAdvice(data.items || []);
       writeJson(WEATHER_CACHE_KEY, { date: nextDate, items: data.items || [] });
-    } catch {
+    } catch (error) {
       const cached = readJson(WEATHER_CACHE_KEY, null);
       setWeatherAdvice(cached?.date === nextDate ? cached.items || [] : []);
+      setWeatherError(error.message || 'Weather advice is currently unavailable.');
     } finally {
       setWeatherLoading(false);
     }
@@ -374,7 +377,7 @@ export default function TechnicianAppPage() {
 
         {message && <div className="rounded-md border border-zinc-200 bg-white px-4 py-3 text-sm font-bold text-zinc-700">{message}</div>}
 
-        <WeatherAdviceCard items={weatherAdvice} loading={weatherLoading} />
+        <WeatherAdviceCard items={weatherAdvice} loading={weatherLoading} error={weatherError} />
 
         <div className="grid gap-3">
           {tasks.length === 0 && (
@@ -469,7 +472,7 @@ export default function TechnicianAppPage() {
   );
 }
 
-function WeatherAdviceCard({ items, loading }) {
+function WeatherAdviceCard({ items, loading, error }) {
   if (loading && items.length === 0) {
     return (
       <Card className="p-4">
@@ -479,8 +482,22 @@ function WeatherAdviceCard({ items, loading }) {
     );
   }
 
+  if (error && items.length === 0) {
+    return (
+      <Card className="border-yellow-200 bg-yellow-50 p-4">
+        <p className="text-sm font-black text-zinc-950">Ø§Ù„Ø·Ù‚Ø³ ÙˆÙ†ØµØ§Ø¦Ø­ Ø§Ù„Ø³Ù„Ø§Ù…Ø©</p>
+        <p className="mt-2 text-sm font-semibold text-zinc-700">{error}</p>
+      </Card>
+    );
+  }
+
   if (!loading && items.length === 0) {
-    return null;
+    return (
+      <Card className="border-yellow-200 bg-yellow-50 p-4">
+        <p className="text-sm font-black text-zinc-950">Ø§Ù„Ø·Ù‚Ø³ ÙˆÙ†ØµØ§Ø¦Ø­ Ø§Ù„Ø³Ù„Ø§Ù…Ø©</p>
+        <p className="mt-2 text-sm font-semibold text-zinc-700">No weather advice for the selected day.</p>
+      </Card>
+    );
   }
 
   return (

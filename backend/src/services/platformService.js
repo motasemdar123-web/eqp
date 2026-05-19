@@ -7,6 +7,14 @@ const { signJwt } = require('../middleware/platformAuthMiddleware');
 const { normalizeArabicStatus } = require('../utils/platformEnums');
 const { createSessionToken } = require('../utils/sessionToken');
 
+const DEFAULT_OPENAI_MANUAL_MODEL = 'gpt-5.4-mini';
+const MANUAL_CHUNK_READ_LIMIT = Number(process.env.MANUAL_CHUNK_READ_LIMIT || 5000);
+const MANUAL_CONTEXT_PAGES_BEFORE = Number(process.env.MANUAL_CONTEXT_PAGES_BEFORE || 1);
+const MANUAL_CONTEXT_PAGES_AFTER = Number(process.env.MANUAL_CONTEXT_PAGES_AFTER || 8);
+const MANUAL_CONTEXT_CHUNK_LIMIT = Number(process.env.MANUAL_CONTEXT_CHUNK_LIMIT || 18);
+const MANUAL_AI_CONTEXT_CHARS = Number(process.env.MANUAL_AI_CONTEXT_CHARS || 18000);
+const MANUAL_INDEX_CHUNK_LIMIT = Number(process.env.MANUAL_INDEX_CHUNK_LIMIT || 2500);
+
 function requirePrisma() {
   const prisma = getPrisma();
 
@@ -15,6 +23,31 @@ function requirePrisma() {
   }
 
   return prisma;
+}
+
+function getManualModel() {
+  return process.env.OPENAI_MANUAL_MODEL || DEFAULT_OPENAI_MANUAL_MODEL;
+}
+
+function isReasoningManualModel(model) {
+  return /^gpt-5/i.test(String(model || ''));
+}
+
+function buildManualChatCompletionBody({ temperature, messages }) {
+  const model = getManualModel();
+  const body = {
+    model,
+    response_format: { type: 'json_object' },
+    messages,
+  };
+
+  if (isReasoningManualModel(model) && process.env.OPENAI_MANUAL_REASONING_EFFORT) {
+    body.reasoning_effort = process.env.OPENAI_MANUAL_REASONING_EFFORT;
+  } else if (temperature !== undefined) {
+    body.temperature = temperature;
+  }
+
+  return body;
 }
 
 async function buildPlatformAuthResult(prisma, user, preferredModule, authType = 'PLATFORM') {
@@ -997,12 +1030,16 @@ function decodeBase64Payload(value) {
   return Buffer.from(base64, 'base64');
 }
 
-function chunkText(text, maxLength = 2800) {
-  const clean = String(text || '')
+function normalizeManualText(text) {
+  return String(text || '')
     .replace(/\r/g, '')
     .replace(/[ \t]+/g, ' ')
     .replace(/\n{3,}/g, '\n\n')
     .trim();
+}
+
+function chunkText(text, maxLength = 2800) {
+  const clean = normalizeManualText(text);
   if (!clean) return [];
 
   const paragraphs = clean.split(/\n\s*\n/);
@@ -1023,8 +1060,34 @@ function chunkText(text, maxLength = 2800) {
   return chunks;
 }
 
-async function extractManualText(payload) {
-  if (payload.text) return String(payload.text);
+async function extractManualDocumentFromBuffer(buffer) {
+  const { PDFParse } = require('pdf-parse');
+  const parser = new PDFParse({ data: buffer });
+  try {
+    const parsed = await parser.getText();
+    const pages = Array.isArray(parsed.pages)
+      ? parsed.pages.map((page, index) => ({
+        pageNumber: index + 1,
+        text: normalizeManualText(page.text || ''),
+      })).filter((page) => page.text)
+      : [];
+
+    return {
+      text: normalizeManualText(parsed.text || pages.map((page) => page.text).join('\n\n')),
+      pages,
+    };
+  } finally {
+    await parser.destroy();
+  }
+}
+
+async function extractManualDocument(payload) {
+  if (payload.text) {
+    return {
+      text: normalizeManualText(payload.text),
+      pages: [],
+    };
+  }
   if (!payload.fileBase64) {
     throw new ApiError(400, 'Manual text or fileBase64 is required.');
   }
@@ -1034,29 +1097,45 @@ async function extractManualText(payload) {
     throw new ApiError(413, 'Manual file is too large. Keep uploads under 35 MB.');
   }
 
-  const { PDFParse } = require('pdf-parse');
-  const parser = new PDFParse({ data: buffer });
-  try {
-    const parsed = await parser.getText();
-    return parsed.text || '';
-  } finally {
-    await parser.destroy();
-  }
+  return extractManualDocumentFromBuffer(buffer);
+}
+
+async function extractManualText(payload) {
+  const document = await extractManualDocument(payload);
+  return document.text;
+}
+
+async function extractManualDocumentFromFile(filePath) {
+  const buffer = await fs.readFile(filePath);
+  return extractManualDocumentFromBuffer(buffer);
 }
 
 async function extractManualTextFromFile(filePath) {
-  const { PDFParse } = require('pdf-parse');
-  const buffer = await fs.readFile(filePath);
-  const parser = new PDFParse({ data: buffer });
-  try {
-    const parsed = await parser.getText();
-    return parsed.text || '';
-  } finally {
-    await parser.destroy();
-  }
+  const document = await extractManualDocumentFromFile(filePath);
+  return document.text;
 }
 
-async function createIndexedShopManual(payload, text, actorId) {
+function chunkManualDocument(document, maxLength = 3200) {
+  const pages = Array.isArray(document?.pages) ? document.pages : [];
+  if (pages.length > 0) {
+    return pages.flatMap((page, pageIndex) => (
+      chunkText(page.text, maxLength).map((content, partIndex) => ({
+        content,
+        pageNumber: Number.isFinite(Number(page.pageNumber)) ? Number(page.pageNumber) : pageIndex + 1,
+        pagePart: partIndex + 1,
+      }))
+    )).filter((chunk) => chunk.content);
+  }
+
+  const text = typeof document === 'string' ? document : document?.text;
+  return chunkText(text, maxLength).map((content, index) => ({
+    content,
+    pageNumber: index + 1,
+    pagePart: 1,
+  }));
+}
+
+async function createIndexedShopManual(payload, document, actorId) {
   const prisma = requirePrisma();
   const machineModel = normalizeMachineModel(payload.machineModel);
   const title = String(payload.title || payload.fileName || '').trim();
@@ -1065,7 +1144,7 @@ async function createIndexedShopManual(payload, text, actorId) {
     throw new ApiError(400, 'machineModel and title are required.');
   }
 
-  const chunks = chunkText(text);
+  const chunks = chunkManualDocument(document);
   if (chunks.length === 0) {
     throw new ApiError(400, 'No readable text was found in this manual.');
   }
@@ -1082,32 +1161,33 @@ async function createIndexedShopManual(payload, text, actorId) {
       },
     });
 
-    for (let index = 0; index < chunks.slice(0, 1200).length; index += 200) {
-      const batch = chunks.slice(0, 1200).slice(index, index + 200);
+    const indexedChunks = chunks.slice(0, MANUAL_INDEX_CHUNK_LIMIT);
+    for (let index = 0; index < indexedChunks.length; index += 200) {
+      const batch = indexedChunks.slice(index, index + 200);
       await tx.shopManualChunk.createMany({
-        data: batch.map((content, offset) => ({
+        data: batch.map((chunk) => ({
           manualId: manual.id,
           machineModel,
-          pageNumber: index + offset + 1,
-          section: inferSectionTitle(content),
-          content,
+          pageNumber: chunk.pageNumber,
+          section: inferSectionTitle(chunk.content),
+          content: chunk.content,
         })),
       });
     }
 
     return {
       ...manual,
-      chunks: chunks.length,
+      chunks: indexedChunks.length,
     };
   }, { timeout: 120000 });
 }
 
 async function uploadShopManual(payload, actorId) {
-  const text = await extractManualText(payload);
+  const document = await extractManualDocument(payload);
   return createIndexedShopManual({
     ...payload,
     sourceType: payload.fileBase64 ? 'PDF' : 'TEXT',
-  }, text, actorId);
+  }, document, actorId);
 }
 
 async function uploadShopManualFile(payload, file, actorId) {
@@ -1116,20 +1196,25 @@ async function uploadShopManualFile(payload, file, actorId) {
   }
 
   try {
-    const text = await extractManualTextFromFile(file.path);
+    const document = await extractManualDocumentFromFile(file.path);
     return await createIndexedShopManual({
       ...payload,
       fileName: file.originalname,
       sourceType: 'PDF',
-    }, text, actorId);
+    }, document, actorId);
   } finally {
     await fs.unlink(file.path).catch(() => {});
   }
 }
 
 function inferSectionTitle(content) {
-  const line = String(content || '').split('\n').find((item) => item.trim().length > 4);
-  return line ? line.trim().slice(0, 160) : null;
+  const lines = String(content || '')
+    .split('\n')
+    .map(cleanManualLine)
+    .filter(Boolean);
+  const heading = lines.find((line) => looksLikeManualHeading(line));
+  const line = heading || lines.find((item) => item.length > 4);
+  return line ? cleanManualTitle(line).slice(0, 160) : null;
 }
 
 async function listShopManuals() {
@@ -1185,6 +1270,14 @@ function expandManualSearchTerms(values) {
   }
 
   return [...expanded];
+}
+
+function buildManualChunkWhere(machineModel) {
+  const normalizedModel = normalizeMachineModel(machineModel);
+  return {
+    ...(normalizedModel ? { machineModel: normalizedModel } : {}),
+    manual: { is: { deletedAt: null } },
+  };
 }
 
 const localTaskSearchMap = [
@@ -1328,9 +1421,7 @@ async function generateTaskSearchProfileWithAi(payload) {
         Authorization: `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        model: process.env.OPENAI_MANUAL_MODEL || 'gpt-4o-mini',
-        response_format: { type: 'json_object' },
+      body: JSON.stringify(buildManualChatCompletionBody({
         temperature: 0.1,
         messages: [
           {
@@ -1353,7 +1444,7 @@ async function generateTaskSearchProfileWithAi(payload) {
             }),
           },
         ],
-      }),
+      })),
     });
 
     if (!response.ok) {
@@ -1446,11 +1537,11 @@ async function findRelevantManualChunks(machineModel, searchProfile) {
   const expandedTerms = expandManualSearchTerms(terms);
 
   const chunks = await prisma.shopManualChunk.findMany({
-    where: normalizedModel ? { machineModel: normalizedModel } : {},
+    where: buildManualChunkWhere(normalizedModel),
     include: {
       manual: true,
     },
-    take: 1500,
+    take: MANUAL_CHUNK_READ_LIMIT,
     orderBy: { createdAt: 'asc' },
   });
 
@@ -1601,9 +1692,9 @@ async function buildManualIndexCandidates(machineModel) {
   const prisma = requirePrisma();
   const normalizedModel = normalizeMachineModel(machineModel);
   const chunks = await prisma.shopManualChunk.findMany({
-    where: normalizedModel ? { machineModel: normalizedModel } : {},
+    where: buildManualChunkWhere(normalizedModel),
     include: { manual: true },
-    take: 1500,
+    take: MANUAL_CHUNK_READ_LIMIT,
     orderBy: [{ manualId: 'asc' }, { pageNumber: 'asc' }, { createdAt: 'asc' }],
   });
   const seen = new Set();
@@ -1627,7 +1718,7 @@ async function buildManualIndexCandidates(machineModel) {
     }
   }
 
-  return candidates.slice(0, 400);
+  return candidates.slice(0, 1200);
 }
 
 function inferManualTaskIntent(payload, interpretedTask = '') {
@@ -1660,6 +1751,36 @@ function scoreManualCandidateForIntent(candidate, intent) {
   return score;
 }
 
+function scoreManualCandidateForTaskText(candidate, payload, interpretedTask = '') {
+  const title = normalizeManualMatchText(candidate?.title);
+  if (!title) return 0;
+
+  const common = new Set(['and', 'the', 'with', 'from', 'into', 'only', 'that', 'this', 'for', 'work', 'task']);
+  const terms = expandManualSearchTerms(tokenizeSearchText([
+    payload.task,
+    payload.description,
+    payload.notes,
+    interpretedTask,
+  ].filter(Boolean).join(' '))).filter((term) => !common.has(term));
+
+  let score = 0;
+  for (const term of terms) {
+    const normalizedTerm = normalizeManualMatchText(term);
+    if (!normalizedTerm) continue;
+    if (title.includes(normalizedTerm)) {
+      score += normalizedTerm.includes(' ') ? 18 : 8;
+      continue;
+    }
+
+    const tokens = tokenizeSearchText(normalizedTerm);
+    const tokenMatches = tokens.filter((token) => title.includes(token)).length;
+    if (tokens.length > 1 && tokenMatches > 0) score += tokenMatches * 3;
+  }
+
+  if (candidate?.sourceType === 'section' || candidate?.sourceType === 'heading') score += 3;
+  return score;
+}
+
 function scoreChunkForManualTitle(chunk, candidate) {
   const title = normalizeManualMatchText(candidate?.title);
   if (!title) return 0;
@@ -1688,7 +1809,8 @@ function rankManualCandidatesForTask(payload, candidates, interpretedTask = '') 
   return [...candidates]
     .map((candidate) => ({
       ...candidate,
-      taskScore: scoreManualCandidateForIntent(candidate, intent),
+      taskScore: scoreManualCandidateForIntent(candidate, intent)
+        + scoreManualCandidateForTaskText(candidate, payload, interpretedTask),
     }))
     .sort((a, b) => {
       if (b.taskScore !== a.taskScore) return b.taskScore - a.taskScore;
@@ -1735,21 +1857,19 @@ async function chooseManualIndexWithAi(payload, candidates) {
   }
 
   try {
-    const rankedCandidates = rankManualCandidatesForTask(payload, candidates).slice(0, 180);
+    const rankedCandidates = rankManualCandidatesForTask(payload, candidates).slice(0, 260);
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        model: process.env.OPENAI_MANUAL_MODEL || 'gpt-4o-mini',
-        response_format: { type: 'json_object' },
+      body: JSON.stringify(buildManualChatCompletionBody({
         temperature: 0.05,
         messages: [
           {
             role: 'system',
-            content: 'You match messy Arabic/English field technician task wording to the best shop manual index or section titles. Choose only from the provided candidates. Return JSON only. Do not provide tools, PPE, or procedure details. If the task means remove, replace, install, or disassemble a component, strongly prefer Removal/Installation or Disassembly/Assembly sections over Adjusting/Testing sections for the same component.',
+            content: 'You match messy Arabic/English field technician task wording to the best shop manual index or section titles. Choose only from the provided candidates. Return JSON only. Do not provide tools, PPE, or procedure details. If the task means remove, replace, install, or disassemble a component, strongly prefer Removal/Installation or Disassembly/Assembly sections over Adjusting/Testing sections for the same component. Select the best candidate first, then useful alternatives that could contain nearby procedure evidence.',
           },
           {
             role: 'user',
@@ -1767,7 +1887,8 @@ async function chooseManualIndexWithAi(payload, candidates) {
               })),
               requiredJsonShape: {
                 interpretedTask: 'best technical English interpretation',
-                selectedCandidateIds: ['M1'],
+                selectedCandidateIds: ['M1', 'M2', 'M3 in ranked order, best first'],
+                candidateReasons: [{ id: 'M1', reason: 'short evidence-based reason', confidence: 'high | medium | low' }],
                 searchPhrases: ['extra search phrase if useful'],
                 keywords: ['component', 'action'],
                 assumptions: ['short reason for the chosen heading'],
@@ -1776,7 +1897,7 @@ async function chooseManualIndexWithAi(payload, candidates) {
             }),
           },
         ],
-      }),
+      })),
     });
 
     if (!response.ok) {
@@ -1791,6 +1912,23 @@ async function chooseManualIndexWithAi(payload, candidates) {
     const parsed = parseJsonFromModel(data.choices?.[0]?.message?.content);
     const candidateMap = new Map(candidates.map((candidate) => [candidate.id, candidate]));
     const selectedIds = Array.isArray(parsed.selectedCandidateIds) ? parsed.selectedCandidateIds : [];
+    const reasonById = new Map();
+    if (Array.isArray(parsed.candidateReasons)) {
+      for (const item of parsed.candidateReasons) {
+        if (!item?.id) continue;
+        reasonById.set(String(item.id), {
+          reason: String(item.reason || '').trim(),
+          confidence: item.confidence || parsed.confidence || 'low',
+        });
+      }
+    } else if (parsed.candidateReasons && typeof parsed.candidateReasons === 'object') {
+      for (const [id, reason] of Object.entries(parsed.candidateReasons)) {
+        reasonById.set(String(id), {
+          reason: typeof reason === 'string' ? reason : String(reason?.reason || ''),
+          confidence: reason?.confidence || parsed.confidence || 'low',
+        });
+      }
+    }
     const selectedCandidates = improveSelectedManualCandidates(payload, candidates, selectedIds
       .map((id) => candidateMap.get(String(id)))
       .filter(Boolean)
@@ -1804,6 +1942,19 @@ async function chooseManualIndexWithAi(payload, candidates) {
       assumptions: Array.isArray(parsed.assumptions) ? parsed.assumptions.filter(Boolean) : [],
       confidence: parsed.confidence || 'low',
       selectedCandidates,
+      alternatives: selectedCandidates.map((candidate) => {
+        const candidateReason = reasonById.get(candidate.id) || {};
+        return {
+          id: candidate.id,
+          title: candidate.title,
+          manual: candidate.manual,
+          page: candidate.page,
+          sourceType: candidate.sourceType,
+          taskScore: candidate.taskScore,
+          reason: candidateReason.reason || '',
+          confidence: candidateReason.confidence || parsed.confidence || 'low',
+        };
+      }),
     };
   } catch (error) {
     return {
@@ -1817,9 +1968,9 @@ async function findManualChunksForIndexSelection(machineModel, selectedCandidate
   const prisma = requirePrisma();
   const normalizedModel = normalizeMachineModel(machineModel);
   const chunks = await prisma.shopManualChunk.findMany({
-    where: normalizedModel ? { machineModel: normalizedModel } : {},
+    where: buildManualChunkWhere(normalizedModel),
     include: { manual: true },
-    take: 1500,
+    take: MANUAL_CHUNK_READ_LIMIT,
     orderBy: [{ manualId: 'asc' }, { pageNumber: 'asc' }, { createdAt: 'asc' }],
   });
   const selectedKeys = new Set();
@@ -1829,7 +1980,7 @@ async function findManualChunksForIndexSelection(machineModel, selectedCandidate
     if (!candidate?.manualId) continue;
     for (const chunk of chunks.filter((item) => item.manualId === candidate.manualId)) {
       const score = scoreChunkForManualTitle(chunk, candidate);
-      if (score > 80 && Number.isFinite(chunk.pageNumber)) {
+      if (score > 60 && Number.isFinite(chunk.pageNumber)) {
         anchorScores.push({ chunk, score, candidate });
       }
     }
@@ -1841,7 +1992,8 @@ async function findManualChunksForIndexSelection(machineModel, selectedCandidate
 
   for (const anchor of anchors) {
     const pageNumber = anchor.chunk.pageNumber;
-    for (let page = pageNumber; page <= pageNumber + 6; page += 1) {
+    for (let page = pageNumber - MANUAL_CONTEXT_PAGES_BEFORE; page <= pageNumber + MANUAL_CONTEXT_PAGES_AFTER; page += 1) {
+      if (page < 1) continue;
       selectedKeys.add(`${anchor.chunk.manualId}:${page}`);
     }
   }
@@ -1849,14 +2001,15 @@ async function findManualChunksForIndexSelection(machineModel, selectedCandidate
   if (selectedKeys.size === 0) {
     for (const candidate of selectedCandidates) {
       if (!candidate?.manualId || !Number.isFinite(candidate.page)) continue;
-      for (let page = candidate.page - 1; page <= candidate.page + 4; page += 1) {
+      for (let page = candidate.page - MANUAL_CONTEXT_PAGES_BEFORE; page <= candidate.page + MANUAL_CONTEXT_PAGES_AFTER; page += 1) {
+        if (page < 1) continue;
         selectedKeys.add(`${candidate.manualId}:${page}`);
       }
     }
   }
 
   const selectedChunks = chunks.filter((chunk) => selectedKeys.has(`${chunk.manualId}:${chunk.pageNumber}`));
-  if (selectedChunks.length > 0) return selectedChunks.slice(0, 12);
+  if (selectedChunks.length > 0) return selectedChunks.slice(0, MANUAL_CONTEXT_CHUNK_LIMIT);
 
   return findRelevantManualChunks(machineModel, searchProfile);
 }
@@ -1909,7 +2062,12 @@ function parseJsonFromModel(text) {
 
 function toCleanArray(value) {
   return Array.isArray(value)
-    ? value.map((item) => String(item || '').trim()).filter((item) => item && item !== '-')
+    ? value.map((item) => {
+      if (item && typeof item === 'object') {
+        return String(item.text || item.name || item.title || item.value || '').trim();
+      }
+      return String(item || '').trim();
+    }).filter((item) => item && item !== '-')
     : [];
 }
 
@@ -1918,24 +2076,28 @@ function isMajorManualSectionHeading(line) {
   return /^(removal and installation|disassembly and assembly|spreading and installation|general disassembly|removal|installation|disassembly|assembly|testing|adjusting|bleeding|inspection|check|replacement)\b/i.test(line);
 }
 
-function getManualContentLines(chunks, preferredTitle = '') {
-  const lines = chunks
-    .flatMap((chunk) => String(chunk.content || '').split('\n'))
-    .map((line) => line.replace(/[\u0000-\u001f\u007f-\u009f]/g, ' ').replace(/\s+/g, ' ').trim())
-    .filter((line) => line.length >= 8)
-    .filter((line) => !/^\d+$/.test(line))
-    .filter((line) => !/\.{5,}/.test(line))
-    .filter((line) => !/^-- \d+ of \d+ --$/.test(line));
+function getManualContentLineEntries(chunks, preferredTitle = '') {
+  const entries = chunks
+    .flatMap((chunk) => String(chunk.content || '').split('\n').map((line, lineIndex) => ({
+      text: line.replace(/[\u0000-\u001f\u007f-\u009f]/g, ' ').replace(/\s+/g, ' ').trim(),
+      lineIndex,
+      chunk,
+    })))
+    .filter((entry) => entry.text.length >= 8)
+    .filter((entry) => !/^\d+$/.test(entry.text))
+    .filter((entry) => !/\.{5,}/.test(entry.text))
+    .filter((entry) => !/^-- \d+ of \d+ --$/.test(entry.text));
 
   const preferred = cleanManualTitle(preferredTitle);
-  if (!preferred) return lines;
+  if (!preferred) return entries;
 
+  const lines = entries.map((entry) => entry.text);
   const start = findManualSectionTitleInLines(lines, preferred);
-  if (!start) return lines;
+  if (!start) return entries;
 
   const scoped = [];
   const startIndex = start.index + (start.nextLineUsed ? 2 : 1);
-  scoped.push(start.title);
+  scoped.push({ ...entries[start.index], text: start.title });
 
   for (let index = startIndex; index < lines.length; index += 1) {
     const line = lines[index];
@@ -1947,10 +2109,14 @@ function getManualContentLines(chunks, preferredTitle = '') {
     if (isMajorManualSectionHeading(line) && normalizedCombined && !normalizedCombined.includes(normalizedPreferred) && !normalizedPreferred.includes(normalizedCombined)) {
       break;
     }
-    scoped.push(line);
+    scoped.push(entries[index]);
   }
 
   return scoped;
+}
+
+function getManualContentLines(chunks, preferredTitle = '') {
+  return getManualContentLineEntries(chunks, preferredTitle).map((entry) => entry.text);
 }
 
 function mergeUniqueManualItems(...groups) {
@@ -1967,6 +2133,148 @@ function mergeUniqueManualItems(...groups) {
     }
   }
   return values;
+}
+
+function buildManualSourceFromChunk(chunk, matchedSectionTitle = '') {
+  return {
+    manual: chunk?.manual?.title,
+    machineModel: chunk?.machineModel,
+    page: chunk?.pageNumber,
+    section: matchedSectionTitle || cleanManualTitle(chunk?.section),
+  };
+}
+
+function buildManualSources(chunks, matchedSectionTitle = '') {
+  const seen = new Set();
+  const sources = [];
+
+  for (const chunk of chunks || []) {
+    const source = buildManualSourceFromChunk(chunk, matchedSectionTitle);
+    const key = `${source.manual || ''}:${source.machineModel || ''}:${source.page || ''}:${source.section || ''}`.toLowerCase();
+    if (seen.has(key)) continue;
+    seen.add(key);
+    sources.push({
+      ...source,
+      matchedSectionTitle,
+    });
+  }
+
+  return sources;
+}
+
+function scoreManualEvidenceLine(item, line) {
+  const itemText = String(item || '').toLowerCase();
+  const lineText = String(line || '').toLowerCase();
+  if (!itemText || !lineText) return 0;
+
+  let score = 0;
+  if (lineText.includes(itemText)) score += 120;
+
+  const itemPartNumbers = itemText.match(/\b\d{3}-\d{3}-\d{4}\b|\b\d{5}-\d{5}\b/g) || [];
+  for (const partNumber of itemPartNumbers) {
+    if (lineText.includes(partNumber)) score += 90;
+  }
+
+  const common = new Set(['and', 'the', 'with', 'from', 'into', 'only', 'that', 'this', 'for', 'use']);
+  const tokens = tokenizeSearchText(itemText).filter((token) => !common.has(token));
+  const tokenMatches = tokens.filter((token) => lineText.includes(token)).length;
+  if (tokens.length > 0) {
+    score += tokenMatches * 10;
+    score += (tokenMatches / tokens.length) * 30;
+  }
+
+  return score;
+}
+
+function findManualEvidenceForItem(item, entries) {
+  let best = null;
+
+  for (const entry of entries || []) {
+    const score = scoreManualEvidenceLine(item, entry.text);
+    if (!best || score > best.score) {
+      best = { entry, score };
+    }
+  }
+
+  if (!best || best.score < 18) return null;
+
+  return {
+    ...buildManualSourceFromChunk(best.entry.chunk),
+    excerpt: best.entry.text.slice(0, 240),
+    matchScore: Math.round(best.score),
+  };
+}
+
+function buildManualEvidence(suggestion, chunks, matchedSectionTitle = '') {
+  const entries = getManualContentLineEntries(chunks, matchedSectionTitle);
+  const evidence = {};
+  const categories = ['requiredTools', 'ppe', 'consumables', 'warnings', 'procedureSummary'];
+
+  for (const category of categories) {
+    const items = toCleanArray(suggestion[category]);
+    evidence[category] = items
+      .map((item) => ({
+        text: item,
+        source: findManualEvidenceForItem(item, entries),
+      }))
+      .filter((item) => item.source);
+  }
+
+  return evidence;
+}
+
+function buildManualExcerptsForAi(chunks, matchedSectionTitle = '') {
+  const entries = getManualContentLineEntries(chunks, matchedSectionTitle);
+  const groups = new Map();
+
+  for (const entry of entries) {
+    const chunk = entry.chunk || {};
+    const key = chunk.id || `${chunk.manualId || chunk.manual?.id || 'manual'}:${chunk.pageNumber || 0}`;
+    if (!groups.has(key)) {
+      groups.set(key, {
+        order: groups.size,
+        chunk,
+        lines: [],
+      });
+    }
+    groups.get(key).lines.push(entry.text);
+  }
+
+  let remaining = MANUAL_AI_CONTEXT_CHARS;
+  const selected = [];
+  const prioritizedGroups = [...groups.values()]
+    .map((group) => {
+      const text = group.lines.join('\n');
+      let priority = 0;
+      if (/special tools/i.test(text)) priority += 35;
+      if (/\bremoval\b/i.test(text)) priority += 30;
+      if (/\binstallation\b/i.test(text)) priority += 25;
+      if (/\b\d+\.\s/.test(text)) priority += 20;
+      if (/warning|never|be sure|pressure|fall|damage/i.test(text)) priority += 15;
+      return { ...group, text, priority };
+    })
+    .sort((a, b) => {
+      if (b.priority !== a.priority) return b.priority - a.priority;
+      return a.order - b.order;
+    });
+
+  for (const group of prioritizedGroups) {
+    if (remaining <= 600) break;
+    const content = group.text.slice(0, Math.min(4500, remaining));
+    if (!content.trim()) continue;
+    selected.push({
+      ...buildManualSourceFromChunk(group.chunk, matchedSectionTitle),
+      content,
+    });
+    remaining -= content.length;
+  }
+
+  return selected.sort((a, b) => {
+    const pageA = Number.isFinite(a.page) ? a.page : 0;
+    const pageB = Number.isFinite(b.page) ? b.page : 0;
+    if (pageA !== pageB) return pageA - pageB;
+    return String(a.section || '').localeCompare(String(b.section || ''));
+  });
 }
 
 function extractManualProcedureFallback(chunks, matchedSectionTitle = '') {
@@ -2086,15 +2394,7 @@ function completeManualSuggestionFromChunks(suggestion, chunks) {
   const manualWarnings = extractManualWarningsFallback(chunks, matchedSectionTitle);
   const manualConsumables = extractManualConsumablesFallback(chunks, matchedSectionTitle);
   const manualProcedure = extractManualProcedureFallback(chunks, matchedSectionTitle);
-  const sources = chunks.slice(0, 6).map((chunk) => ({
-    manual: chunk.manual?.title,
-    machineModel: chunk.machineModel,
-    page: chunk.pageNumber,
-    section: matchedSectionTitle || cleanManualTitle(chunk.section),
-    matchedSectionTitle,
-  }));
-
-  return {
+  const completed = {
     ...suggestion,
     matchedSectionTitle,
     requiredTools: mergeUniqueManualItems(manualTools, requiredTools).slice(0, 12),
@@ -2102,14 +2402,23 @@ function completeManualSuggestionFromChunks(suggestion, chunks) {
     consumables: mergeUniqueManualItems(manualConsumables, consumables).slice(0, 10),
     warnings: mergeUniqueManualItems(manualWarnings, warnings).slice(0, 10),
     procedureSummary: mergeUniqueManualItems(manualProcedure, procedureSummary).slice(0, 14),
-    sources,
+    sources: buildManualSources(chunks, matchedSectionTitle).slice(0, 10),
+  };
+
+  return {
+    ...completed,
+    evidence: buildManualEvidence(completed, chunks, matchedSectionTitle),
   };
 }
 
 async function generateManualSuggestionWithAi(payload, chunks) {
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey || chunks.length === 0) return null;
-  const scopedManualContent = getManualContentLines(chunks, payload.searchProfile?.matchedSectionTitle).join('\n');
+  const manualExcerpts = buildManualExcerptsForAi(chunks, payload.searchProfile?.matchedSectionTitle);
+  const excerpts = manualExcerpts.length ? manualExcerpts : chunks.slice(0, 4).map((chunk) => ({
+    ...buildManualSourceFromChunk(chunk, payload.searchProfile?.matchedSectionTitle),
+    content: String(chunk.content || '').slice(0, 3000),
+  }));
 
   try {
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -2118,9 +2427,7 @@ async function generateManualSuggestionWithAi(payload, chunks) {
         Authorization: `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        model: process.env.OPENAI_MANUAL_MODEL || 'gpt-4o-mini',
-        response_format: { type: 'json_object' },
+      body: JSON.stringify(buildManualChatCompletionBody({
         temperature: 0.1,
         messages: [
           {
@@ -2137,18 +2444,19 @@ async function generateManualSuggestionWithAi(payload, chunks) {
               interpretedTask: payload.searchProfile?.interpretedTask,
               searchAssumptions: payload.searchProfile?.assumptions,
               selectedManualTitles: payload.searchProfile?.selectedManualTitles,
-              excerpts: [{
-                manual: chunks[0]?.manual?.title,
-                page: chunks[0]?.pageNumber,
-                section: payload.searchProfile?.matchedSectionTitle || chunks[0]?.section,
-                content: scopedManualContent.slice(0, 5200),
-              }],
+              alternatives: payload.searchProfile?.manualAlternatives,
+              excerpts,
+              context: {
+                excerptCount: excerpts.length,
+                maxContextCharacters: MANUAL_AI_CONTEXT_CHARS,
+              },
               extractionRules: [
                 'Use Special tools table rows for requiredTools, including part numbers where readable.',
                 'Use warning/note lines beginning with a, never, be sure, prevent, pressure, fall, or damage for warnings.',
                 'Use Removal, Installation, and numbered steps for procedureSummary.',
                 'Use oils, grease, adhesive, seals, gaskets, replacement bolts/washers, and specified pipes as consumables.',
                 'Do not use index/table-of-contents lines as procedure evidence.',
+                'Prefer items that can be tied to a supplied page/section excerpt.',
               ],
               requiredJsonShape: {
                 requiredTools: [],
@@ -2165,7 +2473,7 @@ async function generateManualSuggestionWithAi(payload, chunks) {
             }),
           },
         ],
-      }),
+      })),
     });
 
     if (!response.ok) return null;
@@ -2177,6 +2485,7 @@ async function generateManualSuggestionWithAi(payload, chunks) {
       interpretedTask: payload.searchProfile?.interpretedTask || payload.task,
       interpretationNotes: payload.searchProfile?.assumptions || [],
       selectedManualTitles: payload.searchProfile?.selectedManualTitles || [],
+      alternatives: payload.searchProfile?.manualAlternatives || [],
       matchedSectionTitle: payload.searchProfile?.matchedSectionTitle,
     }, chunks);
   } catch {
@@ -2210,6 +2519,8 @@ async function suggestManualTools(payload) {
       interpretationNotes: [indexChoice.errorMessage || 'The system could not choose a manual index heading for this task.'],
       searchPhrases: [],
       selectedManualTitles: [],
+      alternatives: [],
+      evidence: {},
     };
   }
 
@@ -2241,6 +2552,7 @@ async function suggestManualTools(payload) {
       sourceType: candidate.sourceType,
       confidence: indexChoice.confidence,
     })),
+    manualAlternatives: indexChoice.alternatives || [],
   };
   const enrichedPayload = { ...payload, machineModel, searchProfile };
   const chunks = await findManualChunksForIndexSelection(machineModel, indexChoice.selectedCandidates || [], searchProfile);
@@ -2260,6 +2572,8 @@ async function suggestManualTools(payload) {
       searchPhrases: searchProfile.searchPhrases,
       matchedSectionTitle: searchProfile.matchedSectionTitle,
       selectedManualTitles: searchProfile.selectedManualTitles,
+      alternatives: searchProfile.manualAlternatives,
+      evidence: {},
     };
   }
 
@@ -2285,6 +2599,8 @@ async function suggestManualTools(payload) {
       searchPhrases: searchProfile.searchPhrases,
       matchedSectionTitle: searchProfile.matchedSectionTitle,
       selectedManualTitles: searchProfile.selectedManualTitles,
+      alternatives: searchProfile.manualAlternatives,
+      evidence: {},
     };
   }
 
@@ -2295,6 +2611,7 @@ async function suggestManualTools(payload) {
     searchPhrases: searchProfile.searchPhrases,
     matchedSectionTitle: suggestion.matchedSectionTitle || searchProfile.matchedSectionTitle,
     selectedManualTitles: suggestion.selectedManualTitles || searchProfile.selectedManualTitles,
+    alternatives: suggestion.alternatives || searchProfile.manualAlternatives,
   };
 }
 
@@ -2570,6 +2887,73 @@ async function fetchJson(url, timeoutMs = 8000) {
   }
 }
 
+const kuwaitLocationAliases = [
+  {
+    patterns: [/صباح\s*الأ?حمد/i, /sabah\s+al[-\s]?ahmad/i],
+    name: 'Sabah Al-Ahmad, Kuwait',
+    latitude: 28.8529,
+    longitude: 48.0314,
+  },
+  {
+    patterns: [/الأ?حمدي/i, /ahmadi/i],
+    name: 'Al Ahmadi, Kuwait',
+    latitude: 29.0769,
+    longitude: 48.0839,
+  },
+  {
+    patterns: [/الجهراء/i, /jahra/i],
+    name: 'Al Jahra, Kuwait',
+    latitude: 29.3375,
+    longitude: 47.6581,
+  },
+  {
+    patterns: [/الوفرة/i, /wafra/i],
+    name: 'Al Wafrah, Kuwait',
+    latitude: 28.6392,
+    longitude: 47.9306,
+  },
+  {
+    patterns: [/العبدلي/i, /abdali/i],
+    name: 'Al Abdali, Kuwait',
+    latitude: 30.0269,
+    longitude: 47.7042,
+  },
+  {
+    patterns: [/ميناء\s*عبدالله/i, /mina\s+abdullah/i],
+    name: 'Mina Abdullah, Kuwait',
+    latitude: 29.0264,
+    longitude: 48.1542,
+  },
+  {
+    patterns: [/الفحيحيل/i, /fahaheel/i],
+    name: 'Fahaheel, Kuwait',
+    latitude: 29.0825,
+    longitude: 48.1303,
+  },
+  {
+    patterns: [/الكويت/i, /kuwait\s*city/i],
+    name: 'Kuwait City, Kuwait',
+    latitude: 29.3759,
+    longitude: 47.9774,
+  },
+];
+
+function resolveLocalKuwaitLocation(location) {
+  const value = String(location || '').trim();
+  if (!value) return null;
+  const match = kuwaitLocationAliases.find((item) => item.patterns.some((pattern) => pattern.test(value)));
+  if (!match) return null;
+
+  return {
+    name: match.name,
+    latitude: match.latitude,
+    longitude: match.longitude,
+    country: 'Kuwait',
+    fallback: false,
+    source: 'local-kuwait-map',
+  };
+}
+
 function normalizeWorkLocation(location) {
   const value = String(location || '').trim();
   if (!value) return 'Kuwait City, Kuwait';
@@ -2577,25 +2961,37 @@ function normalizeWorkLocation(location) {
   return `${value}, Kuwait`;
 }
 
+function fallbackKuwaitLocation(name = 'Kuwait City, Kuwait') {
+  return {
+    name,
+    latitude: 29.3759,
+    longitude: 47.9774,
+    country: 'Kuwait',
+    fallback: true,
+  };
+}
+
 async function geocodeLocation(location) {
   const query = normalizeWorkLocation(location);
+  const localLocation = resolveLocalKuwaitLocation(query);
+  if (localLocation) return localLocation;
+
   const url = new URL('https://geocoding-api.open-meteo.com/v1/search');
   url.searchParams.set('name', query);
   url.searchParams.set('count', '1');
   url.searchParams.set('language', 'en');
   url.searchParams.set('format', 'json');
 
-  const data = await fetchJson(url);
+  let data;
+  try {
+    data = await fetchJson(url);
+  } catch {
+    return fallbackKuwaitLocation(query);
+  }
   const result = data.results?.[0];
 
   if (!result) {
-    return {
-      name: query,
-      latitude: 29.3759,
-      longitude: 47.9774,
-      country: 'Kuwait',
-      fallback: true,
-    };
+    return fallbackKuwaitLocation(query);
   }
 
   return {
@@ -2612,7 +3008,8 @@ function summarizeShiftWeather(forecast, date, task) {
   const hourly = forecast.hourly || {};
   const times = hourly.time || [];
   const temperatures = hourly.temperature_2m || [];
-  const precipitation = hourly.precipitation_probability || [];
+  const usesRainProbability = Array.isArray(hourly.precipitation_probability);
+  const precipitation = usesRainProbability ? hourly.precipitation_probability : hourly.precipitation || [];
   const windSpeeds = hourly.wind_speed_10m || [];
   const weatherCodes = hourly.weather_code || [];
   const shiftIndexes = times
@@ -2625,7 +3022,10 @@ function summarizeShiftWeather(forecast, date, task) {
     .map((entry) => entry.index);
 
   const maxTemperatureC = Math.max(...indexes.map((index) => Number(temperatures[index])).filter(Number.isFinite));
-  const maxRainChance = Math.max(...indexes.map((index) => Number(precipitation[index])).filter(Number.isFinite), 0);
+  const maxPrecipitation = Math.max(...indexes.map((index) => Number(precipitation[index])).filter(Number.isFinite), 0);
+  const maxRainChance = usesRainProbability
+    ? maxPrecipitation
+    : Math.min(100, Math.round(maxPrecipitation * 35));
   const maxWindKph = Math.max(...indexes.map((index) => Number(windSpeeds[index])).filter(Number.isFinite), 0);
   const codes = indexes.map((index) => weatherCodes[index]).filter((code) => code !== undefined);
   const condition = weatherCodeLabel(codes.sort((a, b) => Number(b) - Number(a))[0] || 0);
@@ -2636,6 +3036,87 @@ function summarizeShiftWeather(forecast, date, task) {
     maxWindKph: Math.round(maxWindKph),
     condition,
   };
+}
+
+function addDaysToIso(dateText, days) {
+  const date = new Date(`${dateText}T00:00:00Z`);
+  date.setUTCDate(date.getUTCDate() + days);
+  return date.toISOString().slice(0, 10);
+}
+
+function currentIsoDate() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+function buildOpenMeteoForecastUrl(place, date) {
+  const url = new URL('https://api.open-meteo.com/v1/forecast');
+  url.searchParams.set('latitude', String(place.latitude));
+  url.searchParams.set('longitude', String(place.longitude));
+  url.searchParams.set('hourly', 'temperature_2m,precipitation_probability,weather_code,wind_speed_10m');
+  url.searchParams.set('timezone', 'auto');
+  url.searchParams.set('start_date', date);
+  url.searchParams.set('end_date', date);
+  return url;
+}
+
+function buildOpenMeteoArchiveUrl(place, date) {
+  const url = new URL('https://archive-api.open-meteo.com/v1/archive');
+  url.searchParams.set('latitude', String(place.latitude));
+  url.searchParams.set('longitude', String(place.longitude));
+  url.searchParams.set('hourly', 'temperature_2m,precipitation,weather_code,wind_speed_10m');
+  url.searchParams.set('timezone', 'auto');
+  url.searchParams.set('start_date', date);
+  url.searchParams.set('end_date', date);
+  return url;
+}
+
+function buildEstimatedKuwaitWeather(dateText, task) {
+  const parsedMonth = Number(String(dateText || '').slice(5, 7));
+  const month = Number.isInteger(parsedMonth) && parsedMonth >= 1 && parsedMonth <= 12
+    ? parsedMonth - 1
+    : new Date().getUTCMonth();
+  const monthlyHighs = [19, 22, 27, 34, 40, 44, 46, 46, 43, 36, 28, 21];
+  const monthlyWind = [22, 24, 26, 25, 24, 28, 25, 22, 20, 19, 20, 22];
+  const rainyMonths = new Set([0, 1, 2, 10, 11]);
+  const text = taskWeatherText(task);
+  const outdoorAdjustment = hasAnyWord(text, ['outdoor', 'site', 'field', 'yard', 'inspection', 'machine', 'dozer', 'shovel'])
+    ? 1
+    : 0;
+
+  return {
+    maxTemperatureC: monthlyHighs[month] + outdoorAdjustment,
+    maxRainChance: rainyMonths.has(month) ? 20 : 5,
+    maxWindKph: monthlyWind[month],
+    condition: rainyMonths.has(month) ? 'partly cloudy' : 'clear',
+  };
+}
+
+async function fetchWeatherForTask(place, date, task) {
+  try {
+    const forecast = await fetchJson(buildOpenMeteoForecastUrl(place, date));
+    return {
+      weather: summarizeShiftWeather(forecast, date, task),
+      generatedBy: 'open-meteo',
+    };
+  } catch (forecastError) {
+    if (date <= addDaysToIso(currentIsoDate(), -1)) {
+      try {
+        const archive = await fetchJson(buildOpenMeteoArchiveUrl(place, date));
+        return {
+          weather: summarizeShiftWeather(archive, date, task),
+          generatedBy: 'open-meteo-archive',
+        };
+      } catch {
+        // Fall through to seasonal fallback below.
+      }
+    }
+
+    return {
+      weather: buildEstimatedKuwaitWeather(date, task),
+      generatedBy: 'seasonal-fallback',
+      weatherError: forecastError.message,
+    };
+  }
 }
 
 function buildWeatherAdvice(task, weather) {
@@ -2731,16 +3212,8 @@ async function generateAiWeatherAdvice(task, weather, location) {
 async function buildTaskWeatherAdvice(task) {
   const date = formatDateForResponse(task.workDate);
   const place = await geocodeLocation(task.location);
-  const url = new URL('https://api.open-meteo.com/v1/forecast');
-  url.searchParams.set('latitude', String(place.latitude));
-  url.searchParams.set('longitude', String(place.longitude));
-  url.searchParams.set('hourly', 'temperature_2m,precipitation_probability,weather_code,wind_speed_10m');
-  url.searchParams.set('timezone', 'auto');
-  url.searchParams.set('start_date', date);
-  url.searchParams.set('end_date', date);
-
-  const forecast = await fetchJson(url);
-  const weather = summarizeShiftWeather(forecast, date, task);
+  const weatherResult = await fetchWeatherForTask(place, date, task);
+  const weather = weatherResult.weather;
   const aiAdvice = await generateAiWeatherAdvice(task, weather, place.name);
 
   return {
@@ -2752,7 +3225,8 @@ async function buildTaskWeatherAdvice(task) {
     endsAt: task.endsAt,
     ...weather,
     advice: aiAdvice?.length ? aiAdvice : buildWeatherAdvice(task, weather),
-    generatedBy: aiAdvice?.length ? 'openai' : 'rules',
+    generatedBy: aiAdvice?.length ? `openai-${weatherResult.generatedBy}` : weatherResult.generatedBy,
+    weatherError: weatherResult.weatherError,
   };
 }
 

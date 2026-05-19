@@ -104,6 +104,21 @@ MICROSOFT_ENGINEER_EMAILS=motasem.ghanem@daralhai.com,abdelrahman@daralhai.com,f
 MICROSOFT_ENGINEER_NAMES=motasem,abdelrahman,faisal
 ```
 
+## Manual Suggestions
+
+Shop-manual suggestions use OpenAI to match the task to manual sections, then extract tools, warnings, consumables, procedure steps, alternatives, and evidence from the matched excerpts.
+
+```bash
+OPENAI_API_KEY=your-openai-api-key
+OPENAI_MANUAL_MODEL=gpt-5.5
+OPENAI_MANUAL_REASONING_EFFORT=low
+MANUAL_AI_CONTEXT_CHARS=18000
+MANUAL_CONTEXT_PAGES_BEFORE=1
+MANUAL_CONTEXT_PAGES_AFTER=8
+```
+
+If `OPENAI_MANUAL_MODEL` is not set, the backend uses `gpt-5.4-mini` as a stronger default than the old mini model while still keeping cost and latency practical.
+
 The Microsoft app needs delegated access for `openid`, `profile`, `email`, and Microsoft Graph `User.Read`.
 
 Engineer accounts listed in `MICROSOFT_ENGINEER_EMAILS` are automatically assigned the `MAINTENANCE_SUPERVISOR` role on Microsoft sign-in. Motasem, Abdelrahman, and Faisal are treated as engineers, not technicians, and the EQP module is restricted to engineer/management permissions.

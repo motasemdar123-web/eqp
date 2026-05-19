@@ -592,6 +592,15 @@ function ManualAdvicePanel({ advice, onClear }) {
     ['Warnings', advice.warnings],
     ['Procedure', advice.procedureSummary],
   ];
+  const alternatives = advice.alternatives || advice.manualAlternatives || [];
+  const evidenceItems = Object.entries(advice.evidence || {})
+    .flatMap(([category, items]) => (items || []).map((item) => ({
+      category,
+      text: item.text,
+      source: item.source,
+    })))
+    .filter((item) => item.text && item.source)
+    .slice(0, 8);
 
   return (
     <div className="rounded-md border border-yellow-200 bg-yellow-50 p-4">
@@ -610,6 +619,12 @@ function ManualAdvicePanel({ advice, onClear }) {
             <div className="mt-2 text-sm font-semibold text-zinc-700">
               <span className="font-black text-zinc-900">Manual match:</span>{' '}
               {advice.selectedManualTitles.map((item) => `${item.title || 'Untitled'}${item.page ? ` (p.${item.page})` : ''}`).join(', ')}
+            </div>
+          )}
+          {alternatives.length > 1 && (
+            <div className="mt-2 text-sm font-semibold text-zinc-700">
+              <span className="font-black text-zinc-900">Alternatives:</span>{' '}
+              {alternatives.slice(1, 5).map((item) => `${item.title || 'Untitled'}${item.page ? ` (p.${item.page})` : ''}${item.confidence ? ` - ${item.confidence}` : ''}`).join(', ')}
             </div>
           )}
         </div>
@@ -647,6 +662,24 @@ function ManualAdvicePanel({ advice, onClear }) {
           <p className="mt-2 text-sm font-semibold text-zinc-700">
             {advice.sources.map((source) => `${source.manual || source.machineModel || 'Manual'}${source.matchedSectionTitle || source.section ? ` - ${source.matchedSectionTitle || source.section}` : ''} p.${source.page || '-'}`).join(', ')}
           </p>
+        </div>
+      )}
+      {evidenceItems.length > 0 && (
+        <div className="mt-3 rounded-md bg-white p-3">
+          <p className="text-xs font-bold uppercase tracking-[0.12em] text-zinc-500">Evidence</p>
+          <ul className="mt-2 grid gap-2 text-sm font-semibold text-zinc-700">
+            {evidenceItems.map((item) => (
+              <li key={`${item.category}-${item.text}`}>
+                <span className="font-black text-zinc-900">{item.category}:</span> {item.text}
+                <span className="block text-xs font-semibold text-zinc-500">
+                  {item.source.manual || item.source.machineModel || 'Manual'}
+                  {item.source.page ? ` p.${item.source.page}` : ''}
+                  {item.source.section ? ` - ${item.source.section}` : ''}
+                  {item.source.excerpt ? ` - "${item.source.excerpt}"` : ''}
+                </span>
+              </li>
+            ))}
+          </ul>
         </div>
       )}
     </div>

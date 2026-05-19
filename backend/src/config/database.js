@@ -37,29 +37,70 @@ function shouldUseSsl(databaseUrl) {
 
 const databaseUrl = getDatabaseUrl();
 const useSsl = shouldUseSsl(databaseUrl);
-const client = new Client({
-  ...(databaseUrl ? { connectionString: buildPgConnectionString(databaseUrl) } : env.db),
-  ...(useSsl ? { ssl: { rejectUnauthorized: false } } : {}),
-});
-
+let client = null;
 let connected = false;
+let connecting = null;
+
+function createClient() {
+  const nextClient = new Client({
+    ...(databaseUrl ? { connectionString: buildPgConnectionString(databaseUrl) } : env.db),
+    ...(useSsl ? { ssl: { rejectUnauthorized: false } } : {}),
+  });
+
+  nextClient.on('error', (error) => {
+    connected = false;
+    connecting = null;
+    console.error('PostgreSQL connection error', error);
+  });
+
+  nextClient.on('end', () => {
+    connected = false;
+    connecting = null;
+  });
+
+  return nextClient;
+}
 
 async function connectDatabase() {
   if (connected) return client;
+  if (connecting) return connecting;
 
-  await client.connect();
-  connected = true;
-  console.log('Connected to PostgreSQL');
+  client = createClient();
+  connecting = client.connect()
+    .then(() => {
+      connected = true;
+      connecting = null;
+      console.log('Connected to PostgreSQL');
+      return client;
+    })
+    .catch((error) => {
+      connected = false;
+      connecting = null;
+      client = null;
+      throw error;
+    });
 
-  return client;
+  return connecting;
 }
 
-function query(text, params) {
-  return client.query(text, params);
+async function query(text, params) {
+  const activeClient = await connectDatabase();
+  try {
+    return await activeClient.query(text, params);
+  } catch (error) {
+    if (['ECONNRESET', 'ECONNREFUSED', '57P01', '08006'].includes(error.code)) {
+      connected = false;
+      connecting = null;
+      client = null;
+    }
+    throw error;
+  }
 }
 
 module.exports = {
-  client,
+  get client() {
+    return client;
+  },
   connectDatabase,
   query,
 };
