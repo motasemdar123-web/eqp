@@ -94,7 +94,7 @@ export default function SystemShell({
   return (
     <div className="ds-shell">
       <header className="ds-blue-header">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6">
+        <div className="mx-auto max-w-[96rem] px-4 sm:px-6">
           <div className="ds-top-nav">
             <Link href="/management" className="ds-brand-link">
               <div className="ds-brand-mark h-11 w-11 shrink-0 text-lg">
@@ -148,7 +148,7 @@ export default function SystemShell({
         </div>
       </header>
 
-      <main className={`ds-content-frame mx-auto max-w-7xl px-4 pb-10 sm:px-6 ${contentClassName}`}>
+      <main className={`ds-content-frame mx-auto max-w-[96rem] px-4 pb-10 sm:px-6 ${contentClassName}`}>
         {children}
       </main>
     </div>

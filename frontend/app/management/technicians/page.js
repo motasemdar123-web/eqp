@@ -199,18 +199,18 @@ export default function TechniciansManagementPage() {
     >
       <div className="grid gap-6">
         {(message || error) && (
-          <div className={`rounded-md border px-4 py-3 text-sm font-semibold ${
-            error ? 'border-red-200 bg-red-50 text-red-700' : 'border-emerald-200 bg-emerald-50 text-emerald-700'
+          <div className={`rounded-md border-l-4 bg-white px-4 py-3 text-sm font-semibold shadow-sm ${
+            error ? 'border-red-500 text-red-700' : 'border-emerald-500 text-emerald-700'
           }`}>
             {error || message}
           </div>
         )}
 
-        <section className="grid gap-4 md:grid-cols-4">
-          <Metric label="Technicians" value={stats.total} tone="dark" />
-          <Metric label="Available" value={stats.available} />
-          <Metric label="Unavailable" value={stats.unavailable} />
-          <Metric label="Shifts" value={shifts.length} />
+        <section className="ds-kpi-grid">
+          <Metric label="Technicians" value={stats.total} code="TM" />
+          <Metric label="Available" value={stats.available} code="AV" accent />
+          <Metric label="Unavailable" value={stats.unavailable} code="UN" />
+          <Metric label="Shifts" value={shifts.length} code="SH" accent />
         </section>
 
         <section className="grid gap-5 xl:grid-cols-[1fr_420px]">
@@ -222,12 +222,12 @@ export default function TechniciansManagementPage() {
                   placeholder="Search by name, code, email, region, or shift"
                   value={searchTerm}
                   onChange={(event) => setSearchTerm(event.target.value)}
-                  className="h-11 rounded-md border border-zinc-300 bg-white px-4 text-zinc-900 outline-none transition focus:border-yellow-400 focus:ring-2 focus:ring-yellow-100"
+                  className="ds-input w-full"
                 />
                 <select
                   value={availabilityFilter}
                   onChange={(event) => setAvailabilityFilter(event.target.value)}
-                  className="h-11 rounded-md border border-zinc-300 bg-white px-4 text-zinc-900 outline-none transition focus:border-yellow-400 focus:ring-2 focus:ring-yellow-100"
+                  className="ds-input w-full"
                 >
                   <option value="ALL">All availability</option>
                   <option value="AVAILABLE">Available only</option>
@@ -250,7 +250,7 @@ export default function TechniciansManagementPage() {
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full min-w-[980px]">
-                  <thead className="bg-zinc-50 text-xs uppercase tracking-[0.12em] text-zinc-500">
+                  <thead className="bg-[var(--color-surface-muted)] text-xs uppercase tracking-[0.12em] text-[var(--color-muted)]">
                     <tr>
                       <th className="px-5 py-4 text-left">Technician</th>
                       <th className="px-5 py-4 text-left">Availability</th>
@@ -262,19 +262,19 @@ export default function TechniciansManagementPage() {
                   </thead>
                   <tbody>
                     {filteredTechnicians.map((technician) => (
-                      <tr key={technician.id} className="border-t border-zinc-100 align-top transition hover:bg-yellow-50/60">
+                      <tr key={technician.id} className="border-t border-[var(--color-border)] align-top transition hover:bg-[var(--color-brand-soft)]">
                         <td className="px-5 py-4">
-                          <p className="font-bold text-zinc-950">{technicianName(technician)}</p>
-                          <p className="mt-1 font-mono text-xs text-zinc-500">{technician.employeeCode}</p>
-                          <p className="mt-1 text-xs text-zinc-500">{technician.user?.email}</p>
+                          <p className="font-bold text-[var(--color-ink)]">{technicianName(technician)}</p>
+                          <p className="mt-1 font-mono text-xs text-[var(--color-muted)]">{technician.employeeCode}</p>
+                          <p className="mt-1 text-xs text-[var(--color-muted)]">{technician.user?.email}</p>
                         </td>
                         <td className="px-5 py-4">
                           <Badge tone={technician.isAvailable ? 'green' : 'red'}>
                             {technician.isAvailable ? 'AVAILABLE' : 'UNAVAILABLE'}
                           </Badge>
                         </td>
-                        <td className="px-5 py-4 text-sm font-semibold text-zinc-700">{technician.shift?.name || '-'}</td>
-                        <td className="px-5 py-4 text-sm text-zinc-600">{technician.region || '-'}</td>
+                        <td className="px-5 py-4 text-sm font-semibold text-[var(--color-ink-soft)]">{technician.shift?.name || '-'}</td>
+                        <td className="px-5 py-4 text-sm text-[var(--color-muted)]">{technician.region || '-'}</td>
                         <td className="px-5 py-4">
                           <div className="flex flex-wrap gap-1.5">
                             {(technician.skills || []).slice(0, 4).map((skill) => (
@@ -306,10 +306,10 @@ export default function TechniciansManagementPage() {
           <Card className="p-5">
             <div className="flex items-start justify-between gap-4">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.14em] text-zinc-500">
+                <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--color-muted)]">
                   {selectedTechnician ? 'Edit Technician' : 'Add Technician'}
                 </p>
-                <h2 className="mt-2 text-xl font-black text-zinc-950">
+                <h2 className="mt-2 text-xl font-black text-[var(--color-ink)]">
                   {selectedTechnician ? technicianName(selectedTechnician) : 'New technician'}
                 </h2>
               </div>
@@ -317,20 +317,20 @@ export default function TechniciansManagementPage() {
             </div>
 
             <form onSubmit={saveTechnician} className="mt-5 grid gap-3">
-              <input className="h-11 rounded-md border border-zinc-300 px-3" placeholder="Full name" value={form.fullName} onChange={(event) => setForm((current) => ({ ...current, fullName: event.target.value }))} />
-              <input type="email" className="h-11 rounded-md border border-zinc-300 px-3" placeholder="Company email" value={form.email} onChange={(event) => setForm((current) => ({ ...current, email: event.target.value }))} />
+              <input className="ds-input" placeholder="Full name" value={form.fullName} onChange={(event) => setForm((current) => ({ ...current, fullName: event.target.value }))} />
+              <input type="email" className="ds-input" placeholder="Company email" value={form.email} onChange={(event) => setForm((current) => ({ ...current, email: event.target.value }))} />
               <div className="grid grid-cols-2 gap-3">
-                <input type="number" className="h-11 rounded-md border border-zinc-300 px-3" placeholder="User number" value={form.userNumber} onChange={(event) => setForm((current) => ({ ...current, userNumber: event.target.value }))} />
-                <input className="h-11 rounded-md border border-zinc-300 px-3" placeholder="Employee code" value={form.employeeCode} onChange={(event) => setForm((current) => ({ ...current, employeeCode: event.target.value }))} />
+                <input type="number" className="ds-input" placeholder="User number" value={form.userNumber} onChange={(event) => setForm((current) => ({ ...current, userNumber: event.target.value }))} />
+                <input className="ds-input" placeholder="Employee code" value={form.employeeCode} onChange={(event) => setForm((current) => ({ ...current, employeeCode: event.target.value }))} />
               </div>
-              <input className="h-11 rounded-md border border-zinc-300 px-3" placeholder="Phone" value={form.phone} onChange={(event) => setForm((current) => ({ ...current, phone: event.target.value }))} />
-              <input className="h-11 rounded-md border border-zinc-300 px-3" placeholder="Region" value={form.region} onChange={(event) => setForm((current) => ({ ...current, region: event.target.value }))} />
-              <select className="h-11 rounded-md border border-zinc-300 px-3" value={form.shiftId} onChange={(event) => setForm((current) => ({ ...current, shiftId: event.target.value }))}>
+              <input className="ds-input" placeholder="Phone" value={form.phone} onChange={(event) => setForm((current) => ({ ...current, phone: event.target.value }))} />
+              <input className="ds-input" placeholder="Region" value={form.region} onChange={(event) => setForm((current) => ({ ...current, region: event.target.value }))} />
+              <select className="ds-input" value={form.shiftId} onChange={(event) => setForm((current) => ({ ...current, shiftId: event.target.value }))}>
                 <option value="">No default shift</option>
                 {shifts.map((shift) => <option key={shift.id} value={shift.id}>{shift.name} ({shift.startsAt}-{shift.endsAt})</option>)}
               </select>
-              <textarea rows={3} className="rounded-md border border-zinc-300 px-3 py-2" placeholder="Skills separated by commas" value={form.skills} onChange={(event) => setForm((current) => ({ ...current, skills: event.target.value }))} />
-              <label className="flex h-11 items-center gap-3 rounded-md border border-zinc-300 px-3 text-sm font-semibold text-zinc-700">
+              <textarea rows={3} className="ds-input py-2" placeholder="Skills separated by commas" value={form.skills} onChange={(event) => setForm((current) => ({ ...current, skills: event.target.value }))} />
+              <label className="flex h-11 items-center gap-3 rounded-md border border-[var(--color-border-strong)] bg-white px-3 text-sm font-semibold text-[var(--color-ink-soft)]">
                 <input type="checkbox" checked={form.isAvailable} onChange={(event) => setForm((current) => ({ ...current, isAvailable: event.target.checked }))} />
                 Available for dispatch
               </label>
@@ -345,11 +345,14 @@ export default function TechniciansManagementPage() {
   );
 }
 
-function Metric({ label, value, tone = 'light' }) {
+function Metric({ label, value, code, accent = false }) {
   return (
-    <Card className={`p-5 ${tone === 'dark' ? 'border-zinc-900 bg-zinc-950 text-white' : ''}`}>
-      <p className={`text-xs font-semibold uppercase tracking-[0.14em] ${tone === 'dark' ? 'text-zinc-400' : 'text-zinc-500'}`}>{label}</p>
-      <p className={`mt-3 text-3xl font-black ${tone === 'dark' ? 'text-yellow-400' : 'text-zinc-950'}`}>{value}</p>
-    </Card>
+    <article className="ds-kpi-card">
+      <div className={`ds-icon-tile ${accent ? 'ds-icon-tile-accent' : ''}`}>{code}</div>
+      <div>
+        <p className="text-xs font-black uppercase tracking-[0.14em] text-[var(--color-muted)]">{label}</p>
+        <p className="mt-2 text-3xl font-black leading-none text-[var(--color-ink)]">{value}</p>
+      </div>
+    </article>
   );
 }
