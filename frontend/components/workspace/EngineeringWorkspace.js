@@ -263,8 +263,6 @@ function CanvasToolbar({
   onSave,
   onResetView,
   onOpenTemplates,
-  onToggleFullscreen,
-  isFullscreen,
 }) {
   return (
     <div className="eng-canvas-toolbar">
@@ -277,11 +275,30 @@ function CanvasToolbar({
       <span className="eng-toolbar-divider" />
       <Button type="button" variant="secondary" size="sm" onClick={onSave}>Save Board</Button>
       <Button type="button" variant="ghost" size="sm" onClick={onResetView}>Reset View</Button>
-      <Button type="button" variant="secondary" size="sm" onClick={onToggleFullscreen}>
-        {isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}
-      </Button>
       <Button type="button" variant="danger" size="sm" onClick={onClear}>Clear Canvas</Button>
     </div>
+  );
+}
+
+function FullscreenIcon({ active }) {
+  if (active) {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M9 4v5H4" />
+        <path d="M15 4v5h5" />
+        <path d="M9 20v-5H4" />
+        <path d="M15 20v-5h5" />
+      </svg>
+    );
+  }
+
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M4 9V4h5" />
+      <path d="M20 9V4h-5" />
+      <path d="M4 15v5h5" />
+      <path d="M20 15v5h-5" />
+    </svg>
   );
 }
 
@@ -1265,8 +1282,10 @@ function CanvasCreativeArea({ onToast }) {
             className="eng-board-fullscreen-button"
             onClick={toggleFullscreen}
             aria-label={isFullscreen ? 'Exit whiteboard fullscreen' : 'Enter whiteboard fullscreen'}
+            title={isFullscreen ? 'Exit full screen' : 'Enter full screen'}
           >
-            {isFullscreen ? 'Exit full screen' : 'Full screen'}
+            <FullscreenIcon active={isFullscreen} />
+            <span>{isFullscreen ? 'Exit' : 'Full screen'}</span>
           </button>
           <CanvasToolbar
             onOpenTemplates={() => setTemplatesOpen(true)}
@@ -1277,8 +1296,6 @@ function CanvasCreativeArea({ onToast }) {
             onClear={clearCanvas}
             onSave={saveBoard}
             onResetView={resetView}
-            onToggleFullscreen={toggleFullscreen}
-            isFullscreen={isFullscreen}
           />
           <div
             ref={canvasRef}
