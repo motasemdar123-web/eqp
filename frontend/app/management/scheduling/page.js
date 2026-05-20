@@ -444,7 +444,7 @@ export default function SchedulingPage() {
             type="date"
             value={date}
             onChange={(event) => loadBoard(event.target.value, historyFrom, historyTo)}
-            className="h-10 rounded-md border border-zinc-300 bg-white px-3 text-sm font-semibold text-zinc-800"
+            className="ds-input min-h-0 h-10 text-sm font-semibold"
           />
           <Button type="button" variant="secondary" onClick={() => loadBoard(date, historyFrom, historyTo)} disabled={!token || loading}>
             Refresh
@@ -463,17 +463,17 @@ export default function SchedulingPage() {
         )}
 
         {message && (
-          <div className="rounded-md border border-zinc-200 bg-white px-4 py-3 text-sm font-semibold text-zinc-700">
+          <div className="ds-alert">
             {message}
           </div>
         )}
 
         <div className="ds-kpi-grid">
           {[
-            { label: 'Technicians', value: board.kpis?.technicians || 0, code: 'TM', detail: 'Registered roster', badge: 'Live', tone: 'live' },
-            { label: 'Daily Tasks', value: board.kpis?.dailyTasks || 0, code: 'DT', detail: 'Scheduled today', badge: 'Active', tone: 'active' },
-            { label: 'Assigned Today', value: board.kpis?.scheduledTechnicians || 0, code: 'AS', detail: 'Technicians assigned', badge: 'Ready', tone: 'ready' },
-            { label: 'Available', value: board.kpis?.availableTechnicians || 0, code: 'AV', detail: 'Open capacity', badge: 'Ready', tone: 'ready' },
+            { label: 'Technicians', value: board.kpis?.technicians || 0, code: 'TM', unit: 'Registered', detail: 'Roster capacity', badge: 'Live', tone: 'live' },
+            { label: 'Daily Tasks', value: board.kpis?.dailyTasks || 0, code: 'DT', unit: 'Scheduled', detail: 'Tasks today', badge: 'Active', tone: 'active' },
+            { label: 'Assigned', value: board.kpis?.scheduledTechnicians || 0, code: 'AS', unit: 'Today', detail: 'Technicians assigned', badge: 'Ready', tone: 'ready' },
+            { label: 'Available', value: board.kpis?.availableTechnicians || 0, code: 'AV', unit: 'Open capacity', detail: 'Ready for dispatch', badge: 'Ready', tone: 'ready' },
           ].map((item, index) => (
             <article key={item.label} className="ds-kpi-card">
               <div className={`ds-icon-tile ${index % 2 ? 'ds-icon-tile-accent' : ''}`}>{item.code}</div>
@@ -484,6 +484,7 @@ export default function SchedulingPage() {
                 </div>
                 <div>
                   <p className="ds-kpi-main">{item.value}</p>
+                  <p className="ds-kpi-descriptor">{item.unit}</p>
                   <p className="ds-kpi-secondary">{item.detail}</p>
                 </div>
               </div>
@@ -503,21 +504,21 @@ export default function SchedulingPage() {
             </div>
             <form onSubmit={saveDailyTask} className="mt-4 grid gap-3">
               <div className="grid gap-3 md:grid-cols-2">
-                <input type="date" className="h-11 rounded-md border border-zinc-300 px-3" value={taskForm.workDate} onChange={(event) => loadBoard(event.target.value, historyFrom, historyTo)} />
-                <input className="h-11 rounded-md border border-zinc-300 px-3" placeholder="Location" value={taskForm.location} onChange={(event) => setTaskForm((current) => ({ ...current, location: event.target.value }))} />
+                <input type="date" className="ds-input" value={taskForm.workDate} onChange={(event) => loadBoard(event.target.value, historyFrom, historyTo)} />
+                <input className="ds-input" placeholder="Location" value={taskForm.location} onChange={(event) => setTaskForm((current) => ({ ...current, location: event.target.value }))} />
               </div>
               <div className="grid gap-3 md:grid-cols-[1fr_auto]">
-                <input className="h-11 rounded-md border border-zinc-300 px-3 uppercase" placeholder="Machine model, e.g. D155A-6" value={taskForm.machineModel} onChange={(event) => setTaskForm((current) => ({ ...current, machineModel: event.target.value.toUpperCase() }))} />
+                <input className="ds-input uppercase" placeholder="Machine model, e.g. D155A-6" value={taskForm.machineModel} onChange={(event) => setTaskForm((current) => ({ ...current, machineModel: event.target.value.toUpperCase() }))} />
                 <Button type="button" variant="secondary" onClick={findManualOptions} disabled={manualBusy || !taskForm.machineModel || !taskForm.task}>
                   Find Manual Matches
                 </Button>
               </div>
               <div className="grid grid-cols-2 gap-3">
-                <input type="time" className="h-11 rounded-md border border-zinc-300 px-3" value={taskForm.startsAt} onChange={(event) => setTaskForm((current) => ({ ...current, startsAt: event.target.value }))} />
-                <input type="time" className="h-11 rounded-md border border-zinc-300 px-3" value={taskForm.endsAt} onChange={(event) => setTaskForm((current) => ({ ...current, endsAt: event.target.value }))} />
+                <input type="time" className="ds-input" value={taskForm.startsAt} onChange={(event) => setTaskForm((current) => ({ ...current, startsAt: event.target.value }))} />
+                <input type="time" className="ds-input" value={taskForm.endsAt} onChange={(event) => setTaskForm((current) => ({ ...current, endsAt: event.target.value }))} />
               </div>
-              <input className="h-11 rounded-md border border-zinc-300 px-3" placeholder="Task" value={taskForm.task} onChange={(event) => setTaskForm((current) => ({ ...current, task: event.target.value }))} />
-              <textarea rows={3} className="rounded-md border border-zinc-300 px-3 py-2" placeholder="Description" value={taskForm.description} onChange={(event) => setTaskForm((current) => ({ ...current, description: event.target.value }))} />
+              <input className="ds-input" placeholder="Task" value={taskForm.task} onChange={(event) => setTaskForm((current) => ({ ...current, task: event.target.value }))} />
+              <textarea rows={3} className="ds-input py-2" placeholder="Description" value={taskForm.description} onChange={(event) => setTaskForm((current) => ({ ...current, description: event.target.value }))} />
               <ManualOptionChooser
                 state={manualAssistant}
                 busy={manualBusy}
@@ -544,7 +545,7 @@ export default function SchedulingPage() {
                           key={technician.id}
                           type="button"
                           onClick={() => removeTechnician(technician.id)}
-                          className="rounded-md border border-zinc-300 bg-white px-3 py-1.5 text-xs font-bold text-zinc-700 hover:border-zinc-500"
+                          className="ds-button ds-button-secondary ds-button-small"
                         >
                           {technicianName(technician)} x
                         </button>
@@ -578,7 +579,7 @@ export default function SchedulingPage() {
                   )}
                 </div>
               </div>
-              <textarea rows={2} className="rounded-md border border-zinc-300 px-3 py-2" placeholder="Notes" value={taskForm.notes} onChange={(event) => setTaskForm((current) => ({ ...current, notes: event.target.value }))} />
+              <textarea rows={2} className="ds-input py-2" placeholder="Notes" value={taskForm.notes} onChange={(event) => setTaskForm((current) => ({ ...current, notes: event.target.value }))} />
               <Button type="submit" disabled={!token || loading || taskForm.technicianIds.length === 0}>
                 {editingTaskId ? 'Update Daily Task' : 'Save Daily Task'}
               </Button>
@@ -588,9 +589,9 @@ export default function SchedulingPage() {
           <Card className="p-5">
             <h2 className="text-xl font-black text-[var(--color-ink)]">Shop Manual Library</h2>
             <div className="mt-4 grid gap-3 md:grid-cols-2">
-              <input className="h-11 rounded-md border border-zinc-300 px-3 uppercase" placeholder="Machine model" value={manualUpload.machineModel} onChange={(event) => setManualUpload((current) => ({ ...current, machineModel: event.target.value.toUpperCase() }))} />
-              <input className="h-11 rounded-md border border-zinc-300 px-3" placeholder="Manual title" value={manualUpload.title} onChange={(event) => setManualUpload((current) => ({ ...current, title: event.target.value }))} />
-              <input type="file" accept="application/pdf" className="rounded-md border border-zinc-300 bg-white p-3 text-sm md:col-span-2" onChange={(event) => handleManualFile(event.target.files?.[0])} />
+              <input className="ds-input uppercase" placeholder="Machine model" value={manualUpload.machineModel} onChange={(event) => setManualUpload((current) => ({ ...current, machineModel: event.target.value.toUpperCase() }))} />
+              <input className="ds-input" placeholder="Manual title" value={manualUpload.title} onChange={(event) => setManualUpload((current) => ({ ...current, title: event.target.value }))} />
+              <input type="file" accept="application/pdf" className="rounded-md border border-[var(--color-border-strong)] bg-white p-3 text-sm md:col-span-2" onChange={(event) => handleManualFile(event.target.files?.[0])} />
             </div>
             <Button type="button" className="mt-3" onClick={uploadManual} disabled={manualBusy || !manualUpload.machineModel || !manualUpload.title || !manualUpload.file}>
               {manualBusy ? 'Indexing Manual...' : 'Upload and Index Manual'}
@@ -638,8 +639,8 @@ export default function SchedulingPage() {
           <div className="flex flex-col gap-4 border-b border-zinc-100 px-5 py-4 lg:flex-row lg:items-center lg:justify-between">
             <h2 className="text-xl font-black text-[var(--color-ink)]">Schedule History</h2>
             <div className="flex flex-wrap items-center gap-2">
-              <input type="date" className="h-10 rounded-md border border-zinc-300 px-3 text-sm" value={historyFrom} onChange={(event) => setHistoryFrom(event.target.value)} />
-              <input type="date" className="h-10 rounded-md border border-zinc-300 px-3 text-sm" value={historyTo} onChange={(event) => setHistoryTo(event.target.value)} />
+              <input type="date" className="ds-input min-h-0 h-10 text-sm" value={historyFrom} onChange={(event) => setHistoryFrom(event.target.value)} />
+              <input type="date" className="ds-input min-h-0 h-10 text-sm" value={historyTo} onChange={(event) => setHistoryTo(event.target.value)} />
               <Button type="button" variant="secondary" onClick={() => loadBoard(date, historyFrom, historyTo)} disabled={!token || loading}>Search</Button>
             </div>
           </div>
@@ -659,8 +660,8 @@ function ScheduleTable({ tasks, showDate = false, emptyText, onView, onEdit, onD
 
   return (
     <div className="overflow-x-auto">
-      <table className="w-full min-w-[980px]">
-        <thead className="bg-zinc-50 text-xs uppercase tracking-[0.12em] text-zinc-500">
+      <table className="ds-table min-w-[980px]">
+        <thead>
           <tr>
             {showDate && <th className="px-5 py-4 text-left">Date</th>}
             <th className="px-5 py-4 text-left">Time</th>
@@ -710,17 +711,17 @@ function ScheduleTable({ tasks, showDate = false, emptyText, onView, onEdit, onD
                 <td className="px-5 py-4">
                   <div className="flex flex-wrap gap-2">
                     {onView && (
-                      <button type="button" onClick={() => onView(task)} className="rounded-md border border-zinc-300 bg-white px-3 py-1.5 text-xs font-bold text-zinc-700 hover:border-zinc-500">
+                      <button type="button" onClick={() => onView(task)} className="ds-button ds-button-secondary ds-button-small">
                         Details
                       </button>
                     )}
                     {onEdit && (
-                      <button type="button" onClick={() => onEdit(task)} className="rounded-md border border-zinc-300 bg-white px-3 py-1.5 text-xs font-bold text-zinc-700 hover:border-zinc-500">
+                      <button type="button" onClick={() => onEdit(task)} className="ds-button ds-button-secondary ds-button-small">
                         Edit
                       </button>
                     )}
                     {onDelete && (
-                      <button type="button" onClick={() => onDelete(task)} className="rounded-md border border-red-200 bg-red-50 px-3 py-1.5 text-xs font-bold text-red-700 hover:border-red-400">
+                      <button type="button" onClick={() => onDelete(task)} className="ds-button ds-button-danger ds-button-small">
                         Delete
                       </button>
                     )}

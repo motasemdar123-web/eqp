@@ -382,7 +382,7 @@ export default function TechnicianAppPage() {
           <div className="ds-brand-mark mx-auto h-14 w-14 text-xl">DH</div>
           <h1 className="mt-5 text-2xl font-black">تطبيق الفني</h1>
           <p className="mt-2 text-sm font-semibold text-zinc-600">ادخل بالإيميل ورقم الفني</p>
-          {message && <div className="mt-4 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm font-bold text-red-700">{message}</div>}
+          {message && <div className="ds-alert ds-alert-error mt-4 text-right">{message}</div>}
           <form onSubmit={signIn} className="mt-5 grid gap-3 text-right">
             <input
               type="email"
@@ -428,7 +428,7 @@ export default function TechnicianAppPage() {
           {pendingCount > 0 && <Badge tone="yellow">{pendingCount} بانتظار الإرسال</Badge>}
         </div>
 
-        {message && <div className="rounded-md border border-zinc-200 bg-white px-4 py-3 text-sm font-bold text-zinc-700">{message}</div>}
+        {message && <div className="ds-alert text-right">{message}</div>}
 
         <WeatherAdviceCard items={weatherAdvice} loading={weatherLoading} error={weatherError} />
 
@@ -498,7 +498,7 @@ export default function TechnicianAppPage() {
                 />
                 <label className="grid gap-2 text-sm font-bold text-zinc-700">
                   الصور
-                  <input type="file" accept="image/*" capture="environment" multiple onChange={(event) => handlePhotos(selectedTask.id, event.target.files)} className="rounded-md border border-zinc-300 bg-white p-3 text-sm" />
+                  <input type="file" accept="image/*" capture="environment" multiple onChange={(event) => handlePhotos(selectedTask.id, event.target.files)} className="rounded-md border border-[var(--color-border-strong)] bg-white p-3 text-sm" />
                 </label>
                 {(selectedDraft.photos || []).length > 0 && (
                   <div className="grid grid-cols-3 gap-2">
@@ -538,7 +538,7 @@ function WeatherAdviceCard({ items, loading, error }) {
   if (error && items.length === 0) {
     return (
       <Card className="border-[var(--color-border)] bg-[var(--color-surface-muted)] p-4">
-        <p className="text-sm font-black text-zinc-950">Ø§Ù„Ø·Ù‚Ø³ ÙˆÙ†ØµØ§Ø¦Ø­ Ø§Ù„Ø³Ù„Ø§Ù…Ø©</p>
+        <p className="text-sm font-black text-zinc-950">الطقس ونصائح السلامة</p>
         <p className="mt-2 text-sm font-semibold text-zinc-700">{error}</p>
       </Card>
     );
@@ -547,8 +547,8 @@ function WeatherAdviceCard({ items, loading, error }) {
   if (!loading && items.length === 0) {
     return (
       <Card className="border-[var(--color-border)] bg-[var(--color-surface-muted)] p-4">
-        <p className="text-sm font-black text-zinc-950">Ø§Ù„Ø·Ù‚Ø³ ÙˆÙ†ØµØ§Ø¦Ø­ Ø§Ù„Ø³Ù„Ø§Ù…Ø©</p>
-        <p className="mt-2 text-sm font-semibold text-zinc-700">No weather advice for the selected day.</p>
+        <p className="text-sm font-black text-zinc-950">الطقس ونصائح السلامة</p>
+        <p className="mt-2 text-sm font-semibold text-zinc-700">لا توجد نصائح طقس لهذا اليوم.</p>
       </Card>
     );
   }
@@ -591,15 +591,15 @@ function WeatherAdviceCard({ items, loading, error }) {
 
 function TechnicianManualAdvice({ advice, onOpenSource }) {
   const rows = [
-    ['Ø§Ù„Ø£Ø¯ÙˆØ§Øª', advice.requiredTools],
-    ['Ù…Ø¹Ø¯Ø§Øª Ø§Ù„Ø³Ù„Ø§Ù…Ø©', advice.ppe],
-    ['ØªØ­Ø°ÙŠØ±Ø§Øª', advice.warnings],
+    ['الأدوات', advice.requiredTools],
+    ['معدات السلامة', advice.ppe],
+    ['التحذيرات', advice.warnings],
   ];
   const sources = advice.sources || [];
 
   return (
     <div className="mt-4 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-muted)] p-4">
-      <p className="text-sm font-black text-zinc-950">Ø£Ø¯ÙˆØ§Øª ÙˆØªØ­Ø°ÙŠØ±Ø§Øª Ù…Ù† Ø§Ù„ÙƒØªØ§Ù„ÙˆØ¬</p>
+      <p className="text-sm font-black text-zinc-950">أدوات وتحذيرات من الكتالوج</p>
       <div className="mt-3 grid gap-3">
         {rows.map(([label, values]) => (
           <div key={label} className="rounded-md bg-white p-3">
@@ -611,7 +611,7 @@ function TechnicianManualAdvice({ advice, onOpenSource }) {
         ))}
         {sources.length > 0 && (
           <div className="rounded-md bg-white p-3">
-            <p className="text-xs font-bold text-zinc-500">Manual pages</p>
+            <p className="text-xs font-bold text-zinc-500">صفحات المانيوال</p>
             <div className="mt-2 grid gap-2">
               {sources.map((source, index) => (
                 <TechnicianManualSource

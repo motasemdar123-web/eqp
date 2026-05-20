@@ -201,19 +201,21 @@ export default function ReportsPage() {
       <div className="grid gap-6">
 
         <div className="ds-kpi-grid">
-          <ArchiveMetric label="Total Reports" value={archiveStats.total} code="TR" />
-          <ArchiveMetric label="Machines Covered" value={archiveStats.machines} code="MC" accent />
-          <ArchiveMetric label="Latest Report" value={archiveStats.lastReport} code="LR" />
+          <ArchiveMetric label="Reports" value={archiveStats.total} unit="Archived PDFs" detail="Generated files" code="TR" status="Archived" tone="archived" />
+          <ArchiveMetric label="Machines" value={archiveStats.machines} unit="Covered assets" detail="Unique machine scope" code="MC" status="Active" tone="active" accent />
+          <ArchiveMetric label="Latest" value={archiveStats.lastReport} unit="Most recent" detail="Archive activity" code="LR" status="Live" tone="live" compact />
         </div>
 
         {error && (
-          <p className="rounded-md border-l-4 border-red-500 bg-white px-4 py-3 text-sm font-semibold text-red-700 shadow-sm">
+          <p className="ds-alert ds-alert-error">
             {error}
           </p>
         )}
 
         {loading ? (
-          <p className="text-zinc-500">Loading...</p>
+          <Card className="p-6">
+            <p className="text-sm font-black text-[var(--color-muted)]">Loading archive...</p>
+          </Card>
         ) : reports.length === 0 ? (
           <EmptyState title="No reports yet" description="Generated reports will appear here." />
         ) : (
@@ -241,8 +243,8 @@ export default function ReportsPage() {
               </div>
             </div>
             <div className="overflow-x-auto">
-              <table className="w-full min-w-[960px]">
-                <thead className="bg-[var(--color-surface-muted)] text-xs uppercase tracking-[0.12em] text-[var(--color-muted)]">
+              <table className="ds-table min-w-[960px]">
+                <thead>
                   <tr>
                     <th className="px-5 py-4 text-left">
                       <input type="checkbox" checked={allVisibleSelected} onChange={toggleVisibleSelection} aria-label="Select all visible reports" />
@@ -347,13 +349,20 @@ export default function ReportsPage() {
   );
 }
 
-function ArchiveMetric({ label, value, code, accent = false }) {
+function ArchiveMetric({ label, value, unit, detail, code, status, tone = 'neutral', compact = false, accent = false }) {
   return (
     <article className="ds-kpi-card">
       <div className={`ds-icon-tile ${accent ? 'ds-icon-tile-accent' : ''}`}>{code}</div>
-      <div>
-        <div className="text-xs font-black uppercase tracking-[0.14em] text-[var(--color-muted)]">{label}</div>
-        <div className="mt-2 text-2xl font-black text-[var(--color-ink)]">{value}</div>
+      <div className="ds-kpi-content">
+        <div className="ds-kpi-head">
+          <p className="ds-kpi-label">{label}</p>
+          <Badge tone={tone}>{status}</Badge>
+        </div>
+        <div>
+          <p className={`ds-kpi-main ${compact ? 'ds-kpi-main-compact' : ''}`}>{value}</p>
+          <p className="ds-kpi-descriptor">{unit}</p>
+          <p className="ds-kpi-secondary">{detail}</p>
+        </div>
       </div>
     </article>
   );
@@ -368,7 +377,7 @@ function SortableHeader({ label, column, sortConfig, onSort }) {
       <button
         type="button"
         onClick={() => onSort(column)}
-        className="inline-flex items-center gap-1 font-bold text-[var(--color-muted)] transition hover:text-[var(--color-ink)]"
+        className="ds-sort-button"
       >
         {label} {indicator}
       </button>

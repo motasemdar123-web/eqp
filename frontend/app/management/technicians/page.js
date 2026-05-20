@@ -199,18 +199,16 @@ export default function TechniciansManagementPage() {
     >
       <div className="grid gap-6">
         {(message || error) && (
-          <div className={`rounded-md border-l-4 bg-white px-4 py-3 text-sm font-semibold shadow-sm ${
-            error ? 'border-red-500 text-red-700' : 'border-emerald-500 text-emerald-700'
-          }`}>
+          <div className={`ds-alert ${error ? 'ds-alert-error' : 'ds-alert-success'}`}>
             {error || message}
           </div>
         )}
 
         <section className="ds-kpi-grid">
-          <Metric label="Technicians" value={stats.total} code="TM" />
-          <Metric label="Available" value={stats.available} code="AV" accent />
-          <Metric label="Unavailable" value={stats.unavailable} code="UN" />
-          <Metric label="Shifts" value={shifts.length} code="SH" accent />
+          <Metric label="Technicians" value={stats.total} unit="Registered" detail="Roster records" code="TM" status="Live" tone="live" />
+          <Metric label="Available" value={stats.available} unit="Ready today" detail="Dispatch capacity" code="AV" status="Ready" tone="ready" accent />
+          <Metric label="Unavailable" value={stats.unavailable} unit="Not available" detail="Roster exceptions" code="UN" status="Active" tone="active" />
+          <Metric label="Shifts" value={shifts.length} unit="Shift templates" detail="Assignment options" code="SH" status="Ready" tone="ready" accent />
         </section>
 
         <section className="grid gap-5 xl:grid-cols-[1fr_420px]">
@@ -249,8 +247,8 @@ export default function TechniciansManagementPage() {
               </div>
             ) : (
               <div className="overflow-x-auto">
-                <table className="w-full min-w-[980px]">
-                  <thead className="bg-[var(--color-surface-muted)] text-xs uppercase tracking-[0.12em] text-[var(--color-muted)]">
+                <table className="ds-table min-w-[980px]">
+                  <thead>
                     <tr>
                       <th className="px-5 py-4 text-left">Technician</th>
                       <th className="px-5 py-4 text-left">Availability</th>
@@ -330,7 +328,7 @@ export default function TechniciansManagementPage() {
                 {shifts.map((shift) => <option key={shift.id} value={shift.id}>{shift.name} ({shift.startsAt}-{shift.endsAt})</option>)}
               </select>
               <textarea rows={3} className="ds-input py-2" placeholder="Skills separated by commas" value={form.skills} onChange={(event) => setForm((current) => ({ ...current, skills: event.target.value }))} />
-              <label className="flex h-11 items-center gap-3 rounded-md border border-[var(--color-border-strong)] bg-white px-3 text-sm font-semibold text-[var(--color-ink-soft)]">
+              <label className="ds-check-row">
                 <input type="checkbox" checked={form.isAvailable} onChange={(event) => setForm((current) => ({ ...current, isAvailable: event.target.checked }))} />
                 Available for dispatch
               </label>
@@ -345,13 +343,20 @@ export default function TechniciansManagementPage() {
   );
 }
 
-function Metric({ label, value, code, accent = false }) {
+function Metric({ label, value, unit, detail, code, status, tone = 'neutral', accent = false }) {
   return (
     <article className="ds-kpi-card">
       <div className={`ds-icon-tile ${accent ? 'ds-icon-tile-accent' : ''}`}>{code}</div>
-      <div>
-        <p className="text-xs font-black uppercase tracking-[0.14em] text-[var(--color-muted)]">{label}</p>
-        <p className="mt-2 text-3xl font-black leading-none text-[var(--color-ink)]">{value}</p>
+      <div className="ds-kpi-content">
+        <div className="ds-kpi-head">
+          <p className="ds-kpi-label">{label}</p>
+          <Badge tone={tone}>{status}</Badge>
+        </div>
+        <div>
+          <p className="ds-kpi-main">{value}</p>
+          <p className="ds-kpi-descriptor">{unit}</p>
+          <p className="ds-kpi-secondary">{detail}</p>
+        </div>
       </div>
     </article>
   );

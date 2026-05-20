@@ -249,7 +249,7 @@ export default function DashboardPage() {
     <AppShell activePage={activePage} onNavigate={handleNavigate} onLogout={logout} userCode={userCode}>
       <div className="grid gap-6">
         {error && (
-          <p className="mb-5 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
+          <p className="ds-alert ds-alert-error mb-5">
             {error}
           </p>
         )}
@@ -318,9 +318,9 @@ function DashboardContent(props) {
   return (
     <div className="grid gap-6">
       <div className="ds-kpi-grid">
-        <Metric label="Fleet Machines" value={props.machines.length} code="FM" />
-        <Metric label="Average SMR" value={props.fleetInsights.averageSmr} code="SM" accent />
-        <Metric label="Machine Types" value={props.fleetInsights.activeTypes} code="TY" />
+        <Metric label="Machines" value={props.machines.length} unit="Fleet records" detail="Available for reports" code="FM" status="Active" tone="active" />
+        <Metric label="Average SMR" value={props.fleetInsights.averageSmr} unit="Counter average" detail="Across loaded fleet" code="SM" status="Live" tone="live" accent />
+        <Metric label="Types" value={props.fleetInsights.activeTypes} unit="Machine types" detail="Report filters" code="TY" status="Ready" tone="ready" />
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[360px_1fr]">
@@ -488,13 +488,20 @@ function DashboardContent(props) {
   );
 }
 
-function Metric({ label, value, code, accent = false }) {
+function Metric({ label, value, unit, detail, code, status, tone = 'neutral', accent = false }) {
   return (
     <article className="ds-kpi-card">
       <div className={`ds-icon-tile ${accent ? 'ds-icon-tile-accent' : ''}`}>{code}</div>
-      <div>
-        <div className="text-xs font-black uppercase tracking-[0.14em] text-[var(--color-muted)]">{label}</div>
-        <div className="mt-2 text-3xl font-black text-[var(--color-ink)]">{value}</div>
+      <div className="ds-kpi-content">
+        <div className="ds-kpi-head">
+          <p className="ds-kpi-label">{label}</p>
+          <Badge tone={tone}>{status}</Badge>
+        </div>
+        <div>
+          <p className="ds-kpi-main">{value}</p>
+          <p className="ds-kpi-descriptor">{unit}</p>
+          <p className="ds-kpi-secondary">{detail}</p>
+        </div>
       </div>
     </article>
   );
@@ -506,8 +513,8 @@ function MachinesTable({ machines, selectedMachines, toggleMachine, toggleSelect
 
   return (
     <div className="overflow-x-auto">
-      <table className="w-full min-w-[820px]">
-        <thead className="bg-[var(--color-surface-muted)] text-xs uppercase tracking-[0.12em] text-[var(--color-muted)]">
+      <table className="ds-table min-w-[820px]">
+        <thead>
           <tr>
             <th className="px-5 py-4 text-left">
               <input type="checkbox" checked={allVisibleSelected} onChange={toggleSelectAll} />
@@ -551,7 +558,7 @@ function SortableHeader({ label, column, sortConfig, onSort }) {
       <button
         type="button"
         onClick={() => onSort(column)}
-        className="inline-flex items-center gap-1 font-bold text-[var(--color-muted)] transition hover:text-[var(--color-ink)]"
+        className="ds-sort-button"
       >
         {label} {indicator}
       </button>
@@ -573,8 +580,8 @@ function MachineHistory({ history }) {
         </div>
       ) : (
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[900px]">
-            <thead className="bg-[var(--color-surface-muted)] text-xs uppercase tracking-[0.12em] text-[var(--color-muted)]">
+          <table className="ds-table min-w-[900px]">
+            <thead>
               <tr>
                 <th className="px-5 py-4 text-left">Machine</th>
                 <th className="px-5 py-4 text-left">Operation</th>

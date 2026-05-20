@@ -12,10 +12,10 @@ const modules = [
 ];
 
 const controls = [
-  { label: 'Output Format', value: 'PDF', code: 'PDF', status: 'Preserved' },
-  { label: 'Access', value: 'Engineers', code: 'AC', status: 'RBAC' },
-  { label: 'Storage', value: 'Supabase', code: 'ST', status: 'Live' },
-  { label: 'Numbering', value: 'Preserved', code: 'NO', status: 'Ready' },
+  { label: 'Format', value: 'PDF', unit: 'Final reports', detail: 'Preserved output', code: 'PDF', status: 'Preserved', tone: 'preserved' },
+  { label: 'Access', value: 'Engineers', unit: 'RBAC scoped', detail: 'Engineer workflow', code: 'AC', status: 'Ready', tone: 'ready' },
+  { label: 'Storage', value: 'Supabase', unit: 'Archive bucket', detail: 'Live document store', code: 'ST', status: 'Live', tone: 'live' },
+  { label: 'Numbering', value: 'Preserved', unit: 'Report sequence', detail: 'Existing logic kept', code: 'NO', status: 'Ready', tone: 'ready' },
 ];
 
 const workflow = ['Select machines', 'Populate EQP workbook', 'Export final PDF', 'Store and archive'];
@@ -33,10 +33,16 @@ export default function EqpModulePage() {
           {controls.map((item, index) => (
             <article key={item.label} className="ds-kpi-card">
               <div className={`ds-icon-tile ${index % 2 ? 'ds-icon-tile-accent' : ''}`}>{item.code}</div>
-              <div className="min-w-0">
-                <p className="text-xs font-black uppercase tracking-[0.14em] text-[var(--color-muted)]">{item.label}</p>
-                <p className="mt-3 text-2xl font-black text-[var(--color-ink)]">{item.value}</p>
-                <div className="mt-2"><Badge tone={index === 0 ? 'preserved' : 'ready'}>{item.status}</Badge></div>
+              <div className="ds-kpi-content">
+                <div className="ds-kpi-head">
+                  <p className="ds-kpi-label">{item.label}</p>
+                  <Badge tone={item.tone}>{item.status}</Badge>
+                </div>
+                <div>
+                  <p className="ds-kpi-main ds-kpi-main-compact">{item.value}</p>
+                  <p className="ds-kpi-descriptor">{item.unit}</p>
+                  <p className="ds-kpi-secondary">{item.detail}</p>
+                </div>
               </div>
             </article>
           ))}

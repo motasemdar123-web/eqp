@@ -125,15 +125,15 @@ export default function SystemShell({
             </nav>
 
             <div className="ds-top-actions">
-              <div className="ds-session-chip px-3 py-2 text-sm">
-                <span className="block max-w-52 truncate font-semibold">
+              <div className="ds-session-chip px-2.5 py-1.5 text-sm">
+                <span className="block max-w-40 truncate font-semibold">
                   {hasHydrated ? (user?.fullName || user?.email || 'Not signed in') : 'Loading session'}
                 </span>
-                <span className="block max-w-52 truncate text-xs">
+                <span className="block max-w-40 truncate text-xs">
                   {user ? roleLabel : hasHydrated ? 'Authentication required' : 'Checking authentication'}
                 </span>
               </div>
-              {user && <Button type="button" variant="ghost" onClick={logout}>Logout</Button>}
+              {user && <Button type="button" variant="ghost" size="sm" onClick={logout}>Logout</Button>}
             </div>
           </div>
 

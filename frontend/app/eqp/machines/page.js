@@ -94,14 +94,14 @@ export default function MachinesPage() {
     >
       <div className="grid gap-6">
         {error && (
-          <p className="rounded-md border-l-4 border-red-500 bg-white px-4 py-3 text-sm font-semibold text-red-700 shadow-sm">{error}</p>
+          <p className="ds-alert ds-alert-error">{error}</p>
         )}
 
         <section className="ds-kpi-grid">
-          <Metric label="Machines" value={stats.machines} code="MA" />
-          <Metric label="Machine Types" value={stats.types} code="TY" accent />
-          <Metric label="Average SMR" value={stats.averageSmr} code="SM" />
-          <Metric label="Engineers" value={stats.activeEngineers} code="EN" accent />
+          <Metric label="Machines" value={stats.machines} unit="Registered" detail="Fleet records" code="MA" status="Active" tone="active" />
+          <Metric label="Types" value={stats.types} unit="Machine types" detail="Available filters" code="TY" status="Ready" tone="ready" accent />
+          <Metric label="Average SMR" value={stats.averageSmr} unit="Fleet average" detail="Live counter view" code="SM" status="Live" tone="live" />
+          <Metric label="Engineers" value={stats.activeEngineers} unit="Assigned owners" detail="Active coverage" code="EN" status="Ready" tone="ready" accent />
         </section>
 
         <Card className="overflow-hidden">
@@ -138,8 +138,8 @@ export default function MachinesPage() {
             </div>
           ) : (
             <div className="overflow-x-auto">
-              <table className="w-full min-w-[980px]">
-                <thead className="bg-[var(--color-surface-muted)] text-xs uppercase tracking-[0.12em] text-[var(--color-muted)]">
+              <table className="ds-table min-w-[980px]">
+                <thead>
                   <tr>
                     <th className="px-5 py-4 text-left">Machine</th>
                     <th className="px-5 py-4 text-left">Type</th>
@@ -175,13 +175,20 @@ export default function MachinesPage() {
   );
 }
 
-function Metric({ label, value, code, accent = false }) {
+function Metric({ label, value, unit, detail, code, status, tone = 'neutral', accent = false }) {
   return (
     <article className="ds-kpi-card">
       <div className={`ds-icon-tile ${accent ? 'ds-icon-tile-accent' : ''}`}>{code}</div>
-      <div>
-        <p className="text-xs font-black uppercase tracking-[0.14em] text-[var(--color-muted)]">{label}</p>
-        <p className="mt-2 text-3xl font-black leading-none text-[var(--color-ink)]">{value}</p>
+      <div className="ds-kpi-content">
+        <div className="ds-kpi-head">
+          <p className="ds-kpi-label">{label}</p>
+          <Badge tone={tone}>{status}</Badge>
+        </div>
+        <div>
+          <p className="ds-kpi-main">{value}</p>
+          <p className="ds-kpi-descriptor">{unit}</p>
+          <p className="ds-kpi-secondary">{detail}</p>
+        </div>
       </div>
     </article>
   );
