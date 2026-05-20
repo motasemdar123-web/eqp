@@ -62,6 +62,8 @@ body {
   background: var(--color-canvas);
   color: var(--color-ink);
   font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  line-height: 1.45;
 }
 
 button,
@@ -1686,6 +1688,91 @@ textarea {
   box-shadow: var(--shadow-control);
 }
 
+/* Calmer enterprise typography across the app. */
+.ds-shell {
+  font-size: 0.875rem;
+}
+
+.ds-page-eyebrow,
+.ds-sidebar-section-label {
+  font-size: 0.66rem !important;
+  letter-spacing: 0.12em !important;
+}
+
+.ds-page-title {
+  font-size: clamp(1.45rem, 1.8vw, 1.8rem) !important;
+  font-weight: 850 !important;
+  line-height: 1.15 !important;
+}
+
+.ds-page-description {
+  max-width: 38rem !important;
+  font-size: 0.82rem !important;
+  font-weight: 650 !important;
+  line-height: 1.55 !important;
+}
+
+.ds-panel-title,
+.ds-side-widget h2,
+.ds-project-table-card h2 {
+  font-size: 1rem !important;
+  font-weight: 800 !important;
+}
+
+.ds-button {
+  min-height: 2.35rem;
+  padding: 0.5rem 0.85rem;
+  font-size: 0.8rem;
+  font-weight: 750;
+}
+
+.ds-button-small {
+  min-height: 2rem;
+  padding: 0.38rem 0.65rem;
+  font-size: 0.74rem;
+}
+
+.ds-badge {
+  min-height: 1.35rem;
+  padding: 0.18rem 0.55rem;
+  font-size: 0.68rem;
+  font-weight: 750;
+}
+
+.ds-field {
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.ds-input,
+.ds-field input,
+.ds-field select,
+.ds-field textarea {
+  min-height: 2.4rem;
+  font-size: 0.84rem;
+}
+
+.ds-side-nav-link {
+  min-height: 2.35rem !important;
+  font-size: 0.82rem !important;
+  font-weight: 750 !important;
+}
+
+.ds-sidebar-brand .text-lg {
+  font-size: 1rem !important;
+}
+
+.ds-kpi-main {
+  font-size: clamp(1.55rem, 2vw, 1.95rem) !important;
+}
+
+.ds-kpi-descriptor,
+.ds-kpi-secondary,
+.ds-table td,
+.ds-shell td {
+  font-size: 0.82rem !important;
+}
+
 .eng-workspace-shell {
   display: grid;
   gap: 1rem;
@@ -1703,14 +1790,14 @@ textarea {
 }
 
 .eng-tab {
-  min-height: 2.35rem;
+  min-height: 2.2rem;
   border: 0;
   border-radius: 999px;
   background: transparent;
   padding: 0.55rem 0.95rem;
   color: var(--color-muted);
-  font-size: 0.84rem;
-  font-weight: 900;
+  font-size: 0.8rem;
+  font-weight: 750;
   transition: background-color 160ms ease, color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
 }
 
@@ -1727,7 +1814,7 @@ textarea {
 
 .eng-creative-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 22rem;
+  grid-template-columns: minmax(0, 1fr) 18rem;
   gap: 1rem;
   align-items: start;
 }
@@ -1752,7 +1839,7 @@ textarea {
   overflow-x: auto;
   border-bottom: 1px solid var(--color-border);
   background: linear-gradient(180deg, #ffffff, #f7fbff);
-  padding: 0.8rem;
+  padding: 0.65rem;
 }
 
 .eng-toolbar-divider {
@@ -1763,7 +1850,7 @@ textarea {
 
 .eng-canvas {
   position: relative;
-  min-height: 42rem;
+  min-height: 36rem;
   overflow: auto;
   background:
     linear-gradient(var(--color-border) 1px, transparent 1px),
@@ -1834,8 +1921,8 @@ textarea {
   border: 0;
   background: transparent;
   color: var(--color-ink);
-  font-size: 0.95rem;
-  font-weight: 900;
+  font-size: 0.84rem;
+  font-weight: 750;
   line-height: 1.45;
   outline: none;
 }
@@ -1888,8 +1975,8 @@ textarea {
   background: rgba(255, 255, 255, 0.86);
   padding: 0.35rem 0.55rem;
   color: var(--color-ink);
-  font-size: 0.82rem;
-  font-weight: 900;
+  font-size: 0.76rem;
+  font-weight: 750;
   outline: none;
 }
 
@@ -1939,23 +2026,23 @@ textarea {
 .eng-task-form-card {
   position: sticky;
   top: 1rem;
-  padding: 1.1rem;
+  padding: 0.9rem;
 }
 
 .eng-side-panel h2,
 .eng-task-form-card h2,
 .eng-task-section h2 {
   color: var(--color-ink);
-  font-size: 1.05rem;
-  font-weight: 900;
+  font-size: 0.95rem;
+  font-weight: 800;
 }
 
 .eng-side-panel p,
 .eng-task-form-card p {
   margin-top: 0.35rem;
   color: var(--color-muted);
-  font-size: 0.84rem;
-  font-weight: 800;
+  font-size: 0.78rem;
+  font-weight: 650;
   line-height: 1.5;
 }
 
@@ -2221,6 +2308,157 @@ textarea {
   text-align: center;
 }
 
+.eng-simple-planner {
+  display: grid;
+  gap: 0.9rem;
+  max-width: 54rem;
+}
+
+.eng-simple-planner-head,
+.eng-simple-summary,
+.eng-simple-form-card,
+.eng-simple-list-card {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  background: var(--color-elevated);
+  box-shadow: var(--shadow-card);
+}
+
+.eng-simple-planner-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.eng-simple-planner-head p,
+.eng-simple-summary span,
+.eng-simple-list-head span {
+  color: var(--color-muted);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.eng-simple-planner-head h2 {
+  margin-top: 0.2rem;
+  color: var(--color-ink);
+  font-size: clamp(1.15rem, 2vw, 1.45rem);
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.eng-simple-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.85rem;
+  min-width: 12rem;
+  padding: 0.75rem;
+  box-shadow: none;
+}
+
+.eng-simple-summary strong {
+  display: block;
+  margin-top: 0.15rem;
+  color: var(--color-ink);
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.eng-simple-form-card,
+.eng-simple-list-card {
+  padding: 1rem;
+}
+
+.eng-simple-form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 10rem auto;
+  gap: 0.75rem;
+  align-items: end;
+}
+
+.eng-simple-list-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.eng-simple-list-head h2 {
+  color: var(--color-ink);
+  font-size: 0.98rem;
+  font-weight: 800;
+}
+
+.eng-simple-task-list {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.eng-simple-task {
+  display: grid;
+  grid-template-columns: auto 4.5rem minmax(0, 1fr) auto;
+  gap: 0.7rem;
+  align-items: center;
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  background: #ffffff;
+  padding: 0.65rem 0.75rem;
+  transition: border-color 160ms ease, background-color 160ms ease, box-shadow 160ms ease;
+}
+
+.eng-simple-task:hover {
+  border-color: rgba(15, 140, 240, 0.22);
+  box-shadow: var(--shadow-control);
+}
+
+.eng-simple-task-done {
+  background: #f8fafc;
+}
+
+.eng-simple-check {
+  display: grid;
+  place-items: center;
+  width: 1.35rem;
+  height: 1.35rem;
+  overflow: hidden;
+  border: 1px solid var(--color-border-strong);
+  border-radius: 7px;
+  background: #ffffff;
+  color: #ffffff;
+  font-size: 0;
+}
+
+.eng-simple-check-done {
+  border-color: var(--color-success);
+  background:
+    linear-gradient(135deg, transparent 43%, #ffffff 44%, #ffffff 56%, transparent 57%) 48% 38% / 0.85rem 0.85rem no-repeat,
+    var(--color-success);
+}
+
+.eng-simple-task time {
+  color: var(--color-brand);
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.eng-simple-task span {
+  min-width: 0;
+  color: var(--color-ink);
+  font-size: 0.88rem;
+  font-weight: 750;
+  line-height: 1.35;
+}
+
+.eng-simple-task-done span {
+  color: var(--color-muted);
+  text-decoration: line-through;
+}
+
 @media (max-width: 1100px) {
   .ds-reference-shell {
     grid-template-columns: minmax(0, 1fr);
@@ -2391,5 +2629,28 @@ textarea {
 
   .eng-task-actions {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .eng-simple-planner-head,
+  .eng-simple-form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .eng-simple-planner-head {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .eng-simple-summary {
+    min-width: 0;
+  }
+
+  .eng-simple-task {
+    grid-template-columns: auto 4rem minmax(0, 1fr);
+  }
+
+  .eng-simple-task .ds-button {
+    grid-column: 1 / -1;
+    justify-self: start;
   }
 }

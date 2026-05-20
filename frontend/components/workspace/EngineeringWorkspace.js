@@ -32,9 +32,6 @@ const wireframeTypes = [
   'Checklist',
 ];
 
-const statuses = ['todo', 'in_progress', 'done', 'blocked'];
-const priorities = ['low', 'medium', 'high', 'critical'];
-const categories = ['Inspection', 'Report', 'Machine', 'Technician', 'Safety', 'Admin', 'Other'];
 const DEMO_CREATED_AT = '2026-05-20T00:00:00.000Z';
 
 function nowIso() {
@@ -152,11 +149,7 @@ function defaultPlannerTasks() {
     {
       id: 'demo-task-hydraulic-temperature',
       title: 'Inspect hydraulic oil temperature',
-      description: 'Confirm actual temperature, fan condition, and recent alarm history.',
-      priority: 'high',
-      status: 'todo',
       dueTime: '09:00',
-      category: 'Inspection',
       completed: false,
       createdAt,
       updatedAt: createdAt,
@@ -164,11 +157,7 @@ function defaultPlannerTasks() {
     {
       id: 'demo-task-eqp-upload',
       title: 'Review EQP report upload',
-      description: 'Check latest report attachment and missing machine references.',
-      priority: 'medium',
-      status: 'in_progress',
       dueTime: '11:30',
-      category: 'Report',
       completed: false,
       createdAt,
       updatedAt: createdAt,
@@ -176,11 +165,7 @@ function defaultPlannerTasks() {
     {
       id: 'demo-task-tomorrow-plan',
       title: 'Prepare tomorrow maintenance plan',
-      description: 'Set technician coverage and machine priorities for the morning review.',
-      priority: 'low',
-      status: 'todo',
       dueTime: '15:30',
-      category: 'Admin',
       completed: false,
       createdAt,
       updatedAt: createdAt,
@@ -188,11 +173,7 @@ function defaultPlannerTasks() {
     {
       id: 'demo-task-pressure-safety',
       title: 'Check safety notes for pressure testing',
-      description: 'Blocked until pressure test permit is confirmed.',
-      priority: 'critical',
-      status: 'blocked',
       dueTime: '13:00',
-      category: 'Safety',
       completed: false,
       createdAt,
       updatedAt: createdAt,
@@ -214,30 +195,6 @@ function loadStoredItems(key, fallback) {
 function saveStoredItems(key, items) {
   if (typeof window === 'undefined') return;
   localStorage.setItem(key, JSON.stringify(items));
-}
-
-function statusLabel(status) {
-  const labels = {
-    todo: 'Todo',
-    in_progress: 'In Progress',
-    done: 'Done',
-    blocked: 'Blocked',
-  };
-  return labels[status] || status;
-}
-
-function priorityTone(priority) {
-  if (priority === 'critical') return 'critical';
-  if (priority === 'high') return 'warning';
-  if (priority === 'low') return 'neutral';
-  return 'info';
-}
-
-function statusTone(status) {
-  if (status === 'done') return 'completed';
-  if (status === 'in_progress') return 'live';
-  if (status === 'blocked') return 'critical';
-  return 'pending';
 }
 
 function WorkspaceTabs({ activeTab, onTabChange }) {
@@ -621,119 +578,56 @@ function CreativeArea({ onToast }) {
   );
 }
 
-function PlannerStats({ tasks }) {
-  const completed = tasks.filter((task) => task.status === 'done').length;
-  const inProgress = tasks.filter((task) => task.status === 'in_progress').length;
-  const blocked = tasks.filter((task) => task.status === 'blocked').length;
-  const completion = tasks.length ? Math.round((completed / tasks.length) * 100) : 0;
-  const stats = [
-    { label: 'Total Tasks', value: tasks.length, tone: 'info' },
-    { label: 'Completed', value: completed, tone: 'completed' },
-    { label: 'In Progress', value: inProgress, tone: 'live' },
-    { label: 'Blocked', value: blocked, tone: 'critical' },
-    { label: 'Completion', value: `${completion}%`, tone: 'ready' },
-  ];
+function PlannerSummary({ tasks }) {
+  const completed = tasks.filter((task) => task.completed).length;
+  const total = tasks.length;
 
   return (
-    <div className="eng-planner-stats">
-      {stats.map((item) => (
-        <Card key={item.label} className="eng-planner-stat">
-          <span>{item.label}</span>
-          <strong>{item.value}</strong>
-          <Badge tone={item.tone}>Today</Badge>
-        </Card>
-      ))}
-    </div>
+    <Card className="eng-simple-summary">
+      <div>
+        <span>Today</span>
+        <strong>{completed}/{total} done</strong>
+      </div>
+      <Badge tone={completed === total && total > 0 ? 'completed' : 'info'}>{total} tasks</Badge>
+    </Card>
   );
 }
 
-function PlannerTaskForm({ form, setForm, onSubmit, editingTask, onCancel }) {
+function SimpleTaskForm({ title, setTitle, dueTime, setDueTime, onSubmit }) {
   return (
-    <Card className="eng-task-form-card">
-      <div className="eng-panel-head">
-        <div>
-          <h2>{editingTask ? 'Edit Task' : 'Add Daily Task'}</h2>
-          <p>Plan work, priority, due time, and category.</p>
-        </div>
-      </div>
-      <form className="eng-task-form" onSubmit={onSubmit}>
-        <Field label="Task title">
+    <Card className="eng-simple-form-card">
+      <form className="eng-simple-form" onSubmit={onSubmit}>
+        <Field label="Task">
           <input
-            value={form.title}
-            onChange={(event) => setForm((current) => ({ ...current, title: event.target.value }))}
-            placeholder="Inspect hydraulic oil temperature"
+            value={title}
+            onChange={(event) => setTitle(event.target.value)}
+            placeholder="Add a task"
             required
           />
         </Field>
-        <Field label="Description">
-          <textarea
-            rows={3}
-            value={form.description}
-            onChange={(event) => setForm((current) => ({ ...current, description: event.target.value }))}
-            placeholder="Optional details, context, or blockers"
-          />
+        <Field label="Time">
+          <input type="time" value={dueTime} onChange={(event) => setDueTime(event.target.value)} />
         </Field>
-        <div className="eng-form-grid">
-          <Field label="Priority">
-            <select value={form.priority} onChange={(event) => setForm((current) => ({ ...current, priority: event.target.value }))}>
-              {priorities.map((priority) => <option key={priority} value={priority}>{priority}</option>)}
-            </select>
-          </Field>
-          <Field label="Status">
-            <select value={form.status} onChange={(event) => setForm((current) => ({ ...current, status: event.target.value }))}>
-              {statuses.map((status) => <option key={status} value={status}>{statusLabel(status)}</option>)}
-            </select>
-          </Field>
-          <Field label="Due time">
-            <input type="time" value={form.dueTime} onChange={(event) => setForm((current) => ({ ...current, dueTime: event.target.value }))} />
-          </Field>
-          <Field label="Category">
-            <select value={form.category} onChange={(event) => setForm((current) => ({ ...current, category: event.target.value }))}>
-              {categories.map((category) => <option key={category} value={category}>{category}</option>)}
-            </select>
-          </Field>
-        </div>
-        <div className="eng-panel-actions">
-          <Button type="submit">{editingTask ? 'Update Task' : 'Add Task'}</Button>
-          {editingTask && <Button type="button" variant="ghost" onClick={onCancel}>Cancel</Button>}
-        </div>
+        <Button type="submit">Add</Button>
       </form>
     </Card>
   );
 }
 
-function PlannerTaskCard({ task, onToggleDone, onEdit, onDelete, onStatusChange }) {
+function SimpleTaskRow({ task, onToggle, onDelete }) {
   return (
-    <article className={task.status === 'done' ? 'eng-task-card eng-task-card-done' : 'eng-task-card'}>
+    <article className={task.completed ? 'eng-simple-task eng-simple-task-done' : 'eng-simple-task'}>
       <button
         type="button"
-        className={task.status === 'done' ? 'eng-task-check eng-task-check-done' : 'eng-task-check'}
-        onClick={() => onToggleDone(task)}
-        aria-label={`Mark ${task.title} ${task.status === 'done' ? 'not done' : 'done'}`}
+        className={task.completed ? 'eng-simple-check eng-simple-check-done' : 'eng-simple-check'}
+        onClick={() => onToggle(task.id)}
+        aria-label={`Mark ${task.title} ${task.completed ? 'not done' : 'done'}`}
       >
-        {task.status === 'done' ? '✓' : ''}
+        {task.completed ? 'Done' : ''}
       </button>
-      <div className="eng-task-body">
-        <div className="eng-task-title-row">
-          <h3>{task.title}</h3>
-          <div className="eng-task-badges">
-            <Badge tone={priorityTone(task.priority)}>{task.priority}</Badge>
-            <Badge tone={statusTone(task.status)}>{statusLabel(task.status)}</Badge>
-          </div>
-        </div>
-        {task.description && <p>{task.description}</p>}
-        <div className="eng-task-meta">
-          <span>{task.dueTime || 'No time'}</span>
-          <span>{task.category || 'Other'}</span>
-        </div>
-      </div>
-      <div className="eng-task-actions">
-        <select value={task.status} onChange={(event) => onStatusChange(task, event.target.value)} aria-label="Task status">
-          {statuses.map((status) => <option key={status} value={status}>{statusLabel(status)}</option>)}
-        </select>
-        <Button type="button" variant="secondary" size="sm" onClick={() => onEdit(task)}>Edit</Button>
-        <Button type="button" variant="danger" size="sm" onClick={() => onDelete(task.id)}>Delete</Button>
-      </div>
+      <time>{task.dueTime || '--:--'}</time>
+      <span>{task.title}</span>
+      <Button type="button" variant="ghost" size="sm" onClick={() => onDelete(task.id)}>Delete</Button>
     </article>
   );
 }
@@ -741,16 +635,8 @@ function PlannerTaskCard({ task, onToggleDone, onEdit, onDelete, onStatusChange 
 function DayPlanner({ onToast }) {
   const didLoadRef = useRef(false);
   const [tasks, setTasks] = useState(() => defaultPlannerTasks());
-  const [filter, setFilter] = useState('all');
-  const [editingTask, setEditingTask] = useState(null);
-  const [form, setForm] = useState({
-    title: '',
-    description: '',
-    priority: 'medium',
-    status: 'todo',
-    dueTime: '',
-    category: 'Inspection',
-  });
+  const [title, setTitle] = useState('');
+  const [dueTime, setDueTime] = useState('');
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -767,155 +653,81 @@ function DayPlanner({ onToast }) {
 
   const todayLabel = new Intl.DateTimeFormat('en', {
     weekday: 'long',
-    month: 'long',
+    month: 'short',
     day: 'numeric',
-    year: 'numeric',
   }).format(new Date());
 
-  const filteredTasks = useMemo(() => {
-    if (filter === 'all') return tasks;
-    if (filter === 'critical') return tasks.filter((task) => task.priority === 'critical');
-    return tasks.filter((task) => task.status === filter);
-  }, [filter, tasks]);
+  const sortedTasks = useMemo(() => [...tasks].sort((a, b) => {
+    if (a.completed !== b.completed) return a.completed ? 1 : -1;
+    return String(a.dueTime || '99:99').localeCompare(String(b.dueTime || '99:99'));
+  }), [tasks]);
 
-  const groupedTasks = useMemo(() => ({
-    todo: filteredTasks.filter((task) => task.status === 'todo'),
-    in_progress: filteredTasks.filter((task) => task.status === 'in_progress'),
-    done: filteredTasks.filter((task) => task.status === 'done'),
-    blocked: filteredTasks.filter((task) => task.status === 'blocked'),
-  }), [filteredTasks]);
-
-  function resetForm() {
-    setEditingTask(null);
-    setForm({
-      title: '',
-      description: '',
-      priority: 'medium',
-      status: 'todo',
-      dueTime: '',
-      category: 'Inspection',
-    });
-  }
-
-  function saveTask(event) {
+  function addTask(event) {
     event.preventDefault();
+    const cleanTitle = title.trim();
+    if (!cleanTitle) return;
     const timestamp = nowIso();
-    if (editingTask) {
-      setTasks((current) => current.map((task) => (
-        task.id === editingTask.id
-          ? { ...task, ...form, completed: form.status === 'done', updatedAt: timestamp }
-          : task
-      )));
-      onToast('Task updated.');
-    } else {
-      setTasks((current) => [
-        ...current,
-        {
-          ...form,
-          id: createId('task'),
-          completed: form.status === 'done',
-          createdAt: timestamp,
-          updatedAt: timestamp,
-        },
-      ]);
-      onToast('Task added.');
-    }
-    resetForm();
+    setTasks((current) => [
+      ...current,
+      {
+        id: createId('task'),
+        title: cleanTitle,
+        dueTime,
+        completed: false,
+        createdAt: timestamp,
+        updatedAt: timestamp,
+      },
+    ]);
+    setTitle('');
+    setDueTime('');
+    onToast('Task added.');
   }
 
-  function editTask(task) {
-    setEditingTask(task);
-    setForm({
-      title: task.title,
-      description: task.description || '',
-      priority: task.priority || 'medium',
-      status: task.status || 'todo',
-      dueTime: task.dueTime || '',
-      category: task.category || 'Other',
-    });
+  function toggleTask(id) {
+    const timestamp = nowIso();
+    setTasks((current) => current.map((task) => (
+      task.id === id ? { ...task, completed: !task.completed, updatedAt: timestamp } : task
+    )));
   }
 
   function deleteTask(id) {
     setTasks((current) => current.filter((task) => task.id !== id));
-    if (editingTask?.id === id) resetForm();
     onToast('Task deleted.');
   }
 
-  function updateTaskStatus(task, status) {
-    const timestamp = nowIso();
-    setTasks((current) => current.map((item) => (
-      item.id === task.id
-        ? { ...item, status, completed: status === 'done', updatedAt: timestamp }
-        : item
-    )));
-  }
-
-  function toggleDone(task) {
-    updateTaskStatus(task, task.status === 'done' ? 'todo' : 'done');
-  }
-
   return (
-    <div className="eng-planner">
-      <div className="eng-planner-heading">
+    <div className="eng-simple-planner">
+      <div className="eng-simple-planner-head">
         <div>
-          <p>Today&apos;s plan</p>
+          <p>Day Planner</p>
           <h2>{todayLabel}</h2>
         </div>
-        <div className="eng-filter-row">
-          {['all', ...statuses, 'critical'].map((item) => (
-            <button
-              key={item}
-              type="button"
-              className={filter === item ? 'eng-filter eng-filter-active' : 'eng-filter'}
-              onClick={() => setFilter(item)}
-            >
-              {item === 'all' ? 'All' : item === 'critical' ? 'Critical' : statusLabel(item)}
-            </button>
-          ))}
-        </div>
+        <PlannerSummary tasks={tasks} />
       </div>
 
-      <PlannerStats tasks={tasks} />
+      <SimpleTaskForm
+        title={title}
+        setTitle={setTitle}
+        dueTime={dueTime}
+        setDueTime={setDueTime}
+        onSubmit={addTask}
+      />
 
-      <div className="eng-planner-grid">
-        <div className="eng-task-sections">
-          {statuses.map((status) => (
-            <Card key={status} className="eng-task-section">
-              <div className="eng-section-head">
-                <h2>{statusLabel(status)}</h2>
-                <Badge tone={statusTone(status)}>{groupedTasks[status].length}</Badge>
-              </div>
-              <div className="eng-task-list">
-                {groupedTasks[status].map((task) => (
-                  <PlannerTaskCard
-                    key={task.id}
-                    task={task}
-                    onToggleDone={toggleDone}
-                    onEdit={editTask}
-                    onDelete={deleteTask}
-                    onStatusChange={updateTaskStatus}
-                  />
-                ))}
-                {groupedTasks[status].length === 0 && (
-                  <div className="eng-section-empty">No {statusLabel(status).toLowerCase()} tasks.</div>
-                )}
-              </div>
-            </Card>
-          ))}
+      <Card className="eng-simple-list-card">
+        <div className="eng-simple-list-head">
+          <h2>Tasks</h2>
+          <span>{sortedTasks.length} total</span>
         </div>
-
-        <PlannerTaskForm
-          form={form}
-          setForm={setForm}
-          onSubmit={saveTask}
-          editingTask={editingTask}
-          onCancel={resetForm}
-        />
-      </div>
+        <div className="eng-simple-task-list">
+          {sortedTasks.map((task) => (
+            <SimpleTaskRow key={task.id} task={task} onToggle={toggleTask} onDelete={deleteTask} />
+          ))}
+          {sortedTasks.length === 0 && <EmptyState title="No tasks" description="Add a task with a time to plan your day." />}
+        </div>
+      </Card>
     </div>
   );
 }
-
 export default function EngineeringWorkspace() {
   const [activeTab, setActiveTab] = useState('creative');
   const [toast, setToast] = useState('');
@@ -923,7 +735,7 @@ export default function EngineeringWorkspace() {
   const title = activeTab === 'creative' ? 'Creative Area' : 'Day Planner';
   const description = activeTab === 'creative'
     ? 'Visualize maintenance ideas, workflows, and wireframes on an interactive engineering canvas.'
-    : 'Plan daily engineering work, track priorities, and keep execution visible.';
+    : 'Build a simple timed task list for the day.';
 
   return (
     <SystemShell
