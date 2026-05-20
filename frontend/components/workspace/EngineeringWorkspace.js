@@ -1214,7 +1214,7 @@ function CanvasCreativeArea({ onToast }) {
         onClose={() => setTemplatesOpen(false)}
         onUseTemplate={applyCreativeTemplate}
       />
-      <div className="eng-creative-grid">
+      <div className={selectedItem ? 'eng-creative-grid eng-creative-grid-selected' : 'eng-creative-grid'}>
         <section className="eng-board-shell">
           <CanvasToolbar
             onOpenTemplates={() => setTemplatesOpen(true)}
@@ -1253,12 +1253,14 @@ function CanvasCreativeArea({ onToast }) {
             ))}
           </div>
         </section>
-        <PropertiesPanel
-          selectedItem={selectedItem}
-          onChange={updateItem}
-          onDelete={deleteItem}
-          onDuplicate={duplicateItem}
-        />
+        {selectedItem && (
+          <PropertiesPanel
+            selectedItem={selectedItem}
+            onChange={updateItem}
+            onDelete={deleteItem}
+            onDuplicate={duplicateItem}
+          />
+        )}
       </div>
     </div>
   );
