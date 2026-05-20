@@ -1,11 +1,9 @@
 'use client';
 
 import Link from 'next/link';
-import { useMemo, useState } from 'react';
 import SystemShell from '../../components/SystemShell';
 import Card from '../../components/ui/Card';
 import Badge from '../../components/ui/Badge';
-import { getStoredPlatformSession } from '../../lib/auth';
 
 const modules = [
   { title: 'Technicians Management', href: '/management/technicians', status: 'Live', code: 'TM', description: 'Technician records, shifts, regions, skills, and dispatch availability.' },
@@ -34,22 +32,12 @@ const operations = [
 ];
 
 export default function ManagementDashboardPage() {
-  const [session] = useState(() => getStoredPlatformSession());
-  const user = session?.user;
-  const roleLabel = useMemo(() => user?.roles?.join(', ') || 'Guest view', [user]);
-
   return (
     <SystemShell
       activePath="/management"
       eyebrow="Dar Al Hai"
       title="Dashboard"
       description="A unified maintenance operations view for technician administration, scheduling, and EQP reporting."
-      userLabel={roleLabel}
-      actions={!user ? (
-        <Link href="/" className="ds-button ds-button-secondary">
-          Sign In
-        </Link>
-      ) : null}
     >
       <section className="grid gap-5">
         <div className="ds-kpi-grid">
