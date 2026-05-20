@@ -55,24 +55,11 @@ const kpis = [
   },
 ];
 
-const operations = [
-  { label: 'Technicians', value: '39%', color: 'var(--color-brand)' },
-  { label: 'Scheduling', value: '25%', color: 'var(--color-accent)' },
-  { label: 'EQP Reports', value: '19%', color: 'var(--color-info)' },
-  { label: 'Machines', value: '17%', color: 'var(--color-warning)' },
-];
-
 const governanceItems = [
   { title: 'RBAC permissions', value: '88%', width: '88%' },
   { title: 'Audit-ready activities', value: '76%', width: '76%' },
   { title: 'SLA and escalation readiness', value: '64%', width: '64%' },
   { title: 'Centralized role routing', value: '92%', width: '92%' },
-];
-
-const governanceSummary = [
-  { value: '4', label: 'Controls' },
-  { value: '80%', label: 'Avg Readiness' },
-  { value: 'Enterprise', label: 'Status' },
 ];
 
 const modules = [
@@ -91,6 +78,17 @@ const activity = [
   { action: 'Machine maintenance record archived', time: '11:00 AM', status: 'Archived' },
 ];
 
+const chartBars = [
+  { label: '18/05', primary: 88, secondary: 40 },
+  { label: '19/05', primary: 68, secondary: 34 },
+  { label: '20/05', primary: 76, secondary: 60 },
+  { label: '21/05', primary: 32, secondary: 54 },
+  { label: '22/05', primary: 56, secondary: 82 },
+  { label: '23/05', primary: 74, secondary: 96 },
+  { label: '24/05', primary: 62, secondary: 72 },
+  { label: '25/05', primary: 50, secondary: 46 },
+];
+
 const upcomingMaintenance = [
   { machine: 'D155A-6', technician: 'Motasem Ghanem', dueDate: 'May 21, 2026', status: 'Due Soon', tone: 'warning' },
   { machine: 'GD705A-4', technician: 'Abdelrahman', dueDate: 'May 22, 2026', status: 'Ready', tone: 'ready' },
@@ -105,8 +103,9 @@ export default function ManagementDashboardPage() {
       eyebrow="DAR AL HAI"
       title="Dashboard"
       description="A unified maintenance operations view for technician administration, scheduling, and EQP reporting."
+      actions={<Link href="/management/scheduling" className="ds-button ds-button-primary">+ Add schedule</Link>}
     >
-      <section className="ds-dashboard-grid">
+      <section className="ds-reference-dashboard">
         <div className="ds-kpi-grid">
           {kpis.map((kpi) => (
             <article key={kpi.label} className="ds-kpi-card">
@@ -126,129 +125,133 @@ export default function ManagementDashboardPage() {
           ))}
         </div>
 
-        <div className="ds-analytics-grid">
-          <Card className="p-6">
-            <div className="flex flex-col gap-6 xl:flex-row xl:items-center xl:justify-between">
-              <div className="min-w-0">
-                <div className="flex items-center justify-between gap-3">
-                  <h2 className="ds-panel-title">Maintenance Operations Distribution</h2>
-                  <Badge tone="info">Live Mix</Badge>
-                </div>
-                <p className="mt-2 max-w-xl text-sm font-semibold leading-6 text-[var(--color-muted)]">
-                  Operational attention across technicians, scheduling, EQP reports, and machine readiness.
-                </p>
-                <div className="mt-6 grid gap-3">
-                  {operations.map((item) => (
-                    <div key={item.label} className="flex items-center justify-between gap-3 rounded-xl border border-[var(--color-border)] bg-white px-4 py-3">
-                      <div className="flex items-center gap-3">
-                        <span className="h-3 w-3 rounded-full" style={{ backgroundColor: item.color }} />
-                        <span className="text-sm font-black text-[var(--color-ink)]">{item.label}</span>
-                      </div>
-                      <span className="text-sm font-black text-[var(--color-brand)]">{item.value}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div className="mx-auto shrink-0">
-                <div className="ds-donut">
-                  <div className="ds-donut-core">
-                    <p className="text-3xl font-black text-[var(--color-ink)]">100%</p>
-                    <p className="mt-1 text-xs font-black uppercase tracking-[0.12em] text-[var(--color-muted)]">Live Mix</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </Card>
-
-          <Card className="p-6">
-            <div className="flex items-center justify-between gap-3">
-              <h2 className="ds-panel-title">Governance & Protocol Distribution</h2>
-              <Badge tone="dark">Enterprise</Badge>
-            </div>
-            <p className="mt-2 text-sm font-semibold leading-6 text-[var(--color-muted)]">
-              Role routing, audit posture, and escalation readiness for controlled maintenance operations.
-            </p>
-            <div className="ds-summary-grid mt-5">
-              {governanceSummary.map((item) => (
-                <div key={item.label} className="ds-summary-tile">
-                  <p className="ds-summary-value">{item.value}</p>
-                  <p className="ds-summary-label">{item.label}</p>
-                </div>
-              ))}
-            </div>
-            <div className="mt-5 grid gap-4">
-              {governanceItems.map((item) => (
-                <div key={item.title} className="ds-chart-row">
-                  <div className="min-w-0">
-                    <div className="mb-2 flex items-center justify-between gap-3">
-                      <p className="truncate text-sm font-black text-[var(--color-ink)]">{item.title}</p>
-                      <p className="text-sm font-black text-[var(--color-brand)]">{item.value}</p>
-                    </div>
-                    <div className="ds-chart-bar">
-                      <span className="ds-chart-fill" style={{ width: item.width }} />
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </Card>
-        </div>
-
-        <div className="ds-module-grid">
-          {modules.map((module) => (
-            <Card key={module.title} className="ds-card-hover ds-module-card">
+        <div className="ds-reference-grid">
+          <Card className="ds-reference-chart-card">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <div className="flex items-start justify-between gap-4">
-                  <div className="flex items-start gap-3">
-                    <div className="ds-icon-tile">{module.code}</div>
-                    <div>
-                      <h2 className="text-xl font-black text-[var(--color-ink)]">{module.title}</h2>
-                      <p className="mt-1 text-xs font-bold uppercase tracking-[0.12em] text-[var(--color-muted)]">Module workspace</p>
-                    </div>
-                  </div>
-                  <Badge tone={module.tone}>{module.status}</Badge>
-                </div>
-                <p className="mt-5 text-sm font-semibold leading-6 text-[var(--color-muted)]">{module.description}</p>
+                <h2 className="ds-panel-title">Maintenance Operations</h2>
+                <p className="mt-1 text-sm font-bold text-[var(--color-muted)]">250,400 operational points tracked</p>
               </div>
-              <Link href={module.href} className="ds-button ds-button-secondary mt-6">
-                Open Module
-              </Link>
-            </Card>
-          ))}
-        </div>
-
-        <div className="grid gap-5 xl:grid-cols-[0.9fr_1.1fr]">
-          <Card className="p-6">
-            <div className="flex items-center justify-between gap-3">
-              <h2 className="ds-panel-title">Recent Activity</h2>
-              <Badge tone="live">Operational Feed</Badge>
+              <div className="ds-segment-control">
+                <span className="ds-segment-active">Day</span>
+                <span>Month</span>
+              </div>
             </div>
-            <div className="mt-5 grid gap-3">
-              {activity.map((item) => (
-                <div key={`${item.action}-${item.time}`} className="ds-activity-item">
-                  <span className="ds-activity-dot" />
-                  <div className="min-w-0">
-                    <p className="truncate text-sm font-black text-[var(--color-ink)]">{item.action}</p>
-                    <p className="mt-1 text-xs font-bold text-[var(--color-muted)]">{item.time}</p>
+
+            <div className="ds-chart-legend">
+              <span><i className="bg-[var(--color-brand)]" /> Completed</span>
+              <span><i className="bg-[var(--color-canvas-strong)]" /> Planned</span>
+            </div>
+
+            <div className="ds-bar-chart" aria-label="Maintenance operations chart">
+              {chartBars.map((item) => (
+                <div key={item.label} className="ds-bar-column">
+                  <div className="ds-bar-stack">
+                    <span className="ds-bar ds-bar-secondary" style={{ height: `${item.secondary}%` }} />
+                    <span className="ds-bar ds-bar-primary" style={{ height: `${item.primary}%` }} />
                   </div>
-                  <Badge tone={item.status.toLowerCase()}>{item.status}</Badge>
+                  <span className="ds-bar-label">{item.label}</span>
                 </div>
               ))}
             </div>
           </Card>
 
-          <Card className="overflow-hidden">
-            <div className="border-b border-[var(--color-border)] p-6">
-              <div className="flex items-center justify-between gap-3">
-                <div>
-                  <h2 className="ds-panel-title">Upcoming Maintenance</h2>
-                  <p className="mt-1 text-sm font-semibold text-[var(--color-muted)]">Planned service windows and readiness status.</p>
-                </div>
-                <Badge tone="pending">4 Items</Badge>
+          <div className="ds-widget-stack">
+            <Card className="ds-side-widget">
+              <div className="flex items-center justify-between">
+                <h2 className="ds-panel-title">Governance</h2>
+                <Badge tone="info">Live</Badge>
               </div>
+              <div className="mt-4 grid gap-2">
+                {governanceItems.map((item) => (
+                  <div key={item.title} className="ds-compact-row">
+                    <span>{item.title}</span>
+                    <strong>{item.value}</strong>
+                  </div>
+                ))}
+              </div>
+            </Card>
+
+            <Card className="ds-side-widget">
+              <div className="flex items-center justify-between">
+                <h2 className="ds-panel-title">Operational Feed</h2>
+                <span className="ds-widget-menu">...</span>
+              </div>
+              <div className="mt-4 grid gap-2">
+                {activity.map((item) => (
+                  <div key={`${item.action}-${item.time}`} className="ds-feed-row">
+                    <span className="ds-feed-icon">{item.status.slice(0, 1)}</span>
+                    <span className="min-w-0">
+                      <span className="block truncate text-sm font-black text-[var(--color-ink)]">{item.action}</span>
+                      <span className="block text-xs font-bold text-[var(--color-muted)]">{item.time}</span>
+                    </span>
+                    <Badge tone={item.status.toLowerCase()}>{item.status}</Badge>
+                  </div>
+                ))}
+              </div>
+            </Card>
+          </div>
+        </div>
+
+        <Card className="ds-project-table-card">
+          <div className="flex flex-col gap-3 border-b border-[var(--color-border)] p-5 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <h2 className="ds-panel-title">Modules</h2>
+              <p className="mt-1 text-sm font-bold text-[var(--color-muted)]">Dar Al Hai workspaces and current readiness</p>
             </div>
-            <div className="ds-table-wrap">
-              <table className="ds-table min-w-[720px]">
+            <div className="ds-segment-control">
+              <span className="ds-segment-active">Day</span>
+              <span>Month</span>
+            </div>
+          </div>
+          <div className="ds-table-wrap">
+            <table className="ds-table min-w-[860px]">
+              <thead>
+                <tr>
+                  <th className="px-5 py-4 text-left">Module</th>
+                  <th className="px-5 py-4 text-left">Scope</th>
+                  <th className="px-5 py-4 text-left">Status</th>
+                  <th className="px-5 py-4 text-left">Owner</th>
+                  <th className="px-5 py-4 text-right">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {modules.map((module, index) => (
+                  <tr key={module.title} className="border-t border-[var(--color-border)]">
+                    <td className="px-5 py-4">
+                      <div className="flex items-center gap-3">
+                        <span className="ds-mini-module-icon">{module.code}</span>
+                        <span>
+                          <span className="block font-black text-[var(--color-ink)]">{module.title}</span>
+                          <span className="mt-1 block text-xs font-bold text-[var(--color-muted)]">#{String(index + 41).padStart(3, '0')}</span>
+                        </span>
+                      </div>
+                    </td>
+                    <td className="px-5 py-4">{module.description}</td>
+                    <td className="px-5 py-4"><Badge tone={module.tone}>{module.status}</Badge></td>
+                    <td className="px-5 py-4">Operations Team</td>
+                    <td className="px-5 py-4 text-right">
+                      <Link href={module.href} className="ds-button ds-button-secondary ds-button-small">
+                        Open
+                      </Link>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </Card>
+
+        <Card className="ds-project-table-card">
+          <div className="flex items-center justify-between border-b border-[var(--color-border)] p-5">
+            <div>
+              <h2 className="ds-panel-title">Upcoming Maintenance</h2>
+              <p className="mt-1 text-sm font-bold text-[var(--color-muted)]">Planned service windows and readiness status.</p>
+            </div>
+            <Badge tone="pending">4 Items</Badge>
+          </div>
+          <div className="ds-table-wrap">
+            <table className="ds-table min-w-[720px]">
                 <thead>
                   <tr>
                     <th className="px-5 py-4 text-left">Machine</th>
@@ -268,9 +271,8 @@ export default function ManagementDashboardPage() {
                   ))}
                 </tbody>
               </table>
-            </div>
-          </Card>
-        </div>
+          </div>
+        </Card>
       </section>
     </SystemShell>
   );
