@@ -200,14 +200,14 @@ export default function ReportsPage() {
     >
       <div className="grid gap-6">
 
-        <div className="mb-6 grid gap-4 sm:grid-cols-3">
-          <ArchiveMetric label="Total Reports" value={archiveStats.total} tone="dark" />
-          <ArchiveMetric label="Machines Covered" value={archiveStats.machines} />
-          <ArchiveMetric label="Latest Report" value={archiveStats.lastReport} />
+        <div className="ds-kpi-grid">
+          <ArchiveMetric label="Total Reports" value={archiveStats.total} code="TR" />
+          <ArchiveMetric label="Machines Covered" value={archiveStats.machines} code="MC" accent />
+          <ArchiveMetric label="Latest Report" value={archiveStats.lastReport} code="LR" />
         </div>
 
         {error && (
-          <p className="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
+          <p className="rounded-md border-l-4 border-red-500 bg-white px-4 py-3 text-sm font-semibold text-red-700 shadow-sm">
             {error}
           </p>
         )}
@@ -218,14 +218,14 @@ export default function ReportsPage() {
           <EmptyState title="No reports yet" description="Generated reports will appear here." />
         ) : (
           <Card className="overflow-hidden">
-            <div className="border-b border-zinc-200 p-5">
+            <div className="border-b border-[var(--color-border)] p-5">
               <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
                 <input
                   type="text"
                   placeholder="Search reports, machines, or report numbers"
                   value={searchTerm}
                   onChange={(event) => setSearchTerm(event.target.value)}
-                  className="w-full rounded-md border border-zinc-300 bg-white px-4 py-2.5 text-zinc-900 outline-none transition focus:border-yellow-400 focus:ring-2 focus:ring-yellow-100 lg:max-w-md"
+                  className="ds-input w-full lg:max-w-md"
                 />
                 <div className="flex flex-wrap items-center gap-2">
                   <Badge tone="neutral">{filteredReports.length} visible</Badge>
@@ -242,7 +242,7 @@ export default function ReportsPage() {
             </div>
             <div className="overflow-x-auto">
               <table className="w-full min-w-[960px]">
-                <thead className="bg-zinc-50 text-xs uppercase tracking-[0.12em] text-zinc-500">
+                <thead className="bg-[var(--color-surface-muted)] text-xs uppercase tracking-[0.12em] text-[var(--color-muted)]">
                   <tr>
                     <th className="px-5 py-4 text-left">
                       <input type="checkbox" checked={allVisibleSelected} onChange={toggleVisibleSelection} aria-label="Select all visible reports" />
@@ -256,7 +256,7 @@ export default function ReportsPage() {
                 </thead>
                 <tbody>
                   {filteredReports.map((report) => (
-                    <tr key={report.id} className="border-t border-zinc-100 transition hover:bg-yellow-50/60">
+                    <tr key={report.id} className="border-t border-[var(--color-border)] transition hover:bg-[var(--color-brand-soft)]">
                       <td className="px-5 py-4">
                         <input
                           type="checkbox"
@@ -266,16 +266,16 @@ export default function ReportsPage() {
                         />
                       </td>
                       <td className="px-5 py-4">
-                        <div className="font-semibold text-zinc-950">{report.file_name}</div>
-                        {report.report_no && <div className="mt-1 font-mono text-xs text-zinc-500">{report.report_no}</div>}
+                        <div className="font-semibold text-[var(--color-ink)]">{report.file_name}</div>
+                        {report.report_no && <div className="mt-1 font-mono text-xs text-[var(--color-muted)]">{report.report_no}</div>}
                       </td>
-                      <td className="px-5 py-4 text-zinc-600">
+                      <td className="px-5 py-4 text-[var(--color-ink-soft)]">
                         {report.machine_type} {report.machine_number}
                       </td>
                       <td className="px-5 py-4">
                         <Badge tone="yellow">{report.service_type || 'Report'}</Badge>
                       </td>
-                      <td className="px-5 py-4 text-zinc-600">
+                      <td className="px-5 py-4 text-[var(--color-ink-soft)]">
                         {new Date(report.created_at).toLocaleString()}
                       </td>
                       <td className="flex gap-2 px-5 py-4">
@@ -283,7 +283,7 @@ export default function ReportsPage() {
                           href={report.file_url}
                           target="_blank"
                           rel="noreferrer"
-                          className="rounded-md bg-yellow-400 px-4 py-2.5 text-sm font-semibold text-zinc-950 transition hover:bg-yellow-300"
+                          className="ds-button ds-button-primary"
                         >
                           Download
                         </a>
@@ -324,14 +324,14 @@ export default function ReportsPage() {
       )}
 
       {renamingReport && (
-        <div className="fixed inset-0 z-50 grid place-items-center bg-zinc-950/60 p-4 backdrop-blur-sm">
-          <form onSubmit={handleRenameReport} className="w-full max-w-md rounded-lg border border-zinc-200 bg-white p-6 shadow-2xl">
-            <h2 className="text-xl font-bold text-zinc-950">Rename Report</h2>
-            <p className="mt-2 text-sm text-zinc-600">Use a clear operational file name for this report.</p>
+        <div className="fixed inset-0 z-50 grid place-items-center bg-[rgba(7,27,51,0.62)] p-4 backdrop-blur-sm">
+          <form onSubmit={handleRenameReport} className="ds-card w-full max-w-md p-6 shadow-[var(--shadow-overlay)]">
+            <h2 className="text-xl font-black text-[var(--color-ink)]">Rename Report</h2>
+            <p className="mt-2 text-sm font-semibold text-[var(--color-muted)]">Use a clear operational file name for this report.</p>
             <input
               value={renameValue}
               onChange={(event) => setRenameValue(event.target.value)}
-              className="mt-5 w-full rounded-md border border-zinc-300 bg-white px-4 py-2.5 text-zinc-900 outline-none transition focus:border-yellow-400 focus:ring-2 focus:ring-yellow-100"
+              className="ds-input mt-5 w-full"
               autoFocus
             />
             <div className="mt-6 flex justify-end gap-3">
@@ -347,12 +347,15 @@ export default function ReportsPage() {
   );
 }
 
-function ArchiveMetric({ label, value, tone = 'light' }) {
+function ArchiveMetric({ label, value, code, accent = false }) {
   return (
-    <div className={`rounded-lg border p-4 shadow-sm ${tone === 'dark' ? 'border-zinc-900 bg-zinc-950 text-white' : 'border-zinc-200 bg-white text-zinc-900'}`}>
-      <div className={`text-xs font-semibold uppercase tracking-[0.14em] ${tone === 'dark' ? 'text-zinc-400' : 'text-zinc-500'}`}>{label}</div>
-      <div className={`mt-2 text-2xl font-black ${tone === 'dark' ? 'text-yellow-400' : 'text-zinc-950'}`}>{value}</div>
-    </div>
+    <article className="ds-kpi-card">
+      <div className={`ds-icon-tile ${accent ? 'ds-icon-tile-accent' : ''}`}>{code}</div>
+      <div>
+        <div className="text-xs font-black uppercase tracking-[0.14em] text-[var(--color-muted)]">{label}</div>
+        <div className="mt-2 text-2xl font-black text-[var(--color-ink)]">{value}</div>
+      </div>
+    </article>
   );
 }
 
@@ -365,7 +368,7 @@ function SortableHeader({ label, column, sortConfig, onSort }) {
       <button
         type="button"
         onClick={() => onSort(column)}
-        className="inline-flex items-center gap-1 font-bold text-zinc-600 transition hover:text-zinc-950"
+        className="inline-flex items-center gap-1 font-bold text-[var(--color-muted)] transition hover:text-[var(--color-ink)]"
       >
         {label} {indicator}
       </button>

@@ -443,7 +443,7 @@ export default function TechnicianAppPage() {
               key={task.id}
               type="button"
               onClick={() => setSelectedTaskId(task.id)}
-              className={`rounded-md border bg-white p-4 text-right shadow-sm ${selectedTask?.id === task.id ? 'border-zinc-950' : 'border-zinc-200'}`}
+              className={`rounded-xl border bg-white p-4 text-right shadow-sm transition hover:-translate-y-0.5 hover:shadow-[var(--shadow-card)] ${selectedTask?.id === task.id ? 'border-[var(--color-brand)] ring-2 ring-[var(--ring)]' : 'border-[var(--color-border)]'}`}
             >
               <div className="flex items-start justify-between gap-3">
                 <div>
@@ -487,14 +487,14 @@ export default function TechnicianAppPage() {
                   placeholder="ملخص العمل المنجز"
                   value={selectedDraft.summary || ''}
                   onChange={(event) => updateDraft(selectedTask.id, { summary: event.target.value })}
-                  className="rounded-md border border-zinc-300 bg-white px-3 py-3 text-base outline-none focus:border-yellow-400 focus:ring-2 focus:ring-yellow-100"
+                  className="ds-input px-3 py-3 text-base"
                 />
                 <textarea
                   rows={2}
                   placeholder="ملاحظات إضافية"
                   value={selectedDraft.notes || ''}
                   onChange={(event) => updateDraft(selectedTask.id, { notes: event.target.value })}
-                  className="rounded-md border border-zinc-300 bg-white px-3 py-3 text-base outline-none focus:border-yellow-400 focus:ring-2 focus:ring-yellow-100"
+                  className="ds-input px-3 py-3 text-base"
                 />
                 <label className="grid gap-2 text-sm font-bold text-zinc-700">
                   الصور
@@ -537,7 +537,7 @@ function WeatherAdviceCard({ items, loading, error }) {
 
   if (error && items.length === 0) {
     return (
-      <Card className="border-yellow-200 bg-yellow-50 p-4">
+      <Card className="border-[var(--color-border)] bg-[var(--color-surface-muted)] p-4">
         <p className="text-sm font-black text-zinc-950">Ø§Ù„Ø·Ù‚Ø³ ÙˆÙ†ØµØ§Ø¦Ø­ Ø§Ù„Ø³Ù„Ø§Ù…Ø©</p>
         <p className="mt-2 text-sm font-semibold text-zinc-700">{error}</p>
       </Card>
@@ -546,7 +546,7 @@ function WeatherAdviceCard({ items, loading, error }) {
 
   if (!loading && items.length === 0) {
     return (
-      <Card className="border-yellow-200 bg-yellow-50 p-4">
+      <Card className="border-[var(--color-border)] bg-[var(--color-surface-muted)] p-4">
         <p className="text-sm font-black text-zinc-950">Ø§Ù„Ø·Ù‚Ø³ ÙˆÙ†ØµØ§Ø¦Ø­ Ø§Ù„Ø³Ù„Ø§Ù…Ø©</p>
         <p className="mt-2 text-sm font-semibold text-zinc-700">No weather advice for the selected day.</p>
       </Card>
@@ -554,20 +554,20 @@ function WeatherAdviceCard({ items, loading, error }) {
   }
 
   return (
-    <Card className="overflow-hidden border-yellow-200 bg-yellow-50">
-      <div className="border-b border-yellow-200 px-4 py-3">
+    <Card className="overflow-hidden border-[var(--color-border)] bg-[var(--color-surface-muted)]">
+      <div className="border-b border-[var(--color-border)] px-4 py-3">
         <p className="text-sm font-black text-zinc-950">الطقس ونصائح السلامة</p>
         <p className="mt-1 text-xs font-semibold text-zinc-600">حسب موقع ووقت كل مهمة</p>
       </div>
       <div className="grid gap-3 p-4">
         {items.map((item) => (
-          <div key={item.taskId} className="rounded-md border border-yellow-200 bg-white p-3">
+          <div key={item.taskId} className="rounded-xl border border-[var(--color-border)] bg-white p-3">
             <div className="flex items-start justify-between gap-3">
               <div>
                 <p className="text-sm font-black text-zinc-950">{item.task}</p>
                 <p className="mt-1 text-xs font-semibold text-zinc-500">{item.location || item.resolvedLocation}</p>
               </div>
-              <div className="rounded-md bg-zinc-950 px-3 py-2 text-center text-white">
+              <div className="rounded-xl bg-[var(--color-navy)] px-3 py-2 text-center text-white">
                 <p className="text-xl font-black">{item.maxTemperatureC ?? '-'}</p>
                 <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-zinc-300">MAX C</p>
               </div>
@@ -579,7 +579,7 @@ function WeatherAdviceCard({ items, loading, error }) {
             </div>
             <ul className="mt-3 grid gap-2 text-sm font-semibold leading-6 text-zinc-800">
               {(item.advice || []).map((line) => (
-                <li key={line} className="rounded-md bg-yellow-50 px-3 py-2">{line}</li>
+                <li key={line} className="rounded-xl bg-[var(--color-warning-soft)] px-3 py-2">{line}</li>
               ))}
             </ul>
           </div>
@@ -598,7 +598,7 @@ function TechnicianManualAdvice({ advice, onOpenSource }) {
   const sources = advice.sources || [];
 
   return (
-    <div className="mt-4 rounded-md border border-yellow-200 bg-yellow-50 p-4">
+    <div className="mt-4 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-muted)] p-4">
       <p className="text-sm font-black text-zinc-950">Ø£Ø¯ÙˆØ§Øª ÙˆØªØ­Ø°ÙŠØ±Ø§Øª Ù…Ù† Ø§Ù„ÙƒØªØ§Ù„ÙˆØ¬</p>
       <div className="mt-3 grid gap-3">
         {rows.map(([label, values]) => (
@@ -640,21 +640,21 @@ function TechnicianManualSource({ source, onOpenSource }) {
           <button
             type="button"
             onClick={() => onOpenSource(source, 'open')}
-            className="rounded-md border border-yellow-300 bg-white px-3 py-1.5 text-xs font-black text-zinc-800"
+            className="ds-button ds-button-secondary ds-button-small"
           >
             Open page
           </button>
           <button
             type="button"
             onClick={() => onOpenSource(source, 'manual')}
-            className="rounded-md border border-yellow-300 bg-yellow-50 px-3 py-1.5 text-xs font-black text-zinc-800"
+            className="ds-button ds-button-secondary ds-button-small"
           >
             Open manual
           </button>
           <button
             type="button"
             onClick={() => onOpenSource(source, 'download')}
-            className="rounded-md border border-zinc-300 bg-white px-3 py-1.5 text-xs font-black text-zinc-700"
+            className="ds-button ds-button-ghost ds-button-small"
           >
             Download
           </button>

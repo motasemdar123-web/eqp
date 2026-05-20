@@ -1,7 +1,7 @@
 import "./globals.css";
 
 export const metadata = {
-  title: "Dar Al HAI Maintenance Management",
+  title: "Dar Al Hai Maintenance Management",
   description: "Unified maintenance, scheduling, operations, and EQP reporting platform",
 };
 

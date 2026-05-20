@@ -13,7 +13,7 @@ export default function Toast({ message, type = 'success', onClose }) {
       <button
         type="button"
         onClick={onClose}
-        className="rounded px-1 text-sm font-black opacity-70 transition hover:opacity-100"
+        className="rounded-md px-1 text-sm font-black opacity-70 transition hover:bg-white/50 hover:opacity-100"
         aria-label="Dismiss notification"
       >
         x

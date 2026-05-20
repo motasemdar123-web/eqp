@@ -94,30 +94,30 @@ export default function MachinesPage() {
     >
       <div className="grid gap-6">
         {error && (
-          <p className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700">{error}</p>
+          <p className="rounded-md border-l-4 border-red-500 bg-white px-4 py-3 text-sm font-semibold text-red-700 shadow-sm">{error}</p>
         )}
 
-        <section className="grid gap-4 md:grid-cols-4">
-          <Metric label="Machines" value={stats.machines} tone="dark" />
-          <Metric label="Machine Types" value={stats.types} />
-          <Metric label="Average SMR" value={stats.averageSmr} />
-          <Metric label="Engineers" value={stats.activeEngineers} />
+        <section className="ds-kpi-grid">
+          <Metric label="Machines" value={stats.machines} code="MA" />
+          <Metric label="Machine Types" value={stats.types} code="TY" accent />
+          <Metric label="Average SMR" value={stats.averageSmr} code="SM" />
+          <Metric label="Engineers" value={stats.activeEngineers} code="EN" accent />
         </section>
 
         <Card className="overflow-hidden">
-          <div className="border-b border-zinc-200 p-5">
+          <div className="border-b border-[var(--color-border)] p-5">
             <div className="grid gap-3 lg:grid-cols-[1.4fr_0.8fr_auto]">
               <input
                 type="text"
                 placeholder="Search machines, engine number, or engineer"
                 value={searchTerm}
                 onChange={(event) => setSearchTerm(event.target.value)}
-                className="h-11 rounded-md border border-zinc-300 bg-white px-4 text-zinc-900 outline-none transition focus:border-yellow-400 focus:ring-2 focus:ring-yellow-100"
+                className="ds-input w-full"
               />
               <select
                 value={machineType}
                 onChange={(event) => setMachineType(event.target.value)}
-                className="h-11 rounded-md border border-zinc-300 bg-white px-4 text-zinc-900 outline-none transition focus:border-yellow-400 focus:ring-2 focus:ring-yellow-100"
+                className="ds-input w-full"
               >
                 <option value="ALL">All machine types</option>
                 {types.map((type) => <option key={type}>{type}</option>)}
@@ -139,7 +139,7 @@ export default function MachinesPage() {
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full min-w-[980px]">
-                <thead className="bg-zinc-50 text-xs uppercase tracking-[0.12em] text-zinc-500">
+                <thead className="bg-[var(--color-surface-muted)] text-xs uppercase tracking-[0.12em] text-[var(--color-muted)]">
                   <tr>
                     <th className="px-5 py-4 text-left">Machine</th>
                     <th className="px-5 py-4 text-left">Type</th>
@@ -151,13 +151,13 @@ export default function MachinesPage() {
                 </thead>
                 <tbody>
                   {filteredMachines.map((machine) => (
-                    <tr key={machine.id} className="border-t border-zinc-100 transition hover:bg-yellow-50/60">
-                      <td className="px-5 py-4 font-semibold text-zinc-950">{machine.machine_number}</td>
-                      <td className="px-5 py-4 text-zinc-700">{machine.machine_type}</td>
-                      <td className="px-5 py-4 font-mono text-sm text-zinc-600">{machine.engine_number}</td>
-                      <td className="px-5 py-4 text-zinc-700">{machine.last_smr}</td>
-                      <td className="px-5 py-4 text-zinc-700">{machine.smr_step}</td>
-                      <td className="px-5 py-4 text-zinc-700">{machine.responsible_engineer || '-'}</td>
+                    <tr key={machine.id} className="border-t border-[var(--color-border)] transition hover:bg-[var(--color-brand-soft)]">
+                      <td className="px-5 py-4 font-semibold text-[var(--color-ink)]">{machine.machine_number}</td>
+                      <td className="px-5 py-4 text-[var(--color-ink-soft)]">{machine.machine_type}</td>
+                      <td className="px-5 py-4 font-mono text-sm text-[var(--color-muted)]">{machine.engine_number}</td>
+                      <td className="px-5 py-4 text-[var(--color-ink-soft)]">{machine.last_smr}</td>
+                      <td className="px-5 py-4 text-[var(--color-ink-soft)]">{machine.smr_step}</td>
+                      <td className="px-5 py-4 text-[var(--color-ink-soft)]">{machine.responsible_engineer || '-'}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -167,19 +167,22 @@ export default function MachinesPage() {
         </Card>
 
         <Card className="p-5">
-          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-zinc-500">Latest EQP Activity</p>
-          <p className="mt-2 text-lg font-black text-zinc-950">{stats.latestActivity}</p>
+          <p className="text-xs font-black uppercase tracking-[0.14em] text-[var(--color-muted)]">Latest EQP Activity</p>
+          <p className="mt-2 text-lg font-black text-[var(--color-ink)]">{stats.latestActivity}</p>
         </Card>
       </div>
     </SystemShell>
   );
 }
 
-function Metric({ label, value, tone = 'light' }) {
+function Metric({ label, value, code, accent = false }) {
   return (
-    <Card className={`p-5 ${tone === 'dark' ? 'border-zinc-900 bg-zinc-950 text-white' : ''}`}>
-      <p className={`text-xs font-semibold uppercase tracking-[0.14em] ${tone === 'dark' ? 'text-zinc-400' : 'text-zinc-500'}`}>{label}</p>
-      <p className={`mt-3 text-3xl font-black ${tone === 'dark' ? 'text-yellow-400' : 'text-zinc-950'}`}>{value}</p>
-    </Card>
+    <article className="ds-kpi-card">
+      <div className={`ds-icon-tile ${accent ? 'ds-icon-tile-accent' : ''}`}>{code}</div>
+      <div>
+        <p className="text-xs font-black uppercase tracking-[0.14em] text-[var(--color-muted)]">{label}</p>
+        <p className="mt-2 text-3xl font-black leading-none text-[var(--color-ink)]">{value}</p>
+      </div>
+    </article>
   );
 }

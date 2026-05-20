@@ -63,7 +63,7 @@ function MicrosoftCallbackContent() {
         <div className="ds-brand-mark mx-auto h-14 w-14 text-xl">
           DH
         </div>
-        <p className="mt-5 text-xs font-black uppercase tracking-[0.18em] text-[var(--color-accent)]">Dar Al HAI</p>
+        <p className="mt-5 text-xs font-black uppercase tracking-[0.18em] text-[var(--color-accent)]">Dar Al Hai</p>
         <h1 className="mt-2 text-2xl font-black text-[var(--color-ink)]">Microsoft Sign-In</h1>
         <p className={`mt-5 rounded-md px-4 py-3 text-sm font-bold ${error ? 'border border-red-200 bg-red-50 text-red-700' : 'border border-[var(--color-border)] bg-[var(--color-surface-muted)] text-[var(--color-ink-soft)]'}`}>
           {error || message}

@@ -33,7 +33,7 @@ function isActivePath(pathname, href, activePath) {
 
 export default function SystemShell({
   title,
-  eyebrow = 'Dar Al HAI',
+  eyebrow = 'Dar Al Hai',
   description,
   activePath,
   actions,

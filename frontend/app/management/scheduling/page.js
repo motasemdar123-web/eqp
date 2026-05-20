@@ -27,7 +27,7 @@ const emptyManualAssistant = {
 };
 
 const statusTone = {
-  PLANNED: 'yellow',
+  PLANNED: 'pending',
   CONFIRMED: 'green',
   ON_DUTY: 'green',
   OFF_DUTY: 'neutral',
@@ -468,24 +468,27 @@ export default function SchedulingPage() {
           </div>
         )}
 
-        <div className="grid gap-4 md:grid-cols-4">
+        <div className="ds-kpi-grid">
           {[
-            ['Technicians', board.kpis?.technicians || 0],
-            ['Daily Tasks', board.kpis?.dailyTasks || 0],
-            ['Assigned Today', board.kpis?.scheduledTechnicians || 0],
-            ['Available', board.kpis?.availableTechnicians || 0],
-          ].map(([label, value]) => (
-            <Card key={label} className="p-4">
-              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-zinc-500">{label}</p>
-              <p className="mt-2 text-3xl font-black text-zinc-950">{value}</p>
-            </Card>
+            ['Technicians', board.kpis?.technicians || 0, 'TM'],
+            ['Daily Tasks', board.kpis?.dailyTasks || 0, 'DT'],
+            ['Assigned Today', board.kpis?.scheduledTechnicians || 0, 'AS'],
+            ['Available', board.kpis?.availableTechnicians || 0, 'AV'],
+          ].map(([label, value, code], index) => (
+            <article key={label} className="ds-kpi-card">
+              <div className={`ds-icon-tile ${index % 2 ? 'ds-icon-tile-accent' : ''}`}>{code}</div>
+              <div>
+                <p className="text-xs font-black uppercase tracking-[0.14em] text-[var(--color-muted)]">{label}</p>
+                <p className="mt-2 text-3xl font-black text-[var(--color-ink)]">{value}</p>
+              </div>
+            </article>
           ))}
         </div>
 
         <div className="grid gap-5">
           <Card className="p-5">
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-              <h2 className="text-xl font-bold text-zinc-950">{editingTaskId ? 'Edit Daily Schedule Task' : 'Add Daily Schedule Task'}</h2>
+              <h2 className="text-xl font-black text-[var(--color-ink)]">{editingTaskId ? 'Edit Daily Schedule Task' : 'Add Daily Schedule Task'}</h2>
               {editingTaskId && (
                 <Button type="button" variant="secondary" onClick={() => resetTaskForm(date)}>
                   Cancel Edit
@@ -522,7 +525,7 @@ export default function SchedulingPage() {
               <div className="rounded-md border border-zinc-200 bg-zinc-50 p-3">
                 <p className="text-sm font-bold text-zinc-950">Technicians</p>
                 {technicians.length === 0 && (
-                  <p className="mt-3 rounded-md border border-yellow-200 bg-yellow-50 px-3 py-2 text-sm font-semibold text-yellow-800">
+                  <p className="mt-3 rounded-xl border border-[var(--color-border)] bg-[var(--color-warning-soft)] px-3 py-2 text-sm font-semibold text-[var(--color-warning)]">
                     No technicians found. Add technicians in Technicians Management or run the seed script on the backend.
                   </p>
                 )}
@@ -556,7 +559,7 @@ export default function SchedulingPage() {
                           key={technician.id}
                           type="button"
                           onClick={() => addTechnician(technician.id)}
-                          className="flex items-center justify-between gap-3 rounded-md border border-zinc-200 px-3 py-2 text-left text-sm font-semibold text-zinc-700 hover:border-yellow-400 hover:bg-yellow-50"
+                          className="flex items-center justify-between gap-3 rounded-xl border border-[var(--color-border)] px-3 py-2 text-left text-sm font-semibold text-[var(--color-ink-soft)] hover:border-[var(--color-accent)] hover:bg-[var(--color-brand-soft)]"
                         >
                           <span>
                             {technicianName(technician)}
@@ -577,7 +580,7 @@ export default function SchedulingPage() {
           </Card>
 
           <Card className="p-5">
-            <h2 className="text-xl font-bold text-zinc-950">Shop Manual Library</h2>
+            <h2 className="text-xl font-black text-[var(--color-ink)]">Shop Manual Library</h2>
             <div className="mt-4 grid gap-3 md:grid-cols-2">
               <input className="h-11 rounded-md border border-zinc-300 px-3 uppercase" placeholder="Machine model" value={manualUpload.machineModel} onChange={(event) => setManualUpload((current) => ({ ...current, machineModel: event.target.value.toUpperCase() }))} />
               <input className="h-11 rounded-md border border-zinc-300 px-3" placeholder="Manual title" value={manualUpload.title} onChange={(event) => setManualUpload((current) => ({ ...current, title: event.target.value }))} />
@@ -592,7 +595,7 @@ export default function SchedulingPage() {
         <Card className="overflow-hidden">
           <div className="border-b border-zinc-100 px-5 py-4">
             <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-              <h2 className="text-xl font-bold text-zinc-950">Daily Schedule</h2>
+              <h2 className="text-xl font-black text-[var(--color-ink)]">Daily Schedule</h2>
               <div className="flex items-center gap-2">
                 <Button type="button" variant="secondary" onClick={() => loadBoard(addDays(date, -1), historyFrom, historyTo)} disabled={!token || loading}>
                   Previous
@@ -611,8 +614,8 @@ export default function SchedulingPage() {
                     onClick={() => loadBoard(day, historyFrom, historyTo)}
                     className={`min-w-32 rounded-md border px-4 py-3 text-left text-sm font-bold ${
                       day === date
-                        ? 'border-zinc-950 bg-zinc-950 text-white'
-                        : 'border-zinc-200 bg-white text-zinc-700 hover:border-yellow-400 hover:bg-yellow-50'
+                        ? 'border-[var(--color-brand)] bg-[var(--color-brand)] text-white'
+                        : 'border-[var(--color-border)] bg-white text-[var(--color-ink-soft)] hover:border-[var(--color-accent)] hover:bg-[var(--color-brand-soft)]'
                     }`}
                   >
                     <span className="block">{formatDayLabel(day)}</span>
@@ -627,7 +630,7 @@ export default function SchedulingPage() {
 
         <Card className="overflow-hidden">
           <div className="flex flex-col gap-4 border-b border-zinc-100 px-5 py-4 lg:flex-row lg:items-center lg:justify-between">
-            <h2 className="text-xl font-bold text-zinc-950">Schedule History</h2>
+            <h2 className="text-xl font-black text-[var(--color-ink)]">Schedule History</h2>
             <div className="flex flex-wrap items-center gap-2">
               <input type="date" className="h-10 rounded-md border border-zinc-300 px-3 text-sm" value={historyFrom} onChange={(event) => setHistoryFrom(event.target.value)} />
               <input type="date" className="h-10 rounded-md border border-zinc-300 px-3 text-sm" value={historyTo} onChange={(event) => setHistoryTo(event.target.value)} />
@@ -678,7 +681,7 @@ function ScheduleTable({ tasks, showDate = false, emptyText, onView, onEdit, onD
                   <button
                     type="button"
                     onClick={() => onView(task)}
-                    className="text-left font-bold text-zinc-950 underline-offset-4 hover:text-yellow-700 hover:underline"
+                    className="text-left font-bold text-[var(--color-ink)] underline-offset-4 hover:text-[var(--color-brand)] hover:underline"
                   >
                     {task.task}
                   </button>
@@ -730,15 +733,15 @@ function ManualOptionChooser({ state, busy, onSelect, onGenerate, onRestart }) {
   if (!['options', 'generating', 'done'].includes(state.phase) && !state.error) return null;
 
   return (
-    <div className="rounded-md border border-yellow-200 bg-yellow-50 p-4">
+    <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-muted)] p-4">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <p className="text-sm font-black text-zinc-950">Manual Match Confirmation</p>
-          <p className="mt-1 text-sm font-semibold text-zinc-700">
+          <p className="text-sm font-black text-[var(--color-ink)]">Manual Match Confirmation</p>
+          <p className="mt-1 text-sm font-semibold text-[var(--color-ink-soft)]">
             Choose the closest manual section first. Suggestions will be generated only from your selected section.
           </p>
           {state.context?.interpretedTask && (
-            <p className="mt-2 text-sm font-bold text-zinc-800">Interpreted as: {state.context.interpretedTask}</p>
+            <p className="mt-2 text-sm font-bold text-[var(--color-ink-soft)]">Interpreted as: {state.context.interpretedTask}</p>
           )}
         </div>
         <Button type="button" variant="secondary" onClick={onRestart} disabled={busy}>
@@ -763,20 +766,20 @@ function ManualOptionChooser({ state, busy, onSelect, onGenerate, onRestart }) {
                 onClick={() => onSelect(option.id)}
                 className={`group relative overflow-hidden rounded-md border px-4 py-3 text-left transition duration-200 ${
                   selected
-                    ? 'border-yellow-500 bg-white shadow-sm ring-2 ring-yellow-200'
-                    : 'border-yellow-100 bg-white/80 hover:border-yellow-400 hover:bg-white'
+                    ? 'border-[var(--color-accent)] bg-white shadow-sm ring-2 ring-[var(--ring)]'
+                    : 'border-[var(--color-border)] bg-white/80 hover:border-[var(--color-accent)] hover:bg-white'
                 }`}
               >
-                {selected && <span className="absolute inset-y-0 left-0 w-1 animate-pulse bg-yellow-400" />}
+                {selected && <span className="absolute inset-y-0 left-0 w-1 animate-pulse bg-[var(--color-accent)]" />}
                 <div className="flex items-start justify-between gap-3">
                   <div>
-                    <p className="text-sm font-black text-zinc-950">{option.title || 'Untitled section'}</p>
-                    <p className="mt-1 text-xs font-semibold text-zinc-500">
+                    <p className="text-sm font-black text-[var(--color-ink)]">{option.title || 'Untitled section'}</p>
+                    <p className="mt-1 text-xs font-semibold text-[var(--color-muted)]">
                       {option.manual || 'Manual'}{option.page ? ` - p.${option.page}` : ''}{option.sourceType ? ` - ${option.sourceType}` : ''}
                     </p>
-                    {option.reason && <p className="mt-2 text-sm font-semibold leading-6 text-zinc-700">{option.reason}</p>}
+                    {option.reason && <p className="mt-2 text-sm font-semibold leading-6 text-[var(--color-ink-soft)]">{option.reason}</p>}
                   </div>
-                  <span className={`shrink-0 rounded-md px-2.5 py-1 text-xs font-black ${selected ? 'bg-yellow-400 text-zinc-950' : 'bg-zinc-100 text-zinc-600'}`}>
+                  <span className={`shrink-0 rounded-md px-2.5 py-1 text-xs font-black ${selected ? 'bg-[var(--color-accent)] text-[var(--color-navy)]' : 'bg-[var(--color-surface-muted)] text-[var(--color-muted)]'}`}>
                     {selected ? 'Selected' : option.confidence || 'Option'}
                   </span>
                 </div>
@@ -788,7 +791,7 @@ function ManualOptionChooser({ state, busy, onSelect, onGenerate, onRestart }) {
 
       {state.options.length > 0 && (
         <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-xs font-semibold text-zinc-600">
+          <p className="text-xs font-semibold text-[var(--color-muted)]">
             This confirmation step improves accuracy by anchoring the advice to a specific manual section.
           </p>
           <Button type="button" onClick={onGenerate} disabled={busy || state.selectedIds.length === 0}>
@@ -818,13 +821,13 @@ function ManualProgressOverlay({ phase, visible }) {
   const activeIndex = Math.max(0, steps.findIndex((step) => step.id === phase));
 
   return (
-    <div className="fixed inset-0 z-50 grid place-items-center bg-zinc-950/60 px-4 backdrop-blur-sm">
-      <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-2xl">
-        <div className="mx-auto grid h-14 w-14 place-items-center rounded-full border-4 border-yellow-100 border-t-yellow-400">
-          <div className="h-7 w-7 animate-spin rounded-full border-4 border-zinc-200 border-t-zinc-950" />
+    <div className="fixed inset-0 z-50 grid place-items-center bg-[rgba(7,27,51,0.62)] px-4 backdrop-blur-sm">
+      <div className="ds-card w-full max-w-md p-6 shadow-[var(--shadow-overlay)]">
+        <div className="mx-auto grid h-14 w-14 place-items-center rounded-full border-4 border-[var(--color-accent-soft)] border-t-[var(--color-accent)]">
+          <div className="h-7 w-7 animate-spin rounded-full border-4 border-[var(--color-border)] border-t-[var(--color-navy)]" />
         </div>
-        <p className="mt-5 text-center text-lg font-black text-zinc-950">{steps[activeIndex]?.title || 'Working'}</p>
-        <p className="mt-2 text-center text-sm font-semibold leading-6 text-zinc-600">{steps[activeIndex]?.description}</p>
+        <p className="mt-5 text-center text-lg font-black text-[var(--color-ink)]">{steps[activeIndex]?.title || 'Working'}</p>
+        <p className="mt-2 text-center text-sm font-semibold leading-6 text-[var(--color-muted)]">{steps[activeIndex]?.description}</p>
         <div className="mt-5 grid gap-3">
           {steps.map((step, index) => {
             const active = index === activeIndex;
@@ -832,14 +835,14 @@ function ManualProgressOverlay({ phase, visible }) {
             return (
               <div key={step.id} className="flex items-center gap-3">
                 <span className={`grid h-8 w-8 place-items-center rounded-full text-xs font-black ${
-                  done ? 'bg-green-600 text-white' : active ? 'animate-pulse bg-yellow-400 text-zinc-950' : 'bg-zinc-100 text-zinc-400'
+                  done ? 'bg-[var(--color-success)] text-white' : active ? 'animate-pulse bg-[var(--color-accent)] text-[var(--color-navy)]' : 'bg-[var(--color-surface-muted)] text-[var(--color-muted)]'
                 }`}
                 >
                   {index + 1}
                 </span>
                 <div>
-                  <p className={`text-sm font-black ${active || done ? 'text-zinc-950' : 'text-zinc-400'}`}>{step.title}</p>
-                  <p className="text-xs font-semibold text-zinc-500">{done ? 'Complete' : active ? 'In progress' : 'Waiting'}</p>
+                  <p className={`text-sm font-black ${active || done ? 'text-[var(--color-ink)]' : 'text-[var(--color-muted)]'}`}>{step.title}</p>
+                  <p className="text-xs font-semibold text-[var(--color-muted)]">{done ? 'Complete' : active ? 'In progress' : 'Waiting'}</p>
                 </div>
               </div>
             );
@@ -869,10 +872,10 @@ function ManualAdvicePanel({ advice, onClear, onOpenSource }) {
     .slice(0, 8);
 
   return (
-    <div className="rounded-md border border-yellow-200 bg-yellow-50 p-4">
+    <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-muted)] p-4">
       <div className="flex items-start justify-between gap-3">
         <div>
-          <p className="text-sm font-black text-zinc-950">Manual Suggestions</p>
+          <p className="text-sm font-black text-[var(--color-ink)]">Manual Suggestions</p>
           <p className="mt-1 text-xs font-semibold text-zinc-600">Confidence: {advice.confidence || 'unknown'} · Source: {advice.generatedBy || 'manual search'}</p>
           {advice.interpretedTask && (
             <p className="mt-2 text-sm font-bold text-zinc-800">Interpreted as: {advice.interpretedTask}</p>
@@ -895,7 +898,7 @@ function ManualAdvicePanel({ advice, onClear, onOpenSource }) {
           )}
         </div>
         {onClear && (
-          <button type="button" onClick={onClear} className="rounded-md border border-yellow-300 bg-white px-3 py-1.5 text-xs font-bold text-zinc-700">
+          <button type="button" onClick={onClear} className="ds-button ds-button-secondary ds-button-small">
             Clear
           </button>
         )}
@@ -953,7 +956,7 @@ function ManualAdvicePanel({ advice, onClear, onOpenSource }) {
                   <button
                     type="button"
                     onClick={() => onOpenSource(item.source, 'open')}
-                    className="mt-1 rounded-md border border-yellow-300 bg-yellow-50 px-2.5 py-1 text-xs font-black text-zinc-800 hover:border-yellow-500"
+                    className="ds-button ds-button-secondary ds-button-small mt-1"
                   >
                     Open page
                   </button>
@@ -979,21 +982,21 @@ function ManualSourceRow({ source, onOpenSource }) {
           <button
             type="button"
             onClick={() => onOpenSource(source, 'open')}
-            className="rounded-md border border-yellow-300 bg-white px-2.5 py-1 text-xs font-black text-zinc-800 hover:border-yellow-500"
+            className="ds-button ds-button-secondary ds-button-small"
           >
             Open page
           </button>
           <button
             type="button"
             onClick={() => onOpenSource(source, 'manual')}
-            className="rounded-md border border-yellow-300 bg-yellow-50 px-2.5 py-1 text-xs font-black text-zinc-800 hover:border-yellow-500"
+            className="ds-button ds-button-secondary ds-button-small"
           >
             Open manual
           </button>
           <button
             type="button"
             onClick={() => onOpenSource(source, 'download')}
-            className="rounded-md border border-zinc-300 bg-white px-2.5 py-1 text-xs font-black text-zinc-700 hover:border-zinc-500"
+            className="ds-button ds-button-ghost ds-button-small"
           >
             Download
           </button>
@@ -1019,8 +1022,8 @@ function ScheduleSlotModal({ task, onClose, onOpenManualSource }) {
   const hasCompletion = task.status === 'COMPLETED' || task.summary || task.completedAt || photos.length > 0;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-zinc-950/60 p-4">
-      <div className="max-h-[90vh] w-full max-w-4xl overflow-y-auto rounded-lg bg-white shadow-2xl">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[rgba(7,27,51,0.62)] p-4 backdrop-blur-sm">
+      <div className="ds-card max-h-[90vh] w-full max-w-4xl overflow-y-auto shadow-[var(--shadow-overlay)]">
         <div className="sticky top-0 z-10 flex items-start justify-between gap-4 border-b border-zinc-100 bg-white px-5 py-4">
           <div>
             <p className="text-xs font-bold uppercase tracking-[0.14em] text-zinc-500">Schedule Slot</p>
@@ -1029,7 +1032,7 @@ function ScheduleSlotModal({ task, onClose, onOpenManualSource }) {
           <button
             type="button"
             onClick={onClose}
-            className="rounded-md border border-zinc-300 bg-white px-3 py-1.5 text-sm font-bold text-zinc-700 hover:border-zinc-500"
+            className="ds-button ds-button-secondary ds-button-small"
           >
             Close
           </button>
@@ -1111,7 +1114,7 @@ function ScheduleSlotModal({ task, onClose, onOpenManualSource }) {
                 </div>
               </div>
             ) : (
-              <p className="mt-3 rounded-md border border-yellow-200 bg-yellow-50 px-3 py-2 text-sm font-semibold text-yellow-800">
+              <p className="mt-3 rounded-xl border border-[var(--color-border)] bg-[var(--color-warning-soft)] px-3 py-2 text-sm font-semibold text-[var(--color-warning)]">
                 No technician completion has been submitted for this slot yet.
               </p>
             )}

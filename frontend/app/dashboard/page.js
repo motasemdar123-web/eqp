@@ -317,19 +317,19 @@ export default function DashboardPage() {
 function DashboardContent(props) {
   return (
     <div className="grid gap-6">
-      <div className="grid gap-4 sm:grid-cols-3">
-        <Metric label="Fleet Machines" value={props.machines.length} tone="dark" />
-        <Metric label="Average SMR" value={props.fleetInsights.averageSmr} />
-        <Metric label="Machine Types" value={props.fleetInsights.activeTypes} />
+      <div className="ds-kpi-grid">
+        <Metric label="Fleet Machines" value={props.machines.length} code="FM" />
+        <Metric label="Average SMR" value={props.fleetInsights.averageSmr} code="SM" accent />
+        <Metric label="Machine Types" value={props.fleetInsights.activeTypes} code="TY" />
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[360px_1fr]">
       <Card className="p-6">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-yellow-700">Report Builder</p>
-            <h2 className="mt-2 text-2xl font-bold text-zinc-950">Generate PDF Reports</h2>
-            <p className="mt-2 text-sm text-zinc-500">Create finalized PDF reports from EQP templates.</p>
+            <p className="text-xs font-black uppercase tracking-[0.18em] text-[var(--color-accent-hover)]">Report Builder</p>
+            <h2 className="mt-2 text-2xl font-black text-[var(--color-ink)]">Generate PDF Reports</h2>
+            <p className="mt-2 text-sm font-semibold text-[var(--color-muted)]">Create finalized PDF reports from EQP templates.</p>
           </div>
         </div>
 
@@ -338,7 +338,7 @@ function DashboardContent(props) {
             <select
               value={props.reportType}
               onChange={(event) => props.setReportType(event.target.value)}
-              className="rounded-md border border-zinc-300 bg-white px-4 py-2.5 text-zinc-900 outline-none transition focus:border-yellow-400 focus:ring-2 focus:ring-yellow-100"
+              className="ds-input"
             >
               {REPORT_TYPES.map((type) => (
                 <option key={type}>{type}</option>
@@ -350,7 +350,7 @@ function DashboardContent(props) {
             <select
               value={props.serviceType}
               onChange={(event) => props.setServiceType(event.target.value)}
-              className="rounded-md border border-zinc-300 bg-white px-4 py-2.5 text-zinc-900 outline-none transition focus:border-yellow-400 focus:ring-2 focus:ring-yellow-100"
+              className="ds-input"
             >
               {SERVICE_TYPES.map((type) => (
                 <option key={type}>{type}</option>
@@ -366,7 +366,7 @@ function DashboardContent(props) {
               placeholder="1"
               value={props.reportCount}
               onChange={(event) => props.setReportCount(event.target.value)}
-              className="rounded-md border border-zinc-300 bg-white px-4 py-2.5 text-zinc-900 outline-none transition focus:border-yellow-400 focus:ring-2 focus:ring-yellow-100"
+              className="ds-input"
             />
           </Field>
 
@@ -376,17 +376,17 @@ function DashboardContent(props) {
         </div>
 
         <div className="mt-5 grid gap-3">
-          <p className="rounded-md bg-zinc-50 px-4 py-3 text-sm text-zinc-600">
+          <p className="rounded-xl bg-[var(--color-surface-muted)] px-4 py-3 text-sm font-semibold text-[var(--color-muted)]">
             Up to 12 report dates can be generated in one run.
           </p>
-          <div className="rounded-md border border-zinc-200 p-4">
-            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-zinc-500">Latest Activity</p>
-            <p className="mt-2 text-sm font-semibold text-zinc-900">{props.fleetInsights.latestOperation}</p>
+          <div className="rounded-xl border border-[var(--color-border)] p-4">
+            <p className="text-xs font-black uppercase tracking-[0.14em] text-[var(--color-muted)]">Latest Activity</p>
+            <p className="mt-2 text-sm font-semibold text-[var(--color-ink)]">{props.fleetInsights.latestOperation}</p>
           </div>
         </div>
 
         {props.generationSummary && (
-          <div className="mt-5 rounded-lg border border-emerald-200 bg-emerald-50 p-4">
+          <div className="mt-5 rounded-xl border border-emerald-200 bg-emerald-50 p-4">
             <p className="text-sm font-bold text-emerald-800">
               {props.generationSummary.generatedFiles.length} PDF reports generated
             </p>
@@ -398,13 +398,13 @@ function DashboardContent(props) {
       </Card>
 
       <Card className="overflow-hidden">
-        <div className="border-b border-zinc-200 p-6">
+        <div className="border-b border-[var(--color-border)] p-6">
           <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <h2 className="text-2xl font-bold text-zinc-950">Fleet Machines</h2>
-              <p className="mt-2 text-sm text-zinc-500">Live machines loaded from database</p>
+              <h2 className="text-2xl font-black text-[var(--color-ink)]">Fleet Machines</h2>
+              <p className="mt-2 text-sm font-semibold text-[var(--color-muted)]">Live machines loaded from database</p>
             </div>
-            <div className="rounded-md bg-zinc-100 px-3 py-2 text-sm font-semibold text-zinc-700">
+            <div className="rounded-xl bg-[var(--color-surface-muted)] px-3 py-2 text-sm font-black text-[var(--color-ink-soft)]">
               {props.selectedMachines.length} selected
             </div>
           </div>
@@ -415,13 +415,13 @@ function DashboardContent(props) {
               placeholder="Search by machine, type, or engine"
               value={props.searchTerm}
               onChange={(event) => props.setSearchTerm(event.target.value)}
-              className="rounded-md border border-zinc-300 bg-white px-4 py-2.5 text-zinc-900 outline-none transition focus:border-yellow-400 focus:ring-2 focus:ring-yellow-100"
+              className="ds-input"
             />
 
             <select
               value={props.filterType}
               onChange={(event) => props.setFilterType(event.target.value)}
-              className="rounded-md border border-zinc-300 bg-white px-4 py-2.5 text-zinc-900 outline-none transition focus:border-yellow-400 focus:ring-2 focus:ring-yellow-100"
+              className="ds-input"
             >
               <option value="ALL">All Types</option>
               {props.machineTypes.map((type) => (
@@ -432,7 +432,7 @@ function DashboardContent(props) {
             <select
               value={props.filterEngineer}
               onChange={(event) => props.setFilterEngineer(event.target.value)}
-              className="rounded-md border border-zinc-300 bg-white px-4 py-2.5 text-zinc-900 outline-none transition focus:border-yellow-400 focus:ring-2 focus:ring-yellow-100"
+              className="ds-input"
             >
               <option value="ALL">All Engineers</option>
               {props.engineers.map((engineer) => (
@@ -440,7 +440,7 @@ function DashboardContent(props) {
               ))}
             </select>
 
-            <label className="flex items-center gap-3 rounded-md border border-zinc-300 bg-white px-4 py-2.5 text-sm font-medium text-zinc-700">
+            <label className="flex items-center gap-3 rounded-xl border border-[var(--color-border)] bg-white px-4 py-2.5 text-sm font-bold text-[var(--color-ink-soft)]">
               <input
                 type="checkbox"
                 checked={props.showOnlySelected}
@@ -488,12 +488,15 @@ function DashboardContent(props) {
   );
 }
 
-function Metric({ label, value, tone = 'light' }) {
+function Metric({ label, value, code, accent = false }) {
   return (
-    <div className={`rounded-lg border p-4 shadow-sm ${tone === 'dark' ? 'border-zinc-900 bg-zinc-950 text-white' : 'border-zinc-200 bg-white text-zinc-900'}`}>
-      <div className={`text-xs font-semibold uppercase tracking-[0.14em] ${tone === 'dark' ? 'text-zinc-400' : 'text-zinc-500'}`}>{label}</div>
-      <div className={`mt-2 text-3xl font-black ${tone === 'dark' ? 'text-yellow-400' : 'text-zinc-950'}`}>{value}</div>
-    </div>
+    <article className="ds-kpi-card">
+      <div className={`ds-icon-tile ${accent ? 'ds-icon-tile-accent' : ''}`}>{code}</div>
+      <div>
+        <div className="text-xs font-black uppercase tracking-[0.14em] text-[var(--color-muted)]">{label}</div>
+        <div className="mt-2 text-3xl font-black text-[var(--color-ink)]">{value}</div>
+      </div>
+    </article>
   );
 }
 
@@ -504,7 +507,7 @@ function MachinesTable({ machines, selectedMachines, toggleMachine, toggleSelect
   return (
     <div className="overflow-x-auto">
       <table className="w-full min-w-[820px]">
-        <thead className="bg-zinc-50 text-xs uppercase tracking-[0.12em] text-zinc-500">
+        <thead className="bg-[var(--color-surface-muted)] text-xs uppercase tracking-[0.12em] text-[var(--color-muted)]">
           <tr>
             <th className="px-5 py-4 text-left">
               <input type="checkbox" checked={allVisibleSelected} onChange={toggleSelectAll} />
@@ -518,7 +521,7 @@ function MachinesTable({ machines, selectedMachines, toggleMachine, toggleSelect
         </thead>
         <tbody>
           {machines.map((machine) => (
-            <tr key={machine.id} className="border-t border-zinc-100 transition hover:bg-yellow-50/60">
+            <tr key={machine.id} className="border-t border-[var(--color-border)] transition hover:bg-[var(--color-brand-soft)]">
               <td className="px-5 py-4">
                 <input
                   type="checkbox"
@@ -526,11 +529,11 @@ function MachinesTable({ machines, selectedMachines, toggleMachine, toggleSelect
                   onChange={() => toggleMachine(machine.id)}
                 />
               </td>
-              <td className="px-5 py-4 font-semibold text-zinc-950">{machine.machine_number}</td>
-              <td className="px-5 py-4 text-zinc-600">{machine.machine_type}</td>
-              <td className="px-5 py-4 font-mono text-sm text-zinc-600">{machine.engine_number}</td>
-              <td className="px-5 py-4 text-zinc-700">{machine.last_smr}</td>
-              <td className="px-5 py-4 text-zinc-700">{machine.smr_step}</td>
+              <td className="px-5 py-4 font-semibold text-[var(--color-ink)]">{machine.machine_number}</td>
+              <td className="px-5 py-4 text-[var(--color-ink-soft)]">{machine.machine_type}</td>
+              <td className="px-5 py-4 font-mono text-sm text-[var(--color-muted)]">{machine.engine_number}</td>
+              <td className="px-5 py-4 text-[var(--color-ink-soft)]">{machine.last_smr}</td>
+              <td className="px-5 py-4 text-[var(--color-ink-soft)]">{machine.smr_step}</td>
             </tr>
           ))}
         </tbody>
@@ -548,7 +551,7 @@ function SortableHeader({ label, column, sortConfig, onSort }) {
       <button
         type="button"
         onClick={() => onSort(column)}
-        className="inline-flex items-center gap-1 font-bold text-zinc-600 transition hover:text-zinc-950"
+        className="inline-flex items-center gap-1 font-bold text-[var(--color-muted)] transition hover:text-[var(--color-ink)]"
       >
         {label} {indicator}
       </button>
@@ -559,9 +562,9 @@ function SortableHeader({ label, column, sortConfig, onSort }) {
 function MachineHistory({ history }) {
   return (
     <Card className="overflow-hidden">
-      <div className="border-b border-zinc-200 p-6">
-        <h2 className="text-2xl font-bold text-zinc-950">Machine History</h2>
-        <p className="mt-2 text-sm text-zinc-500">Fleet operations and service timeline</p>
+      <div className="border-b border-[var(--color-border)] p-6">
+        <h2 className="text-2xl font-black text-[var(--color-ink)]">Machine History</h2>
+        <p className="mt-2 text-sm font-semibold text-[var(--color-muted)]">Fleet operations and service timeline</p>
       </div>
 
       {history.length === 0 ? (
@@ -571,7 +574,7 @@ function MachineHistory({ history }) {
       ) : (
         <div className="overflow-x-auto">
           <table className="w-full min-w-[900px]">
-            <thead className="bg-zinc-50 text-xs uppercase tracking-[0.12em] text-zinc-500">
+            <thead className="bg-[var(--color-surface-muted)] text-xs uppercase tracking-[0.12em] text-[var(--color-muted)]">
               <tr>
                 <th className="px-5 py-4 text-left">Machine</th>
                 <th className="px-5 py-4 text-left">Operation</th>
@@ -584,16 +587,16 @@ function MachineHistory({ history }) {
             </thead>
             <tbody>
               {history.map((item, index) => (
-                <tr key={`${item.machine_id}-${item.created_at}-${index}`} className="border-t border-zinc-100 transition hover:bg-zinc-50">
-                  <td className="px-5 py-4 font-semibold text-zinc-950">
+                <tr key={`${item.machine_id}-${item.created_at}-${index}`} className="border-t border-[var(--color-border)] transition hover:bg-[var(--color-brand-soft)]">
+                  <td className="px-5 py-4 font-semibold text-[var(--color-ink)]">
                     {item.machine_type} {item.machine_number}
                   </td>
-                  <td className="px-5 py-4 text-zinc-600">{item.operation_type}</td>
-                  <td className="px-5 py-4 text-zinc-600">{item.report_type}</td>
-                  <td className="px-5 py-4 text-zinc-600">{item.service_type}</td>
-                  <td className="px-5 py-4 text-zinc-700">{item.smr}</td>
-                  <td className="px-5 py-4 text-zinc-600">{item.performed_by}</td>
-                  <td className="px-5 py-4 text-zinc-600">
+                  <td className="px-5 py-4 text-[var(--color-ink-soft)]">{item.operation_type}</td>
+                  <td className="px-5 py-4 text-[var(--color-ink-soft)]">{item.report_type}</td>
+                  <td className="px-5 py-4 text-[var(--color-ink-soft)]">{item.service_type}</td>
+                  <td className="px-5 py-4 text-[var(--color-ink-soft)]">{item.smr}</td>
+                  <td className="px-5 py-4 text-[var(--color-ink-soft)]">{item.performed_by}</td>
+                  <td className="px-5 py-4 text-[var(--color-ink-soft)]">
                     {new Date(item.operation_date).toLocaleDateString()}
                   </td>
                 </tr>
