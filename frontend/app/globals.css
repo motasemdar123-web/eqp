@@ -622,7 +622,17 @@ a:focus-visible {
   display: flex;
   justify-content: center;
   width: 100%;
-  padding-top: 1.05rem;
+  padding-top: 1.85rem;
+}
+
+.ds-sidebar-collapsed .ds-sidebar-mark {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 10px;
+  background: #f1f6fb;
+  color: var(--color-brand);
+  font-size: 0.72rem;
+  box-shadow: none;
 }
 
 .ds-sidebar-collapsed .ds-sidebar-brand {
