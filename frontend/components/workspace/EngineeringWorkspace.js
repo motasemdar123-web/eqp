@@ -254,7 +254,6 @@ function WorkspaceTabs({ activeTab, onTabChange }) {
     </div>
   );
 }
-
 function CanvasToolbar({ onAddSticky, onAddWireframe, onAddFrame, onAddText, onClear, onSave, onResetView, onOpenTemplates }) {
   return (
     <div className="eng-canvas-toolbar">
@@ -1283,7 +1282,7 @@ function CreativeSidebar({ docs, activeView, selectedId, onSelectView, onSelectD
       <div className="eng-doc-space-head">
         <span className="eng-doc-avatar">M</span>
         <strong>Motasem Ghanem&apos;s Space</strong>
-        <button type="button" aria-label="Collapse workspace sidebar">«</button>
+        <button type="button" aria-label="Collapse workspace sidebar">Â«</button>
       </div>
 
       <div className="eng-doc-sidebar-actions" aria-label="Workspace shortcuts">
@@ -1297,7 +1296,7 @@ function CreativeSidebar({ docs, activeView, selectedId, onSelectView, onSelectD
         <p>Recents</p>
         {favoriteDoc && (
           <button type="button" onClick={() => onSelectDoc(favoriteDoc.id)}>
-            <span className="eng-doc-favorite">★</span>
+            <span className="eng-doc-favorite">â˜…</span>
             <strong>{favoriteDoc.title}</strong>
           </button>
         )}
@@ -1306,11 +1305,11 @@ function CreativeSidebar({ docs, activeView, selectedId, onSelectView, onSelectD
           className={activeView === 'docs' ? 'eng-doc-nav-active' : ''}
           onClick={() => onSelectView('docs')}
         >
-          <span className="eng-doc-file-icon">■</span>
+          <span className="eng-doc-file-icon">â– </span>
           <strong>Document Hub</strong>
         </button>
         <button type="button" onClick={() => onSelectView('getting-started')}>
-          <span>○</span>
+          <span>â—‹</span>
           <strong>Getting Started</strong>
         </button>
 
@@ -1320,7 +1319,7 @@ function CreativeSidebar({ docs, activeView, selectedId, onSelectView, onSelectD
           className={activeView === 'board' ? 'eng-doc-nav-active' : ''}
           onClick={() => onSelectView('board')}
         >
-          <span>▦</span>
+          <span>â–¦</span>
           <strong>Idea Board</strong>
         </button>
         <button type="button" onClick={onCreateDoc}>
@@ -1336,14 +1335,14 @@ function CreativeSidebar({ docs, activeView, selectedId, onSelectView, onSelectD
             className={selectedId === doc.id && activeView === 'docs' ? 'eng-doc-nav-active' : ''}
             onClick={() => onSelectDoc(doc.id)}
           >
-            <span className="eng-doc-file-icon">■</span>
+            <span className="eng-doc-file-icon">â– </span>
             <strong>{doc.title}</strong>
           </button>
         ))}
 
         <p>Teamspaces</p>
         <button type="button">
-          <span>⌂</span>
+          <span>âŒ‚</span>
           <strong>Maintenance Space HQ</strong>
         </button>
         <button type="button" onClick={onCreateDoc}>
@@ -1364,34 +1363,45 @@ function CreativeSidebar({ docs, activeView, selectedId, onSelectView, onSelectD
 }
 
 function CreativeDocsTable({ docs, selectedId, onSelectDoc, onUpdateDoc, onCreateDoc, onDeleteDoc }) {
+  const [query, setQuery] = useState('');
+  const [view, setView] = useState('all');
+  const [openMenuId, setOpenMenuId] = useState('');
+  const filteredDocs = docs.filter((doc) => {
+    const matchesQuery = `${doc.title} ${doc.category} ${doc.createdBy}`.toLowerCase().includes(query.toLowerCase());
+    if (view === 'mine') return matchesQuery && doc.createdBy === 'Motasem Ghanem';
+    if (view === 'pinned') return matchesQuery && doc.favorite;
+    return matchesQuery;
+  });
+
   return (
     <div className="eng-doc-table-wrap">
       <div className="eng-doc-table-toolbar">
         <div className="eng-doc-view-tabs">
-          <button type="button" className="eng-doc-view-active">★ All Docs</button>
-          <button type="button">● My Docs</button>
+          <button type="button" className={view === 'all' ? 'eng-doc-view-active' : ''} onClick={() => setView('all')}>All Docs</button>
+          <button type="button" className={view === 'mine' ? 'eng-doc-view-active' : ''} onClick={() => setView('mine')}>My Docs</button>
+          <button type="button" className={view === 'pinned' ? 'eng-doc-view-active' : ''} onClick={() => setView('pinned')}>Pinned</button>
         </div>
         <div className="eng-doc-table-actions">
-          <button type="button" aria-label="Filter documents">≡</button>
-          <button type="button" aria-label="Sort documents">↕</button>
-          <button type="button" aria-label="Automations">⚡</button>
-          <button type="button" aria-label="Search documents">⌕</button>
-          <button type="button" aria-label="Table settings">⌘</button>
-          <button type="button" className="eng-doc-new-btn" onClick={onCreateDoc}>New</button>
+          <label className="eng-doc-search">
+            <span>Search</span>
+            <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search documents..." />
+          </label>
+          <button type="button" aria-label="Sort documents">Sort</button>
+          <button type="button" aria-label="Table settings">Settings</button>
+          <button type="button" className="eng-doc-new-btn" onClick={onCreateDoc}>New document</button>
         </div>
       </div>
 
       <div className="eng-doc-table" role="table" aria-label="Document Hub">
         <div className="eng-doc-row eng-doc-header-row" role="row">
-          <span role="columnheader">Aa&nbsp; Doc name</span>
-          <span role="columnheader">☷&nbsp; Category</span>
-          <span role="columnheader">●&nbsp; Created by</span>
-          <span role="columnheader">◷&nbsp; Created time</span>
-          <span role="columnheader">●&nbsp; Last edited by</span>
-          <span role="columnheader">◷&nbsp; Last updated time</span>
+          <span role="columnheader">Doc name</span>
+          <span role="columnheader">Category</span>
+          <span role="columnheader">Created by</span>
+          <span role="columnheader">Created time</span>
+          <span role="columnheader">Last edited</span>
           <span role="columnheader">Actions</span>
         </div>
-        {docs.map((doc) => (
+        {filteredDocs.map((doc) => (
           <div
             key={doc.id}
             className={selectedId === doc.id ? 'eng-doc-row eng-doc-row-selected' : 'eng-doc-row'}
@@ -1412,52 +1422,93 @@ function CreativeDocsTable({ docs, selectedId, onSelectDoc, onUpdateDoc, onCreat
             <span><i>M</i>{doc.createdBy}</span>
             <span>{formatCreativeDate(doc.createdAt)}</span>
             <span><i>M</i>{doc.lastEditedBy}</span>
-            <span>{formatCreativeDate(doc.updatedAt)}</span>
-            <button
-              type="button"
-              className="eng-doc-delete"
-              onClick={(event) => {
-                event.stopPropagation();
-                onDeleteDoc(doc.id);
-              }}
-            >
-              Delete
-            </button>
+            <div className="eng-doc-row-actions">
+              <button
+                type="button"
+                aria-label={`Open actions for ${doc.title}`}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  setOpenMenuId(openMenuId === doc.id ? '' : doc.id);
+                }}
+              >
+                ...
+              </button>
+              {openMenuId === doc.id && (
+                <div className="eng-doc-action-menu">
+                  <button type="button" onClick={() => setOpenMenuId('')}>Open</button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onUpdateDoc(doc.id, { favorite: !doc.favorite });
+                      setOpenMenuId('');
+                    }}
+                  >
+                    {doc.favorite ? 'Unpin' : 'Pin'}
+                  </button>
+                  <button
+                    type="button"
+                    className="eng-doc-menu-danger"
+                    onClick={() => {
+                      onDeleteDoc(doc.id);
+                      setOpenMenuId('');
+                    }}
+                  >
+                    Delete
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         ))}
       </div>
-      <button type="button" className="eng-doc-new-row" onClick={onCreateDoc}>+ New doc</button>
+      {filteredDocs.length === 0
+        ? <EmptyState title="No documents found" description="Try a different search or create a new document." />
+        : <button type="button" className="eng-doc-new-row" onClick={onCreateDoc}>+ New document</button>}
     </div>
   );
 }
 
-function CreativeDocumentHub({ docs, selectedId, onSelectDoc, onUpdateDoc, onCreateDoc, onDeleteDoc }) {
+function CreativeDocumentHub({ docs, selectedId, activeView, onSelectView, onSelectDoc, onUpdateDoc, onCreateDoc, onDeleteDoc }) {
   const selectedDoc = docs.find((doc) => doc.id === selectedId) || docs[0];
+  const pinnedCount = docs.filter((doc) => doc.favorite).length;
 
   return (
-    <main className="eng-doc-main">
-      <header className="eng-doc-topbar">
+    <main className="eng-doc-main eng-doc-main-native">
+      <header className="eng-doc-native-header">
         <div>
-          <span className="eng-doc-file-icon">■</span>
-          <strong>Document Hub</strong>
-          <span className="eng-doc-private">Private</span>
+          <p>Engineering Workspace</p>
+          <h2>Document Hub</h2>
+          <span>Create and collaborate on engineering documents in one place.</span>
         </div>
         <div>
-          <span>Edited 48m ago</span>
-          <button type="button">Share</button>
-          <button type="button" aria-label="Copy link">⌁</button>
-          <button type="button" aria-label="Favorite">☆</button>
-          <button type="button" aria-label="More actions">•••</button>
+          <button type="button" className={activeView === 'docs' ? 'eng-doc-filter-active' : ''} onClick={() => onSelectView('docs')}>Documents</button>
+          <button type="button" className={activeView === 'board' ? 'eng-doc-filter-active' : ''} onClick={() => onSelectView('board')}>Idea Board</button>
+          <Button type="button" onClick={onCreateDoc}>New document</Button>
         </div>
       </header>
 
-      <section className="eng-doc-page">
-        <div className="eng-doc-title-block">
-          <span className="eng-doc-page-icon">■</span>
+      <section className="eng-doc-summary-grid" aria-label="Document summary">
+        <Card>
+          <span>Total documents</span>
+          <strong>{docs.length}</strong>
+        </Card>
+        <Card>
+          <span>Pinned</span>
+          <strong>{pinnedCount}</strong>
+        </Card>
+        <Card>
+          <span>Last selected</span>
+          <strong>{selectedDoc?.category || 'Engineering note'}</strong>
+        </Card>
+      </section>
+
+      <section className="eng-doc-page eng-doc-page-native">
+        <div className="eng-doc-title-block eng-doc-title-native">
           <div>
-            <h2>{selectedDoc?.title || 'Document Hub'}</h2>
-            <p>Create and collaborate on engineering documents in one place.</p>
+            <h3>Documents</h3>
+            <p>Manage engineering notes, proposals, research, and maintenance references.</p>
           </div>
+          <Badge tone="info">{docs.length} docs</Badge>
         </div>
         <CreativeDocsTable
           docs={docs}
@@ -1468,17 +1519,10 @@ function CreativeDocumentHub({ docs, selectedId, onSelectDoc, onUpdateDoc, onCre
           onDeleteDoc={onDeleteDoc}
         />
       </section>
-
-      <footer className="eng-doc-footer">
-        <span>Get started</span>
-        <button type="button">Delete sample pages</button>
-        <button type="button">Tour</button>
-        <button type="button">Customize</button>
-      </footer>
+      <button type="button" className="eng-doc-floating-action" onClick={onCreateDoc}>+ New document</button>
     </main>
   );
 }
-
 function CreativeArea({ onToast }) {
   const didLoadRef = useRef(false);
   const [docs, setDocs] = useState(() => defaultCreativeDocs());
@@ -1538,20 +1582,28 @@ function CreativeArea({ onToast }) {
 
   return (
     <div className="eng-doc-workspace">
-      <CreativeSidebar
-        docs={docs}
-        activeView={activeView}
-        selectedId={selectedId}
-        onSelectView={setActiveView}
-        onSelectDoc={selectDoc}
-        onCreateDoc={createDoc}
-      />
       {activeView === 'board'
-        ? <CanvasCreativeArea onToast={onToast} />
+        ? (
+          <div className="eng-doc-board-view">
+            <div className="eng-doc-native-header">
+              <div>
+                <p>Engineering Workspace</p>
+                <h2>Idea Board</h2>
+                <span>Sketch visual workflows, sticky notes, and wireframes.</span>
+              </div>
+              <div>
+                <button type="button" onClick={() => setActiveView('docs')}>Back to documents</button>
+              </div>
+            </div>
+            <CanvasCreativeArea onToast={onToast} />
+          </div>
+        )
         : (
           <CreativeDocumentHub
             docs={docs}
             selectedId={selectedId}
+            activeView={activeView}
+            onSelectView={setActiveView}
             onSelectDoc={selectDoc}
             onUpdateDoc={updateDoc}
             onCreateDoc={createDoc}
