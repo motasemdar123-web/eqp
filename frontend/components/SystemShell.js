@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import { clearStoredUser, getStoredPlatformSession, getStoredUser } from '../lib/auth';
+import { getNotifications, markAllNotificationsRead, markNotificationRead } from '../lib/api';
 
 const navItems = [
   { href: '/management', label: 'Dashboard', code: 'DB' },
@@ -51,6 +52,9 @@ export default function SystemShell({
   const router = useRouter();
   const [user, setUser] = useState(null);
   const [hasHydrated, setHasHydrated] = useState(false);
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
+  const [notifications, setNotifications] = useState([]);
+  const [unreadCount, setUnreadCount] = useState(0);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -68,6 +72,34 @@ export default function SystemShell({
     router.replace(`/?returnTo=${encodeURIComponent(returnTo)}`);
   }, [hasHydrated, pathname, requireAuth, router, user]);
 
+  useEffect(() => {
+    if (!hasHydrated || !user) return undefined;
+
+    let cancelled = false;
+
+    async function loadNotifications() {
+      try {
+        const data = await getNotifications(12);
+        if (cancelled) return;
+        setNotifications(data.notifications || []);
+        setUnreadCount(data.unreadCount || 0);
+      } catch {
+        if (!cancelled) {
+          setNotifications([]);
+          setUnreadCount(0);
+        }
+      }
+    }
+
+    loadNotifications();
+    const interval = setInterval(loadNotifications, 60000);
+
+    return () => {
+      cancelled = true;
+      clearInterval(interval);
+    };
+  }, [hasHydrated, user]);
+
   const roleLabel = useMemo(() => {
     if (userLabel) return userLabel;
     if (user?.roles?.length) return user.roles.join(', ');
@@ -83,6 +115,35 @@ export default function SystemShell({
 
     clearStoredUser();
     window.location.href = '/';
+  }
+
+  async function handleNotificationClick(notification) {
+    try {
+      if (!notification.readAt) {
+        const data = await markNotificationRead(notification.id);
+        const next = data.notification;
+        setNotifications((current) => current.map((item) => (item.id === notification.id ? next : item)));
+        setUnreadCount((current) => Math.max(0, current - 1));
+      }
+    } catch {
+      // Notification read state is non-blocking for navigation.
+    }
+
+    if (notification.href) {
+      setNotificationsOpen(false);
+      router.push(notification.href);
+    }
+  }
+
+  async function handleMarkAllRead() {
+    try {
+      const data = await markAllNotificationsRead();
+      setNotifications(data.notifications || []);
+      setUnreadCount(data.unreadCount || 0);
+    } catch {
+      setUnreadCount(0);
+      setNotifications((current) => current.map((item) => ({ ...item, readAt: item.readAt || new Date().toISOString() })));
+    }
   }
 
   if (requireAuth && hasHydrated && !user) {
@@ -172,7 +233,49 @@ export default function SystemShell({
 
           <div className="ds-topbar-actions">
             <div className="ds-plan-chip">Business plan</div>
-            <button type="button" className="ds-icon-button" aria-label="Notifications">!</button>
+            <div className="ds-notification-anchor">
+              <button
+                type="button"
+                className={`ds-icon-button ${unreadCount > 0 ? 'ds-icon-button-alert' : ''}`}
+                aria-label="Notifications"
+                onClick={() => setNotificationsOpen((current) => !current)}
+              >
+                !
+                {unreadCount > 0 && <span className="ds-notification-count">{unreadCount > 9 ? '9+' : unreadCount}</span>}
+              </button>
+              {notificationsOpen && (
+                <div className="ds-notification-menu">
+                  <div className="ds-notification-head">
+                    <div>
+                      <p className="text-sm font-black text-[var(--color-ink)]">Notifications</p>
+                      <p className="text-xs font-bold text-[var(--color-muted)]">{unreadCount} unread alerts</p>
+                    </div>
+                    <button type="button" onClick={handleMarkAllRead}>Mark all read</button>
+                  </div>
+                  <div className="ds-notification-list">
+                    {notifications.length === 0 ? (
+                      <div className="ds-notification-empty">No notifications yet.</div>
+                    ) : notifications.map((notification) => (
+                      <button
+                        key={notification.id}
+                        type="button"
+                        className={`ds-notification-item ${notification.readAt ? '' : 'ds-notification-item-unread'}`}
+                        onClick={() => handleNotificationClick(notification)}
+                      >
+                        <span className={`ds-notification-dot ds-notification-dot-${notification.severity || 'info'}`} />
+                        <span className="min-w-0">
+                          <span className="block truncate text-sm font-black text-[var(--color-ink)]">{notification.title}</span>
+                          <span className="mt-1 block line-clamp-2 text-xs font-bold leading-5 text-[var(--color-muted)]">{notification.message}</span>
+                        </span>
+                        <span className="text-[0.65rem] font-black uppercase tracking-[0.08em] text-[var(--color-subtle)]">
+                          {notification.type}
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
             <div className="ds-avatar" aria-hidden="true">
               {(hasHydrated ? (user?.fullName || user?.email || 'D') : 'D').slice(0, 1).toUpperCase()}
             </div>

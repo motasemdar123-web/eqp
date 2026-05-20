@@ -17,6 +17,9 @@ router.get('/auth/microsoft/callback', asyncHandler(platformController.microsoft
 router.post('/auth/microsoft/session', asyncHandler(platformController.completeMicrosoftLogin));
 
 router.get('/api/dashboard', requirePlatformAuth, requirePermission('REPORTS_READ'), asyncHandler(platformController.dashboard));
+router.get('/api/notifications', requirePlatformAuth, asyncHandler(platformController.listNotifications));
+router.post('/api/notifications/read-all', requirePlatformAuth, asyncHandler(platformController.markAllNotificationsRead));
+router.post('/api/notifications/:id/read', requirePlatformAuth, asyncHandler(platformController.markNotificationRead));
 
 router.get('/api/technician/tasks', requirePlatformAuth, asyncHandler(platformController.myDailyScheduleTasks));
 router.get('/api/technician/weather', requirePlatformAuth, asyncHandler(platformController.myWeatherAdvice));

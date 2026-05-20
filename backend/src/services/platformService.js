@@ -3379,6 +3379,139 @@ async function assertDailyScheduleTechniciansAvailable(prisma, technicianIds, wo
   }
 }
 
+function normalizeNotification(notification) {
+  return {
+    id: notification.id,
+    type: notification.type,
+    severity: notification.severity,
+    title: notification.title,
+    message: notification.message,
+    href: notification.href,
+    readAt: notification.readAt,
+    createdAt: notification.createdAt,
+    createdById: notification.createdById,
+  };
+}
+
+async function createNotifications(prisma, userIds, payload) {
+  const recipients = uniqueIds(userIds).filter(Boolean);
+  if (recipients.length === 0) return;
+
+  await prisma.notification.createMany({
+    data: recipients.map((userId) => ({
+      userId,
+      type: payload.type || 'SYSTEM',
+      severity: payload.severity || 'info',
+      title: String(payload.title || 'Notification').slice(0, 160),
+      message: String(payload.message || '').slice(0, 600),
+      href: payload.href || null,
+      createdById: payload.createdById || null,
+    })),
+  });
+}
+
+async function ensureWelcomeNotifications(prisma, userId) {
+  const existingCount = await prisma.notification.count({
+    where: { userId, type: 'SYSTEM_WELCOME' },
+  });
+
+  if (existingCount > 0) return;
+
+  await createNotifications(prisma, [userId], {
+    type: 'SYSTEM_WELCOME',
+    severity: 'info',
+    title: 'Dar Al Hai notifications are active',
+    message: 'You will receive schedule, EQP, and operational alerts in this panel.',
+    href: '/management',
+  });
+}
+
+async function findScheduleManagerUserIds(prisma) {
+  const userRoles = await prisma.userRole.findMany({
+    where: {
+      user: { deletedAt: null, status: 'ACTIVE' },
+      role: {
+        deletedAt: null,
+        permissions: {
+          some: {
+            permission: { code: 'SCHEDULE_MANAGE' },
+          },
+        },
+      },
+    },
+    include: {
+      user: { select: { id: true } },
+    },
+  });
+
+  return uniqueIds(userRoles.map((userRole) => userRole.user.id));
+}
+
+async function listNotifications(actor, limit = 12) {
+  const prisma = requirePrisma();
+  const userId = actor?.sub;
+  if (!userId) {
+    throw new ApiError(401, 'Authentication required');
+  }
+
+  await ensureWelcomeNotifications(prisma, userId);
+
+  const take = Math.min(Math.max(Number(limit) || 12, 1), 30);
+  const [items, unreadCount] = await Promise.all([
+    prisma.notification.findMany({
+      where: { userId, deletedAt: null },
+      orderBy: { createdAt: 'desc' },
+      take,
+    }),
+    prisma.notification.count({
+      where: { userId, readAt: null, deletedAt: null },
+    }),
+  ]);
+
+  return {
+    unreadCount,
+    notifications: items.map(normalizeNotification),
+  };
+}
+
+async function markNotificationRead(actor, notificationId) {
+  const prisma = requirePrisma();
+  const userId = actor?.sub;
+  if (!userId) {
+    throw new ApiError(401, 'Authentication required');
+  }
+
+  const notification = await prisma.notification.findFirst({
+    where: { id: notificationId, userId, deletedAt: null },
+  });
+
+  if (!notification) {
+    throw new ApiError(404, 'Notification not found.');
+  }
+
+  const updated = await prisma.notification.update({
+    where: { id: notification.id },
+    data: { readAt: notification.readAt || new Date() },
+  });
+
+  return normalizeNotification(updated);
+}
+
+async function markAllNotificationsRead(actor) {
+  const prisma = requirePrisma();
+  const userId = actor?.sub;
+  if (!userId) {
+    throw new ApiError(401, 'Authentication required');
+  }
+
+  await prisma.notification.updateMany({
+    where: { userId, readAt: null, deletedAt: null },
+    data: { readAt: new Date() },
+  });
+
+  return listNotifications(actor);
+}
+
 async function createDailyScheduleTask(payload, actorId) {
   const prisma = requirePrisma();
   const technicianIds = uniqueIds(toIdArray(payload.technicianIds));
@@ -3424,6 +3557,22 @@ async function createDailyScheduleTask(payload, actorId) {
       where: { id: createdTask.id },
       include: dailyScheduleTaskInclude,
     });
+
+    await createNotifications(
+      tx,
+      [
+        actorId,
+        ...fullTask.technicians.map((assignment) => assignment.technician.userId),
+      ],
+      {
+        type: 'SCHEDULE',
+        severity: 'info',
+        title: 'Schedule task created',
+        message: `${fullTask.task} is scheduled on ${fullTask.workDate.toISOString().slice(0, 10)} from ${fullTask.startsAt} to ${fullTask.endsAt}.`,
+        href: '/management/scheduling',
+        createdById: actorId,
+      },
+    );
 
     return normalizeDailyScheduleTask(fullTask);
   });
@@ -3487,6 +3636,22 @@ async function updateDailyScheduleTask(id, payload, actorId) {
       where: { id },
       include: dailyScheduleTaskInclude,
     });
+
+    await createNotifications(
+      tx,
+      [
+        actorId,
+        ...updatedTask.technicians.map((assignment) => assignment.technician.userId),
+      ],
+      {
+        type: 'SCHEDULE',
+        severity: 'info',
+        title: 'Schedule task updated',
+        message: `${updatedTask.task} was updated for ${updatedTask.workDate.toISOString().slice(0, 10)}.`,
+        href: '/management/scheduling',
+        createdById: actorId,
+      },
+    );
 
     return normalizeDailyScheduleTask(updatedTask);
   });
@@ -4051,6 +4216,16 @@ async function completeMyDailyScheduleTask(actor, taskId, payload) {
     include: dailyScheduleTaskInclude,
   });
 
+  const managerUserIds = await findScheduleManagerUserIds(prisma);
+  await createNotifications(prisma, [actor.sub, ...managerUserIds], {
+    type: 'SCHEDULE',
+    severity: 'success',
+    title: 'Technician task completed',
+    message: `${task.task} was completed by ${technician.user.fullName || technician.employeeCode || 'a technician'}.`,
+    href: '/management/scheduling',
+    createdById: actor.sub,
+  });
+
   return normalizeDailyScheduleTask(task);
 }
 
@@ -4176,4 +4351,7 @@ module.exports = {
   completeMyDailyScheduleTask,
   listDailyScheduleTasks,
   getSchedulingBoard,
+  listNotifications,
+  markNotificationRead,
+  markAllNotificationsRead,
 };

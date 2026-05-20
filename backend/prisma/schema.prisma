@@ -64,6 +64,7 @@ model User {
   status       UserStatus         @default(ACTIVE)
   roles        UserRole[]
   technician   TechnicianProfile?
+  notifications Notification[]
   createdAt    DateTime           @default(now()) @map("created_at")
   updatedAt    DateTime           @updatedAt @map("updated_at")
   createdById  String?            @map("created_by")
@@ -71,6 +72,25 @@ model User {
   deletedAt    DateTime?          @map("deleted_at")
 
   @@map("users")
+}
+
+model Notification {
+  id          String    @id @default(uuid())
+  userId      String    @map("user_id")
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type        String    @default("SYSTEM")
+  severity    String    @default("info")
+  title       String
+  message     String
+  href        String?
+  readAt      DateTime? @map("read_at")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  createdById String?   @map("created_by")
+  deletedAt   DateTime? @map("deleted_at")
+
+  @@index([userId, readAt])
+  @@index([userId, createdAt])
+  @@map("notifications")
 }
 
 model Role {

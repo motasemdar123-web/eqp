@@ -168,6 +168,21 @@ async function upsertTechnicianSchedule(req, res) {
   res.status(201).json({ success: true, schedule });
 }
 
+async function listNotifications(req, res) {
+  const data = await platformService.listNotifications(req.platformUser, req.query.limit);
+  res.json({ success: true, ...data });
+}
+
+async function markNotificationRead(req, res) {
+  const notification = await platformService.markNotificationRead(req.platformUser, req.params.id);
+  res.json({ success: true, notification });
+}
+
+async function markAllNotificationsRead(req, res) {
+  const data = await platformService.markAllNotificationsRead(req.platformUser);
+  res.json({ success: true, ...data });
+}
+
 module.exports = {
   login,
   unifiedLogin,
@@ -198,4 +213,7 @@ module.exports = {
   completeMyDailyScheduleTask,
   listDailyScheduleTasks,
   upsertTechnicianSchedule,
+  listNotifications,
+  markNotificationRead,
+  markAllNotificationsRead,
 };

@@ -120,3 +120,19 @@ export function updateTechnician(id, payload) {
 export function getShifts() {
   return request('/api/shifts');
 }
+
+export function getNotifications(limit = 12) {
+  return request(`/api/notifications?limit=${encodeURIComponent(limit)}`);
+}
+
+export function markNotificationRead(id) {
+  return request(`/api/notifications/${id}/read`, {
+    method: 'POST',
+  });
+}
+
+export function markAllNotificationsRead() {
+  return request('/api/notifications/read-all', {
+    method: 'POST',
+  });
+}
