@@ -263,6 +263,10 @@ function CanvasToolbar({
   onSave,
   onResetView,
   onOpenTemplates,
+  onZoomIn,
+  onZoomOut,
+  onResetZoom,
+  zoom,
 }) {
   return (
     <div className="eng-canvas-toolbar">
@@ -275,6 +279,12 @@ function CanvasToolbar({
       <span className="eng-toolbar-divider" />
       <Button type="button" variant="secondary" size="sm" onClick={onSave}>Save Board</Button>
       <Button type="button" variant="ghost" size="sm" onClick={onResetView}>Reset View</Button>
+      <span className="eng-toolbar-divider" />
+      <div className="eng-zoom-controls" aria-label="Whiteboard zoom controls">
+        <button type="button" onClick={onZoomOut} aria-label="Zoom out">-</button>
+        <button type="button" onClick={onResetZoom} aria-label="Reset zoom">{Math.round(zoom * 100)}%</button>
+        <button type="button" onClick={onZoomIn} aria-label="Zoom in">+</button>
+      </div>
       <Button type="button" variant="danger" size="sm" onClick={onClear}>Clear Canvas</Button>
     </div>
   );
@@ -1113,11 +1123,13 @@ function CanvasCreativeArea({ onToast }) {
   const [selectedId, setSelectedId] = useState('');
   const [templatesOpen, setTemplatesOpen] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [zoom, setZoom] = useState(1);
   const selectedItem = items.find((item) => item.id === selectedId) || null;
   const canvasHeight = useMemo(() => {
     const bottomEdge = items.reduce((max, item) => Math.max(max, (item.y || 0) + (item.height || 0)), 0);
     return Math.max(820, bottomEdge + 220);
   }, [items]);
+  const canvasVisualHeight = Math.max(820, Math.ceil(canvasHeight * zoom));
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -1235,8 +1247,8 @@ function CanvasCreativeArea({ onToast }) {
     event.currentTarget.setPointerCapture(event.pointerId);
     dragRef.current = {
       id: item.id,
-      offsetX: event.clientX - canvasRect.left - item.x,
-      offsetY: event.clientY - canvasRect.top - item.y,
+      offsetX: (event.clientX - canvasRect.left) / zoom - item.x,
+      offsetY: (event.clientY - canvasRect.top) / zoom - item.y,
     };
     setSelectedId(item.id);
   }
@@ -1244,8 +1256,8 @@ function CanvasCreativeArea({ onToast }) {
   function handlePointerMove(event) {
     if (!dragRef.current || !canvasRef.current) return;
     const canvasRect = canvasRef.current.getBoundingClientRect();
-    const x = Math.max(0, Math.round(event.clientX - canvasRect.left - dragRef.current.offsetX));
-    const y = Math.max(0, Math.round(event.clientY - canvasRect.top - dragRef.current.offsetY));
+    const x = Math.max(0, Math.round((event.clientX - canvasRect.left) / zoom - dragRef.current.offsetX));
+    const y = Math.max(0, Math.round((event.clientY - canvasRect.top) / zoom - dragRef.current.offsetY));
     updateItem(dragRef.current.id, { x, y });
   }
 
@@ -1266,6 +1278,14 @@ function CanvasCreativeArea({ onToast }) {
     } catch {
       setIsFullscreen((current) => !current);
     }
+  }
+
+  function zoomIn() {
+    setZoom((current) => Math.min(1.8, Math.round((current + 0.1) * 10) / 10));
+  }
+
+  function zoomOut() {
+    setZoom((current) => Math.max(0.5, Math.round((current - 0.1) * 10) / 10));
   }
 
   return (
@@ -1296,33 +1316,46 @@ function CanvasCreativeArea({ onToast }) {
             onClear={clearCanvas}
             onSave={saveBoard}
             onResetView={resetView}
+            onZoomIn={zoomIn}
+            onZoomOut={zoomOut}
+            onResetZoom={() => setZoom(1)}
+            zoom={zoom}
           />
           <div
             ref={canvasRef}
             className="eng-canvas"
-            style={{ minHeight: canvasHeight }}
+            style={{ minHeight: canvasVisualHeight }}
             onPointerMove={handlePointerMove}
             onPointerUp={handlePointerUp}
             onPointerLeave={handlePointerUp}
             onClick={() => setSelectedId('')}
           >
-            {items.length === 0 && (
-              <div className="eng-canvas-empty">
-                <EmptyState title="Canvas is empty" description="Add sticky notes, wireframes, frames, or labels to start mapping ideas." />
-              </div>
-            )}
-            {items.map((item) => (
-              <CanvasItem
-                key={item.id}
-                item={item}
-                selected={item.id === selectedId}
-                onSelect={setSelectedId}
-                onPointerDown={handlePointerDown}
-                onChange={updateItem}
-                onDelete={deleteItem}
-                onDuplicate={duplicateItem}
-              />
-            ))}
+            <div
+              className="eng-canvas-stage"
+              style={{
+                minHeight: canvasHeight,
+                width: `${100 / zoom}%`,
+                transform: `scale(${zoom})`,
+              }}
+            >
+              {items.length === 0 && (
+                <div className="eng-canvas-empty">
+                  <EmptyState title="Canvas is empty" description="Add sticky notes, wireframes, frames, or labels to start mapping ideas." />
+                </div>
+              )}
+              {items.map((item) => (
+                <CanvasItem
+                  key={item.id}
+                  item={item}
+                  selected={item.id === selectedId}
+                  onSelect={setSelectedId}
+                  onPointerDown={handlePointerDown}
+                  onChange={updateItem}
+                  onDelete={deleteItem}
+                  onDuplicate={duplicateItem}
+                />
+              ))}
+            </div>
           </div>
         </section>
         {selectedItem && (

@@ -2905,12 +2905,41 @@ textarea {
   box-shadow: 0 18px 42px rgba(31, 91, 153, 0.18);
   padding: 0.45rem;
   backdrop-filter: blur(14px);
+  justify-content: center;
 }
 
 .eng-doc-board-view .eng-canvas-toolbar .ds-button {
   min-height: 2rem;
   padding: 0 0.7rem;
   font-size: 0.72rem;
+}
+
+.eng-zoom-controls {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: #ffffff;
+  padding: 0.2rem;
+}
+
+.eng-zoom-controls button {
+  display: grid;
+  place-items: center;
+  min-width: 2rem;
+  height: 1.65rem;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--color-muted);
+  font-size: 0.72rem;
+  font-weight: 900;
+}
+
+.eng-zoom-controls button:hover {
+  background: var(--color-brand-soft);
+  color: var(--color-brand);
 }
 
 .eng-doc-board-view .eng-canvas {
@@ -2921,6 +2950,12 @@ textarea {
     radial-gradient(circle at 20% 12%, rgba(24, 199, 201, 0.13), transparent 26rem),
     linear-gradient(180deg, #fbfdff, #f6faff);
   background-size: 24px 24px, auto, auto;
+}
+
+.eng-canvas-stage {
+  position: relative;
+  min-width: 100%;
+  transform-origin: top left;
 }
 
 .eng-board-fullscreen {
