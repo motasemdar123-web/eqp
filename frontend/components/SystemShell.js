@@ -265,7 +265,15 @@ export default function SystemShell({
           aria-label={sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
           title={sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
         >
-          <span className="ds-sidebar-toggle-lines" aria-hidden="true" />
+          {sidebarCollapsed ? (
+            <span className="ds-sidebar-hamburger" aria-hidden="true">
+              <span />
+              <span />
+              <span />
+            </span>
+          ) : (
+            <span className="ds-sidebar-chevron" aria-hidden="true" />
+          )}
         </button>
         <div className="ds-sidebar-top">
           <Link href="/management" className="ds-sidebar-brand" aria-label="Dar Al Hai dashboard">
