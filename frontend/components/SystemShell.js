@@ -11,13 +11,10 @@ const navItems = [
   { href: '/management/technicians', label: 'Technicians', icon: 'users' },
   { href: '/management/scheduling', label: 'Scheduling', icon: 'calendar' },
   { href: '/workspace', label: 'Workspace', icon: 'workspace' },
-  { href: '/eqp/generate-reports', label: 'EQP Reports', icon: 'report' },
-  { href: '/eqp/machines', label: 'Machines', icon: 'machine' },
-  { href: '/eqp/reports', label: 'PDF Archive', icon: 'archive' },
+  { href: '/eqp', label: 'EQP Module', icon: 'hub' },
 ];
 
 const supportItems = [
-  { href: '/eqp', label: 'EQP Hub', icon: 'hub' },
   { href: '/technician', label: 'Technician App', icon: 'mobile' },
 ];
 
@@ -120,7 +117,6 @@ function isActivePath(pathname, href, activePath) {
   const target = activePath || pathname;
 
   if (href === '/management') return target === href;
-  if (href === '/eqp') return target === href;
 
   return target === href || target.startsWith(`${href}/`);
 }
