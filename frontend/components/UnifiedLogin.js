@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Button from './ui/Button';
+import Card from './ui/Card';
 import { getMicrosoftLoginUrl } from '../lib/api';
 
 export default function UnifiedLogin({ preferredModule = 'auto' }) {
@@ -16,21 +17,22 @@ export default function UnifiedLogin({ preferredModule = 'auto' }) {
   }
 
   return (
-    <main className="min-h-screen bg-[#edf1ea] text-zinc-950">
+    <main className="min-h-screen bg-[var(--color-canvas)] text-[var(--color-ink)]">
       <section className="grid min-h-screen place-items-center px-5 py-8">
-        <div className="w-full max-w-md rounded-lg border border-zinc-200 bg-white p-7 shadow-xl shadow-zinc-900/8">
+        <Card className="w-full max-w-md p-7">
           <div className="text-center">
-            <div className="mx-auto grid h-14 w-14 place-items-center rounded-md bg-yellow-400 text-xl font-black text-zinc-950">
+            <div className="ds-brand-mark mx-auto h-14 w-14 text-xl">
               DH
             </div>
-            <p className="mt-5 text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">Dar Al HAI</p>
-            <h1 className="mt-2 text-3xl font-black text-zinc-950">Sign In</h1>
+            <p className="mt-5 text-xs font-black uppercase tracking-[0.18em] text-[var(--color-accent)]">Dar Al HAI</p>
+            <h1 className="mt-2 text-3xl font-black text-[var(--color-ink)]">Sign In</h1>
+            <p className="mt-2 text-sm font-semibold text-[var(--color-muted)]">Unified access for operations, technician work, and EQP reporting.</p>
           </div>
 
           <Button type="button" onClick={startMicrosoftLogin} disabled={loading} className="mt-7 w-full py-4 text-base">
             {loading ? 'Redirecting...' : 'Continue with Microsoft'}
           </Button>
-        </div>
+        </Card>
       </section>
     </main>
   );

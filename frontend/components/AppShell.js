@@ -17,17 +17,13 @@ export default function AppShell({ activePage, onNavigate, onLogout, userCode, c
       onLogout={onLogout}
       userLabel={userCode ? `User ${userCode}` : undefined}
       actions={(
-        <div className="flex rounded-md border border-zinc-200 bg-zinc-100 p-1">
+        <div className="ds-tab-list">
           {tabs.map((tab) => (
             <button
               key={tab.id}
               type="button"
               onClick={() => onNavigate(tab.id)}
-              className={`rounded px-3 py-2 text-sm font-semibold transition ${
-                activePage === tab.id
-                  ? 'bg-white text-zinc-950 shadow-sm'
-                  : 'text-zinc-600 hover:text-zinc-950'
-              }`}
+              className={`ds-tab ${activePage === tab.id ? 'ds-tab-active' : ''}`}
             >
               {tab.label}
             </button>

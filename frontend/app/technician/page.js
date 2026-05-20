@@ -377,9 +377,9 @@ export default function TechnicianAppPage() {
 
   if (!token) {
     return (
-      <main dir="rtl" className="grid min-h-screen place-items-center bg-[#edf1ea] px-5 text-zinc-950">
+      <main dir="rtl" className="grid min-h-screen place-items-center bg-[var(--color-canvas)] px-5 text-[var(--color-ink)]">
         <Card className="w-full max-w-sm p-6 text-center">
-          <div className="mx-auto grid h-14 w-14 place-items-center rounded-md bg-yellow-400 text-xl font-black text-zinc-950">DH</div>
+          <div className="ds-brand-mark mx-auto h-14 w-14 text-xl">DH</div>
           <h1 className="mt-5 text-2xl font-black">تطبيق الفني</h1>
           <p className="mt-2 text-sm font-semibold text-zinc-600">ادخل بالإيميل ورقم الفني</p>
           {message && <div className="mt-4 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm font-bold text-red-700">{message}</div>}
@@ -390,13 +390,13 @@ export default function TechnicianAppPage() {
               value={loginForm.email}
               onChange={(event) => setLoginForm((current) => ({ ...current, email: event.target.value }))}
               placeholder="الإيميل"
-              className="h-12 rounded-md border border-zinc-300 bg-white px-3 text-base font-semibold outline-none focus:border-yellow-400 focus:ring-2 focus:ring-yellow-100"
+              className="ds-input h-12 text-base font-semibold"
             />
             <input
               value={loginForm.employeeCode}
               onChange={(event) => setLoginForm((current) => ({ ...current, employeeCode: event.target.value.toUpperCase() }))}
               placeholder="رقم الفني مثال TECH-1005"
-              className="h-12 rounded-md border border-zinc-300 bg-white px-3 text-base font-semibold uppercase outline-none focus:border-yellow-400 focus:ring-2 focus:ring-yellow-100"
+              className="ds-input h-12 text-base font-semibold uppercase"
             />
             <Button type="submit" className="w-full py-4 text-base" disabled={loading}>تسجيل الدخول</Button>
           </form>
@@ -406,8 +406,8 @@ export default function TechnicianAppPage() {
   }
 
   return (
-    <main dir="rtl" className="min-h-screen bg-[#edf1ea] text-zinc-950">
-      <header className="sticky top-0 z-10 border-b border-zinc-200 bg-white/95 px-4 py-4 shadow-sm backdrop-blur">
+    <main dir="rtl" className="min-h-screen bg-[var(--color-canvas)] text-[var(--color-ink)]">
+      <header className="ds-topbar sticky top-0 z-10 px-4 py-4">
         <div className="mx-auto flex max-w-lg items-center justify-between gap-3">
           <div>
             <p className="text-xs font-bold uppercase tracking-[0.16em] text-zinc-500">تطبيق الفني</p>
@@ -419,7 +419,7 @@ export default function TechnicianAppPage() {
 
       <section className="mx-auto grid max-w-lg gap-4 px-4 py-4">
         <div className="flex items-center gap-2">
-          <input type="date" value={date} onChange={(event) => loadTasks(event.target.value)} className="h-11 flex-1 rounded-md border border-zinc-300 bg-white px-3 text-sm font-bold" />
+          <input type="date" value={date} onChange={(event) => loadTasks(event.target.value)} className="ds-input h-11 flex-1 text-sm font-bold" />
           <Button type="button" variant="secondary" onClick={() => loadTasks(date)} disabled={loading}>تحديث</Button>
         </div>
 
