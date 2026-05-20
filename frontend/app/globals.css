@@ -31,6 +31,22 @@
   --color-warning-soft: #fff7ed;
   --color-info: #2563eb;
   --color-info-soft: #eff6ff;
+  --color-text: var(--color-ink);
+  --font-system: var(--font-urbanist), "Urbanist", Arial, Helvetica, sans-serif;
+  --text-2xs: 0.625rem;
+  --text-xs: 0.6875rem;
+  --text-sm: 0.75rem;
+  --text-md: 0.875rem;
+  --text-lg: 1rem;
+  --text-xl: 1.125rem;
+  --text-2xl: 1.375rem;
+  --text-3xl: 1.75rem;
+  --text-4xl: 2.125rem;
+  --text-5xl: 2.5rem;
+  --leading-tight: 1.12;
+  --leading-title: 1.18;
+  --leading-body: 1.5;
+  --tracking-label: 0.12em;
   --radius-card: 18px;
   --radius-panel: 24px;
   --radius-control: 12px;
@@ -552,7 +568,7 @@
 @theme inline {
   --color-background: var(--color-canvas);
   --color-foreground: var(--color-ink);
-  --font-sans: Arial, Helvetica, sans-serif;
+  --font-sans: var(--font-system);
   --font-mono: "Courier New", Courier, monospace;
 }
 
@@ -569,9 +585,11 @@ body {
   min-height: 100vh;
   background: var(--color-canvas);
   color: var(--color-ink);
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 14px;
-  line-height: 1.45;
+  font-family: var(--font-system);
+  font-size: var(--text-md);
+  line-height: var(--leading-body);
+  font-weight: 600;
+  text-rendering: geometricPrecision;
 }
 
 button,
@@ -579,6 +597,51 @@ input,
 select,
 textarea {
   font: inherit;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--color-ink);
+  font-family: var(--font-system);
+  font-weight: 850;
+  letter-spacing: 0;
+  line-height: var(--leading-title);
+}
+
+h1 {
+  font-size: var(--text-5xl);
+}
+
+h2 {
+  font-size: var(--text-3xl);
+}
+
+h3 {
+  font-size: var(--text-2xl);
+}
+
+h4 {
+  font-size: var(--text-xl);
+}
+
+p,
+li,
+td,
+th,
+input,
+select,
+textarea,
+button {
+  font-size: var(--text-md);
+}
+
+small,
+time {
+  font-size: var(--text-sm);
 }
 
 button {
@@ -5193,5 +5256,81 @@ textarea {
   .eng-simple-task .ds-button {
     grid-column: 1 / -1;
     justify-self: start;
+  }
+}
+
+/* Unified typography scale. Keep this section last so page-level legacy sizes resolve to design tokens. */
+:where(.app-shell, .system-shell, .ds-card, .eng-workspace-shell, .eng-doc-workspace, .pro-wb-overlay, .auth-shell, .dashboard-page, .management-page) {
+  font-family: var(--font-system);
+}
+
+:where(.system-title, .page-title, .ds-hero h1, .system-hero h1, .workspace-title, .eng-simple-planner-head h2) {
+  font-size: var(--text-5xl);
+  line-height: var(--leading-tight);
+  font-weight: 900;
+}
+
+:where(.system-hero h2, .section-title, .ds-section-title, .eng-template-intro h2, .pro-wb-header h2) {
+  font-size: var(--text-3xl);
+  line-height: var(--leading-title);
+  font-weight: 875;
+}
+
+:where(.ds-card h2, .ds-card h3, .eng-side-panel h2, .eng-simple-list-head h2, .pro-wb-properties h3, .eng-template-detail-head h3) {
+  font-size: var(--text-xl);
+  line-height: var(--leading-title);
+  font-weight: 850;
+}
+
+:where(.ds-card h4, .field-label, label, .pro-wb-template-popover strong, .eng-template-card > strong, .eng-template-quick-card strong) {
+  font-size: var(--text-md);
+  line-height: var(--leading-body);
+  font-weight: 800;
+}
+
+:where(.system-eyebrow, .ds-label, .ds-kpi-label, .eng-template-intro p, .eng-doc-native-header p, .pro-wb-header p, .pro-wb-prop-head span) {
+  font-size: var(--text-sm);
+  line-height: 1.35;
+  font-weight: 850;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+}
+
+:where(.system-description, .ds-card p, .ds-card span, .eng-side-panel p, .eng-simple-summary span, .eng-template-card > span, .eng-template-quick-card span, .pro-wb-header span, .pro-wb-properties p, .pro-wb-template-popover span) {
+  font-size: var(--text-md);
+  line-height: var(--leading-body);
+}
+
+:where(.ds-button, .ds-badge, .pro-wb-toolbar button, .pro-wb-timer button, .eng-canvas-toolbar .ds-button, .eng-board-fullscreen-button, .eng-board-zoom-floating button) {
+  font-size: var(--text-sm);
+  line-height: 1.15;
+  font-weight: 850;
+}
+
+:where(input, select, textarea, .ds-input, .ds-select, .ds-textarea, .pro-wb-properties input, .pro-wb-properties textarea, .pro-wb-properties select) {
+  font-size: var(--text-md);
+  line-height: var(--leading-body);
+  font-weight: 650;
+}
+
+:where(.ds-kpi-value, .metric-value, .stat-value, .eng-simple-summary strong) {
+  font-size: var(--text-4xl);
+  line-height: var(--leading-tight);
+  font-weight: 900;
+}
+
+:where(.pro-wb-object textarea, .eng-canvas-item textarea, .eng-canvas-item input, .eng-canvas-item select) {
+  font-family: var(--font-system);
+  font-size: var(--wb-font-size, var(--text-lg));
+  line-height: 1.28;
+}
+
+@media (max-width: 760px) {
+  :where(.system-title, .page-title, .ds-hero h1, .system-hero h1, .workspace-title, .eng-simple-planner-head h2) {
+    font-size: var(--text-4xl);
+  }
+
+  :where(.system-hero h2, .section-title, .ds-section-title, .eng-template-intro h2, .pro-wb-header h2) {
+    font-size: var(--text-2xl);
   }
 }
