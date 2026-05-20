@@ -263,10 +263,6 @@ function CanvasToolbar({
   onSave,
   onResetView,
   onOpenTemplates,
-  onZoomIn,
-  onZoomOut,
-  onResetZoom,
-  zoom,
 }) {
   return (
     <div className="eng-canvas-toolbar">
@@ -279,12 +275,6 @@ function CanvasToolbar({
       <span className="eng-toolbar-divider" />
       <Button type="button" variant="secondary" size="sm" onClick={onSave}>Save Board</Button>
       <Button type="button" variant="ghost" size="sm" onClick={onResetView}>Reset View</Button>
-      <span className="eng-toolbar-divider" />
-      <div className="eng-zoom-controls" aria-label="Whiteboard zoom controls">
-        <button type="button" onClick={onZoomOut} aria-label="Zoom out">-</button>
-        <button type="button" onClick={onResetZoom} aria-label="Reset zoom">{Math.round(zoom * 100)}%</button>
-        <button type="button" onClick={onZoomIn} aria-label="Zoom in">+</button>
-      </div>
       <Button type="button" variant="danger" size="sm" onClick={onClear}>Clear Canvas</Button>
     </div>
   );
@@ -1119,17 +1109,20 @@ function CanvasCreativeArea({ onToast }) {
   const canvasRef = useRef(null);
   const boardRef = useRef(null);
   const dragRef = useRef(null);
+  const panRef = useRef(null);
   const [items, setItems] = useState(() => defaultBoardItems());
   const [selectedId, setSelectedId] = useState('');
   const [templatesOpen, setTemplatesOpen] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [zoom, setZoom] = useState(1);
+  const [pan, setPan] = useState({ x: 0, y: 0 });
+  const [isPanning, setIsPanning] = useState(false);
   const selectedItem = items.find((item) => item.id === selectedId) || null;
   const canvasHeight = useMemo(() => {
     const bottomEdge = items.reduce((max, item) => Math.max(max, (item.y || 0) + (item.height || 0)), 0);
     return Math.max(820, bottomEdge + 220);
   }, [items]);
-  const canvasVisualHeight = Math.max(820, Math.ceil(canvasHeight * zoom));
+  const canvasVisualHeight = Math.max(820, Math.ceil(canvasHeight * zoom + Math.max(0, pan.y) + 180));
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -1247,22 +1240,34 @@ function CanvasCreativeArea({ onToast }) {
     event.currentTarget.setPointerCapture(event.pointerId);
     dragRef.current = {
       id: item.id,
-      offsetX: (event.clientX - canvasRect.left) / zoom - item.x,
-      offsetY: (event.clientY - canvasRect.top) / zoom - item.y,
+      offsetX: (event.clientX - canvasRect.left - pan.x) / zoom - item.x,
+      offsetY: (event.clientY - canvasRect.top - pan.y) / zoom - item.y,
     };
     setSelectedId(item.id);
   }
 
   function handlePointerMove(event) {
-    if (!dragRef.current || !canvasRef.current) return;
+    if (!canvasRef.current) return;
+    if (panRef.current) {
+      const nextPan = {
+        x: event.clientX - panRef.current.startX + panRef.current.originX,
+        y: event.clientY - panRef.current.startY + panRef.current.originY,
+      };
+      setPan(nextPan);
+      return;
+    }
+
+    if (!dragRef.current) return;
     const canvasRect = canvasRef.current.getBoundingClientRect();
-    const x = Math.max(0, Math.round((event.clientX - canvasRect.left) / zoom - dragRef.current.offsetX));
-    const y = Math.max(0, Math.round((event.clientY - canvasRect.top) / zoom - dragRef.current.offsetY));
+    const x = Math.max(0, Math.round((event.clientX - canvasRect.left - pan.x) / zoom - dragRef.current.offsetX));
+    const y = Math.max(0, Math.round((event.clientY - canvasRect.top - pan.y) / zoom - dragRef.current.offsetY));
     updateItem(dragRef.current.id, { x, y });
   }
 
   function handlePointerUp() {
     dragRef.current = null;
+    panRef.current = null;
+    setIsPanning(false);
   }
 
   async function toggleFullscreen() {
@@ -1288,6 +1293,48 @@ function CanvasCreativeArea({ onToast }) {
     setZoom((current) => Math.max(0.5, Math.round((current - 0.1) * 10) / 10));
   }
 
+  function resetZoom() {
+    setZoom(1);
+    setPan({ x: 0, y: 0 });
+  }
+
+  function handleCanvasPointerDown(event) {
+    if (event.target.closest('.eng-canvas-item, input, textarea, select, button')) return;
+    event.currentTarget.setPointerCapture(event.pointerId);
+    panRef.current = {
+      startX: event.clientX,
+      startY: event.clientY,
+      originX: pan.x,
+      originY: pan.y,
+    };
+    setIsPanning(true);
+    setSelectedId('');
+  }
+
+  function zoomAtPoint(nextZoom, event) {
+    if (!canvasRef.current) {
+      setZoom(nextZoom);
+      return;
+    }
+    const canvasRect = canvasRef.current.getBoundingClientRect();
+    const pointX = event.clientX - canvasRect.left;
+    const pointY = event.clientY - canvasRect.top;
+    const worldX = (pointX - pan.x) / zoom;
+    const worldY = (pointY - pan.y) / zoom;
+    setZoom(nextZoom);
+    setPan({
+      x: pointX - worldX * nextZoom,
+      y: pointY - worldY * nextZoom,
+    });
+  }
+
+  function handleCanvasWheel(event) {
+    event.preventDefault();
+    const direction = event.deltaY > 0 ? -1 : 1;
+    const nextZoom = Math.max(0.5, Math.min(1.8, Math.round((zoom + direction * 0.08) * 100) / 100));
+    zoomAtPoint(nextZoom, event);
+  }
+
   return (
     <div ref={boardRef} className={isFullscreen ? 'eng-creative-space eng-board-fullscreen' : 'eng-creative-space'}>
       <CreativeTemplateGallery
@@ -1307,6 +1354,11 @@ function CanvasCreativeArea({ onToast }) {
             <FullscreenIcon active={isFullscreen} />
             <span>{isFullscreen ? 'Exit' : 'Full screen'}</span>
           </button>
+          <div className="eng-board-zoom-floating" aria-label="Whiteboard zoom controls">
+            <button type="button" onClick={zoomOut} aria-label="Zoom out">-</button>
+            <button type="button" onClick={resetZoom} aria-label="Reset zoom">{Math.round(zoom * 100)}%</button>
+            <button type="button" onClick={zoomIn} aria-label="Zoom in">+</button>
+          </div>
           <CanvasToolbar
             onOpenTemplates={() => setTemplatesOpen(true)}
             onAddSticky={() => addItem('sticky')}
@@ -1316,26 +1368,24 @@ function CanvasCreativeArea({ onToast }) {
             onClear={clearCanvas}
             onSave={saveBoard}
             onResetView={resetView}
-            onZoomIn={zoomIn}
-            onZoomOut={zoomOut}
-            onResetZoom={() => setZoom(1)}
-            zoom={zoom}
           />
           <div
             ref={canvasRef}
-            className="eng-canvas"
+            className={isPanning ? 'eng-canvas eng-canvas-panning' : 'eng-canvas'}
             style={{ minHeight: canvasVisualHeight }}
             onPointerMove={handlePointerMove}
             onPointerUp={handlePointerUp}
             onPointerLeave={handlePointerUp}
+            onPointerDown={handleCanvasPointerDown}
+            onWheel={handleCanvasWheel}
             onClick={() => setSelectedId('')}
           >
             <div
               className="eng-canvas-stage"
               style={{
                 minHeight: canvasHeight,
-                width: `${100 / zoom}%`,
-                transform: `scale(${zoom})`,
+                width: `${Math.max(100 / zoom, 100)}%`,
+                transform: `matrix(${zoom}, 0, 0, ${zoom}, ${pan.x}, ${pan.y})`,
               }}
             >
               {items.length === 0 && (

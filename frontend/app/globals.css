@@ -2891,13 +2891,50 @@ textarea {
   outline-offset: 3px;
 }
 
+.eng-board-zoom-floating {
+  position: absolute;
+  top: 3.65rem;
+  right: 0.85rem;
+  z-index: 20;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  border: 1px solid rgba(15, 140, 240, 0.16);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 16px 34px rgba(31, 91, 153, 0.12);
+  padding: 0.22rem;
+  backdrop-filter: blur(14px);
+}
+
+.eng-board-zoom-floating button,
+.eng-zoom-controls button {
+  display: grid;
+  place-items: center;
+  min-width: 2rem;
+  height: 1.75rem;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--color-muted);
+  font-size: 0.72rem;
+  font-weight: 900;
+}
+
+.eng-board-zoom-floating button:hover,
+.eng-zoom-controls button:hover {
+  background: var(--color-brand-soft);
+  color: var(--color-brand);
+}
+
 .eng-doc-board-view .eng-canvas-toolbar {
   position: absolute;
   left: 50%;
   right: auto;
   bottom: 0.9rem;
   z-index: 18;
-  width: min(64rem, calc(100% - 1.5rem));
+  width: max-content;
+  max-width: calc(100% - 1.5rem);
   transform: translateX(-50%);
   border: 1px solid rgba(221, 231, 242, 0.86);
   border-radius: 18px;
@@ -2924,24 +2961,6 @@ textarea {
   padding: 0.2rem;
 }
 
-.eng-zoom-controls button {
-  display: grid;
-  place-items: center;
-  min-width: 2rem;
-  height: 1.65rem;
-  border: 0;
-  border-radius: 999px;
-  background: transparent;
-  color: var(--color-muted);
-  font-size: 0.72rem;
-  font-weight: 900;
-}
-
-.eng-zoom-controls button:hover {
-  background: var(--color-brand-soft);
-  color: var(--color-brand);
-}
-
 .eng-doc-board-view .eng-canvas {
   min-height: calc(100vh - 5.25rem);
   overflow: visible;
@@ -2950,12 +2969,18 @@ textarea {
     radial-gradient(circle at 20% 12%, rgba(24, 199, 201, 0.13), transparent 26rem),
     linear-gradient(180deg, #fbfdff, #f6faff);
   background-size: 24px 24px, auto, auto;
+  cursor: grab;
+  user-select: none;
 }
 
 .eng-canvas-stage {
   position: relative;
   min-width: 100%;
   transform-origin: top left;
+}
+
+.eng-canvas-panning {
+  cursor: grabbing !important;
 }
 
 .eng-board-fullscreen {
@@ -2992,6 +3017,14 @@ textarea {
   background: rgba(255, 255, 255, 0.96);
 }
 
+.eng-board-fullscreen .eng-board-zoom-floating,
+.eng-doc-board-view .eng-board-fullscreen .eng-board-zoom-floating {
+  position: fixed;
+  top: 3.75rem;
+  right: 0.9rem;
+  z-index: 134;
+}
+
 .eng-doc-board-view:has(.eng-board-fullscreen) .eng-board-back-floating {
   position: fixed;
   top: 0.9rem;
@@ -3008,8 +3041,8 @@ textarea {
   right: auto;
   bottom: 1rem;
   z-index: 130;
-  width: min(66rem, calc(100vw - 2rem));
-  max-width: none;
+  width: max-content;
+  max-width: calc(100vw - 2rem);
   transform: translateX(-50%);
 }
 
