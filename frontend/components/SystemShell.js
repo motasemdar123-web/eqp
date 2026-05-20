@@ -10,6 +10,7 @@ const navItems = [
   { href: '/management', label: 'Dashboard', code: 'DB' },
   { href: '/management/technicians', label: 'Technicians', code: 'TM' },
   { href: '/management/scheduling', label: 'Scheduling', code: 'SC' },
+  { href: '/workspace', label: 'Workspace', code: 'WS' },
   { href: '/eqp/generate-reports', label: 'EQP Reports', code: 'EQ' },
   { href: '/eqp/machines', label: 'Machines', code: 'MA' },
   { href: '/eqp/reports', label: 'PDF Archive', code: 'PA' },

@@ -21,6 +21,22 @@ router.get('/api/notifications', requirePlatformAuth, asyncHandler(platformContr
 router.post('/api/notifications/read-all', requirePlatformAuth, asyncHandler(platformController.markAllNotificationsRead));
 router.post('/api/notifications/:id/read', requirePlatformAuth, asyncHandler(platformController.markNotificationRead));
 
+router.get('/api/workspace/summary', requirePlatformAuth, asyncHandler(platformController.workspaceSummary));
+router.get('/api/workspace/activity', requirePlatformAuth, asyncHandler(platformController.listWorkspaceActivity));
+router.get('/api/workspace/notes', requirePlatformAuth, asyncHandler(platformController.listWorkspaceNotes));
+router.post('/api/workspace/notes', requirePlatformAuth, asyncHandler(platformController.createWorkspaceNote));
+router.get('/api/workspace/notes/:id', requirePlatformAuth, asyncHandler(platformController.getWorkspaceNote));
+router.patch('/api/workspace/notes/:id', requirePlatformAuth, asyncHandler(platformController.updateWorkspaceNote));
+router.delete('/api/workspace/notes/:id', requirePlatformAuth, asyncHandler(platformController.archiveWorkspaceNote));
+router.get('/api/workspace/tasks', requirePlatformAuth, asyncHandler(platformController.listWorkspaceTasks));
+router.post('/api/workspace/tasks', requirePlatformAuth, asyncHandler(platformController.createWorkspaceTask));
+router.patch('/api/workspace/tasks/:id', requirePlatformAuth, asyncHandler(platformController.updateWorkspaceTask));
+router.delete('/api/workspace/tasks/:id', requirePlatformAuth, asyncHandler(platformController.deleteWorkspaceTask));
+router.get('/api/workspace/templates', requirePlatformAuth, asyncHandler(platformController.listWorkspaceTemplates));
+router.post('/api/workspace/templates', requirePlatformAuth, asyncHandler(platformController.createWorkspaceTemplate));
+router.patch('/api/workspace/templates/:id', requirePlatformAuth, asyncHandler(platformController.updateWorkspaceTemplate));
+router.delete('/api/workspace/templates/:id', requirePlatformAuth, asyncHandler(platformController.deleteWorkspaceTemplate));
+
 router.get('/api/technician/tasks', requirePlatformAuth, asyncHandler(platformController.myDailyScheduleTasks));
 router.get('/api/technician/weather', requirePlatformAuth, asyncHandler(platformController.myWeatherAdvice));
 router.post('/api/technician/tasks/:id/start', requirePlatformAuth, asyncHandler(platformController.startMyDailyScheduleTask));

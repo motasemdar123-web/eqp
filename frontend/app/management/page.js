@@ -8,9 +8,9 @@ import Badge from '../../components/ui/Badge';
 const kpis = [
   {
     label: 'Modules',
-    metric: '3',
+    metric: '4',
     unit: 'Core Modules',
-    secondary: 'Active',
+    secondary: 'Workspace Live',
     status: 'Ready',
     tone: 'ready',
     code: 'AM',
@@ -65,6 +65,7 @@ const governanceItems = [
 const modules = [
   { title: 'Technicians Management', href: '/management/technicians', status: 'Live', tone: 'live', code: 'TM', description: 'Technician records, shifts, regions, skills, and dispatch availability.' },
   { title: 'Scheduling', href: '/management/scheduling', status: 'Live', tone: 'live', code: 'SC', description: 'Daily roster control, work windows, task groups, and technician assignment.' },
+  { title: 'Engineering Workspace', href: '/workspace', status: 'Live', tone: 'live', code: 'WS', description: 'Notes, daily plans, engineering tasks, templates, and shared knowledge base.' },
   { title: 'EQP Module', href: '/eqp', status: 'Preserved', tone: 'preserved', code: 'EQ', description: 'Preventive maintenance workflow, reporting controls, and engineer moderation.' },
   { title: 'Machines', href: '/eqp/machines', status: 'Active', tone: 'active', code: 'MA', description: 'Fleet counters, SMR progression, engine references, and maintenance readiness.' },
   { title: 'PDF Archive', href: '/eqp/reports', status: 'Archived', tone: 'archived', code: 'PA', description: 'Generated PDFs, report numbers, machine coverage, and archive actions.' },

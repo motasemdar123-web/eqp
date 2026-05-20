@@ -65,6 +65,11 @@ model User {
   roles        UserRole[]
   technician   TechnicianProfile?
   notifications Notification[]
+  workspaceNotes WorkspaceNote[] @relation("WorkspaceNotesCreatedBy")
+  assignedWorkspaceTasks WorkspaceTask[] @relation("WorkspaceTasksAssignedTo")
+  createdWorkspaceTasks WorkspaceTask[] @relation("WorkspaceTasksCreatedBy")
+  workspaceTemplates WorkspaceTemplate[] @relation("WorkspaceTemplatesCreatedBy")
+  workspaceActivities WorkspaceActivity[] @relation("WorkspaceActivitiesUser")
   createdAt    DateTime           @default(now()) @map("created_at")
   updatedAt    DateTime           @updatedAt @map("updated_at")
   createdById  String?            @map("created_by")
@@ -91,6 +96,97 @@ model Notification {
   @@index([userId, readAt])
   @@index([userId, createdAt])
   @@map("notifications")
+}
+
+model WorkspaceNote {
+  id                 String    @id @default(uuid())
+  title              String
+  content            Json?
+  type               String    @default("note")
+  status             String    @default("active")
+  tags               Json?
+  category           String?
+  isPinned           Boolean   @default(false) @map("is_pinned")
+  visibility         String    @default("private")
+  linkedMachineId    Int?      @map("linked_machine_id")
+  linkedTechnicianId String?   @map("linked_technician_id")
+  linkedReportId     Int?      @map("linked_report_id")
+  createdById        String    @map("created_by")
+  createdBy          User      @relation("WorkspaceNotesCreatedBy", fields: [createdById], references: [id], onDelete: Cascade)
+  updatedById        String?   @map("updated_by")
+  createdAt          DateTime  @default(now()) @map("created_at")
+  updatedAt          DateTime  @updatedAt @map("updated_at")
+  deletedAt          DateTime? @map("deleted_at")
+
+  @@index([createdById])
+  @@index([type])
+  @@index([status])
+  @@index([isPinned])
+  @@map("workspace_notes")
+}
+
+model WorkspaceTask {
+  id                 String    @id @default(uuid())
+  title              String
+  description        String?
+  status             String    @default("todo")
+  priority           String    @default("medium")
+  dueDate            DateTime? @map("due_date")
+  assignedToId       String?   @map("assigned_to")
+  assignedTo         User?     @relation("WorkspaceTasksAssignedTo", fields: [assignedToId], references: [id], onDelete: SetNull)
+  tags               Json?
+  linkedNoteId       String?   @map("linked_note_id")
+  linkedMachineId    Int?      @map("linked_machine_id")
+  linkedTechnicianId String?   @map("linked_technician_id")
+  linkedReportId     Int?      @map("linked_report_id")
+  createdById        String    @map("created_by")
+  createdBy          User      @relation("WorkspaceTasksCreatedBy", fields: [createdById], references: [id], onDelete: Cascade)
+  updatedById        String?   @map("updated_by")
+  createdAt          DateTime  @default(now()) @map("created_at")
+  updatedAt          DateTime  @updatedAt @map("updated_at")
+  deletedAt          DateTime? @map("deleted_at")
+
+  @@index([createdById])
+  @@index([assignedToId])
+  @@index([status])
+  @@index([priority])
+  @@index([dueDate])
+  @@map("workspace_tasks")
+}
+
+model WorkspaceTemplate {
+  id          String    @id @default(uuid())
+  title       String
+  description String?
+  category    String?
+  content     Json?
+  tags        Json?
+  isSystem    Boolean   @default(false) @map("is_system")
+  createdById String?   @map("created_by")
+  createdBy   User?     @relation("WorkspaceTemplatesCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+  updatedById String?   @map("updated_by")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+  deletedAt   DateTime? @map("deleted_at")
+
+  @@index([category])
+  @@index([isSystem])
+  @@map("workspace_templates")
+}
+
+model WorkspaceActivity {
+  id         String   @id @default(uuid())
+  action     String
+  entityType String   @map("entity_type")
+  entityId   String   @map("entity_id")
+  userId     String?  @map("user_id")
+  user       User?    @relation("WorkspaceActivitiesUser", fields: [userId], references: [id], onDelete: SetNull)
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  @@index([entityType, entityId])
+  @@index([userId])
+  @@index([createdAt])
+  @@map("workspace_activities")
 }
 
 model Role {
