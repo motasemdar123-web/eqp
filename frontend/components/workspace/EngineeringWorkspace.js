@@ -218,9 +218,11 @@ function WorkspaceTabs({ activeTab, onTabChange }) {
   );
 }
 
-function CanvasToolbar({ onAddSticky, onAddWireframe, onAddFrame, onAddText, onClear, onSave, onResetView }) {
+function CanvasToolbar({ onAddSticky, onAddWireframe, onAddFrame, onAddText, onClear, onSave, onResetView, onOpenTemplates }) {
   return (
     <div className="eng-canvas-toolbar">
+      <Button type="button" size="sm" onClick={onOpenTemplates}>Templates</Button>
+      <span className="eng-toolbar-divider" />
       <Button type="button" size="sm" onClick={onAddSticky}>Add Sticky Note</Button>
       <Button type="button" variant="secondary" size="sm" onClick={onAddWireframe}>Add Wireframe</Button>
       <Button type="button" variant="secondary" size="sm" onClick={onAddFrame}>Add Frame</Button>
@@ -511,6 +513,59 @@ const creativeTemplateCards = {
   ],
 };
 
+const allCreativeTemplates = [
+  ...creativeTemplateCards.quick,
+  ...creativeTemplateCards.suggested,
+];
+
+const templateDetails = {
+  'empty-page': {
+    label: 'Blank canvas',
+    description: 'A clean working area for custom sticky notes, frames, labels, and process sketches.',
+    includes: ['No predefined items', 'Best for free thinking', 'Saved to your workspace board'],
+  },
+  'empty-database': {
+    label: 'Structured tracker',
+    description: 'A simple database-style layout for collecting maintenance ideas, owners, status, and due dates.',
+    includes: ['Frame', 'Table wireframe', 'Starter sticky note'],
+  },
+  'ai-build': {
+    label: 'Guided concept board',
+    description: 'A guided board for turning a maintenance challenge into root causes, actions, and validation checks.',
+    includes: ['Challenge prompts', 'Root cause area', 'Action planning cards', 'Validation checklist'],
+  },
+  'tasks-tracker': {
+    label: 'Execution tracker',
+    description: 'Track daily engineering work with status, ownership, and quick visual reminders.',
+    includes: ['Task table', 'Status stickies', 'Daily visibility note'],
+  },
+  projects: {
+    label: 'Project flow',
+    description: 'Map improvement work from backlog to in-progress to completed, using movable project cards.',
+    includes: ['Backlog column', 'In-progress column', 'Done column', 'Project idea cards'],
+  },
+  'document-hub': {
+    label: 'Document workspace',
+    description: 'Organize SOPs, maintenance observations, checklists, and shared engineering documents.',
+    includes: ['Document table', 'SOP note', 'Observation note'],
+  },
+  brainstorm: {
+    label: 'Idea session',
+    description: 'Capture maintenance, reporting, safety, and workflow ideas as a visual brainstorm map.',
+    includes: ['Idea frame', 'Five idea notes', 'Mixed sticky colors'],
+  },
+  'meeting-notes': {
+    label: 'Action meeting',
+    description: 'Capture decisions, risks, and action items from maintenance planning meetings.',
+    includes: ['Meeting header', 'Action checklist', 'Decision note', 'Risk note'],
+  },
+  'goals-tracker': {
+    label: 'Readiness goals',
+    description: 'Visualize operational targets, owners, and readiness progress in one board.',
+    includes: ['Progress chart placeholder', 'Goals table', 'Target notes'],
+  },
+};
+
 function makeTemplateItems(templateKey) {
   const createdAt = nowIso();
   const makeItem = (type, patch) => ({
@@ -774,48 +829,97 @@ function TemplatePreview({ template }) {
   );
 }
 
-function CreativeTemplateGallery({ onUseTemplate }) {
+function CreativeTemplateGallery({ open, onClose, onUseTemplate }) {
+  const [selectedKey, setSelectedKey] = useState('tasks-tracker');
+  const selectedTemplate = allCreativeTemplates.find((template) => template.key === selectedKey) || allCreativeTemplates[0];
+  const selectedDetails = templateDetails[selectedTemplate.key] || templateDetails['empty-page'];
+
+  if (!open) return null;
+
   return (
-    <section className="eng-template-board" aria-label="Creative area templates">
-      <div className="eng-template-intro">
-        <div>
-          <p>Creative templates</p>
-          <h2>Start with a board structure</h2>
+    <div className="eng-template-overlay" role="presentation" onMouseDown={onClose}>
+      <section
+        className="eng-template-board"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="creative-template-title"
+        onMouseDown={(event) => event.stopPropagation()}
+      >
+        <div className="eng-template-intro">
+          <div>
+            <p>Creative templates</p>
+            <h2 id="creative-template-title">Start with a board structure</h2>
+          </div>
+          <div className="eng-template-header-actions">
+            <span>Choose a template, review the setup, then apply it to the canvas.</span>
+            <button type="button" className="eng-template-close" onClick={onClose} aria-label="Close templates">x</button>
+          </div>
         </div>
-        <span>Pick a template to fill the canvas, then edit and move everything freely.</span>
-      </div>
 
-      <div className="eng-template-quick-grid">
-        {creativeTemplateCards.quick.map((template) => (
-          <button
-            key={template.key}
-            type="button"
-            className="eng-template-quick-card"
-            onClick={() => onUseTemplate(template.key, template.title)}
-          >
-            <TemplateIcon type={template.icon} />
-            <strong>{template.title}</strong>
-            <span>{template.subtitle}</span>
-          </button>
-        ))}
-      </div>
+        <div className="eng-template-modal-grid">
+          <div className="eng-template-picker">
+            <div className="eng-template-quick-grid">
+              {creativeTemplateCards.quick.map((template) => (
+                <button
+                  key={template.key}
+                  type="button"
+                  className={selectedKey === template.key ? 'eng-template-quick-card eng-template-selected' : 'eng-template-quick-card'}
+                  onClick={() => setSelectedKey(template.key)}
+                >
+                  <TemplateIcon type={template.icon} />
+                  <strong>{template.title}</strong>
+                  <span>{template.subtitle}</span>
+                </button>
+              ))}
+            </div>
 
-      <h3>Suggested</h3>
-      <div className="eng-template-grid">
-        {creativeTemplateCards.suggested.map((template) => (
-          <button
-            key={template.key}
-            type="button"
-            className={`eng-template-card eng-template-${template.tone}`}
-            onClick={() => onUseTemplate(template.key, template.title)}
-          >
-            <strong>{template.title}</strong>
-            <span>{template.subtitle}</span>
-            <TemplatePreview template={template} />
-          </button>
-        ))}
-      </div>
-    </section>
+            <h3>Suggested</h3>
+            <div className="eng-template-grid">
+              {creativeTemplateCards.suggested.map((template) => (
+                <button
+                  key={template.key}
+                  type="button"
+                  className={`eng-template-card eng-template-${template.tone} ${selectedKey === template.key ? 'eng-template-selected' : ''}`}
+                  onClick={() => setSelectedKey(template.key)}
+                  onDoubleClick={() => onUseTemplate(template.key, template.title)}
+                >
+                  <strong>{template.title}</strong>
+                  <span>{template.subtitle}</span>
+                  <TemplatePreview template={template} />
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <aside className={`eng-template-detail eng-template-${selectedTemplate.tone || 'blue'}`}>
+            <div className="eng-template-detail-head">
+              <TemplateIcon type={selectedTemplate.icon} />
+              <div>
+                <span>{selectedDetails.label}</span>
+                <h3>{selectedTemplate.title}</h3>
+              </div>
+            </div>
+            <p>{selectedDetails.description}</p>
+            <TemplatePreview template={selectedTemplate} />
+            <div className="eng-template-include-list">
+              <strong>Template includes</strong>
+              {selectedDetails.includes.map((item) => (
+                <span key={item}>{item}</span>
+              ))}
+            </div>
+            <div className="eng-template-actions">
+              <Button
+                type="button"
+                onClick={() => onUseTemplate(selectedTemplate.key, selectedTemplate.title)}
+              >
+                Use template
+              </Button>
+              <Button type="button" variant="ghost" onClick={onClose}>Cancel</Button>
+            </div>
+          </aside>
+        </div>
+      </section>
+    </div>
   );
 }
 
@@ -824,6 +928,7 @@ function CreativeArea({ onToast }) {
   const dragRef = useRef(null);
   const [items, setItems] = useState(() => defaultBoardItems());
   const [selectedId, setSelectedId] = useState('');
+  const [templatesOpen, setTemplatesOpen] = useState(false);
   const selectedItem = items.find((item) => item.id === selectedId) || null;
 
   useEffect(() => {
@@ -921,6 +1026,7 @@ function CreativeArea({ onToast }) {
     setItems(nextItems);
     setSelectedId(nextItems[0]?.id || '');
     saveStoredItems(BOARD_KEY, nextItems);
+    setTemplatesOpen(false);
     onToast(`${templateTitle} template loaded.`);
   }
 
@@ -952,10 +1058,15 @@ function CreativeArea({ onToast }) {
 
   return (
     <div className="eng-creative-space">
-      <CreativeTemplateGallery onUseTemplate={applyCreativeTemplate} />
+      <CreativeTemplateGallery
+        open={templatesOpen}
+        onClose={() => setTemplatesOpen(false)}
+        onUseTemplate={applyCreativeTemplate}
+      />
       <div className="eng-creative-grid">
         <section className="eng-board-shell">
           <CanvasToolbar
+            onOpenTemplates={() => setTemplatesOpen(true)}
             onAddSticky={() => addItem('sticky')}
             onAddWireframe={() => addItem('wireframe')}
             onAddFrame={() => addItem('frame')}
