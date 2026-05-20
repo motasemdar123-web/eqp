@@ -394,6 +394,11 @@ a:focus-visible {
 .ds-reference-shell {
   display: grid;
   grid-template-columns: 244px minmax(0, 1fr);
+  transition: grid-template-columns 180ms ease;
+}
+
+.ds-reference-shell.ds-sidebar-collapsed {
+  grid-template-columns: 76px minmax(0, 1fr);
 }
 
 .ds-app-sidebar {
@@ -406,6 +411,14 @@ a:focus-visible {
   border-right: 1px solid var(--color-border);
   background: #ffffff;
   padding: 1.6rem 1.25rem 1.25rem;
+  transition: padding 180ms ease;
+}
+
+.ds-sidebar-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
 }
 
 .ds-sidebar-brand {
@@ -413,6 +426,15 @@ a:focus-visible {
   align-items: center;
   gap: 0.75rem;
   min-height: 2.6rem;
+  min-width: 0;
+}
+
+.ds-sidebar-brand-text,
+.ds-nav-label,
+.ds-footer-label,
+.ds-sidebar-promo,
+.ds-sidebar-section-label {
+  transition: opacity 140ms ease, width 180ms ease, transform 180ms ease;
 }
 
 .ds-sidebar-mark {
@@ -426,6 +448,28 @@ a:focus-visible {
   font-size: 0.9rem;
   font-weight: 950;
   box-shadow: 0 12px 22px rgba(15, 140, 240, 0.2);
+}
+
+.ds-sidebar-toggle {
+  display: grid;
+  width: 2rem;
+  min-width: 2rem;
+  height: 2rem;
+  place-items: center;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  background: var(--color-surface-muted);
+  color: var(--color-ink-soft);
+  font-size: 0.9rem;
+  font-weight: 900;
+  line-height: 1;
+  transition: background-color 160ms ease, color 160ms ease, transform 160ms ease;
+}
+
+.ds-sidebar-toggle:hover {
+  background: var(--color-brand-soft);
+  color: var(--color-brand);
+  transform: translateY(-1px);
 }
 
 .ds-sidebar-nav {
@@ -524,6 +568,80 @@ a:focus-visible {
 .ds-sidebar-logout:hover {
   background: var(--color-danger-soft);
   color: var(--color-danger);
+}
+
+.ds-sidebar-collapsed .ds-app-sidebar {
+  align-items: center;
+  padding: 1rem 0.75rem;
+}
+
+.ds-sidebar-collapsed .ds-sidebar-top {
+  display: grid;
+  justify-items: center;
+  gap: 0.65rem;
+}
+
+.ds-sidebar-collapsed .ds-sidebar-brand {
+  justify-content: center;
+}
+
+.ds-sidebar-collapsed .ds-sidebar-brand-text,
+.ds-sidebar-collapsed .ds-nav-label,
+.ds-sidebar-collapsed .ds-sidebar-section-label,
+.ds-sidebar-collapsed .ds-sidebar-promo,
+.ds-sidebar-collapsed .ds-footer-label {
+  pointer-events: none;
+  width: 0;
+  opacity: 0;
+  overflow: hidden;
+  transform: translateX(-0.35rem);
+}
+
+.ds-sidebar-collapsed .ds-sidebar-nav {
+  width: 100%;
+  margin-top: 1.25rem;
+}
+
+.ds-sidebar-collapsed .ds-side-nav-link {
+  justify-content: center;
+  gap: 0;
+  padding: 0.55rem;
+}
+
+.ds-sidebar-collapsed .ds-side-nav-link:hover {
+  transform: translateY(-1px);
+}
+
+.ds-sidebar-collapsed .ds-side-nav-icon {
+  width: 2rem;
+  height: 2rem;
+}
+
+.ds-sidebar-collapsed .ds-sidebar-footer {
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.55rem;
+}
+
+.ds-sidebar-collapsed .ds-sidebar-logout {
+  position: relative;
+  width: 2rem;
+  height: 2rem;
+  margin-left: 0;
+  overflow: hidden;
+  padding: 0;
+  color: transparent;
+}
+
+.ds-sidebar-collapsed .ds-sidebar-logout::after {
+  content: "LO";
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: var(--color-muted);
+  font-size: 0.65rem;
+  font-weight: 900;
 }
 
 .ds-app-main {
@@ -2464,6 +2582,10 @@ textarea {
     grid-template-columns: minmax(0, 1fr);
   }
 
+  .ds-reference-shell.ds-sidebar-collapsed {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
   .ds-app-sidebar {
     position: static;
     height: auto;
@@ -2483,6 +2605,49 @@ textarea {
 
   .ds-sidebar-footer {
     margin-top: 1rem;
+  }
+
+  .ds-sidebar-collapsed .ds-app-sidebar {
+    align-items: stretch;
+    padding: 1rem;
+  }
+
+  .ds-sidebar-collapsed .ds-sidebar-top {
+    display: flex;
+    justify-items: stretch;
+  }
+
+  .ds-sidebar-collapsed .ds-sidebar-brand-text,
+  .ds-sidebar-collapsed .ds-nav-label,
+  .ds-sidebar-collapsed .ds-footer-label {
+    pointer-events: auto;
+    width: auto;
+    opacity: 1;
+    overflow: visible;
+    transform: none;
+  }
+
+  .ds-sidebar-collapsed .ds-side-nav-link {
+    justify-content: flex-start;
+    gap: 0.7rem;
+  }
+
+  .ds-sidebar-collapsed .ds-sidebar-footer {
+    flex-direction: row;
+    justify-content: flex-start;
+  }
+
+  .ds-sidebar-collapsed .ds-sidebar-logout {
+    width: auto;
+    height: auto;
+    margin-left: auto;
+    overflow: visible;
+    padding: 0.35rem 0.45rem;
+    color: var(--color-muted);
+  }
+
+  .ds-sidebar-collapsed .ds-sidebar-logout::after {
+    content: none;
   }
 
   .ds-app-topbar {

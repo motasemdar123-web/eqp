@@ -56,10 +56,12 @@ export default function SystemShell({
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setUser(getSessionUser());
+      setSidebarCollapsed(localStorage.getItem('darAlHaiSidebarCollapsed') === 'true');
       setHasHydrated(true);
     }, 0);
 
@@ -118,6 +120,14 @@ export default function SystemShell({
     window.location.href = '/';
   }
 
+  function toggleSidebar() {
+    setSidebarCollapsed((current) => {
+      const next = !current;
+      localStorage.setItem('darAlHaiSidebarCollapsed', String(next));
+      return next;
+    });
+  }
+
   async function handleNotificationClick(notification) {
     try {
       if (!notification.readAt) {
@@ -158,15 +168,26 @@ export default function SystemShell({
   }
 
   return (
-    <div className="ds-shell ds-reference-shell">
+    <div className={`ds-shell ds-reference-shell ${sidebarCollapsed ? 'ds-sidebar-collapsed' : ''}`}>
       <aside className="ds-app-sidebar">
-        <Link href="/management" className="ds-sidebar-brand">
-          <span className="ds-sidebar-mark">DH</span>
-          <span>
-            <span className="block text-lg font-black leading-none text-[var(--color-ink)]">Dar Al Hai</span>
-            <span className="mt-1 block text-[0.64rem] font-black uppercase tracking-[0.18em] text-[var(--color-muted)]">Maintenance</span>
-          </span>
-        </Link>
+        <div className="ds-sidebar-top">
+          <Link href="/management" className="ds-sidebar-brand" aria-label="Dar Al Hai dashboard">
+            <span className="ds-sidebar-mark">DH</span>
+            <span className="ds-sidebar-brand-text">
+              <span className="block text-lg font-black leading-none text-[var(--color-ink)]">Dar Al Hai</span>
+              <span className="mt-1 block text-[0.64rem] font-black uppercase tracking-[0.18em] text-[var(--color-muted)]">Maintenance</span>
+            </span>
+          </Link>
+          <button
+            type="button"
+            className="ds-sidebar-toggle"
+            onClick={toggleSidebar}
+            aria-label={sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+            title={sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+          >
+            {sidebarCollapsed ? '>' : '<'}
+          </button>
+        </div>
 
         <nav className="ds-sidebar-nav" aria-label="Primary navigation">
           <p className="ds-sidebar-section-label">Main menu</p>
@@ -178,9 +199,10 @@ export default function SystemShell({
                 key={item.href}
                 href={item.href}
                 className={`ds-side-nav-link ${active ? 'ds-side-nav-link-active' : ''}`}
+                title={item.label}
               >
                 <span className="ds-side-nav-icon">{item.code}</span>
-                <span className="truncate">{item.label}</span>
+                <span className="ds-nav-label truncate">{item.label}</span>
               </Link>
             );
           })}
@@ -194,9 +216,10 @@ export default function SystemShell({
                 key={item.href}
                 href={item.href}
                 className={`ds-side-nav-link ${active ? 'ds-side-nav-link-active' : ''}`}
+                title={item.label}
               >
                 <span className="ds-side-nav-icon">{item.code}</span>
-                <span className="truncate">{item.label}</span>
+                <span className="ds-nav-label truncate">{item.label}</span>
               </Link>
             );
           })}
@@ -216,7 +239,7 @@ export default function SystemShell({
 
         <div className="ds-sidebar-footer">
           <span className="ds-status-dot" />
-          <span className="text-xs font-black text-[var(--color-muted)]">Live system</span>
+          <span className="ds-footer-label text-xs font-black text-[var(--color-muted)]">Live system</span>
           {user && (
             <button type="button" onClick={logout} className="ds-sidebar-logout" aria-label="Logout">
               Logout
