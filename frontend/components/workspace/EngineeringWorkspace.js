@@ -10,6 +10,7 @@ import EmptyState from '../ui/EmptyState';
 import Toast from '../ui/Toast';
 
 const BOARD_KEY = 'dar-al-hai-engineering-creative-board-v1';
+const PRO_WHITEBOARD_KEY = 'dar-al-hai-engineering-pro-whiteboard-v1';
 const PLANNER_KEY = 'dar-al-hai-engineering-day-planner-v1';
 
 const stickyColors = {
@@ -226,10 +227,12 @@ function CanvasToolbar({
   onSave,
   onResetView,
   onOpenTemplates,
+  onOpenProWhiteboard,
 }) {
   return (
     <div className="eng-canvas-toolbar">
       <Button type="button" size="sm" onClick={onOpenTemplates}>Templates</Button>
+      <Button type="button" variant="secondary" size="sm" onClick={onOpenProWhiteboard}>Pro Whiteboard</Button>
       <span className="eng-toolbar-divider" />
       <Button type="button" size="sm" onClick={onAddSticky}>Add Sticky Note</Button>
       <Button type="button" variant="secondary" size="sm" onClick={onAddWireframe}>Add Wireframe</Button>
@@ -561,11 +564,6 @@ const templateDetails = {
     description: 'Map improvement work from backlog to in-progress to completed, using movable project cards.',
     includes: ['Backlog column', 'In-progress column', 'Done column', 'Project idea cards'],
   },
-  'document-hub': {
-    label: 'Document workspace',
-    description: 'Organize SOPs, maintenance observations, checklists, and shared engineering documents.',
-    includes: ['Document table', 'SOP note', 'Observation note'],
-  },
   brainstorm: {
     label: 'Idea session',
     description: 'Capture maintenance, reporting, safety, and workflow ideas as a visual brainstorm map.',
@@ -706,16 +704,6 @@ function makeTemplateItems(templateKey, customization = {}) {
       makeItem('sticky', { label: 'Manual page viewer refinement', color: 'blue', x: 372, y: 184, width: 170, height: 92 }),
       makeItem('sticky', { label: 'Technician assignment cleanup', color: 'purple', x: 628, y: 184, width: 170, height: 92 }),
       ...makeRowLabels(118, 386, 640),
-    ];
-  }
-
-  if (templateKey === 'document-hub') {
-    return [
-      makeItem('frame', { label: customTitle, x: 50, y: 48, width: 980, height: 470 }),
-      makeItem('wireframe', { wireType: 'Table', label: 'Doc name | Created by | Created time', x: 92, y: 126, width: 610, height: 220 }),
-      makeItem('sticky', { label: 'Pressure testing SOP', color: 'pink', x: 748, y: 106, width: 210, height: 118 }),
-      makeItem('sticky', { label: 'Cooling system observations', color: 'blue', x: 748, y: 246, width: 210, height: 118 }),
-      ...makeRowLabels(118, 168),
     ];
   }
 
@@ -1055,6 +1043,996 @@ function CreativeTemplateGallery({ open, onClose, onUseTemplate }) {
   );
 }
 
+const proWhiteboardTemplates = [
+  {
+    key: 'brainstorm',
+    title: 'Brainstorming board',
+    description: 'Frames for ideas, themes, votes, and next actions.',
+  },
+  {
+    key: 'retro',
+    title: 'Retrospective board',
+    description: 'What worked, what blocked us, and what to improve.',
+  },
+  {
+    key: 'kanban',
+    title: 'Kanban board',
+    description: 'Todo, in progress, review, and done sections.',
+  },
+  {
+    key: 'journey',
+    title: 'User journey map',
+    description: 'Steps, pain points, opportunities, and owners.',
+  },
+  {
+    key: 'flowchart',
+    title: 'Flowchart starter',
+    description: 'Decision nodes, process steps, and arrows.',
+  },
+  {
+    key: 'swot',
+    title: 'SWOT analysis',
+    description: 'Strengths, weaknesses, opportunities, and threats.',
+  },
+  {
+    key: 'decision',
+    title: 'Decision matrix',
+    description: 'Options, criteria, confidence, and final call.',
+  },
+  {
+    key: 'agenda',
+    title: 'Meeting agenda',
+    description: 'Agenda, notes, decisions, and action items.',
+  },
+];
+
+const proColors = ['#FEF3C7', '#DBEAFE', '#DCFCE7', '#FCE7F3', '#EDE9FE', '#FFFFFF'];
+
+function defaultProWhiteboardState() {
+  const createdAt = DEMO_CREATED_AT;
+  return {
+    viewport: { zoom: 1, pan: { x: 0, y: 0 } },
+    settings: { grid: true, snap: false },
+    timer: { seconds: 600, running: false },
+    objects: [
+      {
+        id: 'pro-frame-discovery',
+        type: 'frame',
+        x: 80,
+        y: 80,
+        width: 620,
+        height: 360,
+        zIndex: 1,
+        color: 'rgba(219, 234, 254, 0.38)',
+        borderColor: '#93C5FD',
+        text: 'Maintenance Discovery',
+        createdAt,
+        updatedAt: createdAt,
+      },
+      {
+        id: 'pro-sticky-hydraulic',
+        type: 'sticky',
+        x: 140,
+        y: 170,
+        width: 190,
+        height: 140,
+        zIndex: 4,
+        color: '#FEF3C7',
+        textColor: '#1F2937',
+        text: 'Inspect hydraulic heat pattern before assigning repair.',
+        votes: 2,
+        comments: [{ id: 'comment-1', text: 'Link this to machine history.', createdAt }],
+        createdAt,
+        updatedAt: createdAt,
+      },
+      {
+        id: 'pro-shape-process',
+        type: 'shape',
+        shape: 'rounded',
+        x: 390,
+        y: 180,
+        width: 220,
+        height: 120,
+        zIndex: 3,
+        color: '#E0F2FE',
+        borderColor: '#0284C7',
+        strokeWidth: 2,
+        text: 'Verify report attachments',
+        createdAt,
+        updatedAt: createdAt,
+      },
+      {
+        id: 'pro-arrow-one',
+        type: 'connector',
+        x: 330,
+        y: 235,
+        width: 70,
+        height: 2,
+        zIndex: 2,
+        borderColor: '#2563EB',
+        strokeWidth: 3,
+        text: '',
+        createdAt,
+        updatedAt: createdAt,
+      },
+      {
+        id: 'pro-text-note',
+        type: 'text',
+        x: 820,
+        y: 140,
+        width: 300,
+        height: 96,
+        zIndex: 5,
+        color: 'transparent',
+        textColor: '#0F172A',
+        fontSize: 22,
+        text: 'Workshop objective: turn ideas into maintenance actions.',
+        createdAt,
+        updatedAt: createdAt,
+      },
+    ],
+  };
+}
+
+function cloneProState(state) {
+  return JSON.parse(JSON.stringify(state));
+}
+
+function createProObject(type, patch = {}) {
+  const createdAt = nowIso();
+  const base = {
+    id: createId(`pro-${type}`),
+    type,
+    x: 240,
+    y: 180,
+    width: 180,
+    height: 120,
+    rotation: 0,
+    zIndex: Date.now(),
+    color: '#FFFFFF',
+    borderColor: '#BFDBFE',
+    strokeWidth: 2,
+    textColor: '#0F172A',
+    fontSize: 16,
+    text: '',
+    locked: false,
+    votes: 0,
+    comments: [],
+    createdAt,
+    updatedAt: createdAt,
+    metadata: {},
+    ...patch,
+  };
+
+  if (type === 'sticky') return { ...base, color: patch.color || '#FEF3C7', text: patch.text || 'New idea', width: 190, height: 140 };
+  if (type === 'text') return { ...base, color: 'transparent', text: patch.text || 'Text box', width: 260, height: 90 };
+  if (type === 'shape') return { ...base, shape: patch.shape || 'rectangle', text: patch.text || 'Shape', width: 190, height: 120 };
+  if (type === 'connector') return { ...base, width: 220, height: 2, text: '', borderColor: patch.borderColor || '#2563EB' };
+  if (type === 'frame') return { ...base, color: 'rgba(239, 246, 255, 0.55)', text: patch.text || 'New frame', width: 520, height: 320 };
+  if (type === 'comment') return { ...base, color: '#FFF7ED', text: patch.text || 'Comment', width: 170, height: 86 };
+  if (type === 'image') return { ...base, width: 260, height: 180 };
+  if (type === 'file') return { ...base, width: 240, height: 120 };
+  if (type === 'drawing') return { ...base, color: 'transparent', width: 1, height: 1, path: patch.path || [], borderColor: patch.borderColor || '#0F172A' };
+  return base;
+}
+
+function makeProTemplateObjects(templateKey) {
+  const createdAt = nowIso();
+  const object = (type, patch) => createProObject(type, { ...patch, createdAt, updatedAt: createdAt });
+  const frame = (text, x, y, color = 'rgba(239, 246, 255, 0.55)') => object('frame', { text, x, y, width: 360, height: 300, color });
+
+  if (templateKey === 'retro') {
+    return [
+      frame('Worked well', 120, 120, 'rgba(220, 252, 231, 0.55)'),
+      frame('Blocked us', 520, 120, 'rgba(254, 226, 226, 0.55)'),
+      frame('Improve next', 920, 120, 'rgba(219, 234, 254, 0.55)'),
+      object('sticky', { text: 'Fast EQP review', x: 160, y: 200, color: '#DCFCE7' }),
+      object('sticky', { text: 'Manual matching still needs validation', x: 560, y: 200, color: '#FCE7F3' }),
+      object('sticky', { text: 'Create clear handover checklist', x: 960, y: 200, color: '#DBEAFE' }),
+    ];
+  }
+
+  if (templateKey === 'kanban') {
+    return [
+      frame('Todo', 100, 100),
+      frame('In Progress', 500, 100),
+      frame('Review', 900, 100),
+      frame('Done', 1300, 100),
+      object('sticky', { text: 'Inspect oil temperature', x: 145, y: 185, color: '#FEF3C7' }),
+      object('sticky', { text: 'Update EQP report flow', x: 545, y: 185, color: '#DBEAFE' }),
+      object('sticky', { text: 'Review safety prompts', x: 945, y: 185, color: '#FCE7F3' }),
+    ];
+  }
+
+  if (templateKey === 'flowchart') {
+    return [
+      object('shape', { shape: 'rounded', text: 'Task created', x: 120, y: 180, color: '#DBEAFE' }),
+      object('connector', { x: 320, y: 240, width: 150, borderColor: '#2563EB' }),
+      object('shape', { shape: 'diamond', text: 'Manual match?', x: 490, y: 170, color: '#FEF3C7' }),
+      object('connector', { x: 700, y: 240, width: 150, borderColor: '#2563EB' }),
+      object('shape', { shape: 'rounded', text: 'Generate suggestion', x: 870, y: 180, color: '#DCFCE7' }),
+    ];
+  }
+
+  if (templateKey === 'swot') {
+    return [
+      frame('Strengths', 100, 100, 'rgba(220, 252, 231, 0.55)'),
+      frame('Weaknesses', 500, 100, 'rgba(254, 226, 226, 0.55)'),
+      frame('Opportunities', 100, 450, 'rgba(219, 234, 254, 0.55)'),
+      frame('Threats', 500, 450, 'rgba(254, 243, 199, 0.55)'),
+    ];
+  }
+
+  if (templateKey === 'decision') {
+    return [
+      frame('Decision Matrix', 120, 120, 'rgba(237, 233, 254, 0.55)'),
+      object('shape', { shape: 'rectangle', text: 'Option', x: 170, y: 220, width: 170, height: 80 }),
+      object('shape', { shape: 'rectangle', text: 'Impact', x: 360, y: 220, width: 170, height: 80 }),
+      object('shape', { shape: 'rectangle', text: 'Effort', x: 550, y: 220, width: 170, height: 80 }),
+      object('sticky', { text: 'Chosen path + owner', x: 760, y: 220, color: '#FEF3C7' }),
+    ];
+  }
+
+  return [
+    frame(templateKey === 'journey' ? 'Journey stages' : templateKey === 'agenda' ? 'Meeting agenda' : 'Brainstorming board', 100, 100),
+    object('sticky', { text: 'Capture ideas', x: 150, y: 190, color: '#FEF3C7' }),
+    object('sticky', { text: 'Cluster themes', x: 390, y: 190, color: '#DBEAFE' }),
+    object('sticky', { text: 'Vote on best actions', x: 630, y: 190, color: '#DCFCE7' }),
+    object('comment', { text: 'Add discussion notes here', x: 890, y: 160 }),
+  ];
+}
+
+function ProWhiteboardObject({ object, selected, tool, onSelect, onPointerDown, onChange, onVote, onDuplicate, onDelete }) {
+  const style = {
+    left: object.x,
+    top: object.y,
+    width: object.width,
+    height: object.height,
+    zIndex: selected ? 99999 : object.zIndex,
+    transform: `rotate(${object.rotation || 0}deg)`,
+    '--wb-fill': object.color || '#FFFFFF',
+    '--wb-border': object.borderColor || '#BFDBFE',
+    '--wb-stroke': `${object.strokeWidth || 2}px`,
+    '--wb-text': object.textColor || '#0F172A',
+    '--wb-font-size': `${object.fontSize || 16}px`,
+  };
+
+  function select(event) {
+    event.stopPropagation();
+    onSelect(object.id, event.shiftKey);
+  }
+
+  const actions = (
+    <div className="pro-wb-object-actions">
+      <button type="button" onClick={(event) => { event.stopPropagation(); onVote(object.id); }}>+{object.votes || 0}</button>
+      <button type="button" onClick={(event) => { event.stopPropagation(); onDuplicate(object.id); }}>D</button>
+      <button type="button" onClick={(event) => { event.stopPropagation(); onDelete(object.id); }}>x</button>
+    </div>
+  );
+
+  if (object.type === 'drawing') {
+    const points = object.path || [];
+    const pathData = points.map((point, index) => `${index === 0 ? 'M' : 'L'} ${point.x} ${point.y}`).join(' ');
+    const minX = Math.min(...points.map((point) => point.x), 0);
+    const minY = Math.min(...points.map((point) => point.y), 0);
+    const maxX = Math.max(...points.map((point) => point.x), 1);
+    const maxY = Math.max(...points.map((point) => point.y), 1);
+    return (
+      <svg
+        className={selected ? 'pro-wb-object pro-wb-drawing pro-wb-selected' : 'pro-wb-object pro-wb-drawing'}
+        style={{ left: minX, top: minY, width: maxX - minX + 24, height: maxY - minY + 24, zIndex: object.zIndex }}
+        viewBox={`${minX - 12} ${minY - 12} ${maxX - minX + 24} ${maxY - minY + 24}`}
+        onClick={select}
+      >
+        <path d={pathData} fill="none" stroke={object.borderColor || '#0F172A'} strokeWidth={object.strokeWidth || 3} strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    );
+  }
+
+  return (
+    <div
+      className={`pro-wb-object pro-wb-${object.type} ${object.shape ? `pro-wb-shape-${object.shape}` : ''} ${selected ? 'pro-wb-selected' : ''} ${object.locked ? 'pro-wb-locked' : ''}`}
+      style={style}
+      onPointerDown={(event) => onPointerDown(event, object)}
+      onClick={select}
+      role="button"
+      tabIndex={0}
+    >
+      {!object.locked && actions}
+      {object.type === 'connector' && <span className="pro-wb-arrow-head" aria-hidden="true" />}
+      {object.type === 'image' && object.src && (
+        // User uploads are local data URLs here, so Next image optimization does not add value.
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={object.src} alt={object.fileName || 'Uploaded board asset'} />
+      )}
+      {object.type === 'file' && <strong>{object.fileName || 'Uploaded file'}</strong>}
+      {object.type !== 'image' && object.type !== 'file' && object.type !== 'connector' && (
+        <textarea
+          value={object.text}
+          onChange={(event) => onChange(object.id, { text: event.target.value })}
+          onPointerDown={(event) => event.stopPropagation()}
+          aria-label={`${object.type} text`}
+        />
+      )}
+      {object.type === 'connector' && <span className="pro-wb-line-label">{object.text}</span>}
+      {(object.comments?.length || object.votes) ? (
+        <div className="pro-wb-meta">
+          {object.comments?.length ? <span>{object.comments.length} comments</span> : null}
+          {object.votes ? <span>{object.votes} votes</span> : null}
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+function ProWhiteboardToolbar({
+  tool,
+  setTool,
+  onAdd,
+  onUndo,
+  onRedo,
+  canUndo,
+  canRedo,
+  onTemplate,
+  onExport,
+  onImportClick,
+  onImageClick,
+  grid,
+  snap,
+  onToggleGrid,
+  onToggleSnap,
+  onFit,
+  zoom,
+  onZoomIn,
+  onZoomOut,
+  onResetZoom,
+}) {
+  const tools = [
+    ['select', 'Select'],
+    ['pan', 'Pan'],
+    ['sticky', 'Sticky'],
+    ['text', 'Text'],
+    ['shape', 'Shape'],
+    ['connector', 'Arrow'],
+    ['pen', 'Pen'],
+    ['comment', 'Comment'],
+    ['frame', 'Frame'],
+  ];
+
+  return (
+    <div className="pro-wb-toolbar" aria-label="Advanced whiteboard toolbar">
+      <div className="pro-wb-tool-group">
+        {tools.map(([key, label]) => (
+          <button key={key} type="button" className={tool === key ? 'pro-wb-tool-active' : ''} onClick={() => setTool(key)}>{label}</button>
+        ))}
+      </div>
+      <div className="pro-wb-tool-group">
+        <button type="button" onClick={() => onAdd('shape', { shape: 'circle', text: 'Circle' })}>Circle</button>
+        <button type="button" onClick={() => onAdd('shape', { shape: 'diamond', text: 'Decision' })}>Diamond</button>
+        <button type="button" onClick={onImageClick}>Upload</button>
+      </div>
+      <div className="pro-wb-tool-group">
+        <button type="button" onClick={onUndo} disabled={!canUndo}>Undo</button>
+        <button type="button" onClick={onRedo} disabled={!canRedo}>Redo</button>
+        <button type="button" onClick={onTemplate}>Templates</button>
+        <button type="button" onClick={onExport}>Export JSON</button>
+        <button type="button" onClick={onImportClick}>Import</button>
+      </div>
+      <div className="pro-wb-tool-group">
+        <button type="button" className={grid ? 'pro-wb-tool-active' : ''} onClick={onToggleGrid}>Grid</button>
+        <button type="button" className={snap ? 'pro-wb-tool-active' : ''} onClick={onToggleSnap}>Snap</button>
+        <button type="button" onClick={onFit}>Fit</button>
+      </div>
+      <div className="pro-wb-tool-group pro-wb-zoom">
+        <button type="button" onClick={onZoomOut}>-</button>
+        <button type="button" onClick={onResetZoom}>{Math.round(zoom * 100)}%</button>
+        <button type="button" onClick={onZoomIn}>+</button>
+      </div>
+    </div>
+  );
+}
+
+function ProWhiteboardProperties({ object, onChange, onDuplicate, onDelete, onLayer, onAddComment }) {
+  const [comment, setComment] = useState('');
+
+  if (!object) {
+    return (
+      <aside className="pro-wb-properties">
+        <h3>Board tools</h3>
+        <p>Select an object to edit style, layer, size, comments, votes, and lock state.</p>
+        <div className="pro-wb-hint-list">
+          <span>Wheel or trackpad: zoom</span>
+          <span>Drag empty space: pan</span>
+          <span>Double click: quick sticky</span>
+          <span>Delete, Ctrl+C/V/D, Ctrl+Z/Y supported</span>
+        </div>
+      </aside>
+    );
+  }
+
+  function submitComment(event) {
+    event.preventDefault();
+    if (!comment.trim()) return;
+    onAddComment(object.id, comment.trim());
+    setComment('');
+  }
+
+  return (
+    <aside className="pro-wb-properties">
+      <div className="pro-wb-prop-head">
+        <div>
+          <h3>Properties</h3>
+          <span>{object.type}</span>
+        </div>
+        <Badge tone={object.locked ? 'warning' : 'info'}>{object.locked ? 'Locked' : 'Editable'}</Badge>
+      </div>
+      <Field label="Fill">
+        <input type="color" value={object.color === 'transparent' ? '#ffffff' : object.color || '#ffffff'} onChange={(event) => onChange(object.id, { color: event.target.value })} />
+      </Field>
+      <Field label="Border">
+        <input type="color" value={object.borderColor || '#2563EB'} onChange={(event) => onChange(object.id, { borderColor: event.target.value })} />
+      </Field>
+      <Field label="Text color">
+        <input type="color" value={object.textColor || '#0F172A'} onChange={(event) => onChange(object.id, { textColor: event.target.value })} />
+      </Field>
+      <div className="pro-wb-prop-grid">
+        <Field label="X"><input type="number" value={Math.round(object.x)} onChange={(event) => onChange(object.id, { x: Number(event.target.value) || 0 })} /></Field>
+        <Field label="Y"><input type="number" value={Math.round(object.y)} onChange={(event) => onChange(object.id, { y: Number(event.target.value) || 0 })} /></Field>
+        <Field label="W"><input type="number" value={Math.round(object.width)} onChange={(event) => onChange(object.id, { width: Math.max(20, Number(event.target.value) || 20) })} /></Field>
+        <Field label="H"><input type="number" value={Math.round(object.height)} onChange={(event) => onChange(object.id, { height: Math.max(20, Number(event.target.value) || 20) })} /></Field>
+      </div>
+      <div className="pro-wb-prop-grid">
+        <Field label="Font"><input type="number" value={object.fontSize || 16} onChange={(event) => onChange(object.id, { fontSize: Math.max(10, Number(event.target.value) || 16) })} /></Field>
+        <Field label="Stroke"><input type="number" value={object.strokeWidth || 2} onChange={(event) => onChange(object.id, { strokeWidth: Math.max(1, Number(event.target.value) || 2) })} /></Field>
+      </div>
+      {object.type === 'sticky' && (
+        <div className="pro-wb-swatches">
+          {proColors.map((color) => (
+            <button key={color} type="button" style={{ background: color }} onClick={() => onChange(object.id, { color })} aria-label={`Set color ${color}`} />
+          ))}
+        </div>
+      )}
+      <div className="pro-wb-panel-actions">
+        <Button type="button" variant="secondary" size="sm" onClick={() => onDuplicate(object.id)}>Duplicate</Button>
+        <Button type="button" variant="ghost" size="sm" onClick={() => onLayer(object.id, 1)}>Forward</Button>
+        <Button type="button" variant="ghost" size="sm" onClick={() => onLayer(object.id, -1)}>Backward</Button>
+        <Button type="button" variant="secondary" size="sm" onClick={() => onChange(object.id, { locked: !object.locked })}>{object.locked ? 'Unlock' : 'Lock'}</Button>
+        <Button type="button" variant="danger" size="sm" onClick={() => onDelete(object.id)}>Delete</Button>
+      </div>
+      <form className="pro-wb-comment-form" onSubmit={submitComment}>
+        <Field label="Comment">
+          <input value={comment} onChange={(event) => setComment(event.target.value)} placeholder="Add a comment" />
+        </Field>
+        <Button type="submit" size="sm">Add comment</Button>
+      </form>
+      <div className="pro-wb-comments">
+        {(object.comments || []).map((entry) => <span key={entry.id}>{entry.text}</span>)}
+      </div>
+    </aside>
+  );
+}
+
+function ProWhiteboardTemplates({ onInsert, onClose }) {
+  return (
+    <div className="pro-wb-template-popover">
+      <div>
+        <strong>Insert template</strong>
+        <button type="button" onClick={onClose} aria-label="Close templates">x</button>
+      </div>
+      {proWhiteboardTemplates.map((template) => (
+        <button key={template.key} type="button" onClick={() => onInsert(template.key)}>
+          <strong>{template.title}</strong>
+          <span>{template.description}</span>
+        </button>
+      ))}
+    </div>
+  );
+}
+
+function ProWhiteboardTimer({ timer, onChange }) {
+  const minutes = String(Math.floor(timer.seconds / 60)).padStart(2, '0');
+  const seconds = String(timer.seconds % 60).padStart(2, '0');
+
+  return (
+    <div className="pro-wb-timer">
+      <strong>{minutes}:{seconds}</strong>
+      <button type="button" onClick={() => onChange({ ...timer, running: !timer.running })}>{timer.running ? 'Pause' : 'Start'}</button>
+      <button type="button" onClick={() => onChange({ seconds: 600, running: false })}>Reset</button>
+    </div>
+  );
+}
+
+function AdvancedWhiteboard({ onClose, onToast }) {
+  const canvasRef = useRef(null);
+  const fileRef = useRef(null);
+  const importRef = useRef(null);
+  const dragRef = useRef(null);
+  const panRef = useRef(null);
+  const drawingRef = useRef(null);
+  const [state, setState] = useState(() => defaultProWhiteboardState());
+  const [selectedIds, setSelectedIds] = useState([]);
+  const [tool, setTool] = useState('select');
+  const [templateOpen, setTemplateOpen] = useState(false);
+  const [history, setHistory] = useState({ past: [], future: [] });
+  const selectedObject = state.objects.find((object) => object.id === selectedIds[0]) || null;
+
+  useEffect(() => {
+    const timer = setTimeout(() => setState(loadStoredItems(PRO_WHITEBOARD_KEY, defaultProWhiteboardState)), 0);
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    const timer = setTimeout(() => saveStoredItems(PRO_WHITEBOARD_KEY, state), 250);
+    return () => clearTimeout(timer);
+  }, [state]);
+
+  useEffect(() => {
+    if (!state.timer.running) return undefined;
+    const timer = setInterval(() => {
+      setState((current) => ({
+        ...current,
+        timer: {
+          ...current.timer,
+          seconds: Math.max(0, current.timer.seconds - 1),
+          running: current.timer.seconds > 1,
+        },
+      }));
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [state.timer.running]);
+
+  function pushHistory(previousState) {
+    setHistory((current) => ({
+      past: [...current.past.slice(-29), cloneProState(previousState)],
+      future: [],
+    }));
+  }
+
+  function commit(updater) {
+    setState((current) => {
+      const nextState = typeof updater === 'function' ? updater(cloneProState(current)) : updater;
+      pushHistory(current);
+      return nextState;
+    });
+  }
+
+  function updateObject(id, patch) {
+    commit((current) => ({
+      ...current,
+      objects: current.objects.map((object) => (
+        object.id === id ? { ...object, ...patch, updatedAt: nowIso() } : object
+      )),
+    }));
+  }
+
+  function addObject(type, patch = {}) {
+    const object = createProObject(type, patch);
+    commit((current) => ({
+      ...current,
+      objects: [...current.objects, object],
+    }));
+    setSelectedIds([object.id]);
+    return object;
+  }
+
+  function deleteObject(id) {
+    commit((current) => ({
+      ...current,
+      objects: current.objects.filter((object) => object.id !== id),
+    }));
+    setSelectedIds((current) => current.filter((selectedId) => selectedId !== id));
+  }
+
+  function duplicateObject(id) {
+    const object = state.objects.find((entry) => entry.id === id);
+    if (!object) return;
+    const copy = {
+      ...cloneProState(object),
+      id: createId(`pro-${object.type}`),
+      x: object.x + 32,
+      y: object.y + 32,
+      zIndex: Date.now(),
+      createdAt: nowIso(),
+      updatedAt: nowIso(),
+    };
+    commit((current) => ({ ...current, objects: [...current.objects, copy] }));
+    setSelectedIds([copy.id]);
+  }
+
+  function undo() {
+    setHistory((current) => {
+      if (!current.past.length) return current;
+      const previous = current.past[current.past.length - 1];
+      setState(previous);
+      return {
+        past: current.past.slice(0, -1),
+        future: [cloneProState(state), ...current.future],
+      };
+    });
+  }
+
+  function redo() {
+    setHistory((current) => {
+      if (!current.future.length) return current;
+      const next = current.future[0];
+      setState(next);
+      return {
+        past: [...current.past, cloneProState(state)],
+        future: current.future.slice(1),
+      };
+    });
+  }
+
+  function screenToWorld(event) {
+    const rect = canvasRef.current?.getBoundingClientRect();
+    if (!rect) return { x: 0, y: 0 };
+    return {
+      x: (event.clientX - rect.left - state.viewport.pan.x) / state.viewport.zoom,
+      y: (event.clientY - rect.top - state.viewport.pan.y) / state.viewport.zoom,
+    };
+  }
+
+  function setViewport(patch) {
+    setState((current) => ({ ...current, viewport: { ...current.viewport, ...patch } }));
+  }
+
+  function handleCanvasPointerDown(event) {
+    if (event.target.closest('.pro-wb-object, button, input, textarea, select')) return;
+    const world = screenToWorld(event);
+
+    if (tool === 'sticky') {
+      addObject('sticky', { x: world.x, y: world.y });
+      setTool('select');
+      return;
+    }
+    if (tool === 'text') {
+      addObject('text', { x: world.x, y: world.y });
+      setTool('select');
+      return;
+    }
+    if (tool === 'shape') {
+      addObject('shape', { x: world.x, y: world.y });
+      setTool('select');
+      return;
+    }
+    if (tool === 'connector') {
+      addObject('connector', { x: world.x, y: world.y });
+      setTool('select');
+      return;
+    }
+    if (tool === 'comment') {
+      addObject('comment', { x: world.x, y: world.y });
+      setTool('select');
+      return;
+    }
+    if (tool === 'frame') {
+      addObject('frame', { x: world.x, y: world.y });
+      setTool('select');
+      return;
+    }
+    if (tool === 'pen') {
+      const object = createProObject('drawing', { path: [world], borderColor: '#0F172A', strokeWidth: 3 });
+      drawingRef.current = object.id;
+      commit((current) => ({ ...current, objects: [...current.objects, object] }));
+      return;
+    }
+
+    setSelectedIds([]);
+    event.currentTarget.setPointerCapture(event.pointerId);
+    panRef.current = {
+      startX: event.clientX,
+      startY: event.clientY,
+      originX: state.viewport.pan.x,
+      originY: state.viewport.pan.y,
+    };
+  }
+
+  function handleObjectPointerDown(event, object) {
+    if (object.locked || tool !== 'select') return;
+    if (event.target.closest('textarea, input, select, button')) return;
+    const world = screenToWorld(event);
+    event.currentTarget.setPointerCapture(event.pointerId);
+    const activeIds = selectedIds.includes(object.id) ? selectedIds : [object.id];
+    setSelectedIds(activeIds);
+    dragRef.current = {
+      ids: activeIds,
+      start: world,
+      origins: state.objects
+        .filter((entry) => activeIds.includes(entry.id))
+        .map((entry) => ({ id: entry.id, x: entry.x, y: entry.y })),
+    };
+  }
+
+  function handlePointerMove(event) {
+    if (drawingRef.current) {
+      const point = screenToWorld(event);
+      setState((current) => ({
+        ...current,
+        objects: current.objects.map((object) => (
+          object.id === drawingRef.current
+            ? { ...object, path: [...(object.path || []), point], updatedAt: nowIso() }
+            : object
+        )),
+      }));
+      return;
+    }
+
+    if (dragRef.current) {
+      const world = screenToWorld(event);
+      const dx = world.x - dragRef.current.start.x;
+      const dy = world.y - dragRef.current.start.y;
+      const snapSize = state.settings.snap ? 24 : 1;
+      setState((current) => ({
+        ...current,
+        objects: current.objects.map((object) => {
+          const origin = dragRef.current.origins.find((entry) => entry.id === object.id);
+          if (!origin) return object;
+          return {
+            ...object,
+            x: Math.round((origin.x + dx) / snapSize) * snapSize,
+            y: Math.round((origin.y + dy) / snapSize) * snapSize,
+            updatedAt: nowIso(),
+          };
+        }),
+      }));
+      return;
+    }
+
+    if (panRef.current) {
+      setViewport({
+        pan: {
+          x: event.clientX - panRef.current.startX + panRef.current.originX,
+          y: event.clientY - panRef.current.startY + panRef.current.originY,
+        },
+      });
+    }
+  }
+
+  function handlePointerUp() {
+    dragRef.current = null;
+    panRef.current = null;
+    drawingRef.current = null;
+  }
+
+  function zoomAtPoint(nextZoom, event) {
+    const rect = canvasRef.current?.getBoundingClientRect();
+    if (!rect) {
+      setViewport({ zoom: nextZoom });
+      return;
+    }
+    const pointX = event.clientX - rect.left;
+    const pointY = event.clientY - rect.top;
+    const worldX = (pointX - state.viewport.pan.x) / state.viewport.zoom;
+    const worldY = (pointY - state.viewport.pan.y) / state.viewport.zoom;
+    setViewport({
+      zoom: nextZoom,
+      pan: {
+        x: pointX - worldX * nextZoom,
+        y: pointY - worldY * nextZoom,
+      },
+    });
+  }
+
+  function handleWheel(event) {
+    event.preventDefault();
+    const direction = event.deltaY > 0 ? -1 : 1;
+    const nextZoom = Math.max(0.2, Math.min(2.5, Math.round((state.viewport.zoom + direction * 0.08) * 100) / 100));
+    zoomAtPoint(nextZoom, event);
+  }
+
+  function insertTemplate(templateKey) {
+    const nextObjects = makeProTemplateObjects(templateKey);
+    commit((current) => ({ ...current, objects: [...current.objects, ...nextObjects] }));
+    setSelectedIds(nextObjects[0] ? [nextObjects[0].id] : []);
+    setTemplateOpen(false);
+    onToast('Whiteboard template inserted.');
+  }
+
+  function exportJson() {
+    const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'dar-al-hai-whiteboard.json';
+    link.click();
+    URL.revokeObjectURL(url);
+  }
+
+  function importJson(event) {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const imported = JSON.parse(String(reader.result));
+        if (!Array.isArray(imported.objects)) throw new Error('Invalid whiteboard file');
+        if (!window.confirm('Import this backup and append its objects to the current whiteboard?')) return;
+        commit((current) => ({
+          ...current,
+          objects: [...current.objects, ...imported.objects.map((object) => ({ ...object, id: createId(`pro-${object.type || 'object'}`) }))],
+        }));
+        onToast('Whiteboard backup imported.');
+      } catch {
+        onToast('Could not import that whiteboard file.');
+      }
+    };
+    reader.readAsText(file);
+    event.target.value = '';
+  }
+
+  function uploadImage(event) {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      const isImage = file.type.startsWith('image/');
+      addObject(isImage ? 'image' : 'file', {
+        src: isImage ? String(reader.result) : '',
+        fileName: file.name,
+        text: file.name,
+      });
+      onToast(isImage ? 'Image added to whiteboard.' : 'File card added to whiteboard.');
+    };
+    reader.readAsDataURL(file);
+    event.target.value = '';
+  }
+
+  function fitToContent() {
+    if (!state.objects.length) {
+      setViewport({ zoom: 1, pan: { x: 0, y: 0 } });
+      return;
+    }
+    const minX = Math.min(...state.objects.map((object) => object.x));
+    const minY = Math.min(...state.objects.map((object) => object.y));
+    setViewport({ zoom: 0.9, pan: { x: 80 - minX * 0.9, y: 80 - minY * 0.9 } });
+  }
+
+  function addComment(id, text) {
+    updateObject(id, {
+      comments: [...(state.objects.find((object) => object.id === id)?.comments || []), { id: createId('comment'), text, createdAt: nowIso() }],
+    });
+  }
+
+  useEffect(() => {
+    function handleKey(event) {
+      const activeTag = document.activeElement?.tagName?.toLowerCase();
+      if (['input', 'textarea', 'select'].includes(activeTag || '')) return;
+      const modifier = event.ctrlKey || event.metaKey;
+      if ((event.key === 'Delete' || event.key === 'Backspace') && selectedIds.length) {
+        event.preventDefault();
+        commit((current) => ({ ...current, objects: current.objects.filter((object) => !selectedIds.includes(object.id)) }));
+        setSelectedIds([]);
+      }
+      if (modifier && event.key.toLowerCase() === 'z') {
+        event.preventDefault();
+        undo();
+      }
+      if (modifier && ['y', 'd'].includes(event.key.toLowerCase())) {
+        event.preventDefault();
+        if (event.key.toLowerCase() === 'y') redo();
+        if (event.key.toLowerCase() === 'd' && selectedIds[0]) duplicateObject(selectedIds[0]);
+      }
+      if (modifier && event.key.toLowerCase() === 'c' && selectedIds[0]) {
+        window.localStorage.setItem('dar-al-hai-pro-whiteboard-clipboard', JSON.stringify(state.objects.filter((object) => selectedIds.includes(object.id))));
+      }
+      if (modifier && event.key.toLowerCase() === 'v') {
+        const copied = JSON.parse(window.localStorage.getItem('dar-al-hai-pro-whiteboard-clipboard') || '[]');
+        if (copied.length) {
+          const pasted = copied.map((object) => ({ ...object, id: createId(`pro-${object.type}`), x: object.x + 40, y: object.y + 40, zIndex: Date.now() }));
+          commit((current) => ({ ...current, objects: [...current.objects, ...pasted] }));
+          setSelectedIds(pasted.map((object) => object.id));
+        }
+      }
+      if (event.key === 'Escape') setSelectedIds([]);
+    }
+
+    window.addEventListener('keydown', handleKey);
+    return () => window.removeEventListener('keydown', handleKey);
+    // Keyboard shortcuts intentionally read the latest selected IDs and board state in this component.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedIds, state]);
+
+  return (
+    <section className="pro-wb-overlay" aria-label="Advanced whiteboard">
+      <header className="pro-wb-header">
+        <div>
+          <p>Engineering Workspace</p>
+          <h2>Pro Whiteboard</h2>
+          <span>Infinite canvas for workshops, mapping, diagrams, comments, votes, and planning.</span>
+        </div>
+        <div className="pro-wb-header-actions">
+          <ProWhiteboardTimer timer={state.timer} onChange={(timer) => setState((current) => ({ ...current, timer }))} />
+          <Button type="button" variant="secondary" onClick={onClose}>Back to idea board</Button>
+        </div>
+      </header>
+
+      <ProWhiteboardToolbar
+        tool={tool}
+        setTool={setTool}
+        onAdd={addObject}
+        onUndo={undo}
+        onRedo={redo}
+        canUndo={history.past.length > 0}
+        canRedo={history.future.length > 0}
+        onTemplate={() => setTemplateOpen((current) => !current)}
+        onExport={exportJson}
+        onImportClick={() => importRef.current?.click()}
+        onImageClick={() => fileRef.current?.click()}
+        grid={state.settings.grid}
+        snap={state.settings.snap}
+        onToggleGrid={() => setState((current) => ({ ...current, settings: { ...current.settings, grid: !current.settings.grid } }))}
+        onToggleSnap={() => setState((current) => ({ ...current, settings: { ...current.settings, snap: !current.settings.snap } }))}
+        onFit={fitToContent}
+        zoom={state.viewport.zoom}
+        onZoomIn={() => setViewport({ zoom: Math.min(2.5, state.viewport.zoom + 0.1) })}
+        onZoomOut={() => setViewport({ zoom: Math.max(0.2, state.viewport.zoom - 0.1) })}
+        onResetZoom={() => setViewport({ zoom: 1, pan: { x: 0, y: 0 } })}
+      />
+      {templateOpen && <ProWhiteboardTemplates onInsert={insertTemplate} onClose={() => setTemplateOpen(false)} />}
+      <input ref={fileRef} type="file" className="pro-wb-hidden-input" accept="image/*,.pdf,.doc,.docx" onChange={uploadImage} />
+      <input ref={importRef} type="file" className="pro-wb-hidden-input" accept="application/json,.json" onChange={importJson} />
+
+      <div className="pro-wb-layout">
+        <div
+          ref={canvasRef}
+          className={state.settings.grid ? 'pro-wb-canvas pro-wb-canvas-grid' : 'pro-wb-canvas'}
+          onPointerDown={handleCanvasPointerDown}
+          onPointerMove={handlePointerMove}
+          onPointerUp={handlePointerUp}
+          onPointerLeave={handlePointerUp}
+          onWheel={handleWheel}
+          onDoubleClick={(event) => {
+            const world = screenToWorld(event);
+            addObject('sticky', { x: world.x, y: world.y });
+          }}
+        >
+          <div
+            className="pro-wb-stage"
+            style={{
+              transform: `matrix(${state.viewport.zoom}, 0, 0, ${state.viewport.zoom}, ${state.viewport.pan.x}, ${state.viewport.pan.y})`,
+            }}
+          >
+            {state.objects.map((object) => (
+              <ProWhiteboardObject
+                key={object.id}
+                object={object}
+                tool={tool}
+                selected={selectedIds.includes(object.id)}
+                onSelect={(id, additive) => setSelectedIds((current) => (additive ? Array.from(new Set([...current, id])) : [id]))}
+                onPointerDown={handleObjectPointerDown}
+                onChange={updateObject}
+                onVote={(id) => updateObject(id, { votes: (state.objects.find((entry) => entry.id === id)?.votes || 0) + 1 })}
+                onDuplicate={duplicateObject}
+                onDelete={deleteObject}
+              />
+            ))}
+          </div>
+          <div className="pro-wb-minimap" aria-hidden="true">
+            {state.objects.slice(0, 60).map((object) => (
+              <span
+                key={object.id}
+                style={{
+                  left: `${Math.max(4, Math.min(94, object.x / 22))}%`,
+                  top: `${Math.max(4, Math.min(88, object.y / 18))}%`,
+                  width: `${Math.max(4, object.width / 60)}%`,
+                }}
+              />
+            ))}
+          </div>
+        </div>
+        <ProWhiteboardProperties
+          object={selectedObject}
+          onChange={updateObject}
+          onDuplicate={duplicateObject}
+          onDelete={deleteObject}
+          onLayer={(id, direction) => updateObject(id, { zIndex: (state.objects.find((object) => object.id === id)?.zIndex || 1) + direction * 1000 })}
+          onAddComment={addComment}
+        />
+      </div>
+    </section>
+  );
+}
+
 function CanvasCreativeArea({ onToast }) {
   const canvasRef = useRef(null);
   const boardRef = useRef(null);
@@ -1063,6 +2041,7 @@ function CanvasCreativeArea({ onToast }) {
   const [items, setItems] = useState(() => defaultBoardItems());
   const [selectedId, setSelectedId] = useState('');
   const [templatesOpen, setTemplatesOpen] = useState(false);
+  const [proWhiteboardOpen, setProWhiteboardOpen] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [zoom, setZoom] = useState(1);
   const [pan, setPan] = useState({ x: 0, y: 0 });
@@ -1287,6 +2266,12 @@ function CanvasCreativeArea({ onToast }) {
 
   return (
     <div ref={boardRef} className={isFullscreen ? 'eng-creative-space eng-board-fullscreen' : 'eng-creative-space'}>
+      {proWhiteboardOpen && (
+        <AdvancedWhiteboard
+          onClose={() => setProWhiteboardOpen(false)}
+          onToast={onToast}
+        />
+      )}
       <CreativeTemplateGallery
         open={templatesOpen}
         onClose={() => setTemplatesOpen(false)}
@@ -1318,6 +2303,7 @@ function CanvasCreativeArea({ onToast }) {
             onClear={clearCanvas}
             onSave={saveBoard}
             onResetView={resetView}
+            onOpenProWhiteboard={() => setProWhiteboardOpen(true)}
           />
           <div
             ref={canvasRef}
