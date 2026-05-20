@@ -1081,6 +1081,10 @@ function CanvasCreativeArea({ onToast }) {
   const [selectedId, setSelectedId] = useState('');
   const [templatesOpen, setTemplatesOpen] = useState(false);
   const selectedItem = items.find((item) => item.id === selectedId) || null;
+  const canvasHeight = useMemo(() => {
+    const bottomEdge = items.reduce((max, item) => Math.max(max, (item.y || 0) + (item.height || 0)), 0);
+    return Math.max(820, bottomEdge + 220);
+  }, [items]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -1229,6 +1233,7 @@ function CanvasCreativeArea({ onToast }) {
           <div
             ref={canvasRef}
             className="eng-canvas"
+            style={{ minHeight: canvasHeight }}
             onPointerMove={handlePointerMove}
             onPointerUp={handlePointerUp}
             onPointerLeave={handlePointerUp}
@@ -1587,16 +1592,7 @@ function CreativeArea({ onToast }) {
       {activeView === 'board'
         ? (
           <div className="eng-doc-board-view">
-            <div className="eng-doc-native-header">
-              <div>
-                <p>Engineering Workspace</p>
-                <h2>Idea Board</h2>
-                <span>Sketch visual workflows, sticky notes, and wireframes.</span>
-              </div>
-              <div>
-                <button type="button" onClick={() => setActiveView('docs')}>Back to documents</button>
-              </div>
-            </div>
+            <button type="button" className="eng-board-back-floating" onClick={() => setActiveView('docs')}>Back to documents</button>
             <CanvasCreativeArea onToast={onToast} />
           </div>
         )
@@ -1782,6 +1778,7 @@ export default function EngineeringWorkspace() {
       title={title}
       description={description}
       actions={<WorkspaceTabs activeTab={activeTab} onTabChange={setActiveTab} />}
+      contentClassName="eng-workspace-content"
     >
       <Toast message={toast} type="info" onClose={() => setToast('')} />
       <section className="eng-workspace-shell">
