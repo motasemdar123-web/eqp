@@ -1090,6 +1090,7 @@ function CreativeTemplateGallery({ open, onClose, onUseTemplate }) {
 
 function CanvasCreativeArea({ onToast }) {
   const canvasRef = useRef(null);
+  const boardRef = useRef(null);
   const dragRef = useRef(null);
   const [items, setItems] = useState(() => defaultBoardItems());
   const [selectedId, setSelectedId] = useState('');
@@ -1106,6 +1107,15 @@ function CanvasCreativeArea({ onToast }) {
       setItems(loadStoredItems(BOARD_KEY, defaultBoardItems));
     }, 0);
     return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    function handleFullscreenChange() {
+      setIsFullscreen(document.fullscreenElement === boardRef.current);
+    }
+
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
   }, []);
 
   useEffect(() => {
@@ -1226,8 +1236,23 @@ function CanvasCreativeArea({ onToast }) {
     dragRef.current = null;
   }
 
+  async function toggleFullscreen() {
+    try {
+      if (document.fullscreenElement) {
+        await document.exitFullscreen();
+        setIsFullscreen(false);
+        return;
+      }
+
+      await boardRef.current?.requestFullscreen();
+      setIsFullscreen(true);
+    } catch {
+      setIsFullscreen((current) => !current);
+    }
+  }
+
   return (
-    <div className={isFullscreen ? 'eng-creative-space eng-board-fullscreen' : 'eng-creative-space'}>
+    <div ref={boardRef} className={isFullscreen ? 'eng-creative-space eng-board-fullscreen' : 'eng-creative-space'}>
       <CreativeTemplateGallery
         open={templatesOpen}
         onClose={() => setTemplatesOpen(false)}
@@ -1235,6 +1260,14 @@ function CanvasCreativeArea({ onToast }) {
       />
       <div className={selectedItem ? 'eng-creative-grid eng-creative-grid-selected' : 'eng-creative-grid'}>
         <section className="eng-board-shell">
+          <button
+            type="button"
+            className="eng-board-fullscreen-button"
+            onClick={toggleFullscreen}
+            aria-label={isFullscreen ? 'Exit whiteboard fullscreen' : 'Enter whiteboard fullscreen'}
+          >
+            {isFullscreen ? 'Exit full screen' : 'Full screen'}
+          </button>
           <CanvasToolbar
             onOpenTemplates={() => setTemplatesOpen(true)}
             onAddSticky={() => addItem('sticky')}
@@ -1244,7 +1277,7 @@ function CanvasCreativeArea({ onToast }) {
             onClear={clearCanvas}
             onSave={saveBoard}
             onResetView={resetView}
-            onToggleFullscreen={() => setIsFullscreen((current) => !current)}
+            onToggleFullscreen={toggleFullscreen}
             isFullscreen={isFullscreen}
           />
           <div

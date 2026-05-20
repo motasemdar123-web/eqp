@@ -2840,8 +2840,31 @@ textarea {
 }
 
 .eng-doc-board-view .eng-board-shell {
+  position: relative;
   min-height: calc(100vh - 5.25rem);
   border-radius: 18px;
+}
+
+.eng-board-fullscreen-button {
+  position: absolute;
+  top: 0.85rem;
+  right: 0.85rem;
+  z-index: 20;
+  min-height: 2.15rem;
+  border: 1px solid rgba(221, 231, 242, 0.9);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.94);
+  color: var(--color-brand);
+  box-shadow: 0 16px 34px rgba(31, 91, 153, 0.12);
+  padding: 0 0.85rem;
+  font-size: 0.74rem;
+  font-weight: 900;
+  backdrop-filter: blur(14px);
+}
+
+.eng-board-fullscreen-button:hover {
+  border-color: rgba(15, 140, 240, 0.32);
+  background: var(--color-brand-soft);
 }
 
 .eng-doc-board-view .eng-canvas-toolbar {
@@ -2898,12 +2921,20 @@ textarea {
   box-shadow: none;
 }
 
+.eng-board-fullscreen .eng-board-fullscreen-button,
+.eng-doc-board-view .eng-board-fullscreen .eng-board-fullscreen-button {
+  position: fixed;
+  top: 0.9rem;
+  right: 0.9rem;
+  z-index: 134;
+}
+
 .eng-board-fullscreen .eng-canvas-toolbar,
 .eng-doc-board-view .eng-board-fullscreen .eng-canvas-toolbar {
   position: fixed;
   top: 0.8rem;
   left: 0.8rem;
-  right: 0.8rem;
+  right: 9.75rem;
   z-index: 130;
   width: auto;
   max-width: none;
