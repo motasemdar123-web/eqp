@@ -412,6 +412,7 @@ a:focus-visible {
   background: #ffffff;
   padding: 1.6rem 1.25rem 1.25rem;
   transition: padding 180ms ease;
+  isolation: isolate;
 }
 
 .ds-sidebar-top {
@@ -419,6 +420,7 @@ a:focus-visible {
   align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
+  position: relative;
 }
 
 .ds-sidebar-brand {
@@ -451,18 +453,22 @@ a:focus-visible {
 }
 
 .ds-sidebar-toggle {
+  position: absolute;
+  top: 0.95rem;
+  right: -1.05rem;
+  z-index: 35;
   display: grid;
-  width: 2rem;
-  min-width: 2rem;
-  height: 2rem;
+  width: 2.1rem;
+  min-width: 2.1rem;
+  height: 2.1rem;
   place-items: center;
-  border: 1px solid var(--color-border);
-  border-radius: 10px;
-  background: var(--color-surface-muted);
-  color: var(--color-ink-soft);
-  font-size: 0.9rem;
+  border: 1px solid rgba(15, 140, 240, 0.2);
+  border-radius: 999px;
+  background: #ffffff;
+  color: var(--color-brand);
   font-weight: 900;
   line-height: 1;
+  box-shadow: 0 12px 26px rgba(37, 58, 87, 0.14);
   transition: background-color 160ms ease, color 160ms ease, transform 160ms ease;
 }
 
@@ -470,6 +476,35 @@ a:focus-visible {
   background: var(--color-brand-soft);
   color: var(--color-brand);
   transform: translateY(-1px);
+}
+
+.ds-sidebar-toggle-lines {
+  position: relative;
+  display: block;
+  width: 0.85rem;
+  height: 0.85rem;
+}
+
+.ds-sidebar-toggle-lines::before,
+.ds-sidebar-toggle-lines::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 0.55rem;
+  height: 0.12rem;
+  border-radius: 999px;
+  background: currentColor;
+  transform-origin: center;
+}
+
+.ds-sidebar-toggle-lines::before {
+  left: 0.12rem;
+  transform: translateY(-50%) rotate(45deg);
+}
+
+.ds-sidebar-toggle-lines::after {
+  right: 0.12rem;
+  transform: translateY(-50%) rotate(-45deg);
 }
 
 .ds-sidebar-nav {
@@ -519,8 +554,16 @@ a:focus-visible {
   border-radius: 8px;
   background: #f1f6fb;
   color: inherit;
-  font-size: 0.62rem;
-  font-weight: 950;
+}
+
+.ds-nav-svg {
+  width: 1rem;
+  height: 1rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .ds-side-nav-link-active .ds-side-nav-icon {
@@ -573,6 +616,50 @@ a:focus-visible {
 .ds-sidebar-collapsed .ds-app-sidebar {
   align-items: center;
   padding: 1rem 0.75rem;
+}
+
+.ds-sidebar-collapsed .ds-sidebar-toggle {
+  position: static;
+  width: 2.25rem;
+  height: 2.25rem;
+  margin-bottom: 0.75rem;
+  border-radius: 12px;
+  background: var(--color-brand);
+  color: #ffffff;
+  box-shadow: 0 12px 24px rgba(15, 140, 240, 0.18);
+}
+
+.ds-sidebar-collapsed .ds-sidebar-toggle-lines {
+  width: 1rem;
+  height: 0.72rem;
+}
+
+.ds-sidebar-collapsed .ds-sidebar-toggle-lines,
+.ds-sidebar-collapsed .ds-sidebar-toggle-lines::before,
+.ds-sidebar-collapsed .ds-sidebar-toggle-lines::after {
+  border-radius: 999px;
+  background: currentColor;
+}
+
+.ds-sidebar-collapsed .ds-sidebar-toggle-lines {
+  box-shadow: 0 0.34rem 0 currentColor;
+}
+
+.ds-sidebar-collapsed .ds-sidebar-toggle-lines::before,
+.ds-sidebar-collapsed .ds-sidebar-toggle-lines::after {
+  left: 0;
+  right: auto;
+  width: 1rem;
+  height: 0.12rem;
+  transform: none;
+}
+
+.ds-sidebar-collapsed .ds-sidebar-toggle-lines::before {
+  top: 0;
+}
+
+.ds-sidebar-collapsed .ds-sidebar-toggle-lines::after {
+  top: 0.68rem;
 }
 
 .ds-sidebar-collapsed .ds-sidebar-top {

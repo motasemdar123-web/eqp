@@ -7,19 +7,107 @@ import { clearStoredUser, getStoredPlatformSession, getStoredUser } from '../lib
 import { getNotifications, markAllNotificationsRead, markNotificationRead } from '../lib/api';
 
 const navItems = [
-  { href: '/management', label: 'Dashboard', code: 'DB' },
-  { href: '/management/technicians', label: 'Technicians', code: 'TM' },
-  { href: '/management/scheduling', label: 'Scheduling', code: 'SC' },
-  { href: '/workspace', label: 'Workspace', code: 'WS' },
-  { href: '/eqp/generate-reports', label: 'EQP Reports', code: 'EQ' },
-  { href: '/eqp/machines', label: 'Machines', code: 'MA' },
-  { href: '/eqp/reports', label: 'PDF Archive', code: 'PA' },
+  { href: '/management', label: 'Dashboard', icon: 'dashboard' },
+  { href: '/management/technicians', label: 'Technicians', icon: 'users' },
+  { href: '/management/scheduling', label: 'Scheduling', icon: 'calendar' },
+  { href: '/workspace', label: 'Workspace', icon: 'workspace' },
+  { href: '/eqp/generate-reports', label: 'EQP Reports', icon: 'report' },
+  { href: '/eqp/machines', label: 'Machines', icon: 'machine' },
+  { href: '/eqp/reports', label: 'PDF Archive', icon: 'archive' },
 ];
 
 const supportItems = [
-  { href: '/eqp', label: 'EQP Hub', code: 'EH' },
-  { href: '/technician', label: 'Technician App', code: 'TA' },
+  { href: '/eqp', label: 'EQP Hub', icon: 'hub' },
+  { href: '/technician', label: 'Technician App', icon: 'mobile' },
 ];
+
+const iconPaths = {
+  dashboard: (
+    <>
+      <path d="M4 5.5h6v5H4z" />
+      <path d="M14 5.5h6v3.5h-6z" />
+      <path d="M14 13h6v5.5h-6z" />
+      <path d="M4 14.5h6v4H4z" />
+    </>
+  ),
+  users: (
+    <>
+      <path d="M9.5 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z" />
+      <path d="M3.5 20a6 6 0 0 1 12 0" />
+      <path d="M16 11.5a3 3 0 1 0-.5-5.95" />
+      <path d="M17 15.5a5 5 0 0 1 3.5 4.5" />
+    </>
+  ),
+  calendar: (
+    <>
+      <path d="M6 4v3" />
+      <path d="M18 4v3" />
+      <path d="M4.5 8h15" />
+      <path d="M5 6h14v14H5z" />
+      <path d="M8 12h2" />
+      <path d="M14 12h2" />
+      <path d="M8 16h2" />
+    </>
+  ),
+  workspace: (
+    <>
+      <path d="M5 5h14v14H5z" />
+      <path d="M8 9h4" />
+      <path d="M8 13h8" />
+      <path d="M8 17h5" />
+      <path d="M15.5 7.5l1 1 2-2" />
+    </>
+  ),
+  report: (
+    <>
+      <path d="M7 4.5h7l3 3V20H7z" />
+      <path d="M14 4.5V8h3.5" />
+      <path d="M9.5 12h5" />
+      <path d="M9.5 15h5" />
+      <path d="M9.5 18h3" />
+    </>
+  ),
+  machine: (
+    <>
+      <path d="M4 15h12l2-5h-5l-2 3H8" />
+      <path d="M6 18.5h11" />
+      <path d="M7 18.5a2 2 0 1 0 0-4 2 2 0 0 0 0 4z" />
+      <path d="M16 18.5a2 2 0 1 0 0-4 2 2 0 0 0 0 4z" />
+      <path d="M12 10V6h4" />
+    </>
+  ),
+  archive: (
+    <>
+      <path d="M4 6h16v4H4z" />
+      <path d="M6 10h12v10H6z" />
+      <path d="M9 14h6" />
+    </>
+  ),
+  hub: (
+    <>
+      <path d="M12 12m-3 0a3 3 0 1 0 6 0 3 3 0 1 0-6 0" />
+      <path d="M12 4v5" />
+      <path d="M12 15v5" />
+      <path d="M4 12h5" />
+      <path d="M15 12h5" />
+    </>
+  ),
+  mobile: (
+    <>
+      <path d="M8 3.5h8v17H8z" />
+      <path d="M11 17.5h2" />
+      <path d="M10 6.5h4" />
+    </>
+  ),
+};
+
+function NavIcon({ name }) {
+  return (
+    <svg className="ds-nav-svg" viewBox="0 0 24 24" aria-hidden="true">
+      {iconPaths[name] || iconPaths.dashboard}
+    </svg>
+  );
+}
 
 function getSessionUser() {
   const platformSession = getStoredPlatformSession();
@@ -170,6 +258,15 @@ export default function SystemShell({
   return (
     <div className={`ds-shell ds-reference-shell ${sidebarCollapsed ? 'ds-sidebar-collapsed' : ''}`}>
       <aside className="ds-app-sidebar">
+        <button
+          type="button"
+          className="ds-sidebar-toggle"
+          onClick={toggleSidebar}
+          aria-label={sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+          title={sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+        >
+          <span className="ds-sidebar-toggle-lines" aria-hidden="true" />
+        </button>
         <div className="ds-sidebar-top">
           <Link href="/management" className="ds-sidebar-brand" aria-label="Dar Al Hai dashboard">
             <span className="ds-sidebar-mark">DH</span>
@@ -178,15 +275,6 @@ export default function SystemShell({
               <span className="mt-1 block text-[0.64rem] font-black uppercase tracking-[0.18em] text-[var(--color-muted)]">Maintenance</span>
             </span>
           </Link>
-          <button
-            type="button"
-            className="ds-sidebar-toggle"
-            onClick={toggleSidebar}
-            aria-label={sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-            title={sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-          >
-            {sidebarCollapsed ? '>' : '<'}
-          </button>
         </div>
 
         <nav className="ds-sidebar-nav" aria-label="Primary navigation">
@@ -201,7 +289,7 @@ export default function SystemShell({
                 className={`ds-side-nav-link ${active ? 'ds-side-nav-link-active' : ''}`}
                 title={item.label}
               >
-                <span className="ds-side-nav-icon">{item.code}</span>
+                <span className="ds-side-nav-icon"><NavIcon name={item.icon} /></span>
                 <span className="ds-nav-label truncate">{item.label}</span>
               </Link>
             );
@@ -218,7 +306,7 @@ export default function SystemShell({
                 className={`ds-side-nav-link ${active ? 'ds-side-nav-link-active' : ''}`}
                 title={item.label}
               >
-                <span className="ds-side-nav-icon">{item.code}</span>
+                <span className="ds-side-nav-icon"><NavIcon name={item.icon} /></span>
                 <span className="ds-nav-label truncate">{item.label}</span>
               </Link>
             );
