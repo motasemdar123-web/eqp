@@ -406,6 +406,419 @@ function PropertiesPanel({ selectedItem, onChange, onDelete, onDuplicate }) {
   );
 }
 
+const creativeTemplateCards = {
+  quick: [
+    {
+      key: 'empty-page',
+      title: 'Empty page',
+      subtitle: 'Start from a clean canvas.',
+      icon: 'document',
+      tone: 'neutral',
+    },
+    {
+      key: 'empty-database',
+      title: 'Empty database',
+      subtitle: 'Sketch a structured table.',
+      icon: 'database',
+      tone: 'neutral',
+    },
+    {
+      key: 'ai-build',
+      title: 'Build with AI',
+      subtitle: 'Start with a guided idea board.',
+      icon: 'spark',
+      tone: 'neutral',
+    },
+  ],
+  suggested: [
+    {
+      key: 'tasks-tracker',
+      title: 'Tasks Tracker',
+      subtitle: 'Stay organized with tasks, your way.',
+      icon: 'check',
+      tone: 'green',
+      columns: ['Task name', 'Status', 'Assignee'],
+      rows: [
+        ['Inspect pump line', 'Not started', 'MG'],
+        ['Check oil temp', 'In progress', 'SA'],
+        ['Close EQP report', 'Done', 'AK'],
+      ],
+    },
+    {
+      key: 'projects',
+      title: 'Projects',
+      subtitle: 'Manage projects start to finish.',
+      icon: 'loop',
+      tone: 'blue',
+      columns: ['Backlog', 'In progress', 'Done'],
+      rows: [
+        ['Inspection app', 'EQP review', 'Shift flow'],
+        ['PDF viewer', 'Machine tags', 'Safety log'],
+      ],
+    },
+    {
+      key: 'document-hub',
+      title: 'Document Hub',
+      subtitle: 'Collaborate on docs in one hub.',
+      icon: 'file',
+      tone: 'red',
+      columns: ['Doc name', 'Created by', 'Created time'],
+      rows: [
+        ['Pressure test SOP', 'MG', 'Today'],
+        ['Cooling notes', 'SA', '09:30'],
+        ['Report checklist', 'AK', '11:00'],
+      ],
+    },
+    {
+      key: 'brainstorm',
+      title: 'Brainstorm Session',
+      subtitle: 'Spark new ideas together.',
+      icon: 'bulb',
+      tone: 'orange',
+      columns: ['Idea', 'Owner', 'Priority'],
+      rows: [
+        ['Technician routing', 'MG', 'High'],
+        ['Manual matching', 'SA', 'Medium'],
+        ['Safety prompts', 'AK', 'Low'],
+      ],
+    },
+    {
+      key: 'meeting-notes',
+      title: 'Meeting Notes',
+      subtitle: 'Turn meetings into action.',
+      icon: 'calendar',
+      tone: 'yellow',
+      columns: ['Meeting name', 'Date', 'Category'],
+      rows: [
+        ['Morning brief', 'Today', 'Standup'],
+        ['EQP review', 'Thu', 'Planning'],
+        ['Safety sync', 'Sun', 'Action'],
+      ],
+    },
+    {
+      key: 'goals-tracker',
+      title: 'Goals Tracker',
+      subtitle: 'Set team goals, achieve together.',
+      icon: 'flag',
+      tone: 'blue',
+      columns: ['Goal name', 'Owner', 'Status'],
+      rows: [
+        ['Reduce repeat faults', 'MG', 'Done'],
+        ['Improve upload flow', 'SA', 'Not started'],
+        ['Raise SLA readiness', 'AK', 'In progress'],
+      ],
+    },
+  ],
+};
+
+function makeTemplateItems(templateKey) {
+  const createdAt = nowIso();
+  const makeItem = (type, patch) => ({
+    id: createId(type),
+    type,
+    createdAt,
+    updatedAt: createdAt,
+    ...patch,
+  });
+
+  if (templateKey === 'empty-page') return [];
+
+  if (templateKey === 'empty-database') {
+    return [
+      makeItem('frame', {
+        label: 'Engineering Database',
+        x: 58,
+        y: 54,
+        width: 650,
+        height: 360,
+      }),
+      makeItem('wireframe', {
+        wireType: 'Table',
+        label: 'Maintenance Items Table',
+        x: 96,
+        y: 130,
+        width: 560,
+        height: 210,
+      }),
+      makeItem('sticky', {
+        label: 'Add columns for machine, owner, status, and due date',
+        color: 'blue',
+        x: 742,
+        y: 84,
+        width: 220,
+        height: 136,
+      }),
+    ];
+  }
+
+  if (templateKey === 'ai-build') {
+    return [
+      makeItem('frame', {
+        label: 'AI-Assisted Engineering Flow',
+        x: 56,
+        y: 54,
+        width: 720,
+        height: 420,
+      }),
+      makeItem('sticky', {
+        label: 'Describe the maintenance challenge',
+        color: 'purple',
+        x: 96,
+        y: 132,
+        width: 210,
+        height: 126,
+      }),
+      makeItem('sticky', {
+        label: 'Generate possible root causes',
+        color: 'yellow',
+        x: 340,
+        y: 132,
+        width: 210,
+        height: 126,
+      }),
+      makeItem('sticky', {
+        label: 'Turn best idea into action plan',
+        color: 'green',
+        x: 584,
+        y: 132,
+        width: 210,
+        height: 126,
+      }),
+      makeItem('wireframe', {
+        wireType: 'Checklist',
+        label: 'Validation checklist',
+        x: 104,
+        y: 306,
+        width: 300,
+        height: 140,
+      }),
+      makeItem('wireframe', {
+        wireType: 'Card',
+        label: 'Recommended next step',
+        x: 440,
+        y: 306,
+        width: 300,
+        height: 140,
+      }),
+    ];
+  }
+
+  if (templateKey === 'tasks-tracker') {
+    return [
+      makeItem('frame', { label: 'Tasks Tracker', x: 50, y: 48, width: 820, height: 420 }),
+      makeItem('wireframe', { wireType: 'Table', label: 'Task name | Status | Assignee', x: 88, y: 126, width: 560, height: 230 }),
+      makeItem('sticky', { label: 'Todo: inspect hydraulic temperature', color: 'yellow', x: 690, y: 126, width: 210, height: 112 }),
+      makeItem('sticky', { label: 'In progress: review EQP upload', color: 'blue', x: 690, y: 260, width: 210, height: 112 }),
+      makeItem('text', { label: 'Use this board for quick daily visibility before dispatch.', x: 90, y: 382, width: 470, height: 64 }),
+    ];
+  }
+
+  if (templateKey === 'projects') {
+    return [
+      makeItem('frame', { label: 'Maintenance Improvement Projects', x: 52, y: 50, width: 900, height: 440 }),
+      makeItem('wireframe', { wireType: 'Card', label: 'Backlog', x: 96, y: 132, width: 220, height: 230 }),
+      makeItem('wireframe', { wireType: 'Card', label: 'In Progress', x: 352, y: 132, width: 220, height: 230 }),
+      makeItem('wireframe', { wireType: 'Card', label: 'Done', x: 608, y: 132, width: 220, height: 230 }),
+      makeItem('sticky', { label: 'Machine inspection workflow redesign', color: 'green', x: 116, y: 184, width: 170, height: 92 }),
+      makeItem('sticky', { label: 'Manual page viewer refinement', color: 'blue', x: 372, y: 184, width: 170, height: 92 }),
+      makeItem('sticky', { label: 'Technician assignment cleanup', color: 'purple', x: 628, y: 184, width: 170, height: 92 }),
+    ];
+  }
+
+  if (templateKey === 'document-hub') {
+    return [
+      makeItem('frame', { label: 'Document Hub', x: 50, y: 48, width: 760, height: 410 }),
+      makeItem('wireframe', { wireType: 'Table', label: 'Doc name | Created by | Created time', x: 92, y: 126, width: 610, height: 220 }),
+      makeItem('sticky', { label: 'Pressure testing SOP', color: 'pink', x: 748, y: 106, width: 210, height: 118 }),
+      makeItem('sticky', { label: 'Cooling system observations', color: 'blue', x: 748, y: 246, width: 210, height: 118 }),
+    ];
+  }
+
+  if (templateKey === 'brainstorm') {
+    return [
+      makeItem('frame', { label: 'Brainstorm Session', x: 48, y: 48, width: 850, height: 430 }),
+      makeItem('sticky', { label: 'Improve daily technician assignment', color: 'yellow', x: 94, y: 132, width: 190, height: 128 }),
+      makeItem('sticky', { label: 'Better EQP report workflow', color: 'pink', x: 318, y: 132, width: 190, height: 128 }),
+      makeItem('sticky', { label: 'Link manual pages directly to tasks', color: 'blue', x: 542, y: 132, width: 190, height: 128 }),
+      makeItem('sticky', { label: 'Surface safety warnings before dispatch', color: 'green', x: 206, y: 296, width: 190, height: 128 }),
+      makeItem('sticky', { label: 'Add approvals for critical maintenance', color: 'purple', x: 430, y: 296, width: 190, height: 128 }),
+    ];
+  }
+
+  if (templateKey === 'meeting-notes') {
+    return [
+      makeItem('frame', { label: 'Meeting Notes', x: 50, y: 48, width: 820, height: 430 }),
+      makeItem('wireframe', { wireType: 'Header', label: 'Morning Maintenance Brief', x: 92, y: 118, width: 520, height: 76 }),
+      makeItem('wireframe', { wireType: 'Checklist', label: 'Action Items', x: 92, y: 230, width: 340, height: 160 }),
+      makeItem('sticky', { label: 'Decision: assign region groups earlier', color: 'yellow', x: 664, y: 118, width: 210, height: 120 }),
+      makeItem('sticky', { label: 'Risk: missing machine references in reports', color: 'pink', x: 664, y: 268, width: 210, height: 120 }),
+    ];
+  }
+
+  if (templateKey === 'goals-tracker') {
+    return [
+      makeItem('frame', { label: 'Goals Tracker', x: 50, y: 48, width: 850, height: 430 }),
+      makeItem('wireframe', { wireType: 'Chart', label: 'Readiness Progress', x: 94, y: 126, width: 360, height: 220 }),
+      makeItem('wireframe', { wireType: 'Table', label: 'Goal name | Owner | Status', x: 494, y: 126, width: 330, height: 220 }),
+      makeItem('sticky', { label: 'Target: 92% schedule coverage', color: 'green', x: 96, y: 382, width: 210, height: 92 }),
+      makeItem('sticky', { label: 'Target: reduce repeat faults', color: 'blue', x: 336, y: 382, width: 210, height: 92 }),
+      makeItem('sticky', { label: 'Target: faster report closure', color: 'purple', x: 576, y: 382, width: 210, height: 92 }),
+    ];
+  }
+
+  return defaultBoardItems();
+}
+
+function TemplateIcon({ type }) {
+  if (type === 'database') {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <rect x="4" y="5" width="16" height="14" rx="2" />
+        <path d="M4 10h16M9 5v14M15 5v14" />
+      </svg>
+    );
+  }
+
+  if (type === 'spark') {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 3l1.6 4.4L18 9l-4.4 1.6L12 15l-1.6-4.4L6 9l4.4-1.6L12 3zM18 14l.8 2.2L21 17l-2.2.8L18 20l-.8-2.2L15 17l2.2-.8L18 14z" />
+      </svg>
+    );
+  }
+
+  if (type === 'check') {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="12" cy="12" r="8" />
+        <path d="M8.5 12.2l2.2 2.2 4.8-5" />
+      </svg>
+    );
+  }
+
+  if (type === 'loop') {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M17 7a6 6 0 0 0-10 3M7 7v3h3M7 17a6 6 0 0 0 10-3m0 3v-3h-3" />
+      </svg>
+    );
+  }
+
+  if (type === 'file') {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M7 3h7l4 4v14H7zM14 3v5h5" />
+      </svg>
+    );
+  }
+
+  if (type === 'bulb') {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M9 18h6M10 21h4M8 11a4 4 0 1 1 8 0c0 2-1.4 3.1-2.2 4H10.2C9.4 14.1 8 13 8 11z" />
+      </svg>
+    );
+  }
+
+  if (type === 'calendar') {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <rect x="4" y="6" width="16" height="14" rx="2" />
+        <path d="M8 4v4M16 4v4M4 10h16" />
+      </svg>
+    );
+  }
+
+  if (type === 'flag') {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M6 21V4h10l-1 3 1 3H6" />
+      </svg>
+    );
+  }
+
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M7 3h8l3 3v15H7zM15 3v5h5" />
+    </svg>
+  );
+}
+
+function TemplatePreview({ template }) {
+  if (!template.columns) return null;
+
+  return (
+    <div className="eng-template-preview" aria-hidden="true">
+      <div className="eng-template-preview-title">
+        <TemplateIcon type={template.icon} />
+        <strong>{template.title}</strong>
+      </div>
+      <div className="eng-template-columns">
+        {template.columns.map((column) => <span key={column}>{column}</span>)}
+      </div>
+      <div className="eng-template-preview-rows">
+        {template.rows.map((row) => (
+          <div className="eng-template-preview-row" key={row.join('-')}>
+            {row.map((cell, index) => (
+              <span
+                key={`${cell}-${index}`}
+                className={index === row.length - 1 ? 'eng-template-pill' : ''}
+              >
+                {cell}
+              </span>
+            ))}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function CreativeTemplateGallery({ onUseTemplate }) {
+  return (
+    <section className="eng-template-board" aria-label="Creative area templates">
+      <div className="eng-template-intro">
+        <div>
+          <p>Creative templates</p>
+          <h2>Start with a board structure</h2>
+        </div>
+        <span>Pick a template to fill the canvas, then edit and move everything freely.</span>
+      </div>
+
+      <div className="eng-template-quick-grid">
+        {creativeTemplateCards.quick.map((template) => (
+          <button
+            key={template.key}
+            type="button"
+            className="eng-template-quick-card"
+            onClick={() => onUseTemplate(template.key, template.title)}
+          >
+            <TemplateIcon type={template.icon} />
+            <strong>{template.title}</strong>
+            <span>{template.subtitle}</span>
+          </button>
+        ))}
+      </div>
+
+      <h3>Suggested</h3>
+      <div className="eng-template-grid">
+        {creativeTemplateCards.suggested.map((template) => (
+          <button
+            key={template.key}
+            type="button"
+            className={`eng-template-card eng-template-${template.tone}`}
+            onClick={() => onUseTemplate(template.key, template.title)}
+          >
+            <strong>{template.title}</strong>
+            <span>{template.subtitle}</span>
+            <TemplatePreview template={template} />
+          </button>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 function CreativeArea({ onToast }) {
   const canvasRef = useRef(null);
   const dragRef = useRef(null);
@@ -503,6 +916,14 @@ function CreativeArea({ onToast }) {
     onToast('View reset with demo content.');
   }
 
+  function applyCreativeTemplate(templateKey, templateTitle) {
+    const nextItems = makeTemplateItems(templateKey);
+    setItems(nextItems);
+    setSelectedId(nextItems[0]?.id || '');
+    saveStoredItems(BOARD_KEY, nextItems);
+    onToast(`${templateTitle} template loaded.`);
+  }
+
   function handlePointerDown(event, item) {
     const interactive = event.target.closest('input, textarea, select, button');
     if (interactive) return;
@@ -530,50 +951,53 @@ function CreativeArea({ onToast }) {
   }
 
   return (
-    <div className="eng-creative-grid">
-      <section className="eng-board-shell">
-        <CanvasToolbar
-          onAddSticky={() => addItem('sticky')}
-          onAddWireframe={() => addItem('wireframe')}
-          onAddFrame={() => addItem('frame')}
-          onAddText={() => addItem('text')}
-          onClear={clearCanvas}
-          onSave={saveBoard}
-          onResetView={resetView}
+    <div className="eng-creative-space">
+      <CreativeTemplateGallery onUseTemplate={applyCreativeTemplate} />
+      <div className="eng-creative-grid">
+        <section className="eng-board-shell">
+          <CanvasToolbar
+            onAddSticky={() => addItem('sticky')}
+            onAddWireframe={() => addItem('wireframe')}
+            onAddFrame={() => addItem('frame')}
+            onAddText={() => addItem('text')}
+            onClear={clearCanvas}
+            onSave={saveBoard}
+            onResetView={resetView}
+          />
+          <div
+            ref={canvasRef}
+            className="eng-canvas"
+            onPointerMove={handlePointerMove}
+            onPointerUp={handlePointerUp}
+            onPointerLeave={handlePointerUp}
+            onClick={() => setSelectedId('')}
+          >
+            {items.length === 0 && (
+              <div className="eng-canvas-empty">
+                <EmptyState title="Canvas is empty" description="Add sticky notes, wireframes, frames, or labels to start mapping ideas." />
+              </div>
+            )}
+            {items.map((item) => (
+              <CanvasItem
+                key={item.id}
+                item={item}
+                selected={item.id === selectedId}
+                onSelect={setSelectedId}
+                onPointerDown={handlePointerDown}
+                onChange={updateItem}
+                onDelete={deleteItem}
+                onDuplicate={duplicateItem}
+              />
+            ))}
+          </div>
+        </section>
+        <PropertiesPanel
+          selectedItem={selectedItem}
+          onChange={updateItem}
+          onDelete={deleteItem}
+          onDuplicate={duplicateItem}
         />
-        <div
-          ref={canvasRef}
-          className="eng-canvas"
-          onPointerMove={handlePointerMove}
-          onPointerUp={handlePointerUp}
-          onPointerLeave={handlePointerUp}
-          onClick={() => setSelectedId('')}
-        >
-          {items.length === 0 && (
-            <div className="eng-canvas-empty">
-              <EmptyState title="Canvas is empty" description="Add sticky notes, wireframes, frames, or labels to start mapping ideas." />
-            </div>
-          )}
-          {items.map((item) => (
-            <CanvasItem
-              key={item.id}
-              item={item}
-              selected={item.id === selectedId}
-              onSelect={setSelectedId}
-              onPointerDown={handlePointerDown}
-              onChange={updateItem}
-              onDelete={deleteItem}
-              onDuplicate={duplicateItem}
-            />
-          ))}
-        </div>
-      </section>
-      <PropertiesPanel
-        selectedItem={selectedItem}
-        onChange={updateItem}
-        onDelete={deleteItem}
-        onDuplicate={duplicateItem}
-      />
+      </div>
     </div>
   );
 }
