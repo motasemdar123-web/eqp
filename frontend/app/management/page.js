@@ -7,7 +7,7 @@ import Badge from '../../components/ui/Badge';
 
 const kpis = [
   {
-    label: 'Assets / Modules',
+    label: 'Modules',
     metric: '3',
     unit: 'Core Modules',
     secondary: 'Active',
@@ -69,6 +69,12 @@ const governanceItems = [
   { title: 'Centralized role routing', value: '92%', width: '92%' },
 ];
 
+const governanceSummary = [
+  { value: '4', label: 'Controls' },
+  { value: '80%', label: 'Avg Readiness' },
+  { value: 'Enterprise', label: 'Status' },
+];
+
 const modules = [
   { title: 'Technicians Management', href: '/management/technicians', status: 'Live', tone: 'live', code: 'TM', description: 'Technician records, shifts, regions, skills, and dispatch availability.' },
   { title: 'Scheduling', href: '/management/scheduling', status: 'Live', tone: 'live', code: 'SC', description: 'Daily roster control, work windows, task groups, and technician assignment.' },
@@ -105,15 +111,15 @@ export default function ManagementDashboardPage() {
           {kpis.map((kpi) => (
             <article key={kpi.label} className="ds-kpi-card">
               <div className={`ds-icon-tile ${kpi.accent ? 'ds-icon-tile-accent' : ''}`}>{kpi.code}</div>
-              <div className="min-w-0 flex-1">
-                <div className="flex items-start justify-between gap-3">
-                  <p className="truncate text-xs font-black uppercase tracking-[0.14em] text-[var(--color-muted)]">{kpi.label}</p>
+              <div className="ds-kpi-content">
+                <div className="ds-kpi-head">
+                  <p className="ds-kpi-label">{kpi.label}</p>
                   <Badge tone={kpi.tone}>{kpi.status}</Badge>
                 </div>
-                <div className="mt-4">
-                  <p className="text-4xl font-black leading-none text-[var(--color-ink)]">{kpi.metric}</p>
-                  <p className="mt-1 text-sm font-black text-[var(--color-ink-soft)]">{kpi.unit}</p>
-                  <p className="mt-2 text-xs font-bold text-[var(--color-muted)]">{kpi.secondary}</p>
+                <div>
+                  <p className="ds-kpi-main">{kpi.metric}</p>
+                  <p className="ds-kpi-descriptor">{kpi.unit}</p>
+                  <p className="ds-kpi-secondary">{kpi.secondary}</p>
                 </div>
               </div>
             </article>
@@ -147,7 +153,7 @@ export default function ManagementDashboardPage() {
                 <div className="ds-donut">
                   <div className="ds-donut-core">
                     <p className="text-3xl font-black text-[var(--color-ink)]">100%</p>
-                    <p className="mt-1 text-xs font-black uppercase tracking-[0.12em] text-[var(--color-muted)]">Coverage</p>
+                    <p className="mt-1 text-xs font-black uppercase tracking-[0.12em] text-[var(--color-muted)]">Live Mix</p>
                   </div>
                 </div>
               </div>
@@ -162,7 +168,15 @@ export default function ManagementDashboardPage() {
             <p className="mt-2 text-sm font-semibold leading-6 text-[var(--color-muted)]">
               Role routing, audit posture, and escalation readiness for controlled maintenance operations.
             </p>
-            <div className="mt-6 grid gap-4">
+            <div className="ds-summary-grid mt-5">
+              {governanceSummary.map((item) => (
+                <div key={item.label} className="ds-summary-tile">
+                  <p className="ds-summary-value">{item.value}</p>
+                  <p className="ds-summary-label">{item.label}</p>
+                </div>
+              ))}
+            </div>
+            <div className="mt-5 grid gap-4">
               {governanceItems.map((item) => (
                 <div key={item.title} className="ds-chart-row">
                   <div className="min-w-0">

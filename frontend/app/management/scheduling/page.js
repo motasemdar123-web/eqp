@@ -470,16 +470,22 @@ export default function SchedulingPage() {
 
         <div className="ds-kpi-grid">
           {[
-            ['Technicians', board.kpis?.technicians || 0, 'TM'],
-            ['Daily Tasks', board.kpis?.dailyTasks || 0, 'DT'],
-            ['Assigned Today', board.kpis?.scheduledTechnicians || 0, 'AS'],
-            ['Available', board.kpis?.availableTechnicians || 0, 'AV'],
-          ].map(([label, value, code], index) => (
-            <article key={label} className="ds-kpi-card">
-              <div className={`ds-icon-tile ${index % 2 ? 'ds-icon-tile-accent' : ''}`}>{code}</div>
-              <div>
-                <p className="text-xs font-black uppercase tracking-[0.14em] text-[var(--color-muted)]">{label}</p>
-                <p className="mt-2 text-3xl font-black text-[var(--color-ink)]">{value}</p>
+            { label: 'Technicians', value: board.kpis?.technicians || 0, code: 'TM', detail: 'Registered roster', badge: 'Live', tone: 'live' },
+            { label: 'Daily Tasks', value: board.kpis?.dailyTasks || 0, code: 'DT', detail: 'Scheduled today', badge: 'Active', tone: 'active' },
+            { label: 'Assigned Today', value: board.kpis?.scheduledTechnicians || 0, code: 'AS', detail: 'Technicians assigned', badge: 'Ready', tone: 'ready' },
+            { label: 'Available', value: board.kpis?.availableTechnicians || 0, code: 'AV', detail: 'Open capacity', badge: 'Ready', tone: 'ready' },
+          ].map((item, index) => (
+            <article key={item.label} className="ds-kpi-card">
+              <div className={`ds-icon-tile ${index % 2 ? 'ds-icon-tile-accent' : ''}`}>{item.code}</div>
+              <div className="ds-kpi-content">
+                <div className="ds-kpi-head">
+                  <p className="ds-kpi-label">{item.label}</p>
+                  <Badge tone={item.tone}>{item.badge}</Badge>
+                </div>
+                <div>
+                  <p className="ds-kpi-main">{item.value}</p>
+                  <p className="ds-kpi-secondary">{item.detail}</p>
+                </div>
               </div>
             </article>
           ))}
