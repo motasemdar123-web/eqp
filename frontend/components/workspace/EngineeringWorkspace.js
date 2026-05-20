@@ -566,8 +566,11 @@ const templateDetails = {
   },
 };
 
-function makeTemplateItems(templateKey) {
+function makeTemplateItems(templateKey, customization = {}) {
   const createdAt = nowIso();
+  const template = allCreativeTemplates.find((entry) => entry.key === templateKey);
+  const customTitle = customization.title?.trim() || template?.title || 'Creative Board';
+  const customRows = Array.isArray(customization.rows) ? customization.rows : template?.rows || [];
   const makeItem = (type, patch) => ({
     id: createId(type),
     type,
@@ -575,6 +578,13 @@ function makeTemplateItems(templateKey) {
     updatedAt: createdAt,
     ...patch,
   });
+  const makeRowLabels = (x, y, width = 410) => customRows.slice(0, 5).map((row, index) => makeItem('text', {
+    label: row.filter(Boolean).join(' | '),
+    x,
+    y: y + index * 48,
+    width,
+    height: 38,
+  }));
 
   if (templateKey === 'empty-page') return [];
 
@@ -660,64 +670,70 @@ function makeTemplateItems(templateKey) {
 
   if (templateKey === 'tasks-tracker') {
     return [
-      makeItem('frame', { label: 'Tasks Tracker', x: 50, y: 48, width: 820, height: 420 }),
+      makeItem('frame', { label: customTitle, x: 50, y: 48, width: 920, height: 460 }),
       makeItem('wireframe', { wireType: 'Table', label: 'Task name | Status | Assignee', x: 88, y: 126, width: 560, height: 230 }),
       makeItem('sticky', { label: 'Todo: inspect hydraulic temperature', color: 'yellow', x: 690, y: 126, width: 210, height: 112 }),
       makeItem('sticky', { label: 'In progress: review EQP upload', color: 'blue', x: 690, y: 260, width: 210, height: 112 }),
       makeItem('text', { label: 'Use this board for quick daily visibility before dispatch.', x: 90, y: 382, width: 470, height: 64 }),
+      ...makeRowLabels(116, 166),
     ];
   }
 
   if (templateKey === 'projects') {
     return [
-      makeItem('frame', { label: 'Maintenance Improvement Projects', x: 52, y: 50, width: 900, height: 440 }),
+      makeItem('frame', { label: customTitle, x: 52, y: 50, width: 940, height: 470 }),
       makeItem('wireframe', { wireType: 'Card', label: 'Backlog', x: 96, y: 132, width: 220, height: 230 }),
       makeItem('wireframe', { wireType: 'Card', label: 'In Progress', x: 352, y: 132, width: 220, height: 230 }),
       makeItem('wireframe', { wireType: 'Card', label: 'Done', x: 608, y: 132, width: 220, height: 230 }),
       makeItem('sticky', { label: 'Machine inspection workflow redesign', color: 'green', x: 116, y: 184, width: 170, height: 92 }),
       makeItem('sticky', { label: 'Manual page viewer refinement', color: 'blue', x: 372, y: 184, width: 170, height: 92 }),
       makeItem('sticky', { label: 'Technician assignment cleanup', color: 'purple', x: 628, y: 184, width: 170, height: 92 }),
+      ...makeRowLabels(118, 386, 640),
     ];
   }
 
   if (templateKey === 'document-hub') {
     return [
-      makeItem('frame', { label: 'Document Hub', x: 50, y: 48, width: 760, height: 410 }),
+      makeItem('frame', { label: customTitle, x: 50, y: 48, width: 980, height: 470 }),
       makeItem('wireframe', { wireType: 'Table', label: 'Doc name | Created by | Created time', x: 92, y: 126, width: 610, height: 220 }),
       makeItem('sticky', { label: 'Pressure testing SOP', color: 'pink', x: 748, y: 106, width: 210, height: 118 }),
       makeItem('sticky', { label: 'Cooling system observations', color: 'blue', x: 748, y: 246, width: 210, height: 118 }),
+      ...makeRowLabels(118, 168),
     ];
   }
 
   if (templateKey === 'brainstorm') {
     return [
-      makeItem('frame', { label: 'Brainstorm Session', x: 48, y: 48, width: 850, height: 430 }),
+      makeItem('frame', { label: customTitle, x: 48, y: 48, width: 900, height: 460 }),
       makeItem('sticky', { label: 'Improve daily technician assignment', color: 'yellow', x: 94, y: 132, width: 190, height: 128 }),
       makeItem('sticky', { label: 'Better EQP report workflow', color: 'pink', x: 318, y: 132, width: 190, height: 128 }),
       makeItem('sticky', { label: 'Link manual pages directly to tasks', color: 'blue', x: 542, y: 132, width: 190, height: 128 }),
       makeItem('sticky', { label: 'Surface safety warnings before dispatch', color: 'green', x: 206, y: 296, width: 190, height: 128 }),
       makeItem('sticky', { label: 'Add approvals for critical maintenance', color: 'purple', x: 430, y: 296, width: 190, height: 128 }),
+      ...makeRowLabels(670, 132, 230),
     ];
   }
 
   if (templateKey === 'meeting-notes') {
     return [
-      makeItem('frame', { label: 'Meeting Notes', x: 50, y: 48, width: 820, height: 430 }),
+      makeItem('frame', { label: customTitle, x: 50, y: 48, width: 920, height: 450 }),
       makeItem('wireframe', { wireType: 'Header', label: 'Morning Maintenance Brief', x: 92, y: 118, width: 520, height: 76 }),
       makeItem('wireframe', { wireType: 'Checklist', label: 'Action Items', x: 92, y: 230, width: 340, height: 160 }),
       makeItem('sticky', { label: 'Decision: assign region groups earlier', color: 'yellow', x: 664, y: 118, width: 210, height: 120 }),
       makeItem('sticky', { label: 'Risk: missing machine references in reports', color: 'pink', x: 664, y: 268, width: 210, height: 120 }),
+      ...makeRowLabels(110, 404, 620),
     ];
   }
 
   if (templateKey === 'goals-tracker') {
     return [
-      makeItem('frame', { label: 'Goals Tracker', x: 50, y: 48, width: 850, height: 430 }),
+      makeItem('frame', { label: customTitle, x: 50, y: 48, width: 920, height: 460 }),
       makeItem('wireframe', { wireType: 'Chart', label: 'Readiness Progress', x: 94, y: 126, width: 360, height: 220 }),
       makeItem('wireframe', { wireType: 'Table', label: 'Goal name | Owner | Status', x: 494, y: 126, width: 330, height: 220 }),
       makeItem('sticky', { label: 'Target: 92% schedule coverage', color: 'green', x: 96, y: 382, width: 210, height: 92 }),
       makeItem('sticky', { label: 'Target: reduce repeat faults', color: 'blue', x: 336, y: 382, width: 210, height: 92 }),
       makeItem('sticky', { label: 'Target: faster report closure', color: 'purple', x: 576, y: 382, width: 210, height: 92 }),
+      ...makeRowLabels(520, 166, 260),
     ];
   }
 
@@ -829,12 +845,99 @@ function TemplatePreview({ template }) {
   );
 }
 
+function EditableTemplatePreview({ template, title, rows, onTitleChange, onRowChange, onAddRow }) {
+  const columns = template.columns || ['Name', 'Owner', 'Status'];
+
+  return (
+    <div className="eng-template-live-preview">
+      <div className="eng-template-live-tools">
+        <span>Add cover</span>
+        <span>Hide description</span>
+      </div>
+      <div className="eng-template-live-title">
+        <TemplateIcon type={template.icon} />
+        <input
+          value={title}
+          onChange={(event) => onTitleChange(event.target.value)}
+          aria-label="Template title"
+        />
+      </div>
+      <p>{template.subtitle}</p>
+      <div className="eng-template-live-tabs" aria-hidden="true">
+        <span>All items</span>
+        <span>My items</span>
+      </div>
+      <div className="eng-template-live-table">
+        <div className="eng-template-live-row eng-template-live-header">
+          {columns.map((column) => <span key={column}>{column}</span>)}
+        </div>
+        {rows.map((row, rowIndex) => (
+          <div className="eng-template-live-row" key={`${rowIndex}-${row.join('-')}`}>
+            {columns.map((column, columnIndex) => (
+              <input
+                key={`${column}-${columnIndex}`}
+                value={row[columnIndex] || ''}
+                onChange={(event) => onRowChange(rowIndex, columnIndex, event.target.value)}
+                aria-label={`${column} row ${rowIndex + 1}`}
+              />
+            ))}
+          </div>
+        ))}
+        <button type="button" className="eng-template-add-row" onClick={onAddRow}>+ New row</button>
+      </div>
+    </div>
+  );
+}
+
 function CreativeTemplateGallery({ open, onClose, onUseTemplate }) {
-  const [selectedKey, setSelectedKey] = useState('tasks-tracker');
-  const selectedTemplate = allCreativeTemplates.find((template) => template.key === selectedKey) || allCreativeTemplates[0];
+  const initialTemplate = creativeTemplateCards.suggested[0];
+  const [templateDraft, setTemplateDraft] = useState({
+    selectedKey: initialTemplate.key,
+    title: initialTemplate.title,
+    rows: initialTemplate.rows || [],
+  });
+  const selectedKey = templateDraft.selectedKey;
+  const selectedTemplate = allCreativeTemplates.find((template) => template.key === selectedKey) || initialTemplate;
   const selectedDetails = templateDetails[selectedTemplate.key] || templateDetails['empty-page'];
+  const customTitle = templateDraft.title;
+  const customRows = templateDraft.rows;
 
   if (!open) return null;
+
+  function selectTemplate(template) {
+    setTemplateDraft({
+      selectedKey: template.key,
+      title: template.title,
+      rows: template.rows || [],
+    });
+  }
+
+  function updateCustomRow(rowIndex, columnIndex, value) {
+    setTemplateDraft((current) => ({
+      ...current,
+      rows: current.rows.map((row, index) => {
+        if (index !== rowIndex) return row;
+        const nextRow = [...row];
+        nextRow[columnIndex] = value;
+        return nextRow;
+      }),
+    }));
+  }
+
+  function addCustomRow() {
+    const columnCount = selectedTemplate.columns?.length || 3;
+    setTemplateDraft((current) => ({
+      ...current,
+      rows: [...current.rows, Array.from({ length: columnCount }, () => '')],
+    }));
+  }
+
+  function useSelectedTemplate() {
+    onUseTemplate(selectedTemplate.key, customTitle || selectedTemplate.title, {
+      title: customTitle,
+      rows: customRows,
+    });
+  }
 
   return (
     <div className="eng-template-overlay" role="presentation" onMouseDown={onClose}>
@@ -864,7 +967,7 @@ function CreativeTemplateGallery({ open, onClose, onUseTemplate }) {
                   key={template.key}
                   type="button"
                   className={selectedKey === template.key ? 'eng-template-quick-card eng-template-selected' : 'eng-template-quick-card'}
-                  onClick={() => setSelectedKey(template.key)}
+                  onClick={() => selectTemplate(template)}
                 >
                   <TemplateIcon type={template.icon} />
                   <strong>{template.title}</strong>
@@ -880,8 +983,13 @@ function CreativeTemplateGallery({ open, onClose, onUseTemplate }) {
                   key={template.key}
                   type="button"
                   className={`eng-template-card eng-template-${template.tone} ${selectedKey === template.key ? 'eng-template-selected' : ''}`}
-                  onClick={() => setSelectedKey(template.key)}
-                  onDoubleClick={() => onUseTemplate(template.key, template.title)}
+                  onClick={() => selectTemplate(template)}
+                  onDoubleClick={() => {
+                    onUseTemplate(template.key, template.title, {
+                      title: template.title,
+                      rows: template.rows || [],
+                    });
+                  }}
                 >
                   <strong>{template.title}</strong>
                   <span>{template.subtitle}</span>
@@ -896,11 +1004,18 @@ function CreativeTemplateGallery({ open, onClose, onUseTemplate }) {
               <TemplateIcon type={selectedTemplate.icon} />
               <div>
                 <span>{selectedDetails.label}</span>
-                <h3>{selectedTemplate.title}</h3>
+                <h3>{customTitle || selectedTemplate.title}</h3>
               </div>
             </div>
             <p>{selectedDetails.description}</p>
-            <TemplatePreview template={selectedTemplate} />
+            <EditableTemplatePreview
+              template={selectedTemplate}
+              title={customTitle}
+              rows={customRows}
+              onTitleChange={(title) => setTemplateDraft((current) => ({ ...current, title }))}
+              onRowChange={updateCustomRow}
+              onAddRow={addCustomRow}
+            />
             <div className="eng-template-include-list">
               <strong>Template includes</strong>
               {selectedDetails.includes.map((item) => (
@@ -910,7 +1025,7 @@ function CreativeTemplateGallery({ open, onClose, onUseTemplate }) {
             <div className="eng-template-actions">
               <Button
                 type="button"
-                onClick={() => onUseTemplate(selectedTemplate.key, selectedTemplate.title)}
+                onClick={useSelectedTemplate}
               >
                 Use template
               </Button>
@@ -1021,8 +1136,8 @@ function CreativeArea({ onToast }) {
     onToast('View reset with demo content.');
   }
 
-  function applyCreativeTemplate(templateKey, templateTitle) {
-    const nextItems = makeTemplateItems(templateKey);
+  function applyCreativeTemplate(templateKey, templateTitle, customization = {}) {
+    const nextItems = makeTemplateItems(templateKey, customization);
     setItems(nextItems);
     setSelectedId(nextItems[0]?.id || '');
     saveStoredItems(BOARD_KEY, nextItems);

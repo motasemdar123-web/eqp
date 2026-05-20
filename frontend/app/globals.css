@@ -2355,6 +2355,122 @@ textarea {
   line-height: 1.55;
 }
 
+.eng-template-live-preview {
+  display: grid;
+  gap: 0.8rem;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  background: rgba(12, 13, 15, 0.54);
+  padding: 0.9rem;
+}
+
+.eng-template-live-tools,
+.eng-template-live-tabs {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  color: rgba(226, 232, 240, 0.5);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.eng-template-live-title {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.eng-template-live-title svg {
+  flex: 0 0 auto;
+  width: 1.8rem;
+  height: 1.8rem;
+  fill: rgba(248, 113, 113, 0.18);
+  stroke: #f87171;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
+}
+
+.eng-template-live-title input {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  color: #f8fafc;
+  font-size: 1.55rem;
+  font-weight: 900;
+  line-height: 1.1;
+  outline: none;
+}
+
+.eng-template-live-preview > p {
+  color: rgba(248, 250, 252, 0.8);
+  font-size: 0.82rem;
+  font-weight: 650;
+}
+
+.eng-template-live-tabs span:first-child {
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(248, 250, 252, 0.94);
+  padding: 0.45rem 0.7rem;
+}
+
+.eng-template-live-table {
+  display: grid;
+  overflow: hidden;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.eng-template-live-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.eng-template-live-header span {
+  color: rgba(226, 232, 240, 0.58);
+  font-size: 0.68rem;
+  font-weight: 800;
+  padding: 0.55rem;
+}
+
+.eng-template-live-row input {
+  min-width: 0;
+  border: 0;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  background: transparent;
+  color: rgba(248, 250, 252, 0.9);
+  font-size: 0.74rem;
+  font-weight: 750;
+  outline: none;
+  padding: 0.55rem;
+}
+
+.eng-template-live-row input:focus {
+  background: rgba(24, 199, 201, 0.1);
+  box-shadow: inset 0 0 0 1px rgba(24, 199, 201, 0.26);
+}
+
+.eng-template-live-row input:last-child {
+  border-right: 0;
+}
+
+.eng-template-add-row {
+  justify-self: start;
+  border: 0;
+  background: transparent;
+  color: rgba(226, 232, 240, 0.62);
+  font-size: 0.76rem;
+  font-weight: 750;
+  padding: 0.65rem 0.55rem 0.2rem;
+}
+
+.eng-template-add-row:hover {
+  color: #ffffff;
+}
+
 .eng-template-include-list {
   display: grid;
   gap: 0.5rem;
