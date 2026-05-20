@@ -421,6 +421,7 @@ a:focus-visible {
   justify-content: space-between;
   gap: 0.75rem;
   position: relative;
+  padding-top: 0.45rem;
 }
 
 .ds-sidebar-brand {
@@ -454,50 +455,38 @@ a:focus-visible {
 
 .ds-sidebar-toggle {
   position: absolute;
-  top: 0.95rem;
-  right: -1.05rem;
+  top: 1.45rem;
+  right: -0.82rem;
   z-index: 35;
   display: grid;
-  width: 2.1rem;
-  min-width: 2.1rem;
-  height: 2.1rem;
+  width: 1.8rem;
+  min-width: 1.8rem;
+  height: 1.8rem;
   place-items: center;
   border: 1px solid rgba(15, 140, 240, 0.2);
-  border-radius: 999px;
+  border-radius: 10px;
   background: #ffffff;
   color: var(--color-brand);
   font-weight: 900;
   line-height: 1;
-  box-shadow: 0 12px 26px rgba(37, 58, 87, 0.14);
-  transition: background-color 160ms ease, color 160ms ease, transform 160ms ease;
+  box-shadow: 0 10px 22px rgba(37, 58, 87, 0.13);
+  transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease, transform 160ms ease;
 }
 
 .ds-sidebar-toggle:hover {
-  background: var(--color-brand-soft);
+  border-color: rgba(15, 140, 240, 0.32);
+  background: #ffffff;
   color: var(--color-brand);
-  transform: translateY(-1px);
+  transform: translateX(-1px);
 }
 
 .ds-sidebar-chevron {
   display: block;
-  width: 0.5rem;
-  height: 0.5rem;
+  width: 0.42rem;
+  height: 0.42rem;
   border-left: 2px solid currentColor;
   border-bottom: 2px solid currentColor;
   transform: translateX(0.08rem) rotate(45deg);
-}
-
-.ds-sidebar-hamburger {
-  display: grid;
-  gap: 0.22rem;
-  width: 1rem;
-}
-
-.ds-sidebar-hamburger span {
-  display: block;
-  height: 2px;
-  border-radius: 999px;
-  background: currentColor;
 }
 
 .ds-sidebar-nav {
@@ -612,20 +601,27 @@ a:focus-visible {
 }
 
 .ds-sidebar-collapsed .ds-sidebar-toggle {
-  position: static;
-  width: 2.25rem;
-  height: 2.25rem;
-  margin-bottom: 0.75rem;
-  border-radius: 12px;
-  background: var(--color-brand);
-  color: #ffffff;
-  box-shadow: 0 12px 24px rgba(15, 140, 240, 0.18);
+  top: 1.2rem;
+  right: -0.78rem;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-color: rgba(15, 140, 240, 0.24);
+  background: #ffffff;
+  color: var(--color-brand);
+}
+
+.ds-sidebar-collapsed .ds-sidebar-toggle:hover {
+  transform: translateX(1px);
+}
+
+.ds-sidebar-collapsed .ds-sidebar-chevron {
+  transform: translateX(-0.08rem) rotate(225deg);
 }
 
 .ds-sidebar-collapsed .ds-sidebar-top {
-  display: grid;
-  justify-items: center;
-  gap: 0.65rem;
+  display: flex;
+  justify-content: center;
+  width: 100%;
 }
 
 .ds-sidebar-collapsed .ds-sidebar-brand {
