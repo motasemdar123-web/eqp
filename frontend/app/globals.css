@@ -2795,7 +2795,7 @@ textarea {
 .eng-board-back-floating {
   position: absolute;
   top: 0.85rem;
-  right: 0.85rem;
+  left: 0.85rem;
   z-index: 18;
   min-height: 2rem;
   border: 1px solid rgba(221, 231, 242, 0.9);
@@ -2956,11 +2956,19 @@ textarea {
   background: rgba(255, 255, 255, 0.96);
 }
 
+.eng-doc-board-view:has(.eng-board-fullscreen) .eng-board-back-floating {
+  position: fixed;
+  top: 0.9rem;
+  left: 0.9rem;
+  right: auto;
+  z-index: 134;
+}
+
 .eng-board-fullscreen .eng-canvas-toolbar,
 .eng-doc-board-view .eng-board-fullscreen .eng-canvas-toolbar {
   position: fixed;
-  top: 0.8rem;
-  left: 0.8rem;
+  top: 3.65rem;
+  left: 0.9rem;
   right: 9.75rem;
   z-index: 130;
   width: auto;
