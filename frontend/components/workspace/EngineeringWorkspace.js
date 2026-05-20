@@ -254,7 +254,18 @@ function WorkspaceTabs({ activeTab, onTabChange }) {
     </div>
   );
 }
-function CanvasToolbar({ onAddSticky, onAddWireframe, onAddFrame, onAddText, onClear, onSave, onResetView, onOpenTemplates }) {
+function CanvasToolbar({
+  onAddSticky,
+  onAddWireframe,
+  onAddFrame,
+  onAddText,
+  onClear,
+  onSave,
+  onResetView,
+  onOpenTemplates,
+  onToggleFullscreen,
+  isFullscreen,
+}) {
   return (
     <div className="eng-canvas-toolbar">
       <Button type="button" size="sm" onClick={onOpenTemplates}>Templates</Button>
@@ -266,6 +277,9 @@ function CanvasToolbar({ onAddSticky, onAddWireframe, onAddFrame, onAddText, onC
       <span className="eng-toolbar-divider" />
       <Button type="button" variant="secondary" size="sm" onClick={onSave}>Save Board</Button>
       <Button type="button" variant="ghost" size="sm" onClick={onResetView}>Reset View</Button>
+      <Button type="button" variant="secondary" size="sm" onClick={onToggleFullscreen}>
+        {isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}
+      </Button>
       <Button type="button" variant="danger" size="sm" onClick={onClear}>Clear Canvas</Button>
     </div>
   );
@@ -1080,6 +1094,7 @@ function CanvasCreativeArea({ onToast }) {
   const [items, setItems] = useState(() => defaultBoardItems());
   const [selectedId, setSelectedId] = useState('');
   const [templatesOpen, setTemplatesOpen] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
   const selectedItem = items.find((item) => item.id === selectedId) || null;
   const canvasHeight = useMemo(() => {
     const bottomEdge = items.reduce((max, item) => Math.max(max, (item.y || 0) + (item.height || 0)), 0);
@@ -1212,7 +1227,7 @@ function CanvasCreativeArea({ onToast }) {
   }
 
   return (
-    <div className="eng-creative-space">
+    <div className={isFullscreen ? 'eng-creative-space eng-board-fullscreen' : 'eng-creative-space'}>
       <CreativeTemplateGallery
         open={templatesOpen}
         onClose={() => setTemplatesOpen(false)}
@@ -1229,6 +1244,8 @@ function CanvasCreativeArea({ onToast }) {
             onClear={clearCanvas}
             onSave={saveBoard}
             onResetView={resetView}
+            onToggleFullscreen={() => setIsFullscreen((current) => !current)}
+            isFullscreen={isFullscreen}
           />
           <div
             ref={canvasRef}

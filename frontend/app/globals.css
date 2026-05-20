@@ -1963,15 +1963,13 @@ textarea {
 }
 
 .eng-workspace-content .ds-page-heading {
-  position: absolute;
-  top: 0.75rem;
-  right: 1rem;
-  z-index: 22;
+  position: static;
   align-items: center;
   justify-content: flex-end;
-  width: auto;
-  margin: 0;
-  pointer-events: none;
+  width: 100%;
+  min-height: 2.75rem;
+  margin: 0 0 0.45rem;
+  pointer-events: auto;
 }
 
 .eng-workspace-content .ds-page-heading > div:first-child,
@@ -1991,10 +1989,9 @@ textarea {
   gap: 0.35rem;
   border: 1px solid var(--color-border);
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.9);
+  background: #ffffff;
   padding: 0.25rem;
-  box-shadow: 0 16px 34px rgba(31, 91, 153, 0.12);
-  backdrop-filter: blur(14px);
+  box-shadow: var(--shadow-control);
 }
 
 .eng-tab {
@@ -2876,6 +2873,55 @@ textarea {
     radial-gradient(circle at 20% 12%, rgba(24, 199, 201, 0.13), transparent 26rem),
     linear-gradient(180deg, #fbfdff, #f6faff);
   background-size: 24px 24px, auto, auto;
+}
+
+.eng-board-fullscreen {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  display: block;
+  min-height: 100vh;
+  overflow: auto;
+  background: #f6faff;
+}
+
+.eng-board-fullscreen .eng-creative-grid,
+.eng-doc-board-view .eng-board-fullscreen .eng-creative-grid {
+  min-height: 100vh;
+}
+
+.eng-board-fullscreen .eng-board-shell,
+.eng-doc-board-view .eng-board-fullscreen .eng-board-shell {
+  min-height: 100vh;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.eng-board-fullscreen .eng-canvas-toolbar,
+.eng-doc-board-view .eng-board-fullscreen .eng-canvas-toolbar {
+  position: fixed;
+  top: 0.8rem;
+  left: 0.8rem;
+  right: 0.8rem;
+  z-index: 130;
+  width: auto;
+  max-width: none;
+}
+
+.eng-board-fullscreen .eng-canvas,
+.eng-doc-board-view .eng-board-fullscreen .eng-canvas {
+  min-height: 100vh !important;
+  padding-top: 0;
+}
+
+.eng-board-fullscreen .eng-side-panel,
+.eng-doc-board-view .eng-board-fullscreen .eng-side-panel {
+  position: fixed;
+  top: 4.6rem;
+  right: 1rem;
+  z-index: 132;
+  max-height: calc(100vh - 5.6rem);
 }
 
 .eng-doc-board-view .eng-side-panel {
