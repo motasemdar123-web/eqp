@@ -7,7 +7,7 @@ import Badge from '../../../components/ui/Badge';
 import Button from '../../../components/ui/Button';
 import EmptyState from '../../../components/ui/EmptyState';
 import Skeleton from '../../../components/ui/Skeleton';
-import { createTechnician, getShifts, getTechnicians, updateTechnician } from '../../../lib/api';
+import { createTechnician, deleteTechnician, getShifts, getTechnicians, updateTechnician } from '../../../lib/api';
 import { getStoredPlatformSession } from '../../../lib/auth';
 
 const emptyForm = {
@@ -189,6 +189,27 @@ export default function TechniciansManagementPage() {
     }
   }
 
+  async function removeTechnician(technician) {
+    const name = technicianName(technician);
+    const confirmed = window.confirm(`Delete ${name} from Technicians Management? Existing schedule history will be preserved.`);
+    if (!confirmed) return;
+
+    setSaving(true);
+    setMessage('');
+    setError('');
+
+    try {
+      await deleteTechnician(technician.id);
+      if (selectedTechnicianId === technician.id) startCreate();
+      setMessage(`${name} deleted from the active technician roster.`);
+      await loadData();
+    } catch (deleteError) {
+      setError(deleteError.message || 'Failed to delete technician.');
+    } finally {
+      setSaving(false);
+    }
+  }
+
   return (
     <SystemShell
       activePath="/management/technicians"
@@ -290,6 +311,14 @@ export default function TechniciansManagementPage() {
                               disabled={saving}
                             >
                               {technician.isAvailable ? 'Set Unavailable' : 'Set Available'}
+                            </Button>
+                            <Button
+                              type="button"
+                              variant="danger"
+                              onClick={() => removeTechnician(technician)}
+                              disabled={saving}
+                            >
+                              Delete
                             </Button>
                           </div>
                         </td>

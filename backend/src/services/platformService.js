@@ -962,6 +962,53 @@ async function updateTechnician(id, payload, actorId) {
   });
 }
 
+async function deleteTechnician(id, actorId) {
+  const prisma = requirePrisma();
+  const technician = await prisma.technicianProfile.findUnique({
+    where: { id },
+    include: {
+      user: { select: publicUserSelect },
+    },
+  });
+
+  if (!technician || technician.deletedAt) {
+    throw new ApiError(404, 'Technician not found.');
+  }
+
+  const deletedAt = new Date();
+
+  await prisma.$transaction(async (tx) => {
+    await tx.technicianProfile.update({
+      where: { id },
+      data: {
+        isAvailable: false,
+        deletedAt,
+        updatedById: actorId,
+      },
+    });
+
+    await tx.technicianSchedule.updateMany({
+      where: {
+        technicianId: id,
+        deletedAt: null,
+        workDate: { gte: toWorkDate(new Date().toISOString().slice(0, 10)) },
+      },
+      data: {
+        status: 'CANCELLED',
+        deletedAt,
+        updatedById: actorId,
+      },
+    });
+  });
+
+  return {
+    id: technician.id,
+    employeeCode: technician.employeeCode,
+    user: technician.user,
+    deletedAt,
+  };
+}
+
 async function listShifts() {
   const prisma = requirePrisma();
   return prisma.shift.findMany({ where: { deletedAt: null }, include: { branch: true }, orderBy: { startsAt: 'asc' } });
@@ -4339,6 +4386,7 @@ module.exports = {
   suggestManualTools,
   createTechnician,
   updateTechnician,
+  deleteTechnician,
   listShifts,
   createShift,
   upsertTechnicianSchedule,

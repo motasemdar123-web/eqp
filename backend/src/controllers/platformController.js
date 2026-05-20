@@ -103,6 +103,11 @@ async function updateTechnician(req, res) {
   res.json({ success: true, technician });
 }
 
+async function deleteTechnician(req, res) {
+  const technician = await platformService.deleteTechnician(req.params.id, req.platformUser?.sub);
+  res.json({ success: true, technician });
+}
+
 async function listShifts(req, res) {
   const shifts = await platformService.listShifts();
   res.json({ success: true, shifts });
@@ -201,6 +206,7 @@ module.exports = {
   suggestManualTools,
   createTechnician,
   updateTechnician,
+  deleteTechnician,
   listShifts,
   createShift,
   schedulingBoard,

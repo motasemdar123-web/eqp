@@ -117,6 +117,12 @@ export function updateTechnician(id, payload) {
   });
 }
 
+export function deleteTechnician(id) {
+  return request(`/api/technicians/${id}`, {
+    method: 'DELETE',
+  });
+}
+
 export function getShifts() {
   return request('/api/shifts');
 }
