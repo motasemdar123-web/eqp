@@ -86,6 +86,10 @@ export function getAnalyticsOverview() {
   return request('/analytics/overview');
 }
 
+export function getManagementDashboard() {
+  return request('/api/dashboard');
+}
+
 export function renameReport(id, fileName) {
   return request(`/reports/${id}`, {
     method: 'PUT',

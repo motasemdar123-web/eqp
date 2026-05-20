@@ -1,66 +1,13 @@
 'use client';
 
+import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import SystemShell from '../../components/SystemShell';
 import Card from '../../components/ui/Card';
 import Badge from '../../components/ui/Badge';
-
-const kpis = [
-  {
-    label: 'Modules',
-    metric: '4',
-    unit: 'Core Modules',
-    secondary: 'Workspace Live',
-    status: 'Ready',
-    tone: 'ready',
-    code: 'AM',
-  },
-  {
-    label: 'Technicians',
-    metric: '24',
-    unit: 'Active',
-    secondary: '6 Available Today',
-    status: 'Live',
-    tone: 'live',
-    code: 'TM',
-    accent: true,
-  },
-  {
-    label: 'Scheduling',
-    metric: '18',
-    unit: 'Shifts',
-    secondary: '4 Pending / 92% Coverage',
-    status: 'Active',
-    tone: 'active',
-    code: 'SC',
-  },
-  {
-    label: 'EQP Reports',
-    metric: '136',
-    unit: 'Reports',
-    secondary: '12 This Week',
-    status: 'Preserved / Live',
-    tone: 'preserved',
-    code: 'EQ',
-    accent: true,
-  },
-  {
-    label: 'Machines',
-    metric: '58',
-    unit: 'Machines',
-    secondary: '9 Due Soon / 3 Critical',
-    status: 'Warning',
-    tone: 'warning',
-    code: 'MA',
-  },
-];
-
-const governanceItems = [
-  { title: 'RBAC permissions', value: '88%', width: '88%' },
-  { title: 'Audit-ready activities', value: '76%', width: '76%' },
-  { title: 'SLA and escalation readiness', value: '64%', width: '64%' },
-  { title: 'Centralized role routing', value: '92%', width: '92%' },
-];
+import Skeleton from '../../components/ui/Skeleton';
+import Toast from '../../components/ui/Toast';
+import { getManagementDashboard } from '../../lib/api';
 
 const modules = [
   { title: 'Technicians Management', href: '/management/technicians', status: 'Live', tone: 'live', code: 'TM', description: 'Technician records, shifts, regions, skills, and dispatch availability.' },
@@ -69,32 +16,115 @@ const modules = [
   { title: 'EQP Module', href: '/eqp', status: 'Preserved / Live', tone: 'preserved', code: 'EQ', description: 'Reports, machines, PDF archive, and report builder under one EQP workspace.' },
 ];
 
-const activity = [
-  { action: 'Technician profile updated', time: '08:20 AM', status: 'Ready' },
-  { action: 'New schedule created', time: '09:10 AM', status: 'Pending' },
-  { action: 'EQP report uploaded', time: '10:35 AM', status: 'Completed' },
-  { action: 'Machine maintenance record archived', time: '11:00 AM', status: 'Archived' },
-];
+function formatDate(value, fallback = 'No data') {
+  if (!value) return fallback;
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return fallback;
+  return new Intl.DateTimeFormat('en', { month: 'short', day: 'numeric', year: 'numeric' }).format(date);
+}
 
-const chartBars = [
-  { label: '18/05', primary: 88, secondary: 40 },
-  { label: '19/05', primary: 68, secondary: 34 },
-  { label: '20/05', primary: 76, secondary: 60 },
-  { label: '21/05', primary: 32, secondary: 54 },
-  { label: '22/05', primary: 56, secondary: 82 },
-  { label: '23/05', primary: 74, secondary: 96 },
-  { label: '24/05', primary: 62, secondary: 72 },
-  { label: '25/05', primary: 50, secondary: 46 },
-];
+function formatTime(value) {
+  if (!value) return 'No time';
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return 'No time';
+  return new Intl.DateTimeFormat('en', { hour: '2-digit', minute: '2-digit' }).format(date);
+}
 
-const upcomingMaintenance = [
-  { machine: 'D155A-6', technician: 'Motasem Ghanem', dueDate: 'May 21, 2026', status: 'Due Soon', tone: 'warning' },
-  { machine: 'GD705A-4', technician: 'Abdelrahman', dueDate: 'May 22, 2026', status: 'Ready', tone: 'ready' },
-  { machine: 'WA470-6', technician: 'Faisal', dueDate: 'May 23, 2026', status: 'Critical', tone: 'critical' },
-  { machine: 'PC200-8', technician: 'Operations Team', dueDate: 'May 25, 2026', status: 'Scheduled', tone: 'active' },
-];
+function statusTone(status) {
+  const normalized = String(status || '').toLowerCase();
+  if (normalized.includes('complete')) return 'completed';
+  if (normalized.includes('cancel') || normalized.includes('critical')) return 'critical';
+  if (normalized.includes('planned') || normalized.includes('pending')) return 'pending';
+  if (normalized.includes('confirm') || normalized.includes('active')) return 'active';
+  return 'neutral';
+}
 
 export default function ManagementDashboardPage() {
+  const [dashboard, setDashboard] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [toast, setToast] = useState(null);
+
+  useEffect(() => {
+    let ignore = false;
+
+    async function loadDashboard() {
+      try {
+        setLoading(true);
+        const response = await getManagementDashboard();
+        if (!ignore) setDashboard(response.data || null);
+      } catch (error) {
+        if (!ignore) setToast({ type: 'error', message: error.message || 'Failed to load dashboard metrics.' });
+      } finally {
+        if (!ignore) setLoading(false);
+      }
+    }
+
+    loadDashboard();
+    return () => {
+      ignore = true;
+    };
+  }, []);
+
+  const kpis = useMemo(() => {
+    const data = dashboard?.kpis || {};
+    return [
+      {
+        label: 'Modules',
+        metric: dashboard?.modules?.length || modules.length,
+        unit: 'Available modules',
+        secondary: `${modules.length} navigation workspaces`,
+        status: 'Ready',
+        tone: 'ready',
+        code: 'AM',
+      },
+      {
+        label: 'Technicians',
+        metric: data.technicians || 0,
+        unit: 'Registered',
+        secondary: `${data.availableTechnicians || 0} available today`,
+        status: 'Live',
+        tone: 'live',
+        code: 'TM',
+        accent: true,
+      },
+      {
+        label: 'Scheduling',
+        metric: data.dailyTasks || 0,
+        unit: 'Tasks today',
+        secondary: `${data.scheduledTechnicians || 0} technicians assigned`,
+        status: 'Active',
+        tone: 'active',
+        code: 'SC',
+      },
+      {
+        label: 'EQP Reports',
+        metric: data.reports || 0,
+        unit: 'Archived reports',
+        secondary: `${data.reportsThisWeek || 0} generated this week`,
+        status: 'Preserved / Live',
+        tone: 'preserved',
+        code: 'EQ',
+        accent: true,
+      },
+      {
+        label: 'Machines',
+        metric: data.machines || 0,
+        unit: 'Registered assets',
+        secondary: `${data.machineTypes || 0} machine types`,
+        status: 'Active',
+        tone: 'active',
+        code: 'MA',
+      },
+    ];
+  }, [dashboard]);
+
+  const governanceItems = dashboard?.governance || [];
+  const chartBars = dashboard?.timeline || [];
+  const activity = dashboard?.activity || [];
+  const upcomingMaintenance = dashboard?.upcomingMaintenance || [];
+  const maxChartValue = Math.max(1, ...chartBars.map((item) => Math.max(item.scheduled || 0, item.completed || 0, item.reports || 0)));
+  const totalOperations = chartBars.reduce((total, item) => total + (item.scheduled || 0) + (item.reports || 0), 0);
+
   return (
     <SystemShell
       activePath="/management"
@@ -105,7 +135,7 @@ export default function ManagementDashboardPage() {
     >
       <section className="ds-reference-dashboard">
         <div className="ds-kpi-grid">
-          {kpis.map((kpi) => (
+          {loading ? Array.from({ length: 5 }, (_, index) => <Skeleton key={index} className="h-36" />) : kpis.map((kpi) => (
             <article key={kpi.label} className="ds-kpi-card">
               <div className={`ds-icon-tile ${kpi.accent ? 'ds-icon-tile-accent' : ''}`}>{kpi.code}</div>
               <div className="ds-kpi-content">
@@ -128,7 +158,7 @@ export default function ManagementDashboardPage() {
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <h2 className="ds-panel-title">Maintenance Operations</h2>
-                <p className="mt-1 text-sm font-bold text-[var(--color-muted)]">250,400 operational points tracked</p>
+                <p className="mt-1 text-sm font-bold text-[var(--color-muted)]">{totalOperations} real operations tracked this week</p>
               </div>
               <div className="ds-segment-control">
                 <span className="ds-segment-active">Day</span>
@@ -145,8 +175,8 @@ export default function ManagementDashboardPage() {
               {chartBars.map((item) => (
                 <div key={item.label} className="ds-bar-column">
                   <div className="ds-bar-stack">
-                    <span className="ds-bar ds-bar-secondary" style={{ height: `${item.secondary}%` }} />
-                    <span className="ds-bar ds-bar-primary" style={{ height: `${item.primary}%` }} />
+                    <span className="ds-bar ds-bar-secondary" style={{ height: `${Math.max(4, ((item.reports || 0) / maxChartValue) * 100)}%` }} />
+                    <span className="ds-bar ds-bar-primary" style={{ height: `${Math.max(4, ((item.scheduled || 0) / maxChartValue) * 100)}%` }} />
                   </div>
                   <span className="ds-bar-label">{item.label}</span>
                 </div>
@@ -164,9 +194,10 @@ export default function ManagementDashboardPage() {
                 {governanceItems.map((item) => (
                   <div key={item.title} className="ds-compact-row">
                     <span>{item.title}</span>
-                    <strong>{item.value}</strong>
+                    <strong>{item.value}%</strong>
                   </div>
                 ))}
+                {!loading && governanceItems.length === 0 && <span className="text-sm font-bold text-[var(--color-muted)]">No readiness metrics yet.</span>}
               </div>
             </Card>
 
@@ -177,15 +208,16 @@ export default function ManagementDashboardPage() {
               </div>
               <div className="mt-4 grid gap-2">
                 {activity.map((item) => (
-                  <div key={`${item.action}-${item.time}`} className="ds-feed-row">
-                    <span className="ds-feed-icon">{item.status.slice(0, 1)}</span>
+                  <Link key={`${item.action}-${item.time}`} href={item.href || '/management'} className="ds-feed-row">
+                    <span className="ds-feed-icon">{String(item.status || 'A').slice(0, 1)}</span>
                     <span className="min-w-0">
                       <span className="block truncate text-sm font-black text-[var(--color-ink)]">{item.action}</span>
-                      <span className="block text-xs font-bold text-[var(--color-muted)]">{item.time}</span>
+                      <span className="block text-xs font-bold text-[var(--color-muted)]">{formatTime(item.time)}</span>
                     </span>
-                    <Badge tone={item.status.toLowerCase()}>{item.status}</Badge>
-                  </div>
+                    <Badge tone={statusTone(item.status)}>{item.status}</Badge>
+                  </Link>
                 ))}
+                {!loading && activity.length === 0 && <span className="text-sm font-bold text-[var(--color-muted)]">No recent platform activity.</span>}
               </div>
             </Card>
           </div>
@@ -246,7 +278,7 @@ export default function ManagementDashboardPage() {
               <h2 className="ds-panel-title">Upcoming Maintenance</h2>
               <p className="mt-1 text-sm font-bold text-[var(--color-muted)]">Planned service windows and readiness status.</p>
             </div>
-            <Badge tone="pending">4 Items</Badge>
+            <Badge tone="pending">{upcomingMaintenance.length} Items</Badge>
           </div>
           <div className="ds-table-wrap">
             <table className="ds-table min-w-[720px]">
@@ -260,18 +292,24 @@ export default function ManagementDashboardPage() {
                 </thead>
                 <tbody>
                   {upcomingMaintenance.map((item) => (
-                    <tr key={`${item.machine}-${item.dueDate}`} className="border-t border-[var(--color-border)]">
+                    <tr key={item.id || `${item.machine}-${item.dueDate}`} className="border-t border-[var(--color-border)]">
                       <td className="px-5 py-4 font-black text-[var(--color-ink)]">{item.machine}</td>
                       <td className="px-5 py-4">{item.technician}</td>
-                      <td className="px-5 py-4">{item.dueDate}</td>
-                      <td className="px-5 py-4"><Badge tone={item.tone}>{item.status}</Badge></td>
+                      <td className="px-5 py-4">{formatDate(item.dueDate)}</td>
+                      <td className="px-5 py-4"><Badge tone={statusTone(item.status)}>{item.status}</Badge></td>
                     </tr>
                   ))}
+                  {!loading && upcomingMaintenance.length === 0 && (
+                    <tr>
+                      <td className="px-5 py-6 text-sm font-bold text-[var(--color-muted)]" colSpan={4}>No upcoming scheduled maintenance tasks.</td>
+                    </tr>
+                  )}
                 </tbody>
               </table>
           </div>
         </Card>
       </section>
+      <Toast message={toast?.message} type={toast?.type} onClose={() => setToast(null)} />
     </SystemShell>
   );
 }

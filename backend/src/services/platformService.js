@@ -8,6 +8,9 @@ const { signJwt } = require('../middleware/platformAuthMiddleware');
 const { normalizeArabicStatus } = require('../utils/platformEnums');
 const { createSessionToken } = require('../utils/sessionToken');
 const storageService = require('./storageService');
+const machineRepository = require('../repositories/machineRepository');
+const historyRepository = require('../repositories/historyRepository');
+const reportRepository = require('../repositories/reportRepository');
 
 const DEFAULT_OPENAI_MANUAL_MODEL = 'gpt-5.4-mini';
 const MANUAL_CHUNK_READ_LIMIT = Number(process.env.MANUAL_CHUNK_READ_LIMIT || 5000);
@@ -673,26 +676,159 @@ async function ensureDefaultTechnicians(prisma) {
 
 async function listDashboard() {
   const prisma = requirePrisma();
+  const today = todayText();
+  const todayDate = toWorkDate(today);
+  const weekStart = new Date(todayDate);
+  weekStart.setUTCDate(weekStart.getUTCDate() - 6);
   const [
     technicians,
     availableTechnicians,
-    scheduledToday,
+    dailyTasks,
+    completedToday,
+    scheduledTechnicians,
     shifts,
+    upcomingTasks,
+    weekTasks,
+    recentTasks,
+    machines,
+    reports,
+    machineHistory,
   ] = await Promise.all([
     prisma.technicianProfile.count({ where: { deletedAt: null } }),
     prisma.technicianProfile.count({ where: { deletedAt: null, isAvailable: true } }),
-    prisma.dailyScheduleTask.count({ where: { workDate: toWorkDate(new Date().toISOString().slice(0, 10)), deletedAt: null } }),
+    prisma.dailyScheduleTask.count({ where: { workDate: todayDate, deletedAt: null } }),
+    prisma.dailyScheduleTask.count({ where: { workDate: todayDate, deletedAt: null, status: 'COMPLETED' } }),
+    prisma.dailyScheduleTaskTechnician.findMany({
+      where: {
+        task: { workDate: todayDate, deletedAt: null },
+      },
+      select: { technicianId: true },
+      distinct: ['technicianId'],
+    }),
     prisma.shift.count({ where: { deletedAt: null } }),
+    prisma.dailyScheduleTask.findMany({
+      where: {
+        workDate: { gte: todayDate },
+        deletedAt: null,
+      },
+      include: {
+        technicians: {
+          include: {
+            technician: {
+              include: { user: { select: publicUserSelect } },
+            },
+          },
+        },
+      },
+      orderBy: [{ workDate: 'asc' }, { startsAt: 'asc' }],
+      take: 6,
+    }),
+    prisma.dailyScheduleTask.findMany({
+      where: {
+        workDate: { gte: weekStart, lte: todayDate },
+        deletedAt: null,
+      },
+      select: {
+        id: true,
+        workDate: true,
+        status: true,
+      },
+    }),
+    prisma.dailyScheduleTask.findMany({
+      where: { deletedAt: null },
+      orderBy: { updatedAt: 'desc' },
+      take: 4,
+    }),
+    machineRepository.findAll().catch(() => []),
+    reportRepository.findAll().catch(() => []),
+    historyRepository.findAll().catch(() => []),
   ]);
+  const activeMachines = machines.filter((machine) => !machine.deleted_at);
+  const activeReports = reports.filter((report) => !report.deleted_at);
+  const dateKey = (value) => {
+    const date = value ? new Date(value) : null;
+    return date && !Number.isNaN(date.getTime()) ? date.toISOString().slice(0, 10) : '';
+  };
+  const reportMachineIds = new Set(activeReports.map((report) => report.machine_id || report.machine_number).filter(Boolean));
+  const reportsThisWeek = activeReports.filter((report) => {
+    const createdAt = report.created_at ? new Date(report.created_at) : null;
+    return createdAt && createdAt >= weekStart;
+  }).length;
+  const machineTypes = new Set(activeMachines.map((machine) => machine.machine_type).filter(Boolean)).size;
+  const latestOperationDate = machineHistory[0]?.operation_date || machineHistory[0]?.created_at || null;
+  const timeline = Array.from({ length: 7 }, (_, index) => {
+    const date = new Date(weekStart);
+    date.setUTCDate(weekStart.getUTCDate() + index);
+    const key = date.toISOString().slice(0, 10);
+    const scheduled = weekTasks.filter((task) => dateKey(task.workDate) === key).length;
+    const completed = weekTasks.filter((task) => dateKey(task.workDate) === key && task.status === 'COMPLETED').length;
+    const generatedReports = activeReports.filter((report) => dateKey(report.created_at) === key).length;
+    return {
+      date: key,
+      label: key.slice(5),
+      scheduled,
+      completed,
+      reports: generatedReports,
+    };
+  });
+  const activity = [
+    ...recentTasks.map((task) => ({
+      action: `Schedule task updated: ${task.task}`,
+      time: task.updatedAt,
+      status: task.status,
+      href: '/management/scheduling',
+    })),
+    ...activeReports.slice(0, 4).map((report) => ({
+      action: `EQP report generated: ${report.report_no || report.file_name || report.machine_number || 'Report'}`,
+      time: report.created_at,
+      status: 'COMPLETED',
+      href: '/eqp/reports',
+    })),
+    ...machineHistory.slice(0, 4).map((entry) => ({
+      action: `Machine activity: ${entry.machine_type || ''} ${entry.machine_number || ''}`.trim(),
+      time: entry.created_at || entry.operation_date,
+      status: entry.operation_type || 'ACTIVE',
+      href: '/eqp/machines',
+    })),
+  ]
+    .filter((entry) => entry.time)
+    .sort((a, b) => new Date(b.time) - new Date(a.time))
+    .slice(0, 6);
+  const assignmentCoverage = technicians ? Math.round((scheduledTechnicians.length / technicians) * 100) : 0;
+  const availabilityRate = technicians ? Math.round((availableTechnicians / technicians) * 100) : 0;
+  const completionRate = dailyTasks ? Math.round((completedToday / dailyTasks) * 100) : 0;
+  const eqpCoverage = activeMachines.length ? Math.round((reportMachineIds.size / activeMachines.length) * 100) : 0;
 
   return {
     kpis: {
       technicians,
       availableTechnicians,
-      scheduledToday,
+      dailyTasks,
+      completedToday,
+      scheduledTechnicians: scheduledTechnicians.length,
       shifts,
+      machines: activeMachines.length,
+      machineTypes,
+      reports: activeReports.length,
+      reportsThisWeek,
+      latestOperationDate,
     },
-    modules: ['technicians', 'scheduling', 'eqp'],
+    governance: [
+      { title: 'Technician availability', value: availabilityRate },
+      { title: 'Scheduling assignment', value: assignmentCoverage },
+      { title: 'Today completion', value: completionRate },
+      { title: 'EQP machine coverage', value: eqpCoverage },
+    ],
+    timeline,
+    activity,
+    upcomingMaintenance: upcomingTasks.map((task) => ({
+      id: task.id,
+      machine: task.machineModel || task.location || 'General task',
+      technician: task.technicians?.map((assignment) => assignment.technician?.user?.fullName).filter(Boolean).join(', ') || 'Unassigned',
+      dueDate: task.workDate,
+      status: task.status,
+    })),
+    modules: ['technicians', 'scheduling', 'workspace', 'eqp'],
   };
 }
 
