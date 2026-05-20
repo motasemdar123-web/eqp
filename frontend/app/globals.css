@@ -622,7 +622,7 @@ a:focus-visible {
   display: flex;
   justify-content: center;
   width: 100%;
-  padding-top: 0;
+  padding-top: 1.05rem;
 }
 
 .ds-sidebar-collapsed .ds-sidebar-brand {
