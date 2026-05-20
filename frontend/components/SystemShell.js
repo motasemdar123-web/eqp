@@ -103,15 +103,15 @@ export default function SystemShell({
   }
 
   return (
-    <div className="ds-shell lg:flex">
-      <aside className="ds-sidebar border-b border-white/10 lg:sticky lg:top-0 lg:h-screen lg:w-72 lg:shrink-0 lg:border-b-0 lg:border-r lg:border-white/10">
-        <div className="border-b border-white/10 p-5">
+    <div className="ds-shell lg:flex lg:gap-5 lg:p-5">
+      <aside className="ds-sidebar border-b border-[var(--color-border)] shadow-[var(--shadow-card)] lg:sticky lg:top-5 lg:h-[calc(100vh-2.5rem)] lg:w-72 lg:shrink-0 lg:overflow-hidden lg:rounded-[var(--radius-card)] lg:border">
+        <div className="border-b border-[var(--color-border)] p-5">
           <Link href="/management" className="flex items-center gap-3">
             <div className="ds-brand-mark h-11 w-11 shrink-0 text-lg">
               DH
             </div>
             <div className="min-w-0">
-              <div className="truncate text-lg font-black text-white">Dar Al HAI</div>
+              <div className="truncate text-lg font-black text-[var(--color-ink)]">Dar Al HAI</div>
               <p className="truncate text-xs font-bold uppercase tracking-[0.14em] text-[var(--color-sidebar-muted)]">Maintenance System</p>
             </div>
           </Link>
@@ -133,12 +133,12 @@ export default function SystemShell({
                       href={item.href}
                       className={`flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-semibold transition ${
                         active
-                          ? 'bg-[var(--color-brand)] text-[var(--color-ink)] shadow-sm shadow-black/20'
-                          : 'text-zinc-300 hover:bg-white/10 hover:text-white'
+                          ? 'bg-[var(--color-brand-soft)] text-[var(--color-brand-hover)] shadow-sm shadow-[rgba(99,91,255,0.12)]'
+                          : 'text-[var(--color-muted)] hover:bg-[var(--color-sidebar-panel)] hover:text-[var(--color-ink)]'
                       }`}
                     >
                       <span className={`grid h-7 w-7 shrink-0 place-items-center rounded text-[11px] font-black ${
-                        active ? 'bg-[var(--color-sidebar)] text-[var(--color-brand)]' : 'bg-white/10 text-zinc-200'
+                        active ? 'bg-[var(--color-brand)] text-white' : 'bg-[var(--color-sidebar-panel)] text-[var(--color-muted)]'
                       }`}>
                         {item.code}
                       </span>
@@ -153,7 +153,7 @@ export default function SystemShell({
       </aside>
 
       <div className="min-w-0 flex-1">
-        <header className="ds-topbar">
+        <header className="ds-topbar mt-4 lg:mt-0">
           <div className="mx-auto flex max-w-7xl flex-col gap-4 px-5 py-5 sm:px-6 xl:flex-row xl:items-center xl:justify-between">
             <div className="min-w-0">
               <p className="text-xs font-black uppercase tracking-[0.18em] text-[var(--color-accent)]">{eyebrow}</p>
@@ -176,7 +176,7 @@ export default function SystemShell({
           </div>
         </header>
 
-        <main className={`mx-auto max-w-7xl px-4 py-6 sm:px-6 ${contentClassName}`}>
+        <main className={`mx-auto max-w-7xl px-4 py-5 sm:px-0 lg:py-5 ${contentClassName}`}>
           {children}
         </main>
       </div>

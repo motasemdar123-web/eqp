@@ -9,8 +9,8 @@ Tokens live in `app/globals.css` under `:root`.
 - `--color-canvas`: app background
 - `--color-surface`, `--color-elevated`: panels and cards
 - `--color-ink`, `--color-muted`: text hierarchy
-- `--color-brand`: primary Dar Al HAI action color
-- `--color-accent`: secondary interaction and focus color
+- `--color-brand`: primary dashboard action color
+- `--color-accent`: secondary blue interaction and focus color
 - `--color-success`, `--color-danger`, `--color-warning`: status colors
 - `--radius-card`, `--radius-control`: standard radius values
 - `--shadow-card`, `--shadow-control`, `--shadow-overlay`: elevation scale
@@ -38,7 +38,7 @@ Common CSS classes are also available:
 
 ## Page Rules
 
-- Prefer neutral surfaces with amber primary actions and teal focus/accent.
+- Prefer a light dashboard frame with white surfaces, indigo primary actions, and blue focus/accent.
 - Keep cards at `8px` radius or less.
 - Use dense operational layouts for scheduling, reports, and machine tables.
 - Avoid page-specific color systems unless the state is semantic.
