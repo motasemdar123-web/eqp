@@ -10,6 +10,7 @@ import EmptyState from '../ui/EmptyState';
 import Toast from '../ui/Toast';
 
 const BOARD_KEY = 'dar-al-hai-engineering-creative-board-v1';
+const CREATIVE_DOCS_KEY = 'dar-al-hai-engineering-creative-docs-v1';
 const PLANNER_KEY = 'dar-al-hai-engineering-day-planner-v1';
 
 const stickyColors = {
@@ -177,6 +178,42 @@ function defaultPlannerTasks() {
       completed: false,
       createdAt,
       updatedAt: createdAt,
+    },
+  ];
+}
+
+function defaultCreativeDocs() {
+  const createdAt = DEMO_CREATED_AT;
+  return [
+    {
+      id: 'creative-doc-company-mission',
+      title: 'Company mission and strategy',
+      category: 'Strategy doc',
+      createdBy: 'Motasem Ghanem',
+      lastEditedBy: 'Motasem Ghanem',
+      createdAt,
+      updatedAt: createdAt,
+      favorite: true,
+    },
+    {
+      id: 'creative-doc-new-year',
+      title: 'Proposal for new year campaign',
+      category: 'Proposal',
+      createdBy: 'Motasem Ghanem',
+      lastEditedBy: 'Motasem Ghanem',
+      createdAt,
+      updatedAt: createdAt,
+      favorite: false,
+    },
+    {
+      id: 'creative-doc-customer-feedback',
+      title: 'Customer feedback report',
+      category: 'Customer research',
+      createdBy: 'Motasem Ghanem',
+      lastEditedBy: 'Motasem Ghanem',
+      createdAt,
+      updatedAt: createdAt,
+      favorite: false,
     },
   ];
 }
@@ -1038,7 +1075,7 @@ function CreativeTemplateGallery({ open, onClose, onUseTemplate }) {
   );
 }
 
-function CreativeArea({ onToast }) {
+function CanvasCreativeArea({ onToast }) {
   const canvasRef = useRef(null);
   const dragRef = useRef(null);
   const [items, setItems] = useState(() => defaultBoardItems());
@@ -1224,6 +1261,303 @@ function CreativeArea({ onToast }) {
           onDuplicate={duplicateItem}
         />
       </div>
+    </div>
+  );
+}
+
+function formatCreativeDate(value) {
+  const date = new Date(value);
+  const month = date.toLocaleString('en', { month: 'short' });
+  return `${month} ${date.getDate()}, ${date.getFullYear()} ${date.toLocaleTimeString('en', {
+    hour: 'numeric',
+    minute: '2-digit',
+  })}`;
+}
+
+function CreativeSidebar({ docs, activeView, selectedId, onSelectView, onSelectDoc, onCreateDoc }) {
+  const favoriteDoc = docs.find((doc) => doc.favorite) || docs[0];
+  const privateDocs = docs.slice(0, 3);
+
+  return (
+    <aside className="eng-doc-sidebar">
+      <div className="eng-doc-space-head">
+        <span className="eng-doc-avatar">M</span>
+        <strong>Motasem Ghanem&apos;s Space</strong>
+        <button type="button" aria-label="Collapse workspace sidebar">«</button>
+      </div>
+
+      <div className="eng-doc-sidebar-actions" aria-label="Workspace shortcuts">
+        <button type="button" className={activeView === 'docs' ? 'eng-doc-pill-active' : ''} onClick={() => onSelectView('docs')}>Home</button>
+        <button type="button">Inbox</button>
+        <button type="button">Tasks</button>
+        <button type="button">Search</button>
+      </div>
+
+      <nav className="eng-doc-nav" aria-label="Creative documents">
+        <p>Recents</p>
+        {favoriteDoc && (
+          <button type="button" onClick={() => onSelectDoc(favoriteDoc.id)}>
+            <span className="eng-doc-favorite">★</span>
+            <strong>{favoriteDoc.title}</strong>
+          </button>
+        )}
+        <button
+          type="button"
+          className={activeView === 'docs' ? 'eng-doc-nav-active' : ''}
+          onClick={() => onSelectView('docs')}
+        >
+          <span className="eng-doc-file-icon">■</span>
+          <strong>Document Hub</strong>
+        </button>
+        <button type="button" onClick={() => onSelectView('getting-started')}>
+          <span>○</span>
+          <strong>Getting Started</strong>
+        </button>
+
+        <p>Creative tools</p>
+        <button
+          type="button"
+          className={activeView === 'board' ? 'eng-doc-nav-active' : ''}
+          onClick={() => onSelectView('board')}
+        >
+          <span>▦</span>
+          <strong>Idea Board</strong>
+        </button>
+        <button type="button" onClick={onCreateDoc}>
+          <span>+</span>
+          <strong>New doc</strong>
+        </button>
+
+        <p>Private</p>
+        {privateDocs.map((doc) => (
+          <button
+            key={doc.id}
+            type="button"
+            className={selectedId === doc.id && activeView === 'docs' ? 'eng-doc-nav-active' : ''}
+            onClick={() => onSelectDoc(doc.id)}
+          >
+            <span className="eng-doc-file-icon">■</span>
+            <strong>{doc.title}</strong>
+          </button>
+        ))}
+
+        <p>Teamspaces</p>
+        <button type="button">
+          <span>⌂</span>
+          <strong>Maintenance Space HQ</strong>
+        </button>
+        <button type="button" onClick={onCreateDoc}>
+          <span>+</span>
+          <strong>Add new</strong>
+        </button>
+      </nav>
+
+      <div className="eng-doc-sidebar-bottom">
+        <div>
+          <strong>Invite members</strong>
+          <span>Collaborate with your team.</span>
+        </div>
+        <button type="button">New chat</button>
+      </div>
+    </aside>
+  );
+}
+
+function CreativeDocsTable({ docs, selectedId, onSelectDoc, onUpdateDoc, onCreateDoc, onDeleteDoc }) {
+  return (
+    <div className="eng-doc-table-wrap">
+      <div className="eng-doc-table-toolbar">
+        <div className="eng-doc-view-tabs">
+          <button type="button" className="eng-doc-view-active">★ All Docs</button>
+          <button type="button">● My Docs</button>
+        </div>
+        <div className="eng-doc-table-actions">
+          <button type="button" aria-label="Filter documents">≡</button>
+          <button type="button" aria-label="Sort documents">↕</button>
+          <button type="button" aria-label="Automations">⚡</button>
+          <button type="button" aria-label="Search documents">⌕</button>
+          <button type="button" aria-label="Table settings">⌘</button>
+          <button type="button" className="eng-doc-new-btn" onClick={onCreateDoc}>New</button>
+        </div>
+      </div>
+
+      <div className="eng-doc-table" role="table" aria-label="Document Hub">
+        <div className="eng-doc-row eng-doc-header-row" role="row">
+          <span role="columnheader">Aa&nbsp; Doc name</span>
+          <span role="columnheader">☷&nbsp; Category</span>
+          <span role="columnheader">●&nbsp; Created by</span>
+          <span role="columnheader">◷&nbsp; Created time</span>
+          <span role="columnheader">●&nbsp; Last edited by</span>
+          <span role="columnheader">◷&nbsp; Last updated time</span>
+          <span role="columnheader">Actions</span>
+        </div>
+        {docs.map((doc) => (
+          <div
+            key={doc.id}
+            className={selectedId === doc.id ? 'eng-doc-row eng-doc-row-selected' : 'eng-doc-row'}
+            role="row"
+            onClick={() => onSelectDoc(doc.id)}
+          >
+            <input
+              value={doc.title}
+              onChange={(event) => onUpdateDoc(doc.id, { title: event.target.value })}
+              aria-label="Document title"
+            />
+            <input
+              value={doc.category}
+              onChange={(event) => onUpdateDoc(doc.id, { category: event.target.value })}
+              className="eng-doc-category-input"
+              aria-label="Document category"
+            />
+            <span><i>M</i>{doc.createdBy}</span>
+            <span>{formatCreativeDate(doc.createdAt)}</span>
+            <span><i>M</i>{doc.lastEditedBy}</span>
+            <span>{formatCreativeDate(doc.updatedAt)}</span>
+            <button
+              type="button"
+              className="eng-doc-delete"
+              onClick={(event) => {
+                event.stopPropagation();
+                onDeleteDoc(doc.id);
+              }}
+            >
+              Delete
+            </button>
+          </div>
+        ))}
+      </div>
+      <button type="button" className="eng-doc-new-row" onClick={onCreateDoc}>+ New doc</button>
+    </div>
+  );
+}
+
+function CreativeDocumentHub({ docs, selectedId, onSelectDoc, onUpdateDoc, onCreateDoc, onDeleteDoc }) {
+  const selectedDoc = docs.find((doc) => doc.id === selectedId) || docs[0];
+
+  return (
+    <main className="eng-doc-main">
+      <header className="eng-doc-topbar">
+        <div>
+          <span className="eng-doc-file-icon">■</span>
+          <strong>Document Hub</strong>
+          <span className="eng-doc-private">Private</span>
+        </div>
+        <div>
+          <span>Edited 48m ago</span>
+          <button type="button">Share</button>
+          <button type="button" aria-label="Copy link">⌁</button>
+          <button type="button" aria-label="Favorite">☆</button>
+          <button type="button" aria-label="More actions">•••</button>
+        </div>
+      </header>
+
+      <section className="eng-doc-page">
+        <div className="eng-doc-title-block">
+          <span className="eng-doc-page-icon">■</span>
+          <div>
+            <h2>{selectedDoc?.title || 'Document Hub'}</h2>
+            <p>Create and collaborate on engineering documents in one place.</p>
+          </div>
+        </div>
+        <CreativeDocsTable
+          docs={docs}
+          selectedId={selectedId}
+          onSelectDoc={onSelectDoc}
+          onUpdateDoc={onUpdateDoc}
+          onCreateDoc={onCreateDoc}
+          onDeleteDoc={onDeleteDoc}
+        />
+      </section>
+
+      <footer className="eng-doc-footer">
+        <span>Get started</span>
+        <button type="button">Delete sample pages</button>
+        <button type="button">Tour</button>
+        <button type="button">Customize</button>
+      </footer>
+    </main>
+  );
+}
+
+function CreativeArea({ onToast }) {
+  const didLoadRef = useRef(false);
+  const [docs, setDocs] = useState(() => defaultCreativeDocs());
+  const [selectedId, setSelectedId] = useState('creative-doc-company-mission');
+  const [activeView, setActiveView] = useState('docs');
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const storedDocs = loadStoredItems(CREATIVE_DOCS_KEY, defaultCreativeDocs);
+      setDocs(storedDocs);
+      setSelectedId(storedDocs[0]?.id || '');
+      didLoadRef.current = true;
+    }, 0);
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    if (!didLoadRef.current) return;
+    saveStoredItems(CREATIVE_DOCS_KEY, docs);
+  }, [docs]);
+
+  function createDoc() {
+    const timestamp = nowIso();
+    const nextDoc = {
+      id: createId('creative-doc'),
+      title: 'Untitled document',
+      category: 'Engineering note',
+      createdBy: 'Motasem Ghanem',
+      lastEditedBy: 'Motasem Ghanem',
+      createdAt: timestamp,
+      updatedAt: timestamp,
+      favorite: false,
+    };
+    setDocs((current) => [nextDoc, ...current]);
+    setSelectedId(nextDoc.id);
+    setActiveView('docs');
+    onToast('Creative document added.');
+  }
+
+  function updateDoc(id, patch) {
+    setDocs((current) => current.map((doc) => (
+      doc.id === id ? { ...doc, ...patch, updatedAt: nowIso(), lastEditedBy: 'Motasem Ghanem' } : doc
+    )));
+  }
+
+  function deleteDoc(id) {
+    const nextDocs = docs.filter((doc) => doc.id !== id);
+    setDocs(nextDocs);
+    if (selectedId === id) setSelectedId(nextDocs[0]?.id || '');
+    onToast('Creative document deleted.');
+  }
+
+  function selectDoc(id) {
+    setSelectedId(id);
+    setActiveView('docs');
+  }
+
+  return (
+    <div className="eng-doc-workspace">
+      <CreativeSidebar
+        docs={docs}
+        activeView={activeView}
+        selectedId={selectedId}
+        onSelectView={setActiveView}
+        onSelectDoc={selectDoc}
+        onCreateDoc={createDoc}
+      />
+      {activeView === 'board'
+        ? <CanvasCreativeArea onToast={onToast} />
+        : (
+          <CreativeDocumentHub
+            docs={docs}
+            selectedId={selectedId}
+            onSelectDoc={selectDoc}
+            onUpdateDoc={updateDoc}
+            onCreateDoc={createDoc}
+            onDeleteDoc={deleteDoc}
+          />
+        )}
     </div>
   );
 }
