@@ -636,7 +636,12 @@ a:focus-visible {
 }
 
 .ds-sidebar-collapsed .ds-sidebar-brand {
+  width: 100%;
+  min-height: 2.45rem;
   justify-content: center;
+  gap: 0;
+  border-radius: 12px;
+  padding: 0.5rem;
 }
 
 .ds-sidebar-collapsed .ds-sidebar-brand-text,
