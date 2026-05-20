@@ -188,81 +188,6 @@ async function markAllNotificationsRead(req, res) {
   res.json({ success: true, ...data });
 }
 
-async function workspaceSummary(req, res) {
-  const workspace = await platformService.listWorkspaceSummary(req.platformUser);
-  res.json({ success: true, workspace });
-}
-
-async function listWorkspaceNotes(req, res) {
-  const notes = await platformService.listWorkspaceNotes(req.platformUser, req.query);
-  res.json({ success: true, notes });
-}
-
-async function getWorkspaceNote(req, res) {
-  const note = await platformService.getWorkspaceNote(req.platformUser, req.params.id);
-  res.json({ success: true, note });
-}
-
-async function createWorkspaceNote(req, res) {
-  const note = await platformService.createWorkspaceNote(req.platformUser, req.body);
-  res.status(201).json({ success: true, note });
-}
-
-async function updateWorkspaceNote(req, res) {
-  const note = await platformService.updateWorkspaceNote(req.platformUser, req.params.id, req.body);
-  res.json({ success: true, note });
-}
-
-async function archiveWorkspaceNote(req, res) {
-  const note = await platformService.archiveWorkspaceNote(req.platformUser, req.params.id);
-  res.json({ success: true, note });
-}
-
-async function listWorkspaceTasks(req, res) {
-  const tasks = await platformService.listWorkspaceTasks(req.platformUser, req.query);
-  res.json({ success: true, tasks });
-}
-
-async function createWorkspaceTask(req, res) {
-  const task = await platformService.createWorkspaceTask(req.platformUser, req.body);
-  res.status(201).json({ success: true, task });
-}
-
-async function updateWorkspaceTask(req, res) {
-  const task = await platformService.updateWorkspaceTask(req.platformUser, req.params.id, req.body);
-  res.json({ success: true, task });
-}
-
-async function deleteWorkspaceTask(req, res) {
-  const task = await platformService.deleteWorkspaceTask(req.platformUser, req.params.id);
-  res.json({ success: true, task });
-}
-
-async function listWorkspaceTemplates(req, res) {
-  const templates = await platformService.listWorkspaceTemplates(req.platformUser);
-  res.json({ success: true, templates });
-}
-
-async function createWorkspaceTemplate(req, res) {
-  const template = await platformService.createWorkspaceTemplate(req.platformUser, req.body);
-  res.status(201).json({ success: true, template });
-}
-
-async function updateWorkspaceTemplate(req, res) {
-  const template = await platformService.updateWorkspaceTemplate(req.platformUser, req.params.id, req.body);
-  res.json({ success: true, template });
-}
-
-async function deleteWorkspaceTemplate(req, res) {
-  const template = await platformService.deleteWorkspaceTemplate(req.platformUser, req.params.id);
-  res.json({ success: true, template });
-}
-
-async function listWorkspaceActivity(req, res) {
-  const activity = await platformService.listWorkspaceActivity(req.platformUser);
-  res.json({ success: true, activity });
-}
-
 module.exports = {
   login,
   unifiedLogin,
@@ -297,19 +222,4 @@ module.exports = {
   listNotifications,
   markNotificationRead,
   markAllNotificationsRead,
-  workspaceSummary,
-  listWorkspaceNotes,
-  getWorkspaceNote,
-  createWorkspaceNote,
-  updateWorkspaceNote,
-  archiveWorkspaceNote,
-  listWorkspaceTasks,
-  createWorkspaceTask,
-  updateWorkspaceTask,
-  deleteWorkspaceTask,
-  listWorkspaceTemplates,
-  createWorkspaceTemplate,
-  updateWorkspaceTemplate,
-  deleteWorkspaceTemplate,
-  listWorkspaceActivity,
 };

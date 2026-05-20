@@ -1,5 +1,5 @@
-import { WorkspaceHomePage } from '../../components/workspace/WorkspaceClientPages';
+import EngineeringWorkspace from '../../components/workspace/EngineeringWorkspace';
 
 export default function Page() {
-  return <WorkspaceHomePage />;
+  return <EngineeringWorkspace />;
 }
