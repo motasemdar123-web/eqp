@@ -4138,6 +4138,7 @@ function summarizeShiftWeather(forecast, date, task) {
   const hourly = forecast.hourly || {};
   const times = hourly.time || [];
   const temperatures = hourly.temperature_2m || [];
+  const humidities = hourly.relative_humidity_2m || [];
   const usesRainProbability = Array.isArray(hourly.precipitation_probability);
   const precipitation = usesRainProbability ? hourly.precipitation_probability : hourly.precipitation || [];
   const windSpeeds = hourly.wind_speed_10m || [];
@@ -4152,6 +4153,7 @@ function summarizeShiftWeather(forecast, date, task) {
     .map((entry) => entry.index);
 
   const maxTemperatureC = Math.max(...indexes.map((index) => Number(temperatures[index])).filter(Number.isFinite));
+  const maxHumidityPercent = Math.max(...indexes.map((index) => Number(humidities[index])).filter(Number.isFinite));
   const maxPrecipitation = Math.max(...indexes.map((index) => Number(precipitation[index])).filter(Number.isFinite), 0);
   const maxRainChance = usesRainProbability
     ? maxPrecipitation
@@ -4162,6 +4164,7 @@ function summarizeShiftWeather(forecast, date, task) {
 
   return {
     maxTemperatureC: Number.isFinite(maxTemperatureC) ? Math.round(maxTemperatureC) : null,
+    maxHumidityPercent: Number.isFinite(maxHumidityPercent) ? Math.round(maxHumidityPercent) : null,
     maxRainChance,
     maxWindKph: Math.round(maxWindKph),
     condition,
@@ -4182,7 +4185,7 @@ function buildOpenMeteoForecastUrl(place, date) {
   const url = new URL('https://api.open-meteo.com/v1/forecast');
   url.searchParams.set('latitude', String(place.latitude));
   url.searchParams.set('longitude', String(place.longitude));
-  url.searchParams.set('hourly', 'temperature_2m,precipitation_probability,weather_code,wind_speed_10m');
+  url.searchParams.set('hourly', 'temperature_2m,relative_humidity_2m,precipitation_probability,weather_code,wind_speed_10m');
   url.searchParams.set('timezone', 'auto');
   url.searchParams.set('start_date', date);
   url.searchParams.set('end_date', date);
@@ -4193,7 +4196,7 @@ function buildOpenMeteoArchiveUrl(place, date) {
   const url = new URL('https://archive-api.open-meteo.com/v1/archive');
   url.searchParams.set('latitude', String(place.latitude));
   url.searchParams.set('longitude', String(place.longitude));
-  url.searchParams.set('hourly', 'temperature_2m,precipitation,weather_code,wind_speed_10m');
+  url.searchParams.set('hourly', 'temperature_2m,relative_humidity_2m,precipitation,weather_code,wind_speed_10m');
   url.searchParams.set('timezone', 'auto');
   url.searchParams.set('start_date', date);
   url.searchParams.set('end_date', date);
@@ -4206,6 +4209,7 @@ function buildEstimatedKuwaitWeather(dateText, task) {
     ? parsedMonth - 1
     : new Date().getUTCMonth();
   const monthlyHighs = [19, 22, 27, 34, 40, 44, 46, 46, 43, 36, 28, 21];
+  const monthlyHumidity = [62, 55, 45, 35, 28, 24, 25, 28, 32, 40, 52, 62];
   const monthlyWind = [22, 24, 26, 25, 24, 28, 25, 22, 20, 19, 20, 22];
   const rainyMonths = new Set([0, 1, 2, 10, 11]);
   const text = taskWeatherText(task);
@@ -4215,6 +4219,7 @@ function buildEstimatedKuwaitWeather(dateText, task) {
 
   return {
     maxTemperatureC: monthlyHighs[month] + outdoorAdjustment,
+    maxHumidityPercent: monthlyHumidity[month],
     maxRainChance: rainyMonths.has(month) ? 20 : 5,
     maxWindKph: monthlyWind[month],
     condition: rainyMonths.has(month) ? 'partly cloudy' : 'clear',
@@ -4407,6 +4412,7 @@ async function getMyWeatherAdvice(actor, dateText) {
         startsAt: task.startsAt,
         endsAt: task.endsAt,
         maxTemperatureC: null,
+        maxHumidityPercent: null,
         maxRainChance: null,
         maxWindKph: null,
         condition: 'unavailable',

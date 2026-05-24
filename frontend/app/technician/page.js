@@ -130,6 +130,7 @@ export default function TechnicianAppPage() {
   const [weatherLoading, setWeatherLoading] = useState(false);
   const [audioLoading, setAudioLoading] = useState(false);
   const [audioUrl, setAudioUrl] = useState('');
+  const [weatherExpanded, setWeatherExpanded] = useState(false);
   const [message, setMessage] = useState('');
   const [online, setOnline] = useState(true);
 
@@ -464,13 +465,13 @@ export default function TechnicianAppPage() {
   }
 
   return (
-    <main dir="rtl" className="min-h-screen bg-[var(--color-canvas)] text-[var(--color-ink)]">
+    <main dir="rtl" className="min-h-screen overflow-x-hidden bg-[var(--color-canvas)] text-[var(--color-ink)]">
       <header className="sticky top-0 z-10 border-b border-[var(--color-border)] bg-[rgba(252,252,252,0.94)] px-4 py-4 backdrop-blur">
         <div className="mx-auto flex max-w-4xl items-center justify-between gap-3">
-          <div>
+          <div className="min-w-0">
             <p className="text-xs font-bold tracking-[0.12em] text-[var(--color-muted)]">تطبيق الفني</p>
-            <h1 className="mt-1 text-2xl font-black">مهام الفني</h1>
-            <p className="mt-1 text-sm font-semibold text-[var(--color-muted)]">
+            <h1 className="mt-1 text-xl font-black sm:text-2xl">مهام الفني</h1>
+            <p className="mt-1 truncate text-sm font-semibold text-[var(--color-muted)]">
               {technician?.user?.fullName || session.user?.fullName || 'جدول اليوم'}
             </p>
           </div>
@@ -481,7 +482,7 @@ export default function TechnicianAppPage() {
         </div>
       </header>
 
-      <section className="mx-auto grid max-w-4xl gap-4 px-4 py-4">
+      <section className="mx-auto grid max-w-4xl gap-3 px-3 py-3 sm:gap-4 sm:px-4 sm:py-4">
         <Card className="p-4">
           <div className="grid gap-3 sm:grid-cols-[1fr_auto] sm:items-end">
             <div>
@@ -493,23 +494,19 @@ export default function TechnicianAppPage() {
           </div>
         </Card>
 
-        <div className="grid gap-3 sm:grid-cols-3">
-          <TaskSummaryCard label="مهام اليوم" value={tasks.length} />
-          <TaskSummaryCard label="متأخرة" value={overdueCount} tone={overdueCount ? 'critical' : 'neutral'} />
-          <TaskSummaryCard label="مكتملة" value={completedCount} tone={completedCount ? 'completed' : 'neutral'} />
-        </div>
-
         {pendingCount > 0 && <Badge tone="yellow">{pendingCount} بانتظار الإرسال</Badge>}
         {loading && <div className="ds-alert text-right">جاري تحميل المهام...</div>}
         {message && <div className="ds-alert text-right">{message}</div>}
-
-        {!selectedTask && <WeatherAdviceCard items={weatherAdvice} loading={weatherLoading} />}
 
         {!selectedTask && (
         <section className="grid gap-3">
           <div className="flex items-center justify-between gap-3">
             <h2 className="text-lg font-black">قائمة المهام</h2>
-            <span className="text-sm font-semibold text-[var(--color-muted)]">{tasks.length} مهمة</span>
+            <div className="flex flex-wrap justify-end gap-1.5">
+              <Badge tone="info">{tasks.length} مهام</Badge>
+              {overdueCount > 0 && <Badge tone="critical">{overdueCount} متأخرة</Badge>}
+              {completedCount > 0 && <Badge tone="completed">{completedCount} مكتملة</Badge>}
+            </div>
           </div>
 
           {!loading && tasks.length === 0 && (
@@ -534,22 +531,39 @@ export default function TechnicianAppPage() {
         </section>
         )}
 
+        {!selectedTask && (
+          <Card className="p-3">
+            <button
+              type="button"
+              onClick={() => setWeatherExpanded((current) => !current)}
+              className="flex w-full items-center justify-between gap-3 text-right"
+            >
+              <div className="min-w-0">
+                <p className="text-sm font-black text-[var(--color-ink)]">الطقس ونصائح السلامة</p>
+                <p className="mt-1 truncate text-xs font-semibold text-[var(--color-muted)]">افتحها عند الحاجة قبل الخروج للموقع.</p>
+              </div>
+              <Badge tone={weatherExpanded ? 'info' : 'neutral'}>{weatherExpanded ? 'إخفاء' : 'عرض'}</Badge>
+            </button>
+            {weatherExpanded && <div className="mt-3"><WeatherAdviceCard items={weatherAdvice} loading={weatherLoading} embedded /></div>}
+          </Card>
+        )}
+
         {selectedTask && (
-          <Card className="p-5">
+          <Card className="max-w-full overflow-hidden p-4 sm:p-5">
             {(() => {
               const canDocument = isTaskInProgress(selectedTask);
               const completed = isTaskCompleted(selectedTask);
               return (
                 <>
-            <div className="flex items-start justify-between gap-3">
-              <div>
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+              <div className="min-w-0">
                 <Button type="button" variant="ghost" onClick={() => setSelectedTaskId('')} className="mb-3">
                   رجوع للقائمة
                 </Button>
-                <h2 className="text-2xl font-black">{selectedTask.task}</h2>
+                <h2 className="break-words text-xl font-black sm:text-2xl">{selectedTask.task}</h2>
                 <p className="mt-1 text-sm font-bold text-[var(--color-muted)]">{selectedTask.startsAt} - {selectedTask.endsAt}</p>
               </div>
-              <Button type="button" variant="secondary" onClick={() => speak(selectedTask)} disabled={audioLoading}>
+              <Button type="button" variant="secondary" onClick={() => speak(selectedTask)} disabled={audioLoading} className="w-full sm:w-auto">
                 {audioLoading ? 'جاري تجهيز الصوت...' : 'استماع بالذكاء الاصطناعي'}
               </Button>
             </div>
@@ -593,7 +607,7 @@ export default function TechnicianAppPage() {
                   {getTaskChecklist(selectedTask).map((item, index) => {
                     const report = selectedChecklistReports.find((entry) => entry.id === item.id) || { done: false, notes: '', photos: [] };
                     return (
-                      <div key={item.id} className="rounded-md border border-[var(--color-border)] bg-[var(--color-surface-muted)] p-3">
+                      <div key={item.id} className="max-w-full overflow-hidden rounded-md border border-[var(--color-border)] bg-[var(--color-surface-muted)] p-3">
                         <div className="flex items-start gap-3">
                           <label className="mt-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-white">
                             <input
@@ -603,7 +617,7 @@ export default function TechnicianAppPage() {
                             />
                           </label>
                           <div className="min-w-0 flex-1">
-                            <p className="text-sm font-black text-[var(--color-ink)]">{index + 1}. {item.text}</p>
+                            <p className="break-words text-sm font-black text-[var(--color-ink)]">{index + 1}. {item.text}</p>
                             <textarea
                               rows={2}
                               placeholder="ملاحظات هذه النقطة"
@@ -623,7 +637,7 @@ export default function TechnicianAppPage() {
                               />
                             </label>
                             {report.photos.length > 0 && (
-                              <div className="mt-3 grid grid-cols-3 gap-2">
+                              <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">
                                 {report.photos.map((photo) => (
                                   <img key={photo.fileName} src={photo.dataUrl} alt={photo.fileName} className="h-24 w-full rounded-md object-cover" />
                                 ))}
@@ -668,37 +682,22 @@ export default function TechnicianAppPage() {
   );
 }
 
-function TaskSummaryCard({ label, value, tone = 'neutral' }) {
-  return (
-    <Card className="p-4">
-      <p className="text-xs font-bold text-[var(--color-muted)]">{label}</p>
-      <div className="mt-2 flex items-end justify-between gap-3">
-        <p className="text-3xl font-black text-[var(--color-ink)]">{value}</p>
-        <Badge tone={tone}>{label}</Badge>
-      </div>
-    </Card>
-  );
-}
-
-function WeatherAdviceCard({ items, loading }) {
+function WeatherAdviceCard({ items, loading, embedded = false }) {
   const weatherItems = Array.isArray(items) ? items : [];
   const hottest = weatherItems
     .filter((item) => Number.isFinite(Number(item.maxTemperatureC)))
     .sort((a, b) => Number(b.maxTemperatureC) - Number(a.maxTemperatureC))[0] || null;
-  const windiest = weatherItems
-    .filter((item) => Number.isFinite(Number(item.maxWindKph)))
-    .sort((a, b) => Number(b.maxWindKph) - Number(a.maxWindKph))[0] || null;
-  const rainiest = weatherItems
-    .filter((item) => Number.isFinite(Number(item.maxRainChance)))
-    .sort((a, b) => Number(b.maxRainChance) - Number(a.maxRainChance))[0] || null;
+  const mostHumid = weatherItems
+    .filter((item) => Number.isFinite(Number(item.maxHumidityPercent)))
+    .sort((a, b) => Number(b.maxHumidityPercent) - Number(a.maxHumidityPercent))[0] || null;
   const primary = hottest || weatherItems[0] || null;
 
-  return (
-    <Card className="p-4">
+  const content = (
+    <div className={embedded ? '' : 'rounded-md border border-[var(--color-border)] bg-white p-4 shadow-[var(--shadow-card)]'}>
       <div className="flex items-start justify-between gap-3">
-        <div>
+        <div className="min-w-0">
           <h2 className="text-lg font-black">الطقس ونصائح السلامة</h2>
-          <p className="mt-1 text-sm font-semibold text-[var(--color-muted)]">ملخص عملي حسب موقع ووقت مهام اليوم.</p>
+          <p className="mt-1 text-sm font-semibold text-[var(--color-muted)]">مؤشرات سريعة قبل الخروج للموقع.</p>
           {loading && <p className="mt-1 text-sm font-semibold text-[var(--color-muted)]">جاري تحميل الطقس...</p>}
         </div>
         {primary?.generatedBy && <Badge tone="info">{weatherSourceLabel(primary.generatedBy)}</Badge>}
@@ -709,64 +708,15 @@ function WeatherAdviceCard({ items, loading }) {
       )}
 
       {weatherItems.length > 0 && (
-        <div className="mt-4 grid gap-4">
-          <div className="grid gap-3 sm:grid-cols-4">
-            <WeatherMetric label="الحرارة" value={hottest ? `${hottest.maxTemperatureC}°C` : '-'} detail={hottest?.location || ''} tone={Number(hottest?.maxTemperatureC) >= 40 ? 'critical' : 'info'} />
-            <WeatherMetric label="الحالة" value={conditionLabel(primary?.condition)} detail={primary?.location || ''} />
-            <WeatherMetric label="الرياح" value={windiest ? `${windiest.maxWindKph} كم/س` : '-'} detail={Number(windiest?.maxWindKph) >= 35 ? 'رياح قوية' : 'ضمن الطبيعي'} tone={Number(windiest?.maxWindKph) >= 35 ? 'warning' : 'neutral'} />
-            <WeatherMetric label="المطر" value={rainiest ? `${rainiest.maxRainChance}%` : '-'} detail={Number(rainiest?.maxRainChance) >= 30 ? 'جهز حماية للمعدات' : 'احتمال منخفض'} tone={Number(rainiest?.maxRainChance) >= 30 ? 'warning' : 'neutral'} />
-          </div>
-
-          <div className="grid gap-3">
-            {weatherItems.slice(0, 3).map((item) => (
-              <div key={item.taskId || item.task} className="rounded-md border border-[var(--color-border)] bg-[var(--color-surface-muted)] p-3">
-                <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
-                  <div>
-                    <p className="text-sm font-black text-[var(--color-ink)]">{item.task}</p>
-                    <p className="mt-1 text-xs font-semibold text-[var(--color-muted)]">
-                      {item.location || 'الموقع غير محدد'} · {item.startsAt || '-'} - {item.endsAt || '-'}
-                    </p>
-                  </div>
-                  <div className="flex flex-wrap gap-2">
-                    {Number.isFinite(Number(item.maxTemperatureC)) && <Badge tone={Number(item.maxTemperatureC) >= 40 ? 'critical' : 'info'}>{item.maxTemperatureC}°C</Badge>}
-                    <Badge tone="neutral">{conditionLabel(item.condition)}</Badge>
-                  </div>
-                </div>
-                <div className="mt-3 grid gap-3 md:grid-cols-2">
-                  <AdviceGroup
-                    title="نصائح الطقس"
-                    items={(item.weatherAdvice?.length ? item.weatherAdvice : (item.advice || []).slice(0, 2))}
-                    emptyText="لا توجد نصائح طقس إضافية لهذه المهمة."
-                  />
-                  <AdviceGroup
-                    title="نصائح المهمة"
-                    items={(item.taskAdvice?.length ? item.taskAdvice : (item.advice || []).slice(2, 5))}
-                    emptyText="لا توجد نصائح إضافية لطبيعة المهمة."
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
+        <div className="mt-3 grid grid-cols-2 gap-3">
+          <WeatherMetric label="الحرارة" value={hottest ? `${hottest.maxTemperatureC}°C` : '-'} detail={hottest?.location || ''} tone={Number(hottest?.maxTemperatureC) >= 40 ? 'critical' : 'info'} />
+          <WeatherMetric label="الرطوبة" value={mostHumid ? `${mostHumid.maxHumidityPercent}%` : '-'} detail={mostHumid?.location || ''} tone={Number(mostHumid?.maxHumidityPercent) >= 70 ? 'warning' : 'neutral'} />
         </div>
       )}
-    </Card>
-  );
-}
-
-function AdviceGroup({ title, items, emptyText }) {
-  const safeItems = Array.isArray(items) ? items.filter(Boolean).slice(0, 3) : [];
-  return (
-    <div className="rounded-md border border-[var(--color-border)] bg-white p-3">
-      <p className="text-xs font-black text-[var(--color-ink)]">{title}</p>
-      <div className="mt-2 grid gap-2 text-sm font-semibold leading-6 text-zinc-700">
-        {safeItems.length === 0 ? (
-          <p className="text-[var(--color-muted)]">{emptyText}</p>
-        ) : (
-          safeItems.map((item, index) => <p key={`${title}-${index}`}>• {item}</p>)
-        )}
-      </div>
     </div>
   );
+
+  return content;
 }
 
 function WeatherMetric({ label, value, detail, tone = 'neutral' }) {
@@ -774,26 +724,12 @@ function WeatherMetric({ label, value, detail, tone = 'neutral' }) {
     <div className="rounded-md border border-[var(--color-border)] bg-white p-3">
       <p className="text-xs font-bold text-[var(--color-muted)]">{label}</p>
       <div className="mt-2 flex items-center justify-between gap-2">
-        <p className="text-xl font-black text-[var(--color-ink)]">{value}</p>
+        <p className="text-2xl font-black text-[var(--color-ink)]">{value}</p>
         <Badge tone={tone}>{label}</Badge>
       </div>
       {detail && <p className="mt-1 truncate text-xs font-semibold text-[var(--color-muted)]">{detail}</p>}
     </div>
   );
-}
-
-function conditionLabel(condition) {
-  const labels = {
-    clear: 'صحو',
-    'partly cloudy': 'غائم جزئياً',
-    cloudy: 'غائم',
-    fog: 'ضباب',
-    drizzle: 'رذاذ',
-    rain: 'مطر',
-    thunderstorm: 'عواصف رعدية',
-    unavailable: 'غير متاح',
-  };
-  return labels[condition] || 'غير محدد';
 }
 
 function weatherSourceLabel(source) {
