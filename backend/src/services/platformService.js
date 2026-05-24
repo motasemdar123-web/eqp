@@ -4434,6 +4434,67 @@ async function startMyDailyScheduleTask(actor, taskId) {
   return normalizeDailyScheduleTask(task);
 }
 
+function buildTaskAudioScript(task) {
+  const checklist = normalizeTaskChecklist(task.checklist);
+  const checklistText = checklist.length
+    ? checklist.map((item, index) => `${index + 1}. ${item.text}`).join('\n')
+    : 'لا توجد نقاط عمل مفصلة لهذه المهمة.';
+
+  return [
+    'أنت مساعد صوتي للفني داخل نظام صيانة. اقرأ المهمة بالعربية بلهجة واضحة ومهنية، وكأنك تشرح للفني قبل بدء العمل.',
+    'لا تضف معلومات غير موجودة. ركز على المعدة والموقع والوقت ونقاط العمل والتنبيه للسلامة.',
+    '',
+    `عنوان المهمة: ${task.task || '-'}`,
+    `المعدة: ${task.machineModel || 'غير محددة'}`,
+    `الموقع: ${task.location || 'غير محدد'}`,
+    `الوقت: من ${task.startsAt || '-'} إلى ${task.endsAt || '-'}`,
+    task.description ? `الوصف: ${task.description}` : '',
+    task.notes ? `ملاحظات المهندس: ${task.notes}` : '',
+    '',
+    'نقاط العمل المطلوبة:',
+    checklistText,
+    '',
+    'اختم بتذكير قصير: وثق كل نقطة بملاحظة وصورة قبل إرسال المهمة.',
+  ].filter(Boolean).join('\n').slice(0, 3500);
+}
+
+async function generateMyDailyScheduleTaskAudio(actor, taskId) {
+  const prisma = requirePrisma();
+  const technician = await findTechnicianProfileForActor(prisma, actor);
+  const task = await ensureTaskBelongsToTechnician(prisma, taskId, technician.id);
+  const apiKey = process.env.OPENAI_API_KEY;
+
+  if (!apiKey) {
+    throw new ApiError(503, 'OPENAI_API_KEY is not configured on the backend.');
+  }
+
+  const response = await fetch('https://api.openai.com/v1/audio/speech', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      model: process.env.OPENAI_TTS_MODEL || 'gpt-4o-mini-tts',
+      voice: process.env.OPENAI_TTS_VOICE || 'cedar',
+      input: buildTaskAudioScript(task),
+      instructions: 'Speak naturally in Arabic, with a calm field-service tone. Pause briefly between checklist points. Make the technician feel guided, not rushed.',
+      response_format: 'mp3',
+    }),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new ApiError(response.status, errorData.error?.message || 'AI voice generation failed.');
+  }
+
+  const arrayBuffer = await response.arrayBuffer();
+  return {
+    contentType: response.headers.get('content-type') || 'audio/mpeg',
+    buffer: Buffer.from(arrayBuffer),
+  };
+}
+
 function normalizeTaskPhotos(photos) {
   if (!Array.isArray(photos)) return [];
   return photos.slice(0, 8).map((photo) => ({
@@ -4620,6 +4681,7 @@ module.exports = {
   listMyDailyScheduleTasks,
   getMyWeatherAdvice,
   startMyDailyScheduleTask,
+  generateMyDailyScheduleTaskAudio,
   completeMyDailyScheduleTask,
   listDailyScheduleTasks,
   getSchedulingBoard,

@@ -57,19 +57,6 @@ function readFileAsDataUrl(file) {
   });
 }
 
-function taskSpeech(task) {
-  const checklistText = getTaskChecklist(task).map((item, index) => `${index + 1}. ${item.text}`).join('. ');
-  return [
-    `المهمة: ${task.task}`,
-    task.machineModel ? `المعدة: ${task.machineModel}` : '',
-    task.location ? `الموقع: ${task.location}` : '',
-    `الوقت: من ${task.startsAt || '-'} إلى ${task.endsAt || '-'}`,
-    checklistText ? `النقاط: ${checklistText}` : '',
-    task.description ? `الوصف: ${task.description}` : '',
-    task.notes ? `الملاحظات: ${task.notes}` : '',
-  ].filter(Boolean).join('. ');
-}
-
 function getTaskChecklist(task) {
   const items = Array.isArray(task?.checklist) ? task.checklist : [];
   const normalized = items
@@ -107,6 +94,8 @@ export default function TechnicianAppPage() {
   const [loginForm, setLoginForm] = useState({ email: '', employeeCode: '' });
   const [loading, setLoading] = useState(false);
   const [weatherLoading, setWeatherLoading] = useState(false);
+  const [audioLoading, setAudioLoading] = useState(false);
+  const [audioUrl, setAudioUrl] = useState('');
   const [message, setMessage] = useState('');
   const [online, setOnline] = useState(true);
 
@@ -244,6 +233,12 @@ export default function TechnicianAppPage() {
     return () => clearTimeout(timer);
   }, [syncDrafts]);
 
+  useEffect(() => {
+    return () => {
+      if (audioUrl) URL.revokeObjectURL(audioUrl);
+    };
+  }, [audioUrl]);
+
   async function signIn(event) {
     event.preventDefault();
     setLoading(true);
@@ -273,16 +268,35 @@ export default function TechnicianAppPage() {
     setTechnician(null);
   }
 
-  function speak(task) {
-    if (!task || typeof window === 'undefined' || !window.speechSynthesis) {
-      setMessage('قراءة الصوت غير مدعومة على هذا الجهاز.');
-      return;
+  async function speak(task) {
+    if (!task) return;
+    setAudioLoading(true);
+    setMessage('');
+    try {
+      const response = await fetch(`${API_BASE}/api/technician/tasks/${task.id}/audio`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || errorData.message || 'تعذر إنشاء الصوت بالذكاء الاصطناعي.');
+      }
+
+      const blob = await response.blob();
+      const nextUrl = URL.createObjectURL(blob);
+      if (audioUrl) URL.revokeObjectURL(audioUrl);
+      setAudioUrl(nextUrl);
+
+      const audio = new Audio(nextUrl);
+      await audio.play();
+    } catch (error) {
+      setMessage(error.message || 'تعذر تشغيل الصوت بالذكاء الاصطناعي. تحقق من إعدادات OpenAI في الخادم.');
+    } finally {
+      setAudioLoading(false);
     }
-    window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(taskSpeech(task));
-    utterance.lang = 'ar-SA';
-    utterance.rate = 0.9;
-    window.speechSynthesis.speak(utterance);
   }
 
   function updateDraft(taskId, patch) {
@@ -487,8 +501,18 @@ export default function TechnicianAppPage() {
                 <h2 className="text-2xl font-black">{selectedTask.task}</h2>
                 <p className="mt-1 text-sm font-bold text-[var(--color-muted)]">{selectedTask.startsAt} - {selectedTask.endsAt}</p>
               </div>
-              <Button type="button" variant="secondary" onClick={() => speak(selectedTask)}>استماع</Button>
+              <Button type="button" variant="secondary" onClick={() => speak(selectedTask)} disabled={audioLoading}>
+                {audioLoading ? 'جاري تجهيز الصوت...' : 'استماع بالذكاء الاصطناعي'}
+              </Button>
             </div>
+            <p className="mt-3 text-xs font-semibold text-[var(--color-muted)]">
+              الصوت مولد بالذكاء الاصطناعي لمساعدة الفني على فهم سياق المهمة ونقاط العمل.
+            </p>
+            {audioUrl && (
+              <audio src={audioUrl} controls className="mt-3 w-full">
+                <track kind="captions" />
+              </audio>
+            )}
 
             <div className="mt-4 grid gap-3 text-sm text-zinc-700 sm:grid-cols-2">
               <Info label="المعدة" value={selectedTask.machineModel || '-'} />

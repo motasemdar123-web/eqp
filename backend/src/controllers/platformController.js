@@ -156,6 +156,13 @@ async function startMyDailyScheduleTask(req, res) {
   res.json({ success: true, task });
 }
 
+async function generateMyDailyScheduleTaskAudio(req, res) {
+  const audio = await platformService.generateMyDailyScheduleTaskAudio(req.platformUser, req.params.id);
+  res.setHeader('Content-Type', audio.contentType);
+  res.setHeader('Cache-Control', 'private, max-age=300');
+  res.send(audio.buffer);
+}
+
 async function completeMyDailyScheduleTask(req, res) {
   const task = await platformService.completeMyDailyScheduleTask(req.platformUser, req.params.id, req.body);
   res.json({ success: true, task });
@@ -215,6 +222,7 @@ module.exports = {
   myDailyScheduleTasks,
   myWeatherAdvice,
   startMyDailyScheduleTask,
+  generateMyDailyScheduleTaskAudio,
   completeMyDailyScheduleTask,
   listDailyScheduleTasks,
   upsertTechnicianSchedule,
