@@ -198,6 +198,76 @@ function saveStoredItems(key, items) {
   localStorage.setItem(key, JSON.stringify(items));
 }
 
+function formatDateKey(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+function dateFromKey(dateKey) {
+  const [year, month, day] = dateKey.split('-').map(Number);
+  return new Date(year, month - 1, day);
+}
+
+function shiftDateKey(dateKey, days) {
+  const date = dateFromKey(dateKey);
+  date.setDate(date.getDate() + days);
+  return formatDateKey(date);
+}
+
+function startOfWeekKey(dateKey) {
+  const date = dateFromKey(dateKey);
+  const day = date.getDay();
+  date.setDate(date.getDate() - day);
+  return formatDateKey(date);
+}
+
+function daysBetween(startKey, count) {
+  return Array.from({ length: count }, (_, index) => shiftDateKey(startKey, index));
+}
+
+function monthKeys(dateKey) {
+  const date = dateFromKey(dateKey);
+  const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+  const daysInMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+  return Array.from({ length: daysInMonth }, (_, index) => {
+    const next = new Date(firstDay);
+    next.setDate(index + 1);
+    return formatDateKey(next);
+  });
+}
+
+function defaultPlannerByDate() {
+  return {
+    [formatDateKey(new Date())]: defaultPlannerTasks(),
+  };
+}
+
+function loadPlannerByDate() {
+  if (typeof window === 'undefined') return defaultPlannerByDate();
+  try {
+    const stored = JSON.parse(localStorage.getItem(PLANNER_KEY) || 'null');
+    if (Array.isArray(stored)) {
+      return { [formatDateKey(new Date())]: stored };
+    }
+    if (stored && typeof stored === 'object' && !Array.isArray(stored)) {
+      return stored;
+    }
+  } catch {
+    localStorage.removeItem(PLANNER_KEY);
+  }
+  return defaultPlannerByDate();
+}
+
+function plannerStats(plannerByDate, dateKeys) {
+  const tasks = dateKeys.flatMap((dateKey) => plannerByDate[dateKey] || []);
+  const total = tasks.length;
+  const completed = tasks.filter((task) => task.completed).length;
+  const percent = total ? Math.round((completed / total) * 100) : 0;
+  return { total, completed, percent };
+}
+
 function WorkspaceTabs({ activeTab, onTabChange }) {
   return (
     <div className="eng-tabs" role="tablist" aria-label="Engineering workspace tabs">
@@ -2366,18 +2436,34 @@ function CreativeArea({ onToast }) {
     </div>
   );
 }
-function PlannerSummary({ tasks }) {
+function PlannerSummary({ tasks, weekStats, monthStats }) {
   const completed = tasks.filter((task) => task.completed).length;
   const total = tasks.length;
 
   return (
-    <Card className="eng-simple-summary">
-      <div>
-        <span>Today</span>
-        <strong>{completed}/{total} done</strong>
-      </div>
-      <Badge tone={completed === total && total > 0 ? 'completed' : 'info'}>{total} tasks</Badge>
-    </Card>
+    <div className="eng-simple-summary-grid">
+      <Card className="eng-simple-summary">
+        <div>
+          <span>Selected day</span>
+          <strong>{completed}/{total} done</strong>
+        </div>
+        <Badge tone={completed === total && total > 0 ? 'completed' : 'info'}>{total} tasks</Badge>
+      </Card>
+      <Card className="eng-simple-summary">
+        <div>
+          <span>Weekly KPI</span>
+          <strong>{weekStats.percent}%</strong>
+        </div>
+        <Badge tone={weekStats.percent >= 80 ? 'completed' : 'warning'}>{weekStats.completed}/{weekStats.total}</Badge>
+      </Card>
+      <Card className="eng-simple-summary">
+        <div>
+          <span>Monthly KPI</span>
+          <strong>{monthStats.percent}%</strong>
+        </div>
+        <Badge tone={monthStats.percent >= 80 ? 'completed' : 'info'}>{monthStats.completed}/{monthStats.total}</Badge>
+      </Card>
+    </div>
   );
 }
 
@@ -2402,19 +2488,27 @@ function SimpleTaskForm({ title, setTitle, dueTime, setDueTime, onSubmit }) {
   );
 }
 
-function SimpleTaskRow({ task, onToggle, onDelete }) {
+function SimpleTaskRow({ task, onStatusChange, onDelete }) {
   return (
     <article className={task.completed ? 'eng-simple-task eng-simple-task-done' : 'eng-simple-task'}>
-      <button
-        type="button"
-        className={task.completed ? 'eng-simple-check eng-simple-check-done' : 'eng-simple-check'}
-        onClick={() => onToggle(task.id)}
-        aria-label={`Mark ${task.title} ${task.completed ? 'not done' : 'done'}`}
-      >
-        {task.completed ? 'Done' : ''}
-      </button>
       <time>{task.dueTime || '--:--'}</time>
       <span>{task.title}</span>
+      <div className="eng-simple-status" aria-label={`Completion status for ${task.title}`}>
+        <button
+          type="button"
+          className={task.completed ? 'eng-simple-status-button eng-simple-status-done eng-simple-status-active' : 'eng-simple-status-button'}
+          onClick={() => onStatusChange(task.id, true)}
+        >
+          Done
+        </button>
+        <button
+          type="button"
+          className={!task.completed ? 'eng-simple-status-button eng-simple-status-missed eng-simple-status-active' : 'eng-simple-status-button'}
+          onClick={() => onStatusChange(task.id, false)}
+        >
+          Not done
+        </button>
+      </div>
       <Button type="button" variant="ghost" size="sm" onClick={() => onDelete(task.id)}>Delete</Button>
     </article>
   );
@@ -2422,13 +2516,14 @@ function SimpleTaskRow({ task, onToggle, onDelete }) {
 
 function DayPlanner({ onToast }) {
   const didLoadRef = useRef(false);
-  const [tasks, setTasks] = useState(() => defaultPlannerTasks());
+  const [selectedDate, setSelectedDate] = useState(() => formatDateKey(new Date()));
+  const [plannerByDate, setPlannerByDate] = useState(() => defaultPlannerByDate());
   const [title, setTitle] = useState('');
   const [dueTime, setDueTime] = useState('');
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setTasks(loadStoredItems(PLANNER_KEY, defaultPlannerTasks));
+      setPlannerByDate(loadPlannerByDate());
       didLoadRef.current = true;
     }, 0);
     return () => clearTimeout(timer);
@@ -2436,14 +2531,18 @@ function DayPlanner({ onToast }) {
 
   useEffect(() => {
     if (!didLoadRef.current) return;
-    saveStoredItems(PLANNER_KEY, tasks);
-  }, [tasks]);
+    saveStoredItems(PLANNER_KEY, plannerByDate);
+  }, [plannerByDate]);
 
-  const todayLabel = new Intl.DateTimeFormat('en', {
+  const selectedDateLabel = new Intl.DateTimeFormat('en', {
     weekday: 'long',
     month: 'short',
     day: 'numeric',
-  }).format(new Date());
+  }).format(dateFromKey(selectedDate));
+
+  const tasks = useMemo(() => plannerByDate[selectedDate] || [], [plannerByDate, selectedDate]);
+  const weekStats = useMemo(() => plannerStats(plannerByDate, daysBetween(startOfWeekKey(selectedDate), 7)), [plannerByDate, selectedDate]);
+  const monthStats = useMemo(() => plannerStats(plannerByDate, monthKeys(selectedDate)), [plannerByDate, selectedDate]);
 
   const sortedTasks = useMemo(() => [...tasks].sort((a, b) => {
     if (a.completed !== b.completed) return a.completed ? 1 : -1;
@@ -2455,31 +2554,40 @@ function DayPlanner({ onToast }) {
     const cleanTitle = title.trim();
     if (!cleanTitle) return;
     const timestamp = nowIso();
-    setTasks((current) => [
+    setPlannerByDate((current) => ({
       ...current,
-      {
-        id: createId('task'),
-        title: cleanTitle,
-        dueTime,
-        completed: false,
-        createdAt: timestamp,
-        updatedAt: timestamp,
-      },
-    ]);
+      [selectedDate]: [
+        ...(current[selectedDate] || []),
+        {
+          id: createId('task'),
+          title: cleanTitle,
+          dueTime,
+          completed: false,
+          createdAt: timestamp,
+          updatedAt: timestamp,
+        },
+      ],
+    }));
     setTitle('');
     setDueTime('');
     onToast('Task added.');
   }
 
-  function toggleTask(id) {
+  function updateTaskStatus(id, completed) {
     const timestamp = nowIso();
-    setTasks((current) => current.map((task) => (
-      task.id === id ? { ...task, completed: !task.completed, updatedAt: timestamp } : task
-    )));
+    setPlannerByDate((current) => ({
+      ...current,
+      [selectedDate]: (current[selectedDate] || []).map((task) => (
+        task.id === id ? { ...task, completed, updatedAt: timestamp } : task
+      )),
+    }));
   }
 
   function deleteTask(id) {
-    setTasks((current) => current.filter((task) => task.id !== id));
+    setPlannerByDate((current) => ({
+      ...current,
+      [selectedDate]: (current[selectedDate] || []).filter((task) => task.id !== id),
+    }));
     onToast('Task deleted.');
   }
 
@@ -2488,10 +2596,22 @@ function DayPlanner({ onToast }) {
       <div className="eng-simple-planner-head">
         <div>
           <p>Day Planner</p>
-          <h2>{todayLabel}</h2>
+          <h2>{selectedDateLabel}</h2>
         </div>
-        <PlannerSummary tasks={tasks} />
+        <div className="eng-simple-date-controls">
+          <Button type="button" variant="secondary" size="sm" onClick={() => setSelectedDate(shiftDateKey(selectedDate, -1))}>Previous</Button>
+          <input
+            type="date"
+            value={selectedDate}
+            onChange={(event) => setSelectedDate(event.target.value || formatDateKey(new Date()))}
+            aria-label="Planner date"
+          />
+          <Button type="button" variant="secondary" size="sm" onClick={() => setSelectedDate(shiftDateKey(selectedDate, 1))}>Next</Button>
+          <Button type="button" size="sm" onClick={() => setSelectedDate(formatDateKey(new Date()))}>Today</Button>
+        </div>
       </div>
+
+      <PlannerSummary tasks={tasks} weekStats={weekStats} monthStats={monthStats} />
 
       <SimpleTaskForm
         title={title}
@@ -2508,7 +2628,7 @@ function DayPlanner({ onToast }) {
         </div>
         <div className="eng-simple-task-list">
           {sortedTasks.map((task) => (
-            <SimpleTaskRow key={task.id} task={task} onToggle={toggleTask} onDelete={deleteTask} />
+            <SimpleTaskRow key={task.id} task={task} onStatusChange={updateTaskStatus} onDelete={deleteTask} />
           ))}
           {sortedTasks.length === 0 && <EmptyState title="No tasks" description="Add a task with a time to plan your day." />}
         </div>
