@@ -4439,12 +4439,13 @@ function buildTaskAudioScript(task) {
   const checklistText = checklist.length
     ? checklist.map((item, index) => `النقطة ${index + 1}: ${item.text}`).join('\n')
     : 'لا توجد نقاط عمل مفصلة لهذه المهمة.';
+  const timeText = formatArabicSpokenTimeRange(task.startsAt, task.endsAt);
 
   return [
     `مهمة اليوم: ${task.task || '-'}`,
     `المُعِدَّة: ${task.machineModel || 'غير محددة'}`,
     `الموقع: ${task.location || 'غير محدد'}`,
-    `الوقت: من ${task.startsAt || '-'} إلى ${task.endsAt || '-'}`,
+    `الوقت: ${timeText}`,
     task.description ? `وصف المهمة: ${task.description}` : '',
     task.notes ? `ملاحظات المهندس: ${task.notes}` : '',
     '',
@@ -4453,6 +4454,49 @@ function buildTaskAudioScript(task) {
     '',
     'تذكير مهم: قبل إرسال المهمة، وثّق كل نقطة بملاحظة واضحة وصورة من الموقع.',
   ].filter(Boolean).join('\n').slice(0, 3500);
+}
+
+function formatArabicSpokenTimeRange(startsAt, endsAt) {
+  const start = formatArabicSpokenTime(startsAt);
+  const end = formatArabicSpokenTime(endsAt);
+  if (start && end) return `من الساعة ${start} إلى الساعة ${end}`;
+  if (start) return `الساعة ${start}`;
+  if (end) return `حتى الساعة ${end}`;
+  return 'غير محدد';
+}
+
+function formatArabicSpokenTime(value) {
+  const match = String(value || '').match(/^(\d{1,2}):(\d{2})/);
+  if (!match) return '';
+
+  const hour24 = Number(match[1]);
+  const minute = Number(match[2]);
+  if (!Number.isFinite(hour24) || !Number.isFinite(minute)) return '';
+
+  const period = hour24 < 12 ? 'صباحاً' : 'مساءً';
+  const hour12 = hour24 % 12 || 12;
+  const hourText = [
+    '',
+    'الواحدة',
+    'الثانية',
+    'الثالثة',
+    'الرابعة',
+    'الخامسة',
+    'السادسة',
+    'السابعة',
+    'الثامنة',
+    'التاسعة',
+    'العاشرة',
+    'الحادية عشرة',
+    'الثانية عشرة',
+  ][hour12];
+
+  if (minute === 0) return `${hourText} ${period}`;
+  if (minute === 15) return `${hourText} والربع ${period}`;
+  if (minute === 30) return `${hourText} والنصف ${period}`;
+  if (minute === 45) return `${hourText} وخمس وأربعين دقيقة ${period}`;
+
+  return `${hourText} و ${minute} دقيقة ${period}`;
 }
 
 function buildTaskAudioInstructions(task) {
