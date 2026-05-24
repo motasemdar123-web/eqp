@@ -267,8 +267,8 @@ export default function SystemShell({
           <Link href="/management" className="ds-sidebar-brand" aria-label="Dar Al Hai dashboard">
             <span className="ds-sidebar-mark">DH</span>
             <span className="ds-sidebar-brand-text">
-              <span className="block text-lg font-black leading-none text-[var(--color-ink)]">Dar Al Hai</span>
-              <span className="mt-1 block text-[0.64rem] font-black uppercase tracking-[0.18em] text-[var(--color-muted)]">Maintenance</span>
+              <span className="block text-lg font-black leading-none text-white">Dar Al Hai</span>
+              <span className="mt-1 block text-[0.64rem] font-black uppercase tracking-[0.18em] text-white/40">Maintenance</span>
             </span>
           </Link>
         </div>
@@ -310,20 +310,20 @@ export default function SystemShell({
         </nav>
 
         <div className="ds-sidebar-promo">
-          <p className="text-xs font-black text-[var(--color-brand)]">Operations-ready</p>
-          <p className="mt-1 text-xs font-bold leading-5 text-[var(--color-muted)]">
+          <p className="text-xs font-black text-[var(--color-accent)]">Operations-ready</p>
+          <p className="mt-1 text-xs font-bold leading-5 text-white/55">
             Unified scheduling, technicians, EQP reports, and machine records.
           </p>
           <div className="mt-3 grid gap-1.5">
-            <span className="h-1.5 rounded-full bg-[var(--color-brand)]" />
+            <span className="h-1.5 rounded-full bg-[var(--color-accent)]" />
             <span className="h-1.5 w-10/12 rounded-full bg-[var(--color-accent)]" />
-            <span className="h-1.5 w-7/12 rounded-full bg-[var(--color-border-strong)]" />
+            <span className="h-1.5 w-7/12 rounded-full bg-white/15" />
           </div>
         </div>
 
         <div className="ds-sidebar-footer">
           <span className="ds-status-dot" />
-          <span className="ds-footer-label text-xs font-black text-[var(--color-muted)]">Live system</span>
+          <span className="ds-footer-label text-xs font-black text-white/55">Live system</span>
           {user && (
             <button type="button" onClick={logout} className="ds-sidebar-logout" aria-label="Logout">
               Logout
