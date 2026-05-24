@@ -713,15 +713,13 @@ export default function TechnicianAppPage() {
                           </label>
                           <div className="min-w-0 flex-1">
                             <p className="break-words text-sm font-black text-[var(--color-ink)]">{index + 1}. {item.text}</p>
-                            <textarea
+                            <VoiceTextarea
                               rows={2}
                               placeholder="ملاحظات هذه النقطة"
                               value={report.notes}
                               onChange={(event) => updateChecklistReport(selectedTask.id, item.id, { notes: event.target.value })}
-                              className="ds-input mt-3 px-3 py-2 text-sm"
-                            />
-                            <VoiceNoteButton
-                              className="mt-2"
+                              className="mt-3"
+                              textareaClassName="px-3 py-2 text-sm"
                               recording={recordingKey === `point-${item.id}`}
                               transcribing={transcribingKey === `point-${item.id}`}
                               onStart={() => startRecording(`point-${item.id}`, {
@@ -757,14 +755,12 @@ export default function TechnicianAppPage() {
                     );
                   })}
                 </div>
-                <textarea
+                <VoiceTextarea
                   rows={3}
                   placeholder="ملخص عام اختياري"
                   value={selectedDraft.summary || ''}
                   onChange={(event) => updateDraft(selectedTask.id, { summary: event.target.value })}
-                  className="ds-input px-3 py-3 text-base"
-                />
-                <VoiceNoteButton
+                  textareaClassName="px-3 py-3 text-base"
                   recording={recordingKey === 'summary'}
                   transcribing={transcribingKey === 'summary'}
                   onStart={() => startRecording('summary', {
@@ -775,14 +771,12 @@ export default function TechnicianAppPage() {
                   })}
                   onStop={stopRecording}
                 />
-                <textarea
+                <VoiceTextarea
                   rows={2}
                   placeholder="ملاحظات إضافية"
                   value={selectedDraft.notes || ''}
                   onChange={(event) => updateDraft(selectedTask.id, { notes: event.target.value })}
-                  className="ds-input px-3 py-3 text-base"
-                />
-                <VoiceNoteButton
+                  textareaClassName="px-3 py-3 text-base"
                   recording={recordingKey === 'notes'}
                   transcribing={transcribingKey === 'notes'}
                   onStart={() => startRecording('notes', {
@@ -880,16 +874,60 @@ function TechnicianLoading({ label }) {
   );
 }
 
+function VoiceTextarea({
+  rows,
+  placeholder,
+  value,
+  onChange,
+  className = '',
+  textareaClassName = '',
+  recording,
+  transcribing,
+  onStart,
+  onStop,
+}) {
+  return (
+    <div className={`tech-voice-field ${className}`}>
+      <textarea
+        rows={rows}
+        placeholder={placeholder}
+        value={value}
+        onChange={onChange}
+        className={`ds-input min-w-0 ${textareaClassName}`}
+      />
+      <VoiceNoteButton
+        recording={recording}
+        transcribing={transcribing}
+        onStart={onStart}
+        onStop={onStop}
+      />
+    </div>
+  );
+}
+
 function VoiceNoteButton({ recording, transcribing, onStart, onStop, className = '' }) {
+  const label = transcribing ? 'جاري تحويل الصوت إلى نص' : recording ? 'إيقاف التسجيل' : 'تسجيل ملاحظة صوتية';
+
   return (
     <button
       type="button"
       onClick={recording ? onStop : onStart}
       disabled={transcribing}
+      aria-label={label}
+      title={label}
       className={`tech-voice-button ${recording ? 'tech-voice-button-recording' : ''} ${className}`}
     >
+      {transcribing ? (
+        <span className="tech-spinner tech-voice-spinner" aria-hidden="true" />
+      ) : (
+        <svg className="tech-mic-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 14a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v5a3 3 0 0 0 3 3Z" />
+          <path d="M19 11a7 7 0 0 1-14 0" />
+          <path d="M12 18v3" />
+          <path d="M8 21h8" />
+        </svg>
+      )}
       <span className={recording ? 'tech-recording-dot' : 'tech-mic-dot'} aria-hidden="true" />
-      {transcribing ? 'جاري تحويل الصوت إلى نص...' : recording ? 'إيقاف التسجيل' : 'تسجيل ملاحظة صوتية'}
     </button>
   );
 }
