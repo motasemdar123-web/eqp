@@ -590,7 +590,7 @@ export default function TechnicianAppPage() {
         </Card>
 
         {pendingCount > 0 && <Badge tone="yellow">{pendingCount} بانتظار الإرسال</Badge>}
-        {loading && <div className="ds-alert text-right">جاري تحميل المهام...</div>}
+        {loading && <TechnicianLoading label="جاري تحميل المهام..." />}
         {message && <div className="ds-alert text-right">{message}</div>}
 
         {!selectedTask && (
@@ -605,7 +605,7 @@ export default function TechnicianAppPage() {
           </div>
 
           {!loading && tasks.length === 0 && (
-            <Card className="p-5 text-center">
+            <Card className="ds-empty-state p-5 text-center">
               <p className="text-lg font-black">لا توجد مهام لهذا اليوم</p>
               <p className="mt-2 text-sm font-semibold text-[var(--color-muted)]">اختر تاريخاً آخر أو اضغط تحديث للتحقق من المهام الجديدة.</p>
             </Card>
@@ -833,6 +833,8 @@ function WeatherAdviceCard({ items, loading, embedded = false }) {
         {primary?.generatedBy && <Badge tone="info">{weatherSourceLabel(primary.generatedBy)}</Badge>}
       </div>
 
+      {loading && <div className="tech-loading-bar mt-3" />}
+
       {!loading && weatherItems.length === 0 && (
         <p className="mt-3 text-sm font-semibold text-[var(--color-muted)]">لا توجد نصائح طقس لهذا اليوم.</p>
       )}
@@ -862,14 +864,31 @@ function WeatherMetric({ label, value, detail, tone = 'neutral' }) {
   );
 }
 
+function TechnicianLoading({ label }) {
+  return (
+    <Card className="p-3">
+      <div className="flex items-center justify-between gap-3">
+        <p className="text-sm font-black text-[var(--color-ink)]">{label}</p>
+        <span className="tech-spinner" aria-hidden="true" />
+      </div>
+      <div className="tech-loading-bar mt-3" />
+      <div className="mt-3 grid gap-2">
+        <div className="ds-skeleton h-3 w-2/3" />
+        <div className="ds-skeleton h-3 w-1/2" />
+      </div>
+    </Card>
+  );
+}
+
 function VoiceNoteButton({ recording, transcribing, onStart, onStop, className = '' }) {
   return (
     <button
       type="button"
       onClick={recording ? onStop : onStart}
       disabled={transcribing}
-      className={`inline-flex min-h-10 items-center justify-center rounded-md border border-[var(--color-border)] bg-white px-3 py-2 text-sm font-black text-[var(--color-ink)] shadow-[var(--shadow-control)] ${recording ? 'border-[var(--color-danger)] text-[var(--color-danger)]' : ''} ${className}`}
+      className={`tech-voice-button ${recording ? 'tech-voice-button-recording' : ''} ${className}`}
     >
+      <span className={recording ? 'tech-recording-dot' : 'tech-mic-dot'} aria-hidden="true" />
       {transcribing ? 'جاري تحويل الصوت إلى نص...' : recording ? 'إيقاف التسجيل' : 'تسجيل ملاحظة صوتية'}
     </button>
   );
@@ -887,7 +906,7 @@ function TechnicianTaskCard({ task, loading, onSelect, onStart }) {
   const readOnly = isTaskCompleted(task);
 
   return (
-    <Card className="p-4 transition">
+    <Card className="ds-card-hover p-4 transition">
       <div className="flex flex-col gap-3">
         <button type="button" onClick={onSelect} className="text-right">
           <div className="flex items-start justify-between gap-3">
