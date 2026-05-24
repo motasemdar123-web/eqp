@@ -144,7 +144,7 @@ export default function TechnicianAppPage() {
   }, []);
 
   const token = session?.token || '';
-  const selectedTask = useMemo(() => tasks.find((task) => task.id === selectedTaskId) || tasks[0] || null, [selectedTaskId, tasks]);
+  const selectedTask = useMemo(() => tasks.find((task) => task.id === selectedTaskId) || null, [selectedTaskId, tasks]);
   const selectedDraft = selectedTask ? drafts[selectedTask.id] || { summary: '', notes: '', photos: [], checklistReports: [] } : { summary: '', notes: '', photos: [], checklistReports: [] };
   const selectedChecklistReports = selectedTask ? buildChecklistReports(selectedTask, selectedDraft) : [];
   const pendingCount = Object.values(drafts).filter((draft) => draft.pending).length;
@@ -190,7 +190,7 @@ export default function TechnicianAppPage() {
       setDate(nextDate);
       setTasks(nextTasks);
       setTechnician(data.technician || null);
-      setSelectedTaskId((current) => (nextTasks.some((task) => task.id === current) ? current : nextTasks[0]?.id || ''));
+      setSelectedTaskId((current) => (nextTasks.some((task) => task.id === current) ? current : ''));
       writeJson(CACHE_KEY, { date: nextDate, tasks: nextTasks, technician: data.technician || null });
       await loadWeatherAdvice(nextDate);
     } catch (error) {
@@ -503,8 +503,9 @@ export default function TechnicianAppPage() {
         {loading && <div className="ds-alert text-right">جاري تحميل المهام...</div>}
         {message && <div className="ds-alert text-right">{message}</div>}
 
-        <WeatherAdviceCard items={weatherAdvice} loading={weatherLoading} />
+        {!selectedTask && <WeatherAdviceCard items={weatherAdvice} loading={weatherLoading} />}
 
+        {!selectedTask && (
         <section className="grid gap-3">
           <div className="flex items-center justify-between gap-3">
             <h2 className="text-lg font-black">قائمة المهام</h2>
@@ -522,13 +523,16 @@ export default function TechnicianAppPage() {
             <TechnicianTaskCard
               key={task.id}
               task={task}
-              selected={selectedTask?.id === task.id}
               loading={loading}
               onSelect={() => setSelectedTaskId(task.id)}
-              onStart={() => startTask(task.id)}
+              onStart={async () => {
+                await startTask(task.id);
+                setSelectedTaskId(task.id);
+              }}
             />
           ))}
         </section>
+        )}
 
         {selectedTask && (
           <Card className="p-5">
@@ -539,6 +543,9 @@ export default function TechnicianAppPage() {
                 <>
             <div className="flex items-start justify-between gap-3">
               <div>
+                <Button type="button" variant="ghost" onClick={() => setSelectedTaskId('')} className="mb-3">
+                  رجوع للقائمة
+                </Button>
                 <h2 className="text-2xl font-black">{selectedTask.task}</h2>
                 <p className="mt-1 text-sm font-bold text-[var(--color-muted)]">{selectedTask.startsAt} - {selectedTask.endsAt}</p>
               </div>
@@ -674,44 +681,134 @@ function TaskSummaryCard({ label, value, tone = 'neutral' }) {
 }
 
 function WeatherAdviceCard({ items, loading }) {
-  const first = items?.[0] || null;
-  const advice = (items || []).flatMap((item) => item.advice || []).slice(0, 2);
+  const weatherItems = Array.isArray(items) ? items : [];
+  const hottest = weatherItems
+    .filter((item) => Number.isFinite(Number(item.maxTemperatureC)))
+    .sort((a, b) => Number(b.maxTemperatureC) - Number(a.maxTemperatureC))[0] || null;
+  const windiest = weatherItems
+    .filter((item) => Number.isFinite(Number(item.maxWindKph)))
+    .sort((a, b) => Number(b.maxWindKph) - Number(a.maxWindKph))[0] || null;
+  const rainiest = weatherItems
+    .filter((item) => Number.isFinite(Number(item.maxRainChance)))
+    .sort((a, b) => Number(b.maxRainChance) - Number(a.maxRainChance))[0] || null;
+  const primary = hottest || weatherItems[0] || null;
 
   return (
     <Card className="p-4">
       <div className="flex items-start justify-between gap-3">
         <div>
           <h2 className="text-lg font-black">الطقس ونصائح السلامة</h2>
-          {loading && <p className="mt-1 text-sm font-semibold text-[var(--color-muted)]">جاري تحميل النصائح...</p>}
+          <p className="mt-1 text-sm font-semibold text-[var(--color-muted)]">ملخص عملي حسب موقع ووقت مهام اليوم.</p>
+          {loading && <p className="mt-1 text-sm font-semibold text-[var(--color-muted)]">جاري تحميل الطقس...</p>}
         </div>
-        {first?.weather?.maxTempC && <Badge tone="info">{first.weather.maxTempC}°C</Badge>}
+        {primary?.generatedBy && <Badge tone="info">{weatherSourceLabel(primary.generatedBy)}</Badge>}
       </div>
 
-      {!loading && !first && (
+      {!loading && weatherItems.length === 0 && (
         <p className="mt-3 text-sm font-semibold text-[var(--color-muted)]">لا توجد نصائح طقس لهذا اليوم.</p>
       )}
 
-      {first && (
-        <div className="mt-3 grid gap-2 text-sm font-semibold text-zinc-700">
-          {first.weather?.condition && <p>{first.weather.condition}</p>}
-          {advice.length === 0 ? (
-            <p className="text-[var(--color-muted)]">لا توجد نصائح طقس لهذا اليوم.</p>
-          ) : (
-            advice.map((item, index) => <p key={`${item}-${index}`}>{item}</p>)
-          )}
+      {weatherItems.length > 0 && (
+        <div className="mt-4 grid gap-4">
+          <div className="grid gap-3 sm:grid-cols-4">
+            <WeatherMetric label="الحرارة" value={hottest ? `${hottest.maxTemperatureC}°C` : '-'} detail={hottest?.location || ''} tone={Number(hottest?.maxTemperatureC) >= 40 ? 'critical' : 'info'} />
+            <WeatherMetric label="الحالة" value={conditionLabel(primary?.condition)} detail={primary?.location || ''} />
+            <WeatherMetric label="الرياح" value={windiest ? `${windiest.maxWindKph} كم/س` : '-'} detail={Number(windiest?.maxWindKph) >= 35 ? 'رياح قوية' : 'ضمن الطبيعي'} tone={Number(windiest?.maxWindKph) >= 35 ? 'warning' : 'neutral'} />
+            <WeatherMetric label="المطر" value={rainiest ? `${rainiest.maxRainChance}%` : '-'} detail={Number(rainiest?.maxRainChance) >= 30 ? 'جهز حماية للمعدات' : 'احتمال منخفض'} tone={Number(rainiest?.maxRainChance) >= 30 ? 'warning' : 'neutral'} />
+          </div>
+
+          <div className="grid gap-3">
+            {weatherItems.slice(0, 3).map((item) => (
+              <div key={item.taskId || item.task} className="rounded-md border border-[var(--color-border)] bg-[var(--color-surface-muted)] p-3">
+                <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+                  <div>
+                    <p className="text-sm font-black text-[var(--color-ink)]">{item.task}</p>
+                    <p className="mt-1 text-xs font-semibold text-[var(--color-muted)]">
+                      {item.location || 'الموقع غير محدد'} · {item.startsAt || '-'} - {item.endsAt || '-'}
+                    </p>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {Number.isFinite(Number(item.maxTemperatureC)) && <Badge tone={Number(item.maxTemperatureC) >= 40 ? 'critical' : 'info'}>{item.maxTemperatureC}°C</Badge>}
+                    <Badge tone="neutral">{conditionLabel(item.condition)}</Badge>
+                  </div>
+                </div>
+                <div className="mt-3 grid gap-3 md:grid-cols-2">
+                  <AdviceGroup
+                    title="نصائح الطقس"
+                    items={(item.weatherAdvice?.length ? item.weatherAdvice : (item.advice || []).slice(0, 2))}
+                    emptyText="لا توجد نصائح طقس إضافية لهذه المهمة."
+                  />
+                  <AdviceGroup
+                    title="نصائح المهمة"
+                    items={(item.taskAdvice?.length ? item.taskAdvice : (item.advice || []).slice(2, 5))}
+                    emptyText="لا توجد نصائح إضافية لطبيعة المهمة."
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       )}
     </Card>
   );
 }
 
-function TechnicianTaskCard({ task, selected, loading, onSelect, onStart }) {
+function AdviceGroup({ title, items, emptyText }) {
+  const safeItems = Array.isArray(items) ? items.filter(Boolean).slice(0, 3) : [];
+  return (
+    <div className="rounded-md border border-[var(--color-border)] bg-white p-3">
+      <p className="text-xs font-black text-[var(--color-ink)]">{title}</p>
+      <div className="mt-2 grid gap-2 text-sm font-semibold leading-6 text-zinc-700">
+        {safeItems.length === 0 ? (
+          <p className="text-[var(--color-muted)]">{emptyText}</p>
+        ) : (
+          safeItems.map((item, index) => <p key={`${title}-${index}`}>• {item}</p>)
+        )}
+      </div>
+    </div>
+  );
+}
+
+function WeatherMetric({ label, value, detail, tone = 'neutral' }) {
+  return (
+    <div className="rounded-md border border-[var(--color-border)] bg-white p-3">
+      <p className="text-xs font-bold text-[var(--color-muted)]">{label}</p>
+      <div className="mt-2 flex items-center justify-between gap-2">
+        <p className="text-xl font-black text-[var(--color-ink)]">{value}</p>
+        <Badge tone={tone}>{label}</Badge>
+      </div>
+      {detail && <p className="mt-1 truncate text-xs font-semibold text-[var(--color-muted)]">{detail}</p>}
+    </div>
+  );
+}
+
+function conditionLabel(condition) {
+  const labels = {
+    clear: 'صحو',
+    'partly cloudy': 'غائم جزئياً',
+    cloudy: 'غائم',
+    fog: 'ضباب',
+    drizzle: 'رذاذ',
+    rain: 'مطر',
+    thunderstorm: 'عواصف رعدية',
+    unavailable: 'غير متاح',
+  };
+  return labels[condition] || 'غير محدد';
+}
+
+function weatherSourceLabel(source) {
+  if (String(source || '').includes('open-meteo')) return 'تحديث مباشر';
+  if (String(source || '').includes('seasonal')) return 'تقدير موسمي';
+  return 'إرشادات';
+}
+
+function TechnicianTaskCard({ task, loading, onSelect, onStart }) {
   const status = getTaskDisplayStatus(task);
   const actionLabel = getTaskActionLabel(task.status);
   const readOnly = isTaskCompleted(task);
 
   return (
-    <Card className={`p-4 transition ${selected ? 'ring-2 ring-[var(--ring)]' : ''}`}>
+    <Card className="p-4 transition">
       <div className="flex flex-col gap-3">
         <button type="button" onClick={onSelect} className="text-right">
           <div className="flex items-start justify-between gap-3">
@@ -732,7 +829,7 @@ function TechnicianTaskCard({ task, selected, loading, onSelect, onStart }) {
           <Button type="button" onClick={readOnly ? onSelect : onStart} disabled={loading}>
             {actionLabel}
           </Button>
-          <Button type="button" variant="secondary" onClick={onSelect}>تفاصيل</Button>
+          <Button type="button" variant="secondary" onClick={onSelect}>عرض التفاصيل</Button>
         </div>
       </div>
     </Card>

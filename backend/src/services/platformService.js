@@ -4224,16 +4224,30 @@ function buildEstimatedKuwaitWeather(dateText, task) {
 async function fetchWeatherForTask(place, date, task) {
   try {
     const forecast = await fetchJson(buildOpenMeteoForecastUrl(place, date));
+    const weather = summarizeShiftWeather(forecast, date, task);
+    if (!Number.isFinite(Number(weather.maxTemperatureC))) {
+      return {
+        weather: buildEstimatedKuwaitWeather(date, task),
+        generatedBy: 'seasonal-fallback-empty-forecast',
+      };
+    }
     return {
-      weather: summarizeShiftWeather(forecast, date, task),
+      weather,
       generatedBy: 'open-meteo',
     };
   } catch (forecastError) {
     if (date <= addDaysToIso(currentIsoDate(), -1)) {
       try {
         const archive = await fetchJson(buildOpenMeteoArchiveUrl(place, date));
+        const weather = summarizeShiftWeather(archive, date, task);
+        if (!Number.isFinite(Number(weather.maxTemperatureC))) {
+          return {
+            weather: buildEstimatedKuwaitWeather(date, task),
+            generatedBy: 'seasonal-fallback-empty-archive',
+          };
+        }
         return {
-          weather: summarizeShiftWeather(archive, date, task),
+          weather,
           generatedBy: 'open-meteo-archive',
         };
       } catch {
@@ -4251,44 +4265,52 @@ async function fetchWeatherForTask(place, date, task) {
 
 function buildWeatherAdvice(task, weather) {
   const text = taskWeatherText(task);
-  const advice = [];
+  const weatherAdvice = [];
+  const taskAdvice = [];
   const maxTemperature = weather.maxTemperatureC || 0;
 
   if (maxTemperature >= 42) {
-    advice.push('حرارة شديدة: استخدم ملابس قطنية خفيفة، قبعة أو غطاء للرأس، وماء بارد كاف. خذ استراحة قصيرة كل 30-45 دقيقة.');
+    weatherAdvice.push('حرارة شديدة: استخدم ملابس قطنية خفيفة، قبعة أو غطاء للرأس، وماء بارد كاف. خذ استراحة قصيرة كل 30-45 دقيقة.');
   } else if (maxTemperature >= 35) {
-    advice.push('الجو حار: ارتد ملابس خفيفة، وخذ ماء كاف، وتجنب الوقوف الطويل تحت الشمس.');
+    weatherAdvice.push('الجو حار: ارتد ملابس خفيفة، وخذ ماء كاف، وتجنب الوقوف الطويل تحت الشمس.');
   } else if (maxTemperature <= 12) {
-    advice.push('الجو بارد نسبياً: خذ جاكيت خفيف وقفازات إذا كان العمل خارجياً.');
+    weatherAdvice.push('الجو بارد نسبياً: خذ جاكيت خفيف وقفازات إذا كان العمل خارجياً.');
+  } else {
+    weatherAdvice.push('الطقس مناسب عموماً، لكن خذ ماء كافياً وراجع حالة الموقع قبل بدء العمل.');
   }
 
   if (weather.maxRainChance >= 60 || ['rain', 'drizzle', 'thunderstorm'].includes(weather.condition)) {
-    advice.push('احتمال المطر عالي: خذ مظلة أو معطف مطر، واحمِ الأجهزة الكهربائية ونقاط الفحص من البلل.');
+    weatherAdvice.push('احتمال المطر عالي: خذ مظلة أو معطف مطر، واحمِ الأجهزة الكهربائية ونقاط الفحص من البلل.');
   } else if (weather.maxRainChance >= 30) {
-    advice.push('يوجد احتمال مطر: احتفظ بمظلة صغيرة وغطاء للأدوات الحساسة.');
+    weatherAdvice.push('يوجد احتمال مطر: احتفظ بمظلة صغيرة وغطاء للأدوات الحساسة.');
   }
 
   if (weather.maxWindKph >= 35) {
-    advice.push('الرياح قوية: ثبّت الأوراق والأدوات الخفيفة، وتجنب العمل قرب أغطية أو أجزاء غير مثبتة.');
+    weatherAdvice.push('الرياح قوية: ثبّت الأوراق والأدوات الخفيفة، وتجنب العمل قرب أغطية أو أجزاء غير مثبتة.');
+  } else if (weather.maxWindKph >= 25) {
+    weatherAdvice.push('الرياح متوسطة: انتبه للأتربة وثبّت الأوراق والأدوات الخفيفة في الموقع.');
   }
 
   if (hasAnyWord(text, ['electrical', 'electric', 'battery', 'sensor', 'wiring', 'diagnostic', 'komtrax'])) {
-    advice.push('بسبب طبيعة المهمة الكهربائية، أبقِ أجهزة الفحص والفيش جافة ونظيفة، ولا تفحص الدوائر المكشوفة أثناء المطر.');
+    taskAdvice.push('بسبب طبيعة المهمة الكهربائية، أبقِ أجهزة الفحص والفيش جافة ونظيفة، ولا تفحص الدوائر المكشوفة أثناء المطر.');
   }
 
   if (hasAnyWord(text, ['oil', 'hydraulic', 'lubrication', 'fuel', 'leak'])) {
-    advice.push('لأعمال الزيت أو الهيدروليك، خذ قفازات مقاومة للزيوت ومناديل تنظيف، وانتبه أن الحرارة تزيد ضغط السوائل.');
+    taskAdvice.push('لأعمال الزيت أو الهيدروليك، خذ قفازات مقاومة للزيوت ومناديل تنظيف، وانتبه أن الحرارة تزيد ضغط السوائل.');
   }
 
   if (hasAnyWord(text, ['outdoor', 'site', 'field', 'yard', 'inspection', 'machine', 'dozer', 'shovel'])) {
-    advice.push('العمل ميداني: خذ حذاء سلامة، نظارة حماية، وواقي شمس إذا كان الموقع مكشوفاً.');
+    taskAdvice.push('العمل ميداني: خذ حذاء سلامة، نظارة حماية، وواقي شمس إذا كان الموقع مكشوفاً.');
   }
 
-  if (advice.length === 0) {
-    advice.push('الطقس مناسب عموماً. خذ معدات السلامة الأساسية وماء كاف، وراجع الموقع قبل بدء العمل.');
+  if (taskAdvice.length === 0) {
+    taskAdvice.push('جهّز معدات السلامة الأساسية وتأكد من توفر الأدوات المطلوبة قبل بدء المهمة.');
   }
 
-  return advice.slice(0, 5);
+  return {
+    weatherAdvice: weatherAdvice.slice(0, 3),
+    taskAdvice: taskAdvice.slice(0, 3),
+  };
 }
 
 async function generateAiWeatherAdvice(task, weather, location) {
@@ -4345,6 +4367,9 @@ async function buildTaskWeatherAdvice(task) {
   const weatherResult = await fetchWeatherForTask(place, date, task);
   const weather = weatherResult.weather;
   const aiAdvice = await generateAiWeatherAdvice(task, weather, place.name);
+  const ruleAdvice = buildWeatherAdvice(task, weather);
+  const taskAdvice = ruleAdvice.taskAdvice || [];
+  const weatherAdvice = ruleAdvice.weatherAdvice || [];
 
   return {
     taskId: task.id,
@@ -4354,7 +4379,9 @@ async function buildTaskWeatherAdvice(task) {
     startsAt: task.startsAt,
     endsAt: task.endsAt,
     ...weather,
-    advice: aiAdvice?.length ? aiAdvice : buildWeatherAdvice(task, weather),
+    weatherAdvice,
+    taskAdvice: aiAdvice?.length ? aiAdvice : taskAdvice,
+    advice: [...weatherAdvice, ...(aiAdvice?.length ? aiAdvice : taskAdvice)].slice(0, 6),
     generatedBy: aiAdvice?.length ? `openai-${weatherResult.generatedBy}` : weatherResult.generatedBy,
     weatherError: weatherResult.weatherError,
   };
@@ -4383,7 +4410,12 @@ async function getMyWeatherAdvice(actor, dateText) {
         maxRainChance: null,
         maxWindKph: null,
         condition: 'unavailable',
-        advice: ['تعذر جلب الطقس حالياً. استخدم معدات السلامة الأساسية وخذ ماء كاف قبل التوجه للموقع.'],
+        weatherAdvice: ['تعذر جلب الطقس حالياً. استخدم معدات السلامة الأساسية وخذ ماء كاف قبل التوجه للموقع.'],
+        taskAdvice: ['راجع طبيعة المهمة وتأكد من توفر الأدوات ومعدات الوقاية قبل بدء العمل.'],
+        advice: [
+          'تعذر جلب الطقس حالياً. استخدم معدات السلامة الأساسية وخذ ماء كاف قبل التوجه للموقع.',
+          'راجع طبيعة المهمة وتأكد من توفر الأدوات ومعدات الوقاية قبل بدء العمل.',
+        ],
         generatedBy: 'fallback',
       });
     }
