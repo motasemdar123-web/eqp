@@ -38,7 +38,7 @@ const env = {
       .split(',')
       .map((email) => email.trim().toLowerCase())
       .filter(Boolean),
-    engineerNames: (process.env.MICROSOFT_ENGINEER_NAMES || 'motasem,abdelrahman,faisal')
+    engineerNames: (process.env.MICROSOFT_ENGINEER_NAMES || 'motasem,abdelrahman,faisal,mahmoud qaddour')
       .split(',')
       .map((name) => name.trim().toLowerCase())
       .filter(Boolean),

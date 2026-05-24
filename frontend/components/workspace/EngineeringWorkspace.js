@@ -151,6 +151,7 @@ function defaultPlannerTasks() {
       id: 'demo-task-hydraulic-temperature',
       title: 'Inspect hydraulic oil temperature',
       dueTime: '09:00',
+      expectedDurationMinutes: 30,
       completed: false,
       createdAt,
       updatedAt: createdAt,
@@ -159,6 +160,7 @@ function defaultPlannerTasks() {
       id: 'demo-task-eqp-upload',
       title: 'Review EQP report upload',
       dueTime: '11:30',
+      expectedDurationMinutes: 45,
       completed: false,
       createdAt,
       updatedAt: createdAt,
@@ -167,6 +169,7 @@ function defaultPlannerTasks() {
       id: 'demo-task-tomorrow-plan',
       title: 'Prepare tomorrow maintenance plan',
       dueTime: '15:30',
+      expectedDurationMinutes: 60,
       completed: false,
       createdAt,
       updatedAt: createdAt,
@@ -175,6 +178,7 @@ function defaultPlannerTasks() {
       id: 'demo-task-pressure-safety',
       title: 'Check safety notes for pressure testing',
       dueTime: '13:00',
+      expectedDurationMinutes: 25,
       completed: false,
       createdAt,
       updatedAt: createdAt,
@@ -266,6 +270,25 @@ function plannerStats(plannerByDate, dateKeys) {
   const completed = tasks.filter((task) => task.completed).length;
   const percent = total ? Math.round((completed / total) * 100) : 0;
   return { total, completed, percent };
+}
+
+function taskDurationMinutes(task) {
+  return Math.max(0, Number(task?.expectedDurationMinutes || task?.durationMinutes || 0) || 0);
+}
+
+function totalDurationMinutes(tasks) {
+  return tasks.reduce((total, task) => total + taskDurationMinutes(task), 0);
+}
+
+function formatDuration(minutes) {
+  const cleanMinutes = Math.max(0, Number(minutes) || 0);
+  const hours = Math.floor(cleanMinutes / 60);
+  const remainder = cleanMinutes % 60;
+
+  if (!hours && !remainder) return '0m';
+  if (!hours) return `${remainder}m`;
+  if (!remainder) return `${hours}h`;
+  return `${hours}h ${remainder}m`;
 }
 
 function WorkspaceTabs({ activeTab, onTabChange }) {
@@ -2439,6 +2462,7 @@ function CreativeArea({ onToast }) {
 function PlannerSummary({ tasks, weekStats, monthStats }) {
   const completed = tasks.filter((task) => task.completed).length;
   const total = tasks.length;
+  const dayDuration = totalDurationMinutes(tasks);
 
   return (
     <div className="eng-simple-summary-grid">
@@ -2448,6 +2472,13 @@ function PlannerSummary({ tasks, weekStats, monthStats }) {
           <strong>{completed}/{total} done</strong>
         </div>
         <Badge tone={completed === total && total > 0 ? 'completed' : 'info'}>{total} tasks</Badge>
+      </Card>
+      <Card className="eng-simple-summary">
+        <div>
+          <span>Expected duration</span>
+          <strong>{formatDuration(dayDuration)}</strong>
+        </div>
+        <Badge tone={dayDuration > 0 ? 'ready' : 'neutral'}>{dayDuration} min</Badge>
       </Card>
       <Card className="eng-simple-summary">
         <div>
@@ -2467,7 +2498,7 @@ function PlannerSummary({ tasks, weekStats, monthStats }) {
   );
 }
 
-function SimpleTaskForm({ title, setTitle, dueTime, setDueTime, onSubmit }) {
+function SimpleTaskForm({ title, setTitle, dueTime, setDueTime, expectedDuration, setExpectedDuration, onSubmit }) {
   return (
     <Card className="eng-simple-form-card">
       <form className="eng-simple-form" onSubmit={onSubmit}>
@@ -2482,6 +2513,16 @@ function SimpleTaskForm({ title, setTitle, dueTime, setDueTime, onSubmit }) {
         <Field label="Time">
           <input type="time" value={dueTime} onChange={(event) => setDueTime(event.target.value)} />
         </Field>
+        <Field label="Expected duration">
+          <input
+            type="number"
+            min="0"
+            step="5"
+            value={expectedDuration}
+            onChange={(event) => setExpectedDuration(event.target.value)}
+            placeholder="Minutes"
+          />
+        </Field>
         <Button type="submit">Add</Button>
       </form>
     </Card>
@@ -2493,6 +2534,7 @@ function SimpleTaskRow({ task, onStatusChange, onDelete }) {
     <article className={task.completed ? 'eng-simple-task eng-simple-task-done' : 'eng-simple-task'}>
       <time>{task.dueTime || '--:--'}</time>
       <span>{task.title}</span>
+      <span className="eng-simple-duration">{formatDuration(taskDurationMinutes(task))}</span>
       <div className="eng-simple-status" aria-label={`Completion status for ${task.title}`}>
         <button
           type="button"
@@ -2520,6 +2562,7 @@ function DayPlanner({ onToast }) {
   const [plannerByDate, setPlannerByDate] = useState(() => defaultPlannerByDate());
   const [title, setTitle] = useState('');
   const [dueTime, setDueTime] = useState('');
+  const [expectedDuration, setExpectedDuration] = useState('');
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -2554,6 +2597,7 @@ function DayPlanner({ onToast }) {
     const cleanTitle = title.trim();
     if (!cleanTitle) return;
     const timestamp = nowIso();
+    const durationMinutes = Math.max(0, Number(expectedDuration) || 0);
     setPlannerByDate((current) => ({
       ...current,
       [selectedDate]: [
@@ -2562,6 +2606,7 @@ function DayPlanner({ onToast }) {
           id: createId('task'),
           title: cleanTitle,
           dueTime,
+          expectedDurationMinutes: durationMinutes,
           completed: false,
           createdAt: timestamp,
           updatedAt: timestamp,
@@ -2570,6 +2615,7 @@ function DayPlanner({ onToast }) {
     }));
     setTitle('');
     setDueTime('');
+    setExpectedDuration('');
     onToast('Task added.');
   }
 
@@ -2618,6 +2664,8 @@ function DayPlanner({ onToast }) {
         setTitle={setTitle}
         dueTime={dueTime}
         setDueTime={setDueTime}
+        expectedDuration={expectedDuration}
+        setExpectedDuration={setExpectedDuration}
         onSubmit={addTask}
       />
 

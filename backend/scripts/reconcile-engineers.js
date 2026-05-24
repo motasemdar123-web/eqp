@@ -13,6 +13,10 @@ const defaultEngineers = [
   { email: 'faisal@daralhai.com', fullName: 'Faisal' },
 ];
 
+const defaultEngineerNameMatches = [
+  'Mahmoud Qaddour',
+];
+
 const replacementTechnicians = [
   {
     email: 'alikomatsu223@gmail.com',
@@ -81,13 +85,12 @@ const replacementTechnicians = [
 ];
 
 const engineerPermissionCodes = [
+  PermissionCode.SCHEDULE_MANAGE,
   PermissionCode.REPORTS_READ,
   PermissionCode.EQP_MANAGE,
 ];
 
-const technicianPermissionCodes = [
-  PermissionCode.SCHEDULE_MANAGE,
-];
+const technicianPermissionCodes = [];
 
 function parseList(value) {
   return String(value || '')
@@ -138,7 +141,7 @@ function configuredEngineers() {
 
 function configuredEngineerNames(engineers) {
   const explicitNames = parseList(process.env.MICROSOFT_ENGINEER_NAMES);
-  return [...engineers.map((engineer) => engineer.fullName), ...explicitNames]
+  return [...engineers.map((engineer) => engineer.fullName), ...defaultEngineerNameMatches, ...explicitNames]
     .flatMap((name) => normalizedNameParts(name))
     .filter((part, index, parts) => part.length >= 3 && parts.indexOf(part) === index);
 }
@@ -272,7 +275,7 @@ async function softRemoveTechnicianProfile(userId) {
   });
 }
 
-async function promoteExistingNameMatches(engineerRole, technicianRole, names, assignedUserIds) {
+async function promoteExistingNameMatches(engineerRole, technicianRole, legacyRoles, names, assignedUserIds) {
   if (names.length === 0) return;
 
   const users = await prisma.user.findMany({
@@ -301,11 +304,11 @@ async function promoteExistingNameMatches(engineerRole, technicianRole, names, a
     });
     await ensureUserRole(user.id, engineerRole.id);
 
-    if (technicianRole) {
+    if (technicianRole || legacyRoles.length) {
       await prisma.userRole.deleteMany({
         where: {
           userId: user.id,
-          roleId: technicianRole.id,
+          roleId: { in: [technicianRole?.id, ...legacyRoles.map((role) => role.id)].filter(Boolean) },
         },
       });
     }
@@ -316,7 +319,7 @@ async function promoteExistingNameMatches(engineerRole, technicianRole, names, a
   }
 }
 
-async function ensureReplacementTechnician(seed, engineerRole, technicianRole) {
+async function ensureReplacementTechnician(seed, engineerRole, technicianRole, legacyRoles) {
   const existingNumberOwner = await prisma.user.findUnique({ where: { userNumber: seed.userNumber } });
   if (existingNumberOwner && existingNumberOwner.email !== seed.email) {
     await prisma.user.update({
@@ -348,7 +351,7 @@ async function ensureReplacementTechnician(seed, engineerRole, technicianRole) {
   await prisma.userRole.deleteMany({
     where: {
       userId: user.id,
-      roleId: engineerRole.id,
+      roleId: { in: [engineerRole.id, ...legacyRoles.map((role) => role.id)] },
     },
   });
 
@@ -411,8 +414,11 @@ async function ensureReplacementTechnician(seed, engineerRole, technicianRole) {
 async function main() {
   const engineers = configuredEngineers();
   const engineerNames = configuredEngineerNames(engineers);
-  const engineerRole = await ensureRole('MAINTENANCE_SUPERVISOR');
-  const technicianRole = await ensureRole('FIELD_TECHNICIAN');
+  const engineerRole = await ensureRole('SERVICE_ENGINEER');
+  const technicianRole = await ensureRole('TECHNICIAN');
+  const legacyEngineerRole = await ensureRole('MAINTENANCE_SUPERVISOR');
+  const legacyTechnicianRole = await ensureRole('FIELD_TECHNICIAN');
+  const legacyRoles = [legacyEngineerRole, legacyTechnicianRole];
   const assignedUserIds = new Set();
 
   await ensureEngineerPermissions(engineerRole.id);
@@ -423,11 +429,11 @@ async function main() {
 
     await ensureUserRole(user.id, engineerRole.id);
 
-    if (technicianRole) {
+    if (technicianRole || legacyRoles.length) {
       await prisma.userRole.deleteMany({
         where: {
           userId: user.id,
-          roleId: technicianRole.id,
+          roleId: { in: [technicianRole?.id, ...legacyRoles.map((role) => role.id)].filter(Boolean) },
         },
       });
     }
@@ -437,10 +443,10 @@ async function main() {
     console.log(`Reconciled engineer: ${engineer.email}`);
   }
 
-  await promoteExistingNameMatches(engineerRole, technicianRole, engineerNames, assignedUserIds);
+  await promoteExistingNameMatches(engineerRole, technicianRole, legacyRoles, engineerNames, assignedUserIds);
 
   for (const replacementTechnician of replacementTechnicians) {
-    await ensureReplacementTechnician(replacementTechnician, engineerRole, technicianRole);
+    await ensureReplacementTechnician(replacementTechnician, engineerRole, technicianRole, legacyRoles);
   }
 
   await prisma.technicianProfile.updateMany({

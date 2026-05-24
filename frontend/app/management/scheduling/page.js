@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 /* eslint-disable @next/next/no-img-element */
 
@@ -8,6 +8,7 @@ import Card from '../../../components/ui/Card';
 import Badge from '../../../components/ui/Badge';
 import Button from '../../../components/ui/Button';
 import { getMicrosoftLoginUrl } from '../../../lib/api';
+import { getTaskDisplayStatus } from '../../../lib/taskDisplay';
 
 const API_BASE = process.env.NEXT_PUBLIC_BACKEND_URL || process.env.NEXT_PUBLIC_API_BASE_URL || 'https://eqp-1.onrender.com';
 
@@ -24,16 +25,6 @@ const emptyManualAssistant = {
   selectedIds: [],
   context: null,
   error: '',
-};
-
-const statusTone = {
-  PLANNED: 'pending',
-  CONFIRMED: 'green',
-  ON_DUTY: 'green',
-  OFF_DUTY: 'neutral',
-  LEAVE: 'red',
-  COMPLETED: 'dark',
-  CANCELLED: 'red',
 };
 
 function today() {
@@ -63,12 +54,47 @@ function technicianName(technician) {
   return technician?.user?.fullName || technician?.user?.full_name || technician?.employeeCode || 'Technician';
 }
 
+function newChecklistItem(index) {
+  return { id: `point-${index + 1}`, text: '', required: true };
+}
+
+function normalizeChecklistForForm(checklist) {
+  const items = Array.isArray(checklist) ? checklist : [];
+  const normalized = items
+    .map((item, index) => ({
+      id: String(item?.id || `point-${index + 1}`),
+      text: String(item?.text || item?.title || item || ''),
+      required: item?.required === false ? false : true,
+    }))
+    .filter((item) => item.text.trim());
+
+  return normalized.length ? normalized : [newChecklistItem(0)];
+}
+
+function normalizeChecklistForSave(checklist) {
+  return normalizeChecklistForForm(checklist)
+    .map((item, index) => ({
+      id: item.id || `point-${index + 1}`,
+      text: item.text.trim(),
+      required: item.required !== false,
+    }))
+    .filter((item) => item.text);
+}
+
+function isTechnicianSchedulable(technician) {
+  if (!technician?.isAvailable) return false;
+
+  const scheduleStatus = technician.schedules?.[0]?.status;
+  return !scheduleStatus || ['PLANNED', 'CONFIRMED', 'ON_DUTY'].includes(scheduleStatus);
+}
+
 function emptyTaskForm(workDate = today()) {
   return {
     technicianIds: [],
     workDate,
     task: '',
     description: '',
+    checklist: [{ id: 'point-1', text: '', required: true }],
     machineModel: '',
     manualAdvice: null,
     location: '',
@@ -172,6 +198,35 @@ export default function SchedulingPage() {
     });
   }
 
+  function updateChecklistItem(index, patch) {
+    setTaskForm((current) => ({
+      ...current,
+      checklist: (current.checklist || [newChecklistItem(0)]).map((item, itemIndex) => (
+        itemIndex === index ? { ...item, ...patch } : item
+      )),
+    }));
+  }
+
+  function addChecklistItem() {
+    setTaskForm((current) => ({
+      ...current,
+      checklist: [
+        ...(current.checklist || []),
+        newChecklistItem((current.checklist || []).length),
+      ],
+    }));
+  }
+
+  function removeChecklistItem(index) {
+    setTaskForm((current) => {
+      const nextItems = (current.checklist || []).filter((_, itemIndex) => itemIndex !== index);
+      return {
+        ...current,
+        checklist: nextItems.length ? nextItems : [newChecklistItem(0)],
+      };
+    });
+  }
+
   function resetTaskForm(workDate = date) {
     setEditingTaskId('');
     setTaskForm(emptyTaskForm(workDate));
@@ -186,6 +241,7 @@ export default function SchedulingPage() {
       workDate: formatDate(task.workDate),
       task: task.task || '',
       description: task.description || '',
+      checklist: normalizeChecklistForForm(task.checklist),
       machineModel: task.machineModel || '',
       manualAdvice: task.manualAdvice || null,
       location: task.location || '',
@@ -220,9 +276,13 @@ export default function SchedulingPage() {
     setLoading(true);
     setMessage('');
     try {
+      const payload = {
+        ...taskForm,
+        checklist: normalizeChecklistForSave(taskForm.checklist),
+      };
       await request(editingTaskId ? `/api/scheduling/tasks/${editingTaskId}` : '/api/scheduling/tasks', {
         method: editingTaskId ? 'PATCH' : 'POST',
-        body: JSON.stringify(taskForm),
+        body: JSON.stringify(payload),
       });
       setMessage(editingTaskId ? 'Daily schedule task updated' : 'Daily schedule task saved');
       resetTaskForm(taskForm.workDate);
@@ -429,7 +489,9 @@ export default function SchedulingPage() {
   );
   const selectedTechnicians = technicians.filter((technician) => taskForm.technicianIds.includes(technician.id));
   const availableTechnicians = technicians.filter((technician) => (
-    !assignedTechnicianIds.has(technician.id) && !taskForm.technicianIds.includes(technician.id)
+    isTechnicianSchedulable(technician) &&
+    !assignedTechnicianIds.has(technician.id) &&
+    !taskForm.technicianIds.includes(technician.id)
   ));
 
   return (
@@ -519,6 +581,43 @@ export default function SchedulingPage() {
               </div>
               <input className="ds-input" placeholder="Task" value={taskForm.task} onChange={(event) => setTaskForm((current) => ({ ...current, task: event.target.value }))} />
               <textarea rows={3} className="ds-input py-2" placeholder="Description" value={taskForm.description} onChange={(event) => setTaskForm((current) => ({ ...current, description: event.target.value }))} />
+              <div className="rounded-md border border-zinc-200 bg-zinc-50 p-3">
+                <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                  <div>
+                    <p className="text-sm font-bold text-zinc-950">Work points</p>
+                    <p className="mt-1 text-xs font-semibold text-zinc-500">Add the exact checklist the technician must complete and document.</p>
+                  </div>
+                  <Button type="button" variant="secondary" onClick={addChecklistItem}>
+                    Add point
+                  </Button>
+                </div>
+                <div className="mt-3 grid gap-2">
+                  {(taskForm.checklist || []).map((item, index) => (
+                    <div key={item.id || index} className="grid gap-2 rounded-md border border-zinc-200 bg-white p-3 md:grid-cols-[auto_1fr_auto_auto] md:items-center">
+                      <span className="grid h-8 w-8 place-items-center rounded-md bg-[var(--color-brand-soft)] text-sm font-black text-[var(--color-brand)]">
+                        {index + 1}
+                      </span>
+                      <input
+                        className="ds-input min-h-0 h-10 text-sm"
+                        placeholder="Point details, e.g. Inspect hydraulic hoses for leakage"
+                        value={item.text}
+                        onChange={(event) => updateChecklistItem(index, { text: event.target.value })}
+                      />
+                      <label className="flex items-center gap-2 text-xs font-bold text-zinc-600">
+                        <input
+                          type="checkbox"
+                          checked={item.required !== false}
+                          onChange={(event) => updateChecklistItem(index, { required: event.target.checked })}
+                        />
+                        Required
+                      </label>
+                      <Button type="button" variant="secondary" onClick={() => removeChecklistItem(index)}>
+                        Remove
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              </div>
               <ManualOptionChooser
                 state={manualAssistant}
                 busy={manualBusy}
@@ -667,8 +766,8 @@ function ScheduleTable({ tasks, showDate = false, emptyText, onView, onEdit, onD
             <th className="px-5 py-4 text-left">Time</th>
             <th className="px-5 py-4 text-left">Task</th>
             <th className="px-5 py-4 text-left">Technicians</th>
+            <th className="px-5 py-4 text-left">Equipment</th>
             <th className="px-5 py-4 text-left">Location</th>
-            <th className="px-5 py-4 text-left">Notes</th>
             <th className="px-5 py-4 text-left">Status</th>
             {hasActions && <th className="px-5 py-4 text-left">Actions</th>}
           </tr>
@@ -679,7 +778,9 @@ function ScheduleTable({ tasks, showDate = false, emptyText, onView, onEdit, onD
               <td colSpan={(showDate ? 7 : 6) + (hasActions ? 1 : 0)} className="px-5 py-8 text-center text-sm font-semibold text-zinc-500">{emptyText}</td>
             </tr>
           )}
-          {tasks.map((task) => (
+          {tasks.map((task) => {
+            const status = getTaskDisplayStatus(task, 'en');
+            return (
             <tr key={task.id} className="border-t border-zinc-100 align-top">
               {showDate && <td className="px-5 py-4 text-sm font-semibold text-zinc-700">{formatDate(task.workDate)}</td>}
               <td className="px-5 py-4 text-sm font-semibold text-zinc-700">{task.startsAt} - {task.endsAt}</td>
@@ -704,9 +805,9 @@ function ScheduleTable({ tasks, showDate = false, emptyText, onView, onEdit, onD
                   ))}
                 </div>
               </td>
+              <td className="px-5 py-4 text-sm text-zinc-600">{task.machineModel || '-'}</td>
               <td className="px-5 py-4 text-sm text-zinc-600">{task.location || '-'}</td>
-              <td className="px-5 py-4 text-sm text-zinc-600">{task.notes || '-'}</td>
-              <td className="px-5 py-4"><Badge tone={statusTone[task.status] || 'neutral'}>{task.status}</Badge></td>
+              <td className="px-5 py-4"><Badge tone={status.tone}>{status.label}</Badge></td>
               {hasActions && (
                 <td className="px-5 py-4">
                   <div className="flex flex-wrap gap-2">
@@ -729,7 +830,7 @@ function ScheduleTable({ tasks, showDate = false, emptyText, onView, onEdit, onD
                 </td>
               )}
             </tr>
-          ))}
+          );})}
         </tbody>
       </table>
     </div>
@@ -1026,7 +1127,10 @@ function formatDateTime(value) {
 
 function ScheduleSlotModal({ task, onClose, onOpenManualSource }) {
   const photos = Array.isArray(task.photos) ? task.photos : [];
-  const hasCompletion = task.status === 'COMPLETED' || task.summary || task.completedAt || photos.length > 0;
+  const status = getTaskDisplayStatus(task, 'en');
+  const checklist = Array.isArray(task.checklist) ? task.checklist : [];
+  const checklistReports = Array.isArray(task.checklistReports) ? task.checklistReports : [];
+  const hasCompletion = task.status === 'COMPLETED' || task.summary || task.completedAt || photos.length > 0 || checklistReports.length > 0;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-[rgba(7,27,51,0.62)] p-4 backdrop-blur-sm">
@@ -1053,7 +1157,7 @@ function ScheduleSlotModal({ task, onClose, onOpenManualSource }) {
             <div className="rounded-md border border-zinc-200 bg-zinc-50 p-3">
               <p className="text-xs font-bold uppercase tracking-[0.12em] text-zinc-500">Status</p>
               <div className="mt-2">
-                <Badge tone={statusTone[task.status] || 'neutral'}>{task.status || 'PLANNED'}</Badge>
+                <Badge tone={status.tone}>{status.label}</Badge>
               </div>
             </div>
           </div>
@@ -1078,6 +1182,35 @@ function ScheduleSlotModal({ task, onClose, onOpenManualSource }) {
             <p className="text-sm font-black text-zinc-950">Task Notes</p>
             <p className="mt-2 whitespace-pre-wrap text-sm leading-6 text-zinc-700">{task.notes || '-'}</p>
           </div>
+
+          {checklist.length > 0 && (
+            <div className="rounded-md border border-zinc-200 p-4">
+              <p className="text-sm font-black text-zinc-950">Work Points</p>
+              <div className="mt-3 grid gap-2">
+                {checklist.map((item, index) => {
+                  const report = checklistReports.find((entry) => entry.id === item.id);
+                  return (
+                    <div key={item.id || index} className="rounded-md border border-zinc-100 bg-zinc-50 p-3">
+                      <div className="flex items-start justify-between gap-3">
+                        <p className="text-sm font-bold text-zinc-900">{index + 1}. {item.text}</p>
+                        {report?.done && <Badge tone="completed">Done</Badge>}
+                      </div>
+                      {report?.notes && <p className="mt-2 whitespace-pre-wrap text-sm leading-6 text-zinc-700">{report.notes}</p>}
+                      {Array.isArray(report?.photos) && report.photos.length > 0 && (
+                        <div className="mt-3 grid gap-2 sm:grid-cols-3">
+                          {report.photos.map((photo, photoIndex) => (
+                            <a key={`${photo.fileName || 'point-photo'}-${photoIndex}`} href={photo.dataUrl} target="_blank" rel="noreferrer" className="overflow-hidden rounded-md border border-zinc-200 bg-white">
+                              <img src={photo.dataUrl} alt={photo.fileName || `Point photo ${photoIndex + 1}`} className="h-32 w-full object-cover" />
+                            </a>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
 
           {task.manualAdvice && <ManualAdvicePanel advice={task.manualAdvice} onOpenSource={onOpenManualSource} />}
 

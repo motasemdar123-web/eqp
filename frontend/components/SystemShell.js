@@ -121,6 +121,17 @@ function isActivePath(pathname, href, activePath) {
   return target === href || target.startsWith(`${href}/`);
 }
 
+function formatRoleLabel(role) {
+  const labels = {
+    SERVICE_ENGINEER: 'Service Engineer',
+    TECHNICIAN: 'Technician',
+    FIELD_TECHNICIAN: 'Technician',
+    MAINTENANCE_SUPERVISOR: 'Service Engineer',
+  };
+
+  return labels[role] || String(role || '').replace(/_/g, ' ').toLowerCase().replace(/\b\w/g, (letter) => letter.toUpperCase());
+}
+
 export default function SystemShell({
   title,
   eyebrow = 'Dar Al Hai',
@@ -189,7 +200,7 @@ export default function SystemShell({
 
   const roleLabel = useMemo(() => {
     if (userLabel) return userLabel;
-    if (user?.roles?.length) return user.roles.join(', ');
+    if (user?.roles?.length) return user.roles.map(formatRoleLabel).join(', ');
     if (user?.userNumber) return `User ${user.userNumber}`;
     return hasHydrated ? 'Signed in' : 'Loading session';
   }, [hasHydrated, user, userLabel]);

@@ -109,6 +109,10 @@ async function login() {
 }
 
 function resolvePlatformRedirect(roles, permissions, preferredModule) {
+  if (preferredModule === 'technician' || roles.includes('TECHNICIAN')) {
+    return '/technician';
+  }
+
   if (preferredModule === 'eqp' && permissions.includes('EQP_MANAGE')) {
     return '/eqp';
   }
@@ -117,6 +121,7 @@ function resolvePlatformRedirect(roles, permissions, preferredModule) {
     'SUPER_ADMIN',
     'GENERAL_MANAGER',
     'OPERATIONS_MANAGER',
+    'SERVICE_ENGINEER',
     'MAINTENANCE_SUPERVISOR',
     'CALL_CENTER',
     'WAREHOUSE_OFFICER',
@@ -413,14 +418,16 @@ async function findOrCreateMicrosoftUser(prisma, profile) {
   if (isConfiguredAdmin) {
     await ensureUserRole(prisma, user.id, 'SUPER_ADMIN');
   } else if (isEngineer) {
-    await ensureUserRole(prisma, user.id, 'MAINTENANCE_SUPERVISOR');
+    await ensureUserRole(prisma, user.id, 'SERVICE_ENGINEER');
 
-    const fieldTechnicianRole = await prisma.role.findUnique({ where: { code: 'FIELD_TECHNICIAN' } });
-    if (fieldTechnicianRole) {
+    const nonEngineerRoles = await prisma.role.findMany({
+      where: { code: { in: ['FIELD_TECHNICIAN', 'TECHNICIAN', 'MAINTENANCE_SUPERVISOR'] } },
+    });
+    if (nonEngineerRoles.length) {
       await prisma.userRole.deleteMany({
         where: {
           userId: user.id,
-          roleId: fieldTechnicianRole.id,
+          roleId: { in: nonEngineerRoles.map((role) => role.id) },
         },
       });
     }
@@ -589,11 +596,11 @@ async function ensureDefaultTechnicians(prisma) {
 
   await prisma.$transaction(async (tx) => {
     const role = await tx.role.upsert({
-      where: { code: 'FIELD_TECHNICIAN' },
+      where: { code: 'TECHNICIAN' },
       update: {},
       create: {
-        code: 'FIELD_TECHNICIAN',
-        name: 'Field Technician',
+        code: 'TECHNICIAN',
+        name: 'Technician',
       },
     });
 
@@ -886,11 +893,11 @@ async function syncTechnicianSkills(tx, technicianId, skills) {
   });
 }
 
-async function assignFieldTechnicianRole(tx, userId) {
-  const role = await tx.role.findUnique({ where: { code: 'FIELD_TECHNICIAN' } });
+async function assignTechnicianRole(tx, userId) {
+  const role = await tx.role.findUnique({ where: { code: 'TECHNICIAN' } });
 
   if (!role) {
-    throw new ApiError(503, 'FIELD_TECHNICIAN role is not configured.');
+    throw new ApiError(503, 'TECHNICIAN role is not configured.');
   }
 
   await tx.userRole.upsert({
@@ -906,6 +913,16 @@ async function assignFieldTechnicianRole(tx, userId) {
       roleId: role.id,
     },
   });
+
+  const legacyRole = await tx.role.findUnique({ where: { code: 'FIELD_TECHNICIAN' } });
+  if (legacyRole) {
+    await tx.userRole.deleteMany({
+      where: {
+        userId,
+        roleId: legacyRole.id,
+      },
+    });
+  }
 }
 
 async function createTechnician(payload, actorId) {
@@ -971,7 +988,7 @@ async function createTechnician(payload, actorId) {
       });
     }
 
-    await assignFieldTechnicianRole(tx, user.id);
+    await assignTechnicianRole(tx, user.id);
 
     const technician = await tx.technicianProfile.upsert({
       where: { userId: user.id },
@@ -1232,7 +1249,54 @@ function normalizeDailyScheduleTask(task) {
     ...task,
     technicians: (task.technicians || []).map((assignment) => assignment.technician),
     photos: Array.isArray(task.photos) ? task.photos : [],
+    checklist: normalizeTaskChecklist(task.checklist),
+    checklistReports: normalizeChecklistReports(task.checklistReports, normalizeTaskChecklist(task.checklist)),
   };
+}
+
+function checklistItemId(index) {
+  return `point-${index + 1}`;
+}
+
+function normalizeTaskChecklist(value) {
+  const rawItems = Array.isArray(value)
+    ? value
+    : String(value || '').split(/\r?\n/).map((item) => item.trim()).filter(Boolean);
+
+  return rawItems
+    .map((item, index) => {
+      const text = typeof item === 'string'
+        ? item
+        : String(item.text || item.title || item.label || '').trim();
+      if (!text) return null;
+      return {
+        id: String((typeof item === 'object' && item?.id) || checklistItemId(index)).slice(0, 80),
+        text: text.slice(0, 500),
+        required: typeof item === 'object' && item?.required === false ? false : true,
+      };
+    })
+    .filter(Boolean)
+    .slice(0, 30);
+}
+
+function normalizeChecklistReports(value, checklist = []) {
+  const rawReports = Array.isArray(value) ? value : [];
+  const checklistIds = new Set(checklist.map((item) => item.id));
+
+  return rawReports
+    .map((report, index) => {
+      const id = String(report?.id || checklist[index]?.id || checklistItemId(index)).slice(0, 80);
+      if (checklistIds.size > 0 && !checklistIds.has(id)) return null;
+      return {
+        id,
+        done: Boolean(report?.done),
+        notes: String(report?.notes || '').trim().slice(0, 1500),
+        photos: normalizeTaskPhotos(report?.photos).slice(0, 6),
+        updatedAt: new Date().toISOString(),
+      };
+    })
+    .filter(Boolean)
+    .slice(0, 30);
 }
 
 function normalizeMachineModel(value) {
@@ -3700,6 +3764,7 @@ async function createDailyScheduleTask(payload, actorId) {
   const technicianIds = uniqueIds(toIdArray(payload.technicianIds));
   const task = String(payload.task || '').trim();
   const workDate = toWorkDate(payload.workDate || payload.date);
+  const checklist = normalizeTaskChecklist(payload.checklist);
 
   if (!task || !payload.startsAt || !payload.endsAt) {
     throw new ApiError(400, 'task, startsAt, and endsAt are required.');
@@ -3716,6 +3781,7 @@ async function createDailyScheduleTask(payload, actorId) {
         workDate,
         task,
         description: payload.description || null,
+        checklist,
         machineModel: payload.machineModel ? normalizeMachineModel(payload.machineModel) : null,
         manualAdvice: payload.manualAdvice || null,
         location: payload.location || null,
@@ -3775,6 +3841,7 @@ async function updateDailyScheduleTask(id, payload, actorId) {
   const technicianIds = uniqueIds(toIdArray(payload.technicianIds));
   const task = String(payload.task || '').trim();
   const workDate = toWorkDate(payload.workDate || payload.date || existingTask.workDate.toISOString().slice(0, 10));
+  const checklist = normalizeTaskChecklist(payload.checklist);
 
   if (!task || !payload.startsAt || !payload.endsAt) {
     throw new ApiError(400, 'task, startsAt, and endsAt are required.');
@@ -3792,6 +3859,7 @@ async function updateDailyScheduleTask(id, payload, actorId) {
         workDate,
         task,
         description: payload.description || null,
+        checklist,
         machineModel: payload.machineModel ? normalizeMachineModel(payload.machineModel) : null,
         manualAdvice: payload.manualAdvice || existingTask.manualAdvice || null,
         location: payload.location || null,
@@ -4379,11 +4447,26 @@ function normalizeTaskPhotos(photos) {
 async function completeMyDailyScheduleTask(actor, taskId, payload) {
   const prisma = requirePrisma();
   const technician = await findTechnicianProfileForActor(prisma, actor);
-  await ensureTaskBelongsToTechnician(prisma, taskId, technician.id);
+  const existingTask = await ensureTaskBelongsToTechnician(prisma, taskId, technician.id);
 
   const summary = String(payload.summary || '').trim();
-  if (!summary) {
-    throw new ApiError(400, 'Summary is required.');
+  const checklist = normalizeTaskChecklist(existingTask.checklist);
+  const checklistReports = normalizeChecklistReports(payload.checklistReports, checklist);
+  const requiredChecklistIds = checklist.filter((item) => item.required !== false).map((item) => item.id);
+  const completedChecklistIds = new Set(checklistReports.filter((report) => report.done).map((report) => report.id));
+
+  if (requiredChecklistIds.length > 0 && requiredChecklistIds.some((id) => !completedChecklistIds.has(id))) {
+    throw new ApiError(400, 'All required checklist points must be completed.');
+  }
+  const missingEvidence = checklistReports.some((report) => (
+    completedChecklistIds.has(report.id) &&
+    (!report.notes || report.photos.length === 0)
+  ));
+  if (missingEvidence) {
+    throw new ApiError(400, 'Each completed checklist point requires notes and at least one photo.');
+  }
+  if (!summary && checklistReports.length === 0) {
+    throw new ApiError(400, 'Summary or checklist reports are required.');
   }
 
   const task = await prisma.dailyScheduleTask.update({
@@ -4391,9 +4474,14 @@ async function completeMyDailyScheduleTask(actor, taskId, payload) {
     data: {
       status: 'COMPLETED',
       completedAt: new Date(),
-      summary,
+      summary: summary || checklistReports
+        .filter((report) => report.done)
+        .map((report) => checklist.find((item) => item.id === report.id)?.text)
+        .filter(Boolean)
+        .join('\n'),
       notes: payload.notes || null,
       photos: normalizeTaskPhotos(payload.photos),
+      checklistReports,
       updatedById: actor.sub,
     },
     include: dailyScheduleTaskInclude,
@@ -4480,20 +4568,20 @@ async function getSchedulingBoard(dateText, historyFromText, historyToText) {
     dayTasks.flatMap((task) => task.technicians.map((assignment) => assignment.technicianId)),
   );
   const scheduledTechnicians = scheduledTechnicianIds.size;
-  const availableTechnicians = technicians.filter((technician) => {
+  const schedulableTechnicians = technicians.filter((technician) => {
     const status = technician.schedules[0]?.status;
     return technician.isAvailable && (!status || ['PLANNED', 'CONFIRMED', 'ON_DUTY'].includes(status));
-  }).length;
+  });
 
   return {
     date,
     kpis: {
       technicians: technicians.length,
       scheduledTechnicians,
-      availableTechnicians,
+      availableTechnicians: schedulableTechnicians.length,
       dailyTasks: dayTasks.length,
     },
-    technicians,
+    technicians: schedulableTechnicians,
     tasks: dayTasks.map(normalizeDailyScheduleTask),
     history: {
       from: historyRange.from,

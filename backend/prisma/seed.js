@@ -7,7 +7,9 @@ const rolePermissions = {
   SUPER_ADMIN: ['USERS_MANAGE', 'SCHEDULE_MANAGE', 'REPORTS_READ', 'EQP_MANAGE', 'SYSTEM_CONFIGURE'],
   GENERAL_MANAGER: ['REPORTS_READ'],
   OPERATIONS_MANAGER: ['SCHEDULE_MANAGE', 'REPORTS_READ'],
+  SERVICE_ENGINEER: ['SCHEDULE_MANAGE', 'REPORTS_READ', 'EQP_MANAGE'],
   MAINTENANCE_SUPERVISOR: ['SCHEDULE_MANAGE', 'REPORTS_READ', 'EQP_MANAGE'],
+  TECHNICIAN: [],
   FIELD_TECHNICIAN: ['SCHEDULE_MANAGE'],
   CALL_CENTER: [],
   WAREHOUSE_OFFICER: [],
@@ -184,8 +186,10 @@ async function main() {
       passwordHash,
       locale: 'en',
     });
-    await ensureUserRole(engineer.id, roles.MAINTENANCE_SUPERVISOR.id);
+    await ensureUserRole(engineer.id, roles.SERVICE_ENGINEER.id);
+    await removeUserRole(engineer.id, roles.MAINTENANCE_SUPERVISOR.id);
     await removeUserRole(engineer.id, roles.FIELD_TECHNICIAN.id);
+    await removeUserRole(engineer.id, roles.TECHNICIAN.id);
     await prisma.user.update({
       where: { id: engineer.id },
       data: { userNumber: null },
@@ -224,7 +228,8 @@ async function main() {
       locale: 'en',
     });
 
-    await ensureUserRole(technicianUser.id, roles.FIELD_TECHNICIAN.id);
+    await ensureUserRole(technicianUser.id, roles.TECHNICIAN.id);
+    await removeUserRole(technicianUser.id, roles.FIELD_TECHNICIAN.id);
 
     const technician = await prisma.technicianProfile.upsert({
       where: { userId: technicianUser.id },

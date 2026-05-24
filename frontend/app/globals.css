@@ -4873,7 +4873,7 @@ textarea {
 
 .eng-simple-summary-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 0.75rem;
 }
 
@@ -4892,7 +4892,7 @@ textarea {
 
 .eng-simple-form {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 10rem auto;
+  grid-template-columns: minmax(0, 1fr) 10rem 11rem auto;
   gap: 0.75rem;
   align-items: end;
 }
@@ -4918,7 +4918,7 @@ textarea {
 
 .eng-simple-task {
   display: grid;
-  grid-template-columns: 4.5rem minmax(0, 1fr) auto auto;
+  grid-template-columns: 4.5rem minmax(0, 1fr) 5.5rem auto auto;
   gap: 0.7rem;
   align-items: center;
   border: 1px solid var(--color-border);
@@ -4954,6 +4954,18 @@ textarea {
 .eng-simple-task-done span {
   color: var(--color-muted);
   text-decoration: line-through;
+}
+
+.eng-simple-duration {
+  justify-self: start;
+  border-radius: 999px;
+  background: var(--color-surface-muted);
+  padding: 0.25rem 0.55rem;
+  color: var(--color-ink-soft) !important;
+  font-size: 0.72rem !important;
+  font-weight: 900 !important;
+  text-decoration: none !important;
+  white-space: nowrap;
 }
 
 .eng-simple-status {
@@ -5301,6 +5313,10 @@ textarea {
 
   .eng-simple-task {
     grid-template-columns: 4rem minmax(0, 1fr);
+  }
+
+  .eng-simple-duration {
+    grid-column: 1 / -1;
   }
 
   .eng-simple-status {

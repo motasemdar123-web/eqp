@@ -18,7 +18,9 @@ enum RoleCode {
   SUPER_ADMIN
   GENERAL_MANAGER
   OPERATIONS_MANAGER
+  SERVICE_ENGINEER
   MAINTENANCE_SUPERVISOR
+  TECHNICIAN
   FIELD_TECHNICIAN
   CALL_CENTER
   WAREHOUSE_OFFICER
@@ -259,6 +261,7 @@ model DailyScheduleTask {
   workDate     DateTime                      @map("work_date") @db.Date
   task         String
   description  String?
+  checklist    Json?
   machineModel String?                       @map("machine_model")
   manualAdvice Json?                         @map("manual_advice")
   location     String?
@@ -270,6 +273,7 @@ model DailyScheduleTask {
   completedAt  DateTime?                     @map("completed_at")
   summary      String?
   photos       Json?
+  checklistReports Json?                     @map("checklist_reports")
   technicians  DailyScheduleTaskTechnician[]
   createdAt    DateTime                      @default(now()) @map("created_at")
   updatedAt    DateTime                      @updatedAt @map("updated_at")

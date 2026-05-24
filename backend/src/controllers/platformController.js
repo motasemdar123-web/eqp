@@ -157,7 +157,6 @@ async function startMyDailyScheduleTask(req, res) {
 }
 
 async function completeMyDailyScheduleTask(req, res) {
-  requireFields(req.body, ['summary']);
   const task = await platformService.completeMyDailyScheduleTask(req.platformUser, req.params.id, req.body);
   res.json({ success: true, task });
 }
