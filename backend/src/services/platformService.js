@@ -4437,25 +4437,35 @@ async function startMyDailyScheduleTask(actor, taskId) {
 function buildTaskAudioScript(task) {
   const checklist = normalizeTaskChecklist(task.checklist);
   const checklistText = checklist.length
-    ? checklist.map((item, index) => `${index + 1}. ${item.text}`).join('\n')
+    ? checklist.map((item, index) => `النقطة ${index + 1}: ${item.text}`).join('\n')
     : 'لا توجد نقاط عمل مفصلة لهذه المهمة.';
 
   return [
-    'أنت مساعد صوتي للفني داخل نظام صيانة. اقرأ المهمة بالعربية بلهجة واضحة ومهنية، وكأنك تشرح للفني قبل بدء العمل.',
-    'لا تضف معلومات غير موجودة. ركز على المعدة والموقع والوقت ونقاط العمل والتنبيه للسلامة.',
-    '',
-    `عنوان المهمة: ${task.task || '-'}`,
-    `المعدة: ${task.machineModel || 'غير محددة'}`,
+    `مهمة اليوم: ${task.task || '-'}`,
+    `المُعِدَّة: ${task.machineModel || 'غير محددة'}`,
     `الموقع: ${task.location || 'غير محدد'}`,
     `الوقت: من ${task.startsAt || '-'} إلى ${task.endsAt || '-'}`,
-    task.description ? `الوصف: ${task.description}` : '',
+    task.description ? `وصف المهمة: ${task.description}` : '',
     task.notes ? `ملاحظات المهندس: ${task.notes}` : '',
     '',
     'نقاط العمل المطلوبة:',
     checklistText,
     '',
-    'اختم بتذكير قصير: وثق كل نقطة بملاحظة وصورة قبل إرسال المهمة.',
+    'تذكير مهم: قبل إرسال المهمة، وثّق كل نقطة بملاحظة واضحة وصورة من الموقع.',
   ].filter(Boolean).join('\n').slice(0, 3500);
+}
+
+function buildTaskAudioInstructions(task) {
+  return [
+    'You are generating spoken Arabic audio for a field technician working in a heavy equipment maintenance company.',
+    'Do not read these instructions aloud. Only speak the provided input text.',
+    'Use a calm, professional field-service tone. Be clear and practical, not dramatic.',
+    'Treat the Arabic word "المُعِدَّة" as heavy equipment / machine, never as stomach.',
+    'Pronounce machine model codes and equipment names carefully and slowly, for example D155A-6 as separate model characters when needed.',
+    'Pause briefly between the location, time, and each checklist point.',
+    'If the text includes hydraulic, engine, filter, inspection, leakage, oil, hose, or service terms, read them in the context of maintenance work.',
+    task.machineModel ? `The equipment or machine model is: ${task.machineModel}.` : '',
+  ].filter(Boolean).join(' ');
 }
 
 async function generateMyDailyScheduleTaskAudio(actor, taskId) {
@@ -4478,7 +4488,7 @@ async function generateMyDailyScheduleTaskAudio(actor, taskId) {
       model: process.env.OPENAI_TTS_MODEL || 'gpt-4o-mini-tts',
       voice: process.env.OPENAI_TTS_VOICE || 'cedar',
       input: buildTaskAudioScript(task),
-      instructions: 'Speak naturally in Arabic, with a calm field-service tone. Pause briefly between checklist points. Make the technician feel guided, not rushed.',
+      instructions: buildTaskAudioInstructions(task),
       response_format: 'mp3',
     }),
   });
