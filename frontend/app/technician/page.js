@@ -2,7 +2,7 @@
 
 /* eslint-disable @next/next/no-img-element */
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Badge from '../../components/ui/Badge';
 import Button from '../../components/ui/Button';
 import Card from '../../components/ui/Card';
@@ -131,8 +131,13 @@ export default function TechnicianAppPage() {
   const [audioLoading, setAudioLoading] = useState(false);
   const [audioUrl, setAudioUrl] = useState('');
   const [weatherExpanded, setWeatherExpanded] = useState(false);
+  const [recordingKey, setRecordingKey] = useState('');
+  const [transcribingKey, setTranscribingKey] = useState('');
   const [message, setMessage] = useState('');
   const [online, setOnline] = useState(true);
+  const mediaRecorderRef = useRef(null);
+  const recordingChunksRef = useRef([]);
+  const recordingMetaRef = useRef(null);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -331,6 +336,96 @@ export default function TechnicianAppPage() {
       setMessage(error.message || 'تعذر تشغيل الصوت بالذكاء الاصطناعي. تحقق من إعدادات OpenAI في الخادم.');
     } finally {
       setAudioLoading(false);
+    }
+  }
+
+  async function transcribeAudio(blob, meta) {
+    const form = new FormData();
+    form.append('audio', blob, 'technician-note.webm');
+    form.append('target', meta?.target || '');
+    form.append('taskTitle', meta?.taskTitle || selectedTask?.task || '');
+    form.append('pointText', meta?.pointText || '');
+
+    const response = await fetch(`${API_BASE}/api/technician/transcribe`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: form,
+    });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(data.error || data.message || 'تعذر تحويل الصوت إلى نص.');
+    return String(data.text || '').trim();
+  }
+
+  function appendText(current, addition) {
+    const nextText = String(addition || '').trim();
+    if (!nextText) return current || '';
+    const currentText = String(current || '').trim();
+    return currentText ? `${currentText}\n${nextText}` : nextText;
+  }
+
+  async function startRecording(key, meta) {
+    if (!navigator.mediaDevices?.getUserMedia || typeof MediaRecorder === 'undefined') {
+      setMessage('التسجيل الصوتي غير مدعوم على هذا الجهاز.');
+      return;
+    }
+    if (recordingKey) stopRecording();
+
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const recorder = new MediaRecorder(stream);
+      recordingChunksRef.current = [];
+      recordingMetaRef.current = { key, ...meta };
+
+      recorder.ondataavailable = (event) => {
+        if (event.data?.size > 0) recordingChunksRef.current.push(event.data);
+      };
+
+      recorder.onstop = async () => {
+        stream.getTracks().forEach((track) => track.stop());
+        const activeMeta = recordingMetaRef.current;
+        const audioBlob = new Blob(recordingChunksRef.current, { type: recorder.mimeType || 'audio/webm' });
+        recordingChunksRef.current = [];
+        recordingMetaRef.current = null;
+        setRecordingKey('');
+        if (!audioBlob.size || !activeMeta?.taskId) return;
+
+        setTranscribingKey(activeMeta.key);
+        setMessage('');
+        try {
+          const text = await transcribeAudio(audioBlob, activeMeta);
+          if (activeMeta.pointId) {
+            const currentReport = buildChecklistReports(selectedTask, drafts[activeMeta.taskId] || {})
+              .find((report) => report.id === activeMeta.pointId);
+            updateChecklistReport(activeMeta.taskId, activeMeta.pointId, {
+              notes: appendText(currentReport?.notes, text),
+            });
+          } else {
+            const currentDraft = drafts[activeMeta.taskId] || {};
+            updateDraft(activeMeta.taskId, {
+              [activeMeta.field]: appendText(currentDraft[activeMeta.field], text),
+            });
+          }
+        } catch (error) {
+          setMessage(error.message || 'تعذر تحويل الصوت إلى نص.');
+        } finally {
+          setTranscribingKey('');
+        }
+      };
+
+      mediaRecorderRef.current = recorder;
+      setRecordingKey(key);
+      recorder.start();
+    } catch {
+      setMessage('تعذر الوصول إلى الميكروفون. تأكد من صلاحيات المتصفح.');
+    }
+  }
+
+  function stopRecording() {
+    const recorder = mediaRecorderRef.current;
+    if (recorder && recorder.state !== 'inactive') {
+      recorder.stop();
     }
   }
 
@@ -625,6 +720,19 @@ export default function TechnicianAppPage() {
                               onChange={(event) => updateChecklistReport(selectedTask.id, item.id, { notes: event.target.value })}
                               className="ds-input mt-3 px-3 py-2 text-sm"
                             />
+                            <VoiceNoteButton
+                              className="mt-2"
+                              recording={recordingKey === `point-${item.id}`}
+                              transcribing={transcribingKey === `point-${item.id}`}
+                              onStart={() => startRecording(`point-${item.id}`, {
+                                taskId: selectedTask.id,
+                                pointId: item.id,
+                                target: 'checklist point notes',
+                                taskTitle: selectedTask.task,
+                                pointText: item.text,
+                              })}
+                              onStop={stopRecording}
+                            />
                             <label className="mt-3 grid gap-2 text-sm font-bold text-zinc-700">
                               صورة النقطة
                               <input
@@ -656,12 +764,34 @@ export default function TechnicianAppPage() {
                   onChange={(event) => updateDraft(selectedTask.id, { summary: event.target.value })}
                   className="ds-input px-3 py-3 text-base"
                 />
+                <VoiceNoteButton
+                  recording={recordingKey === 'summary'}
+                  transcribing={transcribingKey === 'summary'}
+                  onStart={() => startRecording('summary', {
+                    taskId: selectedTask.id,
+                    field: 'summary',
+                    target: 'task completion summary',
+                    taskTitle: selectedTask.task,
+                  })}
+                  onStop={stopRecording}
+                />
                 <textarea
                   rows={2}
                   placeholder="ملاحظات إضافية"
                   value={selectedDraft.notes || ''}
                   onChange={(event) => updateDraft(selectedTask.id, { notes: event.target.value })}
                   className="ds-input px-3 py-3 text-base"
+                />
+                <VoiceNoteButton
+                  recording={recordingKey === 'notes'}
+                  transcribing={transcribingKey === 'notes'}
+                  onStart={() => startRecording('notes', {
+                    taskId: selectedTask.id,
+                    field: 'notes',
+                    target: 'additional technician notes',
+                    taskTitle: selectedTask.task,
+                  })}
+                  onStop={stopRecording}
                 />
                 <Button type="button" onClick={() => completeTask(selectedTask)} disabled={loading}>
                   إرسال المهمة
@@ -729,6 +859,19 @@ function WeatherMetric({ label, value, detail, tone = 'neutral' }) {
       </div>
       {detail && <p className="mt-1 truncate text-xs font-semibold text-[var(--color-muted)]">{detail}</p>}
     </div>
+  );
+}
+
+function VoiceNoteButton({ recording, transcribing, onStart, onStop, className = '' }) {
+  return (
+    <button
+      type="button"
+      onClick={recording ? onStop : onStart}
+      disabled={transcribing}
+      className={`inline-flex min-h-10 items-center justify-center rounded-md border border-[var(--color-border)] bg-white px-3 py-2 text-sm font-black text-[var(--color-ink)] shadow-[var(--shadow-control)] ${recording ? 'border-[var(--color-danger)] text-[var(--color-danger)]' : ''} ${className}`}
+    >
+      {transcribing ? 'جاري تحويل الصوت إلى نص...' : recording ? 'إيقاف التسجيل' : 'تسجيل ملاحظة صوتية'}
+    </button>
   );
 }
 

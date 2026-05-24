@@ -33,6 +33,24 @@ const manualUpload = multer({
   },
 });
 
+const audioUpload = multer({
+  storage: multer.memoryStorage(),
+  limits: {
+    fileSize: 20 * 1024 * 1024,
+    files: 1,
+  },
+  fileFilter(req, file, callback) {
+    const isAudio = String(file.mimetype || '').startsWith('audio/')
+      || /\.(webm|mp3|mp4|m4a|wav|ogg)$/i.test(file.originalname || '');
+    if (!isAudio) {
+      callback(new ApiError(400, 'Only audio recordings can be uploaded.'));
+      return;
+    }
+    callback(null, true);
+  },
+});
+
 module.exports = {
   manualUpload,
+  audioUpload,
 };

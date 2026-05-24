@@ -2,7 +2,7 @@ const { Router } = require('express');
 const platformController = require('../controllers/platformController');
 const { asyncHandler } = require('../utils/asyncHandler');
 const { requirePlatformAuth, requirePermission } = require('../middleware/platformAuthMiddleware');
-const { manualUpload } = require('../middleware/uploadMiddleware');
+const { audioUpload, manualUpload } = require('../middleware/uploadMiddleware');
 
 const router = Router();
 
@@ -24,6 +24,7 @@ router.post('/api/notifications/:id/read', requirePlatformAuth, asyncHandler(pla
 
 router.get('/api/technician/tasks', requirePlatformAuth, asyncHandler(platformController.myDailyScheduleTasks));
 router.get('/api/technician/weather', requirePlatformAuth, asyncHandler(platformController.myWeatherAdvice));
+router.post('/api/technician/transcribe', requirePlatformAuth, audioUpload.single('audio'), asyncHandler(platformController.transcribeTechnicianAudio));
 router.post('/api/technician/tasks/:id/start', requirePlatformAuth, asyncHandler(platformController.startMyDailyScheduleTask));
 router.post('/api/technician/tasks/:id/audio', requirePlatformAuth, asyncHandler(platformController.generateMyDailyScheduleTaskAudio));
 router.post('/api/technician/tasks/:id/complete', requirePlatformAuth, asyncHandler(platformController.completeMyDailyScheduleTask));

@@ -4433,6 +4433,57 @@ async function getMyWeatherAdvice(actor, dateText) {
   };
 }
 
+async function transcribeTechnicianAudio(actor, file, payload = {}) {
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!actor?.sub) {
+    throw new ApiError(401, 'Authentication required.');
+  }
+  if (!apiKey) {
+    throw new ApiError(503, 'OPENAI_API_KEY is not configured on the backend.');
+  }
+  if (!file?.buffer?.length) {
+    throw new ApiError(400, 'Audio recording is required.');
+  }
+
+  const target = String(payload.target || '').slice(0, 80);
+  const taskTitle = String(payload.taskTitle || '').slice(0, 180);
+  const pointText = String(payload.pointText || '').slice(0, 300);
+  const prompt = [
+    'Transcribe Arabic field-technician speech for a heavy equipment maintenance system.',
+    'Return only the technician note text. Do not add explanations.',
+    'Preserve maintenance terms, machine model codes, numbers, and part names when spoken.',
+    taskTitle ? `Task: ${taskTitle}.` : '',
+    pointText ? `Checklist point: ${pointText}.` : '',
+    target ? `Field target: ${target}.` : '',
+  ].filter(Boolean).join(' ');
+
+  const form = new FormData();
+  const fileName = file.originalname || 'technician-note.webm';
+  const audioBlob = new Blob([file.buffer], { type: file.mimetype || 'audio/webm' });
+  form.append('file', audioBlob, fileName);
+  form.append('model', process.env.OPENAI_TRANSCRIBE_MODEL || 'gpt-4o-mini-transcribe');
+  form.append('language', 'ar');
+  form.append('prompt', prompt);
+
+  const response = await fetch('https://api.openai.com/v1/audio/transcriptions', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+    },
+    body: form,
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new ApiError(response.status, errorData.error?.message || 'AI transcription failed.');
+  }
+
+  const data = await response.json();
+  return {
+    text: String(data.text || '').trim(),
+  };
+}
+
 async function ensureTaskBelongsToTechnician(prisma, taskId, technicianId) {
   const task = await prisma.dailyScheduleTask.findFirst({
     where: {
@@ -4808,6 +4859,7 @@ module.exports = {
   deleteDailyScheduleTask,
   listMyDailyScheduleTasks,
   getMyWeatherAdvice,
+  transcribeTechnicianAudio,
   startMyDailyScheduleTask,
   generateMyDailyScheduleTaskAudio,
   completeMyDailyScheduleTask,

@@ -151,6 +151,11 @@ async function myWeatherAdvice(req, res) {
   res.json({ success: true, ...data });
 }
 
+async function transcribeTechnicianAudio(req, res) {
+  const result = await platformService.transcribeTechnicianAudio(req.platformUser, req.file, req.body);
+  res.json({ success: true, ...result });
+}
+
 async function startMyDailyScheduleTask(req, res) {
   const task = await platformService.startMyDailyScheduleTask(req.platformUser, req.params.id);
   res.json({ success: true, task });
@@ -221,6 +226,7 @@ module.exports = {
   deleteDailyScheduleTask,
   myDailyScheduleTasks,
   myWeatherAdvice,
+  transcribeTechnicianAudio,
   startMyDailyScheduleTask,
   generateMyDailyScheduleTaskAudio,
   completeMyDailyScheduleTask,
