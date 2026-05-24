@@ -4445,7 +4445,7 @@ function buildTaskAudioScript(task) {
     `مهمة اليوم: ${task.task || '-'}`,
     `المُعِدَّة: ${task.machineModel || 'غير محددة'}`,
     `الموقع: ${task.location || 'غير محدد'}`,
-    `الوقت: ${timeText}`,
+    `التوقيت: ${timeText}`,
     task.description ? `وصف المهمة: ${task.description}` : '',
     task.notes ? `ملاحظات المهندس: ${task.notes}` : '',
     '',
@@ -4459,19 +4459,23 @@ function buildTaskAudioScript(task) {
 function formatArabicSpokenTimeRange(startsAt, endsAt) {
   const start = formatArabicSpokenTime(startsAt);
   const end = formatArabicSpokenTime(endsAt);
-  if (start && end) return `من الساعة ${start} إلى الساعة ${end}`;
-  if (start) return `الساعة ${start}`;
+  if (start && end) return `يبدأ من الساعة ${start} وينتهي عند الساعة ${end}`;
+  if (start) return `يبدأ عند الساعة ${start}`;
   if (end) return `حتى الساعة ${end}`;
   return 'غير محدد';
 }
 
 function formatArabicSpokenTime(value) {
-  const match = String(value || '').match(/^(\d{1,2}):(\d{2})/);
+  const text = String(value || '').trim();
+  const match = text.match(/^(\d{1,2}):(\d{2})\s*([AP]\.?M\.?)?/i);
   if (!match) return '';
 
-  const hour24 = Number(match[1]);
+  let hour24 = Number(match[1]);
   const minute = Number(match[2]);
   if (!Number.isFinite(hour24) || !Number.isFinite(minute)) return '';
+  const meridiem = String(match[3] || '').replace(/\./g, '').toUpperCase();
+  if (meridiem === 'PM' && hour24 < 12) hour24 += 12;
+  if (meridiem === 'AM' && hour24 === 12) hour24 = 0;
 
   const period = hour24 < 12 ? 'صباحاً' : 'مساءً';
   const hour12 = hour24 % 12 || 12;
@@ -4496,7 +4500,39 @@ function formatArabicSpokenTime(value) {
   if (minute === 30) return `${hourText} والنصف ${period}`;
   if (minute === 45) return `${hourText} وخمس وأربعين دقيقة ${period}`;
 
-  return `${hourText} و ${minute} دقيقة ${period}`;
+  return `${hourText} و ${formatArabicMinute(minute)} دقيقة ${period}`;
+}
+
+function formatArabicMinute(minute) {
+  const minuteWords = {
+    1: 'دقيقة واحدة',
+    2: 'دقيقتين',
+    3: 'ثلاث',
+    4: 'أربع',
+    5: 'خمس',
+    6: 'ست',
+    7: 'سبع',
+    8: 'ثمان',
+    9: 'تسع',
+    10: 'عشر',
+    11: 'إحدى عشرة',
+    12: 'اثنتي عشرة',
+    13: 'ثلاث عشرة',
+    14: 'أربع عشرة',
+    15: 'خمس عشرة',
+    16: 'ست عشرة',
+    17: 'سبع عشرة',
+    18: 'ثماني عشرة',
+    19: 'تسع عشرة',
+    20: 'عشرين',
+    30: 'ثلاثين',
+    40: 'أربعين',
+    50: 'خمسين',
+  };
+  if (minuteWords[minute]) return minuteWords[minute];
+  const tens = Math.floor(minute / 10) * 10;
+  const ones = minute % 10;
+  return `${minuteWords[ones]} و${minuteWords[tens] || String(tens)}`;
 }
 
 function buildTaskAudioInstructions(task) {
@@ -4571,17 +4607,17 @@ async function completeMyDailyScheduleTask(actor, taskId, payload) {
   const completedChecklistIds = new Set(checklistReports.filter((report) => report.done).map((report) => report.id));
 
   if (requiredChecklistIds.length > 0 && requiredChecklistIds.some((id) => !completedChecklistIds.has(id))) {
-    throw new ApiError(400, 'All required checklist points must be completed.');
+    throw new ApiError(400, 'أكمل كل نقاط العمل المطلوبة قبل إرسال المهمة.');
   }
   const missingEvidence = checklistReports.some((report) => (
     completedChecklistIds.has(report.id) &&
     (!report.notes || report.photos.length === 0)
   ));
   if (missingEvidence) {
-    throw new ApiError(400, 'Each completed checklist point requires notes and at least one photo.');
+    throw new ApiError(400, 'كل نقطة مكتملة تحتاج ملاحظة وصورة واحدة على الأقل.');
   }
   if (!summary && checklistReports.length === 0) {
-    throw new ApiError(400, 'Summary or checklist reports are required.');
+    throw new ApiError(400, 'أضف توثيق نقاط العمل أو ملخصاً قبل إرسال المهمة.');
   }
 
   const task = await prisma.dailyScheduleTask.update({

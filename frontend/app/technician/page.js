@@ -57,6 +57,40 @@ function readFileAsDataUrl(file) {
   });
 }
 
+function compressImageFile(file, maxSize = 1280, quality = 0.72) {
+  if (typeof window === 'undefined' || !file?.type?.startsWith('image/')) {
+    return readFileAsDataUrl(file);
+  }
+
+  return new Promise((resolve) => {
+    const image = new Image();
+    const objectUrl = URL.createObjectURL(file);
+
+    image.onload = () => {
+      const scale = Math.min(1, maxSize / Math.max(image.width, image.height));
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.max(1, Math.round(image.width * scale));
+      canvas.height = Math.max(1, Math.round(image.height * scale));
+      const context = canvas.getContext('2d');
+      context.drawImage(image, 0, 0, canvas.width, canvas.height);
+      URL.revokeObjectURL(objectUrl);
+
+      resolve({
+        fileName: file.name.replace(/\.[^.]+$/, '.jpg'),
+        mimeType: 'image/jpeg',
+        dataUrl: canvas.toDataURL('image/jpeg', quality),
+      });
+    };
+
+    image.onerror = async () => {
+      URL.revokeObjectURL(objectUrl);
+      resolve(await readFileAsDataUrl(file));
+    };
+
+    image.src = objectUrl;
+  });
+}
+
 function getTaskChecklist(task) {
   const items = Array.isArray(task?.checklist) ? task.checklist : [];
   const normalized = items
@@ -317,7 +351,7 @@ export default function TechnicianAppPage() {
 
   async function handlePointPhotos(taskId, pointId, files) {
     const selected = Array.from(files || []).slice(0, 6);
-    const photos = await Promise.all(selected.map(readFileAsDataUrl));
+    const photos = await Promise.all(selected.map((file) => compressImageFile(file)));
     updateChecklistReport(taskId, pointId, { photos });
   }
 
@@ -385,9 +419,11 @@ export default function TechnicianAppPage() {
       writeJson(DRAFT_KEY, nextDrafts);
       setMessage('تم إرسال المهمة.');
       await loadTasks(date);
-    } catch {
+    } catch (error) {
       updateDraft(taskId, nextDraft);
-      setMessage('تم الحفظ بدون اتصال. سيتم الإرسال عند عودة الاتصال.');
+      setMessage(online
+        ? (error.message || 'تعذر إرسال المهمة. تحقق من نقاط العمل والصور.')
+        : 'تم الحفظ بدون اتصال. سيتم الإرسال عند عودة الاتصال.');
     } finally {
       setLoading(false);
     }
@@ -496,6 +532,11 @@ export default function TechnicianAppPage() {
 
         {selectedTask && (
           <Card className="p-5">
+            {(() => {
+              const canDocument = isTaskInProgress(selectedTask);
+              const completed = isTaskCompleted(selectedTask);
+              return (
+                <>
             <div className="flex items-start justify-between gap-3">
               <div>
                 <h2 className="text-2xl font-black">{selectedTask.task}</h2>
@@ -523,13 +564,20 @@ export default function TechnicianAppPage() {
 
             {selectedTask.manualAdvice && <TechnicianManualAdvice advice={selectedTask.manualAdvice} />}
 
-            {!isTaskCompleted(selectedTask) && (
+            {!completed && !canDocument && (
+              <div className="mt-5 rounded-md border border-[var(--color-border)] bg-[var(--color-surface-muted)] p-4">
+                <h3 className="text-lg font-black">جاهز للبدء؟</h3>
+                <p className="mt-2 text-sm font-semibold leading-6 text-[var(--color-muted)]">
+                  اضغط بدء المهمة أولاً. بعد البدء ستظهر نقاط العمل وحقول الملاحظات والصور.
+                </p>
+                <Button type="button" className="mt-4" onClick={() => startTask(selectedTask.id)} disabled={loading || !online}>
+                  بدء المهمة
+                </Button>
+              </div>
+            )}
+
+            {!completed && canDocument && (
               <div className="mt-5 grid gap-3">
-                {!isTaskInProgress(selectedTask) && (
-                  <Button type="button" variant="secondary" onClick={() => startTask(selectedTask.id)} disabled={loading || !online}>
-                    بدء المهمة
-                  </Button>
-                )}
                 <div className="grid gap-3">
                   <div>
                     <h3 className="text-lg font-black">نقاط العمل</h3>
@@ -603,6 +651,9 @@ export default function TechnicianAppPage() {
             {isTaskCompleted(selectedTask) && (
               <div className="ds-alert mt-5 text-right">هذه المهمة مكتملة.</div>
             )}
+                </>
+              );
+            })()}
           </Card>
         )}
       </section>
