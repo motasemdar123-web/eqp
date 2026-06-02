@@ -5264,7 +5264,8 @@ textarea {
 
 .eng-planner-server-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: start;
   gap: 0.9rem;
 }
 
@@ -5288,9 +5289,19 @@ textarea {
 
 .eng-planner-push-form {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 9.5rem 8.5rem 7.5rem;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: 0.75rem;
   align-items: end;
+}
+
+.eng-planner-push-form .ds-field:nth-of-type(1) {
+  grid-column: 1 / -1;
+}
+
+.eng-planner-push-form .ds-field:nth-of-type(2),
+.eng-planner-push-form .ds-field:nth-of-type(3),
+.eng-planner-push-form .ds-field:nth-of-type(4) {
+  grid-column: span 2;
 }
 
 .eng-planner-push-form .ds-field:nth-of-type(5),
@@ -5361,6 +5372,7 @@ textarea {
 .eng-planner-inbox-item {
   display: grid;
   gap: 0.75rem;
+  align-content: start;
   border: 1px solid var(--color-border);
   border-radius: 14px;
   background: #ffffff;
@@ -5384,7 +5396,7 @@ textarea {
 
 .eng-planner-inbox-controls {
   display: grid;
-  grid-template-columns: 9.5rem 7.5rem 5.5rem auto auto;
+  grid-template-columns: minmax(9.5rem, 1.35fr) minmax(7.5rem, 1fr) minmax(5.25rem, 0.7fr) minmax(8.5rem, auto) minmax(5.5rem, auto);
   gap: 0.45rem;
   align-items: center;
 }
@@ -5399,6 +5411,18 @@ textarea {
   color: var(--color-ink);
   font-size: 0.78rem;
   font-weight: 800;
+}
+
+.eng-planner-inbox-controls .ds-button {
+  min-width: 0;
+  width: 100%;
+  justify-content: center;
+  white-space: nowrap;
+}
+
+.eng-planner-inbox-controls .ds-button:first-of-type {
+  min-height: 2.55rem;
+  line-height: 1.15;
 }
 
 .eng-simple-list-head {
@@ -5656,6 +5680,28 @@ textarea {
   .eng-planner-stats {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+
+  .eng-planner-server-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .eng-planner-push-form {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .eng-planner-push-form .ds-field:nth-of-type(2),
+  .eng-planner-push-form .ds-field:nth-of-type(3),
+  .eng-planner-push-form .ds-field:nth-of-type(4) {
+    grid-column: span 2;
+  }
+
+  .eng-planner-inbox-controls {
+    grid-template-columns: minmax(9.5rem, 1fr) minmax(7.5rem, 0.8fr) minmax(5.25rem, 0.55fr);
+  }
+
+  .eng-planner-inbox-controls .ds-button {
+    grid-column: span 1;
+  }
 }
 
 @media (max-width: 720px) {
@@ -5727,6 +5773,23 @@ textarea {
   .eng-task-title-row {
     align-items: stretch;
     flex-direction: column;
+  }
+
+  .eng-planner-push-form,
+  .eng-planner-inbox-controls,
+  .eng-planner-engineers {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .eng-planner-push-form .ds-field:nth-of-type(1),
+  .eng-planner-push-form .ds-field:nth-of-type(2),
+  .eng-planner-push-form .ds-field:nth-of-type(3),
+  .eng-planner-push-form .ds-field:nth-of-type(4),
+  .eng-planner-push-form .ds-field:nth-of-type(5),
+  .eng-planner-engineers,
+  .eng-planner-push-form > .ds-button,
+  .eng-planner-inbox-controls .ds-button {
+    grid-column: 1 / -1;
   }
 
   .eng-tab {
