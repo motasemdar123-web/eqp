@@ -8,9 +8,16 @@ import Card from '../ui/Card';
 import Field from '../ui/Field';
 import EmptyState from '../ui/EmptyState';
 import Toast from '../ui/Toast';
+import {
+  dismissWorkspacePlannerTask,
+  getWorkspaceEngineers,
+  getWorkspacePlannerInbox,
+  planWorkspacePlannerTask,
+  pushWorkspacePlannerTask,
+} from '../../lib/api';
 
 const BOARD_KEY = 'dar-al-hai-engineering-creative-board-v1';
-const PRO_WHITEBOARD_KEY = 'dar-al-hai-engineering-pro-whiteboard-v1';
+const PRO_WHITEBOARD_KEY = 'dar-al-hai-engineering-pro-whiteboard-v2';
 const PLANNER_KEY = 'dar-al-hai-engineering-day-planner-v1';
 
 const stickyColors = {
@@ -289,6 +296,10 @@ function formatDuration(minutes) {
   if (!hours) return `${remainder}m`;
   if (!remainder) return `${hours}h`;
   return `${hours}h ${remainder}m`;
+}
+
+function workspaceUserName(user) {
+  return user?.fullName || user?.full_name || user?.email || 'Engineer';
 }
 
 function WorkspaceTabs({ activeTab, onTabChange }) {
@@ -1138,9 +1149,24 @@ function CreativeTemplateGallery({ open, onClose, onUseTemplate }) {
 
 const proWhiteboardTemplates = [
   {
-    key: 'brainstorm',
-    title: 'Brainstorming board',
-    description: 'Frames for ideas, themes, votes, and next actions.',
+    key: 'maintenance-control',
+    title: 'Maintenance control room',
+    description: 'Assets, work orders, SLA risk, owners, and escalation lanes.',
+  },
+  {
+    key: 'incident-review',
+    title: 'Incident review',
+    description: 'Timeline, facts, root cause, corrective actions, and evidence.',
+  },
+  {
+    key: 'inspection-route',
+    title: 'Inspection route',
+    description: 'Technician route, checkpoints, machine state, and follow-ups.',
+  },
+  {
+    key: 'spares-flow',
+    title: 'Spares and readiness',
+    description: 'Parts demand, approvals, vendor status, and blockers.',
   },
   {
     key: 'retro',
@@ -1149,8 +1175,8 @@ const proWhiteboardTemplates = [
   },
   {
     key: 'kanban',
-    title: 'Kanban board',
-    description: 'Todo, in progress, review, and done sections.',
+    title: 'Work order Kanban',
+    description: 'Backlog, assigned, in service, validation, and closed.',
   },
   {
     key: 'journey',
@@ -1179,7 +1205,7 @@ const proWhiteboardTemplates = [
   },
 ];
 
-const proColors = ['#FEF3C7', '#DBEAFE', '#DCFCE7', '#FCE7F3', '#EDE9FE', '#FFFFFF'];
+const proColors = ['#FEF3C7', '#DBEAFE', '#DCFCE7', '#FCE7F3', '#EDE9FE', '#CCFBF1', '#FEE2E2', '#FFFFFF'];
 
 function defaultProWhiteboardState() {
   const createdAt = DEMO_CREATED_AT;
@@ -1189,77 +1215,143 @@ function defaultProWhiteboardState() {
     timer: { seconds: 600, running: false },
     objects: [
       {
-        id: 'pro-frame-discovery',
+        id: 'pro-frame-control-room',
         type: 'frame',
         x: 80,
         y: 80,
-        width: 620,
-        height: 360,
+        width: 760,
+        height: 430,
         zIndex: 1,
-        color: 'rgba(219, 234, 254, 0.38)',
-        borderColor: '#93C5FD',
-        text: 'Maintenance Discovery',
+        color: 'rgba(232, 244, 255, 0.62)',
+        borderColor: '#7AA7D9',
+        text: 'Maintenance Control Room',
         createdAt,
         updatedAt: createdAt,
       },
       {
-        id: 'pro-sticky-hydraulic',
-        type: 'sticky',
-        x: 140,
-        y: 170,
-        width: 190,
-        height: 140,
+        id: 'pro-card-dozer-17',
+        type: 'card',
+        x: 130,
+        y: 165,
+        width: 230,
+        height: 154,
         zIndex: 4,
-        color: '#FEF3C7',
-        textColor: '#1F2937',
-        text: 'Inspect hydraulic heat pattern before assigning repair.',
-        votes: 2,
-        comments: [{ id: 'comment-1', text: 'Link this to machine history.', createdAt }],
+        color: '#FFFFFF',
+        borderColor: '#EF4444',
+        textColor: '#111827',
+        text: 'DZR-17 hydraulic temperature spike',
+        votes: 3,
+        status: 'SLA risk',
+        owner: 'Faisal',
+        metadata: { asset: 'DZR-17', priority: 'P1', due: 'Today 14:00', zone: 'North yard' },
+        comments: [{ id: 'comment-1', text: 'Link this to machine history before dispatch.', createdAt }],
         createdAt,
         updatedAt: createdAt,
       },
       {
-        id: 'pro-shape-process',
-        type: 'shape',
-        shape: 'rounded',
-        x: 390,
-        y: 180,
-        width: 220,
-        height: 120,
+        id: 'pro-card-exc-04',
+        type: 'card',
+        x: 410,
+        y: 165,
+        width: 230,
+        height: 154,
         zIndex: 3,
-        color: '#E0F2FE',
-        borderColor: '#0284C7',
+        color: '#FFFFFF',
+        borderColor: '#14B8A6',
+        textColor: '#111827',
         strokeWidth: 2,
-        text: 'Verify report attachments',
+        text: 'EXC-04 preventive service package',
+        status: 'Ready',
+        owner: 'Abdelrahman',
+        metadata: { asset: 'EXC-04', priority: 'P3', due: 'Tomorrow 09:00', zone: 'Workshop' },
         createdAt,
         updatedAt: createdAt,
       },
       {
-        id: 'pro-arrow-one',
+        id: 'pro-arrow-escalation',
         type: 'connector',
-        x: 330,
-        y: 235,
-        width: 70,
+        x: 362,
+        y: 239,
+        width: 48,
         height: 2,
         zIndex: 2,
-        borderColor: '#2563EB',
+        borderColor: '#64748B',
         strokeWidth: 3,
-        text: '',
+        text: 'dependency',
+        createdAt,
+        updatedAt: createdAt,
+      },
+      {
+        id: 'pro-table-shift',
+        type: 'table',
+        x: 130,
+        y: 350,
+        width: 650,
+        height: 120,
+        zIndex: 5,
+        color: '#FFFFFF',
+        borderColor: '#CBD5E1',
+        textColor: '#111827',
+        text: 'Shift handoff',
+        metadata: {
+          columns: ['Asset', 'Status', 'Owner', 'Next step'],
+          rows: [
+            ['DZR-17', 'SLA risk', 'Faisal', 'Dispatch technician'],
+            ['EXC-04', 'Ready', 'Abdelrahman', 'Prepare report'],
+            ['GEN-02', 'Waiting parts', 'Motasem', 'Approve filter kit'],
+          ],
+        },
+        createdAt,
+        updatedAt: createdAt,
+      },
+      {
+        id: 'pro-frame-route',
+        type: 'frame',
+        x: 930,
+        y: 90,
+        width: 520,
+        height: 420,
+        zIndex: 1,
+        color: 'rgba(240, 253, 250, 0.66)',
+        borderColor: '#5EEAD4',
+        text: 'Technician Route and Evidence',
+        createdAt,
+        updatedAt: createdAt,
+      },
+      {
+        id: 'pro-timeline-route',
+        type: 'timeline',
+        x: 985,
+        y: 180,
+        width: 420,
+        height: 210,
+        zIndex: 4,
+        color: '#FFFFFF',
+        borderColor: '#14B8A6',
+        text: 'North yard route',
+        metadata: {
+          events: [
+            '08:30 inspection',
+            '10:00 oil sample',
+            '13:30 hydraulic test',
+            '15:00 supervisor signoff',
+          ],
+        },
         createdAt,
         updatedAt: createdAt,
       },
       {
         id: 'pro-text-note',
         type: 'text',
-        x: 820,
-        y: 140,
-        width: 300,
+        x: 85,
+        y: 30,
+        width: 520,
         height: 96,
-        zIndex: 5,
+        zIndex: 8,
         color: 'transparent',
         textColor: '#0F172A',
-        fontSize: 22,
-        text: 'Workshop objective: turn ideas into maintenance actions.',
+        fontSize: 24,
+        text: 'Shared operational context with structured assets, work orders, comments, votes, layers, and exportable evidence.',
         createdAt,
         updatedAt: createdAt,
       },
@@ -1303,6 +1395,41 @@ function createProObject(type, patch = {}) {
   if (type === 'connector') return { ...base, width: 220, height: 2, text: '', borderColor: patch.borderColor || '#2563EB' };
   if (type === 'frame') return { ...base, color: 'rgba(239, 246, 255, 0.55)', text: patch.text || 'New frame', width: 520, height: 320 };
   if (type === 'comment') return { ...base, color: '#FFF7ED', text: patch.text || 'Comment', width: 170, height: 86 };
+  if (type === 'card') {
+    return {
+      ...base,
+      width: 240,
+      height: 156,
+      text: patch.text || 'Asset work order',
+      borderColor: patch.borderColor || '#2563EB',
+      status: patch.status || 'Planned',
+      owner: patch.owner || 'Unassigned',
+      metadata: { asset: 'Asset ID', priority: 'P2', due: 'Today', zone: 'Workshop', ...(patch.metadata || {}) },
+    };
+  }
+  if (type === 'table') {
+    return {
+      ...base,
+      width: 620,
+      height: 180,
+      text: patch.text || 'Operations table',
+      metadata: {
+        columns: ['Asset', 'Status', 'Owner', 'Next step'],
+        rows: [['Asset ID', 'Planned', 'Owner', 'Action']],
+        ...(patch.metadata || {}),
+      },
+    };
+  }
+  if (type === 'timeline') {
+    return {
+      ...base,
+      width: 420,
+      height: 190,
+      text: patch.text || 'Operational timeline',
+      borderColor: patch.borderColor || '#14B8A6',
+      metadata: { events: ['Inspection', 'Diagnosis', 'Repair', 'Signoff'], ...(patch.metadata || {}) },
+    };
+  }
   if (type === 'image') return { ...base, width: 260, height: 180 };
   if (type === 'file') return { ...base, width: 240, height: 120 };
   if (type === 'drawing') return { ...base, color: 'transparent', width: 1, height: 1, path: patch.path || [], borderColor: patch.borderColor || '#0F172A' };
@@ -1312,7 +1439,53 @@ function createProObject(type, patch = {}) {
 function makeProTemplateObjects(templateKey) {
   const createdAt = nowIso();
   const object = (type, patch) => createProObject(type, { ...patch, createdAt, updatedAt: createdAt });
-  const frame = (text, x, y, color = 'rgba(239, 246, 255, 0.55)') => object('frame', { text, x, y, width: 360, height: 300, color });
+  const frame = (text, x, y, color = 'rgba(239, 246, 255, 0.55)', width = 360, height = 300) => object('frame', { text, x, y, width, height, color });
+
+  if (templateKey === 'maintenance-control') {
+    return [
+      frame('Backlog', 100, 110, 'rgba(239, 246, 255, 0.66)', 330, 430),
+      frame('Assigned', 470, 110, 'rgba(254, 243, 199, 0.58)', 330, 430),
+      frame('In service', 840, 110, 'rgba(220, 252, 231, 0.58)', 330, 430),
+      frame('Escalation', 1210, 110, 'rgba(254, 226, 226, 0.58)', 330, 430),
+      object('card', { text: 'DZR-17 hydraulic leak', x: 135, y: 205, status: 'New', owner: 'Planner', borderColor: '#2563EB', metadata: { asset: 'DZR-17', priority: 'P1', due: 'Today', zone: 'North yard' } }),
+      object('card', { text: 'EXC-04 PM service', x: 505, y: 205, status: 'Assigned', owner: 'Abdelrahman', borderColor: '#F59E0B', metadata: { asset: 'EXC-04', priority: 'P3', due: 'Tomorrow', zone: 'Workshop' } }),
+      object('card', { text: 'GEN-02 alternator test', x: 875, y: 205, status: 'In service', owner: 'Faisal', borderColor: '#14B8A6', metadata: { asset: 'GEN-02', priority: 'P2', due: '13:30', zone: 'Plant room' } }),
+      object('card', { text: 'CRN-08 blocked by spare part', x: 1245, y: 205, status: 'Escalated', owner: 'Motasem', borderColor: '#EF4444', metadata: { asset: 'CRN-08', priority: 'P1', due: 'Overdue', zone: 'Gate 3' } }),
+      object('table', { text: 'Shift governance', x: 135, y: 585, width: 860, metadata: { columns: ['Metric', 'Target', 'Actual', 'Action'], rows: [['Open P1', '0', '2', 'Escalate'], ['First visit resolution', '85%', '79%', 'Review parts'], ['Reports pending', '0', '4', 'Close evidence']] } }),
+    ];
+  }
+
+  if (templateKey === 'incident-review') {
+    return [
+      frame('Facts and evidence', 120, 110, 'rgba(239, 246, 255, 0.66)', 520, 360),
+      frame('Root cause', 700, 110, 'rgba(254, 243, 199, 0.58)', 430, 360),
+      frame('Corrective actions', 1180, 110, 'rgba(220, 252, 231, 0.58)', 430, 360),
+      object('timeline', { text: 'Incident timeline', x: 160, y: 205, metadata: { events: ['Alarm received', 'Machine isolated', 'Technician arrived', 'Repair verified'] } }),
+      object('sticky', { text: 'Attach photos, oil sample, and supervisor note.', x: 720, y: 220, color: '#FEF3C7' }),
+      object('card', { text: 'Prevent repeat failure', x: 1215, y: 210, status: 'Corrective action', owner: 'Reliability', borderColor: '#14B8A6', metadata: { asset: 'Fleet', priority: 'P2', due: 'This week', zone: 'All sites' } }),
+    ];
+  }
+
+  if (templateKey === 'inspection-route') {
+    return [
+      frame('Route map', 110, 100, 'rgba(240, 253, 250, 0.66)', 520, 420),
+      frame('Inspection checklist', 700, 100, 'rgba(239, 246, 255, 0.66)', 520, 420),
+      object('timeline', { text: 'Technician route', x: 155, y: 195, metadata: { events: ['Yard A', 'Workshop bay', 'Generator room', 'Supervisor desk'] } }),
+      object('table', { text: 'Checklist capture', x: 745, y: 190, width: 420, metadata: { columns: ['Check', 'Result', 'Evidence'], rows: [['Fluid level', 'OK', 'Photo'], ['Leak', 'Found', 'Video'], ['Safety tag', 'OK', 'Signed']] } }),
+    ];
+  }
+
+  if (templateKey === 'spares-flow') {
+    return [
+      frame('Need', 100, 120, 'rgba(254, 243, 199, 0.58)'),
+      frame('Approval', 500, 120, 'rgba(239, 246, 255, 0.66)'),
+      frame('Supplier', 900, 120, 'rgba(237, 233, 254, 0.58)'),
+      frame('Ready for work', 1300, 120, 'rgba(220, 252, 231, 0.58)'),
+      object('card', { text: 'Hydraulic filter kit', x: 140, y: 215, status: 'Requested', owner: 'Technician', borderColor: '#F59E0B', metadata: { asset: 'DZR-17', priority: 'P1', due: 'Today', zone: 'Stores' } }),
+      object('connector', { x: 350, y: 278, width: 160, borderColor: '#64748B', text: 'approve' }),
+      object('sticky', { text: 'Vendor ETA must be visible before dispatch.', x: 940, y: 230, color: '#EDE9FE' }),
+    ];
+  }
 
   if (templateKey === 'retro') {
     return [
@@ -1373,6 +1546,17 @@ function makeProTemplateObjects(templateKey) {
     object('sticky', { text: 'Vote on best actions', x: 630, y: 190, color: '#DCFCE7' }),
     object('comment', { text: 'Add discussion notes here', x: 890, y: 160 }),
   ];
+}
+
+function EditableBoardText({ object, onChange }) {
+  return (
+    <textarea
+      value={object.text}
+      onChange={(event) => onChange(object.id, { text: event.target.value })}
+      onPointerDown={(event) => event.stopPropagation()}
+      aria-label={`${object.type} text`}
+    />
+  );
 }
 
 function ProWhiteboardObject({ object, selected, tool, onSelect, onPointerDown, onChange, onVote, onDuplicate, onDelete }) {
@@ -1439,13 +1623,43 @@ function ProWhiteboardObject({ object, selected, tool, onSelect, onPointerDown, 
         <img src={object.src} alt={object.fileName || 'Uploaded board asset'} />
       )}
       {object.type === 'file' && <strong>{object.fileName || 'Uploaded file'}</strong>}
-      {object.type !== 'image' && object.type !== 'file' && object.type !== 'connector' && (
-        <textarea
-          value={object.text}
-          onChange={(event) => onChange(object.id, { text: event.target.value })}
-          onPointerDown={(event) => event.stopPropagation()}
-          aria-label={`${object.type} text`}
-        />
+      {object.type === 'card' && (
+        <div className="pro-wb-card-body">
+          <div className="pro-wb-card-title">
+            <EditableBoardText object={object} onChange={onChange} />
+          </div>
+          <div className="pro-wb-card-meta-grid">
+            <span>{object.status || 'Planned'}</span>
+            <span>{object.metadata?.priority || 'P2'}</span>
+            <span>{object.owner || 'Unassigned'}</span>
+            <span>{object.metadata?.due || 'No due date'}</span>
+          </div>
+          <div className="pro-wb-card-asset">{object.metadata?.asset || 'Asset ID'} / {object.metadata?.zone || 'Zone'}</div>
+        </div>
+      )}
+      {object.type === 'table' && (
+        <div className="pro-wb-table-body">
+          <strong>{object.text}</strong>
+          <div className="pro-wb-table-grid" style={{ '--wb-table-cols': object.metadata?.columns?.length || 4 }}>
+            {(object.metadata?.columns || []).map((column) => <span key={column} className="pro-wb-table-head">{column}</span>)}
+            {(object.metadata?.rows || []).flatMap((row, rowIndex) => (
+              row.map((cell, cellIndex) => <span key={`${rowIndex}-${cellIndex}`}>{cell}</span>)
+            ))}
+          </div>
+        </div>
+      )}
+      {object.type === 'timeline' && (
+        <div className="pro-wb-timeline-body">
+          <strong>{object.text}</strong>
+          <div>
+            {(object.metadata?.events || []).map((entry, index) => (
+              <span key={`${entry}-${index}`}>{entry}</span>
+            ))}
+          </div>
+        </div>
+      )}
+      {!['image', 'file', 'connector', 'card', 'table', 'timeline'].includes(object.type) && (
+        <EditableBoardText object={object} onChange={onChange} />
       )}
       {object.type === 'connector' && <span className="pro-wb-line-label">{object.text}</span>}
       {(object.comments?.length || object.votes) ? (
@@ -1484,6 +1698,9 @@ function ProWhiteboardToolbar({
     ['select', 'Select'],
     ['pan', 'Pan'],
     ['sticky', 'Sticky'],
+    ['card', 'Card'],
+    ['table', 'Table'],
+    ['timeline', 'Timeline'],
     ['text', 'Text'],
     ['shape', 'Shape'],
     ['connector', 'Arrow'],
@@ -1500,6 +1717,9 @@ function ProWhiteboardToolbar({
         ))}
       </div>
       <div className="pro-wb-tool-group">
+        <button type="button" onClick={() => onAdd('card')}>Asset card</button>
+        <button type="button" onClick={() => onAdd('table')}>Table</button>
+        <button type="button" onClick={() => onAdd('timeline')}>Timeline</button>
         <button type="button" onClick={() => onAdd('shape', { shape: 'circle', text: 'Circle' })}>Circle</button>
         <button type="button" onClick={() => onAdd('shape', { shape: 'diamond', text: 'Decision' })}>Diamond</button>
         <button type="button" onClick={onImageClick}>Upload</button>
@@ -1525,18 +1745,68 @@ function ProWhiteboardToolbar({
   );
 }
 
-function ProWhiteboardProperties({ object, onChange, onDuplicate, onDelete, onLayer, onAddComment }) {
+function boardStats(objects) {
+  const cards = objects.filter((object) => object.type === 'card');
+  const comments = objects.reduce((total, object) => total + (object.comments?.length || 0), 0);
+  const votes = objects.reduce((total, object) => total + (object.votes || 0), 0);
+  const riskCards = cards.filter((object) => /risk|overdue|escal/i.test(`${object.status || ''} ${object.metadata?.due || ''}`)).length;
+  return { cards: cards.length, comments, votes, riskCards };
+}
+
+function colorInputValue(value, fallback = '#ffffff') {
+  return typeof value === 'string' && /^#[0-9a-f]{6}$/i.test(value) ? value : fallback;
+}
+
+function ProWhiteboardProperties({ object, objects, selectedIds, onChange, onDuplicate, onDelete, onLayer, onAddComment, onSelect }) {
   const [comment, setComment] = useState('');
 
   if (!object) {
+    const stats = boardStats(objects);
+    const layers = [...objects].sort((a, b) => (b.zIndex || 0) - (a.zIndex || 0)).slice(0, 12);
+    const activity = [...objects]
+      .sort((a, b) => new Date(b.updatedAt || b.createdAt || 0) - new Date(a.updatedAt || a.createdAt || 0))
+      .slice(0, 6);
+
     return (
       <aside className="pro-wb-properties">
-        <h3>Board tools</h3>
-        <p>Select an object to edit style, layer, size, comments, votes, and lock state.</p>
+        <div className="pro-wb-prop-head">
+          <div>
+            <h3>Operations board</h3>
+            <span>{objects.length} objects / {selectedIds.length} selected</span>
+          </div>
+          <Badge tone={stats.riskCards ? 'warning' : 'success'}>{stats.riskCards ? `${stats.riskCards} risks` : 'Stable'}</Badge>
+        </div>
+        <div className="pro-wb-board-stats">
+          <span><strong>{stats.cards}</strong> cards</span>
+          <span><strong>{stats.comments}</strong> comments</span>
+          <span><strong>{stats.votes}</strong> votes</span>
+          <span><strong>{objects.filter((entry) => entry.type === 'frame').length}</strong> frames</span>
+        </div>
+        <div className="pro-wb-panel-section">
+          <h4>Layers</h4>
+          <div className="pro-wb-layer-list">
+            {layers.map((entry) => (
+              <button key={entry.id} type="button" onClick={() => onSelect(entry.id)}>
+                <span>{entry.type}</span>
+                <strong>{entry.text || entry.fileName || entry.id}</strong>
+              </button>
+            ))}
+          </div>
+        </div>
+        <div className="pro-wb-panel-section">
+          <h4>Recent activity</h4>
+          <div className="pro-wb-activity-list">
+            {activity.map((entry) => (
+              <span key={`${entry.id}-${entry.updatedAt}`}>
+                {entry.type} updated / {entry.text || entry.fileName || 'Untitled'}
+              </span>
+            ))}
+          </div>
+        </div>
         <div className="pro-wb-hint-list">
-          <span>Wheel or trackpad: zoom</span>
-          <span>Drag empty space: pan</span>
-          <span>Double click: quick sticky</span>
+          <span>Wheel or trackpad: zoom around cursor</span>
+          <span>Drag empty space: pan the board</span>
+          <span>Shift-click: multi-select layers</span>
           <span>Delete, Ctrl+C/V/D, Ctrl+Z/Y supported</span>
         </div>
       </aside>
@@ -1560,13 +1830,13 @@ function ProWhiteboardProperties({ object, onChange, onDuplicate, onDelete, onLa
         <Badge tone={object.locked ? 'warning' : 'info'}>{object.locked ? 'Locked' : 'Editable'}</Badge>
       </div>
       <Field label="Fill">
-        <input type="color" value={object.color === 'transparent' ? '#ffffff' : object.color || '#ffffff'} onChange={(event) => onChange(object.id, { color: event.target.value })} />
+        <input type="color" value={colorInputValue(object.color)} onChange={(event) => onChange(object.id, { color: event.target.value })} />
       </Field>
       <Field label="Border">
-        <input type="color" value={object.borderColor || '#2563EB'} onChange={(event) => onChange(object.id, { borderColor: event.target.value })} />
+        <input type="color" value={colorInputValue(object.borderColor, '#2563EB')} onChange={(event) => onChange(object.id, { borderColor: event.target.value })} />
       </Field>
       <Field label="Text color">
-        <input type="color" value={object.textColor || '#0F172A'} onChange={(event) => onChange(object.id, { textColor: event.target.value })} />
+        <input type="color" value={colorInputValue(object.textColor, '#0F172A')} onChange={(event) => onChange(object.id, { textColor: event.target.value })} />
       </Field>
       <div className="pro-wb-prop-grid">
         <Field label="X"><input type="number" value={Math.round(object.x)} onChange={(event) => onChange(object.id, { x: Number(event.target.value) || 0 })} /></Field>
@@ -1578,6 +1848,22 @@ function ProWhiteboardProperties({ object, onChange, onDuplicate, onDelete, onLa
         <Field label="Font"><input type="number" value={object.fontSize || 16} onChange={(event) => onChange(object.id, { fontSize: Math.max(10, Number(event.target.value) || 16) })} /></Field>
         <Field label="Stroke"><input type="number" value={object.strokeWidth || 2} onChange={(event) => onChange(object.id, { strokeWidth: Math.max(1, Number(event.target.value) || 2) })} /></Field>
       </div>
+      {object.type === 'card' && (
+        <>
+          <Field label="Status">
+            <input value={object.status || ''} onChange={(event) => onChange(object.id, { status: event.target.value })} />
+          </Field>
+          <Field label="Owner">
+            <input value={object.owner || ''} onChange={(event) => onChange(object.id, { owner: event.target.value })} />
+          </Field>
+          <div className="pro-wb-prop-grid">
+            <Field label="Asset"><input value={object.metadata?.asset || ''} onChange={(event) => onChange(object.id, { metadata: { ...(object.metadata || {}), asset: event.target.value } })} /></Field>
+            <Field label="Priority"><input value={object.metadata?.priority || ''} onChange={(event) => onChange(object.id, { metadata: { ...(object.metadata || {}), priority: event.target.value } })} /></Field>
+            <Field label="Due"><input value={object.metadata?.due || ''} onChange={(event) => onChange(object.id, { metadata: { ...(object.metadata || {}), due: event.target.value } })} /></Field>
+            <Field label="Zone"><input value={object.metadata?.zone || ''} onChange={(event) => onChange(object.id, { metadata: { ...(object.metadata || {}), zone: event.target.value } })} /></Field>
+          </div>
+        </>
+      )}
       {object.type === 'sticky' && (
         <div className="pro-wb-swatches">
           {proColors.map((color) => (
@@ -1775,6 +2061,21 @@ function AdvancedWhiteboard({ onClose, onToast }) {
 
     if (tool === 'sticky') {
       addObject('sticky', { x: world.x, y: world.y });
+      setTool('select');
+      return;
+    }
+    if (tool === 'card') {
+      addObject('card', { x: world.x, y: world.y });
+      setTool('select');
+      return;
+    }
+    if (tool === 'table') {
+      addObject('table', { x: world.x, y: world.y });
+      setTool('select');
+      return;
+    }
+    if (tool === 'timeline') {
+      addObject('timeline', { x: world.x, y: world.y });
       setTool('select');
       return;
     }
@@ -2115,11 +2416,14 @@ function AdvancedWhiteboard({ onClose, onToast }) {
         </div>
         <ProWhiteboardProperties
           object={selectedObject}
+          objects={state.objects}
+          selectedIds={selectedIds}
           onChange={updateObject}
           onDuplicate={duplicateObject}
           onDelete={deleteObject}
           onLayer={(id, direction) => updateObject(id, { zIndex: (state.objects.find((object) => object.id === id)?.zIndex || 1) + direction * 1000 })}
           onAddComment={addComment}
+          onSelect={(id) => setSelectedIds([id])}
         />
       </div>
     </section>
@@ -2556,6 +2860,177 @@ function SimpleTaskRow({ task, onStatusChange, onDelete }) {
   );
 }
 
+function ManagerPlannerPush({ engineers, busy, onPush }) {
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [suggestedDate, setSuggestedDate] = useState(() => formatDateKey(new Date()));
+  const [suggestedTime, setSuggestedTime] = useState('');
+  const [expectedDuration, setExpectedDuration] = useState('30');
+  const [assigneeIds, setAssigneeIds] = useState([]);
+
+  function toggleAssignee(id) {
+    setAssigneeIds((current) => (
+      current.includes(id) ? current.filter((item) => item !== id) : [...current, id]
+    ));
+  }
+
+  async function submit(event) {
+    event.preventDefault();
+    await onPush({
+      title,
+      description,
+      suggestedDate,
+      suggestedTime,
+      expectedDurationMinutes: Number(expectedDuration) || 0,
+      assigneeIds,
+    });
+    setTitle('');
+    setDescription('');
+    setSuggestedTime('');
+    setExpectedDuration('30');
+    setAssigneeIds([]);
+  }
+
+  return (
+    <Card className="eng-planner-push-card">
+      <div className="eng-simple-list-head">
+        <div>
+          <h2>Manager task push</h2>
+          <p>Assign a planner task to selected engineer accounts.</p>
+        </div>
+        <Badge tone={engineers.length ? 'ready' : 'neutral'}>{engineers.length} engineers</Badge>
+      </div>
+      <form className="eng-planner-push-form" onSubmit={submit}>
+        <Field label="Task">
+          <input value={title} onChange={(event) => setTitle(event.target.value)} placeholder="Task for engineer" required />
+        </Field>
+        <Field label="Suggested day">
+          <input type="date" value={suggestedDate} onChange={(event) => setSuggestedDate(event.target.value)} />
+        </Field>
+        <Field label="Suggested time">
+          <input type="time" value={suggestedTime} onChange={(event) => setSuggestedTime(event.target.value)} />
+        </Field>
+        <Field label="Duration">
+          <input type="number" min="0" step="5" value={expectedDuration} onChange={(event) => setExpectedDuration(event.target.value)} />
+        </Field>
+        <Field label="Details">
+          <textarea rows={2} value={description} onChange={(event) => setDescription(event.target.value)} placeholder="Optional context" />
+        </Field>
+        <div className="eng-planner-engineers">
+          {engineers.length === 0 && <p>No engineer accounts available. Redeploy the backend if this list is empty after roles are set.</p>}
+          {engineers.map((engineer) => {
+            const selected = assigneeIds.includes(engineer.id);
+            return (
+              <button
+                key={engineer.id}
+                type="button"
+                className={selected ? 'eng-planner-engineer eng-planner-engineer-selected' : 'eng-planner-engineer'}
+                onClick={() => toggleAssignee(engineer.id)}
+              >
+                <strong>{workspaceUserName(engineer)}</strong>
+                <span>{engineer.email}</span>
+              </button>
+            );
+          })}
+        </div>
+        <Button type="submit" disabled={busy || !title.trim() || assigneeIds.length === 0}>
+          Push task
+        </Button>
+      </form>
+    </Card>
+  );
+}
+
+function IncomingPlannerTasks({ tasks, selectedDate, busy, onPlan, onDismiss }) {
+  const [drafts, setDrafts] = useState({});
+
+  function draftFor(task) {
+    return {
+      plannedDate: drafts[task.id]?.plannedDate || task.suggestedDate || selectedDate,
+      plannedTime: drafts[task.id]?.plannedTime || task.suggestedTime || '',
+      expectedDurationMinutes: drafts[task.id]?.expectedDurationMinutes ?? String(task.expectedDurationMinutes || 30),
+    };
+  }
+
+  function updateDraft(taskId, patch) {
+    setDrafts((current) => ({
+      ...current,
+      [taskId]: {
+        ...(current[taskId] || {}),
+        ...patch,
+      },
+    }));
+  }
+
+  if (tasks.length === 0) {
+    return (
+      <Card className="eng-planner-inbox-card">
+        <div className="eng-simple-list-head">
+          <h2>Incoming planner tasks</h2>
+          <Badge tone="neutral">0 pending</Badge>
+        </div>
+        <EmptyState title="No incoming tasks" description="Tasks pushed by a manager will appear here." />
+      </Card>
+    );
+  }
+
+  return (
+    <Card className="eng-planner-inbox-card">
+      <div className="eng-simple-list-head">
+        <h2>Incoming planner tasks</h2>
+        <Badge tone="warning">{tasks.length} pending</Badge>
+      </div>
+      <div className="eng-planner-inbox-list">
+        {tasks.map((task) => {
+          const draft = draftFor(task);
+          return (
+            <article key={task.id} className="eng-planner-inbox-item">
+              <div>
+                <p>{task.title}</p>
+                <span>From {workspaceUserName(task.createdBy)}</span>
+                {task.description && <small>{task.description}</small>}
+              </div>
+              <div className="eng-planner-inbox-controls">
+                <input
+                  type="date"
+                  value={draft.plannedDate}
+                  onChange={(event) => updateDraft(task.id, { plannedDate: event.target.value })}
+                  aria-label="Planned date"
+                />
+                <input
+                  type="time"
+                  value={draft.plannedTime}
+                  onChange={(event) => updateDraft(task.id, { plannedTime: event.target.value })}
+                  aria-label="Planned time"
+                />
+                <input
+                  type="number"
+                  min="0"
+                  step="5"
+                  value={draft.expectedDurationMinutes}
+                  onChange={(event) => updateDraft(task.id, { expectedDurationMinutes: event.target.value })}
+                  aria-label="Duration minutes"
+                />
+                <Button
+                  type="button"
+                  size="sm"
+                  onClick={() => onPlan(task, draft)}
+                  disabled={busy || !draft.plannedDate || !draft.plannedTime}
+                >
+                  Add to my day
+                </Button>
+                <Button type="button" variant="ghost" size="sm" onClick={() => onDismiss(task.id)} disabled={busy}>
+                  Dismiss
+                </Button>
+              </div>
+            </article>
+          );
+        })}
+      </div>
+    </Card>
+  );
+}
+
 function DayPlanner({ onToast }) {
   const didLoadRef = useRef(false);
   const [selectedDate, setSelectedDate] = useState(() => formatDateKey(new Date()));
@@ -2563,6 +3038,9 @@ function DayPlanner({ onToast }) {
   const [title, setTitle] = useState('');
   const [dueTime, setDueTime] = useState('');
   const [expectedDuration, setExpectedDuration] = useState('');
+  const [engineers, setEngineers] = useState([]);
+  const [incomingTasks, setIncomingTasks] = useState([]);
+  const [workspaceBusy, setWorkspaceBusy] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -2576,6 +3054,14 @@ function DayPlanner({ onToast }) {
     if (!didLoadRef.current) return;
     saveStoredItems(PLANNER_KEY, plannerByDate);
   }, [plannerByDate]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      loadWorkspacePlannerData();
+    }, 0);
+    return () => clearTimeout(timer);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const selectedDateLabel = new Intl.DateTimeFormat('en', {
     weekday: 'long',
@@ -2637,6 +3123,96 @@ function DayPlanner({ onToast }) {
     onToast('Task deleted.');
   }
 
+  async function loadWorkspacePlannerData() {
+    setWorkspaceBusy(true);
+    try {
+      let engineerData = { engineers: [] };
+      let inboxData = { tasks: [] };
+
+      try {
+        engineerData = await getWorkspaceEngineers();
+      } catch (error) {
+        if (!String(error.message || '').toLowerCase().includes('route not found')) throw error;
+      }
+
+      try {
+        inboxData = await getWorkspacePlannerInbox();
+      } catch (error) {
+        if (!String(error.message || '').toLowerCase().includes('route not found')) throw error;
+      }
+
+      setEngineers(engineerData.engineers || []);
+      setIncomingTasks((inboxData.tasks || []).filter((task) => task.status === 'PENDING'));
+    } catch (error) {
+      onToast(error.message || 'Unable to load workspace planner tasks.');
+    } finally {
+      setWorkspaceBusy(false);
+    }
+  }
+
+  async function pushPlannerTask(payload) {
+    setWorkspaceBusy(true);
+    try {
+      await pushWorkspacePlannerTask(payload);
+      onToast('Planner task pushed.');
+      await loadWorkspacePlannerData();
+    } catch (error) {
+      onToast(error.message || 'Unable to push planner task.');
+    } finally {
+      setWorkspaceBusy(false);
+    }
+  }
+
+  async function planIncomingTask(task, draft) {
+    setWorkspaceBusy(true);
+    try {
+      const planned = await planWorkspacePlannerTask(task.id, {
+        plannedDate: draft.plannedDate,
+        plannedTime: draft.plannedTime,
+        expectedDurationMinutes: Number(draft.expectedDurationMinutes) || task.expectedDurationMinutes || 0,
+      });
+      const timestamp = nowIso();
+      const plannedTask = planned.task || task;
+      setSelectedDate(draft.plannedDate);
+      setPlannerByDate((current) => ({
+        ...current,
+        [draft.plannedDate]: [
+          ...(current[draft.plannedDate] || []),
+          {
+            id: `pushed-${task.id}`,
+            title: plannedTask.title,
+            dueTime: draft.plannedTime,
+            expectedDurationMinutes: Number(draft.expectedDurationMinutes) || plannedTask.expectedDurationMinutes || 0,
+            completed: false,
+            pushedTaskId: task.id,
+            createdBy: workspaceUserName(task.createdBy),
+            createdAt: timestamp,
+            updatedAt: timestamp,
+          },
+        ],
+      }));
+      setIncomingTasks((current) => current.filter((item) => item.id !== task.id));
+      onToast('Task added to your planner.');
+    } catch (error) {
+      onToast(error.message || 'Unable to add task to your planner.');
+    } finally {
+      setWorkspaceBusy(false);
+    }
+  }
+
+  async function dismissIncomingTask(id) {
+    setWorkspaceBusy(true);
+    try {
+      await dismissWorkspacePlannerTask(id);
+      setIncomingTasks((current) => current.filter((task) => task.id !== id));
+      onToast('Incoming task dismissed.');
+    } catch (error) {
+      onToast(error.message || 'Unable to dismiss task.');
+    } finally {
+      setWorkspaceBusy(false);
+    }
+  }
+
   return (
     <div className="eng-simple-planner">
       <div className="eng-simple-planner-head">
@@ -2668,6 +3244,17 @@ function DayPlanner({ onToast }) {
         setExpectedDuration={setExpectedDuration}
         onSubmit={addTask}
       />
+
+      <div className="eng-planner-server-grid">
+        <ManagerPlannerPush engineers={engineers} busy={workspaceBusy} onPush={pushPlannerTask} />
+        <IncomingPlannerTasks
+          tasks={incomingTasks}
+          selectedDate={selectedDate}
+          busy={workspaceBusy}
+          onPlan={planIncomingTask}
+          onDismiss={dismissIncomingTask}
+        />
+      </div>
 
       <Card className="eng-simple-list-card">
         <div className="eng-simple-list-head">

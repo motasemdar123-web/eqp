@@ -11,6 +11,7 @@ import { getMicrosoftLoginUrl } from '../../../lib/api';
 import { getTaskDisplayStatus } from '../../../lib/taskDisplay';
 
 const API_BASE = process.env.NEXT_PUBLIC_BACKEND_URL || process.env.NEXT_PUBLIC_API_BASE_URL || 'https://eqp-1.onrender.com';
+const APP_TIME_ZONE = 'Asia/Riyadh';
 
 const emptyBoard = {
   kpis: {},
@@ -28,7 +29,14 @@ const emptyManualAssistant = {
 };
 
 function today() {
-  return new Date().toISOString().slice(0, 10);
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone: APP_TIME_ZONE,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).formatToParts(new Date());
+  const values = Object.fromEntries(parts.map((part) => [part.type, part.value]));
+  return `${values.year}-${values.month}-${values.day}`;
 }
 
 function addDays(dateText, amount) {
@@ -106,19 +114,27 @@ function emptyTaskForm(workDate = today()) {
 }
 
 export default function SchedulingPage() {
-  const [token] = useState(() => (
-    typeof window === 'undefined' ? '' : localStorage.getItem('platformToken') || ''
-  ));
-  const [date, setDate] = useState(today());
-  const [historyFrom, setHistoryFrom] = useState(today());
-  const [historyTo, setHistoryTo] = useState(today());
+  const initialToday = useMemo(() => today(), []);
+  const [token, setToken] = useState('');
+  const [date, setDate] = useState(initialToday);
+  const [historyFrom, setHistoryFrom] = useState(() => addDays(initialToday, -7));
+  const [historyTo, setHistoryTo] = useState(initialToday);
   const [board, setBoard] = useState(emptyBoard);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [editingTaskId, setEditingTaskId] = useState('');
-  const [taskForm, setTaskForm] = useState(() => emptyTaskForm());
+  const [taskForm, setTaskForm] = useState(() => emptyTaskForm(initialToday));
   const [viewingTask, setViewingTask] = useState(null);
-  const [manualUpload, setManualUpload] = useState({ machineModel: '', title: '', file: null });
+  const [manualUpload, setManualUpload] = useState({
+    machineModel: '',
+    title: '',
+    manualType: 'Disassembly and Assembly',
+    serialRange: '',
+    revision: '',
+    language: 'en',
+    file: null,
+  });
+  const [manuals, setManuals] = useState([]);
   const [manualBusy, setManualBusy] = useState(false);
   const [manualAssistant, setManualAssistant] = useState(emptyManualAssistant);
 
@@ -196,6 +212,16 @@ export default function SchedulingPage() {
         technicianIds: current.technicianIds.filter((id) => id !== technicianId),
       };
     });
+  }
+
+  async function loadManuals() {
+    if (!token) return;
+    try {
+      const data = await request('/api/shop-manuals');
+      setManuals(data.manuals || []);
+    } catch (error) {
+      setMessage(error.message);
+    }
   }
 
   function updateChecklistItem(index, patch) {
@@ -310,17 +336,164 @@ export default function SchedulingPage() {
       const form = new FormData();
       form.set('machineModel', manualUpload.machineModel);
       form.set('title', manualUpload.title);
+      form.set('manualType', manualUpload.manualType);
+      form.set('serialRange', manualUpload.serialRange);
+      form.set('revision', manualUpload.revision);
+      form.set('language', manualUpload.language);
       form.set('manual', manualUpload.file);
 
-      await request('/api/shop-manuals/upload', {
+      await request('/api/shop-manuals/openai-upload', {
         method: 'POST',
         headers: {},
         body: form,
       });
-      setMessage('Shop manual uploaded and indexed');
-      setManualUpload({ machineModel: manualUpload.machineModel, title: '', file: null });
+      setMessage('Shop manual uploaded to OpenAI. Press Refresh Manuals until OpenAI status becomes COMPLETED.');
+      setManualUpload({
+        machineModel: manualUpload.machineModel,
+        title: '',
+        manualType: manualUpload.manualType,
+        serialRange: '',
+        revision: '',
+        language: manualUpload.language,
+        file: null,
+      });
+      await loadManuals();
     } catch (error) {
       setMessage(error.message);
+    } finally {
+      setManualBusy(false);
+    }
+  }
+
+  async function deleteManual(manual) {
+    const confirmed = window.confirm(`Delete "${manual.title}" and its indexes?`);
+    if (!confirmed) return;
+
+    setManualBusy(true);
+    setMessage('');
+    try {
+      await request(`/api/shop-manuals/${manual.id}`, { method: 'DELETE' });
+      setMessage('Shop manual and indexes deleted');
+      await loadManuals();
+    } catch (error) {
+      setMessage(error.message);
+    } finally {
+      setManualBusy(false);
+    }
+  }
+
+  function applyManualAdviceToChecklist(advice) {
+    const procedure = normalizeChecklistForForm(advice?.procedureSummary || []);
+    if (!procedure.length) {
+      setMessage('No procedure steps were found to apply as work points.');
+      return;
+    }
+
+    setTaskForm((current) => ({
+      ...current,
+      checklist: procedure,
+    }));
+    setMessage('Manual procedure applied to the work points. Review before saving.');
+  }
+
+  async function runManualTaskHelper() {
+    setManualBusy(true);
+    setMessage('');
+    setManualAssistant({
+      ...emptyManualAssistant,
+      phase: 'generating',
+    });
+    try {
+      const payload = {
+        machineModel: taskForm.machineModel,
+        task: taskForm.task,
+        description: taskForm.description,
+        notes: taskForm.notes,
+      };
+      let data;
+      try {
+        data = await request('/api/scheduling/task-helper', {
+          method: 'POST',
+          body: JSON.stringify(payload),
+        });
+      } catch (helperError) {
+        if (!/route not found|not found|cannot post/i.test(helperError.message || '')) {
+          throw helperError;
+        }
+
+        const optionsData = await request('/api/shop-manuals/suggest-options', {
+          method: 'POST',
+          body: JSON.stringify(payload),
+        });
+        const options = optionsData.options || [];
+        const selectedManualCandidateIds = options[0]?.id ? [options[0].id] : [];
+        const toolsData = selectedManualCandidateIds.length
+          ? await request('/api/shop-manuals/suggest-tools', {
+            method: 'POST',
+            body: JSON.stringify({
+              ...payload,
+              selectedManualCandidateIds,
+              manualOptions: options,
+              interpretedTask: optionsData.interpretedTask,
+              interpretationNotes: optionsData.interpretationNotes,
+              searchPhrases: optionsData.searchPhrases,
+            }),
+          })
+          : {
+            suggestion: {
+              requiredTools: [],
+              ppe: [],
+              consumables: [],
+              warnings: ['No close indexed section was found. Refine the task wording or upload a more specific manual.'],
+              procedureSummary: [],
+              sources: [],
+              confidence: 'low',
+              generatedBy: optionsData.generatedBy || 'manual-search',
+              interpretedTask: optionsData.interpretedTask || payload.task,
+              interpretationNotes: optionsData.interpretationNotes || [],
+              searchPhrases: optionsData.searchPhrases || [],
+              alternatives: options,
+              evidence: {},
+            },
+          };
+
+        data = {
+          ...optionsData,
+          options,
+          selectedManualCandidateIds,
+          suggestion: {
+            ...toolsData.suggestion,
+            interpretationNotes: [
+              'Used compatibility mode because the backend task-helper route is not deployed yet.',
+              ...(toolsData.suggestion?.interpretationNotes || []),
+            ],
+          },
+        };
+      }
+      const options = data.options || [];
+      const selectedIds = data.selectedManualCandidateIds || (options[0]?.id ? [options[0].id] : []);
+      setManualAssistant({
+        phase: 'done',
+        options,
+        selectedIds,
+        context: {
+          interpretedTask: data.suggestion?.interpretedTask,
+          interpretationNotes: data.suggestion?.interpretationNotes || [],
+          searchPhrases: data.suggestion?.searchPhrases || [],
+          confidence: data.suggestion?.confidence,
+          generatedBy: data.suggestion?.generatedBy,
+        },
+        error: '',
+      });
+      setTaskForm((current) => ({ ...current, manualAdvice: data.suggestion }));
+      setMessage('AI task helper generated suggested task elements from the uploaded shop manual library.');
+    } catch (error) {
+      setMessage(error.message);
+      setManualAssistant({
+        ...emptyManualAssistant,
+        phase: 'idle',
+        error: error.message,
+      });
     } finally {
       setManualBusy(false);
     }
@@ -424,8 +597,8 @@ export default function SchedulingPage() {
     const manualUrl = source?.manualPdfUrl
       || (source?.manualId ? `/api/shop-manuals/${source.manualId}/file` : '');
     const requestUrl = mode === 'manual' && manualUrl ? manualUrl : pageUrl;
-    if (!pageUrl) {
-      setMessage('No manual page link is available for this source.');
+    if (!requestUrl) {
+      setMessage('No manual file or page link is available for this source.');
       return;
     }
 
@@ -472,8 +645,18 @@ export default function SchedulingPage() {
   }
 
   useEffect(() => {
+    const timer = setTimeout(() => {
+      setToken(localStorage.getItem('platformToken') || '');
+    }, 0);
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
     if (!token) return undefined;
-    const timer = setTimeout(() => loadBoard(date), 0);
+    const timer = setTimeout(() => {
+      loadBoard(date);
+      loadManuals();
+    }, 0);
     return () => clearTimeout(timer);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
@@ -571,9 +754,14 @@ export default function SchedulingPage() {
               </div>
               <div className="grid gap-3 md:grid-cols-[1fr_auto]">
                 <input className="ds-input uppercase" placeholder="Machine model, e.g. D155A-6" value={taskForm.machineModel} onChange={(event) => setTaskForm((current) => ({ ...current, machineModel: event.target.value.toUpperCase() }))} />
-                <Button type="button" variant="secondary" onClick={findManualOptions} disabled={manualBusy || !taskForm.machineModel || !taskForm.task}>
-                  Find Manual Matches
-                </Button>
+                <div className="flex flex-wrap gap-2">
+                  <Button type="button" onClick={runManualTaskHelper} disabled={manualBusy || !taskForm.machineModel || !taskForm.task}>
+                    AI Task Helper
+                  </Button>
+                  <Button type="button" variant="secondary" onClick={findManualOptions} disabled={manualBusy || !taskForm.machineModel || !taskForm.task}>
+                    Choose Section
+                  </Button>
+                </div>
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <input type="time" className="ds-input" value={taskForm.startsAt} onChange={(event) => setTaskForm((current) => ({ ...current, startsAt: event.target.value }))} />
@@ -626,7 +814,12 @@ export default function SchedulingPage() {
                 onRestart={findManualOptions}
               />
               {taskForm.manualAdvice && (
-                <ManualAdvicePanel advice={taskForm.manualAdvice} onClear={() => setTaskForm((current) => ({ ...current, manualAdvice: null }))} onOpenSource={openManualSource} />
+                <ManualAdvicePanel
+                  advice={taskForm.manualAdvice}
+                  onApplyChecklist={() => applyManualAdviceToChecklist(taskForm.manualAdvice)}
+                  onClear={() => setTaskForm((current) => ({ ...current, manualAdvice: null }))}
+                  onOpenSource={openManualSource}
+                />
               )}
               <div className="rounded-md border border-zinc-200 bg-zinc-50 p-3">
                 <p className="text-sm font-bold text-zinc-950">Technicians</p>
@@ -686,15 +879,40 @@ export default function SchedulingPage() {
           </Card>
 
           <Card className="p-5">
-            <h2 className="text-xl font-black text-[var(--color-ink)]">Shop Manual Library</h2>
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <h2 className="text-xl font-black text-[var(--color-ink)]">Shop Manual Library</h2>
+                <p className="mt-1 text-sm font-semibold text-zinc-600">Upload manuals directly to OpenAI File Search to avoid Render memory limits.</p>
+              </div>
+              <Button type="button" variant="secondary" onClick={loadManuals} disabled={manualBusy || !token}>
+                Refresh Manuals
+              </Button>
+            </div>
             <div className="mt-4 grid gap-3 md:grid-cols-2">
               <input className="ds-input uppercase" placeholder="Machine model" value={manualUpload.machineModel} onChange={(event) => setManualUpload((current) => ({ ...current, machineModel: event.target.value.toUpperCase() }))} />
               <input className="ds-input" placeholder="Manual title" value={manualUpload.title} onChange={(event) => setManualUpload((current) => ({ ...current, title: event.target.value }))} />
+              <select className="ds-input" value={manualUpload.manualType} onChange={(event) => setManualUpload((current) => ({ ...current, manualType: event.target.value }))}>
+                <option>Disassembly and Assembly</option>
+                <option>Testing and Adjusting</option>
+                <option>Operation and Maintenance</option>
+                <option>Shop Manual</option>
+                <option>Parts Manual</option>
+                <option>Troubleshooting</option>
+              </select>
+              <input className="ds-input" placeholder="Serial range, e.g. SN 85001-UP" value={manualUpload.serialRange} onChange={(event) => setManualUpload((current) => ({ ...current, serialRange: event.target.value }))} />
+              <input className="ds-input" placeholder="Revision / manual code" value={manualUpload.revision} onChange={(event) => setManualUpload((current) => ({ ...current, revision: event.target.value }))} />
+              <select className="ds-input" value={manualUpload.language} onChange={(event) => setManualUpload((current) => ({ ...current, language: event.target.value }))}>
+                <option value="en">English</option>
+                <option value="ja">Japanese</option>
+                <option value="ar">Arabic</option>
+                <option value="mixed">Mixed</option>
+              </select>
               <input type="file" accept="application/pdf" className="rounded-md border border-[var(--color-border-strong)] bg-white p-3 text-sm md:col-span-2" onChange={(event) => handleManualFile(event.target.files?.[0])} />
             </div>
             <Button type="button" className="mt-3" onClick={uploadManual} disabled={manualBusy || !manualUpload.machineModel || !manualUpload.title || !manualUpload.file}>
-              {manualBusy ? 'Indexing Manual...' : 'Upload and Index Manual'}
+              {manualBusy ? 'Uploading to OpenAI...' : 'Upload to OpenAI'}
             </Button>
+            <ManualLibrary manuals={manuals} onOpenManual={openManualSource} onDeleteManual={deleteManual} busy={manualBusy} />
           </Card>
         </div>
 
@@ -803,6 +1021,7 @@ function ScheduleTable({ tasks, showDate = false, emptyText, onView, onEdit, onD
                   {(task.technicians || []).map((technician) => (
                     <Badge key={technician.id} tone="neutral">{technicianName(technician)}</Badge>
                   ))}
+                  {(task.technicians || []).length === 0 && <span className="text-sm text-zinc-400">-</span>}
                 </div>
               </td>
               <td className="px-5 py-4 text-sm text-zinc-600">{task.machineModel || '-'}</td>
@@ -911,6 +1130,97 @@ function ManualOptionChooser({ state, busy, onSelect, onGenerate, onRestart }) {
   );
 }
 
+function manualIndexTone(status) {
+  if (['COMPLETED', 'IN_PROGRESS', 'PENDING'].includes(String(status || '').toUpperCase())) return 'green';
+  if (['FAILED'].includes(String(status || '').toUpperCase())) return 'red';
+  return 'neutral';
+}
+
+function ManualLibrary({ manuals, onOpenManual, onDeleteManual, busy }) {
+  const grouped = manuals.reduce((groups, manual) => {
+    const key = manual.machineModel || 'UNKNOWN';
+    return {
+      ...groups,
+      [key]: [...(groups[key] || []), manual],
+    };
+  }, {});
+
+  return (
+    <div className="mt-5 rounded-md border border-zinc-200 bg-zinc-50 p-3">
+      <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+        <p className="text-sm font-black text-zinc-950">Indexed manuals</p>
+        <span className="text-xs font-bold uppercase tracking-[0.12em] text-zinc-500">{manuals.length} uploaded</span>
+      </div>
+      {manuals.length === 0 ? (
+        <p className="mt-3 rounded-md border border-dashed border-zinc-300 bg-white px-3 py-4 text-sm font-semibold text-zinc-500">
+          No uploaded manuals yet. Upload a PDF with a machine model so the helper can search it.
+        </p>
+      ) : (
+        <div className="mt-3 grid gap-3">
+          {Object.entries(grouped).map(([machineModel, entries]) => (
+            <div key={machineModel} className="rounded-md border border-zinc-200 bg-white p-3">
+              <div className="flex items-center justify-between gap-3">
+                <p className="font-mono text-sm font-black text-zinc-950">{machineModel}</p>
+                <div className="flex flex-wrap items-center justify-end gap-2">
+                  <Badge tone="info">{entries.reduce((total, manual) => total + Number(manual.chunkCount || 0), 0)} local chunks</Badge>
+                  {entries.some((manual) => manual.aiSearchReady) && <Badge tone="green">AI Search ready</Badge>}
+                </div>
+              </div>
+              <div className="mt-2 grid gap-2">
+                {entries.map((manual) => (
+                  <div key={manual.id} className="grid gap-2 rounded-md border border-zinc-100 bg-zinc-50 p-3 md:grid-cols-[1fr_auto] md:items-center">
+                    <div>
+                      <p className="text-sm font-bold text-zinc-900">{manual.title}</p>
+                      <p className="mt-1 text-xs font-semibold text-zinc-500">
+                        {[manual.manualType, manual.serialRange, manual.revision, manual.language].filter(Boolean).join(' / ') || 'Manual metadata pending'}
+                      </p>
+                      <p className="mt-1 text-xs font-semibold text-zinc-500">
+                        {manual.fileName || manual.sourceType || 'Manual'} / {manual.chunkCount || 0} local chunks
+                        {manual.originalAvailable ? ' / original PDF available' : ' / stored in OpenAI'}
+                      </p>
+                      <div className="mt-2 flex flex-wrap gap-1.5">
+                        <Badge tone={manualIndexTone(manual.openaiIndexStatus)}>
+                          OpenAI: {manual.openaiIndexStatus || 'LOCAL_ONLY'}
+                        </Badge>
+                        {manual.openaiLastError && <Badge tone="red">Index warning</Badge>}
+                      </div>
+                    </div>
+                    <div className="flex flex-wrap gap-2 md:justify-end">
+                      <Button
+                        type="button"
+                        variant="secondary"
+                        size="sm"
+                        onClick={() => onOpenManual({
+                          manualId: manual.id,
+                          manual: manual.title,
+                          machineModel: manual.machineModel,
+                          manualPdfUrl: `/api/shop-manuals/${manual.id}/file`,
+                        }, 'manual')}
+                        disabled={!manual.originalAvailable}
+                      >
+                        Open PDF
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="danger"
+                        size="sm"
+                        onClick={() => onDeleteManual(manual)}
+                        disabled={busy}
+                      >
+                        Delete
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function ManualProgressOverlay({ phase, visible }) {
   if (!visible) return null;
 
@@ -961,7 +1271,7 @@ function ManualProgressOverlay({ phase, visible }) {
   );
 }
 
-function ManualAdvicePanel({ advice, onClear, onOpenSource }) {
+function ManualAdvicePanel({ advice, onApplyChecklist, onClear, onOpenSource }) {
   const sections = [
     ['Tools', advice.requiredTools],
     ['PPE', advice.ppe],
@@ -1005,11 +1315,18 @@ function ManualAdvicePanel({ advice, onClear, onOpenSource }) {
             </div>
           )}
         </div>
-        {onClear && (
-          <button type="button" onClick={onClear} className="ds-button ds-button-secondary ds-button-small">
-            Clear
-          </button>
-        )}
+        <div className="flex flex-wrap gap-2">
+          {onApplyChecklist && (
+            <button type="button" onClick={onApplyChecklist} className="ds-button ds-button-secondary ds-button-small">
+              Apply procedure
+            </button>
+          )}
+          {onClear && (
+            <button type="button" onClick={onClear} className="ds-button ds-button-secondary ds-button-small">
+              Clear
+            </button>
+          )}
+        </div>
       </div>
       <div className="mt-3 grid gap-3 md:grid-cols-2">
         {sections.map(([label, values]) => (
@@ -1127,6 +1444,7 @@ function formatDateTime(value) {
 
 function ScheduleSlotModal({ task, onClose, onOpenManualSource }) {
   const photos = Array.isArray(task.photos) ? task.photos : [];
+  const [previewPhoto, setPreviewPhoto] = useState(null);
   const status = getTaskDisplayStatus(task, 'en');
   const checklist = Array.isArray(task.checklist) ? task.checklist : [];
   const checklistReports = Array.isArray(task.checklistReports) ? task.checklistReports : [];
@@ -1199,9 +1517,13 @@ function ScheduleSlotModal({ task, onClose, onOpenManualSource }) {
                       {Array.isArray(report?.photos) && report.photos.length > 0 && (
                         <div className="mt-3 grid gap-2 sm:grid-cols-3">
                           {report.photos.map((photo, photoIndex) => (
-                            <a key={`${photo.fileName || 'point-photo'}-${photoIndex}`} href={photo.dataUrl} target="_blank" rel="noreferrer" className="overflow-hidden rounded-md border border-zinc-200 bg-white">
-                              <img src={photo.dataUrl} alt={photo.fileName || `Point photo ${photoIndex + 1}`} className="h-32 w-full object-cover" />
-                            </a>
+                            <PhotoThumbnail
+                              key={`${photo.fileName || 'point-photo'}-${photoIndex}`}
+                              photo={photo}
+                              fallbackName={`Point photo ${photoIndex + 1}`}
+                              className="h-32"
+                              onOpen={() => setPreviewPhoto({ ...photo, fallbackName: `Point photo ${photoIndex + 1}` })}
+                            />
                           ))}
                         </div>
                       )}
@@ -1232,22 +1554,14 @@ function ScheduleSlotModal({ task, onClose, onOpenManualSource }) {
                   ) : (
                     <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                       {photos.map((photo, index) => (
-                        <a
+                        <PhotoThumbnail
                           key={`${photo.fileName || 'photo'}-${index}`}
-                          href={photo.dataUrl}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="overflow-hidden rounded-md border border-zinc-200 bg-white"
-                        >
-                          <img
-                            src={photo.dataUrl}
-                            alt={photo.fileName || `Task photo ${index + 1}`}
-                            className="h-44 w-full object-cover"
-                          />
-                          <span className="block truncate px-3 py-2 text-xs font-semibold text-zinc-600">
-                            {photo.fileName || `Photo ${index + 1}`}
-                          </span>
-                        </a>
+                          photo={photo}
+                          fallbackName={`Photo ${index + 1}`}
+                          className="h-44"
+                          showName
+                          onOpen={() => setPreviewPhoto({ ...photo, fallbackName: `Photo ${index + 1}` })}
+                        />
                       ))}
                     </div>
                   )}
@@ -1259,6 +1573,66 @@ function ScheduleSlotModal({ task, onClose, onOpenManualSource }) {
               </p>
             )}
           </div>
+        </div>
+      </div>
+      {previewPhoto && (
+        <PhotoPreviewModal
+          photo={previewPhoto}
+          onClose={() => setPreviewPhoto(null)}
+        />
+      )}
+    </div>
+  );
+}
+
+function PhotoThumbnail({ photo, fallbackName, className = 'h-32', showName = false, onOpen }) {
+  const label = photo.fileName || fallbackName;
+
+  return (
+    <button
+      type="button"
+      onClick={onOpen}
+      className="overflow-hidden rounded-md border border-zinc-200 bg-white text-left transition hover:border-[var(--color-brand)] hover:shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-brand)]"
+    >
+      <img src={photo.dataUrl} alt={label} className={`${className} w-full object-cover`} />
+      {showName && (
+        <span className="block truncate px-3 py-2 text-xs font-semibold text-zinc-600">
+          {label}
+        </span>
+      )}
+    </button>
+  );
+}
+
+function PhotoPreviewModal({ photo, onClose }) {
+  const label = photo.fileName || photo.fallbackName || 'Technician photo';
+
+  function downloadPhoto() {
+    if (!photo.dataUrl) return;
+    const link = document.createElement('a');
+    link.href = photo.dataUrl;
+    link.download = label.replace(/[^a-z0-9._-]+/gi, '-') || 'technician-photo.jpg';
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+  }
+
+  return (
+    <div className="fixed inset-0 z-[70] flex items-center justify-center bg-[rgba(7,27,51,0.78)] p-4 backdrop-blur-sm">
+      <div className="flex max-h-[92vh] w-full max-w-5xl flex-col overflow-hidden rounded-md bg-white shadow-[var(--shadow-overlay)]">
+        <div className="flex items-center justify-between gap-3 border-b border-zinc-100 px-4 py-3">
+          <p className="truncate text-sm font-black text-zinc-950">{label}</p>
+          <div className="flex shrink-0 gap-2">
+            <button type="button" onClick={downloadPhoto} className="ds-button ds-button-primary ds-button-small">
+              Download
+            </button>
+            <button type="button" onClick={onClose} className="ds-button ds-button-secondary ds-button-small">
+              Close
+            </button>
+          </div>
+        </div>
+        <div className="min-h-0 overflow-auto bg-zinc-950 p-3">
+          <img src={photo.dataUrl} alt={label} className="mx-auto max-h-[78vh] max-w-full object-contain" />
         </div>
       </div>
     </div>

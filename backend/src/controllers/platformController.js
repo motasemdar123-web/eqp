@@ -63,6 +63,12 @@ async function uploadShopManualFile(req, res) {
   res.status(201).json({ success: true, manual });
 }
 
+async function uploadShopManualFileToOpenAi(req, res) {
+  requireFields(req.body, ['machineModel', 'title']);
+  const manual = await platformService.uploadShopManualFileToOpenAi(req.body, req.file, req.platformUser?.sub);
+  res.status(201).json({ success: true, manual });
+}
+
 function sendPdf(res, document) {
   res.setHeader('Content-Type', document.contentType || 'application/pdf');
   res.setHeader('Content-Disposition', `inline; filename="${document.fileName || 'shop-manual.pdf'}"`);
@@ -80,6 +86,11 @@ async function getShopManualPagePdf(req, res) {
   sendPdf(res, document);
 }
 
+async function deleteShopManual(req, res) {
+  const manual = await platformService.deleteShopManual(req.params.id);
+  res.json({ success: true, manual });
+}
+
 async function suggestManualTools(req, res) {
   requireFields(req.body, ['machineModel', 'task']);
   const suggestion = await platformService.suggestManualTools(req.body);
@@ -89,6 +100,12 @@ async function suggestManualTools(req, res) {
 async function suggestManualOptions(req, res) {
   requireFields(req.body, ['machineModel', 'task']);
   const result = await platformService.suggestManualOptions(req.body);
+  res.json({ success: true, ...result });
+}
+
+async function suggestScheduleTaskFromManual(req, res) {
+  requireFields(req.body, ['machineModel', 'task']);
+  const result = await platformService.suggestScheduleTaskFromManual(req.body);
   res.json({ success: true, ...result });
 }
 
@@ -125,13 +142,13 @@ async function schedulingBoard(req, res) {
 }
 
 async function createDailyScheduleTask(req, res) {
-  requireFields(req.body, ['technicianIds', 'workDate', 'task', 'startsAt', 'endsAt']);
+  requireFields(req.body, ['workDate', 'task', 'startsAt', 'endsAt']);
   const task = await platformService.createDailyScheduleTask(req.body, req.platformUser?.sub);
   res.status(201).json({ success: true, task });
 }
 
 async function updateDailyScheduleTask(req, res) {
-  requireFields(req.body, ['technicianIds', 'workDate', 'task', 'startsAt', 'endsAt']);
+  requireFields(req.body, ['workDate', 'task', 'startsAt', 'endsAt']);
   const task = await platformService.updateDailyScheduleTask(req.params.id, req.body, req.platformUser?.sub);
   res.json({ success: true, task });
 }
@@ -199,6 +216,32 @@ async function markAllNotificationsRead(req, res) {
   res.json({ success: true, ...data });
 }
 
+async function listWorkspaceEngineers(req, res) {
+  const engineers = await platformService.listWorkspaceEngineers();
+  res.json({ success: true, engineers });
+}
+
+async function createWorkspacePlannerTaskPush(req, res) {
+  requireFields(req.body, ['title', 'assigneeIds']);
+  const tasks = await platformService.createWorkspacePlannerTaskPush(req.platformUser, req.body);
+  res.status(201).json({ success: true, tasks });
+}
+
+async function listMyWorkspacePlannerTaskPushes(req, res) {
+  const tasks = await platformService.listMyWorkspacePlannerTaskPushes(req.platformUser);
+  res.json({ success: true, tasks });
+}
+
+async function planMyWorkspacePlannerTaskPush(req, res) {
+  const task = await platformService.planMyWorkspacePlannerTaskPush(req.platformUser, req.params.id, req.body);
+  res.json({ success: true, task });
+}
+
+async function dismissMyWorkspacePlannerTaskPush(req, res) {
+  const task = await platformService.dismissMyWorkspacePlannerTaskPush(req.platformUser, req.params.id);
+  res.json({ success: true, task });
+}
+
 module.exports = {
   login,
   unifiedLogin,
@@ -211,10 +254,13 @@ module.exports = {
   listShopManuals,
   uploadShopManual,
   uploadShopManualFile,
+  uploadShopManualFileToOpenAi,
   getShopManualFile,
   getShopManualPagePdf,
+  deleteShopManual,
   suggestManualOptions,
   suggestManualTools,
+  suggestScheduleTaskFromManual,
   createTechnician,
   updateTechnician,
   deleteTechnician,
@@ -235,4 +281,9 @@ module.exports = {
   listNotifications,
   markNotificationRead,
   markAllNotificationsRead,
+  listWorkspaceEngineers,
+  createWorkspacePlannerTaskPush,
+  listMyWorkspacePlannerTaskPushes,
+  planMyWorkspacePlannerTaskPush,
+  dismissMyWorkspacePlannerTaskPush,
 };

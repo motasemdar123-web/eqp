@@ -21,6 +21,12 @@ router.get('/api/notifications', requirePlatformAuth, asyncHandler(platformContr
 router.post('/api/notifications/read-all', requirePlatformAuth, asyncHandler(platformController.markAllNotificationsRead));
 router.post('/api/notifications/:id/read', requirePlatformAuth, asyncHandler(platformController.markNotificationRead));
 
+router.get('/api/workspace/engineers', requirePlatformAuth, asyncHandler(platformController.listWorkspaceEngineers));
+router.post('/api/workspace/planner-push', requirePlatformAuth, requirePermission('SCHEDULE_MANAGE'), asyncHandler(platformController.createWorkspacePlannerTaskPush));
+router.get('/api/workspace/planner-push/inbox', requirePlatformAuth, asyncHandler(platformController.listMyWorkspacePlannerTaskPushes));
+router.patch('/api/workspace/planner-push/:id/plan', requirePlatformAuth, asyncHandler(platformController.planMyWorkspacePlannerTaskPush));
+router.patch('/api/workspace/planner-push/:id/dismiss', requirePlatformAuth, asyncHandler(platformController.dismissMyWorkspacePlannerTaskPush));
+
 
 router.get('/api/technician/tasks', requirePlatformAuth, asyncHandler(platformController.myDailyScheduleTasks));
 router.get('/api/technician/weather', requirePlatformAuth, asyncHandler(platformController.myWeatherAdvice));
@@ -33,10 +39,13 @@ router.get('/api/technicians', requirePlatformAuth, requirePermission('SCHEDULE_
 router.get('/api/shop-manuals', requirePlatformAuth, requirePermission('SCHEDULE_MANAGE'), asyncHandler(platformController.listShopManuals));
 router.post('/api/shop-manuals', requirePlatformAuth, requirePermission('SCHEDULE_MANAGE'), asyncHandler(platformController.uploadShopManual));
 router.post('/api/shop-manuals/upload', requirePlatformAuth, requirePermission('SCHEDULE_MANAGE'), manualUpload.single('manual'), asyncHandler(platformController.uploadShopManualFile));
+router.post('/api/shop-manuals/openai-upload', requirePlatformAuth, requirePermission('SCHEDULE_MANAGE'), manualUpload.single('manual'), asyncHandler(platformController.uploadShopManualFileToOpenAi));
 router.get('/api/shop-manuals/:id/file', requirePlatformAuth, asyncHandler(platformController.getShopManualFile));
 router.get('/api/shop-manuals/:id/pages/:page/pdf', requirePlatformAuth, asyncHandler(platformController.getShopManualPagePdf));
+router.delete('/api/shop-manuals/:id', requirePlatformAuth, requirePermission('SCHEDULE_MANAGE'), asyncHandler(platformController.deleteShopManual));
 router.post('/api/shop-manuals/suggest-options', requirePlatformAuth, requirePermission('SCHEDULE_MANAGE'), asyncHandler(platformController.suggestManualOptions));
 router.post('/api/shop-manuals/suggest-tools', requirePlatformAuth, requirePermission('SCHEDULE_MANAGE'), asyncHandler(platformController.suggestManualTools));
+router.post('/api/scheduling/task-helper', requirePlatformAuth, requirePermission('SCHEDULE_MANAGE'), asyncHandler(platformController.suggestScheduleTaskFromManual));
 router.post('/api/technicians', requirePlatformAuth, requirePermission('SCHEDULE_MANAGE'), asyncHandler(platformController.createTechnician));
 router.patch('/api/technicians/:id', requirePlatformAuth, requirePermission('SCHEDULE_MANAGE'), asyncHandler(platformController.updateTechnician));
 router.delete('/api/technicians/:id', requirePlatformAuth, requirePermission('SCHEDULE_MANAGE'), asyncHandler(platformController.deleteTechnician));

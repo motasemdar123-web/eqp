@@ -20,15 +20,17 @@ const API_BASE = process.env.NEXT_PUBLIC_BACKEND_URL || process.env.NEXT_PUBLIC_
 const CACHE_KEY = 'technicianTasksCache';
 const DRAFT_KEY = 'technicianTaskDrafts';
 const WEATHER_CACHE_KEY = 'technicianWeatherCache';
+const APP_TIME_ZONE = 'Asia/Riyadh';
 
 function today() {
-  const value = new Date();
-  if (value.getHours() >= 18) value.setDate(value.getDate() + 1);
-  return [
-    value.getFullYear(),
-    String(value.getMonth() + 1).padStart(2, '0'),
-    String(value.getDate()).padStart(2, '0'),
-  ].join('-');
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone: APP_TIME_ZONE,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).formatToParts(new Date());
+  const values = Object.fromEntries(parts.map((part) => [part.type, part.value]));
+  return `${values.year}-${values.month}-${values.day}`;
 }
 
 function readJson(key, fallback) {
@@ -127,6 +129,7 @@ export default function TechnicianAppPage() {
   const [selectedTaskId, setSelectedTaskId] = useState('');
   const [loginForm, setLoginForm] = useState({ email: '', employeeCode: '' });
   const [loading, setLoading] = useState(false);
+  const [submittingTaskId, setSubmittingTaskId] = useState('');
   const [weatherLoading, setWeatherLoading] = useState(false);
   const [audioLoading, setAudioLoading] = useState(false);
   const [audioUrl, setAudioUrl] = useState('');
@@ -306,6 +309,9 @@ export default function TechnicianAppPage() {
     setSession(null);
     setTasks([]);
     setTechnician(null);
+    setSelectedTaskId('');
+    setMessage('');
+    window.location.replace('/technician');
   }
 
   async function speak(task) {
@@ -475,6 +481,8 @@ export default function TechnicianAppPage() {
 
   async function completeTask(task) {
     const taskId = task.id;
+    if (submittingTaskId) return;
+
     const draft = drafts[taskId] || {};
     const reports = buildChecklistReports(task, draft);
     const incompletePoint = reports.find((report) => !report.done);
@@ -502,12 +510,17 @@ export default function TechnicianAppPage() {
       return;
     }
 
-    setLoading(true);
+    setSubmittingTaskId(taskId);
     setMessage('');
     try {
       await request(`/api/technician/tasks/${taskId}/complete`, {
         method: 'POST',
-        body: JSON.stringify(nextDraft),
+        body: JSON.stringify({
+          summary: nextDraft.summary,
+          notes: nextDraft.notes,
+          photos: nextDraft.photos || [],
+          checklistReports: nextDraft.checklistReports || [],
+        }),
       });
       const nextDrafts = { ...drafts };
       delete nextDrafts[taskId];
@@ -521,7 +534,7 @@ export default function TechnicianAppPage() {
         ? (error.message || 'تعذر إرسال المهمة. تحقق من نقاط العمل والصور.')
         : 'تم الحفظ بدون اتصال. سيتم الإرسال عند عودة الاتصال.');
     } finally {
-      setLoading(false);
+      setSubmittingTaskId('');
     }
   }
 
@@ -787,8 +800,11 @@ export default function TechnicianAppPage() {
                   })}
                   onStop={stopRecording}
                 />
-                <Button type="button" onClick={() => completeTask(selectedTask)} disabled={loading}>
-                  إرسال المهمة
+                {submittingTaskId === selectedTask.id && (
+                  <TechnicianLoading label="جاري إرسال المهمة..." />
+                )}
+                <Button type="button" onClick={() => completeTask(selectedTask)} disabled={loading || submittingTaskId === selectedTask.id}>
+                  {submittingTaskId === selectedTask.id ? 'جاري الإرسال...' : 'إرسال المهمة'}
                 </Button>
               </div>
             )}

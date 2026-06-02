@@ -66,6 +66,9 @@ model User {
   status       UserStatus         @default(ACTIVE)
   roles        UserRole[]
   technician   TechnicianProfile?
+  engineerTaskAssignments DailyScheduleTaskEngineer[]
+  plannerTaskPushes PlannerTaskPush[] @relation("PlannerTaskAssignee")
+  plannerTaskPushesCreated PlannerTaskPush[] @relation("PlannerTaskCreator")
   notifications Notification[]
   createdAt    DateTime           @default(now()) @map("created_at")
   updatedAt    DateTime           @updatedAt @map("updated_at")
@@ -275,6 +278,7 @@ model DailyScheduleTask {
   photos       Json?
   checklistReports Json?                     @map("checklist_reports")
   technicians  DailyScheduleTaskTechnician[]
+  engineers    DailyScheduleTaskEngineer[]
   createdAt    DateTime                      @default(now()) @map("created_at")
   updatedAt    DateTime                      @updatedAt @map("updated_at")
   createdById  String?                       @map("created_by")
@@ -291,8 +295,18 @@ model ShopManual {
   machineModel           String            @map("machine_model")
   title                  String
   fileName               String?           @map("file_name")
+  manualType             String?           @map("manual_type")
+  serialRange            String?           @map("serial_range")
+  revision               String?
+  language               String?           @default("en")
   sourceType             String            @default("PDF") @map("source_type")
   status                 String            @default("INDEXED")
+  openaiFileId           String?           @map("openai_file_id")
+  openaiVectorStoreId    String?           @map("openai_vector_store_id")
+  openaiVectorFileId     String?           @map("openai_vector_file_id")
+  openaiIndexStatus      String            @default("LOCAL_ONLY") @map("openai_index_status")
+  openaiLastError        String?           @map("openai_last_error")
+  manualMetadata         Json?             @map("metadata")
   originalPdf            Bytes?            @map("original_pdf")
   originalPdfSize        Int?              @map("original_pdf_size")
   originalPdfContentType String?           @map("original_pdf_content_type")
@@ -335,6 +349,43 @@ model DailyScheduleTaskTechnician {
   @@unique([taskId, technicianId])
   @@index([technicianId])
   @@map("daily_schedule_task_technicians")
+}
+
+model DailyScheduleTaskEngineer {
+  id          String            @id @default(uuid())
+  taskId      String            @map("task_id")
+  engineerId  String            @map("engineer_id")
+  task        DailyScheduleTask @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  engineer    User              @relation(fields: [engineerId], references: [id], onDelete: Cascade)
+  createdAt   DateTime          @default(now()) @map("created_at")
+  createdById String?           @map("created_by")
+
+  @@unique([taskId, engineerId])
+  @@index([engineerId])
+  @@map("daily_schedule_task_engineers")
+}
+
+model PlannerTaskPush {
+  id                      String    @id @default(uuid())
+  title                   String
+  description             String?
+  suggestedDate           DateTime? @map("suggested_date") @db.Date
+  suggestedTime           String?   @map("suggested_time")
+  expectedDurationMinutes Int       @default(0) @map("expected_duration_minutes")
+  status                  String    @default("PENDING")
+  plannedDate             DateTime? @map("planned_date") @db.Date
+  plannedTime             String?   @map("planned_time")
+  assigneeId              String    @map("assignee_id")
+  createdById             String    @map("created_by")
+  assignee                User      @relation("PlannerTaskAssignee", fields: [assigneeId], references: [id], onDelete: Cascade)
+  createdBy               User      @relation("PlannerTaskCreator", fields: [createdById], references: [id], onDelete: Cascade)
+  createdAt               DateTime  @default(now()) @map("created_at")
+  updatedAt               DateTime  @updatedAt @map("updated_at")
+  deletedAt               DateTime? @map("deleted_at")
+
+  @@index([assigneeId, status])
+  @@index([createdById])
+  @@map("planner_task_pushes")
 }
 
 model EqpMachine {

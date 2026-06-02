@@ -106,18 +106,21 @@ MICROSOFT_ENGINEER_NAMES=motasem,abdelrahman,faisal
 
 ## Manual Suggestions
 
-Shop-manual suggestions use OpenAI to match the task to manual sections, then extract tools, warnings, consumables, procedure steps, alternatives, and evidence from the matched excerpts.
+Shop-manual suggestions use uploaded manuals as a knowledge base. New PDF uploads are saved locally in the database for viewing, indexed into local chunks as a fallback, and sent once to OpenAI File Search / Vector Stores when `OPENAI_API_KEY` is configured. Daily task suggestions then search the indexed knowledge base instead of rereading the whole PDF every time.
 
 ```bash
 OPENAI_API_KEY=your-openai-api-key
 OPENAI_MANUAL_MODEL=gpt-5.5
+OPENAI_MANUAL_PDF_MODEL=gpt-5.5
 OPENAI_MANUAL_REASONING_EFFORT=low
+OPENAI_MANUAL_FILE_SEARCH_RESULTS=8
+MANUAL_UPLOAD_MAX_MB=512
 MANUAL_AI_CONTEXT_CHARS=18000
 MANUAL_CONTEXT_PAGES_BEFORE=1
 MANUAL_CONTEXT_PAGES_AFTER=8
 ```
 
-If `OPENAI_MANUAL_MODEL` is not set, the backend uses `gpt-5.4-mini` as a stronger default than the old mini model while still keeping cost and latency practical.
+Recommended upload structure: one PDF per machine model and manual type, with the machine model, manual type, serial range, revision/manual code, and language filled in. The Scheduling page uploads PDFs directly to OpenAI File Search to avoid Render memory pressure from local PDF parsing. After upload, press Refresh Manuals until the OpenAI status becomes `COMPLETED`; the helper will then use AI File Search.
 
 The Microsoft app needs delegated access for `openid`, `profile`, `email`, and Microsoft Graph `User.Read`.
 

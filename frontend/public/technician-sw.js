@@ -1,4 +1,4 @@
-const CACHE_NAME = 'dh-technician-v2';
+const CACHE_NAME = 'dh-technician-v3';
 const APP_SHELL = ['/technician?direct=1', '/manifest.webmanifest', '/dh-icon.svg'];
 
 self.addEventListener('install', (event) => {
@@ -24,12 +24,12 @@ self.addEventListener('fetch', (event) => {
   event.respondWith(
     fetch(request)
       .then((response) => {
-        if (request.url.startsWith(self.location.origin)) {
+        if (request.url.startsWith(self.location.origin) && response.ok) {
           const copy = response.clone();
           caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
         }
         return response;
       })
-      .catch(() => caches.match(request).then((cached) => cached || caches.match('/technician'))),
+      .catch(() => caches.match(request).then((cached) => cached || caches.match('/technician?direct=1'))),
   );
 });

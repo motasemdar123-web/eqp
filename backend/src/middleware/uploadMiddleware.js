@@ -20,7 +20,7 @@ const storage = multer.diskStorage({
 const manualUpload = multer({
   storage,
   limits: {
-    fileSize: 180 * 1024 * 1024,
+    fileSize: Number(process.env.MANUAL_UPLOAD_MAX_MB || 512) * 1024 * 1024,
     files: 1,
   },
   fileFilter(req, file, callback) {

@@ -1,6 +1,8 @@
 const crypto = require('crypto');
 const fs = require('fs/promises');
+const fsSync = require('fs');
 const path = require('path');
+const OpenAI = require('openai');
 const { getPrisma } = require('../config/prisma');
 const { env } = require('../config/env');
 const { ApiError } = require('../utils/ApiError');
@@ -22,6 +24,7 @@ const MANUAL_INDEX_CHUNK_LIMIT = Number(process.env.MANUAL_INDEX_CHUNK_LIMIT || 
 const MANUAL_PDF_PAGE_LIMIT = Number(process.env.MANUAL_PDF_PAGE_LIMIT || 12);
 const MANUAL_PDF_CONTEXT_CHARS = Number(process.env.MANUAL_PDF_CONTEXT_CHARS || 30000);
 const LOCAL_MANUAL_STORAGE_DIR = process.env.MANUAL_STORAGE_DIR || path.join(process.cwd(), 'storage', 'shop-manuals');
+let openAiClient = null;
 
 function requirePrisma() {
   const prisma = getPrisma();
@@ -60,6 +63,186 @@ function buildManualChatCompletionBody({ temperature, messages }) {
 
 function getManualPdfModel() {
   return process.env.OPENAI_MANUAL_PDF_MODEL || getManualModel();
+}
+
+function hasOpenAiApiKey() {
+  return Boolean(process.env.OPENAI_API_KEY);
+}
+
+function getOpenAiClient() {
+  if (!hasOpenAiApiKey()) {
+    throw new ApiError(503, 'OPENAI_API_KEY is not configured.');
+  }
+  if (!openAiClient) {
+    openAiClient = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+  }
+  return openAiClient;
+}
+
+async function openAiJsonRequest(pathname, options = {}) {
+  if (!hasOpenAiApiKey()) {
+    throw new ApiError(503, 'OPENAI_API_KEY is not configured.');
+  }
+
+  const response = await fetch(`https://api.openai.com/v1${pathname}`, {
+    ...options,
+    headers: {
+      Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+      ...(options.body instanceof FormData ? {} : { 'Content-Type': 'application/json' }),
+      ...(options.headers || {}),
+    },
+  });
+  const data = await response.json().catch(() => ({}));
+
+  if (!response.ok) {
+    throw new Error(data.error?.message || response.statusText || `OpenAI request failed with ${response.status}`);
+  }
+
+  return data;
+}
+
+async function uploadManualFilePathToOpenAi(filePath, fileName) {
+  void fileName;
+  return getOpenAiClient().files.create({
+    file: fsSync.createReadStream(filePath),
+    purpose: 'assistants',
+  });
+}
+
+async function uploadManualPdfToOpenAi(buffer, fileName) {
+  const form = new FormData();
+  form.set('purpose', 'assistants');
+  form.set('file', new Blob([buffer], { type: 'application/pdf' }), safePdfFileName(fileName));
+
+  return openAiJsonRequest('/files', {
+    method: 'POST',
+    body: form,
+  });
+}
+
+function openAiManualAttributes(manual) {
+  return {
+    manual_id: manual.id,
+    machine_model: manual.machineModel,
+    manual_type: manual.manualType || 'shop_manual',
+    title: String(manual.title || '').slice(0, 512),
+    serial_range: manual.serialRange || 'unspecified',
+    revision: manual.revision || 'unspecified',
+    language: manual.language || 'en',
+  };
+}
+
+async function createOpenAiManualVectorStore(machineModel) {
+  return openAiJsonRequest('/vector_stores', {
+    method: 'POST',
+    body: JSON.stringify({
+      name: `EQP shop manuals - ${machineModel}`,
+      metadata: {
+        system: 'eqp',
+        machine_model: machineModel,
+      },
+    }),
+  });
+}
+
+async function findReusableManualVectorStore(prisma, machineModel) {
+  const existing = await prisma.shopManual.findFirst({
+    where: {
+      machineModel,
+      deletedAt: null,
+      openaiVectorStoreId: { not: null },
+    },
+    select: { openaiVectorStoreId: true },
+    orderBy: { createdAt: 'desc' },
+  });
+
+  return existing?.openaiVectorStoreId || null;
+}
+
+async function attachManualToOpenAiVectorStore(manual, originalPdfBuffer) {
+  if (!hasOpenAiApiKey() || !originalPdfBuffer?.length) {
+    return {
+      openaiIndexStatus: hasOpenAiApiKey() ? 'NO_ORIGINAL_PDF' : 'NOT_CONFIGURED',
+    };
+  }
+
+  const prisma = requirePrisma();
+  const file = await uploadManualPdfToOpenAi(originalPdfBuffer, manual.fileName || manual.title);
+  const vectorStoreId = await findReusableManualVectorStore(prisma, manual.machineModel)
+    || (await createOpenAiManualVectorStore(manual.machineModel)).id;
+  const vectorFile = await openAiJsonRequest(`/vector_stores/${vectorStoreId}/files`, {
+    method: 'POST',
+    body: JSON.stringify({
+      file_id: file.id,
+      attributes: openAiManualAttributes({
+        ...manual,
+        openaiFileId: file.id,
+        openaiVectorStoreId: vectorStoreId,
+      }),
+    }),
+  });
+
+  return {
+    openaiFileId: file.id,
+    openaiVectorStoreId: vectorStoreId,
+    openaiVectorFileId: vectorFile.id || file.id,
+    openaiIndexStatus: String(vectorFile.status || 'in_progress').toUpperCase(),
+  };
+}
+
+async function deleteOpenAiManualArtifacts(manual) {
+  if (!hasOpenAiApiKey()) return;
+
+  if (manual.openaiVectorStoreId && (manual.openaiVectorFileId || manual.openaiFileId)) {
+    await openAiJsonRequest(`/vector_stores/${manual.openaiVectorStoreId}/files/${manual.openaiVectorFileId || manual.openaiFileId}`, {
+      method: 'DELETE',
+    }).catch(() => {});
+  }
+
+  if (manual.openaiFileId) {
+    await openAiJsonRequest(`/files/${manual.openaiFileId}`, {
+      method: 'DELETE',
+    }).catch(() => {});
+  }
+}
+
+async function syncOpenAiManualIndexStatuses(prisma) {
+  if (!hasOpenAiApiKey()) return;
+
+  const pendingManuals = await prisma.shopManual.findMany({
+    where: {
+      deletedAt: null,
+      openaiVectorStoreId: { not: null },
+      openaiVectorFileId: { not: null },
+      openaiIndexStatus: { in: ['PENDING', 'IN_PROGRESS'] },
+    },
+    select: {
+      id: true,
+      openaiVectorStoreId: true,
+      openaiVectorFileId: true,
+    },
+    take: 20,
+  });
+
+  for (const manual of pendingManuals) {
+    try {
+      const vectorFile = await openAiJsonRequest(`/vector_stores/${manual.openaiVectorStoreId}/files/${manual.openaiVectorFileId}`);
+      await prisma.shopManual.update({
+        where: { id: manual.id },
+        data: {
+          openaiIndexStatus: String(vectorFile.status || 'in_progress').toUpperCase(),
+          openaiLastError: vectorFile.last_error?.message || null,
+        },
+      });
+    } catch (error) {
+      await prisma.shopManual.update({
+        where: { id: manual.id },
+        data: {
+          openaiLastError: String(error.message || error).slice(0, 1000),
+        },
+      }).catch(() => {});
+    }
+  }
 }
 
 async function buildPlatformAuthResult(prisma, user, preferredModule, authType = 'PLATFORM') {
@@ -494,8 +677,17 @@ function completeMicrosoftLogin(code) {
   return session.authResult;
 }
 
+const APP_TIME_ZONE = process.env.APP_TIME_ZONE || 'Asia/Riyadh';
+
 function todayText() {
-  return new Date().toISOString().slice(0, 10);
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone: APP_TIME_ZONE,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).formatToParts(new Date());
+  const values = Object.fromEntries(parts.map((part) => [part.type, part.value]));
+  return `${values.year}-${values.month}-${values.day}`;
 }
 
 function normalizeDateText(dateText) {
@@ -546,8 +738,18 @@ const shopManualMetadataSelect = {
   machineModel: true,
   title: true,
   fileName: true,
+  manualType: true,
+  serialRange: true,
+  revision: true,
+  language: true,
   sourceType: true,
   status: true,
+  openaiFileId: true,
+  openaiVectorStoreId: true,
+  openaiVectorFileId: true,
+  openaiIndexStatus: true,
+  openaiLastError: true,
+  manualMetadata: true,
   originalPdfSize: true,
   originalPdfContentType: true,
   originalStoredAt: true,
@@ -585,6 +787,12 @@ const dailyScheduleTaskInclude = {
           skills: true,
         },
       },
+    },
+    orderBy: { createdAt: 'asc' },
+  },
+  engineers: {
+    include: {
+      engineer: { select: publicUserSelect },
     },
     orderBy: { createdAt: 'asc' },
   },
@@ -1248,6 +1456,7 @@ function normalizeDailyScheduleTask(task) {
   return {
     ...task,
     technicians: (task.technicians || []).map((assignment) => assignment.technician),
+    engineers: (task.engineers || []).map((assignment) => assignment.engineer),
     photos: Array.isArray(task.photos) ? task.photos : [],
     checklist: normalizeTaskChecklist(task.checklist),
     checklistReports: normalizeChecklistReports(task.checklistReports, normalizeTaskChecklist(task.checklist)),
@@ -1485,8 +1694,16 @@ async function createIndexedShopManual(payload, document, actorId, originalPdfBu
         machineModel,
         title,
         fileName: payload.fileName || null,
+        manualType: payload.manualType || payload.manual_type || null,
+        serialRange: payload.serialRange || payload.serial_range || null,
+        revision: payload.revision || null,
+        language: payload.language || 'en',
         sourceType: payload.sourceType || 'PDF',
         status: 'INDEXED',
+        openaiIndexStatus: originalPdfBuffer?.length
+          ? (hasOpenAiApiKey() ? 'PENDING' : 'NOT_CONFIGURED')
+          : 'NO_ORIGINAL_PDF',
+        manualMetadata: payload.manualMetadata || payload.metadata || null,
         createdById: actorId,
         ...originalPdfData,
       },
@@ -1512,6 +1729,41 @@ async function createIndexedShopManual(payload, document, actorId, originalPdfBu
       chunks: indexedChunks.length,
     };
   }, { timeout: 120000 });
+
+  if (originalPdfBuffer?.length) {
+    try {
+      const openaiIndex = await attachManualToOpenAiVectorStore(manual, originalPdfBuffer);
+      const updated = await prisma.shopManual.update({
+        where: { id: manual.id },
+        data: {
+          ...openaiIndex,
+          openaiLastError: null,
+        },
+        select: shopManualMetadataSelect,
+      });
+
+      return {
+        ...updated,
+        chunks: manual.chunks,
+        originalAvailable: Boolean(updated.originalPdfSize),
+      };
+    } catch (error) {
+      const updated = await prisma.shopManual.update({
+        where: { id: manual.id },
+        data: {
+          openaiIndexStatus: 'FAILED',
+          openaiLastError: String(error.message || error).slice(0, 1000),
+        },
+        select: shopManualMetadataSelect,
+      });
+
+      return {
+        ...updated,
+        chunks: manual.chunks,
+        originalAvailable: Boolean(updated.originalPdfSize),
+      };
+    }
+  }
 
   return {
     ...manual,
@@ -1557,6 +1809,106 @@ async function uploadShopManualFile(payload, file, actorId) {
   }
 }
 
+async function uploadShopManualFileToOpenAi(payload, file, actorId) {
+  if (!file?.path) {
+    throw new ApiError(400, 'PDF manual file is required.');
+  }
+  if (!hasOpenAiApiKey()) {
+    await fs.unlink(file.path).catch(() => {});
+    throw new ApiError(503, 'OPENAI_API_KEY is not configured. Add it to the backend environment before uploading manuals to OpenAI.');
+  }
+
+  const prisma = requirePrisma();
+  const machineModel = normalizeMachineModel(payload.machineModel);
+  const title = String(payload.title || file.originalname || '').trim();
+
+  if (!machineModel || !title) {
+    await fs.unlink(file.path).catch(() => {});
+    throw new ApiError(400, 'machineModel and title are required.');
+  }
+
+  const manual = await prisma.shopManual.create({
+    data: {
+      machineModel,
+      title,
+      fileName: file.originalname || null,
+      manualType: payload.manualType || payload.manual_type || 'Shop Manual',
+      serialRange: payload.serialRange || payload.serial_range || null,
+      revision: payload.revision || null,
+      language: payload.language || 'en',
+      sourceType: 'OPENAI_FILE',
+      status: 'INDEXED',
+      openaiIndexStatus: 'UPLOADING',
+      originalPdfSize: Number(file.size || 0) || null,
+      originalPdfContentType: file.mimetype || 'application/pdf',
+      originalStoredAt: new Date(),
+      manualMetadata: {
+        storage: 'openai-file-search',
+        originalFileName: file.originalname || null,
+        localTextIndex: false,
+      },
+      createdById: actorId,
+    },
+    select: shopManualMetadataSelect,
+  });
+
+  try {
+    const openAiFile = await uploadManualFilePathToOpenAi(file.path, file.originalname || title);
+    const vectorStoreId = await findReusableManualVectorStore(prisma, machineModel)
+      || (await createOpenAiManualVectorStore(machineModel)).id;
+    const vectorFile = await openAiJsonRequest(`/vector_stores/${vectorStoreId}/files`, {
+      method: 'POST',
+      body: JSON.stringify({
+        file_id: openAiFile.id,
+        attributes: openAiManualAttributes({
+          ...manual,
+          openaiFileId: openAiFile.id,
+          openaiVectorStoreId: vectorStoreId,
+        }),
+      }),
+    });
+
+    const updated = await prisma.shopManual.update({
+      where: { id: manual.id },
+      data: {
+        openaiFileId: openAiFile.id,
+        openaiVectorStoreId: vectorStoreId,
+        openaiVectorFileId: vectorFile.id || openAiFile.id,
+        openaiIndexStatus: String(vectorFile.status || 'in_progress').toUpperCase(),
+        openaiLastError: null,
+      },
+      select: shopManualMetadataSelect,
+    });
+
+    return {
+      ...updated,
+      chunks: 0,
+      chunkCount: 0,
+      originalAvailable: false,
+      aiSearchReady: updated.openaiIndexStatus === 'COMPLETED',
+    };
+  } catch (error) {
+    const updated = await prisma.shopManual.update({
+      where: { id: manual.id },
+      data: {
+        openaiIndexStatus: 'FAILED',
+        openaiLastError: String(error.message || error).slice(0, 1000),
+      },
+      select: shopManualMetadataSelect,
+    });
+
+    return {
+      ...updated,
+      chunks: 0,
+      chunkCount: 0,
+      originalAvailable: false,
+      aiSearchReady: false,
+    };
+  } finally {
+    await fs.unlink(file.path).catch(() => {});
+  }
+}
+
 function inferSectionTitle(content) {
   const lines = String(content || '')
     .split('\n')
@@ -1569,6 +1921,7 @@ function inferSectionTitle(content) {
 
 async function listShopManuals() {
   const prisma = requirePrisma();
+  await syncOpenAiManualIndexStatuses(prisma);
   const manuals = await prisma.shopManual.findMany({
     where: { deletedAt: null },
     select: {
@@ -1580,7 +1933,8 @@ async function listShopManuals() {
 
   return manuals.map((manual) => ({
     ...manual,
-    originalAvailable: Boolean(manual.originalPdfSize),
+    originalAvailable: manual.sourceType !== 'OPENAI_FILE' && Boolean(manual.originalPdfSize),
+    aiSearchReady: Boolean(manual.openaiVectorStoreId && manual.openaiIndexStatus === 'COMPLETED'),
     chunkCount: manual._count.chunks,
     _count: undefined,
   }));
@@ -1625,6 +1979,30 @@ async function getShopManualFile(manualId) {
     contentType: 'application/pdf',
     fileName: safePdfFileName(manual.fileName || manual.title),
     sourceType: 'original',
+  };
+}
+
+async function deleteShopManual(manualId) {
+  const prisma = requirePrisma();
+  const manual = await prisma.shopManual.findFirst({
+    where: {
+      id: String(manualId || ''),
+      deletedAt: null,
+    },
+    select: shopManualMetadataSelect,
+  });
+
+  if (!manual) {
+    throw new ApiError(404, 'Shop manual was not found.');
+  }
+
+  await deleteOpenAiManualArtifacts(manual);
+  await prisma.shopManual.delete({ where: { id: manual.id } });
+
+  return {
+    id: manual.id,
+    title: manual.title,
+    machineModel: manual.machineModel,
   };
 }
 
@@ -3576,6 +3954,274 @@ async function suggestManualTools(payload) {
   };
 }
 
+function parseOpenAiResponseText(data) {
+  if (typeof data.output_text === 'string' && data.output_text.trim()) return data.output_text.trim();
+
+  const message = (data.output || []).find((item) => item.type === 'message');
+  const textParts = (message?.content || [])
+    .map((part) => part.text || part.content || '')
+    .filter(Boolean);
+
+  return textParts.join('\n').trim();
+}
+
+function parseJsonObjectFromText(text) {
+  const clean = String(text || '').trim()
+    .replace(/^```json\s*/i, '')
+    .replace(/^```\s*/i, '')
+    .replace(/```$/i, '')
+    .trim();
+
+  try {
+    return JSON.parse(clean);
+  } catch {
+    const match = clean.match(/\{[\s\S]*\}/);
+    if (!match) return null;
+    try {
+      return JSON.parse(match[0]);
+    } catch {
+      return null;
+    }
+  }
+}
+
+function extractFileSearchSources(data, manuals = []) {
+  const manualByFileId = new Map(manuals.map((manual) => [manual.openaiFileId, manual]));
+  const searchCalls = (data.output || []).filter((item) => item.type === 'file_search_call');
+  const results = searchCalls.flatMap((call) => call.results || []);
+
+  return results.slice(0, 8).map((result) => {
+    const manual = manualByFileId.get(result.file_id) || {};
+    const content = Array.isArray(result.content)
+      ? result.content.map((item) => item.text).filter(Boolean).join('\n')
+      : '';
+
+    return {
+      manualId: manual.id || null,
+      manual: result.filename || manual.title || 'Shop manual',
+      machineModel: manual.machineModel || null,
+      section: content.split('\n').find(Boolean)?.slice(0, 160) || null,
+      score: result.score,
+      sourceType: 'openai-file-search',
+      manualPdfUrl: manual.id ? `/api/shop-manuals/${manual.id}/file` : null,
+    };
+  });
+}
+
+function normalizeManualSuggestionShape(value, fallback = {}) {
+  const suggestion = value && typeof value === 'object' ? value : {};
+  const toArray = (input) => Array.isArray(input)
+    ? input.map((item) => String(item || '').trim()).filter(Boolean)
+    : String(input || '').split(/\r?\n/).map((item) => item.trim()).filter(Boolean);
+
+  return {
+    requiredTools: toArray(suggestion.requiredTools || suggestion.tools),
+    ppe: toArray(suggestion.ppe),
+    consumables: toArray(suggestion.consumables || suggestion.parts),
+    warnings: toArray(suggestion.warnings),
+    procedureSummary: toArray(suggestion.procedureSummary || suggestion.steps || suggestion.procedure),
+    confidence: suggestion.confidence || fallback.confidence || 'medium',
+    generatedBy: suggestion.generatedBy || fallback.generatedBy || 'openai-file-search',
+    task: fallback.task,
+    interpretedTask: suggestion.interpretedTask || fallback.interpretedTask || fallback.task,
+    interpretationNotes: toArray(suggestion.interpretationNotes || suggestion.notes),
+    searchPhrases: toArray(suggestion.searchPhrases),
+    matchedSectionTitle: suggestion.matchedSectionTitle || null,
+    selectedManualTitles: Array.isArray(fallback.selectedManualTitles) ? fallback.selectedManualTitles : [],
+    alternatives: [],
+    sources: Array.isArray(fallback.sources) ? fallback.sources : [],
+    evidence: suggestion.evidence && typeof suggestion.evidence === 'object' ? suggestion.evidence : {},
+  };
+}
+
+async function suggestManualToolsWithOpenAiFileSearch(payload, manuals) {
+  if (!hasOpenAiApiKey()) return null;
+
+  const vectorStoreIds = [...new Set(manuals
+    .map((manual) => manual.openaiVectorStoreId)
+    .filter(Boolean))];
+  if (vectorStoreIds.length === 0) return null;
+
+  const response = await openAiJsonRequest('/responses', {
+    method: 'POST',
+    body: JSON.stringify({
+      model: getManualPdfModel(),
+      input: [
+        {
+          role: 'system',
+          content: [
+            'You are an enterprise maintenance planning assistant for Komatsu-style shop manuals.',
+            'Use file_search evidence only. Do not invent tools, PPE, consumables, or steps.',
+            'Return only valid JSON with keys: requiredTools, ppe, consumables, warnings, procedureSummary, confidence, interpretedTask, interpretationNotes, matchedSectionTitle, evidence.',
+            'Keep procedureSummary short and actionable for technician checklist work points.',
+          ].join(' '),
+        },
+        {
+          role: 'user',
+          content: JSON.stringify({
+            machineModel: payload.machineModel,
+            task: payload.task,
+            description: payload.description || '',
+            notes: payload.notes || '',
+            availableManuals: manuals.map((manual) => ({
+              title: manual.title,
+              manualType: manual.manualType,
+              serialRange: manual.serialRange,
+              revision: manual.revision,
+              language: manual.language,
+            })),
+          }),
+        },
+      ],
+      tools: [{
+        type: 'file_search',
+        vector_store_ids: vectorStoreIds,
+        max_num_results: Number(process.env.OPENAI_MANUAL_FILE_SEARCH_RESULTS || 8),
+      }],
+      include: ['file_search_call.results'],
+    }),
+  });
+
+  const parsed = parseJsonObjectFromText(parseOpenAiResponseText(response));
+  if (!parsed) return null;
+
+  const sources = extractFileSearchSources(response, manuals);
+  return normalizeManualSuggestionShape(parsed, {
+    generatedBy: 'openai-file-search',
+    task: payload.task,
+    interpretedTask: payload.task,
+    selectedManualTitles: manuals.map((manual) => ({
+      manual: manual.title,
+      machineModel: manual.machineModel,
+      manualType: manual.manualType,
+      serialRange: manual.serialRange,
+    })),
+    sources,
+  });
+}
+
+async function suggestScheduleTaskFromManual(payload) {
+  const machineModel = normalizeMachineModel(payload.machineModel);
+  if (!machineModel) {
+    throw new ApiError(400, 'machineModel is required to search uploaded shop manuals.');
+  }
+  if (!String(payload.task || '').trim()) {
+    throw new ApiError(400, 'task is required.');
+  }
+
+  const manuals = await listShopManuals();
+  const modelManuals = manuals.filter((manual) => normalizeMachineModel(manual.machineModel) === machineModel);
+  if (modelManuals.length === 0) {
+    return {
+      machineModel,
+      task: payload.task,
+      manuals,
+      options: [],
+      suggestion: {
+        requiredTools: [],
+        ppe: [],
+        consumables: [],
+        warnings: [`No uploaded shop manual is indexed for ${machineModel}. Upload a PDF manual first, then run the helper again.`],
+        procedureSummary: [],
+        sources: [],
+        confidence: 'low',
+        generatedBy: 'no-manual',
+        task: payload.task,
+        interpretedTask: payload.task,
+        interpretationNotes: ['The assistant can only suggest task elements from uploaded and indexed shop manuals.'],
+        selectedManualTitles: [],
+        alternatives: [],
+        evidence: {},
+      },
+    };
+  }
+
+  const fileSearchSuggestion = await suggestManualToolsWithOpenAiFileSearch({ ...payload, machineModel }, modelManuals)
+    .catch((error) => ({
+      requiredTools: [],
+      ppe: [],
+      consumables: [],
+      warnings: [`OpenAI File Search was unavailable, so the helper used the local manual index fallback. ${String(error.message || error).slice(0, 180)}`],
+      procedureSummary: [],
+      confidence: 'low',
+      generatedBy: 'openai-file-search-error',
+      task: payload.task,
+      interpretedTask: payload.task,
+      interpretationNotes: [],
+      sources: [],
+      evidence: {},
+    }));
+
+  if (fileSearchSuggestion && fileSearchSuggestion.generatedBy !== 'openai-file-search-error') {
+    return {
+      machineModel,
+      task: payload.task,
+      manuals: modelManuals,
+      options: [],
+      selectedManualCandidateIds: [],
+      suggestion: fileSearchSuggestion,
+    };
+  }
+
+  const optionsResult = await suggestManualOptions({ ...payload, machineModel });
+  const options = optionsResult.options || [];
+  const selectedManualCandidateIds = Array.isArray(payload.selectedManualCandidateIds) && payload.selectedManualCandidateIds.length
+    ? payload.selectedManualCandidateIds
+    : options.slice(0, 1).map((option) => option.id).filter(Boolean);
+
+  if (selectedManualCandidateIds.length === 0) {
+    return {
+      machineModel,
+      task: payload.task,
+      manuals: modelManuals,
+      options,
+      suggestion: {
+        requiredTools: [],
+        ppe: [],
+        consumables: [],
+        warnings: ['No close indexed section was found. Refine the task wording or upload a more specific manual.'],
+        procedureSummary: [],
+        sources: [],
+        confidence: 'low',
+        generatedBy: optionsResult.generatedBy || 'manual-search',
+        task: payload.task,
+        interpretedTask: optionsResult.interpretedTask || payload.task,
+        interpretationNotes: optionsResult.interpretationNotes || [],
+        searchPhrases: optionsResult.searchPhrases || [],
+        selectedManualTitles: [],
+        alternatives: options,
+        evidence: {},
+      },
+    };
+  }
+
+  const suggestion = await suggestManualTools({
+    ...payload,
+    machineModel,
+    selectedManualCandidateIds,
+    manualOptions: options,
+    interpretedTask: optionsResult.interpretedTask,
+    interpretationNotes: optionsResult.interpretationNotes,
+    searchPhrases: optionsResult.searchPhrases,
+  });
+
+  if (fileSearchSuggestion?.warnings?.length) {
+    suggestion.warnings = [
+      ...fileSearchSuggestion.warnings,
+      ...(suggestion.warnings || []),
+    ];
+  }
+
+  return {
+    machineModel,
+    task: payload.task,
+    manuals: modelManuals,
+    options,
+    selectedManualCandidateIds,
+    suggestion,
+  };
+}
+
 function dailyScheduleDateRange(fromText, toText) {
   const from = normalizeDateText(fromText);
   const to = normalizeDateText(toText || from);
@@ -3591,6 +4237,8 @@ function dailyScheduleDateRange(fromText, toText) {
 }
 
 async function assertDailyScheduleTechniciansAvailable(prisma, technicianIds, workDate, excludeTaskId = null) {
+  if (technicianIds.length === 0) return;
+
   const technicians = await prisma.technicianProfile.findMany({
     where: { id: { in: technicianIds }, deletedAt: null },
     select: { id: true },
@@ -3623,6 +4271,49 @@ async function assertDailyScheduleTechniciansAvailable(prisma, technicianIds, wo
       .map((assignment) => assignment.technician.user.fullName || assignment.technician.employeeCode)
       .join(', ');
     throw new ApiError(409, `Already assigned for this day: ${names}`);
+  }
+}
+
+async function listScheduleEngineers(prisma) {
+  const users = await prisma.user.findMany({
+    where: {
+      deletedAt: null,
+      status: 'ACTIVE',
+      roles: {
+        some: {
+          role: {
+            deletedAt: null,
+            code: { in: ['SERVICE_ENGINEER', 'MAINTENANCE_SUPERVISOR'] },
+          },
+        },
+      },
+    },
+    select: {
+      ...publicUserSelect,
+      roles: {
+        include: {
+          role: true,
+        },
+      },
+    },
+    orderBy: { fullName: 'asc' },
+  });
+
+  return users.map((user) => ({
+    ...user,
+    roles: user.roles.map((userRole) => userRole.role.code),
+  }));
+}
+
+async function assertDailyScheduleEngineersAvailable(prisma, engineerIds) {
+  if (engineerIds.length === 0) return;
+
+  const engineers = await listScheduleEngineers(prisma);
+  const engineerIdSet = new Set(engineers.map((engineer) => engineer.id));
+  const missingIds = engineerIds.filter((engineerId) => !engineerIdSet.has(engineerId));
+
+  if (missingIds.length > 0) {
+    throw new ApiError(400, 'One or more selected engineers cannot receive schedule tasks.');
   }
 }
 
@@ -3759,9 +4450,205 @@ async function markAllNotificationsRead(actor) {
   return listNotifications(actor);
 }
 
+function normalizePlannerTaskPush(item) {
+  if (!item) return item;
+
+  return {
+    id: item.id,
+    title: item.title,
+    description: item.description,
+    suggestedDate: item.suggestedDate ? item.suggestedDate.toISOString().slice(0, 10) : null,
+    suggestedTime: item.suggestedTime,
+    expectedDurationMinutes: item.expectedDurationMinutes,
+    status: item.status,
+    plannedDate: item.plannedDate ? item.plannedDate.toISOString().slice(0, 10) : null,
+    plannedTime: item.plannedTime,
+    assignee: item.assignee || null,
+    createdBy: item.createdBy || null,
+    createdAt: item.createdAt,
+    updatedAt: item.updatedAt,
+  };
+}
+
+async function listWorkspaceEngineers() {
+  const prisma = requirePrisma();
+  const engineers = await listScheduleEngineers(prisma);
+  return engineers.filter((engineer) => !engineer.roles.includes('SUPER_ADMIN') || engineer.roles.includes('SERVICE_ENGINEER'));
+}
+
+async function createWorkspacePlannerTaskPush(actor, payload) {
+  const prisma = requirePrisma();
+  const actorId = actor?.sub;
+  if (!actorId) {
+    throw new ApiError(401, 'Authentication required.');
+  }
+
+  const assigneeIds = uniqueIds(toIdArray(payload.assigneeIds || payload.engineerIds));
+  const title = String(payload.title || payload.task || '').trim();
+  const description = String(payload.description || '').trim();
+  const suggestedDateText = payload.suggestedDate || payload.date || null;
+  const suggestedDate = suggestedDateText ? toWorkDate(suggestedDateText) : null;
+  const suggestedTime = String(payload.suggestedTime || payload.dueTime || '').trim().slice(0, 5) || null;
+  const expectedDurationMinutes = Math.max(0, Number(payload.expectedDurationMinutes || payload.durationMinutes || 0) || 0);
+
+  if (!title) {
+    throw new ApiError(400, 'Task title is required.');
+  }
+  if (assigneeIds.length === 0) {
+    throw new ApiError(400, 'Choose at least one engineer.');
+  }
+
+  await assertDailyScheduleEngineersAvailable(prisma, assigneeIds);
+
+  const tasks = await prisma.$transaction(async (tx) => {
+    const created = [];
+    for (const assigneeId of assigneeIds) {
+      const task = await tx.plannerTaskPush.create({
+        data: {
+          title,
+          description: description || null,
+          suggestedDate,
+          suggestedTime,
+          expectedDurationMinutes,
+          assigneeId,
+          createdById: actorId,
+        },
+        include: {
+          assignee: { select: publicUserSelect },
+          createdBy: { select: publicUserSelect },
+        },
+      });
+      created.push(task);
+    }
+
+    await createNotifications(tx, assigneeIds, {
+      type: 'WORKSPACE_PLANNER',
+      severity: 'info',
+      title: 'New planner task',
+      message: `${title} was assigned to your Workspace day planner.`,
+      href: '/workspace',
+      createdById: actorId,
+    });
+
+    return created;
+  });
+
+  return tasks.map(normalizePlannerTaskPush);
+}
+
+async function listMyWorkspacePlannerTaskPushes(actor) {
+  const prisma = requirePrisma();
+  const actorId = actor?.sub;
+  if (!actorId) {
+    throw new ApiError(401, 'Authentication required.');
+  }
+
+  const tasks = await prisma.plannerTaskPush.findMany({
+    where: {
+      assigneeId: actorId,
+      deletedAt: null,
+      status: { in: ['PENDING', 'PLANNED'] },
+    },
+    include: {
+      assignee: { select: publicUserSelect },
+      createdBy: { select: publicUserSelect },
+    },
+    orderBy: [
+      { status: 'asc' },
+      { createdAt: 'desc' },
+    ],
+    take: 50,
+  });
+
+  return tasks.map(normalizePlannerTaskPush);
+}
+
+async function planMyWorkspacePlannerTaskPush(actor, id, payload) {
+  const prisma = requirePrisma();
+  const actorId = actor?.sub;
+  if (!actorId) {
+    throw new ApiError(401, 'Authentication required.');
+  }
+
+  const plannedDateText = payload.plannedDate || payload.date;
+  const plannedTime = String(payload.plannedTime || payload.dueTime || '').trim().slice(0, 5);
+  if (!plannedDateText || !plannedTime) {
+    throw new ApiError(400, 'plannedDate and plannedTime are required.');
+  }
+
+  const existing = await prisma.plannerTaskPush.findFirst({
+    where: {
+      id,
+      assigneeId: actorId,
+      deletedAt: null,
+    },
+  });
+
+  if (!existing) {
+    throw new ApiError(404, 'Planner task was not found.');
+  }
+
+  const task = await prisma.plannerTaskPush.update({
+    where: { id: existing.id },
+    data: {
+      status: 'PLANNED',
+      plannedDate: toWorkDate(plannedDateText),
+      plannedTime,
+      expectedDurationMinutes: Math.max(0, Number(payload.expectedDurationMinutes || existing.expectedDurationMinutes || 0) || 0),
+    },
+    include: {
+      assignee: { select: publicUserSelect },
+      createdBy: { select: publicUserSelect },
+    },
+  });
+
+  await createNotifications(prisma, [task.createdById], {
+    type: 'WORKSPACE_PLANNER',
+    severity: 'success',
+    title: 'Planner task accepted',
+    message: `${task.assignee.fullName} planned "${task.title}" for ${task.plannedDate.toISOString().slice(0, 10)} at ${task.plannedTime}.`,
+    href: '/workspace',
+    createdById: actorId,
+  });
+
+  return normalizePlannerTaskPush(task);
+}
+
+async function dismissMyWorkspacePlannerTaskPush(actor, id) {
+  const prisma = requirePrisma();
+  const actorId = actor?.sub;
+  if (!actorId) {
+    throw new ApiError(401, 'Authentication required.');
+  }
+
+  const existing = await prisma.plannerTaskPush.findFirst({
+    where: {
+      id,
+      assigneeId: actorId,
+      deletedAt: null,
+    },
+  });
+
+  if (!existing) {
+    throw new ApiError(404, 'Planner task was not found.');
+  }
+
+  const task = await prisma.plannerTaskPush.update({
+    where: { id: existing.id },
+    data: { status: 'DISMISSED' },
+    include: {
+      assignee: { select: publicUserSelect },
+      createdBy: { select: publicUserSelect },
+    },
+  });
+
+  return normalizePlannerTaskPush(task);
+}
+
 async function createDailyScheduleTask(payload, actorId) {
   const prisma = requirePrisma();
   const technicianIds = uniqueIds(toIdArray(payload.technicianIds));
+  const engineerIds = uniqueIds(toIdArray(payload.engineerIds));
   const task = String(payload.task || '').trim();
   const workDate = toWorkDate(payload.workDate || payload.date);
   const checklist = normalizeTaskChecklist(payload.checklist);
@@ -3769,11 +4656,12 @@ async function createDailyScheduleTask(payload, actorId) {
   if (!task || !payload.startsAt || !payload.endsAt) {
     throw new ApiError(400, 'task, startsAt, and endsAt are required.');
   }
-  if (technicianIds.length === 0) {
-    throw new ApiError(400, 'At least one technician is required.');
+  if (technicianIds.length === 0 && engineerIds.length === 0) {
+    throw new ApiError(400, 'Select at least one technician or engineer.');
   }
 
   await assertDailyScheduleTechniciansAvailable(prisma, technicianIds, workDate);
+  await assertDailyScheduleEngineersAvailable(prisma, engineerIds);
 
   return prisma.$transaction(async (tx) => {
     const createdTask = await tx.dailyScheduleTask.create({
@@ -3801,6 +4689,14 @@ async function createDailyScheduleTask(payload, actorId) {
       })),
       skipDuplicates: true,
     });
+    await tx.dailyScheduleTaskEngineer.createMany({
+      data: engineerIds.map((engineerId) => ({
+        taskId: createdTask.id,
+        engineerId,
+        createdById: actorId,
+      })),
+      skipDuplicates: true,
+    });
 
     const fullTask = await tx.dailyScheduleTask.findUnique({
       where: { id: createdTask.id },
@@ -3812,6 +4708,7 @@ async function createDailyScheduleTask(payload, actorId) {
       [
         actorId,
         ...fullTask.technicians.map((assignment) => assignment.technician.userId),
+        ...fullTask.engineers.map((assignment) => assignment.engineerId),
       ],
       {
         type: 'SCHEDULE',
@@ -3839,6 +4736,7 @@ async function updateDailyScheduleTask(id, payload, actorId) {
   }
 
   const technicianIds = uniqueIds(toIdArray(payload.technicianIds));
+  const engineerIds = uniqueIds(toIdArray(payload.engineerIds));
   const task = String(payload.task || '').trim();
   const workDate = toWorkDate(payload.workDate || payload.date || existingTask.workDate.toISOString().slice(0, 10));
   const checklist = normalizeTaskChecklist(payload.checklist);
@@ -3846,11 +4744,12 @@ async function updateDailyScheduleTask(id, payload, actorId) {
   if (!task || !payload.startsAt || !payload.endsAt) {
     throw new ApiError(400, 'task, startsAt, and endsAt are required.');
   }
-  if (technicianIds.length === 0) {
-    throw new ApiError(400, 'At least one technician is required.');
+  if (technicianIds.length === 0 && engineerIds.length === 0) {
+    throw new ApiError(400, 'Select at least one technician or engineer.');
   }
 
   await assertDailyScheduleTechniciansAvailable(prisma, technicianIds, workDate, id);
+  await assertDailyScheduleEngineersAvailable(prisma, engineerIds);
 
   return prisma.$transaction(async (tx) => {
     await tx.dailyScheduleTask.update({
@@ -3882,6 +4781,17 @@ async function updateDailyScheduleTask(id, payload, actorId) {
       })),
       skipDuplicates: true,
     });
+    await tx.dailyScheduleTaskEngineer.deleteMany({
+      where: { taskId: id },
+    });
+    await tx.dailyScheduleTaskEngineer.createMany({
+      data: engineerIds.map((engineerId) => ({
+        taskId: id,
+        engineerId,
+        createdById: actorId,
+      })),
+      skipDuplicates: true,
+    });
 
     const updatedTask = await tx.dailyScheduleTask.findUnique({
       where: { id },
@@ -3893,6 +4803,7 @@ async function updateDailyScheduleTask(id, payload, actorId) {
       [
         actorId,
         ...updatedTask.technicians.map((assignment) => assignment.technician.userId),
+        ...updatedTask.engineers.map((assignment) => assignment.engineerId),
       ],
       {
         type: 'SCHEDULE',
@@ -4770,6 +5681,7 @@ async function getSchedulingBoard(dateText, historyFromText, historyToText) {
 
   const [
     technicians,
+    engineers,
     dayTasks,
     historyTasks,
   ] = await Promise.all([
@@ -4786,6 +5698,7 @@ async function getSchedulingBoard(dateText, historyFromText, historyToText) {
       },
       orderBy: { employeeCode: 'asc' },
     }),
+    listScheduleEngineers(prisma),
     prisma.dailyScheduleTask.findMany({
       where: { workDate, deletedAt: null },
       include: dailyScheduleTaskInclude,
@@ -4818,10 +5731,12 @@ async function getSchedulingBoard(dateText, historyFromText, historyToText) {
     kpis: {
       technicians: technicians.length,
       scheduledTechnicians,
+      engineers: engineers.length,
       availableTechnicians: schedulableTechnicians.length,
       dailyTasks: dayTasks.length,
     },
     technicians: schedulableTechnicians,
+    engineers,
     tasks: dayTasks.map(normalizeDailyScheduleTask),
     history: {
       from: historyRange.from,
@@ -4844,10 +5759,13 @@ module.exports = {
   listShopManuals,
   getShopManualFile,
   getShopManualPagePdf,
+  deleteShopManual,
   uploadShopManual,
   uploadShopManualFile,
+  uploadShopManualFileToOpenAi,
   suggestManualOptions,
   suggestManualTools,
+  suggestScheduleTaskFromManual,
   createTechnician,
   updateTechnician,
   deleteTechnician,
@@ -4868,4 +5786,9 @@ module.exports = {
   listNotifications,
   markNotificationRead,
   markAllNotificationsRead,
+  listWorkspaceEngineers,
+  createWorkspacePlannerTaskPush,
+  listMyWorkspacePlannerTaskPushes,
+  planMyWorkspacePlannerTaskPush,
+  dismissMyWorkspacePlannerTaskPush,
 };

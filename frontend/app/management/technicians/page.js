@@ -58,9 +58,8 @@ function payloadFromForm(form) {
 }
 
 export default function TechniciansManagementPage() {
-  const [token] = useState(() => (
-    typeof window === 'undefined' ? '' : getStoredPlatformSession()?.token || ''
-  ));
+  const [token, setToken] = useState('');
+  const [sessionChecked, setSessionChecked] = useState(false);
   const [technicians, setTechnicians] = useState([]);
   const [shifts, setShifts] = useState([]);
   const [selectedTechnicianId, setSelectedTechnicianId] = useState('');
@@ -92,6 +91,15 @@ export default function TechniciansManagementPage() {
   }
 
   useEffect(() => {
+    const timer = setTimeout(() => {
+      setToken(getStoredPlatformSession()?.token || '');
+      setSessionChecked(true);
+    }, 0);
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    if (!sessionChecked) return undefined;
     if (!token) {
       window.location.href = '/';
       return undefined;
@@ -149,6 +157,8 @@ export default function TechniciansManagementPage() {
 
   async function saveTechnician(event) {
     event.preventDefault();
+    if (saving) return;
+
     setSaving(true);
     setMessage('');
     setError('');
@@ -343,12 +353,12 @@ export default function TechniciansManagementPage() {
               {selectedTechnician && <Button type="button" variant="ghost" onClick={startCreate}>Clear</Button>}
             </div>
 
-            <form onSubmit={saveTechnician} className="mt-5 grid gap-3">
-              <input className="ds-input" placeholder="Full name" value={form.fullName} onChange={(event) => setForm((current) => ({ ...current, fullName: event.target.value }))} />
-              <input type="email" className="ds-input" placeholder="Company email" value={form.email} onChange={(event) => setForm((current) => ({ ...current, email: event.target.value }))} />
+            <form onSubmit={saveTechnician} className="mt-5 grid gap-3" aria-busy={saving}>
+              <input required className="ds-input" placeholder="Full name" value={form.fullName} onChange={(event) => setForm((current) => ({ ...current, fullName: event.target.value }))} />
+              <input required type="email" className="ds-input" placeholder="Company email" value={form.email} onChange={(event) => setForm((current) => ({ ...current, email: event.target.value }))} />
               <div className="grid grid-cols-2 gap-3">
                 <input type="number" className="ds-input" placeholder="User number" value={form.userNumber} onChange={(event) => setForm((current) => ({ ...current, userNumber: event.target.value }))} />
-                <input className="ds-input" placeholder="Employee code" value={form.employeeCode} onChange={(event) => setForm((current) => ({ ...current, employeeCode: event.target.value }))} />
+                <input required className="ds-input" placeholder="Employee code" value={form.employeeCode} onChange={(event) => setForm((current) => ({ ...current, employeeCode: event.target.value }))} />
               </div>
               <input className="ds-input" placeholder="Phone" value={form.phone} onChange={(event) => setForm((current) => ({ ...current, phone: event.target.value }))} />
               <input className="ds-input" placeholder="Region" value={form.region} onChange={(event) => setForm((current) => ({ ...current, region: event.target.value }))} />
@@ -362,7 +372,10 @@ export default function TechniciansManagementPage() {
                 Available for dispatch
               </label>
               <Button type="submit" disabled={saving}>
-                {selectedTechnician ? 'Save Technician' : 'Add Technician'}
+                <span className="flex items-center justify-center gap-2">
+                  {saving && <span className="tech-spinner" aria-hidden="true" />}
+                  {saving ? 'Saving technician...' : (selectedTechnician ? 'Save Technician' : 'Add Technician')}
+                </span>
               </Button>
             </form>
           </Card>

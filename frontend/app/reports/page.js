@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
+import JSZip from 'jszip';
 import { deleteReport, getReports, renameReport } from '../../lib/api';
 import { getStoredPlatformSession, getStoredUser } from '../../lib/auth';
 import SystemShell from '../../components/SystemShell';
@@ -23,6 +24,7 @@ export default function ReportsPage() {
   const [renamingReport, setRenamingReport] = useState(null);
   const [renameValue, setRenameValue] = useState('');
   const [selectedReportIds, setSelectedReportIds] = useState([]);
+  const [downloadBusy, setDownloadBusy] = useState(false);
 
   useEffect(() => {
     const platformSession = getStoredPlatformSession();
@@ -129,20 +131,75 @@ export default function ReportsPage() {
     });
   }
 
-  function downloadReports(targetReports) {
-    targetReports.forEach((report, index) => {
-      setTimeout(() => {
-        const link = document.createElement('a');
-        link.href = report.file_url;
-        link.target = '_blank';
-        link.rel = 'noreferrer';
-        link.download = report.file_name || `report-${report.id}.pdf`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      }, index * 350);
-    });
-    setToast({ type: 'info', message: `Starting ${targetReports.length} downloads.` });
+  function safeZipFileName(value, fallback) {
+    return String(value || fallback)
+      .replace(/[/\\?%*:|"<>]+/g, '-')
+      .replace(/\s+/g, ' ')
+      .trim()
+      .slice(0, 140) || fallback;
+  }
+
+  async function downloadSingleReport(report) {
+    try {
+      const response = await fetch(report.file_url);
+      if (!response.ok) throw new Error('Could not download report file.');
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = safeZipFileName(report.file_name, `report-${report.id}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 30000);
+    } catch (downloadError) {
+      setToast({ type: 'error', message: downloadError.message || 'Failed to download report.' });
+    }
+  }
+
+  async function downloadReports(targetReports) {
+    if (!targetReports.length || downloadBusy) return;
+
+    setDownloadBusy(true);
+    setToast({ type: 'info', message: `Preparing ${targetReports.length} reports as one ZIP.` });
+
+    try {
+      const zip = new JSZip();
+      const usedNames = new Map();
+
+      for (const report of targetReports) {
+        const response = await fetch(report.file_url);
+        if (!response.ok) {
+          throw new Error(`Could not download ${report.file_name || `report-${report.id}.pdf`}.`);
+        }
+
+        const blob = await response.blob();
+        const baseName = safeZipFileName(report.file_name, `report-${report.id}.pdf`);
+        const count = usedNames.get(baseName) || 0;
+        usedNames.set(baseName, count + 1);
+        const fileName = count === 0
+          ? baseName
+          : baseName.replace(/(\.pdf)?$/i, `-${count + 1}.pdf`);
+
+        zip.file(fileName, blob);
+      }
+
+      const zipBlob = await zip.generateAsync({ type: 'blob', compression: 'DEFLATE' });
+      const url = URL.createObjectURL(zipBlob);
+      const link = document.createElement('a');
+      const stamp = new Date().toISOString().slice(0, 10);
+      link.href = url;
+      link.download = `eqp-reports-${stamp}-${targetReports.length}-files.zip`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 30000);
+      setToast({ type: 'success', message: `Downloaded ${targetReports.length} reports in one ZIP.` });
+    } catch (downloadError) {
+      setToast({ type: 'error', message: downloadError.message || 'Failed to create ZIP download.' });
+    } finally {
+      setDownloadBusy(false);
+    }
   }
 
   async function handleBulkDeleteReports() {
@@ -233,8 +290,8 @@ export default function ReportsPage() {
                   <Badge tone="neutral">{filteredReports.length} visible</Badge>
                   {selectedReportIds.length > 0 && <Badge tone="yellow">{selectedReportIds.length} selected</Badge>}
                   <Button variant="ghost" onClick={() => setSearchTerm('')}>Clear Search</Button>
-                  <Button variant="secondary" onClick={() => downloadReports(selectedReports.length ? selectedReports : filteredReports)} disabled={filteredReports.length === 0}>
-                    Download {selectedReports.length ? 'Selected' : 'All Visible'}
+                  <Button variant="secondary" onClick={() => downloadReports(selectedReports.length ? selectedReports : filteredReports)} disabled={filteredReports.length === 0 || downloadBusy}>
+                    {downloadBusy ? 'Preparing ZIP...' : `Download ${selectedReports.length ? 'Selected' : 'All Visible'}`}
                   </Button>
                   <Button variant="danger" onClick={() => setBulkDeleteOpen(true)} disabled={selectedReports.length === 0}>
                     Delete Selected
@@ -281,14 +338,13 @@ export default function ReportsPage() {
                         {new Date(report.created_at).toLocaleString()}
                       </td>
                       <td className="flex gap-2 px-5 py-4">
-                        <a
-                          href={report.file_url}
-                          target="_blank"
-                          rel="noreferrer"
+                        <button
+                          type="button"
+                          onClick={() => downloadSingleReport(report)}
                           className="ds-button ds-button-primary"
                         >
                           Download
-                        </a>
+                        </button>
                         <Button variant="secondary" onClick={() => openRename(report)}>
                           Rename
                         </Button>

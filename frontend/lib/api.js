@@ -146,3 +146,31 @@ export function markAllNotificationsRead() {
     method: 'POST',
   });
 }
+
+export function getWorkspaceEngineers() {
+  return request('/api/workspace/engineers');
+}
+
+export function pushWorkspacePlannerTask(payload) {
+  return request('/api/workspace/planner-push', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+}
+
+export function getWorkspacePlannerInbox() {
+  return request('/api/workspace/planner-push/inbox');
+}
+
+export function planWorkspacePlannerTask(id, payload) {
+  return request(`/api/workspace/planner-push/${id}/plan`, {
+    method: 'PATCH',
+    body: JSON.stringify(payload),
+  });
+}
+
+export function dismissWorkspacePlannerTask(id) {
+  return request(`/api/workspace/planner-push/${id}/dismiss`, {
+    method: 'PATCH',
+  });
+}
