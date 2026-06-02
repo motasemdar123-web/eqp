@@ -2839,23 +2839,25 @@ function SimpleTaskRow({ task, onStatusChange, onDelete }) {
       <time>{task.dueTime || '--:--'}</time>
       <span>{task.title}</span>
       <span className="eng-simple-duration">{formatDuration(taskDurationMinutes(task))}</span>
-      <div className="eng-simple-status" aria-label={`Completion status for ${task.title}`}>
-        <button
-          type="button"
-          className={task.completed ? 'eng-simple-status-button eng-simple-status-done eng-simple-status-active' : 'eng-simple-status-button'}
-          onClick={() => onStatusChange(task.id, true)}
-        >
-          Done
-        </button>
-        <button
-          type="button"
-          className={!task.completed ? 'eng-simple-status-button eng-simple-status-missed eng-simple-status-active' : 'eng-simple-status-button'}
-          onClick={() => onStatusChange(task.id, false)}
-        >
-          Not done
-        </button>
+      <div className="eng-simple-task-actions">
+        <div className="eng-simple-status" aria-label={`Completion status for ${task.title}`}>
+          <button
+            type="button"
+            className={task.completed ? 'eng-simple-status-button eng-simple-status-done eng-simple-status-active' : 'eng-simple-status-button'}
+            onClick={() => onStatusChange(task.id, true)}
+          >
+            Done
+          </button>
+          <button
+            type="button"
+            className={!task.completed ? 'eng-simple-status-button eng-simple-status-missed eng-simple-status-active' : 'eng-simple-status-button'}
+            onClick={() => onStatusChange(task.id, false)}
+          >
+            Not done
+          </button>
+        </div>
+        <Button type="button" variant="ghost" size="sm" onClick={() => onDelete(task.id)}>Delete</Button>
       </div>
-      <Button type="button" variant="ghost" size="sm" onClick={() => onDelete(task.id)}>Delete</Button>
     </article>
   );
 }

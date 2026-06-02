@@ -5257,9 +5257,20 @@ textarea {
 
 .eng-simple-form {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 10rem 11rem auto;
+  grid-template-columns: minmax(0, 1fr) minmax(8.5rem, 10rem) minmax(9rem, 11rem) minmax(6.5rem, auto);
   gap: 0.75rem;
   align-items: end;
+}
+
+.eng-simple-form .ds-field,
+.eng-planner-push-form .ds-field {
+  min-width: 0;
+}
+
+.eng-simple-form .ds-button {
+  width: 100%;
+  min-width: 6.5rem;
+  justify-content: center;
 }
 
 .eng-planner-server-grid {
@@ -5446,8 +5457,8 @@ textarea {
 
 .eng-simple-task {
   display: grid;
-  grid-template-columns: 4.5rem minmax(0, 1fr) 5.5rem auto auto;
-  gap: 0.7rem;
+  grid-template-columns: 4.5rem minmax(12rem, 1fr) minmax(6.5rem, auto) minmax(17rem, auto);
+  gap: 0.8rem;
   align-items: center;
   border: 1px solid var(--color-border);
   border-radius: 14px;
@@ -5486,18 +5497,30 @@ textarea {
 
 .eng-simple-duration {
   justify-self: start;
+  min-width: 5.75rem;
+  max-width: 100%;
   border-radius: 999px;
   background: var(--color-surface-muted);
-  padding: 0.25rem 0.55rem;
+  padding: 0.3rem 0.65rem;
   color: var(--color-ink-soft) !important;
   font-size: 0.72rem !important;
   font-weight: 900 !important;
+  text-align: center;
   text-decoration: none !important;
   white-space: nowrap;
 }
 
+.eng-simple-task-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.65rem;
+  min-width: 0;
+}
+
 .eng-simple-status {
   display: inline-flex;
+  flex: 0 0 auto;
   gap: 0.25rem;
   border: 1px solid var(--color-border);
   border-radius: 999px;
@@ -5507,6 +5530,7 @@ textarea {
 
 .eng-simple-status-button {
   min-height: 1.8rem;
+  min-width: 4.4rem;
   border: 0;
   border-radius: 999px;
   background: transparent;
@@ -5886,13 +5910,17 @@ textarea {
     grid-column: 1 / -1;
   }
 
-  .eng-simple-status {
+  .eng-simple-task-actions {
     grid-column: 1 / -1;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+
+  .eng-simple-status {
     justify-self: start;
   }
 
-  .eng-simple-task .ds-button {
-    grid-column: 1 / -1;
+  .eng-simple-task-actions .ds-button {
     justify-self: start;
   }
 }
