@@ -190,6 +190,7 @@ export default function TechnicianAppPage() {
   const pendingCount = Object.values(drafts).filter((draft) => draft.pending).length;
   const completedCount = tasks.filter((task) => isTaskCompleted(task)).length;
   const overdueCount = tasks.filter((task) => isTaskOverdue(task)).length;
+  const activeCount = tasks.filter((task) => isTaskInProgress(task)).length;
 
   const request = useCallback(async (path, options = {}) => {
     const response = await fetch(`${API_BASE}${path}`, {
@@ -584,33 +585,36 @@ export default function TechnicianAppPage() {
   }
 
   if (!mounted) {
-    return <main dir="rtl" className="min-h-screen bg-[var(--color-canvas)] text-[var(--color-ink)]" />;
+    return <main dir="rtl" className="tech-app" />;
   }
 
   if (!token) {
     return (
-      <main dir="rtl" className="grid min-h-screen place-items-center bg-[var(--color-canvas)] px-5 text-[var(--color-ink)]">
-        <Card className="w-full max-w-sm p-6 text-center">
-          <div className="ds-brand-mark mx-auto h-14 w-14 text-xl">DH</div>
-          <h1 className="mt-5 text-2xl font-black">تطبيق الفني</h1>
-          <p className="mt-2 text-sm font-semibold text-zinc-600">ادخل بالإيميل ورقم الفني</p>
+      <main dir="rtl" className="tech-login-shell">
+        <Card className="tech-login-card">
+          <div className="tech-login-mark">DH</div>
+          <p className="tech-login-eyebrow">Dar Al Hai Maintenance</p>
+          <h1>بوابة الفني</h1>
+          <p>تسجيل دخول سريع لعرض مهام اليوم وتوثيق العمل من الموقع.</p>
           {message && <div className="ds-alert ds-alert-error mt-4 text-right">{message}</div>}
-          <form onSubmit={signIn} className="mt-5 grid gap-3 text-right">
+          <form onSubmit={signIn} className="tech-login-form">
             <input
               type="email"
               inputMode="email"
               value={loginForm.email}
               onChange={(event) => setLoginForm((current) => ({ ...current, email: event.target.value }))}
               placeholder="الإيميل"
-              className="ds-input h-12 text-base font-semibold"
+              className="ds-input"
             />
             <input
               value={loginForm.employeeCode}
               onChange={(event) => setLoginForm((current) => ({ ...current, employeeCode: event.target.value.toUpperCase() }))}
               placeholder="رقم الفني مثال TEST-1015"
-              className="ds-input h-12 text-base font-semibold uppercase"
+              className="ds-input uppercase"
             />
-            <Button type="submit" className="w-full py-4 text-base" disabled={loading}>تسجيل الدخول</Button>
+            <Button type="submit" className="tech-primary-action" disabled={loading}>
+              {loading ? 'جاري الدخول...' : 'تسجيل الدخول'}
+            </Button>
           </form>
         </Card>
       </main>
@@ -618,197 +622,223 @@ export default function TechnicianAppPage() {
   }
 
   return (
-    <main dir="rtl" className="min-h-screen overflow-x-hidden bg-[var(--color-canvas)] text-[var(--color-ink)]">
-      <header className="sticky top-0 z-10 border-b border-[var(--color-border)] bg-[rgba(252,252,252,0.94)] px-4 py-4 backdrop-blur">
-        <div className="mx-auto flex max-w-4xl items-center justify-between gap-3">
-          <div className="min-w-0">
-            <p className="text-xs font-bold tracking-[0.12em] text-[var(--color-muted)]">تطبيق الفني</p>
-            <h1 className="mt-1 text-xl font-black sm:text-2xl">مهام الفني</h1>
-            <p className="mt-1 truncate text-sm font-semibold text-[var(--color-muted)]">
-              {technician?.user?.fullName || session.user?.fullName || 'جدول اليوم'}
-            </p>
+    <main dir="rtl" className="tech-app">
+      <header className="tech-app-header">
+        <div className="tech-app-header-inner">
+          <div className="tech-identity">
+            <div className="tech-avatar">DH</div>
+            <div className="min-w-0">
+              <p>بوابة الفني</p>
+              <h1>{technician?.user?.fullName || session.user?.fullName || 'فني الصيانة'}</h1>
+            </div>
           </div>
-          <div className="flex flex-col items-end gap-2 sm:flex-row sm:items-center">
-            <Badge tone={online ? 'green' : 'red'}>{online ? 'متصل' : 'غير متصل'}</Badge>
+          <div className="tech-header-actions">
+            <span className={online ? 'tech-connectivity tech-online' : 'tech-connectivity tech-offline'}>
+              {online ? 'متصل' : 'بدون اتصال'}
+            </span>
             <Button type="button" variant="ghost" onClick={logout}>خروج</Button>
           </div>
         </div>
       </header>
 
-      <section className="mx-auto grid max-w-4xl gap-3 px-3 py-3 sm:gap-4 sm:px-4 sm:py-4">
-        <Card className="p-4">
-          <div className="grid gap-3 sm:grid-cols-[1fr_auto] sm:items-end">
-            <div>
-              <label className="text-xs font-bold text-[var(--color-muted)]">التاريخ</label>
-              <input type="date" value={date} onChange={(event) => loadTasks(event.target.value)} className="ds-input mt-1 h-11 w-full text-sm font-bold" />
-              <p className="mt-2 text-sm font-semibold text-[var(--color-muted)]">{formatArabicDate(date)}</p>
-            </div>
-            <Button type="button" variant="secondary" onClick={() => loadTasks(date)} disabled={loading}>تحديث</Button>
-          </div>
-        </Card>
-
-        {pendingCount > 0 && <Badge tone="yellow">{pendingCount} بانتظار الإرسال</Badge>}
-        {loading && <TechnicianLoading label="جاري تحميل المهام..." />}
-        {message && <div className="ds-alert text-right">{message}</div>}
-
+      <section className="tech-app-content">
         {!selectedTask && (
-        <section className="grid gap-3">
-          <div className="flex items-center justify-between gap-3">
-            <h2 className="text-lg font-black">قائمة المهام</h2>
-            <div className="flex flex-wrap justify-end gap-1.5">
-              <Badge tone="info">{tasks.length} مهام</Badge>
-              {overdueCount > 0 && <Badge tone="critical">{overdueCount} متأخرة</Badge>}
-              {completedCount > 0 && <Badge tone="completed">{completedCount} مكتملة</Badge>}
-            </div>
-          </div>
-
-          {!loading && tasks.length === 0 && (
-            <Card className="ds-empty-state p-5 text-center">
-              <p className="text-lg font-black">لا توجد مهام لهذا اليوم</p>
-              <p className="mt-2 text-sm font-semibold text-[var(--color-muted)]">اختر تاريخاً آخر أو اضغط تحديث للتحقق من المهام الجديدة.</p>
-            </Card>
-          )}
-
-          {tasks.map((task) => (
-            <TechnicianTaskCard
-              key={task.id}
-              task={task}
-              loading={loading}
-              onSelect={() => setSelectedTaskId(task.id)}
-              onStart={async () => {
-                await startTask(task.id);
-                setSelectedTaskId(task.id);
-              }}
-            />
-          ))}
-        </section>
-        )}
-
-        {!selectedTask && (
-          <Card className="p-3">
-            <button
-              type="button"
-              onClick={() => setWeatherExpanded((current) => !current)}
-              className="flex w-full items-center justify-between gap-3 text-right"
-            >
-              <div className="min-w-0">
-                <p className="text-sm font-black text-[var(--color-ink)]">الطقس ونصائح السلامة</p>
-                <p className="mt-1 truncate text-xs font-semibold text-[var(--color-muted)]">افتحها عند الحاجة قبل الخروج للموقع.</p>
+          <>
+            <section className="tech-day-panel">
+              <div>
+                <p className="tech-section-kicker">جدول اليوم</p>
+                <h2>{formatArabicDate(date)}</h2>
               </div>
-              <Badge tone={weatherExpanded ? 'info' : 'neutral'}>{weatherExpanded ? 'إخفاء' : 'عرض'}</Badge>
-            </button>
-            {weatherExpanded && <div className="mt-3"><WeatherAdviceCard items={weatherAdvice} loading={weatherLoading} embedded /></div>}
-          </Card>
+              <div className="tech-date-actions">
+                <input type="date" value={date} onChange={(event) => loadTasks(event.target.value)} aria-label="التاريخ" />
+                <Button type="button" variant="secondary" onClick={() => loadTasks(date)} disabled={loading}>تحديث</Button>
+              </div>
+            </section>
+
+            <TechnicianStats
+              total={tasks.length}
+              active={activeCount}
+              completed={completedCount}
+              overdue={overdueCount}
+              pending={pendingCount}
+            />
+
+            {pendingCount > 0 && <div className="tech-sync-banner">{pendingCount} مهمة محفوظة بانتظار الإرسال عند عودة الاتصال.</div>}
+            {loading && <TechnicianLoading label="جاري تحميل المهام..." />}
+            {message && <div className="ds-alert text-right">{message}</div>}
+
+            <section className="tech-task-section">
+              <div className="tech-section-head">
+                <div>
+                  <p className="tech-section-kicker">الأعمال الميدانية</p>
+                  <h2>قائمة المهام</h2>
+                </div>
+                <Badge tone="info">{tasks.length} مهام</Badge>
+              </div>
+
+              {!loading && tasks.length === 0 && (
+                <Card className="tech-empty-card">
+                  <div className="tech-empty-icon">DH</div>
+                  <p>لا توجد مهام لهذا اليوم</p>
+                  <span>اختر تاريخاً آخر أو اضغط تحديث للتحقق من المهام الجديدة.</span>
+                </Card>
+              )}
+
+              <div className="tech-task-list">
+                {tasks.map((task) => (
+                  <TechnicianTaskCard
+                    key={task.id}
+                    task={task}
+                    loading={loading}
+                    onSelect={() => setSelectedTaskId(task.id)}
+                    onStart={async () => {
+                      await startTask(task.id);
+                      setSelectedTaskId(task.id);
+                    }}
+                  />
+                ))}
+              </div>
+            </section>
+
+            <section className="tech-weather-shell">
+              <button
+                type="button"
+                onClick={() => setWeatherExpanded((current) => !current)}
+                className="tech-weather-toggle"
+              >
+                <span>
+                  <strong>الطقس ونصائح السلامة</strong>
+                  <small>افتحها عند الحاجة قبل الخروج للموقع.</small>
+                </span>
+                <Badge tone={weatherExpanded ? 'info' : 'neutral'}>{weatherExpanded ? 'إخفاء' : 'عرض'}</Badge>
+              </button>
+              {weatherExpanded && <WeatherAdviceCard items={weatherAdvice} loading={weatherLoading} embedded />}
+            </section>
+          </>
         )}
 
         {selectedTask && (
-          <Card className="max-w-full overflow-hidden p-4 sm:p-5">
+          <section className="tech-detail-shell">
             {(() => {
               const canDocument = isTaskInProgress(selectedTask);
               const completed = isTaskCompleted(selectedTask);
+              const status = getTaskDisplayStatus(selectedTask);
               return (
                 <>
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-              <div className="min-w-0">
-                <Button type="button" variant="ghost" onClick={() => setSelectedTaskId('')} className="mb-3">
-                  رجوع للقائمة
-                </Button>
-                <h2 className="break-words text-xl font-black sm:text-2xl">{selectedTask.task}</h2>
-                <p className="mt-1 text-sm font-bold text-[var(--color-muted)]">{selectedTask.startsAt} - {selectedTask.endsAt}</p>
+            <div className="tech-detail-hero">
+              <div className="tech-detail-topline">
+                <Button type="button" variant="ghost" onClick={() => setSelectedTaskId('')}>رجوع</Button>
+                <Badge tone={status.tone}>{status.label}</Badge>
               </div>
-              <Button type="button" variant="secondary" onClick={() => speak(selectedTask)} disabled={audioLoading} className="w-full sm:w-auto">
-                {audioLoading ? 'جاري تجهيز الصوت...' : 'استماع بالذكاء الاصطناعي'}
-              </Button>
+              <div>
+                <p className="tech-section-kicker">تنفيذ المهمة</p>
+                <h2>{selectedTask.task}</h2>
+                <div className="tech-detail-meta">
+                  <span>{selectedTask.startsAt || '-'} - {selectedTask.endsAt || '-'}</span>
+                  <span>{selectedTask.machineModel || 'معدة غير محددة'}</span>
+                  <span>{selectedTask.location || 'موقع غير محدد'}</span>
+                </div>
+              </div>
             </div>
-            <p className="mt-3 text-xs font-semibold text-[var(--color-muted)]">
-              الصوت مولد بالذكاء الاصطناعي لمساعدة الفني على فهم سياق المهمة ونقاط العمل.
-            </p>
-            {audioUrl && (
-              <audio src={audioUrl} controls className="mt-3 w-full">
-                <track kind="captions" />
-              </audio>
-            )}
 
-            <div className="mt-4 grid gap-3 text-sm text-zinc-700 sm:grid-cols-2">
+            <Card className="tech-audio-card">
+              <div>
+                <p>استماع سريع</p>
+                <span>الصوت مولد بالذكاء الاصطناعي لمساعدة الفني على فهم سياق المهمة ونقاط العمل.</span>
+              </div>
+              <Button type="button" variant="secondary" onClick={() => speak(selectedTask)} disabled={audioLoading}>
+                {audioLoading ? 'جاري تجهيز الصوت...' : 'تشغيل الصوت'}
+              </Button>
+              {audioUrl && (
+                <audio src={audioUrl} controls>
+                  <track kind="captions" />
+                </audio>
+              )}
+            </Card>
+
+            <div className="tech-info-grid">
               <Info label="المعدة" value={selectedTask.machineModel || '-'} />
               <Info label="الموقع" value={selectedTask.location || '-'} />
               <Info label="الوصف" value={selectedTask.description || '-'} />
-              <Info label="الملاحظات" value={selectedTask.notes || '-'} />
+              <Info label="ملاحظات الإدارة" value={selectedTask.notes || '-'} />
             </div>
 
             {selectedTask.manualAdvice && <TechnicianManualAdvice advice={selectedTask.manualAdvice} />}
 
             {!completed && !canDocument && (
-              <div className="mt-5 rounded-md border border-[var(--color-border)] bg-[var(--color-surface-muted)] p-4">
-                <h3 className="text-lg font-black">جاهز للبدء؟</h3>
-                <p className="mt-2 text-sm font-semibold leading-6 text-[var(--color-muted)]">
+              <Card className="tech-start-card">
+                <h3>جاهز للبدء؟</h3>
+                <p>
                   اضغط بدء المهمة أولاً. بعد البدء ستظهر نقاط العمل وحقول الملاحظات والصور.
                 </p>
-                <Button type="button" className="mt-4" onClick={() => startTask(selectedTask.id)} disabled={loading || !online}>
+                <Button type="button" onClick={() => startTask(selectedTask.id)} disabled={loading || !online}>
                   بدء المهمة
                 </Button>
-              </div>
+              </Card>
             )}
 
             {!completed && canDocument && (
-              <div className="mt-5 grid gap-3">
-                <div className="grid gap-3">
+              <div className="tech-execution-flow">
+                <div className="tech-section-head">
                   <div>
-                    <h3 className="text-lg font-black">نقاط العمل</h3>
-                    <p className="mt-1 text-sm font-semibold text-[var(--color-muted)]">علّم كل نقطة، اكتب ملاحظتك، وارفع صورة توثيق واضحة.</p>
+                    <p className="tech-section-kicker">توثيق التنفيذ</p>
+                    <h3>نقاط العمل</h3>
+                    <span>علّم كل نقطة، اكتب ملاحظتك، وارفع صورة توثيق واضحة.</span>
                   </div>
+                  <Badge tone="info">{getTaskChecklist(selectedTask).length} نقاط</Badge>
+                </div>
+                <div className="tech-checklist-flow">
                   {getTaskChecklist(selectedTask).map((item, index) => {
                     const report = selectedChecklistReports.find((entry) => entry.id === item.id) || { done: false, notes: '', photos: [] };
                     return (
-                      <div key={item.id} className="max-w-full overflow-hidden rounded-md border border-[var(--color-border)] bg-[var(--color-surface-muted)] p-3">
-                        <div className="flex items-start gap-3">
-                          <label className="mt-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-white">
+                      <div key={item.id} className={report.done ? 'tech-work-point tech-work-point-done' : 'tech-work-point'}>
+                        <div className="tech-work-point-head">
+                          <label className="tech-check-toggle">
                             <input
                               type="checkbox"
                               checked={report.done}
                               onChange={(event) => updateChecklistReport(selectedTask.id, item.id, { done: event.target.checked })}
                             />
                           </label>
-                          <div className="min-w-0 flex-1">
-                            <p className="break-words text-sm font-black text-[var(--color-ink)]">{index + 1}. {item.text}</p>
-                            <VoiceTextarea
-                              rows={2}
-                              placeholder="ملاحظات هذه النقطة"
-                              value={report.notes}
-                              onChange={(event) => updateChecklistReport(selectedTask.id, item.id, { notes: event.target.value })}
-                              className="mt-3"
-                              textareaClassName="px-3 py-2 text-sm"
-                              recording={recordingKey === `point-${item.id}`}
-                              transcribing={transcribingKey === `point-${item.id}`}
-                              onStart={() => startRecording(`point-${item.id}`, {
-                                taskId: selectedTask.id,
-                                pointId: item.id,
-                                target: 'checklist point notes',
-                                taskTitle: selectedTask.task,
-                                pointText: item.text,
-                              })}
-                              onStop={stopRecording}
-                            />
-                            <label className="mt-3 grid gap-2 text-sm font-bold text-zinc-700">
-                              صورة النقطة
-                              <input
-                                type="file"
-                                accept="image/*"
-                                capture="environment"
-                                multiple
-                                onChange={(event) => handlePointPhotos(selectedTask.id, item.id, event.target.files)}
-                                className="rounded-md border border-[var(--color-border-strong)] bg-white p-3 text-sm"
-                              />
-                            </label>
-                            {report.photos.length > 0 && (
-                              <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">
-                                {report.photos.map((photo) => (
-                                  <img key={photo.fileName} src={photo.dataUrl} alt={photo.fileName} className="h-24 w-full rounded-md object-cover" />
-                                ))}
-                              </div>
-                            )}
+                          <div>
+                            <span>نقطة {index + 1}</span>
+                            <p>{item.text}</p>
                           </div>
                         </div>
+                        <VoiceTextarea
+                          rows={2}
+                          placeholder="ملاحظات هذه النقطة"
+                          value={report.notes}
+                          onChange={(event) => updateChecklistReport(selectedTask.id, item.id, { notes: event.target.value })}
+                          textareaClassName="tech-note-input"
+                          recording={recordingKey === `point-${item.id}`}
+                          transcribing={transcribingKey === `point-${item.id}`}
+                          onStart={() => startRecording(`point-${item.id}`, {
+                            taskId: selectedTask.id,
+                            pointId: item.id,
+                            target: 'checklist point notes',
+                            taskTitle: selectedTask.task,
+                            pointText: item.text,
+                          })}
+                          onStop={stopRecording}
+                        />
+                        <label className="tech-photo-upload">
+                          <span>إضافة صور التوثيق</span>
+                          <input
+                            type="file"
+                            accept="image/*"
+                            capture="environment"
+                            multiple
+                            onChange={(event) => handlePointPhotos(selectedTask.id, item.id, event.target.files)}
+                          />
+                        </label>
+                        {report.photos.length > 0 && (
+                          <div className="tech-photo-grid">
+                            {report.photos.map((photo) => (
+                              <img key={photo.fileName} src={photo.dataUrl} alt={photo.fileName} />
+                            ))}
+                          </div>
+                        )}
                       </div>
                     );
                   })}
@@ -818,7 +848,7 @@ export default function TechnicianAppPage() {
                   placeholder="ملخص عام اختياري"
                   value={selectedDraft.summary || ''}
                   onChange={(event) => updateDraft(selectedTask.id, { summary: event.target.value })}
-                  textareaClassName="px-3 py-3 text-base"
+                  textareaClassName="tech-note-input"
                   recording={recordingKey === 'summary'}
                   transcribing={transcribingKey === 'summary'}
                   onStart={() => startRecording('summary', {
@@ -834,7 +864,7 @@ export default function TechnicianAppPage() {
                   placeholder="ملاحظات إضافية"
                   value={selectedDraft.notes || ''}
                   onChange={(event) => updateDraft(selectedTask.id, { notes: event.target.value })}
-                  textareaClassName="px-3 py-3 text-base"
+                  textareaClassName="tech-note-input"
                   recording={recordingKey === 'notes'}
                   transcribing={transcribingKey === 'notes'}
                   onStart={() => startRecording('notes', {
@@ -848,22 +878,50 @@ export default function TechnicianAppPage() {
                 {submittingTaskId === selectedTask.id && (
                   <TechnicianLoading label="جاري إرسال المهمة..." />
                 )}
+                <div className="tech-submit-bar">
                 <Button type="button" onClick={() => completeTask(selectedTask)} disabled={loading || submittingTaskId === selectedTask.id}>
                   {submittingTaskId === selectedTask.id ? 'جاري الإرسال...' : 'إرسال المهمة'}
                 </Button>
+                </div>
               </div>
             )}
 
             {isTaskCompleted(selectedTask) && (
-              <div className="ds-alert mt-5 text-right">هذه المهمة مكتملة.</div>
+              <div className="ds-alert text-right">هذه المهمة مكتملة.</div>
             )}
                 </>
               );
             })()}
-          </Card>
+          </section>
         )}
       </section>
     </main>
+  );
+}
+
+function TechnicianStats({ total, active, completed, overdue, pending }) {
+  const stats = [
+    { label: 'مهام اليوم', value: total, tone: 'tech-stat-total' },
+    { label: 'قيد العمل', value: active, tone: 'tech-stat-active' },
+    { label: 'مكتملة', value: completed, tone: 'tech-stat-complete' },
+    { label: 'متأخرة', value: overdue, tone: 'tech-stat-risk' },
+  ];
+
+  return (
+    <section className="tech-stat-grid" aria-label="ملخص مهام اليوم">
+      {stats.map((stat) => (
+        <div key={stat.label} className={`tech-stat-card ${stat.tone}`}>
+          <span>{stat.label}</span>
+          <strong>{stat.value}</strong>
+        </div>
+      ))}
+      {pending > 0 && (
+        <div className="tech-stat-card tech-stat-pending">
+          <span>بانتظار المزامنة</span>
+          <strong>{pending}</strong>
+        </div>
+      )}
+    </section>
   );
 }
 
@@ -1003,31 +1061,37 @@ function TechnicianTaskCard({ task, loading, onSelect, onStart }) {
   const status = getTaskDisplayStatus(task);
   const actionLabel = getTaskActionLabel(task.status);
   const readOnly = isTaskCompleted(task);
+  const checklistCount = getTaskChecklist(task).length;
 
   return (
-    <Card className="ds-card-hover p-4 transition">
-      <div className="flex flex-col gap-3">
-        <button type="button" onClick={onSelect} className="text-right">
-          <div className="flex items-start justify-between gap-3">
-            <div>
-              <h3 className="text-lg font-black text-[var(--color-ink)]">{task.task}</h3>
-              <p className="mt-1 text-sm font-bold text-[var(--color-muted)]">{task.machineModel || 'معدة غير محددة'}</p>
-            </div>
-            <Badge tone={status.tone}>{status.label}</Badge>
-          </div>
-          <div className="mt-3 grid gap-2 text-sm font-semibold text-zinc-700 sm:grid-cols-2">
-            <span>{task.location || 'موقع غير محدد'}</span>
-            <span>{task.startsAt || '-'} - {task.endsAt || '-'}</span>
-          </div>
-          {task.description && <p className="mt-3 line-clamp-2 text-sm leading-6 text-zinc-600">{task.description}</p>}
-        </button>
-
-        <div className="flex flex-wrap gap-2">
-          <Button type="button" onClick={readOnly ? onSelect : onStart} disabled={loading}>
-            {actionLabel}
-          </Button>
-          <Button type="button" variant="secondary" onClick={onSelect}>عرض التفاصيل</Button>
+    <Card className={`tech-task-card ${isTaskInProgress(task) ? 'tech-task-card-live' : ''}`}>
+      <button type="button" onClick={onSelect} className="tech-task-card-main">
+        <div className="tech-task-card-top">
+          <Badge tone={status.tone}>{status.label}</Badge>
+          <span className="tech-task-time">{task.startsAt || '-'} - {task.endsAt || '-'}</span>
         </div>
+        <div className="tech-task-title-block">
+          <h3>{task.task}</h3>
+          <p>{task.machineModel || 'معدة غير محددة'}</p>
+        </div>
+        <div className="tech-task-meta">
+          <span>
+            <small>الموقع</small>
+            {task.location || 'موقع غير محدد'}
+          </span>
+          <span>
+            <small>نقاط العمل</small>
+            {checklistCount || 0}
+          </span>
+        </div>
+        {task.description && <p className="tech-task-description">{task.description}</p>}
+      </button>
+
+      <div className="tech-task-actions">
+        <Button type="button" onClick={readOnly ? onSelect : onStart} disabled={loading} fullWidth>
+          {actionLabel}
+        </Button>
+        <Button type="button" variant="secondary" onClick={onSelect} fullWidth>عرض التفاصيل</Button>
       </div>
     </Card>
   );
@@ -1035,9 +1099,9 @@ function TechnicianTaskCard({ task, loading, onSelect, onStart }) {
 
 function Info({ label, value }) {
   return (
-    <div className="rounded-md border border-[var(--color-border)] bg-[var(--color-surface-muted)] p-3">
-      <p className="text-xs font-bold text-[var(--color-muted)]">{label}</p>
-      <p className="mt-1 whitespace-pre-wrap font-semibold text-[var(--color-ink)]">{value}</p>
+    <div className="tech-info-tile">
+      <span>{label}</span>
+      <p>{value}</p>
     </div>
   );
 }
@@ -1047,19 +1111,25 @@ function TechnicianManualAdvice({ advice }) {
   const warnings = advice?.warnings || [];
 
   return (
-    <div className="mt-5 rounded-md border border-[var(--color-border)] bg-[var(--color-surface-muted)] p-4">
-      <h3 className="text-base font-black">إرشادات الصيانة</h3>
-      {advice?.summary && <p className="mt-2 text-sm leading-6 text-zinc-700">{advice.summary}</p>}
+    <section className="tech-manual-card">
+      <div className="tech-section-head">
+        <div>
+          <p className="tech-section-kicker">Shop manual</p>
+          <h3>إرشادات الصيانة</h3>
+        </div>
+        <Badge tone="info">AI</Badge>
+      </div>
+      {advice?.summary && <p className="tech-manual-summary">{advice.summary}</p>}
       {steps.length > 0 && (
-        <ol className="mt-3 grid gap-2 text-sm font-semibold leading-6 text-zinc-700">
+        <ol className="tech-manual-steps">
           {steps.slice(0, 5).map((step, index) => <li key={`${step}-${index}`}>{index + 1}. {step}</li>)}
         </ol>
       )}
       {warnings.length > 0 && (
-        <div className="mt-3 rounded-md border border-[var(--color-warning)] bg-[var(--color-warning-soft)] p-3 text-sm font-bold text-[var(--color-warning)]">
+        <div className="tech-manual-warning">
           {warnings[0]}
         </div>
       )}
-    </div>
+    </section>
   );
 }

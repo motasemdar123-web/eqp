@@ -1,4 +1,4 @@
-const CACHE_NAME = 'dh-technician-v4';
+const CACHE_NAME = 'dh-technician-v5';
 const APP_SHELL = ['/technician?direct=1', '/manifest.webmanifest', '/dh-icon.svg'];
 
 self.addEventListener('install', (event) => {
