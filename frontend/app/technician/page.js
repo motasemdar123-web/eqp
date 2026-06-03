@@ -93,6 +93,37 @@ function compressImageFile(file, maxSize = 1280, quality = 0.72) {
   });
 }
 
+function supportedAudioRecordingType() {
+  if (typeof MediaRecorder === 'undefined') return '';
+
+  const candidates = [
+    'audio/webm;codecs=opus',
+    'audio/webm',
+    'audio/mp4',
+    'audio/mp4;codecs=mp4a.40.2',
+    'audio/aac',
+    'audio/ogg;codecs=opus',
+    'audio/ogg',
+  ];
+
+  return candidates.find((type) => {
+    try {
+      return MediaRecorder.isTypeSupported(type);
+    } catch {
+      return false;
+    }
+  }) || '';
+}
+
+function audioExtensionForType(type) {
+  const cleanType = String(type || '').toLowerCase();
+  if (cleanType.includes('mp4')) return 'm4a';
+  if (cleanType.includes('aac')) return 'aac';
+  if (cleanType.includes('ogg')) return 'ogg';
+  if (cleanType.includes('mpeg') || cleanType.includes('mp3')) return 'mp3';
+  return 'webm';
+}
+
 function getTaskChecklist(task) {
   const items = Array.isArray(task?.checklist) ? task.checklist : [];
   const normalized = items
@@ -347,7 +378,8 @@ export default function TechnicianAppPage() {
 
   async function transcribeAudio(blob, meta) {
     const form = new FormData();
-    form.append('audio', blob, 'technician-note.webm');
+    const extension = audioExtensionForType(blob.type || meta?.mimeType);
+    form.append('audio', blob, `technician-note.${extension}`);
     form.append('target', meta?.target || '');
     form.append('taskTitle', meta?.taskTitle || selectedTask?.task || '');
     form.append('pointText', meta?.pointText || '');
@@ -379,10 +411,17 @@ export default function TechnicianAppPage() {
     if (recordingKey) stopRecording();
 
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const recorder = new MediaRecorder(stream);
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: {
+          echoCancellation: true,
+          noiseSuppression: true,
+          autoGainControl: true,
+        },
+      });
+      const mimeType = supportedAudioRecordingType();
+      const recorder = mimeType ? new MediaRecorder(stream, { mimeType }) : new MediaRecorder(stream);
       recordingChunksRef.current = [];
-      recordingMetaRef.current = { key, ...meta };
+      recordingMetaRef.current = { key, mimeType: recorder.mimeType || mimeType, ...meta };
 
       recorder.ondataavailable = (event) => {
         if (event.data?.size > 0) recordingChunksRef.current.push(event.data);
@@ -391,7 +430,8 @@ export default function TechnicianAppPage() {
       recorder.onstop = async () => {
         stream.getTracks().forEach((track) => track.stop());
         const activeMeta = recordingMetaRef.current;
-        const audioBlob = new Blob(recordingChunksRef.current, { type: recorder.mimeType || 'audio/webm' });
+        const blobType = recorder.mimeType || activeMeta?.mimeType || 'audio/webm';
+        const audioBlob = new Blob(recordingChunksRef.current, { type: blobType });
         recordingChunksRef.current = [];
         recordingMetaRef.current = null;
         setRecordingKey('');
@@ -422,7 +462,7 @@ export default function TechnicianAppPage() {
 
       mediaRecorderRef.current = recorder;
       setRecordingKey(key);
-      recorder.start();
+      recorder.start(1000);
     } catch {
       setMessage('تعذر الوصول إلى الميكروفون. تأكد من صلاحيات المتصفح.');
     }
@@ -431,6 +471,11 @@ export default function TechnicianAppPage() {
   function stopRecording() {
     const recorder = mediaRecorderRef.current;
     if (recorder && recorder.state !== 'inactive') {
+      try {
+        recorder.requestData();
+      } catch {
+        // Some mobile browsers do not support requestData after short recordings.
+      }
       recorder.stop();
     }
   }
