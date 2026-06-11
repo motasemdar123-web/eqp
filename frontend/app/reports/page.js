@@ -20,6 +20,7 @@ export default function ReportsPage() {
   const [sortConfig, setSortConfig] = useState({ key: 'created_at', direction: 'desc' });
   const [toast, setToast] = useState(null);
   const [reportToDelete, setReportToDelete] = useState(null);
+  const [reportToUndo, setReportToUndo] = useState(null);
   const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false);
   const [renamingReport, setRenamingReport] = useState(null);
   const [renameValue, setRenameValue] = useState('');
@@ -206,26 +207,13 @@ export default function ReportsPage() {
     if (selectedReports.length === 0) return;
 
     try {
-      const reportsToDelete = [...selectedReports].sort((a, b) => {
-        const aDate = new Date(a.created_at).getTime();
-        const bDate = new Date(b.created_at).getTime();
-
-        if (aDate !== bDate) return bDate - aDate;
-        return Number(b.id) - Number(a.id);
-      });
-
-      let rolledBackCount = 0;
-
-      for (const report of reportsToDelete) {
-        const result = await deleteReport(report.id);
-        if (result.countersRolledBack) rolledBackCount += 1;
+      for (const report of selectedReports) {
+        await deleteReport(report.id);
       }
 
       setToast({
         type: 'success',
-        message: rolledBackCount > 0
-          ? `${selectedReports.length} reports deleted. ${rolledBackCount} machine counters rolled back.`
-          : `${selectedReports.length} reports deleted.`,
+        message: `${selectedReports.length} reports deleted.`,
       });
       setBulkDeleteOpen(false);
       await loadReports();
@@ -239,18 +227,32 @@ export default function ReportsPage() {
     if (!reportToDelete) return;
 
     try {
-      const result = await deleteReport(reportToDelete.id);
-      setToast({
-        type: 'success',
-        message: result.countersRolledBack
-          ? 'Report deleted and machine counters rolled back.'
-          : 'Report deleted successfully.',
-      });
+      await deleteReport(reportToDelete.id);
+      setToast({ type: 'success', message: 'Report deleted successfully.' });
       setReportToDelete(null);
       await loadReports();
     } catch (deleteError) {
       setError(deleteError.message || 'Failed to delete report');
       setToast({ type: 'error', message: deleteError.message || 'Failed to delete report.' });
+    }
+  }
+
+  async function handleUndoReportRun() {
+    if (!reportToUndo) return;
+
+    try {
+      const result = await deleteReport(reportToUndo.id, { rollbackCounters: true });
+      setToast({
+        type: result.countersRolledBack ? 'success' : 'info',
+        message: result.countersRolledBack
+          ? 'Run undone. Report deleted and machine counters rolled back.'
+          : 'Report deleted, but counters were not rolled back because this was not the latest run for that machine.',
+      });
+      setReportToUndo(null);
+      await loadReports();
+    } catch (deleteError) {
+      setError(deleteError.message || 'Failed to undo report run');
+      setToast({ type: 'error', message: deleteError.message || 'Failed to undo report run.' });
     }
   }
 
@@ -372,6 +374,9 @@ export default function ReportsPage() {
                         <Button variant="secondary" onClick={() => openRename(report)}>
                           Rename
                         </Button>
+                        <Button variant="secondary" onClick={() => setReportToUndo(report)}>
+                          Undo Run
+                        </Button>
                         <Button variant="danger" onClick={() => setReportToDelete(report)}>
                           Delete
                         </Button>
@@ -388,10 +393,20 @@ export default function ReportsPage() {
       {reportToDelete && (
         <ConfirmDialog
           title="Delete report?"
-          description={`This will remove "${reportToDelete.file_name}" from the archive and storage bucket.`}
+          description={`This will remove "${reportToDelete.file_name}" from the archive and storage bucket. Machine counters will not change.`}
           confirmLabel="Delete Report"
           onCancel={() => setReportToDelete(null)}
           onConfirm={handleDeleteReport}
+        />
+      )}
+
+      {reportToUndo && (
+        <ConfirmDialog
+          title="Undo generated run?"
+          description={`This will remove "${reportToUndo.file_name}" and roll back machine counters only if it is the latest run for that machine.`}
+          confirmLabel="Undo Run"
+          onCancel={() => setReportToUndo(null)}
+          onConfirm={handleUndoReportRun}
         />
       )}
 

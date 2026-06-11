@@ -23,7 +23,7 @@ async function renameReport(id, fileName, ownerId, ownerName) {
   return report;
 }
 
-async function deleteReport(id, ownerId, ownerName) {
+async function deleteReport(id, ownerId, ownerName, rollbackCounters = false) {
   const report = await reportRepository.findByIdForOwner(id, ownerId, ownerName);
 
   if (!report) {
@@ -33,7 +33,7 @@ async function deleteReport(id, ownerId, ownerName) {
   const latestReport = report.machine_id
     ? await reportRepository.findLatestForMachine(report.machine_id)
     : null;
-  const shouldRollbackMachineCounters = latestReport && Number(latestReport.id) === Number(report.id);
+  const shouldRollbackMachineCounters = rollbackCounters && latestReport && Number(latestReport.id) === Number(report.id);
   const fileName = decodeURIComponent(report.file_url.split('/').pop());
 
   await storageService.deleteReport(fileName);
@@ -45,6 +45,7 @@ async function deleteReport(id, ownerId, ownerName) {
 
   return {
     success: true,
+    rollbackRequested: Boolean(rollbackCounters),
     countersRolledBack: Boolean(shouldRollbackMachineCounters),
   };
 }

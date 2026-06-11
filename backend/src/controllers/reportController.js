@@ -21,7 +21,8 @@ async function renameReport(req, res) {
 }
 
 async function deleteReport(req, res) {
-  const result = await reportService.deleteReport(req.params.id, req.user.sub, req.user.fullName);
+  const rollbackCounters = req.query.rollbackCounters === 'true';
+  const result = await reportService.deleteReport(req.params.id, req.user.sub, req.user.fullName, rollbackCounters);
 
   res.json(result);
 }

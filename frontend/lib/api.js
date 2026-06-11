@@ -97,8 +97,10 @@ export function renameReport(id, fileName) {
   });
 }
 
-export function deleteReport(id) {
-  return request(`/reports/${id}`, {
+export function deleteReport(id, options = {}) {
+  const params = options.rollbackCounters ? '?rollbackCounters=true' : '';
+
+  return request(`/reports/${id}${params}`, {
     method: 'DELETE',
   });
 }
