@@ -1,4 +1,8 @@
-export const MACHINE_MODELS = ['D155A', 'HM400'];
+export const MACHINE_MODELS = [
+  { value: 'AUTO', label: 'Auto' },
+  { value: 'D155A', label: 'D155A' },
+  { value: 'HM400', label: 'HM400' },
+];
 
 export const REPORT_TYPES = ['W30', 'W41'];
 

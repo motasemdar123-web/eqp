@@ -30,7 +30,7 @@ export default function DashboardPage() {
   const [selectedMachines, setSelectedMachines] = useState([]);
   const [user] = useState(() => getStoredUser());
   const userCode = user?.userNumber || '';
-  const [machineModel, setMachineModel] = useState('D155A');
+  const [machineModel, setMachineModel] = useState('AUTO');
   const [reportType, setReportType] = useState('W30');
   const [serviceType, setServiceType] = useState('1st Service');
   const [searchTerm, setSearchTerm] = useState('');
@@ -345,7 +345,7 @@ function DashboardContent(props) {
               className="ds-input"
             >
               {MACHINE_MODELS.map((model) => (
-                <option key={model}>{model}</option>
+                <option key={model.value} value={model.value}>{model.label}</option>
               ))}
             </select>
           </Field>

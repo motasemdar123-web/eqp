@@ -556,8 +556,41 @@ function normalizeTemplateModel(value) {
     .toUpperCase()
     .replace(/[^A-Z0-9]/g, '');
 
+  if (normalized === 'AUTO') return 'AUTO';
   if (normalized.startsWith('HM400')) return 'HM400';
   if (normalized.startsWith('D155')) return 'D155A';
+
+  return null;
+}
+
+function detectMachineTemplateModel(machine) {
+  const machineModelText = [
+    machine.machine_type,
+    machine.machine_model,
+    machine.model,
+    machine.type,
+  ].filter(Boolean).join(' ');
+
+  if (!machineModelText) return null;
+
+  const normalized = String(machineModelText)
+    .trim()
+    .toUpperCase()
+    .replace(/[^A-Z0-9]/g, '');
+
+  if (normalized.includes('HM400')) return 'HM400';
+  if (normalized.includes('D155')) return 'D155A';
+
+  return null;
+}
+
+function resolveMachineTemplateModel(machine, requestedModel) {
+  const detectedModel = detectMachineTemplateModel(machine);
+  if (TEMPLATE_MODELS.has(detectedModel)) return detectedModel;
+
+  const normalizedRequestedModel = normalizeTemplateModel(requestedModel);
+  if (TEMPLATE_MODELS.has(normalizedRequestedModel)) return normalizedRequestedModel;
+  if (!requestedModel || normalizedRequestedModel === 'AUTO') return DEFAULT_TEMPLATE_MODEL;
 
   return null;
 }
@@ -1181,10 +1214,10 @@ async function exportFilledExcelTemplateToPdf(workbook, sheet, context) {
 }
 
 async function generateReports(payload) {
-  const templateModel = normalizeTemplateModel(payload.machineModel);
+  const requestedTemplateModel = normalizeTemplateModel(payload.machineModel);
 
-  if (!TEMPLATE_MODELS.has(templateModel)) {
-    throw new ApiError(400, 'Machine model must be D155A or HM400');
+  if (payload.machineModel && requestedTemplateModel !== 'AUTO' && !TEMPLATE_MODELS.has(requestedTemplateModel)) {
+    throw new ApiError(400, 'Machine model must be Auto, D155A, or HM400');
   }
 
   const user = payload.userNumber
@@ -1210,6 +1243,12 @@ async function generateReports(payload) {
   let reportIndex = 1;
 
   for (const machine of machines) {
+    const templateModel = resolveMachineTemplateModel(machine, payload.machineModel);
+
+    if (!TEMPLATE_MODELS.has(templateModel)) {
+      throw new ApiError(400, `Machine model could not be resolved for ${machine.machine_number || machine.id}. Select D155A or HM400.`);
+    }
+
     let currentSMR = Number(machine.last_smr);
     let currentStep = Number(machine.smr_step);
     let currentCounter = Number(machine.report_counter);
