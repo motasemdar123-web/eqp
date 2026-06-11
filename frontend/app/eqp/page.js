@@ -7,6 +7,7 @@ import Badge from '../../components/ui/Badge';
 
 const modules = [
   { href: '/eqp/generate-reports', title: 'Report Builder', code: 'RB', status: 'Ready', tone: 'ready', description: 'Generate finalized preventive maintenance PDFs from the EQP templates.' },
+  { href: '/eqp/lifecycle', title: 'Lifecycle View', code: 'LC', status: 'Live', tone: 'live', description: 'Review each machine stage, delivery milestones, service cycle, and next required action.' },
   { href: '/eqp/reports', title: 'PDF Archive', code: 'PA', status: 'Archived', tone: 'archived', description: 'Review, download, rename, and remove generated maintenance PDFs.' },
   { href: '/eqp/machines', title: 'Machines', code: 'MA', status: 'Active', tone: 'active', description: 'Monitor machine counters, SMR state, engine numbers, and report readiness.' },
 ];
