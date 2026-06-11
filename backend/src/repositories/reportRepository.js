@@ -64,22 +64,6 @@ async function findByIdForOwner(id, ownerId, ownerName) {
   return result.rows[0] || null;
 }
 
-async function findLatestForMachine(machineId) {
-  const table = await resolveEqpTable('eqp_reports', 'reports');
-  const result = await db.query(
-    `
-      SELECT *
-      FROM ${table}
-      WHERE machine_id = $1
-      ORDER BY created_at DESC, id DESC
-      LIMIT 1
-    `,
-    [Number(machineId)]
-  );
-
-  return result.rows[0] || null;
-}
-
 async function rename(id, fileName, ownerId, ownerName) {
   const table = await resolveEqpTable('eqp_reports', 'reports');
   const ownerClause = table === 'eqp_reports' ? 'AND (created_by_user = $3 OR (created_by_user IS NULL AND created_by = $4))' : '';
@@ -175,7 +159,6 @@ module.exports = {
   findByOwner,
   findById,
   findByIdForOwner,
-  findLatestForMachine,
   rename,
   remove,
   create,

@@ -30,17 +30,14 @@ async function deleteReport(id, ownerId, ownerName, rollbackCounters = false) {
     throw new ApiError(404, 'Report not found');
   }
 
-  const latestReport = report.machine_id
-    ? await reportRepository.findLatestForMachine(report.machine_id)
-    : null;
-  const shouldRollbackMachineCounters = rollbackCounters && latestReport && Number(latestReport.id) === Number(report.id);
+  const shouldRollbackMachineCounters = rollbackCounters && Boolean(report.machine_id);
   const fileName = decodeURIComponent(report.file_url.split('/').pop());
 
   await storageService.deleteReport(fileName);
   await reportRepository.remove(id, ownerId, ownerName);
 
   if (shouldRollbackMachineCounters) {
-    await rollbackLatestReportCounters(report.machine_id);
+    await rollbackReportCounters(report.machine_id);
   }
 
   return {
@@ -50,7 +47,7 @@ async function deleteReport(id, ownerId, ownerName, rollbackCounters = false) {
   };
 }
 
-async function rollbackLatestReportCounters(machineId) {
+async function rollbackReportCounters(machineId) {
   const machine = await machineRepository.findById(machineId);
   if (!machine) return;
 
