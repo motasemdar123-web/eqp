@@ -458,13 +458,19 @@ model EqpMachineHistory {
 }
 
 model EqpReportComment {
-  id          Int      @id @default(autoincrement())
-  commentText String   @unique @map("comment_text")
-  frequency   Int      @default(1)
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
-  createdById String?  @map("created_by")
-  updatedById String?  @map("updated_by")
+  id           Int      @id @default(autoincrement())
+  machineModel String   @default("D155A") @map("machine_model")
+  documentType String   @default("in_operation") @map("document_type")
+  serviceStage String   @default("scheduled_service") @map("service_stage")
+  commentText  String   @map("comment_text")
+  frequency    Int      @default(1)
+  isActive     Boolean  @default(true) @map("is_active")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+  createdById  String?  @map("created_by")
+  updatedById  String?  @map("updated_by")
 
+  @@unique([machineModel, documentType, serviceStage, commentText])
+  @@index([machineModel, documentType, serviceStage, isActive])
   @@map("eqp_report_comments")
 }

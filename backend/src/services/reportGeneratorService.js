@@ -595,6 +595,56 @@ function resolveMachineTemplateModel(machine, requestedModel) {
   return null;
 }
 
+function getCommentScope(serviceType) {
+  const normalized = String(serviceType || '')
+    .trim()
+    .toLowerCase()
+    .replace(/\./g, '')
+    .replace(/\s+/g, ' ');
+
+  if (normalized === 'pre delivery') {
+    return { documentType: 'new_machine', serviceStage: 'pre_delivery' };
+  }
+
+  if (normalized === 'delivery new') {
+    return { documentType: 'new_machine', serviceStage: 'delivery' };
+  }
+
+  if (normalized === 'delivery used') {
+    return { documentType: 'in_operation', serviceStage: 'delivery' };
+  }
+
+  if (normalized === 'add service' || normalized === 'storage service') {
+    return { documentType: 'storage', serviceStage: 'storage_service' };
+  }
+
+  return { documentType: 'in_operation', serviceStage: 'scheduled_service' };
+}
+
+async function getCommentPicker(pickerCache, machineModel, serviceType) {
+  const scope = getCommentScope(serviceType);
+  const cacheKey = `${machineModel}:${scope.documentType}:${scope.serviceStage}`;
+
+  if (pickerCache.has(cacheKey)) return pickerCache.get(cacheKey);
+
+  const comments = await commentRepository.findForReport({
+    machineModel,
+    documentType: scope.documentType,
+    serviceStage: scope.serviceStage,
+  });
+
+  if (comments.length === 0) {
+    throw new ApiError(
+      400,
+      `No active report comments configured for ${machineModel} ${scope.documentType} ${scope.serviceStage}.`
+    );
+  }
+
+  const picker = buildWeightedCommentPicker(comments);
+  pickerCache.set(cacheKey, picker);
+  return picker;
+}
+
 function buildTemplateCandidates(reportType, serviceType, templateModel) {
   const safeServiceType = serviceType
     .replace(/\./g, '')
@@ -1234,8 +1284,7 @@ async function generateReports(payload) {
     throw new ApiError(404, 'No machines found');
   }
 
-  const comments = await commentRepository.findAll();
-  const randomComment = buildWeightedCommentPicker(comments);
+  const commentPickerCache = new Map();
   const now = new Date();
   const hh = String(now.getHours()).padStart(2, '0');
   const mm = String(now.getMinutes()).padStart(2, '0');
@@ -1271,6 +1320,7 @@ async function generateReports(payload) {
 
       const sheet = workbook.worksheets[0];
       const reportNo = `${safeDate}-${hh}${mm}-${String(reportIndex).padStart(3, '0')}`;
+      const randomComment = await getCommentPicker(commentPickerCache, templateModel, payload.serviceType);
       const selectedComment = randomComment();
       const fieldConfig = getTemplateFieldConfig(templateModel);
 
