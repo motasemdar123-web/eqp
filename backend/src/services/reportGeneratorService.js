@@ -38,9 +38,9 @@ const TEMPLATE_FIELD_CONFIG = {
     ],
     commentColumns: [
       'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R',
-      'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+      'S', 'T', 'U', 'V',
     ],
-    commentRows: [77, 78, 79],
+    commentRows: [78, 79],
     signature: {
       topLeft: { col: 48, row: 78 },
       size: { width: 140, height: 60 },
@@ -56,14 +56,9 @@ const TEMPLATE_FIELD_CONFIG = {
     randomValueCells: [],
     commentColumns: [
       'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R',
-      'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
-      'AA', 'AB', 'AC', 'AD', 'AE', 'AF', 'AG',
-      'AH', 'AI', 'AJ', 'AK', 'AL', 'AM', 'AN',
-      'AO', 'AP', 'AQ', 'AR', 'AS', 'AT', 'AU',
-      'AV', 'AW', 'AX', 'AY', 'AZ', 'BA', 'BB',
-      'BC', 'BD', 'BE', 'BF', 'BG', 'BH',
+      'S', 'T', 'U', 'V',
     ],
-    commentRows: [79, 80, 81],
+    commentRows: [80, 81],
     signature: {
       topLeft: { col: 42, row: 81 },
       size: { width: 140, height: 60 },
@@ -769,6 +764,77 @@ async function tryConvertWorkbookToPdf(workbookBuffer) {
   }
 }
 
+async function tryConvertWorkbooksToPdfs(workbookItems) {
+  if (workbookItems.length === 0) return new Map();
+
+  const commands = converterCommands();
+  const tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), 'eqp-report-batch-'));
+  const profileRoot = await fs.mkdtemp(path.join(os.tmpdir(), 'eqp-libreoffice-profile-'));
+  const pdfBuffers = new Map();
+
+  try {
+    const workbookPaths = await Promise.all(workbookItems.map(async (item, index) => {
+      const workbookPath = path.join(tempRoot, `report-${String(index + 1).padStart(4, '0')}.xlsx`);
+      await fs.writeFile(workbookPath, Buffer.from(item.workbookBuffer));
+      return workbookPath;
+    }));
+
+    for (const command of commands) {
+      try {
+        await execFileAsync(
+          command,
+          [
+            '--headless',
+            '--invisible',
+            '--nodefault',
+            '--nolockcheck',
+            '--nofirststartwizard',
+            '--norestore',
+            `-env:UserInstallation=file:///${profileRoot.replace(/\\/g, '/')}`,
+            '--convert-to',
+            'pdf:calc_pdf_Export',
+            '--outdir',
+            tempRoot,
+            ...workbookPaths,
+          ],
+          { timeout: Math.max(60000, workbookItems.length * 30000) }
+        );
+
+        pdfBuffers.clear();
+
+        for (let index = 0; index < workbookItems.length; index += 1) {
+          const item = workbookItems[index];
+          const pdfPath = path.join(tempRoot, `report-${String(index + 1).padStart(4, '0')}.pdf`);
+
+          if (!await fs.pathExists(pdfPath)) {
+            throw new Error(`Converted PDF missing for ${path.basename(workbookPaths[index])}`);
+          }
+
+          const pdfBuffer = await fs.readFile(pdfPath);
+          if (!bufferLooksLikePdf(pdfBuffer)) {
+            throw new Error(`Invalid PDF output for ${path.basename(workbookPaths[index])}`);
+          }
+
+          pdfBuffers.set(item.id, await cropPdfBottomWhitespace(pdfBuffer));
+        }
+
+        return pdfBuffers;
+      } catch (error) {
+        if (process.env.NODE_ENV !== 'test') {
+          console.warn(`Batch Excel to PDF conversion failed with ${command}: ${error.message}`);
+        }
+      }
+    }
+
+    return null;
+  } finally {
+    await Promise.all([
+      fs.remove(tempRoot),
+      fs.remove(profileRoot),
+    ]);
+  }
+}
+
 async function tryRenderWorkbookToPdfWithPrince(workbook) {
   const commands = htmlPdfCommands();
   const tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), 'eqp-report-html-'));
@@ -1263,6 +1329,39 @@ async function exportFilledExcelTemplateToPdf(workbook, sheet, context) {
   return workbookToPdfBuffer(workbookBuffer, workbook, context);
 }
 
+async function loadTemplateBuffer(templateCache, reportType, serviceType, templateModel) {
+  const templatePath = resolveTemplatePath(reportType, serviceType, templateModel);
+
+  if (!templateCache.has(templatePath)) {
+    templateCache.set(templatePath, await fs.readFile(templatePath));
+  }
+
+  return templateCache.get(templatePath);
+}
+
+async function convertReportJobsToPdfBuffers(reportJobs) {
+  const chunkSize = Math.max(Number(process.env.EQP_REPORT_CONVERSION_BATCH_SIZE) || 12, 1);
+  const pdfBuffers = new Map();
+
+  for (let start = 0; start < reportJobs.length; start += chunkSize) {
+    const chunk = reportJobs.slice(start, start + chunkSize);
+    const converted = await tryConvertWorkbooksToPdfs(chunk);
+
+    if (!converted) {
+      throw new ApiError(
+        503,
+        'Exact Excel template PDF export is unavailable. Install LibreOffice/soffice on the backend or deploy the Docker image that includes LibreOffice.'
+      );
+    }
+
+    converted.forEach((pdfBuffer, id) => {
+      pdfBuffers.set(id, pdfBuffer);
+    });
+  }
+
+  return pdfBuffers;
+}
+
 async function generateReports(payload) {
   const requestedTemplateModel = normalizeTemplateModel(payload.machineModel);
 
@@ -1285,10 +1384,12 @@ async function generateReports(payload) {
   }
 
   const commentPickerCache = new Map();
+  const templateCache = new Map();
+  const reportJobs = [];
+  const machineCounterUpdates = new Map();
   const now = new Date();
   const hh = String(now.getHours()).padStart(2, '0');
   const mm = String(now.getMinutes()).padStart(2, '0');
-  const generatedFiles = [];
   let reportIndex = 1;
 
   for (const machine of machines) {
@@ -1313,10 +1414,9 @@ async function generateReports(payload) {
         currentStep = 0;
       }
 
-      const templatePath = resolveTemplatePath(payload.reportType, payload.serviceType, templateModel);
-
       const workbook = new ExcelJS.Workbook();
-      await workbook.xlsx.readFile(templatePath);
+      const templateBuffer = await loadTemplateBuffer(templateCache, payload.reportType, payload.serviceType, templateModel);
+      await workbook.xlsx.load(templateBuffer);
 
       const sheet = workbook.worksheets[0];
       const reportNo = `${safeDate}-${hh}${mm}-${String(reportIndex).padStart(3, '0')}`;
@@ -1340,53 +1440,76 @@ async function generateReports(payload) {
       addSignature(workbook, sheet, user.full_name, fieldConfig);
 
       const fileName = `${machine.machine_type} ${machine.machine_number} ex${currentCounter}.pdf`;
-      const pdfBuffer = await exportFilledExcelTemplateToPdf(workbook, sheet, {
+      prepareFilledWorkbookForPdfExport(workbook, sheet);
+      const workbookBuffer = await workbook.xlsx.writeBuffer();
+
+      reportJobs.push({
+        id: reportNo,
+        workbookBuffer,
         reportNo,
         machine,
-        reportType: payload.reportType,
-        serviceType: payload.serviceType,
-        templateModel,
-        serviceDate,
-        smr: currentSMR,
-        createdBy: user.full_name,
-        selectedComment,
-      });
-      const fileUrl = await storageService.uploadReport(fileName, pdfBuffer, 'application/pdf');
-
-      await reportRepository.create({
-        reportNo,
-        machineType: machine.machine_type,
-        machineId: machine.id,
         engineNumber: machine.engine_number,
         smr: currentSMR,
         serviceDate,
         comments: selectedComment,
         createdBy: user.full_name,
-        machineNumber: machine.machine_number,
         reportType: payload.reportType,
         serviceType: payload.serviceType,
         fileName,
-        fileUrl,
-        createdById: payload.userId,
+        templateModel,
       });
 
-      await machineRepository.updateCounters(machine.id, {
+      machineCounterUpdates.set(machine.id, {
         lastSmr: currentSMR,
         smrStep: currentStep,
         reportCounter: currentCounter,
       });
 
-      generatedFiles.push({
-        machine: machine.machine_number,
-        report: reportNo,
-        file: fileName,
-        fileUrl,
-        format: 'PDF',
-        templateModel,
-      });
-
       reportIndex += 1;
     }
+  }
+
+  const pdfBuffers = await convertReportJobsToPdfBuffers(reportJobs);
+  const generatedFiles = [];
+
+  for (const job of reportJobs) {
+    const pdfBuffer = pdfBuffers.get(job.id);
+
+    if (!pdfBuffer) {
+      throw new ApiError(503, `PDF conversion failed for report ${job.reportNo}`);
+    }
+
+    const fileUrl = await storageService.uploadReport(job.fileName, pdfBuffer, 'application/pdf');
+
+    await reportRepository.create({
+      reportNo: job.reportNo,
+      machineType: job.machine.machine_type,
+      machineId: job.machine.id,
+      engineNumber: job.engineNumber,
+      smr: job.smr,
+      serviceDate: job.serviceDate,
+      comments: job.comments,
+      createdBy: job.createdBy,
+      machineNumber: job.machine.machine_number,
+      reportType: job.reportType,
+      serviceType: job.serviceType,
+      fileName: job.fileName,
+      fileUrl,
+      createdById: payload.userId,
+    });
+
+    generatedFiles.push({
+      machine: job.machine.machine_number,
+      report: job.reportNo,
+      file: job.fileName,
+      fileUrl,
+      format: 'PDF',
+      templateModel: job.templateModel,
+    });
+  }
+
+  for (const [machineId, counters] of machineCounterUpdates.entries()) {
+    await machineRepository.updateCounters(machineId, counters);
   }
 
   return {

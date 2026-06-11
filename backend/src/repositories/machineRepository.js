@@ -27,6 +27,20 @@ async function findByIds(machineIds) {
   return result.rows;
 }
 
+async function findById(machineId) {
+  const table = await resolveEqpTable('eqp_machines', 'machines');
+  const result = await db.query(
+    `
+      SELECT *
+      FROM ${table}
+      WHERE id = $1
+    `,
+    [Number(machineId)]
+  );
+
+  return result.rows[0] || null;
+}
+
 async function updateCounters(machineId, values) {
   const table = await resolveEqpTable('eqp_machines', 'machines');
   const updatedAtClause = table === 'eqp_machines' ? ', updated_at = CURRENT_TIMESTAMP' : '';
@@ -51,6 +65,7 @@ async function updateCounters(machineId, values) {
 
 module.exports = {
   findAll,
+  findById,
   findByIds,
   updateCounters,
 };

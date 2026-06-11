@@ -206,8 +206,27 @@ export default function ReportsPage() {
     if (selectedReports.length === 0) return;
 
     try {
-      await Promise.all(selectedReports.map((report) => deleteReport(report.id)));
-      setToast({ type: 'success', message: `${selectedReports.length} reports deleted.` });
+      const reportsToDelete = [...selectedReports].sort((a, b) => {
+        const aDate = new Date(a.created_at).getTime();
+        const bDate = new Date(b.created_at).getTime();
+
+        if (aDate !== bDate) return bDate - aDate;
+        return Number(b.id) - Number(a.id);
+      });
+
+      let rolledBackCount = 0;
+
+      for (const report of reportsToDelete) {
+        const result = await deleteReport(report.id);
+        if (result.countersRolledBack) rolledBackCount += 1;
+      }
+
+      setToast({
+        type: 'success',
+        message: rolledBackCount > 0
+          ? `${selectedReports.length} reports deleted. ${rolledBackCount} machine counters rolled back.`
+          : `${selectedReports.length} reports deleted.`,
+      });
       setBulkDeleteOpen(false);
       await loadReports();
     } catch (deleteError) {
@@ -220,8 +239,13 @@ export default function ReportsPage() {
     if (!reportToDelete) return;
 
     try {
-      await deleteReport(reportToDelete.id);
-      setToast({ type: 'success', message: 'Report deleted successfully.' });
+      const result = await deleteReport(reportToDelete.id);
+      setToast({
+        type: 'success',
+        message: result.countersRolledBack
+          ? 'Report deleted and machine counters rolled back.'
+          : 'Report deleted successfully.',
+      });
       setReportToDelete(null);
       await loadReports();
     } catch (deleteError) {

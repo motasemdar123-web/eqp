@@ -1,4 +1,5 @@
 const reportRepository = require('../repositories/reportRepository');
+const machineRepository = require('../repositories/machineRepository');
 const storageService = require('./storageService');
 const { ApiError } = require('../utils/ApiError');
 
@@ -29,12 +30,43 @@ async function deleteReport(id, ownerId, ownerName) {
     throw new ApiError(404, 'Report not found');
   }
 
+  const latestReport = report.machine_id
+    ? await reportRepository.findLatestForMachine(report.machine_id)
+    : null;
+  const shouldRollbackMachineCounters = latestReport && Number(latestReport.id) === Number(report.id);
   const fileName = decodeURIComponent(report.file_url.split('/').pop());
 
   await storageService.deleteReport(fileName);
   await reportRepository.remove(id, ownerId, ownerName);
 
-  return { success: true };
+  if (shouldRollbackMachineCounters) {
+    await rollbackLatestReportCounters(report.machine_id);
+  }
+
+  return {
+    success: true,
+    countersRolledBack: Boolean(shouldRollbackMachineCounters),
+  };
+}
+
+async function rollbackLatestReportCounters(machineId) {
+  const machine = await machineRepository.findById(machineId);
+  if (!machine) return;
+
+  const currentSmr = Math.max(Number(machine.last_smr) || 0, 0);
+  const currentStep = Math.max(Number(machine.smr_step) || 0, 0);
+  const currentCounter = Math.max(Number(machine.report_counter) || 0, 0);
+
+  if (currentCounter <= 0) return;
+
+  const previousStep = currentStep > 0 ? currentStep - 1 : 3;
+  const previousSmr = currentStep > 0 ? currentSmr : Math.max(currentSmr - 1, 0);
+
+  await machineRepository.updateCounters(machineId, {
+    lastSmr: previousSmr,
+    smrStep: previousStep,
+    reportCounter: Math.max(currentCounter - 1, 0),
+  });
 }
 
 module.exports = {
