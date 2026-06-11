@@ -10,7 +10,6 @@ import Card from '../../components/ui/Card';
 import EmptyState from '../../components/ui/EmptyState';
 import Badge from '../../components/ui/Badge';
 import Toast from '../../components/ui/Toast';
-import ConfirmDialog from '../../components/ConfirmDialog';
 
 export default function ReportsPage() {
   const [reports, setReports] = useState([]);
@@ -19,9 +18,7 @@ export default function ReportsPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortConfig, setSortConfig] = useState({ key: 'created_at', direction: 'desc' });
   const [toast, setToast] = useState(null);
-  const [reportToDelete, setReportToDelete] = useState(null);
-  const [reportToUndo, setReportToUndo] = useState(null);
-  const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false);
+  const [deleteRequest, setDeleteRequest] = useState(null);
   const [renamingReport, setRenamingReport] = useState(null);
   const [renameValue, setRenameValue] = useState('');
   const [selectedReportIds, setSelectedReportIds] = useState([]);
@@ -203,56 +200,46 @@ export default function ReportsPage() {
     }
   }
 
-  async function handleBulkDeleteReports() {
-    if (selectedReports.length === 0) return;
+  function openDeleteRequest(targetReports) {
+    setDeleteRequest({ reports: targetReports });
+  }
+
+  async function handleDeleteReports({ rollbackCounters }) {
+    if (!deleteRequest?.reports?.length) return;
+
+    const reportsToDelete = [...deleteRequest.reports].sort((a, b) => {
+      const aDate = new Date(a.created_at).getTime();
+      const bDate = new Date(b.created_at).getTime();
+
+      if (aDate !== bDate) return bDate - aDate;
+      return Number(b.id) - Number(a.id);
+    });
 
     try {
-      for (const report of selectedReports) {
-        await deleteReport(report.id);
+      let rolledBackCount = 0;
+
+      for (const report of reportsToDelete) {
+        const result = await deleteReport(report.id, { rollbackCounters });
+        if (result.countersRolledBack) rolledBackCount += 1;
       }
+
+      const deletedCount = reportsToDelete.length;
+      const rollbackNote = rollbackCounters
+        ? ` ${rolledBackCount} machine counter${rolledBackCount === 1 ? '' : 's'} rolled back.`
+        : '';
+      const skippedNote = rollbackCounters && rolledBackCount < deletedCount
+        ? ' Some reports were not eligible for rollback because newer runs remain.'
+        : '';
 
       setToast({
         type: 'success',
-        message: `${selectedReports.length} reports deleted.`,
+        message: `${deletedCount} report${deletedCount === 1 ? '' : 's'} deleted.${rollbackNote}${skippedNote}`,
       });
-      setBulkDeleteOpen(false);
-      await loadReports();
-    } catch (deleteError) {
-      setError(deleteError.message || 'Failed to delete selected reports');
-      setToast({ type: 'error', message: deleteError.message || 'Failed to delete selected reports.' });
-    }
-  }
-
-  async function handleDeleteReport() {
-    if (!reportToDelete) return;
-
-    try {
-      await deleteReport(reportToDelete.id);
-      setToast({ type: 'success', message: 'Report deleted successfully.' });
-      setReportToDelete(null);
+      setDeleteRequest(null);
       await loadReports();
     } catch (deleteError) {
       setError(deleteError.message || 'Failed to delete report');
       setToast({ type: 'error', message: deleteError.message || 'Failed to delete report.' });
-    }
-  }
-
-  async function handleUndoReportRun() {
-    if (!reportToUndo) return;
-
-    try {
-      const result = await deleteReport(reportToUndo.id, { rollbackCounters: true });
-      setToast({
-        type: result.countersRolledBack ? 'success' : 'info',
-        message: result.countersRolledBack
-          ? 'Run undone. Report deleted and machine counters rolled back.'
-          : 'Report deleted, but counters were not rolled back because this was not the latest run for that machine.',
-      });
-      setReportToUndo(null);
-      await loadReports();
-    } catch (deleteError) {
-      setError(deleteError.message || 'Failed to undo report run');
-      setToast({ type: 'error', message: deleteError.message || 'Failed to undo report run.' });
     }
   }
 
@@ -319,7 +306,7 @@ export default function ReportsPage() {
                   <Button variant="secondary" onClick={() => downloadReports(selectedReports.length ? selectedReports : filteredReports)} disabled={filteredReports.length === 0 || downloadBusy}>
                     {downloadBusy ? 'Preparing ZIP...' : `Download ${selectedReports.length ? 'Selected' : 'All Visible'}`}
                   </Button>
-                  <Button variant="danger" onClick={() => setBulkDeleteOpen(true)} disabled={selectedReports.length === 0}>
+                  <Button variant="danger" onClick={() => openDeleteRequest(selectedReports)} disabled={selectedReports.length === 0}>
                     Delete Selected
                   </Button>
                 </div>
@@ -374,10 +361,7 @@ export default function ReportsPage() {
                         <Button variant="secondary" onClick={() => openRename(report)}>
                           Rename
                         </Button>
-                        <Button variant="secondary" onClick={() => setReportToUndo(report)}>
-                          Undo Run
-                        </Button>
-                        <Button variant="danger" onClick={() => setReportToDelete(report)}>
+                        <Button variant="danger" onClick={() => openDeleteRequest([report])}>
                           Delete
                         </Button>
                       </td>
@@ -390,34 +374,24 @@ export default function ReportsPage() {
         )}
       </div>
 
-      {reportToDelete && (
-        <ConfirmDialog
-          title="Delete report?"
-          description={`This will remove "${reportToDelete.file_name}" from the archive and storage bucket. Machine counters will not change.`}
-          confirmLabel="Delete Report"
-          onCancel={() => setReportToDelete(null)}
-          onConfirm={handleDeleteReport}
-        />
-      )}
-
-      {reportToUndo && (
-        <ConfirmDialog
-          title="Undo generated run?"
-          description={`This will remove "${reportToUndo.file_name}" and roll back machine counters only if it is the latest run for that machine.`}
-          confirmLabel="Undo Run"
-          onCancel={() => setReportToUndo(null)}
-          onConfirm={handleUndoReportRun}
-        />
-      )}
-
-      {bulkDeleteOpen && (
-        <ConfirmDialog
-          title="Delete selected reports?"
-          description={`This will remove ${selectedReports.length} selected reports from your archive and storage bucket.`}
-          confirmLabel="Delete Selected"
-          onCancel={() => setBulkDeleteOpen(false)}
-          onConfirm={handleBulkDeleteReports}
-        />
+      {deleteRequest && (
+        <div className="fixed inset-0 z-50 grid place-items-center bg-[rgba(7,27,51,0.62)] p-4 backdrop-blur-sm">
+          <section className="ds-card w-full max-w-md p-6 text-[var(--color-ink)] shadow-[var(--shadow-overlay)]">
+            <h2 className="text-xl font-black">Delete report{deleteRequest.reports.length === 1 ? '' : 's'}?</h2>
+            <p className="mt-2 text-sm font-semibold leading-6 text-[var(--color-muted)]">
+              This will remove {deleteRequest.reports.length === 1 ? `"${deleteRequest.reports[0].file_name}"` : `${deleteRequest.reports.length} selected reports`} from the archive and storage bucket.
+            </p>
+            <div className="mt-6 flex flex-wrap justify-end gap-3">
+              <Button variant="secondary" onClick={() => setDeleteRequest(null)}>Cancel</Button>
+              <Button variant="danger" onClick={() => handleDeleteReports({ rollbackCounters: false })}>
+                Delete Only
+              </Button>
+              <Button variant="danger" onClick={() => handleDeleteReports({ rollbackCounters: true })}>
+                Delete and Roll Back
+              </Button>
+            </div>
+          </section>
+        </div>
       )}
 
       {renamingReport && (
