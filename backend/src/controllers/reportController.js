@@ -40,6 +40,7 @@ async function generateReports(req, res) {
   const result = await reportGeneratorService.generateReports({
     userId: req.user.sub,
     userNumber: req.user.userNumber,
+    machineModel: req.body.machineModel,
     reportType: req.body.reportType,
     serviceType: req.body.serviceType,
     selectedMachines: req.body.selectedMachines.map(Number),

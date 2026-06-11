@@ -1,3 +1,5 @@
+export const MACHINE_MODELS = ['D155A', 'HM400'];
+
 export const REPORT_TYPES = ['W30', 'W41'];
 
 export const SERVICE_TYPES = [

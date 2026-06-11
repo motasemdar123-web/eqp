@@ -22,6 +22,54 @@ const POINTS_TO_PIXELS = 96 / 72;
 const A4_PRINTABLE_WIDTH_PX = 748;
 const A4_PRINTABLE_HEIGHT_PX = 1055;
 const DEFAULT_PDF_PAGE_HEIGHT_RATIO = 0.84;
+const DEFAULT_TEMPLATE_MODEL = 'D155A';
+const TEMPLATE_MODELS = new Set(['D155A', 'HM400']);
+const TEMPLATE_FIELD_CONFIG = {
+  D155A: {
+    reportNo: 'AN1',
+    machineNumber: 'L9',
+    engineNumber: 'AD9',
+    serviceDate: 'B13',
+    smr: 'L13',
+    inspector: 'AP4',
+    randomValueCells: [
+      { address: 'AX43', min: 750, max: 800 },
+      { address: 'AX44', min: 2050, max: 2110 },
+    ],
+    commentColumns: [
+      'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R',
+      'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+    ],
+    commentRows: [77, 78, 79],
+    signature: {
+      topLeft: { col: 48, row: 78 },
+      size: { width: 140, height: 60 },
+    },
+  },
+  HM400: {
+    reportNo: 'AN1',
+    machineNumber: 'L9',
+    engineNumber: 'AD9',
+    serviceDate: 'B13',
+    smr: 'L13',
+    inspector: 'AP4',
+    randomValueCells: [],
+    commentColumns: [
+      'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R',
+      'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+      'AA', 'AB', 'AC', 'AD', 'AE', 'AF', 'AG',
+      'AH', 'AI', 'AJ', 'AK', 'AL', 'AM', 'AN',
+      'AO', 'AP', 'AQ', 'AR', 'AS', 'AT', 'AU',
+      'AV', 'AW', 'AX', 'AY', 'AZ', 'BA', 'BB',
+      'BC', 'BD', 'BE', 'BF', 'BG', 'BH',
+    ],
+    commentRows: [79, 80, 81],
+    signature: {
+      topLeft: { col: 42, row: 81 },
+      size: { width: 140, height: 60 },
+    },
+  },
+};
 
 function converterCommands() {
   return [...new Set([
@@ -500,12 +548,46 @@ function buildWeightedCommentPicker(comments) {
   };
 }
 
-function buildTemplatePath(reportType, serviceType) {
+function normalizeTemplateModel(value) {
+  if (!value) return DEFAULT_TEMPLATE_MODEL;
+
+  const normalized = String(value || '')
+    .trim()
+    .toUpperCase()
+    .replace(/[^A-Z0-9]/g, '');
+
+  if (normalized.startsWith('HM400')) return 'HM400';
+  if (normalized.startsWith('D155')) return 'D155A';
+
+  return null;
+}
+
+function buildTemplateCandidates(reportType, serviceType, templateModel) {
   const safeServiceType = serviceType
     .replace(/\./g, '')
     .replace(/\s+/g, '_');
+  const baseFileName = `${reportType}_${safeServiceType}.xlsx`;
+  const model = normalizeTemplateModel(templateModel);
 
-  return path.join(TEMPLATE_ROOT, `${reportType}_${safeServiceType}.xlsx`);
+  return [path.join(TEMPLATE_ROOT, model, baseFileName)];
+}
+
+function resolveTemplatePath(reportType, serviceType, templateModel) {
+  const candidates = buildTemplateCandidates(reportType, serviceType, templateModel);
+  const templatePath = candidates.find((candidate) => fs.existsSync(candidate));
+
+  if (!templatePath) {
+    const expectedFiles = candidates
+      .map((candidate) => path.relative(TEMPLATE_ROOT, candidate))
+      .join(', ');
+
+    throw new ApiError(
+      400,
+      `Template not found for ${normalizeTemplateModel(templateModel)} ${reportType} ${serviceType}. Expected: ${expectedFiles}`
+    );
+  }
+
+  return templatePath;
 }
 
 function buildFormattedDate(serviceDate) {
@@ -520,20 +602,18 @@ function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function getRandomCommentCell() {
-  const columns = [
-    'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R',
-    'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
-  ];
-  const rows = [77, 78, 79];
+function getTemplateFieldConfig(templateModel) {
+  return TEMPLATE_FIELD_CONFIG[templateModel] || TEMPLATE_FIELD_CONFIG[DEFAULT_TEMPLATE_MODEL];
+}
 
-  const column = columns[Math.floor(Math.random() * columns.length)];
-  const row = rows[Math.floor(Math.random() * rows.length)];
+function getRandomCommentCell(config) {
+  const column = config.commentColumns[Math.floor(Math.random() * config.commentColumns.length)];
+  const row = config.commentRows[Math.floor(Math.random() * config.commentRows.length)];
 
   return `${column}${row}`;
 }
 
-function addSignature(workbook, sheet, userName) {
+function addSignature(workbook, sheet, userName, config) {
   const signatureName = userName.split(' ')[0].toLowerCase();
   const signaturePath = path.join(SIGNATURE_ROOT, `${signatureName}-signature.png`);
 
@@ -548,14 +628,8 @@ function addSignature(workbook, sheet, userName) {
   });
 
   sheet.addImage(signatureImage, {
-    tl: {
-      col: 48,
-      row: 78,
-    },
-    ext: {
-      width: 140,
-      height: 60,
-    },
+    tl: config.signature.topLeft,
+    ext: config.signature.size,
   });
 
   console.log(`Signature added for ${signatureName}`);
@@ -1107,6 +1181,12 @@ async function exportFilledExcelTemplateToPdf(workbook, sheet, context) {
 }
 
 async function generateReports(payload) {
+  const templateModel = normalizeTemplateModel(payload.machineModel);
+
+  if (!TEMPLATE_MODELS.has(templateModel)) {
+    throw new ApiError(400, 'Machine model must be D155A or HM400');
+  }
+
   const user = payload.userNumber
     ? await userRepository.findByUserNumber(payload.userNumber)
     : await userRepository.findById(payload.userId);
@@ -1145,11 +1225,7 @@ async function generateReports(payload) {
         currentStep = 0;
       }
 
-      const templatePath = buildTemplatePath(payload.reportType, payload.serviceType);
-
-      if (!fs.existsSync(templatePath)) {
-        throw new ApiError(400, `Template not found: ${path.basename(templatePath)}`);
-      }
+      const templatePath = resolveTemplatePath(payload.reportType, payload.serviceType, templateModel);
 
       const workbook = new ExcelJS.Workbook();
       await workbook.xlsx.readFile(templatePath);
@@ -1157,18 +1233,22 @@ async function generateReports(payload) {
       const sheet = workbook.worksheets[0];
       const reportNo = `${safeDate}-${hh}${mm}-${String(reportIndex).padStart(3, '0')}`;
       const selectedComment = randomComment();
+      const fieldConfig = getTemplateFieldConfig(templateModel);
 
-      sheet.getCell('L9').value = machine.machine_number;
-      sheet.getCell('AD9').value = machine.engine_number;
-      sheet.getCell('AN1').value = reportNo;
-      sheet.getCell('B13').value = buildFormattedDate(serviceDate);
-      sheet.getCell('L13').value = currentSMR;
-      sheet.getCell('AP4').value = user.full_name;
-      sheet.getCell('AX43').value = getRandomInt(750, 800);
-      sheet.getCell('AX44').value = getRandomInt(2050, 2110);
-      sheet.getCell(getRandomCommentCell()).value = selectedComment;
+      sheet.getCell(fieldConfig.machineNumber).value = machine.machine_number;
+      sheet.getCell(fieldConfig.engineNumber).value = machine.engine_number;
+      sheet.getCell(fieldConfig.reportNo).value = reportNo;
+      sheet.getCell(fieldConfig.serviceDate).value = buildFormattedDate(serviceDate);
+      sheet.getCell(fieldConfig.smr).value = currentSMR;
+      sheet.getCell(fieldConfig.inspector).value = user.full_name;
 
-      addSignature(workbook, sheet, user.full_name);
+      fieldConfig.randomValueCells.forEach((cell) => {
+        sheet.getCell(cell.address).value = getRandomInt(cell.min, cell.max);
+      });
+
+      sheet.getCell(getRandomCommentCell(fieldConfig)).value = selectedComment;
+
+      addSignature(workbook, sheet, user.full_name, fieldConfig);
 
       const fileName = `${machine.machine_type} ${machine.machine_number} ex${currentCounter}.pdf`;
       const pdfBuffer = await exportFilledExcelTemplateToPdf(workbook, sheet, {
@@ -1176,6 +1256,7 @@ async function generateReports(payload) {
         machine,
         reportType: payload.reportType,
         serviceType: payload.serviceType,
+        templateModel,
         serviceDate,
         smr: currentSMR,
         createdBy: user.full_name,
@@ -1212,6 +1293,7 @@ async function generateReports(payload) {
         file: fileName,
         fileUrl,
         format: 'PDF',
+        templateModel,
       });
 
       reportIndex += 1;

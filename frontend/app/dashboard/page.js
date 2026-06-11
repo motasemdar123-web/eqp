@@ -14,7 +14,7 @@ import Skeleton from '../../components/ui/Skeleton';
 import Toast from '../../components/ui/Toast';
 import { getStoredUser, clearStoredUser } from '../../lib/auth';
 import { generateReports, getMachineHistory, getMachines } from '../../lib/api';
-import { REPORT_TYPES, SERVICE_TYPES } from '../../lib/reportOptions';
+import { MACHINE_MODELS, REPORT_TYPES, SERVICE_TYPES } from '../../lib/reportOptions';
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -30,6 +30,7 @@ export default function DashboardPage() {
   const [selectedMachines, setSelectedMachines] = useState([]);
   const [user] = useState(() => getStoredUser());
   const userCode = user?.userNumber || '';
+  const [machineModel, setMachineModel] = useState('D155A');
   const [reportType, setReportType] = useState('W30');
   const [serviceType, setServiceType] = useState('1st Service');
   const [searchTerm, setSearchTerm] = useState('');
@@ -226,6 +227,7 @@ export default function DashboardPage() {
 
       const data = await generateReports({
         userNumber: Number(userCode),
+        machineModel,
         reportType,
         serviceType,
         selectedMachines,
@@ -257,6 +259,8 @@ export default function DashboardPage() {
         {activePage === 'dashboard' ? (
           <DashboardContent
             loading={loading}
+            machineModel={machineModel}
+            setMachineModel={setMachineModel}
             reportType={reportType}
             setReportType={setReportType}
             serviceType={serviceType}
@@ -334,6 +338,18 @@ function DashboardContent(props) {
         </div>
 
         <div className="mt-6 grid gap-5">
+          <Field label="Machine Model">
+            <select
+              value={props.machineModel}
+              onChange={(event) => props.setMachineModel(event.target.value)}
+              className="ds-input"
+            >
+              {MACHINE_MODELS.map((model) => (
+                <option key={model}>{model}</option>
+              ))}
+            </select>
+          </Field>
+
           <Field label="Report Type">
             <select
               value={props.reportType}
