@@ -1,54 +1,55 @@
 @import "tailwindcss";
 
 :root {
-  --brand-ink: #192d36;
-  --brand-surface: #fcfcfc;
-  --brand-accent: #64eb60;
+  --brand-ink: #16294d;
+  --brand-surface: #f4f4f4;
+  --brand-accent: #f2a900;
   --neutral-0: #ffffff;
-  --neutral-25: #fcfcfc;
-  --neutral-50: #f7f7f8;
-  --neutral-100: #eeeef0;
-  --neutral-200: #dddde0;
-  --neutral-300: #c8c8cc;
-  --neutral-400: #ababb3;
-  --neutral-500: #84848f;
-  --neutral-600: #5e5e6a;
-  --neutral-700: #3e3e47;
-  --neutral-800: #272730;
-  --neutral-900: #192d36;
-  --neutral-950: #0e1a20;
+  --neutral-25: #fafafa;
+  --neutral-50: #f4f4f4;
+  --neutral-100: #e9e9e9;
+  --neutral-200: #d8d8d8;
+  --neutral-300: #c4c5c7;
+  --neutral-400: #9a9da1;
+  --neutral-500: #73767b;
+  --neutral-600: #4a4e54;
+  --neutral-700: #36393e;
+  --neutral-800: #27292d;
+  --neutral-900: #1d1d1d;
+  --neutral-950: #111111;
   --color-canvas: var(--brand-surface);
   --color-canvas-strong: var(--neutral-50);
   --color-surface: var(--neutral-0);
   --color-surface-muted: var(--neutral-50);
   --color-elevated: var(--neutral-0);
-  --color-ink: var(--brand-ink);
+  --color-ink: var(--neutral-900);
   --color-ink-soft: var(--neutral-600);
   --color-muted: var(--neutral-500);
   --color-subtle: var(--neutral-400);
   --color-border: var(--neutral-100);
   --color-border-strong: var(--neutral-200);
   --color-sidebar: var(--brand-ink);
-  --color-sidebar-panel: rgba(255, 255, 255, 0.1);
-  --color-sidebar-muted: rgba(255, 255, 255, 0.58);
+  --color-sidebar-panel: rgba(255, 255, 255, 0.08);
+  --color-sidebar-muted: rgba(255, 255, 255, 0.66);
   --color-brand: var(--brand-ink);
-  --color-brand-hover: #243f4c;
-  --color-brand-soft: rgba(25, 45, 54, 0.06);
+  --color-brand-hover: #203965;
+  --color-brand-soft: rgba(22, 41, 77, 0.07);
   --color-navy: var(--brand-ink);
-  --color-dark-blue: #0e1a20;
+  --color-dark-blue: #0d1b35;
   --color-accent: var(--brand-accent);
-  --color-accent-hover: #4fd94c;
-  --color-accent-soft: #e8fde7;
-  --color-success: #2db82a;
-  --color-success-soft: #e8fde7;
-  --color-danger: #e53935;
-  --color-danger-soft: #fdecea;
-  --color-warning: #f5a623;
-  --color-warning-soft: #fef3e2;
-  --color-info: #1e7aeb;
-  --color-info-soft: #e3f0fd;
+  --color-accent-hover: #d99700;
+  --color-accent-soft: #fff3cf;
+  --color-success: #2f7d4a;
+  --color-success-soft: #eaf5ed;
+  --color-danger: #c43d3d;
+  --color-danger-soft: #faecec;
+  --color-warning: #b87800;
+  --color-warning-soft: #fff4d8;
+  --color-info: #1465b0;
+  --color-info-soft: #eaf3fb;
+  --color-link: #1465b0;
   --color-text: var(--color-ink);
-  --font-system: var(--font-urbanist), "Urbanist", Arial, Helvetica, sans-serif;
+  --font-system: var(--font-inter), Inter, Arial, Helvetica, sans-serif;
   --text-2xs: 0.625rem;
   --text-xs: 0.6875rem;
   --text-sm: 0.75rem;
@@ -62,15 +63,15 @@
   --leading-tight: 1.12;
   --leading-title: 1.18;
   --leading-body: 1.5;
-  --tracking-label: 0.12em;
-  --radius-card: 8px;
-  --radius-panel: 12px;
-  --radius-control: 6px;
-  --shadow-card: 0 4px 12px rgba(25, 45, 54, 0.09), 0 2px 4px rgba(25, 45, 54, 0.05);
-  --shadow-card-hover: 0 8px 24px rgba(25, 45, 54, 0.11), 0 4px 8px rgba(25, 45, 54, 0.06);
-  --shadow-control: 0 1px 4px rgba(25, 45, 54, 0.07), 0 1px 2px rgba(25, 45, 54, 0.04);
-  --shadow-overlay: 0 16px 40px rgba(25, 45, 54, 0.14), 0 8px 16px rgba(25, 45, 54, 0.07);
-  --ring: rgba(25, 45, 54, 0.12);
+  --tracking-label: 0.1em;
+  --radius-card: 6px;
+  --radius-panel: 8px;
+  --radius-control: 3px;
+  --shadow-card: 0 1px 3px rgba(22, 41, 77, 0.08);
+  --shadow-card-hover: 0 4px 14px rgba(22, 41, 77, 0.11);
+  --shadow-control: 0 1px 2px rgba(22, 41, 77, 0.08);
+  --shadow-overlay: 0 18px 44px rgba(22, 41, 77, 0.2);
+  --ring: rgba(20, 101, 176, 0.18);
 }
 
 .pro-wb-overlay {
@@ -6809,5 +6810,625 @@ textarea {
 
   :where(.system-hero h2, .section-title, .ds-section-title, .eng-template-intro h2, .pro-wb-header h2) {
     font-size: var(--text-2xl);
+  }
+}
+
+/* Dar Al Hai Machinery application theme. Keep last to normalize legacy modules. */
+body {
+  overflow-x: hidden;
+  background: var(--color-canvas);
+  color: var(--color-ink-soft);
+  font-weight: 400;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--color-ink);
+  font-weight: 600;
+}
+
+a:not([class]) {
+  color: var(--color-link);
+}
+
+::selection {
+  background: var(--color-accent-soft);
+  color: var(--color-ink);
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+  accent-color: var(--color-brand);
+}
+
+:where(.ds-shell, .tech-app, .tech-login-shell, .eng-workspace-shell, .pro-wb-overlay) .font-black {
+  font-weight: 650 !important;
+}
+
+:where(.ds-shell, .tech-app, .tech-login-shell, .eng-workspace-shell, .pro-wb-overlay) .font-bold {
+  font-weight: 600 !important;
+}
+
+:where(.ds-shell, .tech-app, .tech-login-shell, .eng-workspace-shell, .pro-wb-overlay) .font-semibold {
+  font-weight: 500 !important;
+}
+
+.ds-card,
+.ds-kpi-card,
+.ds-reference-chart-card,
+.ds-project-table-card,
+.ds-side-widget,
+.ds-summary-tile,
+.ds-activity-item,
+.tech-day-panel,
+.tech-empty-card,
+.tech-weather-shell,
+.tech-detail-hero,
+.tech-audio-card,
+.tech-start-card,
+.tech-manual-card,
+.tech-execution-flow {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  background: #ffffff;
+  box-shadow: var(--shadow-card);
+}
+
+.ds-card-hover:hover,
+.ds-kpi-card:hover {
+  border-color: var(--color-border-strong);
+  box-shadow: var(--shadow-card-hover);
+  transform: translateY(-1px);
+}
+
+.ds-button {
+  min-height: 2.35rem;
+  border-radius: 3px;
+  padding: 0.55rem 1rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.ds-button-primary {
+  border-color: var(--color-brand);
+  background: var(--color-brand);
+  color: #ffffff;
+  box-shadow: none;
+}
+
+.ds-button-primary:not(:disabled):hover {
+  border-color: var(--color-brand-hover);
+  background: var(--color-brand-hover);
+}
+
+.ds-button-secondary {
+  border-color: var(--color-border-strong);
+  background: #ffffff;
+  color: var(--color-brand);
+}
+
+.ds-button-secondary:not(:disabled):hover,
+.ds-button-ghost:not(:disabled):hover {
+  border-color: var(--color-brand);
+  background: var(--color-brand-soft);
+  color: var(--color-brand);
+}
+
+.ds-button-danger {
+  box-shadow: none;
+}
+
+.ds-badge,
+.ds-stat-pill,
+.tech-connectivity {
+  border-radius: 3px;
+  font-weight: 600;
+}
+
+.ds-badge-dark {
+  background: var(--color-brand);
+}
+
+.ds-badge-yellow,
+.ds-badge-amber,
+.ds-badge-warning,
+.ds-badge-pending {
+  background: var(--color-accent-soft);
+  color: #7a5500;
+}
+
+.ds-badge-cyan,
+.ds-badge-live,
+.ds-badge-ready {
+  background: var(--color-accent-soft);
+  color: #765200;
+}
+
+.ds-badge-archived,
+.ds-badge-preserved,
+.ds-badge-completed {
+  background: var(--color-surface-muted);
+  color: var(--color-ink-soft);
+}
+
+.ds-input,
+.ds-field input,
+.ds-field select,
+.ds-field textarea,
+.ds-shell input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
+.ds-shell select,
+.ds-shell textarea,
+.ds-app-form-control {
+  min-height: 2.5rem;
+  border-color: var(--color-border-strong) !important;
+  border-radius: 3px !important;
+  background: #ffffff !important;
+  box-shadow: none;
+  font-weight: 400;
+}
+
+.ds-input:focus,
+.ds-field input:focus,
+.ds-field select:focus,
+.ds-field textarea:focus,
+.ds-shell input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):focus,
+.ds-shell select:focus,
+.ds-shell textarea:focus,
+.ds-app-form-control:focus {
+  border-color: var(--color-info) !important;
+  box-shadow: 0 0 0 3px var(--ring) !important;
+}
+
+.ds-reference-shell {
+  grid-template-columns: 252px minmax(0, 1fr);
+}
+
+.ds-app-sidebar {
+  border-right: 0;
+  background: var(--color-brand);
+  padding: 1.35rem 1rem 1rem;
+}
+
+.ds-sidebar-mark {
+  width: 2rem;
+  height: 2rem;
+  margin-bottom: 0;
+  border-radius: 3px;
+  background: var(--color-accent);
+  color: var(--color-brand);
+  font-weight: 700;
+}
+
+.ds-sidebar-brand-text .text-white {
+  color: #ffffff !important;
+}
+
+.ds-sidebar-section-label {
+  color: rgba(255, 255, 255, 0.48);
+  font-weight: 500;
+  letter-spacing: 0.1em !important;
+}
+
+.ds-side-nav-link {
+  position: relative;
+  min-height: 2.5rem !important;
+  border-radius: 3px;
+  color: rgba(255, 255, 255, 0.72);
+  font-weight: 500 !important;
+}
+
+.ds-side-nav-link:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+  transform: none;
+}
+
+.ds-side-nav-link-active {
+  background: rgba(255, 255, 255, 0.11);
+  color: #ffffff;
+}
+
+.ds-side-nav-link-active::before {
+  position: absolute;
+  inset-block: 0.45rem;
+  left: -1rem;
+  width: 3px;
+  content: "";
+  background: var(--color-accent);
+}
+
+.ds-side-nav-icon {
+  border-radius: 3px;
+  background: transparent;
+}
+
+.ds-side-nav-link-active .ds-side-nav-icon {
+  background: var(--color-accent);
+  color: var(--color-brand);
+}
+
+.ds-sidebar-promo {
+  border: 0;
+  border-top: 3px solid var(--color-accent);
+  border-radius: 0;
+  background: rgba(255, 255, 255, 0.06);
+  padding: 0.9rem;
+}
+
+.ds-sidebar-promo .rounded-full {
+  border-radius: 1px !important;
+}
+
+.ds-status-dot {
+  background: var(--color-accent);
+  box-shadow: 0 0 0 3px rgba(242, 169, 0, 0.18);
+}
+
+.ds-app-topbar {
+  min-height: 4.2rem;
+  border-bottom: 3px solid var(--color-accent);
+  background: rgba(255, 255, 255, 0.97);
+  padding: 0.7rem 2rem;
+  backdrop-filter: blur(12px);
+}
+
+.ds-topbar-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.ds-topbar-brand-rule {
+  width: 4px;
+  height: 2.15rem;
+  flex: 0 0 auto;
+  background: var(--color-accent);
+}
+
+.ds-topbar-brand strong,
+.ds-topbar-brand small {
+  display: block;
+}
+
+.ds-topbar-brand strong {
+  color: var(--color-brand);
+  font-size: 0.82rem;
+  font-weight: 650;
+}
+
+.ds-topbar-brand small {
+  margin-top: 0.12rem;
+  color: var(--color-muted);
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.ds-plan-chip {
+  border-radius: 3px;
+  background: var(--color-accent-soft);
+  color: #765200;
+  font-weight: 600;
+}
+
+.ds-icon-button,
+.ds-avatar {
+  border-radius: 3px;
+}
+
+.ds-avatar {
+  border-color: var(--color-accent);
+  background: var(--color-accent);
+  color: var(--color-brand);
+}
+
+.ds-reference-content {
+  width: min(100%, 1240px);
+  padding: 1.5rem 2rem 2.5rem;
+}
+
+.ds-page-heading {
+  position: relative;
+  align-items: flex-end;
+  margin-bottom: 1.25rem;
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: 1.15rem;
+}
+
+.ds-page-heading::after {
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  width: 3rem;
+  height: 3px;
+  content: "";
+  background: var(--color-accent);
+}
+
+.ds-page-eyebrow {
+  color: var(--color-brand);
+  font-weight: 600;
+  letter-spacing: 0.1em !important;
+}
+
+.ds-page-title {
+  color: var(--color-ink);
+  font-size: clamp(1.55rem, 2vw, 1.95rem) !important;
+  font-weight: 600 !important;
+}
+
+.ds-page-description {
+  color: var(--color-ink-soft);
+  font-weight: 400 !important;
+}
+
+.ds-kpi-card {
+  min-height: 7rem;
+  border-top: 3px solid var(--color-brand);
+}
+
+.ds-kpi-card:nth-child(even) {
+  border-top-color: var(--color-accent);
+}
+
+.ds-kpi-label {
+  color: var(--color-muted);
+  font-weight: 600;
+}
+
+.ds-kpi-main {
+  color: var(--color-ink);
+  font-weight: 600 !important;
+}
+
+.ds-kpi-descriptor {
+  color: var(--color-ink-soft);
+  font-weight: 600;
+}
+
+.ds-kpi-secondary {
+  font-weight: 400;
+}
+
+.ds-icon-tile,
+.ds-mini-module-icon,
+.ds-feed-icon {
+  border-radius: 3px;
+  background: var(--color-brand-soft);
+  color: var(--color-brand);
+  box-shadow: none;
+}
+
+.ds-icon-tile-accent {
+  background: var(--color-accent);
+  color: var(--color-brand);
+}
+
+.ds-segment-control,
+.ds-tab-list {
+  border-radius: 3px;
+  background: var(--color-surface-muted);
+}
+
+.ds-segment-control span,
+.ds-tab {
+  border-radius: 2px;
+}
+
+.ds-tab-active,
+.ds-segment-active {
+  background: var(--color-brand);
+  color: #ffffff;
+  box-shadow: none;
+}
+
+.ds-shell thead,
+.ds-table thead {
+  background: var(--color-surface-muted) !important;
+}
+
+.ds-shell th,
+.ds-table th {
+  color: var(--color-brand) !important;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
+.ds-shell td,
+.ds-table td {
+  color: var(--color-ink-soft);
+  font-weight: 400;
+}
+
+.ds-shell tbody tr:hover,
+.ds-table tbody tr:hover {
+  background: var(--color-accent-soft) !important;
+}
+
+.ds-alert {
+  border-radius: 3px;
+  box-shadow: none;
+}
+
+.ds-progress-fill,
+.ds-chart-fill,
+.ds-bar-primary {
+  background: var(--color-brand);
+  box-shadow: none;
+}
+
+.ds-bar-secondary {
+  background: var(--color-accent);
+}
+
+.ds-donut {
+  background: conic-gradient(
+    var(--color-brand) 0 42%,
+    var(--color-accent) 42% 67%,
+    var(--color-info) 67% 84%,
+    var(--color-border-strong) 84% 100%
+  );
+}
+
+.ds-blue-header {
+  background: var(--color-brand);
+  box-shadow: none;
+}
+
+.ds-blue-header :is(h1, h2, h3, h4) {
+  color: #ffffff;
+}
+
+.ds-blue-header::after {
+  height: 4px;
+  background: var(--color-accent);
+}
+
+.ds-blue-header .ds-brand-mark {
+  border: 0;
+  border-radius: 3px;
+  background: var(--color-accent);
+  color: var(--color-brand);
+  box-shadow: none;
+}
+
+.ds-blue-header .rounded-xl {
+  border-radius: 3px !important;
+}
+
+.ds-empty-state {
+  border-radius: 6px;
+}
+
+.ds-empty-state > .rounded-full {
+  border-radius: 3px !important;
+  background: var(--color-accent) !important;
+  color: var(--color-brand) !important;
+}
+
+.ds-toast,
+.ds-notification-menu,
+.ds-notification-item,
+.ds-notification-head button {
+  border-radius: 3px;
+}
+
+.ds-notification-item-unread {
+  background: var(--color-accent-soft);
+}
+
+.ds-shell :is(.rounded-xl, .rounded-2xl, .rounded-3xl),
+.tech-app :is(.rounded-xl, .rounded-2xl, .rounded-3xl),
+.tech-login-shell :is(.rounded-xl, .rounded-2xl, .rounded-3xl) {
+  border-radius: 6px !important;
+}
+
+.tech-app,
+.tech-login-shell {
+  background: var(--color-canvas);
+}
+
+.tech-login-mark,
+.tech-avatar,
+.tech-empty-icon {
+  border-radius: 3px;
+  background: var(--color-accent);
+  color: var(--color-brand);
+}
+
+.tech-app-header {
+  border-bottom: 3px solid var(--color-accent);
+  background: rgba(255, 255, 255, 0.97);
+}
+
+.tech-stat-card,
+.tech-task-meta span,
+.tech-info-tile,
+.tech-work-point,
+.tech-submit-bar {
+  border-radius: 6px;
+}
+
+.tech-work-point-done {
+  border-color: #b8d7c2;
+  background: var(--color-success-soft);
+}
+
+.tech-loading-bar::before {
+  background: var(--color-accent);
+}
+
+.pro-wb-overlay {
+  background: var(--color-canvas);
+}
+
+.pro-wb-header,
+.pro-wb-toolbar,
+.pro-wb-canvas,
+.pro-wb-properties,
+.pro-wb-tool-group,
+.pro-wb-timer,
+.pro-wb-minimap {
+  border-color: var(--color-border-strong);
+  border-radius: 6px;
+  background: #ffffff;
+  box-shadow: var(--shadow-card);
+}
+
+.pro-wb-toolbar .pro-wb-tool-active {
+  background: var(--color-brand);
+  color: #ffffff;
+  box-shadow: none;
+}
+
+.pro-wb-object-selected {
+  outline-color: var(--color-accent);
+}
+
+.eng-workspace-shell .ds-page-heading::after {
+  display: none;
+}
+
+@media (max-width: 1100px) {
+  .ds-reference-shell,
+  .ds-reference-shell.ds-sidebar-collapsed {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .ds-app-sidebar {
+    border-bottom: 3px solid var(--color-accent);
+  }
+
+  .ds-sidebar-toggle,
+  .ds-sidebar-collapsed .ds-sidebar-toggle {
+    top: 0.75rem;
+    right: 0.75rem;
+  }
+}
+
+@media (max-width: 720px) {
+  .ds-app-topbar {
+    align-items: center;
+    flex-direction: row;
+    padding: 0.7rem 1rem;
+  }
+
+  .ds-topbar-brand small,
+  .ds-plan-chip {
+    display: none;
+  }
+
+  .ds-topbar-actions {
+    margin-left: auto;
+  }
+
+  .ds-reference-content {
+    padding: 1.15rem 1rem 2rem;
   }
 }

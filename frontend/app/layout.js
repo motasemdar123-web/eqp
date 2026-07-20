@@ -1,9 +1,9 @@
 import "./globals.css";
-import { Urbanist } from "next/font/google";
+import { Inter } from "next/font/google";
 
-const urbanist = Urbanist({
+const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-urbanist",
+  variable: "--font-inter",
   display: "swap",
 });
 
@@ -16,7 +16,7 @@ export default function RootLayout({ children }) {
   return (
     <html
       lang="en"
-      className={`${urbanist.variable} h-full antialiased`}
+      className={`${inter.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">{children}</body>
     </html>

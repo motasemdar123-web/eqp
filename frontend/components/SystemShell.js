@@ -321,9 +321,9 @@ export default function SystemShell({
         </nav>
 
         <div className="ds-sidebar-promo">
-          <p className="text-xs font-black text-[var(--color-accent)]">Operations-ready</p>
+          <p className="text-xs font-black text-[var(--color-accent)]">Service operations</p>
           <p className="mt-1 text-xs font-bold leading-5 text-white/55">
-            Unified scheduling, technicians, EQP reports, and machine records.
+            Scheduling, field teams, machine records, and EQP reporting in one system.
           </p>
           <div className="mt-3 grid gap-1.5">
             <span className="h-1.5 rounded-full bg-[var(--color-accent)]" />
@@ -345,13 +345,16 @@ export default function SystemShell({
 
       <div className="ds-app-main">
         <header className="ds-app-topbar">
-          <label className="ds-global-search">
-            <span>Search</span>
-            <input placeholder="Search modules, tasks, reports..." aria-label="Search modules, tasks, reports" />
-          </label>
+          <div className="ds-topbar-brand" aria-label="Dar Al Hai Machinery service operations">
+            <span className="ds-topbar-brand-rule" aria-hidden="true" />
+            <span>
+              <strong>Dar Al Hai Machinery</strong>
+              <small>Service Operations</small>
+            </span>
+          </div>
 
           <div className="ds-topbar-actions">
-            <div className="ds-plan-chip">Business plan</div>
+            <div className="ds-plan-chip">Operations online</div>
             <div className="ds-notification-anchor">
               <button
                 type="button"

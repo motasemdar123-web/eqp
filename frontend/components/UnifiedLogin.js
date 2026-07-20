@@ -24,14 +24,14 @@ export default function UnifiedLogin({ preferredModule = 'auto' }) {
             <div className="ds-blue-header flex flex-col justify-between p-8">
               <div>
                 <div className="ds-brand-mark h-14 w-14 text-xl">DH</div>
-                <p className="mt-8 text-xs font-black uppercase tracking-[0.18em] text-[var(--color-sidebar-muted)]">Dar Al Hai</p>
-                <h1 className="mt-3 max-w-xl text-4xl font-black leading-tight text-white">Maintenance command center</h1>
+                <p className="mt-8 text-xs font-black uppercase tracking-[0.18em] text-[var(--color-sidebar-muted)]">Dar Al Hai Machinery</p>
+                <h1 className="mt-3 max-w-xl text-4xl font-black leading-tight text-white">Dar Al Hai Maintenance</h1>
                 <p className="mt-4 max-w-lg text-sm font-semibold leading-6 text-white/75">
-                  Unified access for operations, technician work, scheduling, machine tracking, and EQP reporting.
+                  One operational workspace for field service, scheduling, machine tracking, and EQP reporting.
                 </p>
               </div>
               <div className="mt-8 grid grid-cols-3 gap-3 text-center text-white">
-                {['RBAC', 'Audit', 'Reports'].map((item) => (
+                {['Field service', 'Machines', 'Reports'].map((item) => (
                   <div key={item} className="rounded-xl border border-white/15 bg-white/10 px-3 py-3 text-xs font-black uppercase tracking-[0.12em]">
                     {item}
                   </div>
