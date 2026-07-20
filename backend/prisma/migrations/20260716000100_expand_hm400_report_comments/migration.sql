@@ -1,0 +1,31 @@
+INSERT INTO "eqp_report_comments" ("machine_model", "document_type", "service_stage", "comment_text", "frequency", "updated_at")
+VALUES
+  ('HM400', 'new_machine', 'pre_delivery', 'Walk-around inspection completed; dump body, pins, tires, and hydraulic areas checked.', 2, CURRENT_TIMESTAMP),
+  ('HM400', 'new_machine', 'pre_delivery', 'Truck delivery readiness confirmed after checking fluid levels, battery condition, and visible leaks.', 2, CURRENT_TIMESTAMP),
+  ('HM400', 'new_machine', 'pre_delivery', 'Cabin controls, monitor panel, lights, horn, and safety items checked before handover.', 2, CURRENT_TIMESTAMP),
+  ('HM400', 'new_machine', 'pre_delivery', 'Articulation area, steering linkages, and dump body mounting points visually inspected.', 1, CURRENT_TIMESTAMP),
+  ('HM400', 'new_machine', 'pre_delivery', 'Machine prepared for customer delivery with no visible damage or abnormal condition found.', 2, CURRENT_TIMESTAMP),
+  ('HM400', 'new_machine', 'delivery', 'Delivery inspection completed; customer handover condition confirmed for the dump truck.', 3, CURRENT_TIMESTAMP),
+  ('HM400', 'new_machine', 'delivery', 'Machine details, serial number, service meter reading, and delivery condition verified.', 2, CURRENT_TIMESTAMP),
+  ('HM400', 'new_machine', 'delivery', 'Customer delivery completed after confirming truck operation, safety items, and visible condition.', 2, CURRENT_TIMESTAMP),
+  ('HM400', 'new_machine', 'delivery', 'Dump truck handed over with body, tires, lights, and operator controls checked.', 2, CURRENT_TIMESTAMP),
+  ('HM400', 'new_machine', 'delivery', 'No leakage, warning indication, or external damage observed during delivery inspection.', 1, CURRENT_TIMESTAMP),
+  ('HM400', 'in_operation', 'delivery', 'Used dump truck delivery inspection completed with operating condition and SMR recorded.', 2, CURRENT_TIMESTAMP),
+  ('HM400', 'in_operation', 'delivery', 'Truck condition checked during handover, including tires, dump body, brakes, and hydraulic areas.', 2, CURRENT_TIMESTAMP),
+  ('HM400', 'in_operation', 'delivery', 'Customer site delivery completed after verifying visible condition and service meter reading.', 2, CURRENT_TIMESTAMP),
+  ('HM400', 'in_operation', 'delivery', 'Articulated dump truck inspected at handover with no critical abnormality observed.', 1, CURRENT_TIMESTAMP),
+  ('HM400', 'in_operation', 'scheduled_service', 'Scheduled service completed; engine, hydraulic, brake, and steering systems checked.', 3, CURRENT_TIMESTAMP),
+  ('HM400', 'in_operation', 'scheduled_service', 'Dump body, hoist cylinders, articulation joint, and frame areas inspected during service.', 2, CURRENT_TIMESTAMP),
+  ('HM400', 'in_operation', 'scheduled_service', 'Tire condition, wheel areas, suspension, and visible leaks checked during maintenance.', 2, CURRENT_TIMESTAMP),
+  ('HM400', 'in_operation', 'scheduled_service', 'Monitor panel, warning indicators, lights, horn, and operator controls checked.', 2, CURRENT_TIMESTAMP),
+  ('HM400', 'in_operation', 'scheduled_service', 'Preventive maintenance completed and service items recorded with no major abnormality found.', 3, CURRENT_TIMESTAMP),
+  ('HM400', 'in_operation', 'scheduled_service', 'Lubrication points, filters, fluid levels, and general truck condition reviewed.', 2, CURRENT_TIMESTAMP),
+  ('HM400', 'storage', 'storage_service', 'Storage service completed; truck preservation condition and visible leaks checked.', 3, CURRENT_TIMESTAMP),
+  ('HM400', 'storage', 'storage_service', 'Battery condition, tire condition, fluid levels, and external protection reviewed during storage.', 2, CURRENT_TIMESTAMP),
+  ('HM400', 'storage', 'storage_service', 'Dump body, hoist cylinders, articulation area, and hydraulic hoses visually inspected in storage.', 2, CURRENT_TIMESTAMP),
+  ('HM400', 'storage', 'storage_service', 'Machine remains parked under storage condition; preservation checks completed.', 2, CURRENT_TIMESTAMP),
+  ('HM400', 'storage', 'storage_service', 'No operation-related defects noted during storage service inspection.', 1, CURRENT_TIMESTAMP)
+ON CONFLICT ("machine_model", "document_type", "service_stage", "comment_text") DO UPDATE
+  SET "frequency" = GREATEST("eqp_report_comments"."frequency", EXCLUDED."frequency"),
+      "is_active" = true,
+      "updated_at" = CURRENT_TIMESTAMP;

@@ -23,7 +23,7 @@ const A4_PRINTABLE_WIDTH_PX = 748;
 const A4_PRINTABLE_HEIGHT_PX = 1055;
 const DEFAULT_PDF_PAGE_HEIGHT_RATIO = 0.84;
 const DEFAULT_TEMPLATE_MODEL = 'D155A';
-const TEMPLATE_MODELS = new Set(['D155A', 'HM400']);
+const TEMPLATE_MODELS = new Set(['D155A', 'HM400', 'PC400']);
 const TEMPLATE_FIELD_CONFIG = {
   D155A: {
     reportNo: 'AN1',
@@ -61,6 +61,24 @@ const TEMPLATE_FIELD_CONFIG = {
     commentRows: [80, 81],
     signature: {
       topLeft: { col: 42, row: 81 },
+      size: { width: 140, height: 60 },
+    },
+  },
+  PC400: {
+    reportNo: 'AN1',
+    machineNumber: 'L9',
+    engineNumber: 'AD9',
+    serviceDate: 'B13',
+    smr: 'L13',
+    inspector: 'AP4',
+    randomValueCells: [],
+    commentColumns: [
+      'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R',
+      'S', 'T', 'U', 'V',
+    ],
+    commentRows: [78, 79],
+    signature: {
+      topLeft: { col: 48, row: 78 },
       size: { width: 140, height: 60 },
     },
   },
@@ -554,6 +572,7 @@ function normalizeTemplateModel(value) {
   if (normalized === 'AUTO') return 'AUTO';
   if (normalized.startsWith('HM400')) return 'HM400';
   if (normalized.startsWith('D155')) return 'D155A';
+  if (normalized.startsWith('PC400')) return 'PC400';
 
   return null;
 }
@@ -575,6 +594,7 @@ function detectMachineTemplateModel(machine) {
 
   if (normalized.includes('HM400')) return 'HM400';
   if (normalized.includes('D155')) return 'D155A';
+  if (normalized.includes('PC400')) return 'PC400';
 
   return null;
 }
@@ -1366,7 +1386,7 @@ async function generateReports(payload) {
   const requestedTemplateModel = normalizeTemplateModel(payload.machineModel);
 
   if (payload.machineModel && requestedTemplateModel !== 'AUTO' && !TEMPLATE_MODELS.has(requestedTemplateModel)) {
-    throw new ApiError(400, 'Machine model must be Auto, D155A, or HM400');
+    throw new ApiError(400, 'Machine model must be Auto, D155A, HM400, or PC400');
   }
 
   const user = payload.userNumber
@@ -1396,7 +1416,7 @@ async function generateReports(payload) {
     const templateModel = resolveMachineTemplateModel(machine, payload.machineModel);
 
     if (!TEMPLATE_MODELS.has(templateModel)) {
-      throw new ApiError(400, `Machine model could not be resolved for ${machine.machine_number || machine.id}. Select D155A or HM400.`);
+      throw new ApiError(400, `Machine model could not be resolved for ${machine.machine_number || machine.id}. Select D155A, HM400, or PC400.`);
     }
 
     let currentSMR = Number(machine.last_smr);
