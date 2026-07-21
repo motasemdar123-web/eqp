@@ -11,6 +11,7 @@ const router = Router();
 router.get('/api/eqp/machines', requireAuth, requireEqpAccess, asyncHandler(machineController.listMachines));
 router.get('/api/eqp/machine-history', requireAuth, requireEqpAccess, asyncHandler(machineController.listMachineHistory));
 router.get('/api/eqp/reports', requireAuth, requireEqpAccess, asyncHandler(reportController.listReports));
+router.get('/api/eqp/report-profile', requireAuth, requireEqpAccess, asyncHandler(reportController.getReportProfile));
 router.put('/api/eqp/reports/:id', requireAuth, requireEqpAccess, asyncHandler(reportController.renameReport));
 router.delete('/api/eqp/reports/:id', requireAuth, requireEqpAccess, asyncHandler(reportController.deleteReport));
 router.post('/api/eqp/generate-reports', requireAuth, requireEqpAccess, reportGenerationRateLimit, asyncHandler(reportController.generateReports));

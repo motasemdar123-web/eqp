@@ -12,10 +12,10 @@ const machineRepository = require('../repositories/machineRepository');
 const commentRepository = require('../repositories/commentRepository');
 const reportRepository = require('../repositories/reportRepository');
 const storageService = require('./storageService');
+const { findSignaturePath, getSignatureStatus } = require('./reportSignatureService');
 const { ApiError } = require('../utils/ApiError');
 
 const TEMPLATE_ROOT = path.join(__dirname, '..', '..', 'templates');
-const SIGNATURE_ROOT = path.join(__dirname, '..', '..', 'signatures');
 const execFileAsync = promisify(execFile);
 const EMUS_PER_PIXEL = 9525;
 const POINTS_TO_PIXELS = 96 / 72;
@@ -711,15 +711,7 @@ function getRandomCommentCell(config) {
   return `${column}${row}`;
 }
 
-function addSignature(workbook, sheet, userName, config) {
-  const signatureName = userName.split(' ')[0].toLowerCase();
-  const signaturePath = path.join(SIGNATURE_ROOT, `${signatureName}-signature.png`);
-
-  if (!fs.existsSync(signaturePath)) {
-    console.log(`Signature not found: ${signaturePath}`);
-    return;
-  }
-
+function addSignature(workbook, sheet, signaturePath, config) {
   const signatureImage = workbook.addImage({
     filename: signaturePath,
     extension: 'png',
@@ -729,8 +721,6 @@ function addSignature(workbook, sheet, userName, config) {
     tl: config.signature.topLeft,
     ext: config.signature.size,
   });
-
-  console.log(`Signature added for ${signatureName}`);
 }
 
 async function tryConvertWorkbookToPdf(workbookBuffer) {
@@ -966,20 +956,6 @@ function collectPdfBuffer(doc) {
 
 function sheetText(sheet, address) {
   return String(formatCellValue(sheet.getCell(address).value)).trim();
-}
-
-function findSignaturePath(userName) {
-  const signatureName = userName.split(' ')[0].toLowerCase();
-  const exactPath = path.join(SIGNATURE_ROOT, `${signatureName}-signature.png`);
-
-  if (fs.existsSync(exactPath)) return exactPath;
-  if (!fs.existsSync(SIGNATURE_ROOT)) return null;
-
-  const matchingFile = fs
-    .readdirSync(SIGNATURE_ROOT)
-    .find((file) => file.toLowerCase().startsWith(`${signatureName}-signature`));
-
-  return matchingFile ? path.join(SIGNATURE_ROOT, matchingFile) : null;
 }
 
 function drawKomatsuHeader(doc, logoBuffer, context) {
@@ -1237,7 +1213,7 @@ function drawNotesAndSignatures(doc, context) {
     .text('CUSTOMER SIGNATURE', left + 10, sigY + 10)
     .text('INSPECTOR SIGNATURE', left + half + 22, sigY + 10);
 
-  const signaturePath = findSignaturePath(context.createdBy || '');
+  const signaturePath = findSignaturePath({ full_name: context.createdBy || '' });
   if (signaturePath) {
     try {
       doc.image(signaturePath, left + half + 22, sigY + 28, { width: 110, height: 34, fit: [110, 34] });
@@ -1382,6 +1358,32 @@ async function convertReportJobsToPdfBuffers(reportJobs) {
   return pdfBuffers;
 }
 
+async function resolveReportUser({ userId, userNumber }) {
+  const user = userId
+    ? await userRepository.findById(userId)
+    : await userRepository.findByUserNumber(userNumber);
+
+  if (!user) {
+    throw new ApiError(404, 'Authenticated report user not found');
+  }
+
+  return user;
+}
+
+async function getReportProfile(payload) {
+  const user = await resolveReportUser(payload);
+  const signature = getSignatureStatus(user);
+
+  return {
+    reportMaker: {
+      id: user.id,
+      fullName: user.full_name,
+      userNumber: user.user_number,
+    },
+    signatureAvailable: signature.available,
+  };
+}
+
 async function generateReports(payload) {
   const requestedTemplateModel = normalizeTemplateModel(payload.machineModel);
 
@@ -1389,12 +1391,14 @@ async function generateReports(payload) {
     throw new ApiError(400, 'Machine model must be Auto, D155A, HM400, or PC400');
   }
 
-  const user = payload.userNumber
-    ? await userRepository.findByUserNumber(payload.userNumber)
-    : await userRepository.findById(payload.userId);
+  const user = await resolveReportUser(payload);
+  const signature = getSignatureStatus(user);
 
-  if (!user) {
-    throw new ApiError(404, 'User not found');
+  if (!signature.available) {
+    throw new ApiError(
+      409,
+      `No report signature is configured for ${user.full_name}. Ask a system administrator to add this user's signature before generating reports.`
+    );
   }
 
   const machines = await machineRepository.findByIds(payload.selectedMachines);
@@ -1457,7 +1461,7 @@ async function generateReports(payload) {
 
       sheet.getCell(getRandomCommentCell(fieldConfig)).value = selectedComment;
 
-      addSignature(workbook, sheet, user.full_name, fieldConfig);
+      addSignature(workbook, sheet, signature.path, fieldConfig);
 
       const fileName = `${machine.machine_type} ${machine.machine_number} ex${currentCounter}.pdf`;
       prepareFilledWorkbookForPdfExport(workbook, sheet);
@@ -1515,7 +1519,7 @@ async function generateReports(payload) {
       serviceType: job.serviceType,
       fileName: job.fileName,
       fileUrl,
-      createdById: payload.userId,
+      createdById: user.id,
     });
 
     generatedFiles.push({
@@ -1535,7 +1539,12 @@ async function generateReports(payload) {
   return {
     totalMachines: machines.length,
     generatedFiles,
+    reportMaker: {
+      id: user.id,
+      fullName: user.full_name,
+      userNumber: user.user_number,
+    },
   };
 }
 
-module.exports = { generateReports, getPdfConverterStatus };
+module.exports = { generateReports, getPdfConverterStatus, getReportProfile };

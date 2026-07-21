@@ -13,7 +13,7 @@ import Badge from '../../components/ui/Badge';
 import Skeleton from '../../components/ui/Skeleton';
 import Toast from '../../components/ui/Toast';
 import { getStoredUser, clearStoredUser } from '../../lib/auth';
-import { generateReports, getMachineHistory, getMachines } from '../../lib/api';
+import { generateReports, getMachineHistory, getMachines, getReportProfile } from '../../lib/api';
 import { MACHINE_MODELS, REPORT_TYPES, SERVICE_TYPES } from '../../lib/reportOptions';
 
 export default function DashboardPage() {
@@ -29,7 +29,8 @@ export default function DashboardPage() {
   const [machines, setMachines] = useState([]);
   const [selectedMachines, setSelectedMachines] = useState([]);
   const [user] = useState(() => getStoredUser());
-  const userCode = user?.userNumber || '';
+  const [reportProfile, setReportProfile] = useState(null);
+  const userCode = reportProfile?.reportMaker?.userNumber || user?.userNumber || '';
   const [machineModel, setMachineModel] = useState('AUTO');
   const [reportType, setReportType] = useState('W30');
   const [serviceType, setServiceType] = useState('1st Service');
@@ -46,13 +47,15 @@ export default function DashboardPage() {
       setError('');
       setLoading(true);
 
-      const [machinesResponse, historyResponse] = await Promise.all([
+      const [machinesResponse, historyResponse, profileResponse] = await Promise.all([
         getMachines(),
         getMachineHistory(),
+        getReportProfile(),
       ]);
 
       setMachines(machinesResponse.machines || []);
       setMachineHistory(historyResponse.history || []);
+      setReportProfile(profileResponse);
     } catch (loadError) {
       setError(loadError.message || 'Failed to load dashboard data');
     } finally {
@@ -188,6 +191,14 @@ export default function DashboardPage() {
   function openDatesModal() {
     setError('');
 
+    if (!reportProfile?.signatureAvailable) {
+      const makerName = reportProfile?.reportMaker?.fullName || 'this user';
+      const message = `No report signature is configured for ${makerName}.`;
+      setError(message);
+      setToast({ type: 'error', message });
+      return;
+    }
+
     if (selectedMachines.length === 0) {
       setError('Please select at least one machine');
       setToast({ type: 'error', message: 'Select at least one machine before generating reports.' });
@@ -226,7 +237,6 @@ export default function DashboardPage() {
       setIsGenerating(true);
 
       const data = await generateReports({
-        userNumber: Number(userCode),
         machineModel,
         reportType,
         serviceType,
@@ -289,6 +299,7 @@ export default function DashboardPage() {
             resetFilters={resetFilters}
             fleetInsights={fleetInsights}
             generationSummary={generationSummary}
+            reportProfile={reportProfile}
           />
         ) : (
           <MachineHistory history={machineHistory} />
@@ -338,6 +349,29 @@ function DashboardContent(props) {
         </div>
 
         <div className="mt-6 grid gap-5">
+          <div className={`ds-alert ${props.reportProfile?.signatureAvailable ? 'ds-alert-success' : 'ds-alert-error'}`}>
+            <div className="flex items-center justify-between gap-3">
+              <div className="min-w-0">
+                <p className="text-xs font-black uppercase tracking-[0.14em]">Report Maker</p>
+                <p className="mt-1 truncate text-sm font-black">
+                  {props.reportProfile?.reportMaker?.fullName || 'Checking signed-in user...'}
+                </p>
+              </div>
+              <Badge tone={!props.reportProfile ? 'neutral' : props.reportProfile.signatureAvailable ? 'green' : 'red'}>
+                {!props.reportProfile
+                  ? 'Checking'
+                  : props.reportProfile.signatureAvailable
+                    ? 'Signature Ready'
+                    : 'Signature Missing'}
+              </Badge>
+            </div>
+            {props.reportProfile && !props.reportProfile.signatureAvailable && (
+              <p className="mt-2 text-xs font-semibold">
+                A user signature must be added before this account can generate reports.
+              </p>
+            )}
+          </div>
+
           <Field label="Machine Model">
             <select
               value={props.machineModel}
@@ -386,7 +420,11 @@ function DashboardContent(props) {
             />
           </Field>
 
-          <Button onClick={props.openDatesModal} className="w-full">
+          <Button
+            onClick={props.openDatesModal}
+            disabled={props.loading || !props.reportProfile?.signatureAvailable}
+            className="w-full"
+          >
             Generate PDF Reports
           </Button>
         </div>
@@ -407,7 +445,7 @@ function DashboardContent(props) {
               {props.generationSummary.generatedFiles.length} PDF reports generated
             </p>
             <p className="mt-1 text-xs text-emerald-700">
-              {props.generationSummary.totalMachines} machines were processed and exported as PDF.
+              {props.generationSummary.totalMachines} machines were processed by {props.generationSummary.reportMaker?.fullName}.
             </p>
           </div>
         )}

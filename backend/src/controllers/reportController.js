@@ -27,6 +27,18 @@ async function deleteReport(req, res) {
   res.json(result);
 }
 
+async function getReportProfile(req, res) {
+  const result = await reportGeneratorService.getReportProfile({
+    userId: req.user.sub,
+    userNumber: req.user.userNumber,
+  });
+
+  res.json({
+    success: true,
+    ...result,
+  });
+}
+
 async function generateReports(req, res) {
   requireFields(req.body, [
     'reportType',
@@ -58,5 +70,6 @@ module.exports = {
   listReports,
   renameReport,
   deleteReport,
+  getReportProfile,
   generateReports,
 };

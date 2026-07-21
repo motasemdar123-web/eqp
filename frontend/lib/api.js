@@ -71,6 +71,10 @@ export function getMachineHistory() {
   return request('/machine-history');
 }
 
+export function getReportProfile() {
+  return request('/report-profile');
+}
+
 export function generateReports(payload) {
   return request('/generate-reports', {
     method: 'POST',
