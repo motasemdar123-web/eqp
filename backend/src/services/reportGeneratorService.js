@@ -82,6 +82,24 @@ const TEMPLATE_FIELD_CONFIG = {
       size: { width: 140, height: 60 },
     },
   },
+  PC400_GROUPED: {
+    reportNo: 'AN1',
+    machineNumber: 'L9',
+    engineNumber: 'AD9',
+    serviceDate: 'B13',
+    smr: 'L13',
+    inspector: 'AP4',
+    randomValueCells: [],
+    commentColumns: [
+      'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R',
+      'S', 'T', 'U', 'V',
+    ],
+    commentRows: [80, 81, 82],
+    signature: {
+      topLeft: { col: 48, row: 81 },
+      size: { width: 140, height: 60 },
+    },
+  },
 };
 
 function converterCommands() {
@@ -660,23 +678,48 @@ async function getCommentPicker(pickerCache, machineModel, serviceType) {
   return picker;
 }
 
-function buildTemplateCandidates(reportType, serviceType, templateModel) {
+function normalizeTemplateGroup(value) {
+  const normalized = String(value || '')
+    .trim()
+    .toUpperCase()
+    .replace(/[^A-Z0-9_-]/g, '');
+
+  return normalized || null;
+}
+
+function buildTemplateCandidates(reportType, serviceType, templateModel, templateGroup) {
   const safeServiceType = serviceType
     .replace(/\./g, '')
     .replace(/\s+/g, '_');
   const baseFileName = `${reportType}_${safeServiceType}.xlsx`;
   const model = normalizeTemplateModel(templateModel);
+  const group = normalizeTemplateGroup(templateGroup);
+  const candidates = [];
 
-  return [path.join(TEMPLATE_ROOT, model, baseFileName)];
+  if (model === 'PC400' && group) {
+    candidates.push({
+      path: path.join(TEMPLATE_ROOT, model, group, baseFileName),
+      variant: 'grouped',
+      group,
+    });
+  }
+
+  candidates.push({
+    path: path.join(TEMPLATE_ROOT, model, baseFileName),
+    variant: 'default',
+    group: null,
+  });
+
+  return candidates;
 }
 
-function resolveTemplatePath(reportType, serviceType, templateModel) {
-  const candidates = buildTemplateCandidates(reportType, serviceType, templateModel);
-  const templatePath = candidates.find((candidate) => fs.existsSync(candidate));
+function resolveTemplate(reportType, serviceType, templateModel, templateGroup) {
+  const candidates = buildTemplateCandidates(reportType, serviceType, templateModel, templateGroup);
+  const selection = candidates.find((candidate) => fs.existsSync(candidate.path));
 
-  if (!templatePath) {
+  if (!selection) {
     const expectedFiles = candidates
-      .map((candidate) => path.relative(TEMPLATE_ROOT, candidate))
+      .map((candidate) => path.relative(TEMPLATE_ROOT, candidate.path))
       .join(', ');
 
     throw new ApiError(
@@ -685,7 +728,7 @@ function resolveTemplatePath(reportType, serviceType, templateModel) {
     );
   }
 
-  return templatePath;
+  return selection;
 }
 
 function buildFormattedDate(serviceDate) {
@@ -700,7 +743,11 @@ function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function getTemplateFieldConfig(templateModel) {
+function getTemplateFieldConfig(templateModel, templateVariant = 'default') {
+  if (templateModel === 'PC400' && templateVariant === 'grouped') {
+    return TEMPLATE_FIELD_CONFIG.PC400_GROUPED;
+  }
+
   return TEMPLATE_FIELD_CONFIG[templateModel] || TEMPLATE_FIELD_CONFIG[DEFAULT_TEMPLATE_MODEL];
 }
 
@@ -1325,14 +1372,17 @@ async function exportFilledExcelTemplateToPdf(workbook, sheet, context) {
   return workbookToPdfBuffer(workbookBuffer, workbook, context);
 }
 
-async function loadTemplateBuffer(templateCache, reportType, serviceType, templateModel) {
-  const templatePath = resolveTemplatePath(reportType, serviceType, templateModel);
+async function loadTemplate(templateCache, reportType, serviceType, templateModel, templateGroup) {
+  const selection = resolveTemplate(reportType, serviceType, templateModel, templateGroup);
 
-  if (!templateCache.has(templatePath)) {
-    templateCache.set(templatePath, await fs.readFile(templatePath));
+  if (!templateCache.has(selection.path)) {
+    templateCache.set(selection.path, await fs.readFile(selection.path));
   }
 
-  return templateCache.get(templatePath);
+  return {
+    ...selection,
+    buffer: templateCache.get(selection.path),
+  };
 }
 
 async function convertReportJobsToPdfBuffers(reportJobs) {
@@ -1439,14 +1489,20 @@ async function generateReports(payload) {
       }
 
       const workbook = new ExcelJS.Workbook();
-      const templateBuffer = await loadTemplateBuffer(templateCache, payload.reportType, payload.serviceType, templateModel);
-      await workbook.xlsx.load(templateBuffer);
+      const template = await loadTemplate(
+        templateCache,
+        payload.reportType,
+        payload.serviceType,
+        templateModel,
+        machine.report_template_group
+      );
+      await workbook.xlsx.load(template.buffer);
 
       const sheet = workbook.worksheets[0];
       const reportNo = `${safeDate}-${hh}${mm}-${String(reportIndex).padStart(3, '0')}`;
       const randomComment = await getCommentPicker(commentPickerCache, templateModel, payload.serviceType);
       const selectedComment = randomComment();
-      const fieldConfig = getTemplateFieldConfig(templateModel);
+      const fieldConfig = getTemplateFieldConfig(templateModel, template.variant);
 
       sheet.getCell(fieldConfig.machineNumber).value = machine.machine_number;
       sheet.getCell(fieldConfig.engineNumber).value = machine.engine_number;
@@ -1481,6 +1537,7 @@ async function generateReports(payload) {
         serviceType: payload.serviceType,
         fileName,
         templateModel,
+        templateGroup: template.group,
       });
 
       machineCounterUpdates.set(machine.id, {
@@ -1529,6 +1586,7 @@ async function generateReports(payload) {
       fileUrl,
       format: 'PDF',
       templateModel: job.templateModel,
+      templateGroup: job.templateGroup,
     });
   }
 

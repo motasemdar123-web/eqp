@@ -14,7 +14,8 @@
     "prisma:migrate": "node scripts/migrate-deploy.js",
     "prisma:seed": "node prisma/seed.js",
     "reconcile:engineers": "node scripts/reconcile-engineers.js",
-    "templates:pc400": "node scripts/build-pc400-templates.js"
+    "templates:pc400": "node scripts/build-pc400-templates.js",
+    "templates:import-pc400": "node scripts/import-pc400-customer-template.js"
   },
   "keywords": [],
   "author": "",

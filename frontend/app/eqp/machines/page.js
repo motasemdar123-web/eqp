@@ -143,6 +143,7 @@ export default function MachinesPage() {
                   <tr>
                     <th className="px-5 py-4 text-left">Machine</th>
                     <th className="px-5 py-4 text-left">Type</th>
+                    <th className="px-5 py-4 text-left">Customer</th>
                     <th className="px-5 py-4 text-left">Engine</th>
                     <th className="px-5 py-4 text-left">SMR</th>
                     <th className="px-5 py-4 text-left">Step</th>
@@ -154,6 +155,7 @@ export default function MachinesPage() {
                     <tr key={machine.id} className="border-t border-[var(--color-border)] transition hover:bg-[var(--color-brand-soft)]">
                       <td className="px-5 py-4 font-semibold text-[var(--color-ink)]">{machine.machine_number}</td>
                       <td className="px-5 py-4 text-[var(--color-ink-soft)]">{machine.machine_type}</td>
+                      <td className="px-5 py-4 text-[var(--color-ink-soft)]">{machine.report_template_group || '-'}</td>
                       <td className="px-5 py-4 font-mono text-sm text-[var(--color-muted)]">{machine.engine_number}</td>
                       <td className="px-5 py-4 text-[var(--color-ink-soft)]">{machine.last_smr}</td>
                       <td className="px-5 py-4 text-[var(--color-ink-soft)]">{machine.smr_step}</td>

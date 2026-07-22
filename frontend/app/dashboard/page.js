@@ -575,6 +575,7 @@ function MachinesTable({ machines, selectedMachines, toggleMachine, toggleSelect
             </th>
             <SortableHeader label="Machine" column="machine_number" sortConfig={sortConfig} onSort={changeSort} />
             <SortableHeader label="Type" column="machine_type" sortConfig={sortConfig} onSort={changeSort} />
+            <SortableHeader label="Customer" column="report_template_group" sortConfig={sortConfig} onSort={changeSort} />
             <SortableHeader label="Engine" column="engine_number" sortConfig={sortConfig} onSort={changeSort} />
             <SortableHeader label="SMR" column="last_smr" sortConfig={sortConfig} onSort={changeSort} />
             <SortableHeader label="Step" column="smr_step" sortConfig={sortConfig} onSort={changeSort} />
@@ -592,6 +593,7 @@ function MachinesTable({ machines, selectedMachines, toggleMachine, toggleSelect
               </td>
               <td className="px-5 py-4 font-semibold text-[var(--color-ink)]">{machine.machine_number}</td>
               <td className="px-5 py-4 text-[var(--color-ink-soft)]">{machine.machine_type}</td>
+              <td className="px-5 py-4 text-[var(--color-ink-soft)]">{machine.report_template_group || '-'}</td>
               <td className="px-5 py-4 font-mono text-sm text-[var(--color-muted)]">{machine.engine_number}</td>
               <td className="px-5 py-4 text-[var(--color-ink-soft)]">{machine.last_smr}</td>
               <td className="px-5 py-4 text-[var(--color-ink-soft)]">{machine.smr_step}</td>

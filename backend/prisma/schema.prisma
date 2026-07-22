@@ -397,6 +397,7 @@ model EqpMachine {
   smrStep             Int                 @default(0) @map("smr_step")
   reportCounter       Int                 @default(0) @map("report_counter")
   responsibleEngineer String?             @map("responsible_engineer")
+  reportTemplateGroup String?             @map("report_template_group")
   reports             EqpReport[]
   history             EqpMachineHistory[]
   createdAt           DateTime            @default(now()) @map("created_at")
@@ -406,6 +407,7 @@ model EqpMachine {
   deletedAt           DateTime?           @map("deleted_at")
 
   @@index([machineType])
+  @@index([reportTemplateGroup])
   @@map("eqp_machines")
 }
 
