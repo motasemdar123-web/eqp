@@ -63,7 +63,9 @@ export default function MachinesPage() {
         machine.machine_number?.toString().toLowerCase().includes(query) ||
         machine.engine_number?.toString().toLowerCase().includes(query) ||
         machine.machine_type?.toString().toLowerCase().includes(query) ||
-        machine.responsible_engineer?.toString().toLowerCase().includes(query);
+        machine.responsible_engineer?.toString().toLowerCase().includes(query) ||
+        machine.customer_name?.toString().toLowerCase().includes(query) ||
+        machine.location?.toString().toLowerCase().includes(query);
 
       return matchesType && matchesSearch;
     });
@@ -138,12 +140,13 @@ export default function MachinesPage() {
             </div>
           ) : (
             <div className="overflow-x-auto">
-              <table className="ds-table min-w-[980px]">
+              <table className="ds-table min-w-[1180px]">
                 <thead>
                   <tr>
                     <th className="px-5 py-4 text-left">Machine</th>
                     <th className="px-5 py-4 text-left">Type</th>
                     <th className="px-5 py-4 text-left">Customer</th>
+                    <th className="px-5 py-4 text-left">Location</th>
                     <th className="px-5 py-4 text-left">Engine</th>
                     <th className="px-5 py-4 text-left">SMR</th>
                     <th className="px-5 py-4 text-left">Step</th>
@@ -155,7 +158,8 @@ export default function MachinesPage() {
                     <tr key={machine.id} className="border-t border-[var(--color-border)] transition hover:bg-[var(--color-brand-soft)]">
                       <td className="px-5 py-4 font-semibold text-[var(--color-ink)]">{machine.machine_number}</td>
                       <td className="px-5 py-4 text-[var(--color-ink-soft)]">{machine.machine_type}</td>
-                      <td className="px-5 py-4 text-[var(--color-ink-soft)]">{machine.report_template_group || '-'}</td>
+                      <td className="max-w-[260px] px-5 py-4 text-[var(--color-ink-soft)]">{machine.customer_name || '-'}</td>
+                      <td className="px-5 py-4 text-[var(--color-ink-soft)]">{machine.location || '-'}</td>
                       <td className="px-5 py-4 font-mono text-sm text-[var(--color-muted)]">{machine.engine_number}</td>
                       <td className="px-5 py-4 text-[var(--color-ink-soft)]">{machine.last_smr}</td>
                       <td className="px-5 py-4 text-[var(--color-ink-soft)]">{machine.smr_step}</td>

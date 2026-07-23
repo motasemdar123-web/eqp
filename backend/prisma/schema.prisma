@@ -398,6 +398,8 @@ model EqpMachine {
   reportCounter       Int                 @default(0) @map("report_counter")
   responsibleEngineer String?             @map("responsible_engineer")
   reportTemplateGroup String?             @map("report_template_group")
+  customerName        String?             @map("customer_name")
+  location            String?
   reports             EqpReport[]
   history             EqpMachineHistory[]
   createdAt           DateTime            @default(now()) @map("created_at")

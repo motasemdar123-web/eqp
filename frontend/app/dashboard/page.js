@@ -94,7 +94,9 @@ export default function DashboardPage() {
         !normalizedSearch ||
         machine.machine_number?.toString().toLowerCase().includes(normalizedSearch) ||
         machine.engine_number?.toString().toLowerCase().includes(normalizedSearch) ||
-        machine.machine_type?.toString().toLowerCase().includes(normalizedSearch);
+        machine.machine_type?.toString().toLowerCase().includes(normalizedSearch) ||
+        machine.customer_name?.toString().toLowerCase().includes(normalizedSearch) ||
+        machine.location?.toString().toLowerCase().includes(normalizedSearch);
       const matchesType = filterType === 'ALL' || machine.machine_type === filterType;
       const matchesEngineer =
         filterEngineer === 'ALL' || machine.responsible_engineer === filterEngineer;
@@ -567,7 +569,7 @@ function MachinesTable({ machines, selectedMachines, toggleMachine, toggleSelect
 
   return (
     <div className="overflow-x-auto">
-      <table className="ds-table min-w-[820px]">
+      <table className="ds-table min-w-[1180px]">
         <thead>
           <tr>
             <th className="px-5 py-4 text-left">
@@ -575,7 +577,8 @@ function MachinesTable({ machines, selectedMachines, toggleMachine, toggleSelect
             </th>
             <SortableHeader label="Machine" column="machine_number" sortConfig={sortConfig} onSort={changeSort} />
             <SortableHeader label="Type" column="machine_type" sortConfig={sortConfig} onSort={changeSort} />
-            <SortableHeader label="Customer" column="report_template_group" sortConfig={sortConfig} onSort={changeSort} />
+            <SortableHeader label="Customer" column="customer_name" sortConfig={sortConfig} onSort={changeSort} />
+            <SortableHeader label="Location" column="location" sortConfig={sortConfig} onSort={changeSort} />
             <SortableHeader label="Engine" column="engine_number" sortConfig={sortConfig} onSort={changeSort} />
             <SortableHeader label="SMR" column="last_smr" sortConfig={sortConfig} onSort={changeSort} />
             <SortableHeader label="Step" column="smr_step" sortConfig={sortConfig} onSort={changeSort} />
@@ -593,7 +596,8 @@ function MachinesTable({ machines, selectedMachines, toggleMachine, toggleSelect
               </td>
               <td className="px-5 py-4 font-semibold text-[var(--color-ink)]">{machine.machine_number}</td>
               <td className="px-5 py-4 text-[var(--color-ink-soft)]">{machine.machine_type}</td>
-              <td className="px-5 py-4 text-[var(--color-ink-soft)]">{machine.report_template_group || '-'}</td>
+              <td className="max-w-[260px] px-5 py-4 text-[var(--color-ink-soft)]">{machine.customer_name || '-'}</td>
+              <td className="px-5 py-4 text-[var(--color-ink-soft)]">{machine.location || '-'}</td>
               <td className="px-5 py-4 font-mono text-sm text-[var(--color-muted)]">{machine.engine_number}</td>
               <td className="px-5 py-4 text-[var(--color-ink-soft)]">{machine.last_smr}</td>
               <td className="px-5 py-4 text-[var(--color-ink-soft)]">{machine.smr_step}</td>

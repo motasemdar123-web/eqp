@@ -32,6 +32,8 @@ const TEMPLATE_FIELD_CONFIG = {
     serviceDate: 'B13',
     smr: 'L13',
     inspector: 'AP4',
+    customerName: 'R13',
+    location: 'L16',
     randomValueCells: [
       { address: 'AX43', min: 750, max: 800 },
       { address: 'AX44', min: 2050, max: 2110 },
@@ -53,6 +55,8 @@ const TEMPLATE_FIELD_CONFIG = {
     serviceDate: 'B13',
     smr: 'L13',
     inspector: 'AP4',
+    customerName: 'R13',
+    location: 'J16',
     randomValueCells: [],
     commentColumns: [
       'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R',
@@ -71,6 +75,8 @@ const TEMPLATE_FIELD_CONFIG = {
     serviceDate: 'B13',
     smr: 'L13',
     inspector: 'AP4',
+    customerName: 'R13',
+    location: 'L16',
     randomValueCells: [],
     commentColumns: [
       'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R',
@@ -89,6 +95,8 @@ const TEMPLATE_FIELD_CONFIG = {
     serviceDate: 'B13',
     smr: 'L13',
     inspector: 'AP4',
+    customerName: 'R13',
+    location: 'H16',
     randomValueCells: [],
     commentColumns: [
       'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R',
@@ -1510,6 +1518,14 @@ async function generateReports(payload) {
       sheet.getCell(fieldConfig.serviceDate).value = buildFormattedDate(serviceDate);
       sheet.getCell(fieldConfig.smr).value = currentSMR;
       sheet.getCell(fieldConfig.inspector).value = user.full_name;
+
+      if (machine.customer_name && fieldConfig.customerName) {
+        sheet.getCell(fieldConfig.customerName).value = machine.customer_name;
+      }
+
+      if (machine.location && fieldConfig.location) {
+        sheet.getCell(fieldConfig.location).value = machine.location;
+      }
 
       fieldConfig.randomValueCells.forEach((cell) => {
         sheet.getCell(cell.address).value = getRandomInt(cell.min, cell.max);
