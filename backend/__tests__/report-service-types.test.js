@@ -1,12 +1,15 @@
 const path = require('path');
 
 const reportGeneratorService = require('../src/services/reportGeneratorService');
+const reportRepository = require('../src/repositories/reportRepository');
+const { getLifecycleReportCount } = require('../src/data/lifecycleReportCounts');
 
 const {
   buildReportFileName,
   buildTemplateCandidates,
   getCommentScope,
   getEffectiveReportType,
+  getInitialRepeatingReportCounter,
   getRequiredReportType,
   getTemplateServiceType,
   isRepeatingServiceType,
@@ -71,7 +74,7 @@ describe('report service type handling', () => {
     })).toBe('D155A 81867 W30-1.pdf');
   });
 
-  it('names repeating additional service files as W41X sequences', () => {
+  it('names repeating additional service files with Ex shortcuts', () => {
     expect(isRepeatingServiceType('Add. Service')).toBe(true);
     expect(buildReportFileName({
       machineModel: 'D155A',
@@ -79,6 +82,29 @@ describe('report service type handling', () => {
       reportType: getEffectiveReportType('W30', 'Add. Service'),
       serviceType: 'Add. Service',
       reportCounter: 1,
-    })).toBe('D155A 81867 W41X-1.pdf');
+    })).toBe('D155A 81867 Ex_1.pdf');
+  });
+
+  it('reads W30 and W41X counters from the imported lifecycle baseline', () => {
+    expect(getLifecycleReportCount('88767', 'W30')).toBe(9);
+    expect(getLifecycleReportCount('88767', 'W41X')).toBe(16);
+    expect(getLifecycleReportCount('9720', 'W30')).toBe(7);
+    expect(getLifecycleReportCount('9720', 'W41X')).toBe(5);
+  });
+
+  it('continues repeating report counters from lifecycle plus generated reports', async () => {
+    jest
+      .spyOn(reportRepository, 'countByMachineAndReportType')
+      .mockResolvedValueOnce(2);
+
+    await expect(getInitialRepeatingReportCounter({
+      machine: {
+        id: 16,
+        machine_number: '88767',
+      },
+      reportType: 'W41X',
+    })).resolves.toBe(18);
+
+    reportRepository.countByMachineAndReportType.mockRestore();
   });
 });

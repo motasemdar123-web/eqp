@@ -14,6 +14,7 @@ const reportRepository = require('../repositories/reportRepository');
 const storageService = require('./storageService');
 const { findSignaturePath, getSignatureStatus } = require('./reportSignatureService');
 const { ApiError } = require('../utils/ApiError');
+const { getLifecycleReportCount } = require('../data/lifecycleReportCounts');
 
 const TEMPLATE_ROOT = path.join(__dirname, '..', '..', 'templates');
 const execFileAsync = promisify(execFile);
@@ -715,6 +716,10 @@ function getTemplateReportType(reportType, serviceType) {
 function getFileReportLabel(reportType, serviceType, reportCounter) {
   const normalized = normalizeServiceTypeLabel(serviceType);
 
+  if (normalized === 'add service') {
+    return `Ex_${reportCounter}`;
+  }
+
   if (isRepeatingServiceType(serviceType)) {
     return `${reportType}-${reportCounter}`;
   }
@@ -737,6 +742,17 @@ function buildReportFileName({ machineModel, machineNumber, reportType, serviceT
   ].filter(Boolean);
 
   return `${parts.join(' ')}.pdf`;
+}
+
+async function getInitialRepeatingReportCounter({ machine, reportType }) {
+  const lifecycleCount = getLifecycleReportCount(machine.machine_number, reportType);
+  const generatedCount = await reportRepository.countByMachineAndReportType({
+    machineId: machine.id,
+    machineNumber: machine.machine_number,
+    reportType,
+  });
+
+  return lifecycleCount + generatedCount;
 }
 
 async function getCommentPicker(pickerCache, machineModel, serviceType) {
@@ -1570,12 +1586,7 @@ async function generateReports(payload) {
     let currentStep = Number(machine.smr_step);
     let currentCounter = Number(machine.report_counter);
     let repeatServiceCounter = isRepeatingServiceType(payload.serviceType)
-      ? await reportRepository.countByMachineReportAndService({
-        machineId: machine.id,
-        machineNumber: machine.machine_number,
-        reportType: effectiveReportType,
-        serviceType: payload.serviceType,
-      })
+      ? await getInitialRepeatingReportCounter({ machine, reportType: effectiveReportType })
       : 0;
 
     for (const serviceDate of payload.reportDates) {
@@ -1731,6 +1742,7 @@ module.exports = {
     getCommentScope,
     getEffectiveReportType,
     getFileReportLabel,
+    getInitialRepeatingReportCounter,
     getRequiredReportType,
     getTemplateServiceType,
     getTemplateReportType,
