@@ -8,5 +8,6 @@ describe('health route', () => {
 
     expect(response.status).toBe(200);
     expect(response.body.message).toBe('EQP Backend Running');
+    expect(response.body.database).toMatch(/^(connected|disconnected)$/);
   });
 });

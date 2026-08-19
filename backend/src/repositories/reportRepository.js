@@ -154,6 +154,25 @@ async function create(report) {
   );
 }
 
+async function countByMachineReportAndService({ machineId, machineNumber, reportType, serviceType }) {
+  const table = await resolveEqpTable('eqp_reports', 'reports');
+  const result = await db.query(
+    `
+      SELECT COUNT(*)::int AS count
+      FROM ${table}
+      WHERE report_type = $1
+        AND service_type = $2
+        AND (
+          machine_id = $3
+          OR (machine_id IS NULL AND machine_number = $4)
+        )
+    `,
+    [reportType, serviceType, Number(machineId), machineNumber]
+  );
+
+  return result.rows[0]?.count || 0;
+}
+
 module.exports = {
   findAll,
   findByOwner,
@@ -162,4 +181,5 @@ module.exports = {
   rename,
   remove,
   create,
+  countByMachineReportAndService,
 };

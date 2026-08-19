@@ -662,6 +662,83 @@ function getCommentScope(serviceType) {
   return { documentType: 'in_operation', serviceStage: 'scheduled_service' };
 }
 
+function getTemplateServiceType(serviceType) {
+  const normalized = String(serviceType || '')
+    .trim()
+    .toLowerCase()
+    .replace(/\./g, '')
+    .replace(/\s+/g, ' ');
+
+  if (normalized === 'storage service') {
+    return 'Add Service';
+  }
+
+  return serviceType;
+}
+
+function normalizeServiceTypeLabel(serviceType) {
+  return String(serviceType || '')
+    .trim()
+    .toLowerCase()
+    .replace(/\./g, '')
+    .replace(/\s+/g, ' ');
+}
+
+function isRepeatingServiceType(serviceType) {
+  const normalized = normalizeServiceTypeLabel(serviceType);
+  return normalized === 'add service' || normalized === 'storage service';
+}
+
+function getRequiredReportType(serviceType) {
+  const normalized = normalizeServiceTypeLabel(serviceType);
+
+  if (normalized === 'storage service') return 'W30';
+  if (normalized === 'add service') return 'W41X';
+
+  return null;
+}
+
+function getEffectiveReportType(reportType, serviceType) {
+  return getRequiredReportType(serviceType) || reportType;
+}
+
+function getTemplateReportType(reportType, serviceType) {
+  const effectiveReportType = getEffectiveReportType(reportType, serviceType);
+
+  if (effectiveReportType === 'W41X') {
+    return 'W41';
+  }
+
+  return effectiveReportType;
+}
+
+function getFileReportLabel(reportType, serviceType, reportCounter) {
+  const normalized = normalizeServiceTypeLabel(serviceType);
+
+  if (isRepeatingServiceType(serviceType)) {
+    return `${reportType}-${reportCounter}`;
+  }
+
+  if (normalized === '1st service') return '1st';
+  if (normalized === '2nd service') return '2nd';
+  if (normalized === '3rd service') return '3rd';
+  if (normalized === 'pre delivery') return 'Pre Delivery';
+  if (normalized === 'delivery new') return 'Delivery New';
+  if (normalized === 'delivery used') return 'Delivery Used';
+
+  return String(serviceType || reportType || 'Report').trim();
+}
+
+function buildReportFileName({ machineModel, machineNumber, reportType, serviceType, reportCounter }) {
+  const parts = [
+    machineModel,
+    machineNumber,
+    getFileReportLabel(reportType, serviceType, reportCounter),
+  ].filter(Boolean);
+
+  return `${parts.join(' ')}.pdf`;
+}
+
 async function getCommentPicker(pickerCache, machineModel, serviceType) {
   const scope = getCommentScope(serviceType);
   const cacheKey = `${machineModel}:${scope.documentType}:${scope.serviceStage}`;
@@ -696,10 +773,12 @@ function normalizeTemplateGroup(value) {
 }
 
 function buildTemplateCandidates(reportType, serviceType, templateModel, templateGroup) {
-  const safeServiceType = serviceType
+  const templateReportType = getTemplateReportType(reportType, serviceType);
+  const templateServiceType = getTemplateServiceType(serviceType);
+  const safeServiceType = templateServiceType
     .replace(/\./g, '')
     .replace(/\s+/g, '_');
-  const baseFileName = `${reportType}_${safeServiceType}.xlsx`;
+  const baseFileName = `${templateReportType}_${safeServiceType}.xlsx`;
   const model = normalizeTemplateModel(templateModel);
   const group = normalizeTemplateGroup(templateGroup);
   const candidates = [];
@@ -1444,6 +1523,12 @@ async function getReportProfile(payload) {
 
 async function generateReports(payload) {
   const requestedTemplateModel = normalizeTemplateModel(payload.machineModel);
+  const effectiveReportType = getEffectiveReportType(payload.reportType, payload.serviceType);
+  const requiredReportType = getRequiredReportType(payload.serviceType);
+
+  if (!requiredReportType && effectiveReportType === 'W41X') {
+    throw new ApiError(400, 'W41X report type is only valid for Add. Service.');
+  }
 
   if (payload.machineModel && requestedTemplateModel !== 'AUTO' && !TEMPLATE_MODELS.has(requestedTemplateModel)) {
     throw new ApiError(400, 'Machine model must be Auto, D155A, HM400, or PC400');
@@ -1484,12 +1569,21 @@ async function generateReports(payload) {
     let currentSMR = Number(machine.last_smr);
     let currentStep = Number(machine.smr_step);
     let currentCounter = Number(machine.report_counter);
+    let repeatServiceCounter = isRepeatingServiceType(payload.serviceType)
+      ? await reportRepository.countByMachineReportAndService({
+        machineId: machine.id,
+        machineNumber: machine.machine_number,
+        reportType: effectiveReportType,
+        serviceType: payload.serviceType,
+      })
+      : 0;
 
     for (const serviceDate of payload.reportDates) {
       const safeDate = serviceDate.replace(/-/g, '');
 
       currentStep += 1;
       currentCounter += 1;
+      repeatServiceCounter += isRepeatingServiceType(payload.serviceType) ? 1 : 0;
 
       if (currentStep >= 4) {
         currentSMR += 1;
@@ -1499,7 +1593,7 @@ async function generateReports(payload) {
       const workbook = new ExcelJS.Workbook();
       const template = await loadTemplate(
         templateCache,
-        payload.reportType,
+        effectiveReportType,
         payload.serviceType,
         templateModel,
         machine.report_template_group
@@ -1535,7 +1629,13 @@ async function generateReports(payload) {
 
       addSignature(workbook, sheet, signature.path, fieldConfig);
 
-      const fileName = `${machine.machine_type} ${machine.machine_number} ex${currentCounter}.pdf`;
+      const fileName = buildReportFileName({
+        machineModel: templateModel,
+        machineNumber: machine.machine_number,
+        reportType: effectiveReportType,
+        serviceType: payload.serviceType,
+        reportCounter: repeatServiceCounter,
+      });
       prepareFilledWorkbookForPdfExport(workbook, sheet);
       const workbookBuffer = await workbook.xlsx.writeBuffer();
 
@@ -1549,7 +1649,7 @@ async function generateReports(payload) {
         serviceDate,
         comments: selectedComment,
         createdBy: user.full_name,
-        reportType: payload.reportType,
+        reportType: effectiveReportType,
         serviceType: payload.serviceType,
         fileName,
         templateModel,
@@ -1621,4 +1721,19 @@ async function generateReports(payload) {
   };
 }
 
-module.exports = { generateReports, getPdfConverterStatus, getReportProfile };
+module.exports = {
+  generateReports,
+  getPdfConverterStatus,
+  getReportProfile,
+  __private: {
+    buildReportFileName,
+    buildTemplateCandidates,
+    getCommentScope,
+    getEffectiveReportType,
+    getFileReportLabel,
+    getRequiredReportType,
+    getTemplateServiceType,
+    getTemplateReportType,
+    isRepeatingServiceType,
+  },
+};

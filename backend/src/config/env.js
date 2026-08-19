@@ -6,6 +6,9 @@ const env = {
     database: process.env.DB_NAME,
     password: process.env.DB_PASSWORD,
     port: process.env.DB_PORT,
+    connectionTimeoutMillis: Number(process.env.DB_CONNECTION_TIMEOUT_MS || 10000),
+    query_timeout: Number(process.env.DB_QUERY_TIMEOUT_MS || 30000),
+    statement_timeout: Number(process.env.DB_STATEMENT_TIMEOUT_MS || 30000),
   },
   supabase: {
     url: process.env.SUPABASE_URL,

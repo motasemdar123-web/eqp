@@ -42,8 +42,15 @@ let connected = false;
 let connecting = null;
 
 function createClient() {
+  const timeoutOptions = {
+    connectionTimeoutMillis: env.db.connectionTimeoutMillis,
+    query_timeout: env.db.query_timeout,
+    statement_timeout: env.db.statement_timeout,
+  };
+
   const nextClient = new Client({
     ...(databaseUrl ? { connectionString: buildPgConnectionString(databaseUrl) } : env.db),
+    ...timeoutOptions,
     ...(useSsl ? { ssl: { rejectUnauthorized: false } } : {}),
   });
 
@@ -100,6 +107,9 @@ async function query(text, params) {
 module.exports = {
   get client() {
     return client;
+  },
+  isConnected() {
+    return connected;
   },
   connectDatabase,
   query,

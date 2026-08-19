@@ -14,7 +14,7 @@ import Skeleton from '../../components/ui/Skeleton';
 import Toast from '../../components/ui/Toast';
 import { getStoredUser, clearStoredUser } from '../../lib/auth';
 import { generateReports, getMachineHistory, getMachines, getReportProfile } from '../../lib/api';
-import { MACHINE_MODELS, REPORT_TYPES, SERVICE_TYPES } from '../../lib/reportOptions';
+import { MACHINE_MODELS, REPORT_TYPES, SERVICE_TYPES, getRequiredReportType } from '../../lib/reportOptions';
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -41,6 +41,8 @@ export default function DashboardPage() {
   const [sortConfig, setSortConfig] = useState({ key: 'machine_number', direction: 'asc' });
   const [toast, setToast] = useState(null);
   const [generationSummary, setGenerationSummary] = useState(null);
+  const requiredReportType = getRequiredReportType(serviceType);
+  const effectiveReportType = requiredReportType || reportType;
 
   const loadDashboardData = useCallback(async () => {
     try {
@@ -144,6 +146,15 @@ export default function DashboardPage() {
     setActivePage(page);
   }
 
+  function changeServiceType(nextServiceType) {
+    setServiceType(nextServiceType);
+
+    const nextRequiredReportType = getRequiredReportType(nextServiceType);
+    if (nextRequiredReportType) {
+      setReportType(nextRequiredReportType);
+    }
+  }
+
   function logout() {
     clearStoredUser();
     router.push('/');
@@ -240,7 +251,7 @@ export default function DashboardPage() {
 
       const data = await generateReports({
         machineModel,
-        reportType,
+        reportType: effectiveReportType,
         serviceType,
         selectedMachines,
         reportDates,
@@ -273,10 +284,11 @@ export default function DashboardPage() {
             loading={loading}
             machineModel={machineModel}
             setMachineModel={setMachineModel}
-            reportType={reportType}
+            reportType={effectiveReportType}
             setReportType={setReportType}
+            requiredReportType={requiredReportType}
             serviceType={serviceType}
-            setServiceType={setServiceType}
+            setServiceType={changeServiceType}
             reportCount={reportCount}
             setReportCount={setReportCount}
             openDatesModal={openDatesModal}
@@ -332,6 +344,10 @@ export default function DashboardPage() {
 }
 
 function DashboardContent(props) {
+  const reportTypes = props.requiredReportType
+    ? [props.requiredReportType]
+    : REPORT_TYPES.filter((type) => type !== 'W41X');
+
   return (
     <div className="grid gap-6">
       <div className="ds-kpi-grid">
@@ -390,9 +406,10 @@ function DashboardContent(props) {
             <select
               value={props.reportType}
               onChange={(event) => props.setReportType(event.target.value)}
+              disabled={Boolean(props.requiredReportType)}
               className="ds-input"
             >
-              {REPORT_TYPES.map((type) => (
+              {reportTypes.map((type) => (
                 <option key={type}>{type}</option>
               ))}
             </select>
