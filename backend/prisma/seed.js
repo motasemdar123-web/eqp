@@ -311,7 +311,6 @@ async function main() {
       { machineModel: 'HM400', documentType: 'new_machine', serviceStage: 'delivery', commentText: 'Customer delivery checks completed with truck details verified.', frequency: 2 },
       { machineModel: 'HM400', documentType: 'in_operation', serviceStage: 'delivery', commentText: 'Used dump truck delivery inspection completed and operating condition recorded.', frequency: 2 },
       { machineModel: 'HM400', documentType: 'in_operation', serviceStage: 'delivery', commentText: 'Truck handover completed after checking visible leaks, damage, tires, and service condition.', frequency: 2 },
-      { machineModel: 'HM400', documentType: 'in_operation', serviceStage: 'scheduled_service', commentText: 'Preventive maintenance completed successfully for dump truck service items.', frequency: 3 },
       { machineModel: 'HM400', documentType: 'in_operation', serviceStage: 'scheduled_service', commentText: 'Dump body, hoist cylinders, articulation joint, brakes, retarder, and tires inspected.', frequency: 2 },
       { machineModel: 'HM400', documentType: 'in_operation', serviceStage: 'scheduled_service', commentText: 'No abnormal noise, leakage, or warning indicators observed during inspection.', frequency: 2 },
       { machineModel: 'HM400', documentType: 'storage', serviceStage: 'storage_service', commentText: 'Storage service completed; dump truck preservation condition checked.', frequency: 3 },
