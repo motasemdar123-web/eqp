@@ -428,10 +428,310 @@ async function executeSingleEmergencyOrder(orderData, customCookie = null) {
   };
 }
 
+async function searchQuotations(filters = {}, customCookie = null) {
+  const cookieStr = customCookie ? parseCookieInput(customCookie) : loadCookie();
+  if (!cookieStr) {
+    throw new Error('No PDX session cookie configured.');
+  }
+
+  const {
+    status = '1',
+    customerCode = '',
+    fromDate = '',
+    toDate = '',
+    quotationNo = '',
+    dbOrderNo = '',
+    salesOrderNo = '',
+    personIncharge = '',
+    page = '1',
+  } = filters;
+
+  const url = `${BASE_PORTAL_URL}/Inquiry/SearchResult`;
+  const bodyData = new URLSearchParams({
+    QuotationNo: quotationNo,
+    QuotationSubNo: '',
+    DistributerOrderNo: dbOrderNo,
+    SalesOrderNo: salesOrderNo,
+    Status: status,
+    FromDate: fromDate,
+    ToDate: toDate,
+    PersonIncharge: personIncharge,
+    CustomerCode: customerCode,
+    page: String(page || '1'),
+  });
+
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36 Edg/151.0.0.0',
+      'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+      'Accept': '*/*',
+      'X-Requested-With': 'XMLHttpRequest',
+      'Origin': 'https://www.komatsu.ae',
+      'Referer': `${BASE_PORTAL_URL}/Inquiry/Index`,
+      'Cookie': cookieStr,
+    },
+    body: bodyData.toString(),
+  });
+
+  const text = await response.text();
+  const trMatches = text.match(/<tr[^>]*>([\s\S]*?)<\/tr>/gi) || [];
+  const quotations = [];
+
+  for (const tr of trMatches) {
+    const tdMatches = tr.match(/<td[^>]*>([\s\S]*?)<\/td>/gi) || [];
+    if (tdMatches.length < 9) continue;
+
+    const cleanTds = tdMatches.map((td) => {
+      let txt = td.replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ').trim();
+      return txt.replace(/\s+/g, ' ');
+    });
+
+    const qtnNo = cleanTds[0] || '';
+    if (!qtnNo || isNaN(Number(qtnNo))) continue;
+
+    quotations.push({
+      quotation_no: qtnNo,
+      revision_no: cleanTds[1] || '00',
+      sales_order_no: cleanTds[2] || '',
+      db_order_no: cleanTds[3] || '',
+      db_code: cleanTds[4] || '536K',
+      customer_code: cleanTds[5] || '',
+      customer_name: cleanTds[6] || '',
+      person_in_charge: cleanTds[7] || '',
+      status: cleanTds[8] || '',
+      total_amount: cleanTds[9] || '0.00',
+    });
+  }
+
+  return {
+    total: quotations.length,
+    status_filter: status,
+    quotations,
+  };
+}
+
+async function confirmQuotation(quotationNo, seqNo = '00', customCookie = null) {
+  const cookieStr = customCookie ? parseCookieInput(customCookie) : loadCookie();
+  if (!cookieStr) {
+    throw new Error('No PDX session cookie configured.');
+  }
+
+  const defaultHeaders = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36 Edg/151.0.0.0',
+    'Accept-Language': 'en-US,en;q=0.9,ar;q=0.8',
+    'Origin': 'https://www.komatsu.ae',
+    'Cookie': cookieStr,
+  };
+
+  // 1. Search QuotationCondition to load state & TimeStamp
+  const condSearchUrl = `${BASE_PORTAL_URL}/QuotationCondition/Search`;
+  const condSearchData = new URLSearchParams({
+    strQuotationNo: String(quotationNo).trim(),
+    strQuotSeqNo: String(seqNo || '00').trim(),
+    DBCode: '536K',
+  });
+
+  const searchResp = await fetch(condSearchUrl, {
+    method: 'POST',
+    headers: {
+      ...defaultHeaders,
+      'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+      'X-Requested-With': 'XMLHttpRequest',
+      'Referer': `${BASE_PORTAL_URL}/QuotationCondition/Index?strQUTN=${quotationNo}&strQutnSubNo=${seqNo}&DBCode=536K`,
+    },
+    body: condSearchData.toString(),
+  });
+
+  const searchData = await searchResp.json();
+  const timestamp = searchData.TimeStamp || '';
+
+  let rates = searchData.Rates || searchData.lstRates || [];
+  if (!rates || rates.length === 0) {
+    rates = ['A', 'B', 'C', 'D', 'DA', 'E', 'F', 'NA', 'Other', 'S'].map((grp) => ({
+      QuotationNo: quotationNo,
+      QuotationSubNo: seqNo,
+      RateType: '1',
+      CommodityGroupCode: grp,
+      RateValue: '0.00',
+    }));
+  }
+
+  // 2. Save with Status = '2' (Confirmed)
+  const saveUrl = `${BASE_PORTAL_URL}/QuotationCondition/Save`;
+  const savePayload = {
+    objQuotationConditionPostModel: {
+      OrigQuotationNo: quotationNo,
+      OrigQuotationSeqNo: seqNo,
+      QuotationNo: quotationNo,
+      QuotationSeqNo: seqNo,
+      DistributerOrderNo: searchData.DistributerOrderNo || '',
+      DistributerCodes: '536K',
+      DistributerName: searchData.DistributerName || 'DAR AL HAI',
+      SalesPriceList: 'USD037',
+      Currency: searchData.Currency || 'USD',
+      ExchangeRate: '1',
+      OrderType: searchData.OrderType?.[0]?.Value || 'EO',
+      Usance: '30',
+      TaxRate: '0',
+      Transportation: searchData.SelectedTransportationCode || 'RD',
+      DeliveryTerms: searchData.DeliveryTerms || 'DDU',
+      PaymentTerms: searchData.PaymentTerms || 'T2',
+      OrderPRobability: 'A',
+      Region: 'AE',
+      Status: '2', // 2 = Confirmed
+      LoadingPort: searchData.LoadingPort || 'JEA',
+      UnloadingPort: searchData.UnloadingPort1 || 'KWI',
+      PersonIncharge: searchData.PersonIncharge || 'motasemgha',
+      QuotationValidity: searchData.QuotationValidity || '08/29/2026',
+      RequestedDeliveryTime: searchData.RequestedDeliveryTime || '08/22/2026',
+      PriceCalculationMethod: 'D',
+      DiscountRateOther: '0',
+      PremiumRate: '13.3',
+      BillingRateA: '0',
+      BillingRateB: '0',
+      BillingRateC: '0',
+      BillingRateD: '0',
+      BillingRateE: '0',
+      BillingRateF: '0',
+      ShipToAddress: searchData.ShipToAddress || 'DAR AL HAI\nKUWAIT GENERAL TRADING. Al-Rai Industrial Area Plot # 1732 Block # 2 Street # 4 Behind the Avenues Kuwait',
+      AvailableMark: true,
+      UseHSCode: false,
+      ReserverStock: false,
+      DontConsiderEORes: false,
+      FixPrice: false,
+      Memo: '',
+      Comments: searchData.Comments || 'Urgent',
+      ModelCode: searchData.ModelCode || 'PC500LC-10R',
+      SerialNo: searchData.SerialNo || '100433',
+      EngineSrNo: '-',
+      CustomerDetails: searchData.CustomerDetails || 'DAR AL HAI',
+      ModelInfoMark: true,
+      jobCard: '',
+      Warranty: '',
+      TSINumber: '',
+      ModelSVREMark: false,
+      ExitPoint: 'JEA',
+      CustomerCode: searchData.CustomerCode || 'REG',
+      lstRates: rates,
+      MarkingCode: 'MCOIL',
+      TimeStamp: timestamp,
+    },
+  };
+
+  const saveResp = await fetch(saveUrl, {
+    method: 'POST',
+    headers: {
+      ...defaultHeaders,
+      'Content-Type': 'application/json',
+      'Accept': 'application/json, text/javascript, */*; q=0.01',
+      'X-Requested-With': 'XMLHttpRequest',
+      'Referer': `${BASE_PORTAL_URL}/QuotationCondition/Index?strQUTN=${quotationNo}&strQutnSubNo=${seqNo}&DBCode=536K`,
+    },
+    body: JSON.stringify(savePayload),
+  });
+
+  const saveJson = await saveResp.json();
+  if (saveJson.ErrorOccured && saveJson.ErrorOccured !== 0) {
+    throw new Error(saveJson.ErrorMessage || 'Failed to update quotation status to Confirmed');
+  }
+
+  return {
+    status: 'CONFIRMED',
+    quotation_no: quotationNo,
+    db_order_no: searchData.DistributerOrderNo,
+    timestamp,
+    raw_response: saveJson,
+  };
+}
+
+async function copyQuotationToSo(quotationNo, seqNo = '00', options = {}, customCookie = null) {
+  const cookieStr = customCookie ? parseCookieInput(customCookie) : loadCookie();
+  if (!cookieStr) {
+    throw new Error('No PDX session cookie configured.');
+  }
+
+  const defaultHeaders = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36 Edg/151.0.0.0',
+    'Accept-Language': 'en-US,en;q=0.9,ar;q=0.8',
+    'Origin': 'https://www.komatsu.ae',
+    'Cookie': cookieStr,
+  };
+
+  // STEP 1: Inquiry/CopyToSO
+  const copyUrl = `${BASE_PORTAL_URL}/Inquiry/CopyToSO`;
+  const copyResp = await fetch(copyUrl, {
+    method: 'POST',
+    headers: {
+      ...defaultHeaders,
+      'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+      'X-Requested-With': 'XMLHttpRequest',
+      'Referer': `${BASE_PORTAL_URL}/Inquiry/Index`,
+    },
+    body: new URLSearchParams({ strQutn: quotationNo, strQuto: seqNo }).toString(),
+  });
+
+  const copyJson = await copyResp.json();
+  if (copyJson.ErrorOccured && copyJson.ErrorOccured !== 0) {
+    throw new Error(copyJson.ErrorMessage || 'CopyToSO pre-check failed');
+  }
+
+  // STEP 2: CheckConsumedLines
+  const chkUrl = `${BASE_PORTAL_URL}/CopyToSO/CheckConsumedLines`;
+  await fetch(chkUrl, {
+    method: 'POST',
+    headers: {
+      ...defaultHeaders,
+      'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+      'X-Requested-With': 'XMLHttpRequest',
+      'Referer': `${BASE_PORTAL_URL}/CopyToSO/CopyToSOView?strQUTN=${quotationNo}&strQUTO=${seqNo}`,
+    },
+    body: new URLSearchParams({ strQuotationNumber: quotationNo, strQuotationSubNumber: seqNo }).toString(),
+  });
+
+  // STEP 3: CopyTOSOConversion
+  const convUrl = `${BASE_PORTAL_URL}/CopyToSO/CopyTOSOConversion`;
+  const convData = new URLSearchParams({
+    QuotationNo: quotationNo,
+    QuotationSubNo: String(parseInt(seqNo, 10) || 0),
+    ddlBODSSelectedVal: String(options.bods || '1'),
+    chkPickingAllowed: 'true',
+    chkMixPackingAllowed: 'true',
+    chkPartialShipmentAllowed: 'true',
+  });
+
+  const convResp = await fetch(convUrl, {
+    method: 'POST',
+    headers: {
+      ...defaultHeaders,
+      'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+      'X-Requested-With': 'XMLHttpRequest',
+      'Referer': `${BASE_PORTAL_URL}/CopyToSO/CopyToSOView?strQUTN=${quotationNo}&strQUTO=${seqNo}`,
+    },
+    body: convData.toString(),
+  });
+
+  const convText = await convResp.text();
+
+  if (convText.includes('txtErrorType = "0"') || convText.includes('error.png') || convText.includes('An error occurred')) {
+    const errMatch = convText.match(/txtError\s*=\s*"([^"]+)"/);
+    throw new Error(errMatch ? errMatch[1] : 'Copy to SO conversion failed on PDX portal');
+  }
+
+  return {
+    status: 'COPIED_TO_SO',
+    quotation_no: quotationNo,
+    message: 'Quotation successfully transferred to Sales Order',
+  };
+}
+
 module.exports = {
   loadFleetData,
   addCustomMachine,
   lookupPartMaster,
   getLatestDbOrderNo,
   executeSingleEmergencyOrder,
+  searchQuotations,
+  confirmQuotation,
+  copyQuotationToSo,
 };

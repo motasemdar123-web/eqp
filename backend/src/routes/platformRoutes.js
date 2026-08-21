@@ -66,6 +66,9 @@ router.post('/api/komatsu/custom-machine', requirePlatformAuth, asyncHandler(pla
 router.get('/api/komatsu/part-lookup', requirePlatformAuth, asyncHandler(platformController.lookupKomatsuPartMaster));
 router.get('/api/komatsu/latest-order-no', requirePlatformAuth, asyncHandler(platformController.getKomatsuLatestOrderNo));
 router.post('/api/komatsu/eo-execute', requirePlatformAuth, asyncHandler(platformController.executeKomatsuEoOrder));
+router.get('/api/komatsu/quotations', requirePlatformAuth, asyncHandler(platformController.searchKomatsuQuotations));
+router.post('/api/komatsu/quotations/confirm', requirePlatformAuth, asyncHandler(platformController.confirmKomatsuQuotation));
+router.post('/api/komatsu/quotations/copy-to-so', requirePlatformAuth, asyncHandler(platformController.copyKomatsuQuotationToSo));
 
 module.exports = router;
 

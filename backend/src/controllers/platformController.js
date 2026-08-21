@@ -314,6 +314,29 @@ async function executeKomatsuEoOrder(req, res) {
   res.json({ success: true, ...result });
 }
 
+async function searchKomatsuQuotations(req, res) {
+  const data = await komatsuEoService.searchQuotations(req.query || {});
+  res.json({ success: true, ...data });
+}
+
+async function confirmKomatsuQuotation(req, res) {
+  const { quotationNo, seqNo } = req.body || {};
+  if (!quotationNo) {
+    return res.status(400).json({ success: false, message: 'Quotation number is required' });
+  }
+  const result = await komatsuEoService.confirmQuotation(quotationNo, seqNo || '00');
+  res.json({ success: true, ...result });
+}
+
+async function copyKomatsuQuotationToSo(req, res) {
+  const { quotationNo, seqNo, options } = req.body || {};
+  if (!quotationNo) {
+    return res.status(400).json({ success: false, message: 'Quotation number is required' });
+  }
+  const result = await komatsuEoService.copyQuotationToSo(quotationNo, seqNo || '00', options || {});
+  res.json({ success: true, ...result });
+}
+
 module.exports = {
   login,
   unifiedLogin,
@@ -366,5 +389,8 @@ module.exports = {
   lookupKomatsuPartMaster,
   getKomatsuLatestOrderNo,
   executeKomatsuEoOrder,
+  searchKomatsuQuotations,
+  confirmKomatsuQuotation,
+  copyKomatsuQuotationToSo,
 };
 

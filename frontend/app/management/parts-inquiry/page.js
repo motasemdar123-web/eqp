@@ -16,6 +16,9 @@ import {
   getKomatsuLatestOrderNo,
   executeKomatsuEoOrder,
   addKomatsuCustomMachine,
+  getKomatsuQuotations,
+  confirmKomatsuQuotation,
+  copyKomatsuQuotationToSo,
 } from '../../../lib/api';
 
 const SAMPLE_PARTS = [
@@ -75,7 +78,7 @@ function parseInputText(text) {
 }
 
 export default function SparePartsPage() {
-  const [activeTab, setActiveTab] = useState('eo-dispatcher'); // 'eo-dispatcher' | 'inquiry' | 'split' | 'fleet'
+  const [activeTab, setActiveTab] = useState('eo-dispatcher'); // 'eo-dispatcher' | 'so-converter' | 'inquiry' | 'split' | 'fleet'
   const [status, setStatus] = useState({ connected: false, message: 'Checking PDX status...' });
   const [loadingStatus, setLoadingStatus] = useState(true);
   const [cookieModalOpen, setCookieModalOpen] = useState(false);
@@ -113,7 +116,21 @@ export default function SparePartsPage() {
   const terminalBottomRef = useRef(null);
 
   // ==========================================
-  // TAB 2 & 3: BULK INQUIRY STATE
+  // TAB 2: QUOTATION TO SO CONVERTER STATE
+  // ==========================================
+  const [inProcessQuotations, setInProcessQuotations] = useState([]);
+  const [loadingQuotations, setLoadingQuotations] = useState(false);
+  const [qtnStatusFilter, setQtnStatusFilter] = useState('1'); // '1' = In-Process, '2' = Confirmed, '' = All
+  const [qtnSearchFilter, setQtnSearchFilter] = useState('');
+  const [selectedQtnNumbers, setSelectedQtnNumbers] = useState(new Set());
+  const [isConvertingSo, setIsConvertingSo] = useState(false);
+  const [soConversionProgress, setSoConversionProgress] = useState(null);
+  const [soLogs, setSoLogs] = useState([]);
+  const shouldStopSoRef = useRef(false);
+  const soTerminalBottomRef = useRef(null);
+
+  // ==========================================
+  // TAB 3 & 4: BULK INQUIRY STATE
   // ==========================================
   const [pastedText, setPastedText] = useState(SAMPLE_PARTS.join('\n'));
   const [parsedQueue, setParsedQueue] = useState([]);
@@ -142,6 +159,17 @@ export default function SparePartsPage() {
   useEffect(() => {
     terminalBottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [eoLogs]);
+
+  useEffect(() => {
+    soTerminalBottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [soLogs]);
+
+  // Load In-Process quotations when switching to so-converter tab
+  useEffect(() => {
+    if (activeTab === 'so-converter' && inProcessQuotations.length === 0) {
+      loadInProcessQuotations();
+    }
+  }, [activeTab]);
 
   async function loadConnectionStatus() {
     try {
@@ -197,6 +225,7 @@ export default function SparePartsPage() {
         setCookieModalOpen(false);
         setCookieInput('');
         loadLatestOrderNumber();
+        if (activeTab === 'so-converter') loadInProcessQuotations();
       } else {
         setToast({ type: 'error', message: res.message || 'Cookie verification failed' });
       }
@@ -212,8 +241,13 @@ export default function SparePartsPage() {
     setEoLogs((prev) => [...prev, { timestamp, text: msg, type }]);
   }
 
+  function addSoLog(msg, type = 'info') {
+    const timestamp = new Date().toLocaleTimeString();
+    setSoLogs((prev) => [...prev, { timestamp, text: msg, type }]);
+  }
+
   // ==========================================
-  // EO DISPATCHER LOGIC
+  // TAB 1: EO DISPATCHER LOGIC
   // ==========================================
   async function handleLookupPart() {
     const pNo = eoPartNo.trim();
@@ -243,7 +277,6 @@ export default function SparePartsPage() {
     }
   }
 
-  // Available Models for current customer & machine type selection
   const availableModels = useMemo(() => {
     let filtered = fleetData;
     if (selectedCustomer) {
@@ -262,7 +295,6 @@ export default function SparePartsPage() {
     });
   }, [fleetData, selectedCustomer, selectedMachineType, eoPartInfo]);
 
-  // Machine types for customer
   const availableMachineTypes = useMemo(() => {
     let filtered = fleetData;
     if (selectedCustomer) {
@@ -271,7 +303,6 @@ export default function SparePartsPage() {
     return [...new Set(filtered.map((m) => m.machine_type).filter(Boolean))].sort();
   }, [fleetData, selectedCustomer]);
 
-  // Matching serial numbers
   const matchingMachines = useMemo(() => {
     let filtered = fleetData;
     if (selectedCustomer) filtered = filtered.filter((m) => m.customer.toLowerCase() === selectedCustomer.toLowerCase());
@@ -417,7 +448,6 @@ export default function SparePartsPage() {
       }
 
       setPlannedOrders([...updatedOrders]);
-      // Small spacing between requests
       await new Promise((r) => setTimeout(r, 600));
     }
 
@@ -456,6 +486,197 @@ export default function SparePartsPage() {
     link.click();
     URL.revokeObjectURL(url);
     setToast({ type: 'success', message: 'Emergency Order report downloaded.' });
+  }
+
+  // ==========================================
+  // TAB 2: QUOTATION TO SO CONVERTER LOGIC
+  // ==========================================
+  async function loadInProcessQuotations() {
+    try {
+      setLoadingQuotations(true);
+      addSoLog(`Searching Komatsu PDX quotations (Status Filter: ${qtnStatusFilter || 'ALL'})...`, 'info');
+      const res = await getKomatsuQuotations({ status: qtnStatusFilter });
+      if (res && res.quotations) {
+        setInProcessQuotations(res.quotations);
+        // Select all by default
+        const newSet = new Set(res.quotations.map((q) => q.quotation_no));
+        setSelectedQtnNumbers(newSet);
+        addSoLog(`Found ${res.quotations.length} quotations matching filter.`, 'success');
+      }
+    } catch (err) {
+      addSoLog(`Failed to fetch quotations: ${err.message}`, 'error');
+      setToast({ type: 'error', message: err.message || 'Failed to fetch quotations from PDX' });
+    } finally {
+      setLoadingQuotations(false);
+    }
+  }
+
+  const filteredQuotations = useMemo(() => {
+    const q = qtnSearchFilter.trim().toLowerCase();
+    if (!q) return inProcessQuotations;
+    return inProcessQuotations.filter(
+      (item) =>
+        item.quotation_no?.toLowerCase().includes(q) ||
+        item.db_order_no?.toLowerCase().includes(q) ||
+        item.customer_name?.toLowerCase().includes(q) ||
+        item.person_in_charge?.toLowerCase().includes(q) ||
+        item.sales_order_no?.toLowerCase().includes(q)
+    );
+  }, [inProcessQuotations, qtnSearchFilter]);
+
+  function toggleSelectAllQuotations() {
+    if (selectedQtnNumbers.size === filteredQuotations.length) {
+      setSelectedQtnNumbers(new Set());
+    } else {
+      setSelectedQtnNumbers(new Set(filteredQuotations.map((q) => q.quotation_no)));
+    }
+  }
+
+  function toggleSelectQuotation(qNo) {
+    const next = new Set(selectedQtnNumbers);
+    if (next.has(qNo)) next.delete(qNo);
+    else next.add(qNo);
+    setSelectedQtnNumbers(next);
+  }
+
+  // Step 1: Confirm single quotation
+  async function handleConfirmSingle(qtnItem) {
+    try {
+      addSoLog(`Confirming quotation ${qtnItem.quotation_no}...`, 'info');
+      const res = await confirmKomatsuQuotation({ quotationNo: qtnItem.quotation_no, seqNo: qtnItem.revision_no || '00' });
+      if (res && res.status === 'CONFIRMED') {
+        addSoLog(`✅ Quotation ${qtnItem.quotation_no} Status changed to Confirmed.`, 'success');
+        setInProcessQuotations((prev) =>
+          prev.map((q) => (q.quotation_no === qtnItem.quotation_no ? { ...q, status: 'Confirmed' } : q))
+        );
+        setToast({ type: 'success', message: `Quotation ${qtnItem.quotation_no} confirmed.` });
+      }
+    } catch (err) {
+      addSoLog(`❌ Failed to confirm ${qtnItem.quotation_no}: ${err.message}`, 'error');
+      setToast({ type: 'error', message: err.message || 'Confirm failed' });
+    }
+  }
+
+  // Step 2: Copy single quotation to SO
+  async function handleCopySingleToSo(qtnItem) {
+    try {
+      addSoLog(`Copying quotation ${qtnItem.quotation_no} to Sales Order (SO)...`, 'info');
+      const res = await copyQuotationToSo({ quotationNo: qtnItem.quotation_no, seqNo: qtnItem.revision_no || '00' });
+      if (res && res.status === 'COPIED_TO_SO') {
+        addSoLog(`🎉 Quotation ${qtnItem.quotation_no} successfully transferred to Sales Order!`, 'success');
+        setInProcessQuotations((prev) =>
+          prev.map((q) => (q.quotation_no === qtnItem.quotation_no ? { ...q, status: 'Transferred to SO' } : q))
+        );
+        setToast({ type: 'success', message: `Quotation ${qtnItem.quotation_no} copied to SO!` });
+      }
+    } catch (err) {
+      addSoLog(`❌ Failed to copy ${qtnItem.quotation_no} to SO: ${err.message}`, 'error');
+      setToast({ type: 'error', message: err.message || 'Copy to SO failed' });
+    }
+  }
+
+  // Step 3: Full Batch Confirm & Copy to SO
+  async function startBatchConfirmAndCopy(actionType = 'FULL_CONVERT') {
+    const selectedList = inProcessQuotations.filter((q) => selectedQtnNumbers.has(q.quotation_no));
+    if (selectedList.length === 0) {
+      setToast({ type: 'error', message: 'Please select at least one quotation from the table' });
+      return;
+    }
+
+    const actionName =
+      actionType === 'FULL_CONVERT'
+        ? 'Confirm & Transfer to Sales Order (SO)'
+        : actionType === 'CONFIRM_ONLY'
+        ? 'Confirm Status'
+        : 'Copy to Sales Order (SO)';
+
+    const confirmed = window.confirm(`Are you sure you want to ${actionName} for ${selectedList.length} selected quotations on Komatsu PDX?`);
+    if (!confirmed) return;
+
+    setIsConvertingSo(true);
+    shouldStopSoRef.current = false;
+    addSoLog(`[START] Running batch ${actionName} for ${selectedList.length} quotations...`, 'info');
+
+    let successCount = 0;
+
+    for (let i = 0; i < selectedList.length; i++) {
+      if (shouldStopSoRef.current) {
+        addSoLog('[HALTED] Batch conversion stopped by user.', 'warn');
+        break;
+      }
+
+      const q = selectedList[i];
+      setSoConversionProgress({ current: i + 1, total: selectedList.length, quotation: q.quotation_no });
+
+      try {
+        // 1. Confirm if needed
+        if (actionType === 'FULL_CONVERT' || actionType === 'CONFIRM_ONLY') {
+          if (q.status !== 'Confirmed') {
+            addSoLog(`[#${i + 1}] Step 1/2: Setting Status to Confirmed for ${q.quotation_no} (${q.db_order_no})...`, 'info');
+            await confirmKomatsuQuotation({ quotationNo: q.quotation_no, seqNo: q.revision_no || '00' });
+            q.status = 'Confirmed';
+            setInProcessQuotations((prev) =>
+              prev.map((item) => (item.quotation_no === q.quotation_no ? { ...item, status: 'Confirmed' } : item))
+            );
+            addSoLog(`  ✓ Status Confirmed for ${q.quotation_no}`, 'success');
+            await new Promise((r) => setTimeout(r, 400));
+          }
+        }
+
+        // 2. Copy to SO if needed
+        if (actionType === 'FULL_CONVERT' || actionType === 'COPY_ONLY') {
+          addSoLog(`[#${i + 1}] Step 2/2: Executing Copy to Sales Order for ${q.quotation_no}...`, 'info');
+          await copyQuotationToSo({ quotationNo: q.quotation_no, seqNo: q.revision_no || '00' });
+          q.status = 'Transferred to SO';
+          setInProcessQuotations((prev) =>
+            prev.map((item) => (item.quotation_no === q.quotation_no ? { ...item, status: 'Transferred to SO' } : item))
+          );
+          addSoLog(`  🎉 [#${i + 1} SUCCESS] Quotation ${q.quotation_no} (${q.db_order_no}) successfully transferred to Sales Order!`, 'success');
+        }
+
+        successCount++;
+      } catch (err) {
+        addSoLog(`  ❌ [#${i + 1} ERROR] Failed ${q.quotation_no}: ${err.message}`, 'error');
+      }
+
+      await new Promise((r) => setTimeout(r, 600));
+    }
+
+    setIsConvertingSo(false);
+    setSoConversionProgress(null);
+    addSoLog(`[FINISHED] Process complete: ${successCount} / ${selectedList.length} quotations processed successfully.`, 'success');
+    setToast({ type: 'success', message: `Batch complete: ${successCount} / ${selectedList.length} processed.` });
+  }
+
+  function stopSoBatch() {
+    shouldStopSoRef.current = true;
+    addSoLog('Stopping batch conversion after current item...', 'warn');
+  }
+
+  function downloadSoCsv() {
+    if (inProcessQuotations.length === 0) return;
+    const headers = ['Quotation No', 'Rev', 'DB Order No', 'DB Code', 'Customer Code', 'Customer Name', 'Person In Charge', 'Status', 'Total Amount (USD)'];
+    const rows = inProcessQuotations.map((q) => [
+      `"${q.quotation_no}"`,
+      `"${q.revision_no}"`,
+      `"${q.db_order_no}"`,
+      `"${q.db_code}"`,
+      `"${q.customer_code}"`,
+      `"${q.customer_name}"`,
+      `"${q.person_in_charge}"`,
+      `"${q.status}"`,
+      q.total_amount,
+    ]);
+
+    const csvContent = '\uFEFF' + [headers.join(','), ...rows.map((row) => row.join(','))].join('\r\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `komatsu-quotations-report-${new Date().toISOString().slice(0, 10)}.csv`;
+    link.click();
+    URL.revokeObjectURL(url);
+    setToast({ type: 'success', message: 'Quotations report downloaded.' });
   }
 
   // ==========================================
@@ -619,7 +840,7 @@ export default function SparePartsPage() {
       activePath="/management/parts-inquiry"
       eyebrow="KOMATSU PDX & FLEET LOGISTICS"
       title="Spare Parts Hub"
-      description="Automate Emergency Orders (EO) across multi-machine customer fleets, query live stock & pricing from Komatsu PDX, and manage machine part compatibility."
+      description="Automate Emergency Orders (EO), confirm in-process quotations, batch transfer to Sales Orders (SO), and query live Komatsu PDX catalog."
       actions={
         <div className="flex items-center gap-2">
           <Button
@@ -634,6 +855,11 @@ export default function SparePartsPage() {
           {activeTab === 'eo-dispatcher' && plannedOrders.length > 0 && (
             <Button type="button" variant="secondary" size="sm" onClick={downloadEoCsv}>
               Export Order Plan
+            </Button>
+          )}
+          {activeTab === 'so-converter' && inProcessQuotations.length > 0 && (
+            <Button type="button" variant="secondary" size="sm" onClick={downloadSoCsv}>
+              Export Quotations CSV
             </Button>
           )}
           {activeTab === 'inquiry' && results.length > 0 && (
@@ -676,6 +902,15 @@ export default function SparePartsPage() {
           <button
             type="button"
             className={`px-4 py-2 text-xs font-bold rounded-lg transition-all flex items-center gap-1.5 ${
+              activeTab === 'so-converter' ? 'bg-amber-500 text-slate-950 shadow-sm font-black' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+            }`}
+            onClick={() => setActiveTab('so-converter')}
+          >
+            <span>📑</span> Quotation to Sales Order (SO) Converter
+          </button>
+          <button
+            type="button"
+            className={`px-4 py-2 text-xs font-bold rounded-lg transition-all flex items-center gap-1.5 ${
               activeTab === 'inquiry' ? 'bg-slate-900 text-white shadow-sm' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
             }`}
             onClick={() => setActiveTab('inquiry')}
@@ -707,7 +942,6 @@ export default function SparePartsPage() {
         {/* ============================================================ */}
         {activeTab === 'eo-dispatcher' && (
           <div className="space-y-6">
-            {/* Top Config Grid */}
             <div className="grid gap-6 lg:grid-cols-12">
               {/* Part Setup & Quantities (5 cols) */}
               <Card className="p-5 space-y-4 lg:col-span-5">
@@ -738,7 +972,6 @@ export default function SparePartsPage() {
                     </div>
                   </div>
 
-                  {/* Part Details Readout Card */}
                   {eoPartInfo && (
                     <div className="p-3 bg-slate-50 border border-slate-200 rounded-lg space-y-2 text-xs">
                       <div className="flex justify-between items-start">
@@ -788,7 +1021,6 @@ export default function SparePartsPage() {
                     </Field>
                   </div>
 
-                  {/* Calculated Plan Banner */}
                   <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg flex items-center justify-between">
                     <div>
                       <span className="text-xs text-amber-900 block font-medium">Orders Required:</span>
@@ -867,7 +1099,6 @@ export default function SparePartsPage() {
                     </select>
                   </Field>
 
-                  {/* Matching Serials Chips */}
                   <div>
                     <div className="flex justify-between items-center text-xs mb-1.5">
                       <span className="font-bold text-slate-700">Available Machine Serials in Fleet:</span>
@@ -959,7 +1190,6 @@ export default function SparePartsPage() {
                 </div>
               </div>
 
-              {/* Progress Bar (Visible during execution) */}
               {isExecutingEo && (
                 <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg space-y-1.5 animate-pulse">
                   <div className="flex justify-between text-xs font-bold text-amber-900">
@@ -975,7 +1205,6 @@ export default function SparePartsPage() {
                 </div>
               )}
 
-              {/* Data Grid Table */}
               <div className="ds-table-wrap">
                 <table className="ds-table font-mono text-xs">
                   <thead>
@@ -1037,7 +1266,6 @@ export default function SparePartsPage() {
                 </table>
               </div>
 
-              {/* Execution Terminal */}
               <div className="space-y-1.5 pt-2">
                 <div className="flex justify-between items-center text-xs">
                   <span className="font-bold text-slate-700 flex items-center gap-1.5">
@@ -1083,12 +1311,271 @@ export default function SparePartsPage() {
         )}
 
         {/* ============================================================ */}
-        {/* TAB 2: STOCK & PRICE BULK INQUIRY */}
+        {/* TAB 2: QUOTATION TO SALES ORDER (SO) CONVERTER */}
+        {/* ============================================================ */}
+        {activeTab === 'so-converter' && (
+          <div className="space-y-6">
+            <Card className="p-5 space-y-4">
+              <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3 border-b border-slate-100 pb-4">
+                <div>
+                  <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
+                    <span>📑</span> In-Process Quotations & Sales Order (SO) Transfer
+                  </h2>
+                  <p className="text-xs text-slate-500">
+                    Fetch In-Process quotations, confirm condition, and batch convert directly to Komatsu Sales Orders (SO).
+                  </p>
+                </div>
+
+                <div className="flex flex-wrap items-center gap-2">
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    size="sm"
+                    disabled={loadingQuotations || isConvertingSo}
+                    onClick={loadInProcessQuotations}
+                  >
+                    {loadingQuotations ? 'Fetching...' : '🔄 Refresh Quotations'}
+                  </Button>
+
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    disabled={isConvertingSo || selectedQtnNumbers.size === 0}
+                    onClick={() => startBatchConfirmAndCopy('CONFIRM_ONLY')}
+                  >
+                    ✓ Confirm Selected ({selectedQtnNumbers.size})
+                  </Button>
+
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    size="sm"
+                    disabled={isConvertingSo || selectedQtnNumbers.size === 0}
+                    onClick={() => startBatchConfirmAndCopy('COPY_ONLY')}
+                  >
+                    📋 Copy to SO ({selectedQtnNumbers.size})
+                  </Button>
+
+                  {!isConvertingSo ? (
+                    <Button
+                      type="button"
+                      variant="primary"
+                      size="sm"
+                      disabled={selectedQtnNumbers.size === 0}
+                      onClick={() => startBatchConfirmAndCopy('FULL_CONVERT')}
+                    >
+                      ⚡ Auto Confirm & Copy to SO ({selectedQtnNumbers.size})
+                    </Button>
+                  ) : (
+                    <Button type="button" variant="danger" size="sm" onClick={stopSoBatch}>
+                      ⏹ Stop Conversion
+                    </Button>
+                  )}
+                </div>
+              </div>
+
+              {/* Filters Bar */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <Field label="Status Filter">
+                  <select
+                    className="ds-input text-xs font-semibold"
+                    value={qtnStatusFilter}
+                    onChange={(e) => {
+                      setQtnStatusFilter(e.target.value);
+                    }}
+                  >
+                    <option value="1">Status: In-Process (Pending Confirmation)</option>
+                    <option value="2">Status: Confirmed (Ready for Copy to SO)</option>
+                    <option value="">Status: All Quotations</option>
+                  </select>
+                </Field>
+
+                <div className="sm:col-span-2">
+                  <Field label="Search by Quotation / Order / Customer">
+                    <input
+                      type="text"
+                      placeholder="Filter quotation no, DB.R.NO, customer..."
+                      className="ds-input text-xs"
+                      value={qtnSearchFilter}
+                      onChange={(e) => setQtnSearchFilter(e.target.value)}
+                    />
+                  </Field>
+                </div>
+              </div>
+
+              {/* Progress Bar (Visible during SO conversion) */}
+              {isConvertingSo && soConversionProgress && (
+                <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg space-y-1.5 animate-pulse">
+                  <div className="flex justify-between text-xs font-bold text-amber-900">
+                    <span>Converting Quotation {soConversionProgress.quotation} to Sales Order...</span>
+                    <span>{soConversionProgress.current} / {soConversionProgress.total}</span>
+                  </div>
+                  <div className="h-2 w-full bg-amber-200 rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-amber-500 transition-all duration-300"
+                      style={{ width: `${Math.round((soConversionProgress.current / soConversionProgress.total) * 100)}%` }}
+                    />
+                  </div>
+                </div>
+              )}
+
+              {/* Quotations Data Grid */}
+              <div className="ds-table-wrap">
+                <table className="ds-table text-xs">
+                  <thead>
+                    <tr>
+                      <th className="w-10 text-center">
+                        <input
+                          type="checkbox"
+                          className="rounded text-amber-500 focus:ring-0 cursor-pointer"
+                          checked={filteredQuotations.length > 0 && selectedQtnNumbers.size === filteredQuotations.length}
+                          onChange={toggleSelectAllQuotations}
+                        />
+                      </th>
+                      <th>Quotation No</th>
+                      <th>Rev</th>
+                      <th>DB Order No</th>
+                      <th>Customer Name</th>
+                      <th>Person in Charge</th>
+                      <th>Status</th>
+                      <th className="text-right">Total (USD)</th>
+                      <th className="text-center">Single Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {loadingQuotations ? (
+                      <tr>
+                        <td colSpan={9} className="text-center py-8 text-slate-500">
+                          <span className="inline-block animate-spin mr-2">⏳</span> Loading quotations from Komatsu PDX...
+                        </td>
+                      </tr>
+                    ) : filteredQuotations.length === 0 ? (
+                      <tr>
+                        <td colSpan={9} className="text-center py-8 text-slate-400">
+                          No quotations found matching filter. Click &ldquo;Refresh Quotations&rdquo; to load.
+                        </td>
+                      </tr>
+                    ) : (
+                      filteredQuotations.map((q) => {
+                        const isSelected = selectedQtnNumbers.has(q.quotation_no);
+                        const isConfirmed = q.status?.toLowerCase().includes('confirmed');
+                        const isConverted = q.status?.toLowerCase().includes('so') || q.status?.toLowerCase().includes('sales');
+
+                        return (
+                          <tr
+                            key={q.quotation_no}
+                            className={`hover:bg-slate-50/80 transition-colors ${isSelected ? 'bg-amber-50/30' : 'bg-white'}`}
+                          >
+                            <td className="text-center">
+                              <input
+                                type="checkbox"
+                                className="rounded text-amber-500 focus:ring-0 cursor-pointer"
+                                checked={isSelected}
+                                onChange={() => toggleSelectQuotation(q.quotation_no)}
+                              />
+                            </td>
+                            <td className="font-mono font-bold text-slate-900">{q.quotation_no}</td>
+                            <td className="font-mono text-slate-500">{q.revision_no}</td>
+                            <td className="font-mono font-bold text-amber-600">{q.db_order_no || '—'}</td>
+                            <td className="font-semibold text-slate-700 truncate max-w-xs">{q.customer_name || 'DAR AL HAI'}</td>
+                            <td className="text-slate-600">{q.person_in_charge}</td>
+                            <td>
+                              <Badge tone={isConverted ? 'success' : isConfirmed ? 'info' : 'warning'}>
+                                {q.status || 'In-Process'}
+                              </Badge>
+                            </td>
+                            <td className="font-mono text-right font-bold text-slate-900">${q.total_amount}</td>
+                            <td className="text-center">
+                              <div className="flex items-center justify-center gap-1.5">
+                                {!isConfirmed && !isConverted && (
+                                  <Button
+                                    type="button"
+                                    variant="ghost"
+                                    size="sm"
+                                    disabled={isConvertingSo}
+                                    onClick={() => handleConfirmSingle(q)}
+                                    title="Change status to Confirmed"
+                                  >
+                                    Confirm
+                                  </Button>
+                                )}
+                                {!isConverted && (
+                                  <Button
+                                    type="button"
+                                    variant="secondary"
+                                    size="sm"
+                                    disabled={isConvertingSo}
+                                    onClick={() => handleCopySingleToSo(q)}
+                                    title="Copy directly to Sales Order (SO)"
+                                  >
+                                    Copy to SO
+                                  </Button>
+                                )}
+                                {isConverted && (
+                                  <span className="text-[11px] font-bold text-emerald-600">✓ In Sales Order</span>
+                                )}
+                              </div>
+                            </td>
+                          </tr>
+                        );
+                      })
+                    )}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Conversion Terminal */}
+              <div className="space-y-1.5 pt-2">
+                <div className="flex justify-between items-center text-xs">
+                  <span className="font-bold text-slate-700 flex items-center gap-1.5">
+                    <span>🖥️</span> Sales Order (SO) Conversion Terminal
+                  </span>
+                  <div className="flex items-center gap-2">
+                    <button type="button" className="text-slate-400 hover:text-slate-600 text-xs" onClick={() => setSoLogs([])}>
+                      Clear
+                    </button>
+                    {inProcessQuotations.length > 0 && (
+                      <button type="button" className="text-amber-600 font-bold hover:underline text-xs" onClick={downloadSoCsv}>
+                        Download Report (CSV)
+                      </button>
+                    )}
+                  </div>
+                </div>
+                <div className="p-3 bg-slate-950 rounded-lg font-mono text-[11px] h-36 overflow-y-auto text-emerald-400 space-y-1 border border-slate-800">
+                  {soLogs.length === 0 ? (
+                    <div className="text-slate-500">[Ready] Quotation Confirmation & SO Transfer Engine ready.</div>
+                  ) : (
+                    soLogs.map((l, i) => (
+                      <div
+                        key={i}
+                        className={
+                          l.type === 'success'
+                            ? 'text-emerald-400 font-semibold'
+                            : l.type === 'error'
+                            ? 'text-rose-400 font-semibold'
+                            : l.type === 'warn'
+                            ? 'text-amber-400'
+                            : 'text-slate-300'
+                        }
+                      >
+                        [{l.timestamp}] {l.text}
+                      </div>
+                    ))
+                  )}
+                  <div ref={soTerminalBottomRef} />
+                </div>
+              </div>
+            </Card>
+          </div>
+        )}
+
+        {/* ============================================================ */}
+        {/* TAB 3: STOCK & PRICE BULK INQUIRY */}
         {/* ============================================================ */}
         {activeTab === 'inquiry' && (
           <div className="space-y-6">
             <div className="grid gap-6 lg:grid-cols-[1fr_360px]">
-              {/* Input Section */}
               <Card className="p-5 space-y-4">
                 <div className="flex items-center justify-between border-b border-slate-100 pb-3">
                   <div>
@@ -1151,7 +1638,6 @@ export default function SparePartsPage() {
                 )}
               </Card>
 
-              {/* Side Summary */}
               <Card className="p-5 space-y-4 h-fit">
                 <div className="border-b border-slate-100 pb-3">
                   <h3 className="text-sm font-bold text-slate-900">Bulk Inquiry Capabilities</h3>
@@ -1178,7 +1664,6 @@ export default function SparePartsPage() {
               </Card>
             </div>
 
-            {/* Results KPIs & Table */}
             {results.length > 0 && (
               <div className="space-y-4">
                 <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
@@ -1300,7 +1785,7 @@ export default function SparePartsPage() {
         )}
 
         {/* ============================================================ */}
-        {/* TAB 3: 12-ITEM BATCH SPLITTER */}
+        {/* TAB 4: 12-ITEM BATCH SPLITTER */}
         {/* ============================================================ */}
         {activeTab === 'split' && (
           <Card className="p-6 space-y-4">
@@ -1327,7 +1812,7 @@ export default function SparePartsPage() {
         )}
 
         {/* ============================================================ */}
-        {/* TAB 4: CUSTOMER FLEET REGISTER */}
+        {/* TAB 5: CUSTOMER FLEET REGISTER */}
         {/* ============================================================ */}
         {activeTab === 'fleet' && (
           <Card className="p-5 space-y-4">

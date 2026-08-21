@@ -20,4 +20,10 @@ describe('Komatsu Emergency Order Service', () => {
     expect(fleet.customers).toContain('TEST_CUSTOM_CUSTOMER');
     expect(fleet.models).toContain('PC999-TEST');
   });
+
+  test('exposes searchQuotations, confirmQuotation, and copyQuotationToSo functions', () => {
+    expect(typeof komatsuEoService.searchQuotations).toBe('function');
+    expect(typeof komatsuEoService.confirmQuotation).toBe('function');
+    expect(typeof komatsuEoService.copyQuotationToSo).toBe('function');
+  });
 });

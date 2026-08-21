@@ -225,3 +225,22 @@ export function executeKomatsuEoOrder(payload) {
   });
 }
 
+export function getKomatsuQuotations(params = {}) {
+  const query = new URLSearchParams(params).toString();
+  return request(`/api/komatsu/quotations?${query}`);
+}
+
+export function confirmKomatsuQuotation(payload) {
+  return request('/api/komatsu/quotations/confirm', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+}
+
+export function copyKomatsuQuotationToSo(payload) {
+  return request('/api/komatsu/quotations/copy-to-so', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+}
+
