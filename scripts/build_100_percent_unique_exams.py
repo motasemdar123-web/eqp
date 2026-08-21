@@ -480,64 +480,24 @@ N4_UNIQUE_LISTENING_DB = {
     }
 }
 
-# Generate unique questions for N4 Exams 4 through 10
+from authentic_n4_data import AUTHENTIC_N4_LISTENING_DB
+
+# Complete Authentic N4 Listening Handler
 def get_n4_exam_listening_data(exam_num):
     if exam_num in N4_UNIQUE_LISTENING_DB:
         return N4_UNIQUE_LISTENING_DB[exam_num]
+    if exam_num in AUTHENTIC_N4_LISTENING_DB:
+        return AUTHENTIC_N4_LISTENING_DB[exam_num]
+    raise ValueError(f"Missing authentic listening data for N4 Exam {exam_num}")
 
-    n4_themes = {
-        4: ("NAT-TEST Benchmark", "大阪支社へのFAX送信", "深夜サーバー保守", "ホッチキスの借用", "名刺の受け取り"),
-        5: ("Keigo & Passive", "会議フォルダー30部印刷", "通関手続きの遅延", "休暇申請の署名依頼", "役員への取次ぎ"),
-        6: ("Speed Drill", "会議室4のネット予約", "地下鉄の通過事故", "ITサポートへの連絡", "折り返し電話の連絡"),
-        7: ("Grammar Challenge", "問い合わせメールの仕分け", "ソフトウェア必須更新", "報告書の添削依頼", "喜んで承る返答"),
-        8: ("Workplace Etiquette", "上座・下座の席次案内", "再生エネルギー導入理由", "両手での名刺交換", "日程調整の依頼"),
-        9: ("Reading Sprint", "非常口の安全点検", "チラシ印刷の納期変更", "同僚への校正依頼", "注文内容の確認"),
-        10: ("Final Sprint 2026", "受験票・HB鉛筆の確認", "星印並べ替え対策", "試験直前の激励挨拶", "マークシート完全記入")
-    }
-    th = n4_themes.get(exam_num, ("General", "業務", "理由", "依頼", "応答"))
 
-    m1_list = []
-    for i in range(8):
-        m1_list.append((
-            f"{i+1}. 【{th[0]}】職場や日常の場面です。{i+1}番目に何の手続きや作業を行いますか。",
-            f"男「まずは{th[1]}の確認を最優先で進めてください。」女「かしこまりました。直ちに取り掛かります。」\n質問：何を行いますか。",
-            [f"{th[1]} (タスク {i+1})", f"別の作業 (タスク {((i+1)%4)+1})", f"資料整理", f"待機"],
-            0,
-            f"Exam {exam_num} N4 Task Comprehension item {i+1}."
-        ))
-
-    m2_list = []
-    for i in range(7):
-        m2_list.append((
-            f"{i+9}. 【{th[0]}】二人が話しています。どうして{th[2]}の決定がなされましたか。",
-            f"男「理由は{th[2]}に関する条件を総合的に判断した結果です。」女「なるほど、理解いたしました。」\n質問：どうしてですか。",
-            [f"{th[2]}の条件判断のため", "予算不足のため", "納期が迫っていたから", "指示があったから"],
-            0,
-            f"Exam {exam_num} N4 Point Comprehension rationale {i+1}."
-        ))
-
-    m3_list = []
-    for i in range(5):
-        m3_list.append((
-            f"{i+16}. 場面：{th[3]}の敬語表現です。相手に丁寧に何と言いますか。（矢印の人）",
-            f"状況：{th[3]}のビジネス・日常場面です。\n質問：何と言いますか。\n1. {th[3]}に関する適切な敬語表現\n2. ごめんなさい\n3. どういたしまして",
-            [f"{th[3]}に関する適切な敬語表現", "ごめんなさい", "どういたしまして"],
-            0,
-            f"Exam {exam_num} N4 Situational Keigo Utterance {i+1}."
-        ))
-
-    m4_list = []
-    for i in range(8):
-        m4_list.append((
-            f"{i+21}. 「{th[4]}に関する質問や依頼です。」",
-            f"発話：「{th[4]}について確認・依頼いたします。」\n1. はい、かしこまりました。承知いたしました。\n2. いいえ、違います。\n3. どういたしまして。",
-            ["はい、かしこまりました。承知いたしました。", "いいえ、違います。", "どういたしまして。"],
-            0,
-            f"Exam {exam_num} N4 Quick Response {i+1}."
-        ))
-
-    return {"m1": m1_list, "m2": m2_list, "m3": m3_list, "m4": m4_list}
-
+def balance_options(options, correct_idx, seed):
+    correct_val = options[correct_idx]
+    distractors = [opt for i, opt in enumerate(options) if i != correct_idx]
+    target_pos = seed % len(options)
+    new_options = distractors[:target_pos] + [correct_val] + distractors[target_pos:]
+    new_correct = new_options.index(correct_val)
+    return new_options, new_correct
 
 def build_all_10_n5():
     exams = []
@@ -589,49 +549,53 @@ def build_all_10_n5():
 
         distinct_listening = []
         for i, q in enumerate(sc["m1"]):
+            shuffled_opts, new_corr = balance_options(q[2], q[3], ex_num * 7 + i)
             distinct_listening.append({
                 "id": f"n5-e{ex_num}-l-{i+1}",
                 "type": "Mondai 1 (課題理解)",
                 "audioSrc": audio_m1,
                 "question": q[0],
-                "options": q[2],
-                "correct": q[3],
+                "options": shuffled_opts,
+                "correct": new_corr,
                 "transcript": q[1],
                 "explanation": q[4]
             })
 
         for i, q in enumerate(sc["m2"]):
+            shuffled_opts, new_corr = balance_options(q[2], q[3], ex_num * 11 + i)
             distinct_listening.append({
                 "id": f"n5-e{ex_num}-l-{i+8}",
                 "type": "Mondai 2 (ポイント理解)",
                 "audioSrc": audio_m2,
                 "question": q[0],
-                "options": q[2],
-                "correct": q[3],
+                "options": shuffled_opts,
+                "correct": new_corr,
                 "transcript": q[1],
                 "explanation": q[4]
             })
 
         for i, q in enumerate(sc["m3"]):
+            shuffled_opts, new_corr = balance_options(q[2], q[3], ex_num * 13 + i)
             distinct_listening.append({
                 "id": f"n5-e{ex_num}-l-{i+14}",
                 "type": "Mondai 3 (発話表現)",
                 "audioSrc": audio_m3,
                 "question": q[0],
-                "options": q[2],
-                "correct": q[3],
+                "options": shuffled_opts,
+                "correct": new_corr,
                 "transcript": q[1],
                 "explanation": q[4]
             })
 
         for i, q in enumerate(sc["m4"]):
+            shuffled_opts, new_corr = balance_options(q[2], q[3], ex_num * 17 + i)
             distinct_listening.append({
                 "id": f"n5-e{ex_num}-l-{i+19}",
                 "type": "Mondai 4 (即時応答)",
                 "audioSrc": audio_m4,
                 "question": q[0],
-                "options": q[2],
-                "correct": q[3],
+                "options": shuffled_opts,
+                "correct": new_corr,
                 "transcript": q[1],
                 "explanation": q[4]
             })
@@ -708,49 +672,53 @@ def build_all_10_n4():
 
         distinct_listening = []
         for i, q in enumerate(sc["m1"]):
+            shuffled_opts, new_corr = balance_options(q[2], q[3], ex_num * 7 + i)
             distinct_listening.append({
                 "id": f"n4-e{ex_num}-l-{i+1}",
                 "type": "Mondai 1 (課題理解)",
                 "audioSrc": audio_m1,
                 "question": q[0],
-                "options": q[2],
-                "correct": q[3],
+                "options": shuffled_opts,
+                "correct": new_corr,
                 "transcript": q[1],
                 "explanation": q[4]
             })
 
         for i, q in enumerate(sc["m2"]):
+            shuffled_opts, new_corr = balance_options(q[2], q[3], ex_num * 11 + i)
             distinct_listening.append({
                 "id": f"n4-e{ex_num}-l-{i+9}",
                 "type": "Mondai 2 (ポイント理解)",
                 "audioSrc": audio_m2,
                 "question": q[0],
-                "options": q[2],
-                "correct": q[3],
+                "options": shuffled_opts,
+                "correct": new_corr,
                 "transcript": q[1],
                 "explanation": q[4]
             })
 
         for i, q in enumerate(sc["m3"]):
+            shuffled_opts, new_corr = balance_options(q[2], q[3], ex_num * 13 + i)
             distinct_listening.append({
                 "id": f"n4-e{ex_num}-l-{i+16}",
                 "type": "Mondai 3 (発話表現)",
                 "audioSrc": audio_m3,
                 "question": q[0],
-                "options": q[2],
-                "correct": q[3],
+                "options": shuffled_opts,
+                "correct": new_corr,
                 "transcript": q[1],
                 "explanation": q[4]
             })
 
         for i, q in enumerate(sc["m4"]):
+            shuffled_opts, new_corr = balance_options(q[2], q[3], ex_num * 17 + i)
             distinct_listening.append({
                 "id": f"n4-e{ex_num}-l-{i+21}",
                 "type": "Mondai 4 (即時応答)",
                 "audioSrc": audio_m4,
                 "question": q[0],
-                "options": q[2],
-                "correct": q[3],
+                "options": shuffled_opts,
+                "correct": new_corr,
                 "transcript": q[1],
                 "explanation": q[4]
             })
