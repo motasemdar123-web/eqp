@@ -480,16 +480,14 @@ N4_UNIQUE_LISTENING_DB = {
     }
 }
 
+from strict_n5_listening_db import STRICT_N5_LISTENING_DB
+from strict_n4_listening_db import STRICT_N4_LISTENING_DB
 from authentic_n4_data import AUTHENTIC_N4_LISTENING_DB
 
-# Complete Authentic N4 Listening Handler
-def get_n4_exam_listening_data(exam_num):
-    if exam_num in N4_UNIQUE_LISTENING_DB:
-        return N4_UNIQUE_LISTENING_DB[exam_num]
-    if exam_num in AUTHENTIC_N4_LISTENING_DB:
-        return AUTHENTIC_N4_LISTENING_DB[exam_num]
-    raise ValueError(f"Missing authentic listening data for N4 Exam {exam_num}")
-
+# Merge any remaining N4 exams into STRICT_N4_LISTENING_DB
+for k in range(5, 11):
+    if k in AUTHENTIC_N4_LISTENING_DB and k not in STRICT_N4_LISTENING_DB:
+        STRICT_N4_LISTENING_DB[k] = AUTHENTIC_N4_LISTENING_DB[k]
 
 def balance_options(options, correct_idx, seed):
     correct_val = options[correct_idx]
@@ -539,13 +537,7 @@ def build_all_10_n5():
     for meta in meta_list:
         ex_num = meta[0]
         base_sections = generate_10_full_exams.make_n5_exam(ex_num, meta[1], meta[2], meta[3], meta[4], meta[5])
-        sc = N5_UNIQUE_LISTENING_DB[ex_num]
-
-        audio_base = "/audio/japanese/n5" if ex_num % 2 == 1 else "/audio/japanese/n5_2018"
-        audio_m1 = f"{audio_base}/captured-media-0-mp3.mp3" if "2018" not in audio_base else f"{audio_base}/N5Q1.mp3"
-        audio_m2 = f"{audio_base}/captured-media-1-mp3.mp3" if "2018" not in audio_base else f"{audio_base}/N5Q2.mp3"
-        audio_m3 = f"{audio_base}/captured-media-2-mp3.mp3" if "2018" not in audio_base else f"{audio_base}/N5Q3.mp3"
-        audio_m4 = f"{audio_base}/captured-media-3-mp3.mp3" if "2018" not in audio_base else f"{audio_base}/N5Q4.mp3"
+        sc = STRICT_N5_LISTENING_DB[ex_num]
 
         distinct_listening = []
         for i, q in enumerate(sc["m1"]):
@@ -553,7 +545,7 @@ def build_all_10_n5():
             distinct_listening.append({
                 "id": f"n5-e{ex_num}-l-{i+1}",
                 "type": "Mondai 1 (課題理解)",
-                "audioSrc": audio_m1,
+                "audioSrc": None,
                 "question": q[0],
                 "options": shuffled_opts,
                 "correct": new_corr,
@@ -566,7 +558,7 @@ def build_all_10_n5():
             distinct_listening.append({
                 "id": f"n5-e{ex_num}-l-{i+8}",
                 "type": "Mondai 2 (ポイント理解)",
-                "audioSrc": audio_m2,
+                "audioSrc": None,
                 "question": q[0],
                 "options": shuffled_opts,
                 "correct": new_corr,
@@ -579,7 +571,7 @@ def build_all_10_n5():
             distinct_listening.append({
                 "id": f"n5-e{ex_num}-l-{i+14}",
                 "type": "Mondai 3 (発話表現)",
-                "audioSrc": audio_m3,
+                "audioSrc": None,
                 "question": q[0],
                 "options": shuffled_opts,
                 "correct": new_corr,
@@ -592,7 +584,7 @@ def build_all_10_n5():
             distinct_listening.append({
                 "id": f"n5-e{ex_num}-l-{i+19}",
                 "type": "Mondai 4 (即時応答)",
-                "audioSrc": audio_m4,
+                "audioSrc": None,
                 "question": q[0],
                 "options": shuffled_opts,
                 "correct": new_corr,
@@ -662,13 +654,7 @@ def build_all_10_n4():
     for meta in meta_list:
         ex_num = meta[0]
         base_sections = generate_10_full_exams.make_n4_exam(ex_num, meta[1], meta[2], meta[3], meta[4], meta[5])
-        sc = get_n4_exam_listening_data(ex_num)
-
-        audio_base = "/audio/japanese/n4" if ex_num % 2 == 1 else "/audio/japanese/n4_2018"
-        audio_m1 = f"{audio_base}/captured-media-0-mp3.mp3" if "2018" not in audio_base else f"{audio_base}/N4Q1.mp3"
-        audio_m2 = f"{audio_base}/captured-media-1-mp3.mp3" if "2018" not in audio_base else f"{audio_base}/N4Q2.mp3"
-        audio_m3 = f"{audio_base}/captured-media-2-mp3.mp3" if "2018" not in audio_base else f"{audio_base}/N4Q3.mp3"
-        audio_m4 = f"{audio_base}/captured-media-3-mp3.mp3" if "2018" not in audio_base else f"{audio_base}/N4Q4.mp3"
+        sc = STRICT_N4_LISTENING_DB[ex_num]
 
         distinct_listening = []
         for i, q in enumerate(sc["m1"]):
@@ -676,7 +662,7 @@ def build_all_10_n4():
             distinct_listening.append({
                 "id": f"n4-e{ex_num}-l-{i+1}",
                 "type": "Mondai 1 (課題理解)",
-                "audioSrc": audio_m1,
+                "audioSrc": None,
                 "question": q[0],
                 "options": shuffled_opts,
                 "correct": new_corr,
@@ -689,7 +675,7 @@ def build_all_10_n4():
             distinct_listening.append({
                 "id": f"n4-e{ex_num}-l-{i+9}",
                 "type": "Mondai 2 (ポイント理解)",
-                "audioSrc": audio_m2,
+                "audioSrc": None,
                 "question": q[0],
                 "options": shuffled_opts,
                 "correct": new_corr,
@@ -702,7 +688,7 @@ def build_all_10_n4():
             distinct_listening.append({
                 "id": f"n4-e{ex_num}-l-{i+16}",
                 "type": "Mondai 3 (発話表現)",
-                "audioSrc": audio_m3,
+                "audioSrc": None,
                 "question": q[0],
                 "options": shuffled_opts,
                 "correct": new_corr,
@@ -715,7 +701,7 @@ def build_all_10_n4():
             distinct_listening.append({
                 "id": f"n4-e{ex_num}-l-{i+21}",
                 "type": "Mondai 4 (即時応答)",
-                "audioSrc": audio_m4,
+                "audioSrc": None,
                 "question": q[0],
                 "options": shuffled_opts,
                 "correct": new_corr,

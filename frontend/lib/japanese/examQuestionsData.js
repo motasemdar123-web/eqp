@@ -2158,6 +2158,7 @@ export const EXAM_PAPERS_CATALOG = {
                 "短くて白い折りたたみ傘"
               ],
               "correct": 2,
+              "transcript": "女「雨が降るかもしれないよ。傘を持って行ったら？」\n男「じゃあ、カバンに入る短くて黒い折りたたみ傘を持っていくよ。」\n質問：男の人はどの傘を持って行きますか。",
               "explanation": "He chooses the compact black folding umbrella (短くて黒い折りたたみ傘, Option 3)."
             },
             {
@@ -2173,6 +2174,7 @@ export const EXAM_PAPERS_CATALOG = {
                 "写真とお金"
               ],
               "correct": 0,
+              "transcript": "先生「明日の授業では漢字の練習をします。ノートと鉛筆を必ず持って来てください。」\n質問：学生は明日、何を持って来ますか。",
               "explanation": "Students need to bring notebook and pencil (ノートと鉛筆, Option 1)."
             },
             {
@@ -2188,6 +2190,7 @@ export const EXAM_PAPERS_CATALOG = {
                 "真ん中の四角いテーブル"
               ],
               "correct": 3,
+              "transcript": "女「どこに座る？」\n男「真ん中の四角いテーブルが空いているよ。あそこに座ろう。」\n質問：二人はどのテーブルに座りますか。",
               "explanation": "They sit at the square table in the middle (真ん中の四角いテーブル, Option 4)."
             },
             {
@@ -2203,7 +2206,8 @@ export const EXAM_PAPERS_CATALOG = {
                 "セーターとスラックス"
               ],
               "correct": 1,
-              "explanation": "He wears the white shirt and dark slacks (Option 2)."
+              "transcript": "男「明日のパーティー、何を着て行こうか。」\n女「黒いシャツに白いズボンが素敵よ。」\n男「じゃあ、それにしよう。」\n質問：男の人はどの服を着て行きますか。",
+              "explanation": "He wears the black shirt and white slacks (Option 2)."
             },
             {
               "id": "n5-v2-l-5",
@@ -2218,6 +2222,7 @@ export const EXAM_PAPERS_CATALOG = {
                 "ピンクの花束"
               ],
               "correct": 0,
+              "transcript": "女「すみません、この赤いバラを3本ください。」\n店員「はい、赤いバラ3本ですね。」\n質問：女の人はどの花を買いますか。",
               "explanation": "She buys 3 red roses (赤いバラ3本, Option 1)."
             },
             {
@@ -2233,6 +2238,7 @@ export const EXAM_PAPERS_CATALOG = {
                 "部屋を掃除する"
               ],
               "correct": 3,
+              "transcript": "男「午後から来客があるから、会議室を掃除してくれる？」\n女「わかりました。すぐ掃除します。」\n質問：女の人はこれから何をしますか。",
               "explanation": "She cleans the meeting room (部屋を掃除する, Option 4)."
             },
             {
@@ -2248,6 +2254,7 @@ export const EXAM_PAPERS_CATALOG = {
                 "4番バス"
               ],
               "correct": 2,
+              "transcript": "男「市役所へ行くバスはどれ？」\n女「3番のバスよ。もうすぐ来るわ。」\n男「よし、3番に乗ろう。」\n質問：二人はどのバスに乗りますか。",
               "explanation": "They board bus number 3 (3番バス, Option 3)."
             },
             {
@@ -2262,6 +2269,7 @@ export const EXAM_PAPERS_CATALOG = {
                 "道を間違えたから"
               ],
               "correct": 1,
+              "transcript": "男「遅かったね。」\n女「ごめんなさい、事故で電車が止まってしまったの。」\n質問：女の人はどうして遅れましたか。",
               "explanation": "The train stopped due to an issue (電車が止まったから, Option 2)."
             },
             {
@@ -2276,6 +2284,7 @@ export const EXAM_PAPERS_CATALOG = {
                 "5月4日"
               ],
               "correct": 0,
+              "transcript": "女「誕生日はいつ？」\n男「3月5日だよ。」\n女「へえ、ひな祭りのすぐ後ね。」\n質問：男の人の誕生日はいつですか。",
               "explanation": "His birthday is March 5th (3月5日, Option 1)."
             },
             {
@@ -2290,6 +2299,7 @@ export const EXAM_PAPERS_CATALOG = {
                 "映画館"
               ],
               "correct": 2,
+              "transcript": "男「昨日は休みだったので、静かな図書館へ行って本を読みました。」\n質問：男の人は昨日、どこへ行きましたか。",
               "explanation": "He went to the library (図書館, Option 3)."
             },
             {
@@ -2304,6 +2314,7 @@ export const EXAM_PAPERS_CATALOG = {
                 "焼肉"
               ],
               "correct": 0,
+              "transcript": "女「今晩は何にする？」\n男「久しぶりに美味しいカレーを作ろうか。」\n女「いいね、カレーにしましょう。」\n質問：二人は今晩、何を食べますか。",
               "explanation": "They decide to have curry (カレー, Option 1)."
             },
             {
@@ -2318,6 +2329,7 @@ export const EXAM_PAPERS_CATALOG = {
                 "金曜日"
               ],
               "correct": 1,
+              "transcript": "男「日本語の試験って月曜日だっけ？」\n女「ううん、火曜日よ。間違えないでね。」\n質問：試験は何曜日ですか。",
               "explanation": "The exam is on Tuesday (火曜日, Option 2)."
             },
             {
@@ -2332,6 +2344,7 @@ export const EXAM_PAPERS_CATALOG = {
                 "ポケットの中"
               ],
               "correct": 1,
+              "transcript": "女「部屋の鍵なら、机の引き出しの中に入れておいたよ。」\n質問：部屋の鍵はどこにありますか。",
               "explanation": "In the desk drawer (机の引き出し, Option 2)."
             },
             {
@@ -2346,6 +2359,7 @@ export const EXAM_PAPERS_CATALOG = {
                 "こんばんは"
               ],
               "correct": 0,
+              "transcript": "状況：朝、先生に会いました。\n質問：何と言いますか。\n1. おはようございます\n2. こんにちは\n3. こんばんは",
               "explanation": "Morning greeting:「おはようございます」."
             },
             {
@@ -2360,6 +2374,7 @@ export const EXAM_PAPERS_CATALOG = {
                 "ただいま"
               ],
               "correct": 0,
+              "transcript": "状況：友達の家を出ます。\n質問：何と言いますか。\n1. お邪魔しました\n2. いってきます\n3. ただいま",
               "explanation": "Polite departure after visiting:「お邪魔しました」."
             },
             {
@@ -2374,6 +2389,7 @@ export const EXAM_PAPERS_CATALOG = {
                 "わかりません"
               ],
               "correct": 0,
+              "transcript": "状況：言葉がよく聞こえませんでした。\n質問：何と言いますか。\n1. もう一度お願いします\n2. 大きな声で話してください\n3. わかりません",
               "explanation": "Polite repetition request:「もう一度お願いします」."
             },
             {
@@ -2388,6 +2404,7 @@ export const EXAM_PAPERS_CATALOG = {
                 "ごめんなさい"
               ],
               "correct": 0,
+              "transcript": "状況：プレゼントをもらいました。\n質問：何と言いますか。\n1. ありがとうございます\n2. どういたしまして\n3. ごめんなさい",
               "explanation": "Expressing gratitude:「ありがとうございます」."
             },
             {
@@ -2402,6 +2419,7 @@ export const EXAM_PAPERS_CATALOG = {
                 "写真を見せてください"
               ],
               "correct": 0,
+              "transcript": "状況：写真を撮ってもらいたいです。\n質問：何と言いますか。\n1. 写真を撮ってください\n2. 写真を撮りましょうか\n3. 写真を見せてください",
               "explanation": "Asking someone to take a photo:「写真を撮ってください」."
             },
             {
@@ -2415,6 +2433,7 @@ export const EXAM_PAPERS_CATALOG = {
                 "いただきます。"
               ],
               "correct": 0,
+              "transcript": "発話：「お疲れ様でした。」\n1. お疲れ様でした。\n2. どういたしまして。\n3. いただきます。",
               "explanation": "Natural reciprocal greeting:「お疲れ様でした。」"
             },
             {
@@ -2428,6 +2447,7 @@ export const EXAM_PAPERS_CATALOG = {
                 "そうしましょう。"
               ],
               "correct": 0,
+              "transcript": "発話：「この本を借りてもいいですか。」\n1. はい、どうぞ。\n2. いいえ、借ります。\n3. そうしましょう。",
               "explanation": "Granting permission:「はい、どうぞ。」"
             },
             {
@@ -2441,6 +2461,7 @@ export const EXAM_PAPERS_CATALOG = {
                 "いいえ、けっこうです。"
               ],
               "correct": 0,
+              "transcript": "発話：「コーヒーと紅茶、どちらがいいですか。」\n1. コーヒーをお願いします。\n2. はい、どちらもです。\n3. いいえ、けっこうです。",
               "explanation": "Selecting option:「コーヒーをお願いします。」"
             },
             {
@@ -2454,6 +2475,7 @@ export const EXAM_PAPERS_CATALOG = {
                 "いいえ、晴れません。"
               ],
               "correct": 0,
+              "transcript": "発話：「明日の天気はどうでしょうか。」\n1. 晴れると思いますよ。\n2. 昨日雨でした。\n3. いいえ、晴れません。",
               "explanation": "Forecasting answer:「晴れると思いますよ。」"
             },
             {
@@ -2467,6 +2489,7 @@ export const EXAM_PAPERS_CATALOG = {
                 "ごめんなさい。"
               ],
               "correct": 0,
+              "transcript": "発話：「ごちそうさまでした。」\n1. お粗末様でした。\n2. いただきます。\n3. ごめんなさい。",
               "explanation": "Host reply to after-meal thanks:「お粗末様でした。」(or どういたしまして)."
             },
             {
@@ -2480,6 +2503,7 @@ export const EXAM_PAPERS_CATALOG = {
                 "はい、行きます。"
               ],
               "correct": 0,
+              "transcript": "発話：「駅までどうやって行きますか。」\n1. バスで10分です。\n2. 100円です。\n3. はい、行きます。",
               "explanation": "Transportation answer:「バスで10分です。」"
             }
           ]
@@ -3365,13 +3389,13 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n5-e3-l-1",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
+              "audioSrc": null,
               "question": "1. 教室で 先生が 話しています。学生は 明日、何を 持って来ますか。",
               "options": [
-                "辞書と教科書",
-                "鉛筆と消しゴム",
-                "消しゴムと辞書",
-                "教科書とノート"
+                "辞書と 教科書",
+                "鉛筆と 消しゴム",
+                "消しゴムと 辞書",
+                "教科書と ノート"
               ],
               "correct": 1,
               "transcript": "女（先生）「明日は テストを しますから、鉛筆と 消しゴムを 忘れないでください。辞書は 使えません。」\n質問：学生は 明日、何を 持って来ますか。",
@@ -3380,7 +3404,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n5-e3-l-2",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
+              "audioSrc": null,
               "question": "2. 駅で 男の人と 女の人が 話しています。二人は どの 電車に 乗りますか。",
               "options": [
                 "10時15分の 急行",
@@ -3389,13 +3413,13 @@ export const EXAM_PAPERS_CATALOG = {
                 "10時05分の 電車"
               ],
               "correct": 2,
-              "transcript": "男「次の 急行は 10時15分だよ。」女「でも、急行は 目的の駅に 止まらないわ。10時20分の 普通電車に しよう。」\n質問：二人は どの 電車に 乗りますか。",
-              "explanation": "Takes 10:20 local train (10時20分の普通電車)."
+              "transcript": "男「次の 急行は 10時15分だよ。」\n女「でも、急行は 目的の駅に 止まらないわ。10時20分の 普通電車に しよう。」\n男「そうだね。」\n質問：二人は どの 電車に 乗りますか。",
+              "explanation": "Takes the 10:20 local train (10時20分の普通電車)."
             },
             {
               "id": "n5-e3-l-3",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
+              "audioSrc": null,
               "question": "3. カフェで 男の人と 店員が 話しています。男の人は 何を 注文しますか。",
               "options": [
                 "アイスコーヒー",
@@ -3404,14 +3428,14 @@ export const EXAM_PAPERS_CATALOG = {
                 "ホットコーヒー"
               ],
               "correct": 3,
-              "transcript": "男「ホットコーヒーと チーズケーキを ください。」店員「ケーキは 売り切れです。」男「じゃあ、ホットコーヒーだけ お願いします。」\n質問：男の人は 何を 注文しますか。",
+              "transcript": "男「ホットコーヒーと チーズケーキを ください。」\n店員「すみません、チーズケーキは 売り切れです。」\n男「じゃあ、ホットコーヒーだけ お願いします。」\n質問：男の人は 何を 注文しますか。",
               "explanation": "Orders hot coffee only (ホットコーヒー)."
             },
             {
               "id": "n5-e3-l-4",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
-              "question": "4. 家で 母と 息子が 話しています。男の子は 先に 何を しますか。",
+              "audioSrc": null,
+              "question": "4. 家で 母と 男の子が 話しています。男の子は 先に 何を しますか。",
               "options": [
                 "手を 洗う",
                 "宿題を カバンに 入れる",
@@ -3419,13 +3443,13 @@ export const EXAM_PAPERS_CATALOG = {
                 "テレビを 見る"
               ],
               "correct": 0,
-              "transcript": "母「ご飯の 前に 手を 洗ってね。」男の子「うん、宿題を カバンに 入れてから 洗うよ。」母「先に 手を 洗いなさい。」\n質問：男の子は 先に 何を しますか。",
+              "transcript": "母「ご飯の 前に 手を 洗ってね。」\n男の子「うん、宿題を カバンに 入れてから 洗うよ。」\n母「先に 手を 洗いなさい。」\n男の子「はーい。」\n質問：男の子は 先に 何を しますか。",
               "explanation": "Washes hands first (手を洗う)."
             },
             {
               "id": "n5-e3-l-5",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
+              "audioSrc": null,
               "question": "5. 図書館で 女の人と 係員が 話しています。女の人は 本を 何冊 借りますか。",
               "options": [
                 "4冊",
@@ -3434,13 +3458,13 @@ export const EXAM_PAPERS_CATALOG = {
                 "2冊"
               ],
               "correct": 1,
-              "transcript": "女「この 4冊を 借りたいです。」係員「貸出は 3冊までです。」女「では、この 3冊に します。」\n質問：女の人は 本を 何冊 借りますか。",
+              "transcript": "女「この 4冊を 借りたいです。」\n係員「貸出は お一人様 3冊までです。」\n女「では、この 3冊に します。」\n質問：女の人は 本を 何冊 借りますか。",
               "explanation": "Borrows 3 books (3冊)."
             },
             {
               "id": "n5-e3-l-6",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
+              "audioSrc": null,
               "question": "6. 店で 男の人と 女の人が 靴を 見ています。女の人は どの 靴を 買いますか。",
               "options": [
                 "黒い靴",
@@ -3449,13 +3473,13 @@ export const EXAM_PAPERS_CATALOG = {
                 "青い靴"
               ],
               "correct": 2,
-              "transcript": "女「黒い靴と 茶色い靴、どっちが いい？」男「黒い方が スーツに 合うよ。」女「でも 茶色い方が 歩きやすそう。茶色い方に するわ。」\n質問：女の人は どの 靴を 買いますか。",
+              "transcript": "女「黒い靴と 茶色い靴、どっちが いい？」\n男「黒い方が スーツに 合うよ。」\n女「でも 茶色い方が 歩きやすそう。茶色い方に するわ。」\n質問：女の人は どの 靴を 買いますか。",
               "explanation": "Selects brown shoes (茶色い靴)."
             },
             {
               "id": "n5-e3-l-7",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
+              "audioSrc": null,
               "question": "7. 留学生と 友達が 話しています。男の人は これから どこへ 行きますか。",
               "options": [
                 "カフェ",
@@ -3464,13 +3488,13 @@ export const EXAM_PAPERS_CATALOG = {
                 "郵便局"
               ],
               "correct": 3,
-              "transcript": "女「カフェに 行かない？」男「郵便局で 切手を 買ってから 行くよ。」\n質問：男の人は これから どこへ 行きますか。",
-              "explanation": "Goes to the post office first (郵便局)."
+              "transcript": "女「カフェに 行かない？」\n男「郵便局で 切手を 買ってから 行くよ。」\n女「じゃあ、郵便局の 前で 待ってるね。」\n質問：男の人は これから どこへ 行きますか。",
+              "explanation": "Goes to post office first (郵便局)."
             },
             {
               "id": "n5-e3-l-8",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n5/captured-media-1-mp3.mp3",
+              "audioSrc": null,
               "question": "8. 男の人と 女の人が 話しています。美術館は 何曜日に 休みですか。",
               "options": [
                 "月曜日",
@@ -3479,28 +3503,28 @@ export const EXAM_PAPERS_CATALOG = {
                 "日曜日"
               ],
               "correct": 1,
-              "transcript": "男「明日、美術館に 行かない？」女「明日は 火曜日だから 休館日よ。水曜日に しよう。」\n質問：美術館は 何曜日に 休みですか。",
+              "transcript": "男「明日、美術館に 行かない？」\n女「明日は 火曜日だから 休館日よ。水曜日に しよう。」\n男「わかった、水曜日に 行こう。」\n質問：美術館は 何曜日に 休みですか。",
               "explanation": "Closed on Tuesdays (火曜日)."
             },
             {
               "id": "n5-e3-l-9",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n5/captured-media-1-mp3.mp3",
+              "audioSrc": null,
               "question": "9. 女の人と 男の人が 話しています。男の人は どうして 自転車で 来ましたか。",
               "options": [
                 "電車が 遅れたから",
                 "お金が なかったから",
-                "天気が良く、運動になるから",
+                "天気が良く 運動になるから",
                 "車が 壊れたから"
               ],
               "correct": 2,
-              "transcript": "女「今日は 自転車なのね。」男「天気が 良かったし、運動にも なるからね。」\n質問：男の人は どうして 自転車で 来ましたか。",
-              "explanation": "Nice weather and good exercise (運動になるから)."
+              "transcript": "女「今日は 自転車なのね。」\n男「天気が 良かったし、運動にも なるからね。」\n質問：男の人は どうして 自転車で 来ましたか。",
+              "explanation": "Good weather and exercise (天気が良く運動になるから)."
             },
             {
               "id": "n5-e3-l-10",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n5/captured-media-1-mp3.mp3",
+              "audioSrc": null,
               "question": "10. 男の人と 女の人が 話しています。男の人は どこに 傘を 忘れましたか。",
               "options": [
                 "電車の中",
@@ -3509,13 +3533,13 @@ export const EXAM_PAPERS_CATALOG = {
                 "レストランの 傘立て"
               ],
               "correct": 3,
-              "transcript": "男「傘が ないんだ。電車の中に 忘れたかな。」女「さっきの レストランの 傘立てに 置いたままじゃない？」男「あ、そうだ！」\n質問：男の人は どこに 傘を 忘れましたか。",
-              "explanation": "Forgot umbrella at restaurant (レストランの傘立て)."
+              "transcript": "男「傘が ないんだ。電車の中に 忘れたかな。」\n女「さっきの レストランの 傘立てに 置いたままじゃない？」\n男「あ、そうだ！ レストランだ。」\n質問：男の人は どこに 傘を 忘れましたか。",
+              "explanation": "Restaurant umbrella stand (レストランの傘立て)."
             },
             {
               "id": "n5-e3-l-11",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n5/captured-media-1-mp3.mp3",
+              "audioSrc": null,
               "question": "11. 女の人と 男の人が 時計を 見ています。この 時計は 誰から もらいましたか。",
               "options": [
                 "お父さん",
@@ -3524,13 +3548,13 @@ export const EXAM_PAPERS_CATALOG = {
                 "先生"
               ],
               "correct": 0,
-              "transcript": "女「素敵な 時計ね。」男「去年の 誕生日に 父から もらったんだ。」\n質問：時計は 誰から もらいましたか。",
+              "transcript": "女「素敵な 時計ね。」\n男「去年の 誕生日に 父から もらったんだ。」\n質問：時計は 誰から もらいましたか。",
               "explanation": "Received from father (お父さん)."
             },
             {
               "id": "n5-e3-l-12",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n5/captured-media-1-mp3.mp3",
+              "audioSrc": null,
               "question": "12. 男の人と 女の人が 話しています。京都まで 新幹線で 何時間 かかりますか。",
               "options": [
                 "約1時間",
@@ -3539,13 +3563,13 @@ export const EXAM_PAPERS_CATALOG = {
                 "約30分"
               ],
               "correct": 1,
-              "transcript": "男「東京から 京都まで 新幹線で どのくらい？」女「だいたい 2時間ちょっとよ。」\n質問：新幹線で どのくらい かかりますか。",
-              "explanation": "Takes approx 2 hours (約2時間)."
+              "transcript": "男「東京から 京都まで 新幹線で どのくらい？」\n女「だいたい 2時間ちょっとよ。」\n質問：新幹線で どのくらい かかりますか。",
+              "explanation": "Approx 2 hours (約2時間)."
             },
             {
               "id": "n5-e3-l-13",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n5/captured-media-1-mp3.mp3",
+              "audioSrc": null,
               "question": "13. スーパーの 案内放送が 流れています。スーパーは 何時に 閉まりますか。",
               "options": [
                 "夜8時",
@@ -3560,7 +3584,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n5-e3-l-14",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
+              "audioSrc": null,
               "question": "14. 朝、近所の人に 会いました。何と言いますか。（矢印の人）",
               "options": [
                 "おはようございます",
@@ -3574,7 +3598,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n5-e3-l-15",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
+              "audioSrc": null,
               "question": "15. 友達の ペンを 借りたいです。何と言いますか。（矢印の人）",
               "options": [
                 "ペンを あげます",
@@ -3588,7 +3612,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n5-e3-l-16",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
+              "audioSrc": null,
               "question": "16. 先生の 部屋に 入ります。何と言いますか。（矢印の人）",
               "options": [
                 "ごめんなさい",
@@ -3602,7 +3626,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n5-e3-l-17",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
+              "audioSrc": null,
               "question": "17. 食事を 始める 前です。何と言いますか。（矢印の人）",
               "options": [
                 "いただきます",
@@ -3616,7 +3640,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n5-e3-l-18",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
+              "audioSrc": null,
               "question": "18. 会社から 先に 帰ります。何と言いますか。（矢印の人）",
               "options": [
                 "おかえりなさい",
@@ -3630,7 +3654,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n5-e3-l-19",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n5/captured-media-3-mp3.mp3",
+              "audioSrc": null,
               "question": "19. 「お茶を どうぞ。」",
               "options": [
                 "いただきます。",
@@ -3644,7 +3668,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n5-e3-l-20",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n5/captured-media-3-mp3.mp3",
+              "audioSrc": null,
               "question": "20. 「この 席、空いていますか。」",
               "options": [
                 "いいえ、元気です。",
@@ -3658,7 +3682,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n5-e3-l-21",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n5/captured-media-3-mp3.mp3",
+              "audioSrc": null,
               "question": "21. 「昨日の テストは どうでしたか。」",
               "options": [
                 "明日 あります。",
@@ -3667,12 +3691,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "発話：「昨日の テストは どうでしたか。」\n1. 少し 難しかったです。\n2. 明日 あります。\n3. いいえ、違います。",
-              "explanation": "Difficulty review:「少し難しかったです。」"
+              "explanation": "Difficulty:「少し難しかったです。」"
             },
             {
               "id": "n5-e3-l-22",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n5/captured-media-3-mp3.mp3",
+              "audioSrc": null,
               "question": "22. 「お国は どちらですか。」",
               "options": [
                 "アメリカです。",
@@ -3686,7 +3710,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n5-e3-l-23",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n5/captured-media-3-mp3.mp3",
+              "audioSrc": null,
               "question": "23. 「一緒にお昼ご飯を食べませんか。」",
               "options": [
                 "ごちそうさまでした。",
@@ -3695,12 +3719,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "発話：「一緒にお昼ご飯を食べませんか。」\n1. ええ、行きましょう。\n2. ごちそうさまでした。\n3. いいえ、食べました。",
-              "explanation": "Accepting lunch invitation:「ええ、行きましょう。」"
+              "explanation": "Accepting lunch:「ええ、行きましょう。」"
             },
             {
               "id": "n5-e3-l-24",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n5/captured-media-3-mp3.mp3",
+              "audioSrc": null,
               "question": "24. 「宿題は もう 終わりましたか。」",
               "options": [
                 "いいえ、始めました。",
@@ -4594,7 +4618,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n5-e4-l-1",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
+              "audioSrc": null,
               "question": "1. 会社で 男の人と 女の人が 話しています。男の人は コピーを 何枚 しますか。",
               "options": [
                 "15枚",
@@ -4603,13 +4627,13 @@ export const EXAM_PAPERS_CATALOG = {
                 "20枚"
               ],
               "correct": 0,
-              "transcript": "女「会議の 資料、10枚 コピーして。」男「参加者は 12人ですが、足りますか。」女「あ、そうね。じゃあ 予備も 入れて 15枚 お願い。」\n質問：男の人は コピーを 何枚 しますか。",
+              "transcript": "女「会議の 資料、10枚 コピーして。」\n男「参加者は 12人ですが、足りますか。」\n女「あ、そうね。じゃあ 予備も 入れて 15枚 お願い。」\n質問：男の人は コピーを 何枚 しますか。",
               "explanation": "Makes 15 copies (15枚)."
             },
             {
               "id": "n5-e4-l-2",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
+              "audioSrc": null,
               "question": "2. 八百屋で 女の人と 店員が 話しています。女の人は どの リンゴを 買いますか。",
               "options": [
                 "3個400円の リンゴを 1袋",
@@ -4618,13 +4642,13 @@ export const EXAM_PAPERS_CATALOG = {
                 "3個400円の リンゴを 2袋"
               ],
               "correct": 1,
-              "transcript": "女「この 1個150円の リンゴと、3個400円の リンゴは どこが 違いますか。」店員「150円の 方が 大きくて 甘いですよ。」女「じゃあ、大きい方を 2つ ください。」\n質問：女の人は どの リンゴを 買いますか。",
+              "transcript": "女「この 1個150円の リンゴと、3個400円の リンゴは どこが 違いますか。」\n店員「150円の 方が 大きくて 甘いですよ。」\n女「じゃあ、大きい方を 2つ ください。」\n質問：女の人は どの リンゴを 買いますか。",
               "explanation": "Buys two 150-yen apples (1個150円のリンゴを2個)."
             },
             {
               "id": "n5-e4-l-3",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
+              "audioSrc": null,
               "question": "3. 病院で 医者と 患者が 話しています。患者は 薬を いつ 飲みますか。",
               "options": [
                 "毎食後（朝・昼・晩）",
@@ -4639,7 +4663,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n5-e4-l-4",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
+              "audioSrc": null,
               "question": "4. 男の人と 女の人が 話しています。二人は どこで 待ち合わせますか。",
               "options": [
                 "駅の 改札口",
@@ -4648,13 +4672,13 @@ export const EXAM_PAPERS_CATALOG = {
                 "東口の 本屋の前"
               ],
               "correct": 3,
-              "transcript": "男「駅の 改札口で 待ってるよ。」女「改札口は 混むから、東口の 本屋の 前に しない？」男「いいね、そうしよう。」\n質問：二人は どこで 待ち合わせますか。",
+              "transcript": "男「駅の 改札口で 待ってるよ。」\n女「改札口は 混むから、東口の 本屋の 前に しない？」\n男「いいね、そうしよう。」\n質問：二人は どこで 待ち合わせますか。",
               "explanation": "Meets in front of East exit bookstore (東口の本屋の前)."
             },
             {
               "id": "n5-e4-l-5",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
+              "audioSrc": null,
               "question": "5. 学校で 先生が 話しています。学生は 月曜日に 何を 出しますか。",
               "options": [
                 "作文",
@@ -4669,7 +4693,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n5-e4-l-6",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
+              "audioSrc": null,
               "question": "6. ホテルで 客と フロントが 話しています。朝食は どこで 食べますか。",
               "options": [
                 "自分の 部屋",
@@ -4678,13 +4702,13 @@ export const EXAM_PAPERS_CATALOG = {
                 "屋上の テラス"
               ],
               "correct": 1,
-              "transcript": "客「朝食は 部屋で 食べられますか。」フロント「朝食は 2階の レストランに なっております。」\n質問：朝食は どこで 食べますか。",
+              "transcript": "客「朝食は 部屋で 食べられますか。」\nフロント「朝食は 2階の レストランに なっております。」\n質問：朝食は どこで 食べますか。",
               "explanation": "Breakfast at 2F restaurant (2階のレストラン)."
             },
             {
               "id": "n5-e4-l-7",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
+              "audioSrc": null,
               "question": "7. 男の人と 女の人が 話しています。男の人は 何時に 家を 出ますか。",
               "options": [
                 "2時30分",
@@ -4693,13 +4717,13 @@ export const EXAM_PAPERS_CATALOG = {
                 "3時00分"
               ],
               "correct": 2,
-              "transcript": "女「映画は 3時よ。駅まで 30分かかるから 2時半には 出てね。」男「切符を 買うから、もう 15分早く 2時15分に 出るよ。」\n質問：男の人は 何時に 家を 出ますか。",
+              "transcript": "女「映画は 3時よ。駅まで 30分かかるから 2時半には 出てね。」\n男「切符を 買うから、もう 15分早く 2時15分に 出るよ。」\n質問：男の人は 何時に 家を 出ますか。",
               "explanation": "Leaves at 2:15 PM (2時15分)."
             },
             {
               "id": "n5-e4-l-8",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q2.mp3",
+              "audioSrc": null,
               "question": "8. 男の人と 女の人が 話しています。田中さんは どうして パーティーに 来られませんか。",
               "options": [
                 "風邪を 引いて 熱が あるから",
@@ -4708,13 +4732,13 @@ export const EXAM_PAPERS_CATALOG = {
                 "忘れていたから"
               ],
               "correct": 0,
-              "transcript": "男「田中さん、来ないの？」女「風邪を 引いて 熱が あるそうなの。」\n質問：田中さんは どうして 来られませんか。",
-              "explanation": "Has a fever (風邪を引いて熱があるから)."
+              "transcript": "男「田中さん、来ないの？」\n女「風邪を 引いて 熱が あるそうなの。」\n質問：田中さんは どうして 来られませんか。",
+              "explanation": "Fever (風邪を引いて熱があるから)."
             },
             {
               "id": "n5-e4-l-9",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q2.mp3",
+              "audioSrc": null,
               "question": "9. 女の人と 男の人が 話しています。電車が 遅れた 理由は何ですか。",
               "options": [
                 "事故の ため",
@@ -4723,13 +4747,13 @@ export const EXAM_PAPERS_CATALOG = {
                 "雪の ため"
               ],
               "correct": 1,
-              "transcript": "女「電車が 止まっていたね。」男「強い 雨と 風の せいだったみたいだよ。」\n質問：電車が 遅れた 理由は何ですか。",
-              "explanation": "Due to heavy rain and wind (大雨と強風のため)."
+              "transcript": "女「電車が 止まっていたね。」\n男「強い 雨と 風の せいだったみたいだよ。」\n質問：電車が 遅れた 理由は何ですか。",
+              "explanation": "Heavy rain and wind (大雨と強風のため)."
             },
             {
               "id": "n5-e4-l-10",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q2.mp3",
+              "audioSrc": null,
               "question": "10. 男の人と 女の人が 話しています。女の人は どの 季節が 一番 好きですか。",
               "options": [
                 "夏",
@@ -4738,13 +4762,13 @@ export const EXAM_PAPERS_CATALOG = {
                 "冬"
               ],
               "correct": 2,
-              "transcript": "男「どの 季節が 好き？」女「春は 桜が 綺麗だから 一番 好きよ。」\n質問：女の人は どの 季節が 一番 好きですか。",
+              "transcript": "男「どの 季節が 好き？」\n女「春は 桜が 綺麗だから 一番 好きよ。」\n質問：女の人は どの 季節が 一番 好きですか。",
               "explanation": "Prefers Spring (春)."
             },
             {
               "id": "n5-e4-l-11",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q2.mp3",
+              "audioSrc": null,
               "question": "11. バス停で 男の人と 運転手が 話しています。動物園へ 行く バスは 何番ですか。",
               "options": [
                 "3番の バス",
@@ -4753,13 +4777,13 @@ export const EXAM_PAPERS_CATALOG = {
                 "5番の バス"
               ],
               "correct": 3,
-              "transcript": "男「動物園へ 行きたいのですが。」運転手「動物園へは 5番の バスに 乗って ください。」\n質問：動物園へ 行く バスは 何番ですか。",
-              "explanation": "Takes bus number 5 (5番のバス)."
+              "transcript": "男「動物園へ 行きたいのですが。」\n運転手「動物園へは 5番の バスに 乗って ください。」\n質問：動物園へ 行く バスは 何番ですか。",
+              "explanation": "Bus 5 (5番のバス)."
             },
             {
               "id": "n5-e4-l-12",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q2.mp3",
+              "audioSrc": null,
               "question": "12. 女の人と 男の人が 話しています。誕生日の プレゼントは何に しましたか。",
               "options": [
                 "本",
@@ -4768,13 +4792,13 @@ export const EXAM_PAPERS_CATALOG = {
                 "時計"
               ],
               "correct": 0,
-              "transcript": "女「妹の 誕生日に 何を あげたの？」男「花と 迷ったけど、好きな 本を あげたよ。」\n質問：プレゼントは何ですか。",
-              "explanation": "Gave a book (本)."
+              "transcript": "女「妹の 誕生日に 何を あげたの？」\n男「花と 迷ったけど、好きな 本を あげたよ。」\n質問：プレゼントは何ですか。",
+              "explanation": "Book (本)."
             },
             {
               "id": "n5-e4-l-13",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q2.mp3",
+              "audioSrc": null,
               "question": "13. 天気予報が 流れています。明日の 午後の 天気は どうなりますか。",
               "options": [
                 "一日中 晴れる",
@@ -4784,12 +4808,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "アナウンス「明日は 朝は 晴れますが、午後からは 雨が 降るでしょう。」\n質問：明日の 午後は どうなりますか。",
-              "explanation": "Rains in the afternoon (雨が降る)."
+              "explanation": "Rain in afternoon (雨が降る)."
             },
             {
               "id": "n5-e4-l-14",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
+              "audioSrc": null,
               "question": "14. 道を 尋ねたいです。何と言いますか。（矢印の人）",
               "options": [
                 "駅に 行きましょう",
@@ -4803,7 +4827,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n5-e4-l-15",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
+              "audioSrc": null,
               "question": "15. プレゼントを 渡します。何と言いますか。（矢印の人）",
               "options": [
                 "ごちそうさまでした",
@@ -4812,12 +4836,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "状況：プレゼントを 渡します。\n質問：何と言いますか。\n1. どうぞ\n2. ごちそうさまでした\n3. おめでとう",
-              "explanation": "Handing over gift:「どうぞ」."
+              "explanation": "Giving gift:「どうぞ」."
             },
             {
               "id": "n5-e4-l-16",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
+              "audioSrc": null,
               "question": "16. 足を踏んでしまいました。何と言いますか。（矢印の人）",
               "options": [
                 "すみません！",
@@ -4831,7 +4855,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n5-e4-l-17",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
+              "audioSrc": null,
               "question": "17. 食事を 終えました。何と言いますか。（矢印の人）",
               "options": [
                 "いただきます",
@@ -4845,7 +4869,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n5-e4-l-18",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
+              "audioSrc": null,
               "question": "18. 駅で 友達と 別れます。何と言いますか。（矢印の人）",
               "options": [
                 "ただいま",
@@ -4859,7 +4883,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n5-e4-l-19",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q4.mp3",
+              "audioSrc": null,
               "question": "19. 「今、お時間ありますか。」",
               "options": [
                 "いいえ、時間です。",
@@ -4873,7 +4897,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n5-e4-l-20",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q4.mp3",
+              "audioSrc": null,
               "question": "20. 「いいお天気ですね。」",
               "options": [
                 "そうですね、気持ちいいですね。",
@@ -4882,12 +4906,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "発話：「いいお天気ですね。」\n1. そうですね、気持ちいいですね。\n2. いいえ、雨です。\n3. お大事に。",
-              "explanation": "Agreeing on weather:「そうですね、気持ちいいですね。」"
+              "explanation": "Agreeing on weather:「そうですね」"
             },
             {
               "id": "n5-e4-l-21",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q4.mp3",
+              "audioSrc": null,
               "question": "21. 「ここで写真を撮ってもいいですか。」",
               "options": [
                 "はい、撮りました。",
@@ -4896,12 +4920,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "発話：「ここで写真を撮ってもいいですか。」\n1. ええ、いいですよ。\n2. はい、撮りました。\n3. 写真です。",
-              "explanation": "Granting permission:「ええ、いいですよ。」"
+              "explanation": "Permission:「ええ、いいですよ。」"
             },
             {
               "id": "n5-e4-l-22",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q4.mp3",
+              "audioSrc": null,
               "question": "22. 「日本語がお上手ですね。」",
               "options": [
                 "はい、上手でした。",
@@ -4910,12 +4934,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "発話：「日本語がお上手ですね。」\n1. いいえ、まだまだです。\n2. はい、上手でした。\n3. どういたしまして。",
-              "explanation": "Humble response:「いいえ、まだまだです。」"
+              "explanation": "Modest reply:「いいえ、まだまだです。」"
             },
             {
               "id": "n5-e4-l-23",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q4.mp3",
+              "audioSrc": null,
               "question": "23. 「これは誰のカバンですか。」",
               "options": [
                 "私のです。",
@@ -4929,7 +4953,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n5-e4-l-24",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q4.mp3",
+              "audioSrc": null,
               "question": "24. 「少し休みましょうか。」",
               "options": [
                 "いいえ、休みました。",
@@ -4938,7 +4962,7 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "発話：「少し休みましょうか。」\n1. はい、そうしましょう。\n2. いいえ、休みました。\n3. 疲れました。",
-              "explanation": "Taking a break:「はい、そうしましょう。」"
+              "explanation": "Break:「はい、そうしましょう。」"
             }
           ]
         }
@@ -5823,7 +5847,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n5-e5-l-1",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
+              "audioSrc": null,
               "question": "1. 夫婦が 話しています。夫は これから どこへ 行きますか。",
               "options": [
                 "スーパー",
@@ -5832,13 +5856,13 @@ export const EXAM_PAPERS_CATALOG = {
                 "銀行"
               ],
               "correct": 3,
-              "transcript": "妻「スーパーに 行くけど、牛乳 頼むわね。」夫「あ、僕はお金を おろしに 銀行へ 行ってくるよ。」\n質問：夫は これから どこへ 行きますか。",
-              "explanation": "Husband goes to the bank (銀行)."
+              "transcript": "妻「スーパーに 行くけど、牛乳 頼むわね。」\n夫「あ、僕はお金を おろしに 銀行へ 行ってくるよ。」\n質問：夫は これから どこへ 行きますか。",
+              "explanation": "Goes to bank (銀行)."
             },
             {
               "id": "n5-e5-l-2",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
+              "audioSrc": null,
               "question": "2. カフェで 二人が 席を 選んでいます。二人は どの 席に 座りますか。",
               "options": [
                 "奥の テーブル席",
@@ -5847,13 +5871,13 @@ export const EXAM_PAPERS_CATALOG = {
                 "テラス席"
               ],
               "correct": 0,
-              "transcript": "男「窓側の 席が 空いてるよ。」女「日差しが 暑いわ。奥の 静かな テーブルに しましょ。」\n質問：二人は どの 席に 座りますか。",
-              "explanation": "Inner table away from sunlight (奥のテーブル席)."
+              "transcript": "男「窓側の 席が 空いてるよ。」\n女「日差しが 暑いわ。奥の 静かな テーブルに しましょ。」\n質問：二人は どの 席に 座りますか。",
+              "explanation": "Inner shaded table (奥のテーブル席)."
             },
             {
               "id": "n5-e5-l-3",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
+              "audioSrc": null,
               "question": "3. 教室で 先生が 話しています。学生は 宿題を 何ページまで しますか。",
               "options": [
                 "23ページまで",
@@ -5863,12 +5887,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "先生「今日は 20ページから 22ページまで やってください。23ページは 明日 やります。」\n質問：今日の 宿題は 何ページまでですか。",
-              "explanation": "Homework up to page 22 (22ページまで)."
+              "explanation": "Up to page 22 (22ページまで)."
             },
             {
               "id": "n5-e5-l-4",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
+              "audioSrc": null,
               "question": "4. パン屋で 女の人が 注文しています。女の人は 何を 買いますか。",
               "options": [
                 "サンドイッチ 2個",
@@ -5877,13 +5901,13 @@ export const EXAM_PAPERS_CATALOG = {
                 "食パン 1斤"
               ],
               "correct": 2,
-              "transcript": "女「メロンパンと サンドイッチを ください。」店員「すみません、サンドイッチは 売り切れです。」女「じゃあ、メロンパンを 2個 ください。」\n質問：女の人は 何を 買いましたか。",
+              "transcript": "女「メロンパンと サンドイッチを ください。」\n店員「すみません、サンドイッチは 売り切れです。」\n女「じゃあ、メロンパンを 2個 ください。」\n質問：女の人は 何を 買いましたか。",
               "explanation": "Buys 2 melon pans (メロンパン2個)."
             },
             {
               "id": "n5-e5-l-5",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
+              "audioSrc": null,
               "question": "5. 男の人と 女の人が 話しています。男の人は 今日、何で 通勤しましたか。",
               "options": [
                 "自転車",
@@ -5892,13 +5916,13 @@ export const EXAM_PAPERS_CATALOG = {
                 "バス"
               ],
               "correct": 3,
-              "transcript": "女「今日も 自転車？」男「雨が 降っているから、今日は バスで 来たよ。」\n質問：男の人は 今日、何で 来ましたか。",
-              "explanation": "Commuted by bus today (バス)."
+              "transcript": "女「今日も 自転車？」\n男「雨が 降っているから、今日は バスで 来たよ。」\n質問：男の人は 今日、何で 来ましたか。",
+              "explanation": "Bus commute (バス)."
             },
             {
               "id": "n5-e5-l-6",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
+              "audioSrc": null,
               "question": "6. 友達が 話しています。二人は 日曜日に 何を しますか。",
               "options": [
                 "カラオケに 行く",
@@ -5907,13 +5931,13 @@ export const EXAM_PAPERS_CATALOG = {
                 "買い物に 行く"
               ],
               "correct": 0,
-              "transcript": "男「テニスを しない？」女「ラケットが ないの。カラオケは どう？」男「いいね、そうしよう！」\n質問：二人は 何を しますか。",
-              "explanation": "Going to karaoke (カラオケに行く)."
+              "transcript": "男「テニスを しない？」\n女「ラケットが ないの。カラオケは どう？」\n男「いいね、そうしよう！」\n質問：二人は 何を しますか。",
+              "explanation": "Karaoke (カラオケに行く)."
             },
             {
               "id": "n5-e5-l-7",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
+              "audioSrc": null,
               "question": "7. 男の人が 鍵を 探しています。鍵は どこに ありましたか。",
               "options": [
                 "カバンの中",
@@ -5922,13 +5946,13 @@ export const EXAM_PAPERS_CATALOG = {
                 "靴箱の上"
               ],
               "correct": 1,
-              "transcript": "男「鍵が 見当たらない！」女「机の上の 本の下に 置いてあるわよ。」男「あ、本当だ！」\n質問：鍵は どこに ありましたか。",
+              "transcript": "男「鍵が 見当たらない！」\n女「机の上の 本の下に 置いてあるわよ。」\n男「あ、本当だ！」\n質問：鍵は どこに ありましたか。",
               "explanation": "Under book on desk (机の上の本の下)."
             },
             {
               "id": "n5-e5-l-8",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n5/captured-media-1-mp3.mp3",
+              "audioSrc": null,
               "question": "8. レストランで 客が 話しています。スープは どうでしたか。",
               "options": [
                 "甘すぎる",
@@ -5937,13 +5961,13 @@ export const EXAM_PAPERS_CATALOG = {
                 "塩辛い（しょっぱい）"
               ],
               "correct": 3,
-              "transcript": "男「この スープ、少し 塩が 多すぎるね。」女「本当ね、ちょっと しょっぱいわ。」\n質問：スープは どうでしたか。",
+              "transcript": "男「この スープ、少し 塩が 多すぎるね。」\n女「本当ね、ちょっと しょっぱいわ。」\n質問：スープは どうでしたか。",
               "explanation": "Too salty (塩辛い)."
             },
             {
               "id": "n5-e5-l-9",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n5/captured-media-1-mp3.mp3",
+              "audioSrc": null,
               "question": "9. 女の人と 男の人が 話しています。男の人は いつ 勉強していますか。",
               "options": [
                 "毎朝 5時（早朝）",
@@ -5952,13 +5976,13 @@ export const EXAM_PAPERS_CATALOG = {
                 "夕方"
               ],
               "correct": 0,
-              "transcript": "女「いつ 勉強してるの？」男「夜は 眠くなるから、毎朝 5時に 起きて 勉強してるよ。」\n質問：男の人は いつ 勉強しますか。",
-              "explanation": "Studies every morning at 5 AM (毎朝5時)."
+              "transcript": "女「いつ 勉強してるの？」\n男「夜は 眠くなるから、毎朝 5時に 起きて 勉強してるよ。」\n質問：男の人は いつ 勉強しますか。",
+              "explanation": "Every morning at 5 AM (毎朝5時)."
             },
             {
               "id": "n5-e5-l-10",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n5/captured-media-1-mp3.mp3",
+              "audioSrc": null,
               "question": "10. 映画館で チケットを 買います。学生割引で いくらに なりますか。",
               "options": [
                 "1800円",
@@ -5968,12 +5992,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "店員「一般は 1800円ですが、学生証を ご提示で 1000円に なります。」\n質問：学生は いくら 払いますか。",
-              "explanation": "Student ticket is 1,000 yen (1000円)."
+              "explanation": "Student ticket 1000 yen (1000円)."
             },
             {
               "id": "n5-e5-l-11",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n5/captured-media-1-mp3.mp3",
+              "audioSrc": null,
               "question": "11. 公園で 二人が 話しています。公園が 混んでいる 理由は何ですか。",
               "options": [
                 "天気が 悪いから",
@@ -5982,13 +6006,13 @@ export const EXAM_PAPERS_CATALOG = {
                 "無料だから"
               ],
               "correct": 2,
-              "transcript": "男「今日は 人が 多いね。」女「桜祭りを やっているからよ。」\n質問：混んでいる 理由は 何ですか。",
+              "transcript": "男「今日は 人が 多いね。」\n女「桜祭りを やっているからよ。」\n質問：混んでいる 理由は 何ですか。",
               "explanation": "Cherry blossom festival (桜祭りをやっているから)."
             },
             {
               "id": "n5-e5-l-12",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n5/captured-media-1-mp3.mp3",
+              "audioSrc": null,
               "question": "12. スマホを 探しています。スマホは どこに ありましたか。",
               "options": [
                 "ズボンの ポケット",
@@ -5998,12 +6022,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 3,
               "transcript": "男「コートの ポケットに 入っていたよ。」\n質問：スマホは どこに ありましたか。",
-              "explanation": "In coat pocket (コートのポケット)."
+              "explanation": "Coat pocket (コートのポケット)."
             },
             {
               "id": "n5-e5-l-13",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n5/captured-media-1-mp3.mp3",
+              "audioSrc": null,
               "question": "13. ケーキ屋で ケーキを 買いました。何味の ケーキを 買いましたか。",
               "options": [
                 "イチゴ（ショートケーキ）",
@@ -6018,7 +6042,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n5-e5-l-14",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
+              "audioSrc": null,
               "question": "14. 客を 家に 迎えます。何と言いますか。（矢印の人）",
               "options": [
                 "お邪魔しました",
@@ -6027,12 +6051,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "状況：家に来た 客を迎えます。\n1. いらっしゃい、どうぞお入りください\n2. お邪魔しました\n3. 行ってらっしゃい",
-              "explanation": "Welcoming guest:「いらっしゃい、どうぞお入りください」."
+              "explanation": "Welcoming:「いらっしゃい、どうぞお入りください」."
             },
             {
               "id": "n5-e5-l-15",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
+              "audioSrc": null,
               "question": "15. レストランで 支払いを します。何と言いますか。（矢印の人）",
               "options": [
                 "お会計を お願いします",
@@ -6041,12 +6065,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "状況：支払いを お願いします。\n1. お会計を お願いします\n2. ごちそうさまでした\n3. いただきます",
-              "explanation": "Asking for bill:「お会計をお願いします」."
+              "explanation": "Bill:「お会計をお願いします」."
             },
             {
               "id": "n5-e5-l-16",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
+              "audioSrc": null,
               "question": "16. 病気の 友達を お見舞いします。何と言いますか。（矢印の人）",
               "options": [
                 "おかげさまで",
@@ -6055,12 +6079,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "状況：病気の人を 励まします。\n1. お大事に\n2. おかげさまで\n3. おめでとう",
-              "explanation": "Get well wishes:「お大事に」."
+              "explanation": "Get well:「お大事に」."
             },
             {
               "id": "n5-e5-l-17",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
+              "audioSrc": null,
               "question": "17. 試合に 出る 友達を 応援します。何と言いますか。（矢印の人）",
               "options": [
                 "ごめんなさい",
@@ -6069,12 +6093,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "状況：友達を 応援します。\n1. 頑張って ください！\n2. ごめんなさい\n3. 失礼します",
-              "explanation": "Cheering:「頑張ってください！」"
+              "explanation": "Cheer:「頑張ってください！」"
             },
             {
               "id": "n5-e5-l-18",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
+              "audioSrc": null,
               "question": "18. お店で 買い物を 終えました。店員に 何と言いますか。（矢印の人）",
               "options": [
                 "ありがとう",
@@ -6083,12 +6107,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "状況：お店を出ます。\n1. ありがとう\n2. ただいま\n3. いってきます",
-              "explanation": "Thanking clerk:「ありがとう」."
+              "explanation": "Thanks:「ありがとう」."
             },
             {
               "id": "n5-e5-l-19",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n5/captured-media-3-mp3.mp3",
+              "audioSrc": null,
               "question": "19. 「富士山に 登ったことが ありますか。」",
               "options": [
                 "いいえ、山です。",
@@ -6097,12 +6121,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "発話：「富士山に 登ったことが ありますか。」\n1. はい、一度 登りました。\n2. いいえ、山です。\n3. 高いです。",
-              "explanation": "Climbed Mt Fuji once:「はい、一度登りました。」"
+              "explanation": "Mt Fuji:「はい、一度登りました。」"
             },
             {
               "id": "n5-e5-l-20",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n5/captured-media-3-mp3.mp3",
+              "audioSrc": null,
               "question": "20. 「コーヒーは ホットと アイス、どちらが よろしいですか。」",
               "options": [
                 "コーヒーが 好きです。",
@@ -6116,7 +6140,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n5-e5-l-21",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n5/captured-media-3-mp3.mp3",
+              "audioSrc": null,
               "question": "21. 「荷物を 持ちましょうか。」",
               "options": [
                 "助かります、お願いします。",
@@ -6125,12 +6149,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "発話：「荷物を 持ちましょうか。」\n1. 助かります、お願いします。\n2. いいえ、持っています。\n3. 重いです。",
-              "explanation": "Accepting help:「助かります、お願いします。」"
+              "explanation": "Help offer:「助かります、お願いします。」"
             },
             {
               "id": "n5-e5-l-22",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n5/captured-media-3-mp3.mp3",
+              "audioSrc": null,
               "question": "22. 「お誕生日は いつですか。」",
               "options": [
                 "ケーキを 食べます。",
@@ -6139,12 +6163,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "発話：「お誕生日は いつですか。」\n1. 来月の 3日です。\n2. ケーキを 食べます。\n3. 20歳です。",
-              "explanation": "Date:「来月の3日です。」"
+              "explanation": "Birthday:「来月の3日です。」"
             },
             {
               "id": "n5-e5-l-23",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n5/captured-media-3-mp3.mp3",
+              "audioSrc": null,
               "question": "23. 「東京に 住んで どのくらいですか。」",
               "options": [
                 "新宿です。",
@@ -6153,12 +6177,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "発話：「東京に 住んで どのくらいですか。」\n1. 半年に なります。\n2. 新宿です。\n3. 一人暮らしです。",
-              "explanation": "Length of stay:「半年になります。」"
+              "explanation": "Half a year:「半年になります。」"
             },
             {
               "id": "n5-e5-l-24",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n5/captured-media-3-mp3.mp3",
+              "audioSrc": null,
               "question": "24. 「銀行は ここから 遠いですか。」",
               "options": [
                 "いいえ、歩いて 5分ですよ。",
@@ -6167,7 +6191,7 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "発話：「銀行は ここから 遠いですか。」\n1. いいえ、歩いて 5分ですよ。\n2. はい、銀行です。\n3. 9時に 開きます。",
-              "explanation": "5 mins walk:「いいえ、歩いて5分ですよ。」"
+              "explanation": "5 min walk:「いいえ、歩いて5分ですよ。」"
             }
           ]
         }
@@ -7052,7 +7076,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n5-e6-l-1",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
+              "audioSrc": null,
               "question": "1. 留学生と 教授が 話しています。留学生は 何時に 教授の 部屋へ 行きますか。",
               "options": [
                 "3時",
@@ -7061,13 +7085,13 @@ export const EXAM_PAPERS_CATALOG = {
                 "5時"
               ],
               "correct": 2,
-              "transcript": "男「先生、ご相談は 何時が よろしいでしょうか。」教授「4時半に 来てください。」\n質問：留学生は 何時に 行きますか。",
+              "transcript": "男「先生、ご相談は 何時が よろしいでしょうか。」\n教授「4時半に 来てください。」\n質問：留学生は 何時に 行きますか。",
               "explanation": "4:30 PM (4時半)."
             },
             {
               "id": "n5-e6-l-2",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
+              "audioSrc": null,
               "question": "2. 飲み物を 選びます。車を 運転する 男の人は 何を 飲みますか。",
               "options": [
                 "ビール",
@@ -7076,13 +7100,13 @@ export const EXAM_PAPERS_CATALOG = {
                 "お茶"
               ],
               "correct": 3,
-              "transcript": "女「ビールと お茶と ジュースが あるわ。」男「運転するから、お茶に するよ。」\n質問：男の人は 何を 飲みますか。",
-              "explanation": "Drinks tea due to driving (お茶)."
+              "transcript": "女「ビールと お茶と ジュースが あるわ。」\n男「運転するから、お茶に するよ。」\n質問：男の人は 何を 飲みますか。",
+              "explanation": "Tea for driver (お茶)."
             },
             {
               "id": "n5-e6-l-3",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
+              "audioSrc": null,
               "question": "3. 服屋で 男の人が シャツを 買います。何色の シャツを 買いますか。",
               "options": [
                 "青い シャツ",
@@ -7097,7 +7121,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n5-e6-l-4",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
+              "audioSrc": null,
               "question": "4. 二人が 話しています。明日は どこへ 行きますか。",
               "options": [
                 "海",
@@ -7106,13 +7130,13 @@ export const EXAM_PAPERS_CATALOG = {
                 "遊園地"
               ],
               "correct": 1,
-              "transcript": "男「明日は 雨予報だから、海をやめて 美術館に しよう。」女「そうね。」\n質問：明日は どこへ 行きますか。",
-              "explanation": "Art museum (美術館)."
+              "transcript": "男「明日は 雨予報だから、海をやめて 美術館に しよう。」\n女「そうね。」\n質問：明日は どこへ 行きますか。",
+              "explanation": "Museum (美術館)."
             },
             {
               "id": "n5-e6-l-5",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
+              "audioSrc": null,
               "question": "5. 料理の 準備です。冷蔵庫から 何を 出しますか。",
               "options": [
                 "卵と 牛乳",
@@ -7127,7 +7151,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n5-e6-l-6",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
+              "audioSrc": null,
               "question": "6. パーティーの 日程を 決めます。何曜日に 変更しましたか。",
               "options": [
                 "金曜日",
@@ -7142,7 +7166,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n5-e6-l-7",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
+              "audioSrc": null,
               "question": "7. 図書館で 荷物を 置きます。大きな カバンは どこに 入れますか。",
               "options": [
                 "ロッカー",
@@ -7157,7 +7181,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n5-e6-l-8",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q2.mp3",
+              "audioSrc": null,
               "question": "8. 電車が 止まった 理由は何ですか。",
               "options": [
                 "大雨のため",
@@ -7172,7 +7196,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n5-e6-l-9",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q2.mp3",
+              "audioSrc": null,
               "question": "9. 新しい ノートパソコンを 買った 理由は何ですか。",
               "options": [
                 "画面が 大きいから",
@@ -7182,12 +7206,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 3,
               "transcript": "男「軽くて 持ち運びに 便利だから これに したんだ。」\n質問：選んだ 理由は 何ですか。",
-              "explanation": "Lightweight portability (軽くて持ち運びやすいから)."
+              "explanation": "Lightweight (軽くて持ち運びやすいから)."
             },
             {
               "id": "n5-e6-l-10",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q2.mp3",
+              "audioSrc": null,
               "question": "10. 映画は 何時に 始まりますか。",
               "options": [
                 "6時45分",
@@ -7197,12 +7221,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "女「映画は 6時45分から 上映よ。」\n質問：映画は 何時に 始まりますか。",
-              "explanation": "Starts at 6:45 PM (6時45分)."
+              "explanation": "6:45 PM (6時45分)."
             },
             {
               "id": "n5-e6-l-11",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q2.mp3",
+              "audioSrc": null,
               "question": "11. 男の人が 夕食を 食べなかった 理由は何ですか。",
               "options": [
                 "忙しかったから",
@@ -7217,7 +7241,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n5-e6-l-12",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q2.mp3",
+              "audioSrc": null,
               "question": "12. タクシーに 忘れた 傘は何色ですか。",
               "options": [
                 "青",
@@ -7227,12 +7251,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "男「赤い傘を タクシーの 中に 忘れてしまったんだ。」\n質問：傘は 何色ですか。",
-              "explanation": "Red umbrella (赤)."
+              "explanation": "Red (赤)."
             },
             {
               "id": "n5-e6-l-13",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q2.mp3",
+              "audioSrc": null,
               "question": "13. アパートには 誰が 住んでいますか。",
               "options": [
                 "弟",
@@ -7247,7 +7271,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n5-e6-l-14",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
+              "audioSrc": null,
               "question": "14. 借りていた 本を 返します。何と言いますか。（矢印の人）",
               "options": [
                 "ありがとうございました、とても 面白かったです",
@@ -7256,12 +7280,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "状況：本を 返却します。\n1. ありがとうございました、とても 面白かったです\n2. いってらっしゃい\n3. どういたしまして",
-              "explanation": "Returning borrowed item:「ありがとうございました」."
+              "explanation": "Return:「ありがとうございました」."
             },
             {
               "id": "n5-e6-l-15",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
+              "audioSrc": null,
               "question": "15. 電話に 出ました。何と言いますか。（矢印の人）",
               "options": [
                 "さようなら",
@@ -7270,12 +7294,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "状況：電話を 取ります。\n1. もしもし、田中です\n2. さようなら\n3. お邪魔します",
-              "explanation": "Phone answer:「もしもし、田中です」."
+              "explanation": "Phone:「もしもし、田中です」."
             },
             {
               "id": "n5-e6-l-16",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
+              "audioSrc": null,
               "question": "16. 相手の 話す スピードが 速いです。何と言いますか。（矢印の人）",
               "options": [
                 "もっと 早く 話して ください",
@@ -7284,12 +7308,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "状況：ゆっくり話してほしいです。\n1. もう少し ゆっくり 話して ください\n2. もっと 早く 話して ください\n3. 静かに して ください",
-              "explanation": "Slow down request:「もう少しゆっくり話してください」."
+              "explanation": "Slow down:「もう少しゆっくり話してください」."
             },
             {
               "id": "n5-e6-l-17",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
+              "audioSrc": null,
               "question": "17. 窓を 開けたいです。許可を もらいます。何と言いますか。（矢印の人）",
               "options": [
                 "窓を 開けても いいですか",
@@ -7303,7 +7327,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n5-e6-l-18",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
+              "audioSrc": null,
               "question": "18. 空港で 帰国する 友達を 見送ります。何と言いますか。（矢印の人）",
               "options": [
                 "ただいま",
@@ -7312,12 +7336,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "状況：見送り。\n1. 気をつけて 帰ってね！\n2. ただいま\n3. お邪魔しました",
-              "explanation": "Safe trip farewell:「気をつけて帰ってね！」"
+              "explanation": "Farewell:「気をつけて帰ってね！」"
             },
             {
               "id": "n5-e6-l-19",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q4.mp3",
+              "audioSrc": null,
               "question": "19. 「ご趣味は 何ですか。」",
               "options": [
                 "写真を 撮ることです。",
@@ -7331,7 +7355,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n5-e6-l-20",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q4.mp3",
+              "audioSrc": null,
               "question": "20. 「切符は もう 買いましたか。」",
               "options": [
                 "電車です。",
@@ -7340,12 +7364,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "発話：「切符は もう 買いましたか。」\n1. はい、ネットで 買いました。\n2. 電車です。\n3. いいえ、切符です。",
-              "explanation": "Purchased online:「はい、ネットで買いました。」"
+              "explanation": "Online:「はい、ネットで買いました。」"
             },
             {
               "id": "n5-e6-l-21",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q4.mp3",
+              "audioSrc": null,
               "question": "21. 「外は 寒いですか。」",
               "options": [
                 "いいえ、暑かったです。",
@@ -7354,12 +7378,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "発話：「外は 寒いですか。」\n1. はい、とても 寒いです。\n2. いいえ、暑かったです。\n3. 風です。",
-              "explanation": "Cold outside:「はい、とても寒いです。」"
+              "explanation": "Cold:「はい、とても寒いです。」"
             },
             {
               "id": "n5-e6-l-22",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q4.mp3",
+              "audioSrc": null,
               "question": "22. 「ここに 座っても よろしいですか。」",
               "options": [
                 "どうぞ、お座りください。",
@@ -7368,12 +7392,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "発話：「ここに 座っても よろしいですか。」\n1. どうぞ、お座りください。\n2. いいえ、座りました。\n3. 椅子です。",
-              "explanation": "Welcome to sit:「どうぞ、お座りください。」"
+              "explanation": "Sit:「どうぞ、お座りください。」"
             },
             {
               "id": "n5-e6-l-23",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q4.mp3",
+              "audioSrc": null,
               "question": "23. 「手伝っていただけますか。」",
               "options": [
                 "どういたしまして。",
@@ -7382,12 +7406,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "発話：「手伝っていただけますか。」\n1. はい、何でしょうか。\n2. どういたしまして。\n3. いいえ、手伝いました。",
-              "explanation": "Ready to help:「はい、何でしょうか。」"
+              "explanation": "Help:「はい、何でしょうか。」"
             },
             {
               "id": "n5-e6-l-24",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q4.mp3",
+              "audioSrc": null,
               "question": "24. 「今週末は 何を しますか。」",
               "options": [
                 "先週 行きました。",
@@ -7396,7 +7420,7 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "発話：「今週末は 何を しますか。」\n1. 家で 映画を 見ます。\n2. 先週 行きました。\n3. 日曜日です。",
-              "explanation": "Weekend plan:「家で映画を見ます。」"
+              "explanation": "Weekend:「家で映画を見ます。」"
             }
           ]
         }
@@ -8281,22 +8305,22 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n5-e7-l-1",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
+              "audioSrc": null,
               "question": "1. 書道教室で 先生が 話しています。生徒は 最初に 何を 準備しますか。",
               "options": [
-                "半紙と下敷き",
-                "筆と墨汁",
-                "教科書とノート",
+                "半紙と 下敷き",
+                "筆と 墨汁",
+                "教科書と ノート",
                 "文鎮だけ"
               ],
               "correct": 1,
               "transcript": "先生「まずは 筆と 黒い墨汁を 机の上に 出してください。紙は 後で 配ります。」\n質問：生徒は 最初に 何を 出しますか。",
-              "explanation": "Brush and ink first (筆と墨汁)."
+              "explanation": "Brush & ink (筆と墨汁)."
             },
             {
               "id": "n5-e7-l-2",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
+              "audioSrc": null,
               "question": "2. 劇場で チケットを 予約します。何曜日の チケットを 取りますか。",
               "options": [
                 "土曜日",
@@ -8306,12 +8330,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "女「日曜日の 午後6時の 公演を 2枚 お願いします。」\n質問：何曜日の チケットですか。",
-              "explanation": "Sunday ticket (日曜日)."
+              "explanation": "Sunday (日曜日)."
             },
             {
               "id": "n5-e7-l-3",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
+              "audioSrc": null,
               "question": "3. 駅前で 待ち合わせます。二人は どの 広場で 会いますか。",
               "options": [
                 "北口の 時計台",
@@ -8321,12 +8345,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 3,
               "transcript": "男「南口の 噴水広場で 待っているよ。」\n質問：どこで 会いますか。",
-              "explanation": "South exit fountain plaza (南口の噴水広場)."
+              "explanation": "South fountain plaza (南口の噴水広場)."
             },
             {
               "id": "n5-e7-l-4",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
+              "audioSrc": null,
               "question": "4. バスに 乗ります。どの バス停から 乗りますか。",
               "options": [
                 "2番乗り場",
@@ -8341,7 +8365,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n5-e7-l-5",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
+              "audioSrc": null,
               "question": "5. ラーメンを 作ります。最初に 何を しますか。",
               "options": [
                 "麺を ゆでる",
@@ -8356,22 +8380,22 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n5-e7-l-6",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
+              "audioSrc": null,
               "question": "6. 手続きを します。窓口に 何を 持参しますか。",
               "options": [
                 "健康保険証",
-                "学生証と印鑑",
-                "パスポートと写真2枚",
+                "学生証と 印鑑",
+                "パスポートと 写真2枚",
                 "現金だけ"
               ],
               "correct": 2,
               "transcript": "職員「パスポートと 写真 2枚を お持ちください。」\n質問：何を 持って行きますか。",
-              "explanation": "Passport and 2 photos (パスポートと写真2枚)."
+              "explanation": "Passport & photos (パスポートと写真2枚)."
             },
             {
               "id": "n5-e7-l-7",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
+              "audioSrc": null,
               "question": "7. レストランで ランチを 注文します。どの セットを 選びましたか。",
               "options": [
                 "Aセット",
@@ -8386,7 +8410,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n5-e7-l-8",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n5/captured-media-1-mp3.mp3",
+              "audioSrc": null,
               "question": "8. 図書館が 静かな 理由は何ですか。",
               "options": [
                 "人が いないから",
@@ -8396,12 +8420,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "男「試験期間だから、みんな 集中して 勉強しているんだね。」\n質問：静かな 理由は 何ですか。",
-              "explanation": "Exam period study (試験期間中だから)."
+              "explanation": "Exam period (試験期間中だから)."
             },
             {
               "id": "n5-e7-l-9",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n5/captured-media-1-mp3.mp3",
+              "audioSrc": null,
               "question": "9. 夏の 旅行先に 北海道を 選んだ 理由は何ですか。",
               "options": [
                 "海で 泳ぎたいから",
@@ -8411,12 +8435,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "女「東京より 涼しくて 過ごしやすいから 北海道に したの。」\n質問：選んだ 理由は 何ですか。",
-              "explanation": "Cooler summer climate (涼しくて過ごしやすいから)."
+              "explanation": "Cooler summer (涼しくて過ごしやすいから)."
             },
             {
               "id": "n5-e7-l-10",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n5/captured-media-1-mp3.mp3",
+              "audioSrc": null,
               "question": "10. 先生が 推薦した 本は どれですか。",
               "options": [
                 "上級読解の本",
@@ -8426,12 +8450,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 3,
               "transcript": "先生「初級の 文法が よく 分かる この 緑の 本が おすすめですよ。」\n質問：どの 本ですか。",
-              "explanation": "Green beginner grammar book (初級文法の緑の本)."
+              "explanation": "Green grammar book (初級文法の緑の本)."
             },
             {
               "id": "n5-e7-l-11",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n5/captured-media-1-mp3.mp3",
+              "audioSrc": null,
               "question": "11. プリンターが 動かない 理由は何ですか。",
               "options": [
                 "紙が なくなったから",
@@ -8441,12 +8465,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "男「紙が なくなったみたいだよ。補充しよう。」\n質問：理由は 何ですか。",
-              "explanation": "Ran out of paper (紙がなくなったから)."
+              "explanation": "Out of paper (紙がなくなったから)."
             },
             {
               "id": "n5-e7-l-12",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n5/captured-media-1-mp3.mp3",
+              "audioSrc": null,
               "question": "12. 祝日の 閉店時間は 何時ですか。",
               "options": [
                 "夜9時",
@@ -8456,12 +8480,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "店員「祝日は 通常より 早く、夜7時に 閉店いたします。」\n質問：何時に 閉まりますか。",
-              "explanation": "Closes at 7 PM on holidays (夜7時)."
+              "explanation": "7:00 PM (夜7時)."
             },
             {
               "id": "n5-e7-l-13",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n5/captured-media-1-mp3.mp3",
+              "audioSrc": null,
               "question": "13. メールを 送ったのは 誰ですか。",
               "options": [
                 "部長",
@@ -8476,7 +8500,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n5-e7-l-14",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
+              "audioSrc": null,
               "question": "14. 友達の 誕生日に お祝いを 言います。何と言いますか。（矢印の人）",
               "options": [
                 "ごちそうさまでした",
@@ -8485,12 +8509,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "状況：お誕生日祝い。\n1. お誕生日 おめでとうございます！\n2. ごちそうさまでした\n3. いってらっしゃい",
-              "explanation": "Birthday greeting:「お誕生日おめでとうございます！」"
+              "explanation": "Birthday:「お誕生日おめでとうございます！」"
             },
             {
               "id": "n5-e7-l-15",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
+              "audioSrc": null,
               "question": "15. 電車で お年寄りに 席を 譲ります。何と言いますか。（矢印の人）",
               "options": [
                 "邪魔です",
@@ -8499,12 +8523,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "状況：席を 譲ります。\n1. どうぞ、こちらへ お座りください\n2. 邪魔です\n3. ありがとう",
-              "explanation": "Offering seat:「どうぞ、こちらへお座りください」."
+              "explanation": "Seat:「どうぞ、こちらへお座りください」."
             },
             {
               "id": "n5-e7-l-16",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
+              "audioSrc": null,
               "question": "16. 仕事を 終えて 先に 帰ります。何と言いますか。（矢印の人）",
               "options": [
                 "お先に 失礼します",
@@ -8513,12 +8537,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "状況：退勤時。\n1. お先に 失礼します\n2. ただいま\n3. おかえりなさい",
-              "explanation": "Departing greeting:「お先に失礼します」."
+              "explanation": "Leaving:「お先に失礼します」."
             },
             {
               "id": "n5-e7-l-17",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
+              "audioSrc": null,
               "question": "17. 約束の 時間に 遅れてしまいました。何と言いますか。（矢印の人）",
               "options": [
                 "どういたしまして",
@@ -8527,12 +8551,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "状況：遅刻の 謝罪。\n1. 遅れて 大変 申し訳ありません\n2. どういたしまして\n3. お疲れ様でした",
-              "explanation": "Apologizing for delay:「遅れて大変申し訳ありません」."
+              "explanation": "Apology:「遅れて大変申し訳ありません」."
             },
             {
               "id": "n5-e7-l-18",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
+              "audioSrc": null,
               "question": "18. 手作りの 料理を 褒めます。何と言いますか。（矢印の人）",
               "options": [
                 "まずいです",
@@ -8541,12 +8565,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "状況：料理の 感想。\n1. とても 美味しいです！\n2. まずいです\n3. いただきます",
-              "explanation": "Complimenting meal:「とても美味しいです！」"
+              "explanation": "Compliment:「とても美味しいです！」"
             },
             {
               "id": "n5-e7-l-19",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n5/captured-media-3-mp3.mp3",
+              "audioSrc": null,
               "question": "19. 「電子辞書を 持っていますか。」",
               "options": [
                 "いいえ、辞書です。",
@@ -8555,12 +8579,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "発話：「電子辞書を 持っていますか。」\n1. はい、毎日 使っています。\n2. いいえ、辞書です。\n3. 本屋です。",
-              "explanation": "Owns and uses it:「はい、毎日使っています。」"
+              "explanation": "Dictionary:「はい、毎日使っています。」"
             },
             {
               "id": "n5-e7-l-20",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n5/captured-media-3-mp3.mp3",
+              "audioSrc": null,
               "question": "20. 「電車賃は いくらでしたか。」",
               "options": [
                 "大人 200円でした。",
@@ -8569,12 +8593,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "発話：「電車賃は いくらでしたか。」\n1. 大人 200円でした。\n2. 2時間でした。\n3. 駅です。",
-              "explanation": "Fare 200 yen:「大人200円でした。」"
+              "explanation": "Fare:「大人200円でした。」"
             },
             {
               "id": "n5-e7-l-21",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n5/captured-media-3-mp3.mp3",
+              "audioSrc": null,
               "question": "21. 「昼ご飯は もう 食べましたか。」",
               "options": [
                 "レストランです。",
@@ -8583,12 +8607,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "発話：「昼ご飯は もう 食べましたか。」\n1. これから 食べるところです。\n2. レストランです。\n3. ラーメンです。",
-              "explanation": "About to eat:「これから食べるところです。」"
+              "explanation": "Lunch:「これから食べるところです。」"
             },
             {
               "id": "n5-e7-l-22",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n5/captured-media-3-mp3.mp3",
+              "audioSrc": null,
               "question": "22. 「朝の 会議は 何時からですか。」",
               "options": [
                 "3階です。",
@@ -8602,7 +8626,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n5-e7-l-23",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n5/captured-media-3-mp3.mp3",
+              "audioSrc": null,
               "question": "23. 「その セーター、どこで 買いましたか。」",
               "options": [
                 "駅前の デパートで 買いました。",
@@ -8611,12 +8635,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "発話：「その セーター、どこで 買いましたか。」\n1. 駅前の デパートで 買いました。\n2. 昨日です。\n3. 青いです。",
-              "explanation": "Store location:「駅前のデパートで買いました。」"
+              "explanation": "Store:「駅前のデパートで買いました。」"
             },
             {
               "id": "n5-e7-l-24",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n5/captured-media-3-mp3.mp3",
+              "audioSrc": null,
               "question": "24. 「一緒に 散歩に 行きませんか。」",
               "options": [
                 "いいえ、散歩です。",
@@ -8625,7 +8649,7 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "発話：「一緒に 散歩に 行きませんか。」\n1. ええ、喜んで 行きましょう。\n2. いいえ、散歩です。\n3. 疲れました。",
-              "explanation": "Accepting walk invitation:「ええ、喜んで行きましょう。」"
+              "explanation": "Walk:「ええ、喜んで行きましょう。」"
             }
           ]
         }
@@ -9510,7 +9534,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n5-e8-l-1",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
+              "audioSrc": null,
               "question": "1. 空港で アナウンスが 流れています。搭乗ゲートは何番に 変更されましたか。",
               "options": [
                 "14番ゲート",
@@ -9525,7 +9549,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n5-e8-l-2",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
+              "audioSrc": null,
               "question": "2. ラーメン屋で 注文します。トッピングは何を 追加しましたか。",
               "options": [
                 "チャーシュー",
@@ -9540,7 +9564,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n5-e8-l-3",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
+              "audioSrc": null,
               "question": "3. 待ち合わせ場所を 決めます。二人は どこで 会いますか。",
               "options": [
                 "駅の 改札口",
@@ -9550,12 +9574,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "女「角の パン屋さんの 前で 待ってるね。」\n質問：どこで 会いますか。",
-              "explanation": "In front of corner bakery (角のパン屋の前)."
+              "explanation": "Corner bakery (角のパン屋の前)."
             },
             {
               "id": "n5-e8-l-4",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
+              "audioSrc": null,
               "question": "4. 新宿へ 行きます。どの ホームの 電車に 乗りますか。",
               "options": [
                 "1番ホーム",
@@ -9570,7 +9594,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n5-e8-l-5",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
+              "audioSrc": null,
               "question": "5. セミナーの 準備です。資料を 何部 用意しますか。",
               "options": [
                 "20部",
@@ -9585,7 +9609,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n5-e8-l-6",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
+              "audioSrc": null,
               "question": "6. 朝の 掃除と 水やりです。花の水やりは 何時までに しますか。",
               "options": [
                 "7時まで",
@@ -9595,12 +9619,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "母「日差しが 強くなる前の 8時までに 花に 水を あげてね。」\n質問：何時までですか。",
-              "explanation": "Before 8 AM (8時まで)."
+              "explanation": "By 8 AM (8時まで)."
             },
             {
               "id": "n5-e8-l-7",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
+              "audioSrc": null,
               "question": "7. 冬の 旅行の 準備です。スーツケースに 何を 入れましたか。",
               "options": [
                 "水着",
@@ -9615,7 +9639,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n5-e8-l-8",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q2.mp3",
+              "audioSrc": null,
               "question": "8. ホテルの 部屋を 変更した 理由は何ですか。",
               "options": [
                 "禁煙の シングルが よかったから",
@@ -9625,12 +9649,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "男「ツインから 禁煙の シングルルームに 変更して もらったよ。」\n質問：どうして 変更しましたか。",
-              "explanation": "Non-smoking single room (禁煙のシングル)."
+              "explanation": "Non-smoking single (禁煙のシングル)."
             },
             {
               "id": "n5-e8-l-9",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q2.mp3",
+              "audioSrc": null,
               "question": "9. 飛行機が 遅延した 理由は何ですか。",
               "options": [
                 "エンジンの 故障のため",
@@ -9640,12 +9664,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "アナウンス「札幌空港の 猛吹雪の ため、出発が 1時間 遅れます。」\n質問：遅れた 理由は 何ですか。",
-              "explanation": "Blizzard in Sapporo (猛吹雪のため)."
+              "explanation": "Blizzard (猛吹雪のため)."
             },
             {
               "id": "n5-e8-l-10",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q2.mp3",
+              "audioSrc": null,
               "question": "10. 辛すぎた 料理は どれでしたか。",
               "options": [
                 "ラーメン",
@@ -9655,12 +9679,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "女「激辛カレーは 辛すぎて 食べられなかったわ。」\n質問：辛かった 料理は何ですか。",
-              "explanation": "Extra spicy curry (激辛カレー)."
+              "explanation": "Spicy curry (激辛カレー)."
             },
             {
               "id": "n5-e8-l-11",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q2.mp3",
+              "audioSrc": null,
               "question": "11. 留学生が 先生に お願いしたことは 何ですか。",
               "options": [
                 "漢字の 宿題",
@@ -9670,12 +9694,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 3,
               "transcript": "男「発音の 練習を もう一度 指導して いただけますか。」\n質問：何をお願いしましたか。",
-              "explanation": "Pronunciation practice (発音の練習)."
+              "explanation": "Pronunciation (発音の練習)."
             },
             {
               "id": "n5-e8-l-12",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q2.mp3",
+              "audioSrc": null,
               "question": "12. 会議は どの 部屋で 行われますか。",
               "options": [
                 "B会議室",
@@ -9685,12 +9709,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "女「今日の 会議は B会議室に 変更に なりました。」\n質問：どの 部屋ですか。",
-              "explanation": "Conference Room B (B会議室)."
+              "explanation": "Room B (B会議室)."
             },
             {
               "id": "n5-e8-l-13",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q2.mp3",
+              "audioSrc": null,
               "question": "13. スーパーの タイムセールは 何時から 始まりますか。",
               "options": [
                 "夕方6時",
@@ -9700,12 +9724,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "アナウンス「夕方7時より、惣菜コーナーにて 半額シールを 貼付いたします。」\n質問：何時からですか。",
-              "explanation": "7:00 PM (夕方7時)."
+              "explanation": "7 PM (夕方7時)."
             },
             {
               "id": "n5-e8-l-14",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
+              "audioSrc": null,
               "question": "14. 日本人の 知人の 家を 訪ねました。玄関で 何と言いますか。（矢印の人）",
               "options": [
                 "ごちそうさまでした",
@@ -9714,12 +9738,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "状況：訪問の 挨拶。\n1. お邪魔します\n2. ごちそうさまでした\n3. さようなら",
-              "explanation": "Visiting greeting:「お邪魔します」."
+              "explanation": "Visiting:「お邪魔します」."
             },
             {
               "id": "n5-e8-l-15",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
+              "audioSrc": null,
               "question": "15. 来客に 温かい お茶を 勧めます。何と言いますか。（矢印の人）",
               "options": [
                 "温かい お茶を どうぞ",
@@ -9733,7 +9757,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n5-e8-l-16",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
+              "audioSrc": null,
               "question": "16. カフェで WiFiの パスワードを 聞きます。何と言いますか。（矢印の人）",
               "options": [
                 "パスワードを 書きました",
@@ -9742,12 +9766,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "状況：パスワードの 確認。\n1. WiFiの パスワードを 教えて いただけますか\n2. パスワードを 書きました\n3. インターネットです",
-              "explanation": "Asking WiFi code:「WiFiのパスワードを教えていただけますか」."
+              "explanation": "WiFi:「WiFiのパスワードを教えていただけますか」."
             },
             {
               "id": "n5-e8-l-17",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
+              "audioSrc": null,
               "question": "17. 食卓で 塩を 取ってほしいです。何と言いますか。（矢印の人）",
               "options": [
                 "塩を 食べます",
@@ -9756,12 +9780,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "状況：調味料を 頼みます。\n1. すみません、お塩を 取って ください\n2. 塩を 食べます\n3. しょっぱいです",
-              "explanation": "Passing salt:「すみません、お塩を取ってください」."
+              "explanation": "Salt:「すみません、お塩を取ってください」."
             },
             {
               "id": "n5-e8-l-18",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
+              "audioSrc": null,
               "question": "18. 会社の 電話を 取ります。最初に 何と言いますか。（矢印の人）",
               "options": [
                 "お電話 ありがとうございます、○○商事で ございます",
@@ -9770,12 +9794,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "状況：会社の 電話対応。\n1. お電話 ありがとうございます、○○商事で ございます\n2. もしもし、誰ですか\n3. さようなら",
-              "explanation": "Corporate phone greeting."
+              "explanation": "Phone greeting."
             },
             {
               "id": "n5-e8-l-19",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q4.mp3",
+              "audioSrc": null,
               "question": "19. 「レジ袋は ご利用に なりますか。」",
               "options": [
                 "カバンです。",
@@ -9784,12 +9808,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "発話：「レジ袋は ご利用に なりますか。」\n1. はい、1枚 お願いします。\n2. カバンです。\n3. いいえ、買いました。",
-              "explanation": "Asking 1 bag:「はい、1枚お願いします。」"
+              "explanation": "Bag:「はい、1枚お願いします。」"
             },
             {
               "id": "n5-e8-l-20",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q4.mp3",
+              "audioSrc": null,
               "question": "20. 「この 傘、お忘れ物ですか。」",
               "options": [
                 "雨が 降っています。",
@@ -9798,12 +9822,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "発話：「この 傘、お忘れ物ですか。」\n1. あ、それ 私の 傘です！ ありがとうございます。\n2. 雨が 降っています。\n3. いいえ、傘です。",
-              "explanation": "My umbrella:「あ、それ私の傘です！」"
+              "explanation": "Umbrella:「あ、それ私の傘です！」"
             },
             {
               "id": "n5-e8-l-21",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q4.mp3",
+              "audioSrc": null,
               "question": "21. 「今日の 講義の 内容は 分かりましたか。」",
               "options": [
                 "はい、とても よく 分かりました。",
@@ -9812,12 +9836,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "発話：「今日の 講義の 内容は 分かりましたか。」\n1. はい、とても よく 分かりました。\n2. 教室でした。\n3. 先生です。",
-              "explanation": "Understood well:「はい、とてもよく分かりました。」"
+              "explanation": "Understood:「はい、とてもよく分かりました。」"
             },
             {
               "id": "n5-e8-l-22",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q4.mp3",
+              "audioSrc": null,
               "question": "22. 「京都の 観光は どうでしたか。」",
               "options": [
                 "新幹線で行きました。",
@@ -9826,12 +9850,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "発話：「京都の 観光は どうでしたか。」\n1. お寺が とても 綺麗でした。\n2. 新幹線で行きました。\n3. 明日 行きます。",
-              "explanation": "Beautiful temples:「お寺がとても綺麗でした。」"
+              "explanation": "Kyoto:「お寺がとても綺麗でした。」"
             },
             {
               "id": "n5-e8-l-23",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q4.mp3",
+              "audioSrc": null,
               "question": "23. 「こちらの 申込書に お名前を ご記入ください。」",
               "options": [
                 "名前です。",
@@ -9840,12 +9864,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "発話：「こちらの 申込書に お名前を ご記入ください。」\n1. はい、ここに 書けば いいですか。\n2. 名前です。\n3. ペンを 持っています。",
-              "explanation": "Filling form:「はい、ここに書けばいいですか。」"
+              "explanation": "Form:「はい、ここに書けばいいですか。」"
             },
             {
               "id": "n5-e8-l-24",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q4.mp3",
+              "audioSrc": null,
               "question": "24. 「そろそろ 授業を 始めましょうか。」",
               "options": [
                 "はい、よろしく お願いします。",
@@ -9854,7 +9878,7 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "発話：「そろそろ 授業を 始めましょうか。」\n1. はい、よろしく お願いします。\n2. 終わりました。\n3. 教科書です。",
-              "explanation": "Ready to start:「はい、よろしくお願いします。」"
+              "explanation": "Class start:「はい、よろしくお願いします。」"
             }
           ]
         }
@@ -10739,7 +10763,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n5-e9-l-1",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
+              "audioSrc": null,
               "question": "1. ごみ収集の 日程です。火曜日は 何の ごみを 出しますか。",
               "options": [
                 "プラスチックごみ",
@@ -10749,12 +10773,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 3,
               "transcript": "女「火曜日は 燃えるごみの 日よ。プラスチックは 木曜日ね。」\n質問：火曜日は 何ごみですか。",
-              "explanation": "Burnable trash (燃えるごみ)."
+              "explanation": "Burnable (燃えるごみ)."
             },
             {
               "id": "n5-e9-l-2",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
+              "audioSrc": null,
               "question": "2. スピーチコンテストの 原稿は いつまでに 出しますか。",
               "options": [
                 "金曜日の 17時まで",
@@ -10769,7 +10793,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n5-e9-l-3",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
+              "audioSrc": null,
               "question": "3. 電車を 乗り換えます。どこで 乗り換えますか。",
               "options": [
                 "新宿駅",
@@ -10784,7 +10808,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n5-e9-l-4",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
+              "audioSrc": null,
               "question": "4. 高速バスに 乗ります。何番 乗り場ですか。",
               "options": [
                 "1番乗り場",
@@ -10799,7 +10823,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n5-e9-l-5",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
+              "audioSrc": null,
               "question": "5. 売店で 買い物を します。何を 買いますか。",
               "options": [
                 "お茶1本と おにぎり",
@@ -10809,12 +10833,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 3,
               "transcript": "女「お茶 2本と サンドイッチを 1つ ください。」\n質問：何を 買いましたか。",
-              "explanation": "2 green teas and 1 sandwich (お茶2本とサンドイッチ1つ)."
+              "explanation": "Tea & sandwich (お茶2本とサンドイッチ1つ)."
             },
             {
               "id": "n5-e9-l-6",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
+              "audioSrc": null,
               "question": "6. レンタルDVDを 返却します。何時までに 返しますか。",
               "options": [
                 "夜10時まで",
@@ -10824,12 +10848,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "店員「今夜 10時までに 返却ボックスへ お入れください。」\n質問：何時までですか。",
-              "explanation": "Before 10 PM (夜10時まで)."
+              "explanation": "By 10 PM (夜10時まで)."
             },
             {
               "id": "n5-e9-l-7",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
+              "audioSrc": null,
               "question": "7. ハイキングに 行きます。どの 靴を 履いて行きますか。",
               "options": [
                 "革靴",
@@ -10844,7 +10868,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n5-e9-l-8",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n5/captured-media-1-mp3.mp3",
+              "audioSrc": null,
               "question": "8. コンサートが 延期に なった 理由は何ですか。",
               "options": [
                 "台風のため",
@@ -10854,12 +10878,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 3,
               "transcript": "女「歌手の 方が 喉を 痛めてしまったそうなの。」\n質問：延期の 理由は 何ですか。",
-              "explanation": "Singer sore throat (歌手が喉を痛めたため)."
+              "explanation": "Throat pain (歌手が喉を痛めたため)."
             },
             {
               "id": "n5-e9-l-9",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n5/captured-media-1-mp3.mp3",
+              "audioSrc": null,
               "question": "9. 禁煙ルームを 選んだ 理由は何ですか。",
               "options": [
                 "タバコの 匂いが 苦手だから",
@@ -10869,12 +10893,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "男「タバコの 匂いが 苦手だから、禁煙ルームを 指定したよ。」\n質問：選んだ 理由は 何ですか。",
-              "explanation": "Dislikes smoke smell (タバコの匂いが苦手だから)."
+              "explanation": "No smoke (タバコの匂いが苦手だから)."
             },
             {
               "id": "n5-e9-l-10",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n5/captured-media-1-mp3.mp3",
+              "audioSrc": null,
               "question": "10. 子供に わかりやすい 辞書は どれですか。",
               "options": [
                 "厚い 専門辞書",
@@ -10884,12 +10908,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "店員「イラストが たくさん 入っている こちらの 辞書が 人気です。」\n質問：どの 辞書ですか。",
-              "explanation": "Illustrated dictionary (イラスト入りの辞書)."
+              "explanation": "Illustrated (イラスト入りの辞書)."
             },
             {
               "id": "n5-e9-l-11",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n5/captured-media-1-mp3.mp3",
+              "audioSrc": null,
               "question": "11. 犬が 吠えていた 理由は何ですか。",
               "options": [
                 "お腹が 空いたから",
@@ -10899,12 +10923,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "女「宅配便の 配達員さんが 来たから 吠えていたのね。」\n質問：吠えた 理由は 何ですか。",
-              "explanation": "Delivery person arrived (配達員が来たから)."
+              "explanation": "Delivery person (配達員が来たから)."
             },
             {
               "id": "n5-e9-l-12",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n5/captured-media-1-mp3.mp3",
+              "audioSrc": null,
               "question": "12. 郵便局の 窓口は 土曜日に 何時まで 開いていますか。",
               "options": [
                 "午後5時まで",
@@ -10914,12 +10938,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 3,
               "transcript": "職員「土曜日の 営業は 午前9時から 午後3時までです。」\n質問：何時までですか。",
-              "explanation": "3:00 PM on Saturday (午後3時まで)."
+              "explanation": "3 PM (午後3時まで)."
             },
             {
               "id": "n5-e9-l-13",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n5/captured-media-1-mp3.mp3",
+              "audioSrc": null,
               "question": "13. 卓球大会で 優勝したのは 誰ですか。",
               "options": [
                 "鈴木さん",
@@ -10929,12 +10953,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "男「鈴木さんが 決勝で 勝って 優勝したよ。」\n質問：優勝したのは 誰ですか。",
-              "explanation": "Suzuki-san (鈴木さん)."
+              "explanation": "Suzuki (鈴木さん)."
             },
             {
               "id": "n5-e9-l-14",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
+              "audioSrc": null,
               "question": "14. 朝、家を 出ます。家族に 何と言いますか。（矢印の人）",
               "options": [
                 "行ってきます！",
@@ -10948,7 +10972,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n5-e9-l-15",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
+              "audioSrc": null,
               "question": "15. 出かける 家族を 見送ります。何と言いますか。（矢印の人）",
               "options": [
                 "お邪魔します",
@@ -10962,7 +10986,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n5-e9-l-16",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
+              "audioSrc": null,
               "question": "16. 夕方、家に 帰ってきました。何と言いますか。（矢印の人）",
               "options": [
                 "行ってきます",
@@ -10971,12 +10995,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "状況：帰宅時の 挨拶。\n1. ただいま！\n2. 行ってきます\n3. さようなら",
-              "explanation": "Returning home:「ただいま！」"
+              "explanation": "Returning:「ただいま！」"
             },
             {
               "id": "n5-e9-l-17",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
+              "audioSrc": null,
               "question": "17. 帰ってきた 家族を 迎えます。何と言いますか。（矢印の人）",
               "options": [
                 "おかえりなさい！",
@@ -10990,7 +11014,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n5-e9-l-18",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
+              "audioSrc": null,
               "question": "18. 相手の 言ったことが 聞き取れませんでした。何と言いますか。（矢印の人）",
               "options": [
                 "わかりました",
@@ -10999,12 +11023,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "状況：聞き直し。\n1. すみません、もう一度 お願いします\n2. わかりました\n3. 静かに してください",
-              "explanation": "Asking repetition:「すみません、もう一度お願いします」."
+              "explanation": "Repeat:「すみません、もう一度お願いします」."
             },
             {
               "id": "n5-e9-l-19",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n5/captured-media-3-mp3.mp3",
+              "audioSrc": null,
               "question": "19. 「明日の イベントに 来られますか。」",
               "options": [
                 "はい、ぜひ 伺います。",
@@ -11013,12 +11037,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "発話：「明日の イベントに 来られますか。」\n1. はい、ぜひ 伺います。\n2. 昨日 行きました。\n3. イベントです。",
-              "explanation": "Attending gladly:「はい、ぜひ伺います。」"
+              "explanation": "Attending:「はい、ぜひ伺います。」"
             },
             {
               "id": "n5-e9-l-20",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n5/captured-media-3-mp3.mp3",
+              "audioSrc": null,
               "question": "20. 「この チラシの デザイン、どう 思いますか。」",
               "options": [
                 "チラシです。",
@@ -11027,12 +11051,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "発話：「この チラシの デザイン、どう 思いますか。」\n1. 写真が 大きくて とても 見やすいです。\n2. チラシです。\n3. 買いました。",
-              "explanation": "Clear design review:「写真が大きくてとても見やすいです。」"
+              "explanation": "Design:「とても見やすいです。」"
             },
             {
               "id": "n5-e9-l-21",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n5/captured-media-3-mp3.mp3",
+              "audioSrc": null,
               "question": "21. 「エアコンは ついていますか。」",
               "options": [
                 "寒いです。",
@@ -11041,12 +11065,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "発話：「エアコンは ついていますか。」\n1. はい、ついていますよ。\n2. 寒いです。\n3. リモコンです。",
-              "explanation": "AC is on:「はい、ついていますよ。」"
+              "explanation": "AC:「はい、ついていますよ。」"
             },
             {
               "id": "n5-e9-l-22",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n5/captured-media-3-mp3.mp3",
+              "audioSrc": null,
               "question": "22. 「私の 眼鏡を 見ませんでしたか。」",
               "options": [
                 "机の 引き出しの 中に ありましたよ。",
@@ -11055,12 +11079,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "発話：「私の 眼鏡を 見ませんでしたか。」\n1. 机の 引き出しの 中に ありましたよ。\n2. 目です。\n3. 新しいです。",
-              "explanation": "In desk drawer:「机の引き出しの中にありましたよ。」"
+              "explanation": "Glasses:「机の引き出しの中にありましたよ。」"
             },
             {
               "id": "n5-e9-l-23",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n5/captured-media-3-mp3.mp3",
+              "audioSrc": null,
               "question": "23. 「先ほどの メール、届きましたか。」",
               "options": [
                 "手紙です。",
@@ -11069,12 +11093,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "発話：「先ほどの メール、届きましたか。」\n1. はい、先ほど 確認いたしました。\n2. 手紙です。\n3. パソコンです。",
-              "explanation": "Email confirmed:「はい、先ほど確認いたしました。」"
+              "explanation": "Email:「はい、先ほど確認いたしました。」"
             },
             {
               "id": "n5-e9-l-24",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n5/captured-media-3-mp3.mp3",
+              "audioSrc": null,
               "question": "24. 「新しい 職場の 雰囲気は どうですか。」",
               "options": [
                 "9時からです。",
@@ -11083,7 +11107,7 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "発話：「新しい 職場の 雰囲気は どうですか。」\n1. 皆さん とても 親切で 働きやすいです。\n2. 9時からです。\n3. 会社です。",
-              "explanation": "Friendly colleagues:「皆さんとても親切で働きやすいです。」"
+              "explanation": "Atmosphere:「皆さんとても親切で働きやすいです。」"
             }
           ]
         }
@@ -11968,7 +11992,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n5-e10-l-1",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
+              "audioSrc": null,
               "question": "1. 試験会場で 案内が あります。受験生は どの 教室へ 行きますか。",
               "options": [
                 "2階の 201号室",
@@ -11978,17 +12002,17 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "係員「N5の 受験生は 3階の 302号室へ お進みください。」\n質問：どの 教室へ 行きますか。",
-              "explanation": "Room 302 on 3rd floor (3階の302号室)."
+              "explanation": "Room 302 (3階の302号室)."
             },
             {
               "id": "n5-e10-l-2",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
+              "audioSrc": null,
               "question": "2. 机の 上に 置くものを 確認します。机の上に 置いてよいものは 何ですか。",
               "options": [
-                "辞書と筆箱",
-                "スマホと時計",
-                "教科書とノート",
+                "辞書と 筆箱",
+                "スマホと 時計",
+                "教科書と ノート",
                 "受験票、鉛筆、消しゴム"
               ],
               "correct": 3,
@@ -11998,7 +12022,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n5-e10-l-3",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
+              "audioSrc": null,
               "question": "3. 試験開始 前の 集合時間は 何時ですか。",
               "options": [
                 "8時45分",
@@ -12013,7 +12037,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n5-e10-l-4",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
+              "audioSrc": null,
               "question": "4. スマートフォンの 扱いです。受験生は スマホを どうしますか。",
               "options": [
                 "机の上に 置いておく",
@@ -12023,12 +12047,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "監督員「スマホの 電源を 完全に 切って、カバンの中に しまってください。」\n質問：スマホを どうしますか。",
-              "explanation": "Turn off and put in bag (電源を切ってカバンにしまう)."
+              "explanation": "Power off (電源を切ってカバンにしまう)."
             },
             {
               "id": "n5-e10-l-5",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
+              "audioSrc": null,
               "question": "5. セクション間の 休憩時間は 何分間ですか。",
               "options": [
                 "10分間",
@@ -12038,12 +12062,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "監督員「第1部と 第2部の 間に 15分間の 休憩が あります。」\n質問：休憩は 何分ですか。",
-              "explanation": "15-minute recess (15分間)."
+              "explanation": "15 min (15分間)."
             },
             {
               "id": "n5-e10-l-6",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
+              "audioSrc": null,
               "question": "6. 解答用紙の マークです。どこを 最初に 確認しますか。",
               "options": [
                 "生年月日",
@@ -12053,12 +12077,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 3,
               "transcript": "監督員「受験番号と お名前が 正しく 印刷されているか 確認してください。」\n質問：最初に 何を 確認しますか。",
-              "explanation": "Registration number and name (受験番号とお名前)."
+              "explanation": "Reg number & name (受験番号とお名前)."
             },
             {
               "id": "n5-e10-l-7",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
+              "audioSrc": null,
               "question": "7. 試験終了時の 指示です。終了の 合図が 鳴ったら どうしますか。",
               "options": [
                 "すぐに 鉛筆を 置く",
@@ -12068,12 +12092,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "監督員「やめの 合図で すぐに 鉛筆を 置いてください。」\n質問：どうしますか。",
-              "explanation": "Put pencil down immediately (すぐに鉛筆を置く)."
+              "explanation": "Pencils down (すぐに鉛筆を置く)."
             },
             {
               "id": "n5-e10-l-8",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q2.mp3",
+              "audioSrc": null,
               "question": "8. 受験生が 会場に 早く 到着した 理由は何ですか。",
               "options": [
                 "道に 迷ったから",
@@ -12083,12 +12107,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "男「電車の 遅延が 心配だったから、30分 余裕を 持って 来たんだ。」\n質問：早く 来た 理由は 何ですか。",
-              "explanation": "To avoid train delay risk (電車の遅れを心配したから)."
+              "explanation": "Train delay risk (電車の遅れを心配したから)."
             },
             {
               "id": "n5-e10-l-9",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q2.mp3",
+              "audioSrc": null,
               "question": "9. 午前中の 受験を 選んだ 理由は何ですか。",
               "options": [
                 "午後は 予定が あるから",
@@ -12098,12 +12122,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 3,
               "transcript": "女「朝の 方が 頭が 冴えて 集中できるからよ。」\n質問：選んだ 理由は 何ですか。",
-              "explanation": "Better morning focus (朝の方が集中できるから)."
+              "explanation": "Morning focus (朝の方が集中できるから)."
             },
             {
               "id": "n5-e10-l-10",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q2.mp3",
+              "audioSrc": null,
               "question": "10. 文法問題で 注意すべき 問題形式は何ですか。",
               "options": [
                 "星印（★）の 並べ替え問題",
@@ -12113,12 +12137,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "男「星印（★）の 並び替え問題は 慎重に 解かないとね。」\n質問：どの 問題ですか。",
-              "explanation": "Star sentence ordering questions (星印の並べ替え問題)."
+              "explanation": "Star ordering (星印の並べ替え問題)."
             },
             {
               "id": "n5-e10-l-11",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q2.mp3",
+              "audioSrc": null,
               "question": "11. 音声テストで 確認することは 何ですか。",
               "options": [
                 "試験時間",
@@ -12128,12 +12152,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "監督員「スピーカーの 音の 大きさに 問題は ございませんか。」\n質問：何を 確認しますか。",
-              "explanation": "Broadcast volume level (スピーカーの音の大きさ)."
+              "explanation": "Volume (スピーカーの音の大きさ)."
             },
             {
               "id": "n5-e10-l-12",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q2.mp3",
+              "audioSrc": null,
               "question": "12. 試験全体の 終了時間は 何時ですか。",
               "options": [
                 "12時00分",
@@ -12148,7 +12172,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n5-e10-l-13",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q2.mp3",
+              "audioSrc": null,
               "question": "13. 合否結果通知書は いつ頃 届きますか。",
               "options": [
                 "来週",
@@ -12158,12 +12182,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 3,
               "transcript": "係員「結果通知書は 試験から 約1か月半後に 郵送されます。」\n質問：いつ 届きますか。",
-              "explanation": "Approx 1.5 months later (約1か月半後)."
+              "explanation": "1.5 months (約1か月半後)."
             },
             {
               "id": "n5-e10-l-14",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
+              "audioSrc": null,
               "question": "14. 試験直前、仲間に 励ましの 言葉を かけます。何と言いますか。（矢印の人）",
               "options": [
                 "ごちそうさまでした",
@@ -12172,12 +12196,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "状況：試験前の 励まし。\n1. 全力を 尽くして 頑張りましょう！\n2. ごちそうさまでした\n3. さようなら",
-              "explanation": "Pre-exam encouragement:「全力を尽くして頑張りましょう！」"
+              "explanation": "Cheer:「全力を尽くして頑張りましょう！」"
             },
             {
               "id": "n5-e10-l-15",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
+              "audioSrc": null,
               "question": "15. 監督員が 受験票を 確認しに来ました。何と言いますか。（矢印の人）",
               "options": [
                 "どういたしまして",
@@ -12186,12 +12210,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "状況：本人確認。\n1. よろしく お願いいたします\n2. どういたしまして\n3. お邪魔しました",
-              "explanation": "Greeting proctor:「よろしくお願いいたします」."
+              "explanation": "Proctor:「よろしくお願いいたします」."
             },
             {
               "id": "n5-e10-l-16",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
+              "audioSrc": null,
               "question": "16. 試験が 終了し、用紙を 提出します。何と言いますか。（矢印の人）",
               "options": [
                 "書き終えました、お願いします",
@@ -12200,12 +12224,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "状況：答案提出。\n1. 書き終えました、お願いします\n2. まだ 書いています\n3. いってらっしゃい",
-              "explanation": "Submitting answer sheet:「書き終えました、お願いします」."
+              "explanation": "Submit:「書き終えました、お願いします」."
             },
             {
               "id": "n5-e10-l-17",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
+              "audioSrc": null,
               "question": "17. 休憩時間に トイレへ 行きたいです。監督員に 何と言いますか。（矢印の人）",
               "options": [
                 "トイレに 行きなさい",
@@ -12214,26 +12238,26 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "状況：お手洗いの 許可。\n1. お手洗いに 行っても よろしいでしょうか\n2. トイレに 行きなさい\n3. 休み時間です",
-              "explanation": "Asking restroom permission:「お手洗いに行ってもよろしいでしょうか」."
+              "explanation": "Restroom:「お手洗いに行ってもよろしいでしょうか」."
             },
             {
               "id": "n5-e10-l-18",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
+              "audioSrc": null,
               "question": "18. 試験が すべて 終了しました。監督員に 挨拶します。何と言いますか。（矢印の人）",
               "options": [
                 "いただきます",
-                "お帰りなさい",
+                "おかえりなさい",
                 "ありがとうございました、失礼いたします"
               ],
               "correct": 2,
               "transcript": "状況：退室時の 挨拶。\n1. ありがとうございました、失礼いたします\n2. いただきます\n3. おかえりなさい",
-              "explanation": "Exiting hall:「ありがとうございました、失礼いたします」."
+              "explanation": "Exit:「ありがとうございました、失礼いたします」."
             },
             {
               "id": "n5-e10-l-19",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q4.mp3",
+              "audioSrc": null,
               "question": "19. 「試験の 準備は バッチリですか。」",
               "options": [
                 "いいえ、試験です。",
@@ -12247,7 +12271,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n5-e10-l-20",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q4.mp3",
+              "audioSrc": null,
               "question": "20. 「受験票は 忘れずに 持ちましたか。」",
               "options": [
                 "はい、カバンの中に 入っています。",
@@ -12256,12 +12280,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "発話：「受験票は 忘れずに 持ちましたか。」\n1. はい、カバンの中に 入っています。\n2. 写真です。\n3. 机です。",
-              "explanation": "Voucher secured:「はい、カバンの中に入っています。」"
+              "explanation": "Voucher:「はい、カバンの中に入っています。」"
             },
             {
               "id": "n5-e10-l-21",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q4.mp3",
+              "audioSrc": null,
               "question": "21. 「リスニングの 音声は よく 聞こえましたか。」",
               "options": [
                 "ラジオです。",
@@ -12270,12 +12294,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "発話：「リスニングの 音声は よく 聞こえましたか。」\n1. はい、とても クリアに 聞こえました。\n2. ラジオです。\n3. 声です。",
-              "explanation": "Clear audio:「はい、とてもクリアに聞こえました。」"
+              "explanation": "Audio:「はい、とてもクリアに聞こえました。」"
             },
             {
               "id": "n5-e10-l-22",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q4.mp3",
+              "audioSrc": null,
               "question": "22. 「次の セクションの 開始時間は 何時ですか。」",
               "options": [
                 "30分間です。",
@@ -12284,12 +12308,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "発話：「次の セクションの 開始時間は 何時ですか。」\n1. 10時40分からです。\n2. 30分間です。\n3. テストです。",
-              "explanation": "Starts at 10:40:「10時40分からです。」"
+              "explanation": "10:40:「10時40分からです。」"
             },
             {
               "id": "n5-e10-l-23",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q4.mp3",
+              "audioSrc": null,
               "question": "23. 「マークシートは すべて 塗りつぶしましたか。」",
               "options": [
                 "はい、空欄なく 全て マークしました。",
@@ -12298,12 +12322,12 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "発話：「マークシートは すべて 塗りつぶしましたか。」\n1. はい、空欄なく 全て マークしました。\n2. 鉛筆です。\n3. 紙です。",
-              "explanation": "All filled:「はい、空欄なく全てマークしました。」"
+              "explanation": "Bubble sheet:「はい、空欄なく全てマークしました。」"
             },
             {
               "id": "n5-e10-l-24",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n5_2018/N5Q4.mp3",
+              "audioSrc": null,
               "question": "24. 「合格していると いいですね！」",
               "options": [
                 "いいえ、落ちました。",
@@ -12312,7 +12336,7 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "発話：「合格していると いいですね！」\n1. ありがとうございます、合格を 祈っています！\n2. いいえ、落ちました。\n3. 試験です。",
-              "explanation": "Aiming for pass:「ありがとうございます、合格を祈っています！」"
+              "explanation": "Pass:「ありがとうございます、合格を祈っています！」"
             }
           ]
         }
@@ -14626,6 +14650,7 @@ export const EXAM_PAPERS_CATALOG = {
                 "サンダル"
               ],
               "correct": 0,
+              "transcript": "男「歩きやすい靴を探しているんだ。」\n女「この黒いスニーカーは軽くてクッションもいいわよ。」\n男「本当だ、これにするよ。」\n質問：男の人はどの靴を買いますか。",
               "explanation": "He selects the black sneakers (黒いスニーカー, Option 1)."
             },
             {
@@ -14641,6 +14666,7 @@ export const EXAM_PAPERS_CATALOG = {
                 "4番線"
               ],
               "correct": 2,
+              "transcript": "アナウンス「空港行きの快速電車は3番線から発車いたします。」\n女「3番線ね、階段を急がなきゃ。」\n質問：女の人は何番線に行きますか。",
               "explanation": "She goes to platform 3 (3番線, Option 3)."
             },
             {
@@ -14656,6 +14682,7 @@ export const EXAM_PAPERS_CATALOG = {
                 "市役所"
               ],
               "correct": 1,
+              "transcript": "男「この書類を速達で送ってきてくれる？」\n女「はい、郵便局に行ってまいります。」\n質問：女の人はこれからどこへ行きますか。",
               "explanation": "She heads to the post office (郵便局, Option 2)."
             },
             {
@@ -14671,6 +14698,7 @@ export const EXAM_PAPERS_CATALOG = {
                 "恋愛映画"
               ],
               "correct": 3,
+              "transcript": "男「どのアクション映画か恋愛映画がいいな。」\n女「話題の恋愛映画にしましょうよ。」\n男「そうだね、そうしよう。」\n質問：二人はどの映画を見ますか。",
               "explanation": "They pick the romance movie (Option 4)."
             },
             {
@@ -14686,6 +14714,7 @@ export const EXAM_PAPERS_CATALOG = {
                 "自由順"
               ],
               "correct": 0,
+              "transcript": "先生「今日のプレゼンは、まずAグループが発表し、その後にBグループが行います。」\n質問：学生はどの順序で発表しますか。",
               "explanation": "Group A presents first, followed by Group B (Option 1)."
             },
             {
@@ -14701,6 +14730,7 @@ export const EXAM_PAPERS_CATALOG = {
                 "長袖の白いシャツ"
               ],
               "correct": 1,
+              "transcript": "男「青い長袖のシャツのMサイズはありますか。」\n店員「はい、こちらにございます。」\n男「これをいただきます。」\n質問：男の人はどのシャツを買いますか。",
               "explanation": "He chooses the long-sleeve blue shirt (長袖の青いシャツ, Option 2)."
             },
             {
@@ -14716,6 +14746,7 @@ export const EXAM_PAPERS_CATALOG = {
                 "時計台の下"
               ],
               "correct": 2,
+              "transcript": "女「どこで会う？」\n男「駅の東口にある本屋の前で待ってるよ。」\n女「わかった、本屋の前ね。」\n質問：二人はどこで待ち合わせますか。",
               "explanation": "In front of the bookstore (本屋の前, Option 3)."
             },
             {
@@ -14731,6 +14762,7 @@ export const EXAM_PAPERS_CATALOG = {
                 "雨具とお弁当"
               ],
               "correct": 0,
+              "transcript": "女「明日の遠足、お弁当と水筒を忘れないでね。」\n男「うん、お弁当と水筒をリュックに入れておくよ。」\n質問：男の人は明日、何を持って行きますか。",
               "explanation": "Lunchbox and water bottle (お弁当と水筒, Option 1)."
             },
             {
@@ -14745,6 +14777,7 @@ export const EXAM_PAPERS_CATALOG = {
                 "ヨガ"
               ],
               "correct": 0,
+              "transcript": "女「日本の伝統文化を学びたくて、先月からお茶のお稽古（茶道）に通い始めたんです。」\n質問：女の人が最近始めた習い事は何ですか。",
               "explanation": "Tea ceremony (茶道, Option 1)."
             },
             {
@@ -14759,6 +14792,7 @@ export const EXAM_PAPERS_CATALOG = {
                 "静かな街だから"
               ],
               "correct": 0,
+              "transcript": "男「来月引っ越すんだ。今の家は通勤に1時間半かかるけど、新居なら会社まで徒歩10分なんだ。」\n質問：男の人はなぜ引っ越しますか。",
               "explanation": "Closer to the workplace (会社に近くなるから, Option 1)."
             },
             {
@@ -14773,6 +14807,7 @@ export const EXAM_PAPERS_CATALOG = {
                 "第1課から第10課"
               ],
               "correct": 2,
+              "transcript": "男「中間テストの範囲、どこだっけ？」\n女「先生が第5課から第10課までって言ってたよ。」\n質問：試験の範囲はどこからどこまでですか。",
               "explanation": "Chapter 5 to Chapter 10 (第5課から第10課, Option 3)."
             },
             {
@@ -14787,6 +14822,7 @@ export const EXAM_PAPERS_CATALOG = {
                 "冬"
               ],
               "correct": 2,
+              "transcript": "男「紅葉が綺麗で、涼しくて過ごしやすい秋が一番好きですね。」\n質問：男の人が好きな季節はいつですか。",
               "explanation": "Autumn (秋, Option 3)."
             },
             {
@@ -14801,6 +14837,7 @@ export const EXAM_PAPERS_CATALOG = {
                 "7時"
               ],
               "correct": 1,
+              "transcript": "男「同窓会は何時から？」\n女「開場は5時半だけど、乾杯と開始は6時ちょうどよ。」\n質問：パーティーは何時から始まりますか。",
               "explanation": "Starts at 6:00 PM (6時, Option 2)."
             },
             {
@@ -14815,6 +14852,7 @@ export const EXAM_PAPERS_CATALOG = {
                 "雨が降ったから"
               ],
               "correct": 1,
+              "transcript": "男「昨日のサッカーの決勝戦、うちのエース選手が前半で足を怪我して退場してしまったのが痛かったよ。」\n質問：勝てなかった理由は何ですか。",
               "explanation": "The ace player got injured (エースが怪我をしたから, Option 2)."
             },
             {
@@ -14829,6 +14867,7 @@ export const EXAM_PAPERS_CATALOG = {
                 "カラオケ"
               ],
               "correct": 1,
+              "transcript": "女「日曜日、美術館でフランス絵画展をやっているの。一緒に行かない？」\n男「いいね、見に行こう。」\n質問：二人は今度の日曜日、何をしますか。",
               "explanation": "Going to the art museum (美術館に行く, Option 2)."
             },
             {
@@ -14843,6 +14882,7 @@ export const EXAM_PAPERS_CATALOG = {
                 "荷物を持ってもいいです。"
               ],
               "correct": 0,
+              "transcript": "状況：相手の荷物を持ってあげたいです。\n質問：何と言いますか。\n1. 荷物をお持ちしましょうか。\n2. 荷物を持ってください。\n3. 荷物を持ってもいいです。",
               "explanation": "Humble offer:「荷物をお持ちしましょうか。」"
             },
             {
@@ -14857,6 +14897,7 @@ export const EXAM_PAPERS_CATALOG = {
                 "遅れました。"
               ],
               "correct": 0,
+              "transcript": "状況：会議に遅れそうです。\n質問：何と言いますか。\n1. 電車が遅れており、少し遅れそうです。\n2. 少し遅れてください。\n3. 遅れました。",
               "explanation": "Reporting expected lateness:「少し遅れそうです。」"
             },
             {
@@ -14871,6 +14912,7 @@ export const EXAM_PAPERS_CATALOG = {
                 "注文してください。"
               ],
               "correct": 0,
+              "transcript": "状況：注文が決まりました。\n質問：何と言いますか。\n1. すみません、注文をお願いします。\n2. 注文を言います。\n3. 注文してください。",
               "explanation": "Calling a waiter for ordering:「すみません、注文をお願いします。」"
             },
             {
@@ -14885,6 +14927,7 @@ export const EXAM_PAPERS_CATALOG = {
                 "駅へ行きましょう。"
               ],
               "correct": 0,
+              "transcript": "状況：友達に道を尋ねます。\n質問：何と言いますか。\n1. 駅への行き方を教えてくれない？\n2. 駅へ行ってください。\n3. 駅へ行きましょう。",
               "explanation": "Asking a friend for directions:「教えてくれない？」"
             },
             {
@@ -14899,6 +14942,7 @@ export const EXAM_PAPERS_CATALOG = {
                 "乗ってください。"
               ],
               "correct": 0,
+              "transcript": "状況：エレベーターで順番を譲ります。\n質問：何と言いますか。\n1. お先にどうぞ。\n2. お先に失礼します。\n3. 乗ってください。",
               "explanation": "Yielding priority politely:「お先にどうぞ。」"
             },
             {
@@ -14912,6 +14956,7 @@ export const EXAM_PAPERS_CATALOG = {
                 "そうですね、終わりました。"
               ],
               "correct": 0,
+              "transcript": "発話：「この書類、今日中にコピーしておいてね。」\n1. はい、すぐやっておきます。\n2. いいえ、コピーしました。\n3. そうですね、終わりました。",
               "explanation": "Acknowledging task request:「はい、すぐやっておきます。」"
             },
             {
@@ -14925,6 +14970,7 @@ export const EXAM_PAPERS_CATALOG = {
                 "はい、行きました。"
               ],
               "correct": 0,
+              "transcript": "発話：「昨日のサッカーの試合、見ましたか。」\n1. ええ、テレビで見ましたよ。\n2. いいえ、見ませんでしたよ。\n3. はい、行きました。",
               "explanation": "Confirming watching:「ええ、テレビで見ましたよ。」"
             },
             {
@@ -14938,6 +14984,7 @@ export const EXAM_PAPERS_CATALOG = {
                 "どういたしまして。"
               ],
               "correct": 0,
+              "transcript": "発話：「ちょっと窓を閉めてもいいですか。」\n1. ええ、いいですよ。\n2. いいえ、閉めました。\n3. どういたしまして。",
               "explanation": "Granting permission:「ええ、いいですよ。」"
             },
             {
@@ -14951,6 +14998,7 @@ export const EXAM_PAPERS_CATALOG = {
                 "はい、飲ませます。"
               ],
               "correct": 0,
+              "transcript": "発話：「部長、お茶を召し上がりますか。」\n1. ありがとう、いただきます。\n2. いいえ、召し上がります。\n3. はい、飲ませます。",
               "explanation": "Accepting tea offer politely:「ありがとう、いただきます。」"
             },
             {
@@ -14964,6 +15012,7 @@ export const EXAM_PAPERS_CATALOG = {
                 "はい、行きました。"
               ],
               "correct": 0,
+              "transcript": "発話：「来週の旅行、楽しみにしています。」\n1. ええ、楽しみですね。\n2. いいえ、楽しみではありません。\n3. はい、行きました。",
               "explanation": "Reciprocating excitement:「ええ、楽しみですね。」"
             },
             {
@@ -14977,6 +15026,7 @@ export const EXAM_PAPERS_CATALOG = {
                 "いいえ、わかりません。"
               ],
               "correct": 0,
+              "transcript": "発話：「道に迷ってしまったんですが、駅はどちらですか。」\n1. あそこの角を右に曲がるとすぐですよ。\n2. 駅に行きましたよ。\n3. いいえ、わかりません。",
               "explanation": "Giving directions:「あそこの角を右に曲がるとすぐですよ。」"
             },
             {
@@ -14990,6 +15040,7 @@ export const EXAM_PAPERS_CATALOG = {
                 "いいえ、受けませんでした。"
               ],
               "correct": 0,
+              "transcript": "発話：「日本語のテスト、難しかったですね。」\n1. 本当に難しかったですね。\n2. そうですね、簡単でした。\n3. いいえ、受けませんでした。",
               "explanation": "Agreeing on difficulty:「本当に難しかったですね。」"
             },
             {
@@ -15003,6 +15054,7 @@ export const EXAM_PAPERS_CATALOG = {
                 "どういたしまして。"
               ],
               "correct": 0,
+              "transcript": "発話：「また明日、お会いしましょう。」\n1. はい、また明日。\n2. いいえ、明日です。\n3. どういたしまして。",
               "explanation": "Farewell response:「はい、また明日。」"
             }
           ]
@@ -15953,409 +16005,409 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e3-l-1",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
-              "question": "1. 会社で 男の人と 女の人が 話しています。女の人は この後 まず 何を しますか。",
+              "audioSrc": null,
+              "question": "1. 会社で 上司と 部下が 話しています。部下は この後 まず 何を しますか。",
               "options": [
-                "資料を コピーする",
-                "プロジェクターの 接続を 確認する",
-                "参加者に 連絡する",
-                "お茶を 用意する"
+                "資料を 印刷する",
+                "グラフの 数字を 修正する",
+                "上司に メールを 送る",
+                "会議室を 予約する"
               ],
               "correct": 1,
-              "transcript": "男「会議室の プロジェクターの 準備を お願いできる？」女「はい。資料の コピーも しておきましょうか。」男「資料は 僕が やるから、先に プロジェクターの 接続を 確認して。」女「わかりました。」\n質問：女の人は この後 まず 何を しますか。",
-              "explanation": "First checks the projector connection (プロジェクターの接続を確認する)."
+              "transcript": "上司「明日の プレゼン資料、印刷する前に グラフの 数字を 最新版に 差し替えておいてくれ。」\n部下「承知いたしました。直ちに 修正いたします。」\n質問：部下は この後 まず 何を しますか。",
+              "explanation": "Update chart figures first (グラフの数字を修正する)."
             },
             {
               "id": "n4-e3-l-2",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
-              "question": "2. 病院で 看護師と 患者が 話しています。患者は どこで 待ちますか。",
+              "audioSrc": null,
+              "question": "2. 駅前で 男の人と 女の人が 話しています。二人は どの 店に 行きますか。",
               "options": [
-                "1階の 会計窓口",
-                "3階の 手術室",
-                "2階の 放射線科の前",
-                "薬局"
+                "駅前の 和食屋",
+                "向かいの ラーメン屋",
+                "隣の イタリアン",
+                "カフェ"
               ],
               "correct": 2,
-              "transcript": "看護師「診察の 前に レントゲンを 撮りますので、2階の 放射線科の 前で お待ちください。」患者「会計は どこですか。」看護師「会計は 診察が すべて 終わった後、1階です。」\n質問：患者は これから どこへ 行きますか。",
-              "explanation": "Goes to 2nd floor radiology (2階の放射線科の前)."
+              "transcript": "男「お昼、駅前の 和食屋に 行かない？」\n女「今日は 月曜だから 定休日よ。隣の イタリアンに しましょう。」\n男「そうだね、そうしよう。」\n質問：二人は どの 店に 行きますか。",
+              "explanation": "Italian restaurant next door (隣のイタリアン)."
             },
             {
               "id": "n4-e3-l-3",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
-              "question": "3. 引越し業者と 客が 話しています。客は どの 箱に 食器を 入れますか。",
+              "audioSrc": null,
+              "question": "3. 図書館で 学生と 司書が 話しています。学生は どの 手続きを しますか。",
               "options": [
-                "青い テープの 箱",
-                "黄色い 大きい箱",
-                "段ボールの 袋",
-                "赤い テープの 小さい箱"
+                "延滞金を 払う",
+                "本を 返却する",
+                "学生証を 再発行する",
+                "申請用紙に 記入する"
               ],
               "correct": 3,
-              "transcript": "業者「割れやすい 食器は 赤い テープが 貼ってある 小さい 箱に お入れください。本は 青い 箱です。」客「わかりました。」\n質問：食器は どの 箱に 入れますか。",
-              "explanation": "Packs dishes in small box with red tape (赤いテープの小さい箱)."
+              "transcript": "司書「返却期限を 延長するには、こちらの 申請用紙に 学籍番号と 書名を ご記入ください。」\n学生「わかりました。今 書きます。」\n質問：学生は 何を しますか。",
+              "explanation": "Fill out application (申請用紙に記入する)."
             },
             {
               "id": "n4-e3-l-4",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
-              "question": "4. 大学の 事務室で 学生と 職員が 話しています。学生は いつまでに 奨学金の 書類を 出しますか。",
+              "audioSrc": null,
+              "question": "4. ホテルで 客と フロントが 話しています。客は タクシーを 何時に 呼びますか。",
               "options": [
-                "来週の 金曜日 17時",
-                "来週の 水曜日",
-                "今週の 金曜日",
-                "月末"
+                "8時15分",
+                "8時30分",
+                "8時00分",
+                "8時45分"
               ],
               "correct": 0,
-              "transcript": "職員「締め切りは 来週の 金曜日 17時です。ただし、推薦書は 水曜日までに 教授に もらって ください。」学生「わかりました。」\n質問：書類の 最終締め切りは いつですか。",
-              "explanation": "Final deadline is next Friday at 17:00 (来週の金曜日17時)."
+              "transcript": "客「明日の 朝、新幹線の 時間に 合わせて 8時半に 出発したいのですが。」\nフロント「朝は 道路が 混み合いますので、8時15分のお手配をおすすめいたします。」\n客「では、8時15分で お願いします。」\n質問：客は タクシーを 何時に 呼びますか。",
+              "explanation": "Taxi for 8:15 AM (8時15分)."
             },
             {
               "id": "n4-e3-l-5",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
-              "question": "5. レストランの 厨房で 店長と アルバイトが 話しています。アルバイトは どの テーブルを 片付けますか。",
+              "audioSrc": null,
+              "question": "5. 病院の 受付で 案内を 聞いています。患者は どこで 待ちますか。",
               "options": [
-                "7番テーブル",
-                "3番テーブル",
-                "1番テーブル",
-                "カウンター席"
+                "玄関ロビー",
+                "2番診察室前の 中待合室",
+                "処置室の中",
+                "会計窓口の前"
               ],
               "correct": 1,
-              "transcript": "店長「3番テーブルと 7番テーブル、どっちが 空いた？」バイト「3番テーブルの お客様が お帰りになりました。」店長「じゃあ、急いで 3番テーブルを 拭いて 次の お客様を 案内して。」\n質問：アルバイトは どの テーブルを 片付けますか。",
-              "explanation": "Cleans table 3 (3番テーブル)."
+              "transcript": "看護師「まず 2番の 診察室の 前の 中待合室で お待ちください。お呼びいたします。」\n質問：患者は どこで 待ちますか。",
+              "explanation": "Inner waiting room 2 (2番診察室前の中待合室)."
             },
             {
               "id": "n4-e3-l-6",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
-              "question": "6. 旅行会社で 客と 案内係が 話しています。客は どの プランを 選びましたか。",
+              "audioSrc": null,
+              "question": "6. 大学で 留学生と 事務員が 話しています。留学生は 奨学金の 書類を いつまでに 出しますか。",
               "options": [
-                "ホテルの Bプラン",
-                "日帰り Cプラン",
-                "温泉旅館の Aプラン",
-                "キャンプ Dプラン"
+                "木曜日の 午前中",
+                "来週の 月曜日",
+                "金曜日の 午後5時まで",
+                "水曜日の 正午"
               ],
               "correct": 2,
-              "transcript": "案内係「温泉旅館に 泊まる Aプランと、ホテルの Bプランが ございます。」客「露天風呂に 入りたくて 来たので、Aプランに します。」\n質問：客は どの プランを 選びましたか。",
-              "explanation": "Selects onsen ryokan Plan A (温泉旅館のAプラン)."
+              "transcript": "事務員「申請書の 締め切りは 今週の 金曜日の 午後5時必着です。」\n留学生「金曜日の 17時ですね、わかりました。」\n質問：締め切りは いつですか。",
+              "explanation": "Friday 5:00 PM (金曜日の午後5時まで)."
             },
             {
               "id": "n4-e3-l-7",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
-              "question": "7. 図書館で 係員と 利用者が 話しています。利用者は DVDを 何枚 借りられますか。",
+              "audioSrc": null,
+              "question": "7. 携帯ショップで 店員が 説明しています。客は 最初に 何を しますか。",
               "options": [
-                "2枚",
-                "3枚",
-                "0枚",
-                "1枚"
+                "新しい 端末の 電源を入れる",
+                "SIMカードを 抜く",
+                "契約書に サインする",
+                "データの バックアップを 取る"
               ],
               "correct": 3,
-              "transcript": "利用者「本 3冊と DVD 2枚を 借りたいです。」係員「DVDは お一人様 1枚までとなって おります。」利用者「では、この 1枚だけに します。」\n質問：利用者は DVDを 何枚 借りますか。",
-              "explanation": "Borrows 1 DVD (1枚)."
+              "transcript": "店員「古い 端末の データを クラウドに バックアップしてから、こちらの 移行作業を 開始してください。」\n質問：客は 最初に 何を しますか。",
+              "explanation": "Backup data first (データのバックアップを取る)."
             },
             {
               "id": "n4-e3-l-8",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
-              "question": "8. 男の人と 女の人が 買い物の 相談を しています。二人は 何を 買いますか。",
+              "audioSrc": null,
+              "question": "8. 旅行先で ガイドが 説明しています。観光客は 集合までに 何を 済ませますか。",
               "options": [
-                "テントだけ",
-                "寝袋だけ",
-                "テントと 寝袋の両方",
-                "ランタン"
+                "お手洗いと お土産の購入",
+                "夕食を 食べる",
+                "ホテルの チェックイン",
+                "写真の 現像"
               ],
               "correct": 0,
-              "transcript": "男「キャンプ用の テントと 寝袋、両方 買う？」女「寝袋は 兄に 借りられるから、テントだけ 買いましょう。」男「オッケー。」\n質問：二人は 何を 買いますか。",
-              "explanation": "Buys tent only (テントだけ)."
+              "transcript": "ガイド「バスの 集合時刻は 16時です。それまでに お手洗いとお土産の 購入を 済ませておいてください。」\n質問：観光客は 何を 済ませますか。",
+              "explanation": "Restroom and souvenirs (お手洗いとお土産の購入)."
             },
             {
               "id": "n4-e3-l-9",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
-              "question": "9. 男の人と 女の人が 話しています。男の人が 遅刻した 理由は何ですか。",
+              "audioSrc": null,
+              "question": "9. 会社で 社員二人が 話しています。新製品の 発売が 延期された 理由は何ですか。",
               "options": [
-                "寝坊したから",
-                "電車が 事故で 止まったから",
-                "バスを 乗り間違えたから",
-                "鍵を 探していたから"
+                "デザインが 決まらないため",
+                "部品の 輸送が 遅れているため",
+                "予算が 不足したため",
+                "需要が なくなったため"
               ],
               "correct": 1,
-              "transcript": "男「遅れて すみません。途中で 人身事故が あって 電車が 30分 止まって しまいました。」女「大変だったわね。」\n質問：男の人が 遅刻した 理由は 何ですか。",
-              "explanation": "Train halted due to accident (電車が事故で止まったから)."
+              "transcript": "男「来月 予定だった 新製品、2か月 延期になったそうだね。」\n女「ええ、部品の 海外からの 輸送が 船便の 遅れで 間に合わないそうなの。」\n質問：延期された 理由は 何ですか。",
+              "explanation": "Parts shipping delay (部品の輸送が遅れているため)."
             },
             {
               "id": "n4-e3-l-10",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
-              "question": "10. 女の人と 男の人が 新しい パソコンについて 話しています。女の人が この パソコンを 選んだ 理由は何ですか。",
+              "audioSrc": null,
+              "question": "10. 女の人が 引っ越し先を 決めた 決定的な 理由は何ですか。",
               "options": [
-                "画面が 一番 大きいから",
-                "値段が 最も 安かったから",
-                "軽くて 持ち歩きやすいから",
-                "色が 好きだったから"
+                "家賃が 一番 安かったから",
+                "職場まで 歩いて 通えるから",
+                "公園と 24時間スーパーが 近くにあるから",
+                "部屋が 広かったから"
               ],
               "correct": 2,
-              "transcript": "男「軽くて 薄い パソコンだね。」女「ええ、毎日 持ち歩くから、重さが 1キロ未満の 物を 探していたの。」\n質問：選んだ 理由は 何ですか。",
-              "explanation": "Lightweight for commuting (軽くて持ち歩きやすいから)."
+              "transcript": "女「駅から 少し 遠いんだけど、近くに 大きな 公園と 24時間営業の スーパーが あるから ここに 決めたの。」\n質問：決めた 理由は 何ですか。",
+              "explanation": "Park and 24h supermarket (公園と24時間スーパーが近くにあるから)."
             },
             {
               "id": "n4-e3-l-11",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
-              "question": "11. 男の人と 女の人が 話しています。二人は どうして 旅行の 日程を 変更しましたか。",
+              "audioSrc": null,
+              "question": "11. 男の人が 日本語学校を 選んだ 理由は何ですか。",
               "options": [
-                "仕事が 入ったから",
-                "ホテルが 満室だったから",
-                "体調を 崩したから",
-                "台風が 来る 予報だから"
+                "学費が 安かったから",
+                "自宅から 近かったから",
+                "友人が 通っていたから",
+                "ビジネス日本語と 敬語の クラスが充実しているから"
               ],
               "correct": 3,
-              "transcript": "男「来週の 週末、台風が 直撃する 予報に なったね。」女「危ないから、再来週の 連休に 延期しましょう。」\n質問：変更した 理由は 何ですか。",
-              "explanation": "Typhoon forecast (台風が来る予報だから)."
+              "transcript": "男「ビジネス日本語と 敬語の 専門クラスが 充実しているから この 学校を 選んだんだ。」\n質問：選んだ 理由は 何ですか。",
+              "explanation": "Business Japanese & Keigo (ビジネス日本語と敬語のクラスが充実しているから)."
             },
             {
               "id": "n4-e3-l-12",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
-              "question": "12. 店で 店員と 客が 話しています。この シャツの セールは いつまでですか。",
+              "audioSrc": null,
+              "question": "12. セミナーの 会場が 変更された 理由は何ですか。",
               "options": [
-                "今週の 日曜日まで",
-                "来週の 月曜日まで",
-                "今日中",
-                "月末まで"
+                "参加者が 予想より 大幅に増えたため",
+                "元の 部屋の エアコンが 故障したため",
+                "講師の 都合のため",
+                "料金が 安かったから"
               ],
               "correct": 0,
-              "transcript": "客「この 20%割引は いつまで やっていますか。」店員「今週の 日曜日の 閉店時間までで ございます。」\n質問：セールは いつまでですか。",
-              "explanation": "Until this Sunday (今週の日曜日まで)."
+              "transcript": "女「参加希望者が 当初の 予想を 大幅に 超えて 満席になったため、大ホールに 変更されたのよ。」\n質問：理由は 何ですか。",
+              "explanation": "Participant overflow (参加者が予想より大幅に増えたため)."
             },
             {
               "id": "n4-e3-l-13",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
-              "question": "13. 男の人と 女の人が 話しています。女の人は どうして アルバイトを 辞めましたか。",
+              "audioSrc": null,
+              "question": "13. 男の人が 朝の ランニングを 始めた きっかけは何ですか。",
               "options": [
-                "時給が 安かったから",
-                "卒業論文で 忙しくなったから",
-                "人間関係が 悪かったから",
-                "遠かったから"
+                "マラソン大会に 出場するため",
+                "健康診断で 運動不足を 指摘されたから",
+                "ダイエットの 賭けをしたから",
+                "友人に 誘われたから"
               ],
               "correct": 1,
-              "transcript": "男「カフェの バイト、辞めたの？」女「ええ、大学の 卒業論文の 執筆が 忙しくなってきたから。」\n質問：辞めた 理由は 何ですか。",
-              "explanation": "Busy writing graduation thesis (卒業論文で忙しくなったから)."
+              "transcript": "男「先月の 健康診断で 運動不足を 指摘されてね。それで 毎朝 30分 走ることにしたんだ。」\n質問：始めた 理由は 何ですか。",
+              "explanation": "Health check recommendation (健康診断で運動不足を指摘されたから)."
             },
             {
               "id": "n4-e3-l-14",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
-              "question": "14. 留学生と 日本人の 友達が 話しています。留学生が 日本の 居酒屋で 驚いたことは 何ですか。",
+              "audioSrc": null,
+              "question": "14. 飛行機の 便を 1本 遅らせた 理由は何ですか。",
               "options": [
-                "メニューの 多さ",
-                "席の 狭さ",
-                "お通し（最初の小鉢）の 仕組み",
-                "お酒の 種類"
+                "寝坊して 遅刻したため",
+                "チケットを 紛失したため",
+                "モノレールの 運行停止で 間に合わなかったため",
+                "荷物が 重すぎたため"
               ],
               "correct": 2,
-              "transcript": "留学生「注文していないのに 最初に出てくる 小鉢（お通し）の 仕組みに びっくりしたよ。」\n質問：何に 驚きましたか。",
-              "explanation": "Otoshi appetizer system (お通しの仕組み)."
+              "transcript": "女「空港への モノレールが 人身事故で 止まってしまい、予定の 便に 間に合わなかったんです。」\n質問：理由は 何ですか。",
+              "explanation": "Monorail breakdown (モノレールの運行停止で間に合わなかったため)."
             },
             {
               "id": "n4-e3-l-15",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
-              "question": "15. 会社で 部長と 社員が 話しています。プレゼンが 成功した 要因は何ですか。",
+              "audioSrc": null,
+              "question": "15. 取引先への 訪問日時を 水曜日にした 理由は何ですか。",
               "options": [
-                "声が 大きかったこと",
-                "時間が 短かったこと",
-                "英語で 発表したこと",
-                "グラフや データが 具体的で わかりやすかったこと"
+                "こちらが 忙しいから",
+                "社内会議が あるから",
+                "祝日だから",
+                "相手の 担当者が 水曜の午後に 戻るから"
               ],
               "correct": 3,
-              "transcript": "部長「今日の プレゼン、グラフや データが 具体的で 大変わかりやすかったよ。」\n質問：成功の 要因は何ですか。",
-              "explanation": "Clear data and graphics (グラフやデータが具体的でわかりやすかったこと)."
+              "transcript": "男「先方の ご担当者様が 火曜日まで 出張中で、水曜日の 午後なら ご在席だからです。」\n質問：水曜日にした 理由は 何ですか。",
+              "explanation": "Client back on Wednesday (相手の担当者が水曜の午後に戻るから)."
             },
             {
               "id": "n4-e3-l-16",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
-              "question": "16. 先輩に 仕事を 教えてもらいたいです。何と言いますか。（矢印の人）",
+              "audioSrc": null,
+              "question": "16. 会議で 先輩の 発言中に 補足の 意見を 述べたいです。何と言いますか。（矢印の人）",
               "options": [
-                "この やり方を 教えて いただけませんか。",
-                "この やり方を 教えますよ。",
-                "この やり方を 勉強しなさい。"
+                "恐れ入ります、一点 補足を させて いただけますでしょうか。",
+                "私の 話を 聞きなさい。",
+                "静かに して ください。"
               ],
               "correct": 0,
-              "transcript": "状況：先輩に 仕事の やり方を 尋ねます。\n1. この やり方を 教えて いただけませんか。\n2. この やり方を 教えますよ。\n3. この やり方を 勉強しなさい。",
-              "explanation": "Polite request:「〜ていただけませんか」."
+              "transcript": "状況：会議で 丁寧に 発言を 求めます。\n1. 恐れ入ります、一点 補足を させて いただけますでしょうか。\n2. 私の 話を 聞きなさい。\n3. 静かに して ください。",
+              "explanation": "Polite interruption:「恐れ入ります、一点補足を〜」."
             },
             {
               "id": "n4-e3-l-17",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
-              "question": "17. 上司の 荷物が 重そうです。手伝いたいです。何と言いますか。（矢印の人）",
+              "audioSrc": null,
+              "question": "17. 取引先から 名刺を いただきます。両手で 受け取りながら 何と言いますか。（矢印の人）",
               "options": [
-                "荷物を 持って ください。",
-                "お荷物を お持ち しましょうか。",
-                "荷物を 持ちました。"
+                "名刺を ください。",
+                "頂戴いたします。どうぞ よろしく お願い申し上げます。",
+                "お邪魔しました。"
               ],
               "correct": 1,
-              "transcript": "状況：上司の 荷物を 持ちます。\n1. お荷物を お持ち しましょうか。\n2. 荷物を 持って ください。\n3. 荷物を 持ちました。",
-              "explanation": "Humble offer:「お持ちしましょうか」."
+              "transcript": "状況：名刺を 受け取ります。\n1. 頂戴いたします。どうぞ よろしく お願い申し上げます。\n2. 名刺を ください。\n3. お邪魔しました。",
+              "explanation": "Business card:「頂戴いたします」."
             },
             {
               "id": "n4-e3-l-18",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
-              "question": "18. 取引先の 会社を 訪問しました。受付で 何と言いますか。（矢印の人）",
+              "audioSrc": null,
+              "question": "18. 上司の 重い 荷物を 代わりに 持ちたいです。何と言いますか。（矢印の人）",
               "options": [
-                "いらっしゃいませ、ご用件は 何でしょうか。",
-                "お邪魔しました、さようなら。",
-                "○○社の 田中と 申します。山田部長に お約束を いただいております。"
+                "荷物を 持ってください。",
+                "荷物が 重いですよ。",
+                "課長、お荷物を お持ちいたしましょうか。"
               ],
               "correct": 2,
-              "transcript": "状況：訪問先の 受付で 挨拶します。\n1. ○○社の 田中と 申します。山田部長に お約束を いただいております。\n2. いらっしゃいませ、ご用件は 何でしょうか。\n3. お邪魔しました、さようなら。",
-              "explanation": "Business visitor greeting."
+              "transcript": "状況：荷物を 持つ 申し出。\n1. 課長、お荷物を お持ちいたしましょうか。\n2. 荷物を 持ってください。\n3. 荷物が 重いですよ。",
+              "explanation": "Humble offer:「お持ちいたしましょうか」."
             },
             {
               "id": "n4-e3-l-19",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
-              "question": "19. 会議中、電話が 鳴ってしまいました。何と言いますか。（矢印の人）",
+              "audioSrc": null,
+              "question": "19. 書類の 締め切りを 1日 延ばして もらいたいです。何と言いますか。（矢印の人）",
               "options": [
-                "大変 失礼いたしました。",
-                "どういたしまして。",
-                "お疲れ様でした。"
+                "申し訳ありませんが、提出を 明日まで 待って いただけないでしょうか。",
+                "明日 出します。",
+                "締め切りを 延ばしなさい。"
               ],
               "correct": 0,
-              "transcript": "状況：会議室で 謝ります。\n1. 大変 失礼いたしました。\n2. どういたしまして。\n3. お疲れ様でした。",
-              "explanation": "Apology:「大変失礼いたしました。」"
+              "transcript": "状況：提出期限の 延長依頼。\n1. 申し訳ありませんが、提出を 明日まで 待って いただけないでしょうか。\n2. 明日 出します。\n3. 締め切りを 延ばしなさい。",
+              "explanation": "Deadline extension request."
             },
             {
               "id": "n4-e3-l-20",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
-              "question": "20. 先生の お宅から 帰ります。何と言いますか。（矢印の人）",
+              "audioSrc": null,
+              "question": "20. 他社の 事務所を 訪問しました。受付で 何と言いますか。（矢印の人）",
               "options": [
-                "いってらっしゃい。",
-                "今日は ごちそうになり、本当に ありがとうございました。",
-                "お大事に。"
+                "ここに 入ります。",
+                "本日 14時に お約束を いただいております ○○の 田中と 申します。",
+                "社長を 呼んでください。"
               ],
               "correct": 1,
-              "transcript": "状況：お礼を 言って 帰ります。\n1. 今日は ごちそうになり、本当に ありがとうございました。\n2. いってらっしゃい。\n3. お大事に。",
-              "explanation": "Expressing hospitality gratitude."
+              "transcript": "状況：受付での 挨拶。\n1. 本日 14時に お約束を いただいております ○○の 田中と 申します。\n2. ここに 入ります。\n3. 社長を 呼んでください。",
+              "explanation": "Visiting greeting."
             },
             {
               "id": "n4-e3-l-21",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
-              "question": "21. 「こちらの 書類を ご確認 いただけますでしょうか。」",
+              "audioSrc": null,
+              "question": "21. 「鈴木課長は ただいま 席を 外しておりますが。」",
               "options": [
-                "はい、拝見いたします。",
-                "はい、確認させました。",
-                "いいえ、見ました。"
+                "恐れ入ります。それでは 後ほど 改めて お電話いたします。",
+                "はい、席に います。",
+                "どういたしまして。"
               ],
               "correct": 0,
-              "transcript": "発話：「こちらの 書類を ご確認 いただけますでしょうか。」\n1. はい、拝見いたします。\n2. はい、確認させました。\n3. いいえ、見ました。",
-              "explanation": "Humble check:「拝見いたします。」"
+              "transcript": "発話：「鈴木課長は ただいま 席を 外しておりますが。」\n1. 恐れ入ります。それでは 後ほど 改めて お電話いたします。\n2. はい、席に います。\n3. どういたしまして。",
+              "explanation": "Call back:「後ほど改めてお電話いたします。」"
             },
             {
               "id": "n4-e3-l-22",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
-              "question": "22. 「お先に 失礼しても よろしいでしょうか。」",
+              "audioSrc": null,
+              "question": "22. 「こちらの 企画書、目を通して いただけますか。」",
               "options": [
-                "はい、いってきます。",
-                "ええ、お疲れ様でした。",
-                "いいえ、失礼しました。"
+                "目が 痛いです。",
+                "かしこまりました。拝見させていただきます。",
+                "書類を 書きました。"
               ],
               "correct": 1,
-              "transcript": "発話：「お先に 失礼しても よろしいでしょうか。」\n1. ええ、お疲れ様でした。\n2. はい、いってきます。\n3. いいえ、失礼しました。",
-              "explanation": "Departure acknowledgment:「お疲れ様でした。」"
+              "transcript": "発話：「こちらの 企画書、目を通して いただけますか。」\n1. かしこまりました。拝見させていただきます。\n2. 目が 痛いです。\n3. 書類を 書きました。",
+              "explanation": "Read proposal:「拝見させていただきます。」"
             },
             {
               "id": "n4-e3-l-23",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
-              "question": "23. 「この プロジェクト、手伝ってもらえないかな。」",
+              "audioSrc": null,
+              "question": "23. 「新幹線の 指定席、予約 取れましたか。」",
               "options": [
-                "いいえ、手伝いました。",
-                "どういたしまして。",
-                "はい、喜んで お手伝いします。"
+                "電車です。",
+                "駅に あります。",
+                "はい、無事に 窓側の 席が 取れました。"
               ],
               "correct": 2,
-              "transcript": "発話：「この プロジェクト、手伝ってもらえないかな。」\n1. はい、喜んで お手伝いします。\n2. いいえ、手伝いました。\n3. どういたしまして。",
-              "explanation": "Willing assistance:「喜んでお手伝いします。」"
+              "transcript": "発話：「新幹線の 指定席、予約 取れましたか。」\n1. はい、無事に 窓側の 席が 取れました。\n2. 電車です。\n3. 駅に あります。",
+              "explanation": "Seat confirmed:「無事に窓側の席が取れました。」"
             },
             {
               "id": "n4-e3-l-24",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
-              "question": "24. 「部長、明日の 会議の 時間を 変更されたと 伺いました。」",
+              "audioSrc": null,
+              "question": "24. 「本日の セミナーに ご参加いただき、誠に ありがとうございました。」",
               "options": [
-                "ええ、14時からに 変更したよ。",
-                "はい、伺いました。",
-                "いいえ、変わりません。"
+                "こちらこそ、大変 勉強になりました。",
+                "どういたしまして、参加です。",
+                "お疲れ様でした。"
               ],
               "correct": 0,
-              "transcript": "発話：「部長、明日の 会議の 時間を 変更されたと 伺いました。」\n1. ええ、14時からに 変更したよ。\n2. はい、伺いました。\n3. いいえ、変わりません。",
-              "explanation": "Confirming change:「14時からに変更したよ。」"
+              "transcript": "発話：「本日の セミナーに ご参加いただき、誠に ありがとうございました。」\n1. こちらこそ、大変 勉強になりました。\n2. どういたしまして、参加です。\n3. お疲れ様でした。",
+              "explanation": "Learned a lot:「こちらこそ、大変勉強になりました。」"
             },
             {
               "id": "n4-e3-l-25",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
-              "question": "25. 「コーヒーでも いかがですか。」",
+              "audioSrc": null,
+              "question": "25. 「お茶が 冷めてしまいましたね。温かいものを お入れしましょうか。」",
               "options": [
-                "いいえ、コーヒーです。",
-                "ありがとうございます、いただきます。",
-                "ごちそうさまでした。"
+                "冷たい お茶です。",
+                "恐縮です、お言葉に 甘えて お願いいたします。",
+                "飲みました。"
               ],
               "correct": 1,
-              "transcript": "発話：「コーヒーでも いかがですか。」\n1. ありがとうございます、いただきます。\n2. いいえ、コーヒーです。\n3. ごちそうさまでした。",
-              "explanation": "Accepting coffee:「いただきます。」"
+              "transcript": "発話：「お茶が 冷めてしまいましたね。温かいものを お入れしましょうか。」\n1. 恐縮です、お言葉に 甘えて お願いいたします。\n2. 冷たい お茶です。\n3. 飲みました。",
+              "explanation": "Grateful tea response."
             },
             {
               "id": "n4-e3-l-26",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
-              "question": "26. 「少し 寒くありませんか。エアコンを 弱めましょうか。」",
+              "audioSrc": null,
+              "question": "26. 「明日の 懇親会、何時に 乾杯でしたっけ。」",
               "options": [
-                "はい、寒いです。",
-                "いいえ、つけました。",
-                "助かります、お願いします。"
+                "ビールです。",
+                "居酒屋です。",
+                "18時半から 開始の 予定ですよ。"
               ],
               "correct": 2,
-              "transcript": "発話：「少し 寒くありませんか。エアコンを 弱めましょうか。」\n1. 助かります、お願いします。\n2. はい、寒いです。\n3. いいえ、つけました。",
-              "explanation": "Grateful response:「助かります、お願いします。」"
+              "transcript": "発話：「明日の 懇親会、何時に 乾杯でしたっけ。」\n1. 18時半から 開始の 予定ですよ。\n2. ビールです。\n3. 居酒屋です。",
+              "explanation": "Time:「18時半から開始の予定ですよ。」"
             },
             {
               "id": "n4-e3-l-27",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
-              "question": "27. 「新幹線の 切符は もう 手配しましたか。」",
+              "audioSrc": null,
+              "question": "27. 「急な お願いで 申し訳ないのですが、手伝っていただけませんか。」",
               "options": [
-                "はい、先ほど 予約を 済ませました。",
-                "いいえ、新幹線です。",
-                "駅に あります。"
+                "ええ、私で お役に 立てるなら 喜んで。",
+                "いいえ、手伝いました。",
+                "どういたしまして。"
               ],
               "correct": 0,
-              "transcript": "発話：「新幹線の 切符は もう 手配しましたか。」\n1. はい、先ほど 予約を 済ませました。\n2. いいえ、新幹線です。\n3. 駅に あります。",
-              "explanation": "Reservation complete:「予約を済ませました。」"
+              "transcript": "発話：「急な お願いで 申し訳ないのですが、手伝っていただけませんか。」\n1. ええ、私で お役に 立てるなら 喜んで。\n2. いいえ、手伝いました。\n3. どういたしまして。",
+              "explanation": "Willing to help."
             },
             {
               "id": "n4-e3-l-28",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
-              "question": "28. 「明日の 懇親会、参加されますか。」",
+              "audioSrc": null,
+              "question": "28. 「出張の 報告書、もう 提出なさいましたか。」",
               "options": [
-                "いいえ、参加です。",
-                "はい、ぜひ 参加させていただきます。",
-                "お疲れ様でした。"
+                "出張に 行きました。",
+                "はい、先ほど 部長に 提出いたしました。",
+                "いいえ、書類です。"
               ],
               "correct": 1,
-              "transcript": "発話：「明日の 懇親会、参加されますか。」\n1. はい、ぜひ 参加させていただきます。\n2. いいえ、参加です。\n3. お疲れ様でした。",
-              "explanation": "Attending:「参加させていただきます。」"
+              "transcript": "発話：「出張の 報告書、もう 提出なさいましたか。」\n1. はい、先ほど 部長に 提出いたしました。\n2. 出張に 行きました。\n3. いいえ、書類です。",
+              "explanation": "Report submitted."
             }
           ]
         }
@@ -17305,409 +17357,409 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e4-l-1",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
-              "question": "1. 会社で 男の人と 女の人が 話しています。女の人は この後 まず 何を 送りますか。",
+              "audioSrc": null,
+              "question": "1. 会社で 上司と 社員が 話しています。社員は これから 何を 最優先で 行いますか。",
               "options": [
-                "見積書",
-                "企画書",
-                "見積書と 企画書の両方",
-                "請求書"
+                "見積書を 取引先に メール送信する",
+                "請求書を まとめる",
+                "会議室の 準備をする",
+                "出張申請を 出す"
               ],
               "correct": 0,
-              "transcript": "男「佐藤さん、大阪支社への FAX 送信をお願いできる？」\n女「はい、見積書ですね。先ほど作った 企画書も 一緒に 送りますか。」\n男「いや、企画書は メールで 送るから、見積書だけ 先に 送って。」\n女「わかりました。すぐ 送信します。」\n質問：女の人は この後 まず 何を 送りますか。",
-              "explanation": "First sends the price quotation (見積書) via FAX."
+              "transcript": "上司「明日の 見積書を 取引先に メールで 送信するのが 最優先だ。その後で 請求書を まとめなさい。」\n質問：社員は まず 何を しますか。",
+              "explanation": "Send price quotes (見積書を取引先にメール送信する)."
             },
             {
               "id": "n4-e4-l-2",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
-              "question": "2. 病院の 受付で 男の人と 受付の人が 話しています。男の人は 次に どこへ 行きますか。",
+              "audioSrc": null,
+              "question": "2. 病院で 健診の 案内を 聞いています。受診者は 最初に どこへ 行きますか。",
               "options": [
-                "1階の 内科診察室",
-                "2階の 検査室",
-                "3階の レントゲン室",
-                "薬局の 窓口"
+                "2階の レントゲン室",
+                "3階の 採血コーナー",
+                "1階の 総合受付",
+                "4階の 医師面談室"
               ],
               "correct": 1,
-              "transcript": "受付「内科での 診察の 前に、採血と 血圧測定を 行います。まずは 2階の 検査室へ お進みください。」\n男「レントゲンは 撮らなくて いいですか。」\n受付「レントゲンは 診察後に 医師の 指示が あれば 撮ります。」\n質問：男の人は 次に どこへ 行きますか。",
-              "explanation": "Goes to 2F testing room for blood/BP check (2階の検査室)."
+              "transcript": "看護師「まず 3階の 採血コーナーへ お進みください。レントゲンは その後です。」\n質問：最初に どこへ 行きますか。",
+              "explanation": "Blood test room (3階の採血コーナー)."
             },
             {
               "id": "n4-e4-l-3",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
-              "question": "3. 大学で 留学生と 事務員が 話しています。留学生は 住所変更届を いつまでに 出さなければなりませんか。",
+              "audioSrc": null,
+              "question": "3. レンタカーの 店舗で 説明を 受けています。返却時に 何を しなければなりませんか。",
               "options": [
-                "来週の 月曜日まで",
-                "1か月以内",
-                "今週の 金曜日まで",
-                "今日中"
+                "洗車をする",
+                "車内を 掃除する",
+                "ガソリンを満タンに 給油する",
+                "鍵を 郵送する"
               ],
               "correct": 2,
-              "transcript": "留学生「引っ越しをしたのですが、住所変更の 届出は いつまでですか。」\n事務員「引っ越してから 14日以内です。今週の 金曜日までに 住民票を 添えて 提出してください。」\n留学生「学生証の 再発行も 必要ですか。」\n事務員「裏面の 住所書き換えだけですから、窓口で すぐ できますよ。」\n質問：留学生は いつまでに 届出を 出しますか。",
-              "explanation": "Submits by this Friday (今週の金曜日まで)."
+              "transcript": "店員「車を ご返却の 際は、必ず 近くの スタンドで ガソリンを満タンに 給油して お戻しください。」\n質問：返却時に 何を しますか。",
+              "explanation": "Refuel fully (ガソリンを満タンに給油する)."
             },
             {
               "id": "n4-e4-l-4",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
-              "question": "4. 居酒屋で 幹事の 男の人と 店員が 話しています。男の人は どの コースを 予約しますか。",
+              "audioSrc": null,
+              "question": "4. 会社で 男の人と 女の人が 話しています。女の人は 会議室の ネット予約を 何時に 取りますか。",
               "options": [
-                "お料理のみ 3000円コース",
-                "個別注文の コース",
-                "ランチコース",
-                "飲み放題付き 4500円コース"
+                "13時から 15時まで",
+                "15時から 17時まで",
+                "終日",
+                "14時から 16時まで"
               ],
               "correct": 3,
-              "transcript": "男「明日の 懇親会、8名で 予約したいのですが。」\n店員「お料理のみの 3000円コースと、2時間飲み放題付き 4500円コースが ございます。」\n男「みんな お酒を よく 飲むので、飲み放題付きの 4500円コースで お願いします。」\n質問：男の人は どの コースを 予約しますか。",
-              "explanation": "Reserves the 4,500-yen all-you-can-drink course (飲み放題付き4500円コース)."
+              "transcript": "男「会議室4は 14時から 16時まで 予約して おいてくれる？」\n女「わかりました、今 システムで 予約を 入れます。」\n質問：女の人は 何時から何時まで 予約しますか。",
+              "explanation": "14:00 to 16:00 (14時から16時まで)."
             },
             {
               "id": "n4-e4-l-5",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
-              "question": "5. 家で 妻と 夫が 話しています。夫は これから 何を 買いに行きますか。",
+              "audioSrc": null,
+              "question": "5. 空港で 荷物の 重さについて 話しています。乗客は スーツケースを どうしますか。",
               "options": [
-                "玉ねぎと 人参",
-                "牛肉と カレールー",
-                "玉ねぎと お肉",
-                "カレールーだけ"
+                "重い 本を リュックに 移す",
+                "超過料金を 払う",
+                "スーツケースを 預けない",
+                "荷物を 捨てる"
               ],
               "correct": 0,
-              "transcript": "妻「今夜は カレーに しようと思うんだけど、玉ねぎと 人参が 足りないの。」\n夫「買ってくるよ。お肉は ある？」\n妻「お肉と カレールーは あるから、野菜の 玉ねぎと 人参だけ 頼むわね。」\n夫「了解、スーパーに 行ってくる。」\n質問：夫は 何を 買いに行きますか。",
-              "explanation": "Buys onions and carrots (玉ねぎと人参)."
+              "transcript": "係員「荷物が 2キロ 超過しております。手荷物に 少し 移していただけますか。」\n乗客「わかりました、重い 本を リュックに 移します。」\n質問：乗客は どうしますか。",
+              "explanation": "Move books to backpack (重い本をリュックに移す)."
             },
             {
               "id": "n4-e4-l-6",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
-              "question": "6. 駅の ホームで 観光客と 駅員が 話しています。観光客は どの 電車に 乗りますか。",
+              "audioSrc": null,
+              "question": "6. 大学で 教授が 指導しています。学生は 論文の どこを 書き直しますか。",
               "options": [
-                "1番線の 宇都宮行き",
-                "2番線の 特急日光行き",
-                "3番線の 普通電車",
-                "地下鉄"
+                "第1章の はじめに",
+                "結論と 第4章の 考察・データ分析",
+                "参考文献リスト",
+                "タイトル"
               ],
               "correct": 1,
-              "transcript": "客「日光へ 行きたいのですが、どれに乗れば いいですか。」\n駅員「日光行きは 2番線の 10時15分発 特急です。1番線の 電車は 途中の 宇都宮止まりです。」\n客「特急券は 車内で 買えますか。」\n駅員「ホームの 券売機で 先に お買い求めください。」\n質問：観光客は どの 電車に 乗りますか。",
-              "explanation": "Takes the 10:15 Limited Express on platform 2 (2番線の特急日光行き)."
+              "transcript": "教授「結論の 部分の 考察が 少し 弱いです。第4章の データを もう一度 分析し直してください。」\n質問：学生は どこを 書き直しますか。",
+              "explanation": "Conclusion & analysis (結論と第4章の考察・データ分析)."
             },
             {
               "id": "n4-e4-l-7",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
-              "question": "7. 留学生と 日本語学校の 先生が 話しています。留学生は 明日 何を 持参しますか。",
+              "audioSrc": null,
+              "question": "7. カフェの 開店準備を しています。店員は 看板を どこに 出しますか。",
               "options": [
-                "筆記用具",
-                "雨具",
-                "お弁当",
-                "交通系ICカード"
+                "道路の 中央",
+                "入口の 左側の ドア前",
+                "入口の 右側の 壁際",
+                "店内の レジ横"
               ],
               "correct": 2,
-              "transcript": "先生「明日の 校外学習では、筆記用具と 交通系ICカード、それから 雨具を 忘れないでください。お弁当は 学校で 用意します。」\n留学生「カメラは 持っていっても いいですか。」\n先生「はい、大丈夫ですよ。」\n質問：学校側が 用意するものは 何ですか。",
-              "explanation": "Bento is prepared by the school (お弁当)."
+              "transcript": "店長「歩行者の 邪魔に ならないよう、入口の 右側の 壁際に 看板を 出してね。」\n質問：看板は どこに 出しますか。",
+              "explanation": "Right wall near entrance (入口の右側の壁際)."
             },
             {
               "id": "n4-e4-l-8",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
-              "question": "8. デパートで 客と 店員が 話しています。客は 包装を どうしますか。",
+              "audioSrc": null,
+              "question": "8. 電車の 遅延案内です。乗客は どの 振替輸送を 利用しますか。",
               "options": [
-                "青い リボン",
-                "緑の リボン",
-                "リボンなし",
-                "赤い リボン"
+                "タクシー",
+                "路線バス",
+                "新幹線",
+                "地下鉄線への 振替輸送"
               ],
               "correct": 3,
-              "transcript": "客「この マフラーを プレゼント用で お願いします。」\n店員「リボンは 赤と 青の どちらに なさいますか。」\n客「女性に 贈るので、明るい 赤色で お願いします。メッセージカードも 1枚 付けてください。」\n店員「かしこまりました。」\n質問：客は どの リボンを 選びましたか。",
-              "explanation": "Chooses red ribbon (赤いリボン)."
+              "transcript": "アナウンス「JR線は 運転を 見合わせております。地下鉄線への 振替輸送を ご利用ください。」\n質問：乗客は 何を 利用しますか。",
+              "explanation": "Subway transfer (地下鉄線への振替輸送)."
             },
             {
               "id": "n4-e4-l-9",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
-              "question": "9. 男の人と 女の人が 話しています。男の人が 昨夜 眠れなかった 理由は何ですか。",
+              "audioSrc": null,
+              "question": "9. 会社で 社員が 話しています。港の 通関手続きが 遅れている 理由は何ですか。",
               "options": [
-                "道路工事の 音が うるさかったから",
-                "夜遅くまで 残業したから",
-                "スマホゲームを していたから",
-                "コーヒーを 飲みすぎたから"
+                "台風の 影響で 検査が 遅れたため",
+                "書類に 不備があったため",
+                "関税が 未払いのため",
+                "荷物が 紛失したため"
               ],
               "correct": 0,
-              "transcript": "女「田中さん、眠そうな 顔をしているわね。」\n男「実は 近所で 深夜まで 道路工事を やっていて、音が うるさくて 全然 眠れなかったんだ。」\n女「それは 大変だったわね。」\n質問：男の人が 眠れなかった 理由は 何ですか。",
-              "explanation": "Loud road construction noise at night (道路工事の音がうるさかったから)."
+              "transcript": "男「輸入貨物の 許可が まだ 下りないんだ。」\n女「台風の 影響で 税関の 検査船が 欠航したからだそうよ。」\n質問：遅れている 理由は 何ですか。",
+              "explanation": "Typhoon backlog (台風の影響で検査が遅れたため)."
             },
             {
               "id": "n4-e4-l-10",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
-              "question": "10. 会社で 先輩と 後輩が 話しています。後輩が プレゼン資料を 直す 箇所は どこですか。",
+              "audioSrc": null,
+              "question": "10. 会社が テレワークと クラウドシステムを 導入した 最大の 目的は何ですか。",
               "options": [
-                "表紙の タイトル",
-                "売上グラフの フォント（文字）サイズ",
-                "発表者の 名前",
-                "最後の 結論ページ"
+                "オフィスの 家賃削減のため",
+                "迅速な 情報共有と 業務効率化のため",
+                "社員の 残業を 増やすため",
+                "パソコンを 売るため"
               ],
               "correct": 1,
-              "transcript": "先輩「全体の 流れは とても いいよ。ただ、3ページ目の 売上グラフの フォントが 小さくて 後ろの 席から 見えにくいと思う。」\n後輩「わかりました。グラフの 文字を 大きく 修正します。」\n質問：後輩は どこを 修正しますか。",
-              "explanation": "Enlarges graph font size on page 3 (売上グラフのフォントサイズ)."
+              "transcript": "男「場所を 問わずに 迅速な 情報共有と 業務効率化を 図るためだよ。」\n質問：導入の 目的は 何ですか。",
+              "explanation": "Information sharing efficiency (迅速な情報共有と業務効率化のため)."
             },
             {
               "id": "n4-e4-l-11",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
-              "question": "11. 男の人と 女の人が 新しい カフェについて 話しています。女の人が その カフェを 気に入った 理由は何ですか。",
+              "audioSrc": null,
+              "question": "11. 男の人が 英語の 勉強法を オンライン英会話に 変えた 理由は何ですか。",
               "options": [
-                "値段が とても 安いから",
-                "ケーキの種類が 多いから",
-                "電源（コンセント）と WiFiが 完備されているから",
-                "店員が 親切だから"
+                "一番 安いから",
+                "友達に 勧められたから",
+                "通学時間を 節約でき 毎日話せるから",
+                "試験が ないから"
               ],
               "correct": 2,
-              "transcript": "男「駅前の 新しい カフェ、もう 行った？」\n女「ええ。コーヒーも 美味しいけど、全席に コンセントと WiFiが あって 勉強しやすいのが すごく 気に入ったわ。」\n質問：女の人が 気に入った 理由は 何ですか。",
-              "explanation": "Free WiFi and power outlets at all seats (電源とWiFiが完備されているから)."
+              "transcript": "男「通学の 時間が 節約できて、毎日 25分 ネイティブと 話せるからだよ。」\n質問：選んだ 理由は 何ですか。",
+              "explanation": "Time-saving & daily speaking (通学時間を節約でき毎日話せるから)."
             },
             {
               "id": "n4-e4-l-12",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
-              "question": "12. 電気屋で 店員が 新しい 洗濯機について 説明しています。この 洗濯機の 最大の 特長は何ですか。",
+              "audioSrc": null,
+              "question": "12. 飲食店が 紙ストローと エコ容器に 切り替えた 理由は何ですか。",
               "options": [
-                "サイズが 一番 小さいこと",
-                "乾燥時間が 長いこと",
-                "色が カラフルなこと",
-                "温水泡洗浄で 油汚れを しっかり 落とせること"
+                "紙の方が 安いから",
+                "お客様の 指示だから",
+                "プラスチックが 売り切れたから",
+                "環境保全と プラスチック削減のため"
               ],
               "correct": 3,
-              "transcript": "店員「こちらの 新製品は、温水泡洗浄機能によって しつこい 油汚れを 素早く 落とせる点が お客様から 大変 高く 評価されております。」\n質問：最大の 特長は何ですか。",
-              "explanation": "Warm-water bubble wash removing heavy grease stains (温水泡洗浄)."
+              "transcript": "店長「海洋プラスチックごみ 削減と 環境保全への 取り組みの 一環です。」\n質問：理由は 何ですか。",
+              "explanation": "Eco initiative (環境保全とプラスチック削減のため)."
             },
             {
               "id": "n4-e4-l-13",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
-              "question": "13. 男の人と 女の人が 旅行について 話しています。男の人が 飛行機ではなく 新幹線を 選んだ 理由は何ですか。",
+              "audioSrc": null,
+              "question": "13. デザイナーが 配色を 青と 白に 統一した 理由は何ですか。",
               "options": [
-                "街の 中心に 直結していて 移動が 楽だから",
-                "飛行機より 運賃が 格段に 安いから",
-                "景色が 綺麗だから",
-                "駅弁が 食べたいから"
+                "清潔感と 信頼性を 与えるため",
+                "インク代を 節約するため",
+                "青が 好きだから",
+                "指示が なかったから"
               ],
               "correct": 0,
-              "transcript": "女「福岡まで 飛行機の 方が 早くない？」\n男「空港までの 移動や 保安検査の 手間を 考えると、駅直結で 街の 中心に着く 新幹線の 方が 楽なんだよ。」\n質問：新幹線を 選んだ 理由は 何ですか。",
-              "explanation": "Direct downtown access without airport hassle (街の中心に直結していて楽だから)."
+              "transcript": "女「医療機器の パンフレットなので、清潔感と 信頼性を 与えるためよ。」\n質問：理由は 何ですか。",
+              "explanation": "Cleanliness & reliability (清潔感と信頼性を与えるため)."
             },
             {
               "id": "n4-e4-l-14",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
-              "question": "14. 留学生と 日本人の 友達が 話しています。留学生が ゴミ出しで 注意された 理由は何ですか。",
+              "audioSrc": null,
+              "question": "14. 支店長が 今期の 目標を 達成できた 理由として 挙げたことは 何ですか。",
               "options": [
-                "指定の 曜日と 違っていたから",
-                "ペットボトルの キャップと ラベルを 剥がさなかったから",
-                "袋が 破れていたから",
-                "夜遅くに 出したから"
+                "景気が 良かったから",
+                "チームワークと 迅速な 顧客対応",
+                "広告を 増やしたから",
+                "運が 良かったから"
               ],
               "correct": 1,
-              "transcript": "留学生「昨日、アパートの 管理人さんに 注意されちゃった。」\n友達「どうしたの？」\n留学生「ペットボトルを 捨てる時に、キャップと ラベルを 剥がさずに そのまま 出していたんだ。」\n質問：留学生が 注意された 理由は 何ですか。",
-              "explanation": "Did not separate plastic caps and labels (キャップとラベルを剥がさなかったから)."
+              "transcript": "支店長「全社員の チームワークと 顧客への 迅速な フォローのおかげです。」\n質問：達成の 理由は 何ですか。",
+              "explanation": "Teamwork & customer service (チームワークと迅速な顧客対応)."
             },
             {
               "id": "n4-e4-l-15",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
-              "question": "15. 会社で 上司と 部下が 話しています。来週の 社内研修が 延期になった 理由は何ですか。",
+              "audioSrc": null,
+              "question": "15. 新幹線の 速度を 落として 運行している 理由は何ですか。",
               "options": [
-                "参加者が 少なかったため",
-                "会場が 使えなくなったため",
-                "講師が 急病で 入院されたため",
-                "台風が 近づいているため"
+                "線路の 工事のため",
+                "雪の ため",
+                "沿線での 強風警報のため",
+                "車両の 点検のため"
               ],
               "correct": 2,
-              "transcript": "上司「来週 水曜の セキュリティ研修だけど、講師の 先生が 急病で 入院されたため、来月に 延期することになったよ。」\n部下「承知いたしました。受講者に メールで 連絡します。」\n質問：延期になった 理由は 何ですか。",
-              "explanation": "Instructor hospitalized due to sudden illness (講師が急病のため)."
+              "transcript": "アナウンス「沿線での 強風警報の 発令に伴い、安全確保のため 徐行運転を行っております。」\n質問：理由は 何ですか。",
+              "explanation": "Strong wind safety warning (沿線での強風警報のため)."
             },
             {
               "id": "n4-e4-l-16",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
-              "question": "16. 先輩から 書類を 受け取りました。丁寧に お礼を 言いたいです。何と言いますか。（矢印の人）",
+              "audioSrc": null,
+              "question": "16. 会議室の プロジェクターが 映りません。IT担当者に 何と言いますか。（矢印の人）",
               "options": [
-                "どういたしまして。",
-                "ありがとうございます。助かります。",
-                "こちらこそ ごめんなさい。"
+                "直しなさい。",
+                "恐れ入ります、接続が 上手くいかないのですが、少々 診て いただけますか。",
+                "プロジェクターです。"
               ],
               "correct": 1,
-              "transcript": "状況：先輩から 親切に 資料を もらいました。\n質問：何と言いますか。\n1. ありがとうございます。助かります。\n2. どういたしまして。\n3. こちらこそ ごめんなさい。",
-              "explanation": "Thanking senior:「ありがとうございます。助かります。」"
+              "transcript": "状況：機械の 不具合を 相談します。\n1. 恐れ入ります、接続が 上手くいかないのですが、少々 診て いただけますか。\n2. 直しなさい。\n3. プロジェクターです。",
+              "explanation": "Technical support request."
             },
             {
               "id": "n4-e4-l-17",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
-              "question": "17. 同僚の ホッチキスを 少し 借りたいです。何と言いますか。（矢印の人）",
+              "audioSrc": null,
+              "question": "17. 取引先の 役員に お茶を お出しします。何と言いますか。（矢印の人）",
               "options": [
-                "ホッチキスを 貸してあげます。",
-                "ホッチキスを 使わせてくださいました。",
-                "ホッチキスを 少々 お借りしても よろしいですか。"
+                "お茶を 飲みなさい。",
+                "いただきます。",
+                "どうぞ お召し上がりくださいませ。"
               ],
               "correct": 2,
-              "transcript": "状況：ホッチキスを 借ります。\n質問：何と言いますか。\n1. ホッチキスを 少々 お借りしても よろしいですか。\n2. ホッチキスを 貸してあげます。\n3. ホッチキスを 使わせてくださいました。",
-              "explanation": "Polite request:「〜お借りしてもよろしいですか」."
+              "transcript": "状況：来客への お茶出し。\n1. どうぞ お召し上がりくださいませ。\n2. お茶を 飲みなさい。\n3. いただきます。",
+              "explanation": "Tea serving Keigo:「どうぞお召し上がりくださいませ」."
             },
             {
               "id": "n4-e4-l-18",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
-              "question": "18. 訪問先で 名刺を 渡されました。両手で 受け取りながら 何と言いますか。（矢印の人）",
+              "audioSrc": null,
+              "question": "18. 上司に 休暇届を 提出し、承認を お願いします。何と言いますか。（矢印の人）",
               "options": [
-                "頂戴いたします。よろしく お願い申し上げます。",
-                "こちらを どうぞ。",
-                "お疲れ様でございます。"
+                "課長、来週の 休暇届で ございます。ご承認 いただけますでしょうか。",
+                "休みを 取ります。",
+                "お疲れ様でした。"
               ],
               "correct": 0,
-              "transcript": "状況：名刺交換を します。\n質問：何と言いますか。\n1. 頂戴いたします。よろしく お願い申し上げます。\n2. こちらを どうぞ。\n3. お疲れ様でございます。",
-              "explanation": "Accepting business card:「頂戴いたします。」"
+              "transcript": "状況：休暇届の 提出・承認依頼。\n1. 課長、来週の 休暇届で ございます。ご承認 いただけますでしょうか。\n2. 休みを 取ります。\n3. お疲れ様でした。",
+              "explanation": "Leave request."
             },
             {
               "id": "n4-e4-l-19",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
-              "question": "19. 部長の 部屋に 入ります。ドアを ノックした 後、何と言いますか。（矢印の人）",
+              "audioSrc": null,
+              "question": "19. 電話口で 相手の 名前を 丁寧に 確認したいです。何と言いますか。（矢印の人）",
               "options": [
-                "お邪魔しました。",
-                "失礼いたします。",
-                "ごめんください。"
+                "誰ですか。",
+                "恐れ入りますが、お名前を もう一度 お聞かせ いただけますでしょうか。",
+                "名前を 言いなさい。"
               ],
               "correct": 1,
-              "transcript": "状況：上司の 部屋へ 入室します。\n質問：何と言いますか。\n1. 失礼いたします。\n2. お邪魔しました。\n3. ごめんください。",
-              "explanation": "Entering superior office:「失礼いたします。」"
+              "transcript": "状況：相手の お名前の 確認。\n1. 恐れ入りますが、お名前を もう一度 お聞かせ いただけますでしょうか。\n2. 誰ですか。\n3. 名前を 言いなさい。",
+              "explanation": "Polite name check."
             },
             {
               "id": "n4-e4-l-20",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
-              "question": "20. 体調が 悪そうな 同僚を 気遣います。何と言いますか。（矢印の人）",
+              "audioSrc": null,
+              "question": "20. 訪問先を 退出する 際の 挨拶です。何と言いますか。（矢印の人）",
               "options": [
-                "おめでとうございます。",
-                "おかげさまで 元気です。",
-                "大丈夫ですか。無理を しないでくださいね。"
+                "さようなら。",
+                "お邪魔しました。",
+                "本日は お忙しい中、貴重な お時間を いただき 誠に ありがとうございました。"
               ],
               "correct": 2,
-              "transcript": "状況：同僚の 体調を 心配します。\n質問：何と言いますか。\n1. 大丈夫ですか。無理を しないでくださいね。\n2. おめでとうございます。\n3. おかげさまで 元気です。",
-              "explanation": "Expressing concern:「大丈夫ですか。無理をしないでくださいね。」"
+              "transcript": "状況：退室の 挨拶。\n1. 本日は お忙しい中、貴重な お時間を いただき 誠に ありがとうございました。\n2. さようなら。\n3. お邪魔しました。",
+              "explanation": "Departure gratitude."
             },
             {
               "id": "n4-e4-l-21",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
-              "question": "21. 「明日の プレゼンの 準備は もう 済みましたか。」",
+              "audioSrc": null,
+              "question": "21. 「担当者が ただいま 別の 電話に出ておりますが、折り返し お電話させましょうか。」",
               "options": [
-                "いいえ、プレゼンを 行いました。",
-                "会議室に あります。",
-                "はい、先ほど 資料の 確認が 終わりました。"
+                "電話を かけました。",
+                "いいえ、外です。",
+                "恐れ入ります。それでは 戻られましたら お願いできますでしょうか。"
               ],
               "correct": 2,
-              "transcript": "発話：「明日の プレゼンの 準備は もう 済みましたか。」\n1. はい、先ほど 資料の 確認が 終わりました。\n2. いいえ、プレゼンを 行いました。\n3. 会議室に あります。",
-              "explanation": "Preparation complete:「はい、先ほど資料の確認が終わりました。」"
+              "transcript": "発話：「担当者が ただいま 別の 電話に出ておりますが、折り返し お電話させましょうか。」\n1. 恐れ入ります。それでは 戻られましたら お願いできますでしょうか。\n2. 電話を かけました。\n3. いいえ、外です。",
+              "explanation": "Call back:「戻られましたらお願いできますでしょうか。」"
             },
             {
               "id": "n4-e4-l-22",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
-              "question": "22. 「お荷物が 重そうですね。手をお貸ししましょうか。」",
+              "audioSrc": null,
+              "question": "22. 「こちらの サンプル、お持ち帰りになっても 構いませんよ。」",
               "options": [
-                "助かります。恐れ入ります。",
-                "いいえ、手です。",
-                "どういたしまして。"
+                "ありがとうございます、ありがたく 頂戴いたします。",
+                "持ちました。",
+                "サンプルです。"
               ],
               "correct": 0,
-              "transcript": "発話：「お荷物が 重そうですね。手をお貸ししましょうか。」\n1. 助かります。恐れ入ります。\n2. いいえ、手です。\n3. どういたしまして。",
-              "explanation": "Accepting offer:「助かります。恐れ入ります。」"
+              "transcript": "発話：「こちらの サンプル、お持ち帰りになっても 構いませんよ。」\n1. ありがとうございます、ありがたく 頂戴いたします。\n2. 持ちました。\n3. サンプルです。",
+              "explanation": "Humble acceptance:「ありがたく頂戴いたします。」"
             },
             {
               "id": "n4-e4-l-23",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
-              "question": "23. 「恐れ入りますが、もう一度 お名前を 伺っても よろしいでしょうか。」",
+              "audioSrc": null,
+              "question": "23. 「来期の 予算案、もう 確定いたしましたか。」",
               "options": [
-                "お名前を どうぞ。",
-                "はい、田中商事の 山田と 申します。",
-                "いいえ、知りません。"
+                "お金です。",
+                "はい、役員会で 正式に 承認されました。",
+                "来年です。"
               ],
               "correct": 1,
-              "transcript": "発話：「恐れ入りますが、もう一度 お名前を 伺っても よろしいでしょうか。」\n1. はい、田中商事の 山田と 申します。\n2. お名前を どうぞ。\n3. いいえ、知りません。",
-              "explanation": "Stating name humbly:「田中商事の山田と申します。」"
+              "transcript": "発話：「来期の 予算案、もう 確定いたしましたか。」\n1. はい、役員会で 正式に 承認されました。\n2. お金です。\n3. 来年です。",
+              "explanation": "Budget approved:「役員会で正式に承認されました。」"
             },
             {
               "id": "n4-e4-l-24",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
-              "question": "24. 「この 企画案、課長に ご相談されましたか。」",
+              "audioSrc": null,
+              "question": "24. 「工場見学の 手続き、私が 担当いたしましょうか。」",
               "options": [
-                "いいえ、課長です。",
-                "企画書を 書きました。",
-                "はい、午前中に 承認を いただきました。"
+                "工場です。",
+                "見学しました。",
+                "助かります！ ぜひ よろしく お願いいたします。"
               ],
               "correct": 2,
-              "transcript": "発話：「この 企画案、課長に ご相談されましたか。」\n1. はい、午前中に 承認を いただきました。\n2. いいえ、課長です。\n3. 企画書を 書きました。",
-              "explanation": "Approved by manager:「午前中に承認をいただきました。」"
+              "transcript": "発話：「工場見学の 手続き、私が 担当いたしましょうか。」\n1. 助かります！ ぜひ よろしく お願いいたします。\n2. 工場です。\n3. 見学しました。",
+              "explanation": "Accepting offer:「ぜひよろしくお願いいたします。」"
             },
             {
               "id": "n4-e4-l-25",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
-              "question": "25. 「本日中に この アンケートを 回収していただけますか。」",
+              "audioSrc": null,
+              "question": "25. 「お車で お越しの お客様は、駐車券を 受付に ご提示ください。」",
               "options": [
-                "かしこまりました。夕方までに 集めます。",
-                "どういたしまして。",
-                "回収されました。"
+                "はい、こちらが 駐車券です。",
+                "車です。",
+                "運転しました。"
               ],
               "correct": 0,
-              "transcript": "発話：「本日中に この アンケートを 回収していただけますか。」\n1. かしこまりました。夕方までに 集めます。\n2. どういたしまして。\n3. 回収されました。",
-              "explanation": "Acknowledging task:「かしこまりました。夕方までに集めます。」"
+              "transcript": "発話：「お車で お越しの お客様は、駐車券を 受付に ご提示ください。」\n1. はい、こちらが 駐車券です。\n2. 車です。\n3. 運転しました。",
+              "explanation": "Presenting parking ticket."
             },
             {
               "id": "n4-e4-l-26",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
-              "question": "26. 「エレベーターが 参りました。どうぞ お先にお乗りください。」",
+              "audioSrc": null,
+              "question": "26. 「今回の プロジェクト、大変 素晴らしい 成果でしたね。」",
               "options": [
-                "いいえ、エレベーターです。",
-                "ありがとうございます。お先に 失礼します。",
-                "お先に失礼します。"
+                "終わりました。",
+                "ありがとうございます。チーム全員の 協力の おかげです。",
+                "失敗です。"
               ],
               "correct": 1,
-              "transcript": "発話：「エレベーターが 参りました。どうぞ お先にお乗りください。」\n1. ありがとうございます。お先に 失礼します。\n2. いいえ、エレベーターです。\n3. 行ってらっしゃい。",
-              "explanation": "Elevator etiquette:「ありがとうございます。お先に失礼します。」"
+              "transcript": "発話：「今回の プロジェクト、大変 素晴らしい 成果でしたね。」\n1. ありがとうございます。チーム全員の 協力の おかげです。\n2. 終わりました。\n3. 失敗です。",
+              "explanation": "Praise response."
             },
             {
               "id": "n4-e4-l-27",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
-              "question": "27. 「明日の 飲み会、田中さんも 来られるそうですよ。」",
+              "audioSrc": null,
+              "question": "27. 「明日の 朝一番で 全体朝礼を 行いますので、遅れないように。」",
               "options": [
-                "はい、飲みました。",
-                "お疲れ様でした。",
-                "そうなんですか！ お会いできるのが 楽しみです。"
+                "朝です。",
+                "礼を しました。",
+                "かしこまりました。10分前には 着席いたします。"
               ],
               "correct": 2,
-              "transcript": "発話：「明日の 飲み会、田中さんも 来られるそうですよ。」\n1. そうなんですか！ お会いできるのが 楽しみです。\n2. はい、飲みました。\n3. お疲れ様でした。",
-              "explanation": "Pleased reaction:「お会いできるのが楽しみです。」"
+              "transcript": "発話：「明日の 朝一番で 全体朝礼を 行いますので、遅れないように。」\n1. かしこまりました。10分前には 着席いたします。\n2. 朝です。\n3. 礼を しました。",
+              "explanation": "Punctuality reply."
             },
             {
               "id": "n4-e4-l-28",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
-              "question": "28. 「本日は お忙しい中、ご足労いただき ありがとうございました。」",
+              "audioSrc": null,
+              "question": "28. 「新商品の カタログ、もう 届いておりますでしょうか。」",
               "options": [
-                "こちらこそ、貴重な お時間を ありがとうございました。",
-                "ごちそうさまでした。",
-                "お邪魔しました。"
+                "はい、先ほど 郵送で 届いたのを 確認いたしました。",
+                "本です。",
+                "買いません。"
               ],
               "correct": 0,
-              "transcript": "発話：「本日は お忙しい中、ご足労いただき ありがとうございました。」\n1. こちらこそ、貴重な お時間を ありがとうございました。\n2. ごちそうさまでした。\n3. お邪魔しました。",
-              "explanation": "Polite business reciprocity:「こちらこそ、貴重なお時間をありがとうございました。」"
+              "transcript": "発話：「新商品の カタログ、もう 届いておりますでしょうか。」\n1. はい、先ほど 郵送で 届いたのを 確認いたしました。\n2. 本です。\n3. 買いません。",
+              "explanation": "Catalog arrival confirmation."
             }
           ]
         }
@@ -18657,7 +18709,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e5-l-1",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
+              "audioSrc": null,
               "question": "1. 会社で 上司と 部下が 話しています。部下は これから 何部 コピーを 取りますか。",
               "options": [
                 "8部",
@@ -18672,7 +18724,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e5-l-2",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
+              "audioSrc": null,
               "question": "2. レンタカーの 営業所で 店員と 客が 話しています。客は 車を 返却する 前に 何を しなければなりませんか。",
               "options": [
                 "ガソリンを 満タンに 給油する",
@@ -18687,7 +18739,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e5-l-3",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
+              "audioSrc": null,
               "question": "3. 旅館の フロントで 客と 仲居が 話しています。客は 夕食の 時間を 何時に しましたか。",
               "options": [
                 "18時（午後6時）",
@@ -18702,7 +18754,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e5-l-4",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
+              "audioSrc": null,
               "question": "4. 留学生と 友達が 話しています。二人は どの 映画を 見ることに しましたか。",
               "options": [
                 "アクション映画",
@@ -18717,7 +18769,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e5-l-5",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
+              "audioSrc": null,
               "question": "5. 会社で 男の人と 女の人が 話しています。男の人は 経費精算書を いつまでに 提出しますか。",
               "options": [
                 "今日中（23日）",
@@ -18732,7 +18784,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e5-l-6",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
+              "audioSrc": null,
               "question": "6. スポーツクラブで 受付と 客が 話しています。客は 初回に 何を 提出しますか。",
               "options": [
                 "身分証明書と キャッシュカード",
@@ -18747,7 +18799,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e5-l-7",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
+              "audioSrc": null,
               "question": "7. 教室で 先生が 学生に 指示しています。学生は 作文用紙を どのように 書きますか。",
               "options": [
                 "1行目から",
@@ -18762,7 +18814,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e5-l-8",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
+              "audioSrc": null,
               "question": "8. 洋服店で 客と 店員が 話しています。客は どの 色の スーツを 試着しますか。",
               "options": [
                 "黒の スーツ",
@@ -18777,7 +18829,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e5-l-9",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
+              "audioSrc": null,
               "question": "9. 貿易会社で 社員二人が 話しています。海外からの 貨物の 通関が 遅れている 理由は何ですか。",
               "options": [
                 "関税が 未払いのため",
@@ -18792,7 +18844,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e5-l-10",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
+              "audioSrc": null,
               "question": "10. 会社で 上司が 後輩の 働きぶりを 褒めています。後輩が 評価された 要因は何ですか。",
               "options": [
                 "こまめな 報告・連絡・相談を 徹底したこと",
@@ -18807,7 +18859,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e5-l-11",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
+              "audioSrc": null,
               "question": "11. 夫婦が 新しい マンションについて 話しています。購入の 決め手になった 理由は何ですか。",
               "options": [
                 "価格が 予算より 安かったから",
@@ -18822,7 +18874,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e5-l-12",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
+              "audioSrc": null,
               "question": "12. レストランで 店長と 料理長が 話しています。新メニューが 若者に ヒットした 理由は何ですか。",
               "options": [
                 "値段を 半額にしたから",
@@ -18837,7 +18889,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e5-l-13",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
+              "audioSrc": null,
               "question": "13. 留学生と 大家さんが 話しています。エアコンが 動かなかった 理由は何ですか。",
               "options": [
                 "本体が 故障していたから",
@@ -18852,7 +18904,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e5-l-14",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
+              "audioSrc": null,
               "question": "14. 会社で 同僚二人が 話しています。田中さんが 有給休暇を 取った 理由は何ですか。",
               "options": [
                 "子供の 入学式に 出席するため",
@@ -18867,7 +18919,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e5-l-15",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
+              "audioSrc": null,
               "question": "15. 講義で 教授が 歴史的建造物について 話しています。この 寺が 火災を 免れた 理由は何ですか。",
               "options": [
                 "雨が 降っていたため",
@@ -18882,7 +18934,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e5-l-16",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
+              "audioSrc": null,
               "question": "16. 休暇届に 上司の 承認印を もらいたいです。何と言いますか。（矢印の人）",
               "options": [
                 "ハンコを 押してくださいました。",
@@ -18896,7 +18948,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e5-l-17",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
+              "audioSrc": null,
               "question": "17. お客様を 応接室へ 案内します。何と言いますか。（矢印の人）",
               "options": [
                 "どうぞ こちらの 応接室へ お入りください。",
@@ -18910,7 +18962,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e5-l-18",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
+              "audioSrc": null,
               "question": "18. エレベーターの 前で 社長と 一緒になりました。何と言いますか。（矢印の人）",
               "options": [
                 "やあ、元気ですか。",
@@ -18924,7 +18976,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e5-l-19",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
+              "audioSrc": null,
               "question": "19. 提出した 書類に 誤字が ありました。お詫びして 差し替えます。何と言いますか。（矢印の人）",
               "options": [
                 "間違えたので 見ないでください。",
@@ -18938,7 +18990,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e5-l-20",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
+              "audioSrc": null,
               "question": "20. 定年退職する 恩師に 感謝の 気持ちを 伝えます。何と言いますか。（矢印の人）",
               "options": [
                 "長い間、温かい ご指導を 賜り 心より 感謝申し上げます。",
@@ -18952,7 +19004,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e5-l-21",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
+              "audioSrc": null,
               "question": "21. 「営業部の 鈴木部長を お願いできますでしょうか。」",
               "options": [
                 "部長を お願いしました。",
@@ -18966,7 +19018,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e5-l-22",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
+              "audioSrc": null,
               "question": "22. 「今回の 新商品発表会、大盛況でしたね。」",
               "options": [
                 "いいえ、失敗でした。",
@@ -18980,7 +19032,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e5-l-23",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
+              "audioSrc": null,
               "question": "23. 「お打ち合わせの 日程ですが、来週 火曜日の 14時は いかがでしょうか。」",
               "options": [
                 "はい、火曜の 14時で 結構でございます。よろしく お願いいたします。",
@@ -18994,7 +19046,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e5-l-24",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
+              "audioSrc": null,
               "question": "24. 「本日の セミナーの 資料を メールで お送りしても よろしいですか。」",
               "options": [
                 "メールを 送りました。",
@@ -19008,7 +19060,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e5-l-25",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
+              "audioSrc": null,
               "question": "25. 「お茶が 冷めてしまいましたね。新しいのを お淹れしましょうか。」",
               "options": [
                 "いいえ、冷たいです。",
@@ -19022,7 +19074,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e5-l-26",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
+              "audioSrc": null,
               "question": "26. 「こちらの 契約書の 内容に ご不明な 点は ございますか。」",
               "options": [
                 "いいえ、分かりやすく ご説明いただき 十分 理解いたしました。",
@@ -19036,7 +19088,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e5-l-27",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
+              "audioSrc": null,
               "question": "27. 「明日は 朝から 大雨の 予報ですので、お気をつけて お越しください。」",
               "options": [
                 "雨が 降りました。",
@@ -19050,7 +19102,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e5-l-28",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
+              "audioSrc": null,
               "question": "28. 「今週末は ごゆっくり お過ごしください。」",
               "options": [
                 "日曜日です。",
@@ -20009,7 +20061,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e6-l-1",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
+              "audioSrc": null,
               "question": "1. 会社で 男の人と 女の人が 話しています。男の人は 何番の 会議室を 予約しますか。",
               "options": [
                 "第1会議室",
@@ -20024,7 +20076,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e6-l-2",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
+              "audioSrc": null,
               "question": "2. 書店で 客と 店員が 話しています。店員は 客に どの 本を 渡しますか。",
               "options": [
                 "赤い 文法本",
@@ -20039,7 +20091,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e6-l-3",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
+              "audioSrc": null,
               "question": "3. 大学で 教授と 留学生が 話しています。留学生は 明日 何時に 研究室へ 行きますか。",
               "options": [
                 "16時（午後4時）",
@@ -20054,7 +20106,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e6-l-4",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
+              "audioSrc": null,
               "question": "4. カフェで 店員と 客が 話しています。客は セットの 飲み物に 何を 選びましたか。",
               "options": [
                 "ホットコーヒー",
@@ -20069,7 +20121,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e6-l-5",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
+              "audioSrc": null,
               "question": "5. 不動産屋で 営業マンと 客が 話しています。客は どの 物件を 内見しますか。",
               "options": [
                 "家賃が安い 1階の角部屋",
@@ -20084,7 +20136,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e6-l-6",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
+              "audioSrc": null,
               "question": "6. 料理教室で 講師が 生徒に 説明しています。生徒は 最初に 何を しますか。",
               "options": [
                 "野菜を 一口大に切る",
@@ -20099,7 +20151,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e6-l-7",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
+              "audioSrc": null,
               "question": "7. 空港の チェックインカウンターで 係員と 乗客が 話しています。乗客は 荷物を どうしますか。",
               "options": [
                 "荷物を 一部 出して 機内へ 持ち込む",
@@ -20114,7 +20166,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e6-l-8",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
+              "audioSrc": null,
               "question": "8. 美容室で 美容師と 客が 話しています。客は 髪を どのくらい 切りますか。",
               "options": [
                 "ショートカット",
@@ -20129,7 +20181,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e6-l-9",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
+              "audioSrc": null,
               "question": "9. 男の人と 女の人が 話しています。地下鉄が 一部の 駅を 通過した 理由は何ですか。",
               "options": [
                 "駅で 火災が あったため",
@@ -20144,7 +20196,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e6-l-10",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
+              "audioSrc": null,
               "question": "10. 会社で 社員二人が 話しています。クラウドストレージを 導入した メリットは何ですか。",
               "options": [
                 "パソコンが 軽くなったこと",
@@ -20159,7 +20211,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e6-l-11",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
+              "audioSrc": null,
               "question": "11. 男の人と 女の人が 話しています。セミナーの 会場が 変更された 理由は何ですか。",
               "options": [
                 "参加応募者が 予想以上に 多かったため",
@@ -20174,7 +20226,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e6-l-12",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
+              "audioSrc": null,
               "question": "12. ネット通販で 客と サポートが 話しています。商品が 届かない 理由は何ですか。",
               "options": [
                 "住所が 間違っていたため",
@@ -20189,7 +20241,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e6-l-13",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
+              "audioSrc": null,
               "question": "13. 留学生と 友達が 話しています。留学生が 自転車通学を やめた 理由は何ですか。",
               "options": [
                 "自転車が 盗まれたから",
@@ -20204,7 +20256,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e6-l-14",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
+              "audioSrc": null,
               "question": "14. 会社で 上司と 部下が 話しています。広告キャンペーンを 成功させた 施策は何ですか。",
               "options": [
                 "新聞の 折り込みチラシ",
@@ -20219,7 +20271,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e6-l-15",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
+              "audioSrc": null,
               "question": "15. 夫婦が 話しています。新しい 掃除機を 買った 理由は何ですか。",
               "options": [
                 "コードレスで 軽く、音も 静かだから",
@@ -20234,7 +20286,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e6-l-16",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
+              "audioSrc": null,
               "question": "16. 社内の IT担当者に ネット接続の 不具合を 見てもらいたいです。何と言いますか。（矢印の人）",
               "options": [
                 "パソコンが ネットに 繋がらないのですが、少々 診て いただけますでしょうか。",
@@ -20248,7 +20300,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e6-l-17",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
+              "audioSrc": null,
               "question": "17. 取引先から 届いた お中元に お礼の 電話を かけます。何と言いますか。（矢印の人）",
               "options": [
                 "お中元を 食べました。",
@@ -20262,7 +20314,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e6-l-18",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
+              "audioSrc": null,
               "question": "18. 執務室内で 大声で 話している 同僚に 注意を 促します。何と言いますか。（矢印の人）",
               "options": [
                 "黙りなさい。",
@@ -20276,7 +20328,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e6-l-19",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
+              "audioSrc": null,
               "question": "19. レジで 会社名義の 領収書を お願いします。何と言いますか。（矢印の人）",
               "options": [
                 "○○株式会社の 宛名で 領収書を 発行して いただけますか。",
@@ -20290,7 +20342,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e6-l-20",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
+              "audioSrc": null,
               "question": "20. 遠方から 来社された お客様を 見送ります。何と言いますか。（矢印の人）",
               "options": [
                 "バイバイ。",
@@ -20304,7 +20356,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e6-l-21",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
+              "audioSrc": null,
               "question": "21. 「担当者が ただいま 席を 外しておりますが、折り返し お電話させましょうか。」",
               "options": [
                 "恐縮です。それでは 戻られましたら お願いできますでしょうか。",
@@ -20318,7 +20370,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e6-l-22",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
+              "audioSrc": null,
               "question": "22. 「プロジェクトの 進捗状況は 予定通りですか。」",
               "options": [
                 "いいえ、予定です。",
@@ -20332,7 +20384,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e6-l-23",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
+              "audioSrc": null,
               "question": "23. 「来期の 新規事業案、プレゼンを お願いできますか。」",
               "options": [
                 "プレゼンを 見ました。",
@@ -20346,7 +20398,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e6-l-24",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
+              "audioSrc": null,
               "question": "24. 「本日は あいにくの お天気と なってしまいましたね。」",
               "options": [
                 "ええ、足元の 悪い中 お越しいただき 恐縮でございます。",
@@ -20360,7 +20412,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e6-l-25",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
+              "audioSrc": null,
               "question": "25. 「お昼休み、一緒に 駅前の うどん屋に 行かない？」",
               "options": [
                 "うどんを食べました。",
@@ -20374,7 +20426,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e6-l-26",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
+              "audioSrc": null,
               "question": "26. 「こちらの サンプル、お持ち帰りになられますか。」",
               "options": [
                 "いいえ、捨てます。",
@@ -20388,7 +20440,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e6-l-27",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
+              "audioSrc": null,
               "question": "27. 「課長、明日の 朝礼で 発表する 資料を ご確認願えますか。」",
               "options": [
                 "分かったよ。今日の 夕方までに 目を 通しておくね。",
@@ -20402,7 +20454,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e6-l-28",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
+              "audioSrc": null,
               "question": "28. 「昇進試験、見事 合格されたそうですね！ おめでとうございます！」",
               "options": [
                 "いいえ、落ちました。",
@@ -21361,7 +21413,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e7-l-1",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
+              "audioSrc": null,
               "question": "1. 会社で 男の人と 女の人が 話しています。女の人は この後 まず 何を しますか。",
               "options": [
                 "カタログを 郵送する",
@@ -21376,7 +21428,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e7-l-2",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
+              "audioSrc": null,
               "question": "2. 病院で 医師と 患者が 話しています。患者は 処方箋を どこへ 持っていきますか。",
               "options": [
                 "病院の 診察室",
@@ -21391,7 +21443,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e7-l-3",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
+              "audioSrc": null,
               "question": "3. 図書館で 司書と 学生が 話しています。学生は 予約した 本を いつまでに 取りに行きますか。",
               "options": [
                 "今週 金曜日まで",
@@ -21406,7 +21458,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e7-l-4",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
+              "audioSrc": null,
               "question": "4. 家で 母と 娘が 話しています。娘は 部屋の 掃除で 最初に 何を しますか。",
               "options": [
                 "床の 洗濯物を 片付ける",
@@ -21421,7 +21473,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e7-l-5",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
+              "audioSrc": null,
               "question": "5. 会社で 上司と 部下が 話しています。部下は 会議資料を どこに 保存しますか。",
               "options": [
                 "個人の デスクトップ",
@@ -21436,7 +21488,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e7-l-6",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
+              "audioSrc": null,
               "question": "6. レストランで 客と 店員が 話しています。客は 支払いを どのように しますか。",
               "options": [
                 "クレジットカード",
@@ -21451,7 +21503,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e7-l-7",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
+              "audioSrc": null,
               "question": "7. 留学生と 大家さんが 話しています。粗大ゴミの シールは どこで 買いますか。",
               "options": [
                 "市役所のみ",
@@ -21466,7 +21518,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e7-l-8",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
+              "audioSrc": null,
               "question": "8. 駅で 案内アナウンスが 流れています。快速電車が 発車する ホームは何番ですか。",
               "options": [
                 "4番線",
@@ -21481,7 +21533,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e7-l-9",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
+              "audioSrc": null,
               "question": "9. 会社で IT管理者が 説明しています。全社で パスワード変更が 必要な 理由は何ですか。",
               "options": [
                 "サーバーが 故障したため",
@@ -21496,7 +21548,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e7-l-10",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
+              "audioSrc": null,
               "question": "10. 男の人と 女の人が 話しています。男の人が 新しい スニーカーを 買った 理由は何ですか。",
               "options": [
                 "限定モデルで 珍しいから",
@@ -21511,7 +21563,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e7-l-11",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
+              "audioSrc": null,
               "question": "11. 夫婦が カフェで 話しています。この 店が いつも 行列している 理由は何ですか。",
               "options": [
                 "コーヒーが 無料だから",
@@ -21526,7 +21578,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e7-l-12",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
+              "audioSrc": null,
               "question": "12. 会社で 上司と 部下が 話しています。取引先が 契約更新に 同意した 理由は何ですか。",
               "options": [
                 "24時間の 保守サポート体制が 評価されたから",
@@ -21541,7 +21593,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e7-l-13",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
+              "audioSrc": null,
               "question": "13. 留学生と 日本人の 友達が 話しています。留学生が 和食で 一番 好きな メニューは何ですか。",
               "options": [
                 "刺身",
@@ -21556,7 +21608,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e7-l-14",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
+              "audioSrc": null,
               "question": "14. 男の人と 女の人が 話しています。図書館が 来週 月曜日に 臨時休館する 理由は何ですか。",
               "options": [
                 "工事のため",
@@ -21571,7 +21623,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e7-l-15",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
+              "audioSrc": null,
               "question": "15. 会社で 社員二人が 話しています。新入社員の 配属先が 決まった 決め手は何ですか。",
               "options": [
                 "本人の 希望",
@@ -21586,7 +21638,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e7-l-16",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
+              "audioSrc": null,
               "question": "16. 会議の 途中で 意見を 述べたいです。何と言いますか。（矢印の人）",
               "options": [
                 "私の 意見を 聞きなさい。",
@@ -21600,7 +21652,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e7-l-17",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
+              "audioSrc": null,
               "question": "17. 取引先の 担当者に 提案書を 提出します。何と言いますか。（矢印の人）",
               "options": [
                 "これを 読みなさい。",
@@ -21614,7 +21666,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e7-l-18",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
+              "audioSrc": null,
               "question": "18. 先輩の アドバイスに 心から 感謝します。何と言いますか。（矢印の人）",
               "options": [
                 "大変 勉強になりました。貴重な ご助言を ありがとうございます。",
@@ -21628,7 +21680,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e7-l-19",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
+              "audioSrc": null,
               "question": "19. お茶を 出してくれた 同僚に 礼を 言います。何と言いますか。（矢印の人）",
               "options": [
                 "お邪魔しました。",
@@ -21642,7 +21694,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e7-l-20",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
+              "audioSrc": null,
               "question": "20. 客先を 辞去する際の 最後の 挨拶です。何と言いますか。（矢印の人）",
               "options": [
                 "ただいま 帰りました。",
@@ -21656,7 +21708,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e7-l-21",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
+              "audioSrc": null,
               "question": "21. 「こちらの 企画案、来週の 役員会で 諮っても よろしいですか。」",
               "options": [
                 "いいえ、役員です。",
@@ -21670,7 +21722,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e7-l-22",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
+              "audioSrc": null,
               "question": "22. 「お荷物の お届け先は ご自宅で よろしかったでしょうか。」",
               "options": [
                 "はい、登録の 住所へ お願いいたします。",
@@ -21684,7 +21736,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e7-l-23",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
+              "audioSrc": null,
               "question": "23. 「急な お願いで 恐縮ですが、明日の シフトを 代わっていただけないでしょうか。」",
               "options": [
                 "シフトです。",
@@ -21698,7 +21750,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e7-l-24",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
+              "audioSrc": null,
               "question": "24. 「部長からの 伝言は お聞き及びでしょうか。」",
               "options": [
                 "部長です。",
@@ -21712,7 +21764,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e7-l-25",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
+              "audioSrc": null,
               "question": "25. 「この プリンター、紙詰まりを 起こしているみたいですよ。」",
               "options": [
                 "すぐに カバーを 開けて 確認してみますね。",
@@ -21726,7 +21778,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e7-l-26",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
+              "audioSrc": null,
               "question": "26. 「本日の 懇親会、二次会へも 行かれますか。」",
               "options": [
                 "二次会です。",
@@ -21740,7 +21792,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e7-l-27",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
+              "audioSrc": null,
               "question": "27. 「ご不明な 点が ございましたら、いつでも ご遠慮なく お申し付けください。」",
               "options": [
                 "いいえ、不明です。",
@@ -21754,7 +21806,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e7-l-28",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
+              "audioSrc": null,
               "question": "28. 「出張の 報告書、締め切りは 明日でしたよね。」",
               "options": [
                 "ええ、明日の 17時までに 課長へ 提出だよ。",
@@ -22713,7 +22765,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e8-l-1",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
+              "audioSrc": null,
               "question": "1. 会社で 上司と 部下が 会議室の 席次について 話しています。取引先の 社長は どの 席に 案内しますか。",
               "options": [
                 "入口から 一番 遠い 奥の中央席（上座）",
@@ -22728,7 +22780,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e8-l-2",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
+              "audioSrc": null,
               "question": "2. 郵便局で 客と 局員が 話しています。客は どの 発送方法を 選びますか。",
               "options": [
                 "普通郵便",
@@ -22743,7 +22795,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e8-l-3",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
+              "audioSrc": null,
               "question": "3. カフェで 店長と 新人アルバイトが 話しています。アルバイトは 次に 何を 補充しますか。",
               "options": [
                 "ストローと ナプキン",
@@ -22758,7 +22810,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e8-l-4",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
+              "audioSrc": null,
               "question": "4. 会社で 総務部員二人が 話しています。防災訓練は 何時に 始まりますか。",
               "options": [
                 "13時半",
@@ -22773,7 +22825,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e8-l-5",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
+              "audioSrc": null,
               "question": "5. 旅行代理店で 客と 係員が 話しています。客は どの オプショナルツアーを 申し込みますか。",
               "options": [
                 "金閣寺と 清水寺を 回る 午前コース",
@@ -22788,7 +22840,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e8-l-6",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
+              "audioSrc": null,
               "question": "6. 病院で 看護師が 患者に 指示しています。患者は 検査の前、いつから 飲食を 控えなければなりませんか。",
               "options": [
                 "明日の 朝から",
@@ -22803,7 +22855,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e8-l-7",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
+              "audioSrc": null,
               "question": "7. 会社で 社員二人が 話しています。男の人は 出張の 交通チケットを どこで 受け取りますか。",
               "options": [
                 "駅の みどりの窓口",
@@ -22818,7 +22870,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e8-l-8",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
+              "audioSrc": null,
               "question": "8. 洋服の セールで 客と 店員が 話しています。客は 割引券を どのように 使いますか。",
               "options": [
                 "6000円",
@@ -22833,7 +22885,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e8-l-9",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
+              "audioSrc": null,
               "question": "9. 会社で 役員二人が 話しています。オフィスに 太陽光発電と 省エネLEDを 導入した 理由は何ですか。",
               "options": [
                 "CO2削減と 環境経営への 取り組み強化のため",
@@ -22848,7 +22900,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e8-l-10",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
+              "audioSrc": null,
               "question": "10. 男の人と 女の人が 話しています。男の人が 引っ越し先に 静かな 郊外を 選んだ 理由は何ですか。",
               "options": [
                 "家賃が 半額だったから",
@@ -22863,7 +22915,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e8-l-11",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
+              "audioSrc": null,
               "question": "11. カフェで 店長と 店員が 話しています。テイクアウトの 売上が 伸びた 要因は何ですか。",
               "options": [
                 "価格を 大幅に 安くしたこと",
@@ -22878,7 +22930,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e8-l-12",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
+              "audioSrc": null,
               "question": "12. 会社で 上司と 部下が 話しています。プレゼン時間を 当初の 30分から 15分に 短縮した 理由は何ですか。",
               "options": [
                 "資料が 未完成だったため",
@@ -22893,7 +22945,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e8-l-13",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
+              "audioSrc": null,
               "question": "13. 留学生と 友達が 話しています。留学生が 新幹線で 富士山を 見逃した 理由は何ですか。",
               "options": [
                 "電車の中で 居眠りをしてしまったから",
@@ -22908,7 +22960,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e8-l-14",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
+              "audioSrc": null,
               "question": "14. 会社で 先輩と 後輩が 話しています。製品の 保証期間を 3年に 延長した 理由は何ですか。",
               "options": [
                 "部品が 余っていたため",
@@ -22923,7 +22975,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e8-l-15",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
+              "audioSrc": null,
               "question": "15. 夫婦が 話しています。新車に ハイブリッドカーを 選んだ 理由は何ですか。",
               "options": [
                 "スピードが 出るから",
@@ -22938,7 +22990,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e8-l-16",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
+              "audioSrc": null,
               "question": "16. 来客に 名刺を 両手で 差し出します。何と言いますか。（矢印の人）",
               "options": [
                 "私の 名刺を 受け取りなさい。",
@@ -22952,7 +23004,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e8-l-17",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
+              "audioSrc": null,
               "question": "17. 上司に 急ぎの 電話が 入ったことを 伝えます。何と言いますか。（矢印の人）",
               "options": [
                 "部長、○○社の 佐藤様より お急ぎの お電話が 入っております。",
@@ -22966,7 +23018,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e8-l-18",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
+              "audioSrc": null,
               "question": "18. 招待された レセプションパーティーの 受付での 挨拶です。何と言いますか。（矢印の人）",
               "options": [
                 "ごちそうさまでした。",
@@ -22980,7 +23032,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e8-l-19",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
+              "audioSrc": null,
               "question": "19. 取引先の ミーティングに 少し 早く 到着しました。受付で 何と言いますか。（矢印の人）",
               "options": [
                 "早く 着いたので 呼んでください。",
@@ -22994,7 +23046,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e8-l-20",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
+              "audioSrc": null,
               "question": "20. 同僚の 昇進祝いの 乾杯の 音頭を とります。何と言いますか。（矢印の人）",
               "options": [
                 "それでは、山田課長の 今後の ますますの ご活躍を 祈念いたしまして、乾杯！",
@@ -23008,7 +23060,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e8-l-21",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
+              "audioSrc": null,
               "question": "21. 「鈴木課長、先ほどの 資料に 修正点を 加筆いたしました。」",
               "options": [
                 "資料を 書きました。",
@@ -23022,7 +23074,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e8-l-22",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
+              "audioSrc": null,
               "question": "22. 「お足元の 悪い中、わざわざ お越しいただき 恐縮でございます。」",
               "options": [
                 "雨です。",
@@ -23036,7 +23088,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e8-l-23",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
+              "audioSrc": null,
               "question": "23. 「本日の 役員会議、10分ほど 開始が 遅れるとのことです。」",
               "options": [
                 "承知いたしました。出席者の 皆様に 伝達しておきます。",
@@ -23050,7 +23102,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e8-l-24",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
+              "audioSrc": null,
               "question": "24. 「お口に 合うか 分かりませんが、どうぞ お召し上がりください。」",
               "options": [
                 "ごちそうさまでした。",
@@ -23064,7 +23116,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e8-l-25",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
+              "audioSrc": null,
               "question": "25. 「来月の 社員旅行の 出欠届、もう 提出されましたか。」",
               "options": [
                 "旅行に行きました。",
@@ -23078,7 +23130,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e8-l-26",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
+              "audioSrc": null,
               "question": "26. 「こちらの 書類を シュレッダーで 破棄していただけますか。」",
               "options": [
                 "かしこまりました。直ちに 処理いたします。",
@@ -23092,7 +23144,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e8-l-27",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
+              "audioSrc": null,
               "question": "27. 「明日は 始発の 電車で 出発ですので、早めに 休みましょう。」",
               "options": [
                 "起きました。",
@@ -23106,7 +23158,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e8-l-28",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
+              "audioSrc": null,
               "question": "28. 「長期休暇中は 大変 お世話になり、ありがとうございました。」",
               "options": [
                 "休みました。",
@@ -24065,7 +24117,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e9-l-1",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
+              "audioSrc": null,
               "question": "1. 会社で 防災担当者が 社員に 指示しています。地震が 起きたら 最初に 何を しますか。",
               "options": [
                 "ドアを 開けて 避難する",
@@ -24080,7 +24132,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e9-l-2",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
+              "audioSrc": null,
               "question": "2. 印刷会社で 客と 営業マンが 話しています。客は パンフレットの 納期を いつに しましたか。",
               "options": [
                 "金曜日（通常納期）",
@@ -24095,7 +24147,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e9-l-3",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
+              "audioSrc": null,
               "question": "3. 会社で 先輩と 後輩が 話しています。後輩は どの グラフを レポートに 挿入しますか。",
               "options": [
                 "円グラフ",
@@ -24110,7 +24162,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e9-l-4",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
+              "audioSrc": null,
               "question": "4. ホテルの チェックインで 客と フロントが 話しています。客は 朝食券を 何枚 受け取りましたか。",
               "options": [
                 "2枚",
@@ -24125,7 +24177,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e9-l-5",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
+              "audioSrc": null,
               "question": "5. 会社で 男の人と 女の人が 話しています。男の人は 会議の 前に 何を 用意しますか。",
               "options": [
                 "資料の 印刷",
@@ -24140,7 +24192,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e9-l-6",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
+              "audioSrc": null,
               "question": "6. 電器店で 店員と 客が 話しています。客は どの 保証プランに 加入しますか。",
               "options": [
                 "3年延長ワイド保証",
@@ -24155,7 +24207,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e9-l-7",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
+              "audioSrc": null,
               "question": "7. 留学生と 日本語の 先生が 話しています。留学生は 漢字テストの 追試を いつ 受けますか。",
               "options": [
                 "明日 10時",
@@ -24170,7 +24222,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e9-l-8",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
+              "audioSrc": null,
               "question": "8. ケーキ屋で 客と 店員が 話しています。客は ろうそくを 何本 もらいますか。",
               "options": [
                 "長2本だけ",
@@ -24185,7 +24237,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e9-l-9",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
+              "audioSrc": null,
               "question": "9. 会社で 社員二人が 話しています。チラシの 印刷納期が 変更された 理由は何ですか。",
               "options": [
                 "印刷機が 故障したため",
@@ -24200,7 +24252,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e9-l-10",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
+              "audioSrc": null,
               "question": "10. 男の人と 女の人が 話しています。新しい 食品パッケージに 紙素材を 採用した 理由は何ですか。",
               "options": [
                 "プラスチック削減と 環境保護（脱プラ）のため",
@@ -24215,7 +24267,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e9-l-11",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
+              "audioSrc": null,
               "question": "11. 会社で 人事担当者が 社員アンケートの 結果について 報告しています。社員の 満足度が 最も 高かった 制度は何ですか。",
               "options": [
                 "社員食堂の 無料化",
@@ -24230,7 +24282,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e9-l-12",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
+              "audioSrc": null,
               "question": "12. 地方自治体の 説明会で 担当者が 話しています。新しい 地域支所を 開設した 理由は何ですか。",
               "options": [
                 "本庁舎が 狭くなったため",
@@ -24245,7 +24297,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e9-l-13",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
+              "audioSrc": null,
               "question": "13. レストランで 客二人が 話しています。この レストランが 地元で 愛されている 理由は何ですか。",
               "options": [
                 "値段が どこよりも 安いから",
@@ -24260,7 +24312,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e9-l-14",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
+              "audioSrc": null,
               "question": "14. 運送会社で 配達ルートを 見直した 成果は何ですか。",
               "options": [
                 "配達時間の 短縮と 燃料消費の 削減",
@@ -24275,7 +24327,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e9-l-15",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
+              "audioSrc": null,
               "question": "15. スポーツチームで 監督が 勝利の 要因を 語っています。逆転勝利できた 要因は何ですか。",
               "options": [
                 "相手の 選手が 怪我をしたこと",
@@ -24290,7 +24342,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e9-l-16",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
+              "audioSrc": null,
               "question": "16. 先輩に レポートの 添削を 頼みたいです。何と言いますか。（矢印の人）",
               "options": [
                 "先輩、お時間のある 際に レポートを ご確認 いただけますでしょうか。",
@@ -24304,7 +24356,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e9-l-17",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
+              "audioSrc": null,
               "question": "17. 会議室の 片付けを 手伝いたいです。何と言いますか。（矢印の人）",
               "options": [
                 "片付けを しました。",
@@ -24318,7 +24370,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e9-l-18",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
+              "audioSrc": null,
               "question": "18. 体調不良の ため、早退の 許可を 上司に 求めます。何と言いますか。（矢印の人）",
               "options": [
                 "帰ります。",
@@ -24332,7 +24384,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e9-l-19",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
+              "audioSrc": null,
               "question": "19. 連絡の 不手際を お詫びします。何と言いますか。（矢印の人）",
               "options": [
                 "ご連絡が 遅くなり、多大なる ご迷惑を おかけして 大変 申し訳ございません。",
@@ -24346,7 +24398,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e9-l-20",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
+              "audioSrc": null,
               "question": "20. 講演会の 講師に 素晴らしい お話の お礼を 伝えます。何と言いますか。（矢印の人）",
               "options": [
                 "お邪魔しました。",
@@ -24360,7 +24412,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e9-l-21",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
+              "audioSrc": null,
               "question": "21. 「ご注文の 商品、明日 午前中に お届けする 手筈となって おります。」",
               "options": [
                 "ご手配 ありがとうございます。受け取りの 準備をして お待ちしております。",
@@ -24374,7 +24426,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e9-l-22",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
+              "audioSrc": null,
               "question": "22. 「来週の 社内ゴルフコンペ、参加されますか。」",
               "options": [
                 "ゴルフです。",
@@ -24388,7 +24440,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e9-l-23",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
+              "audioSrc": null,
               "question": "23. 「この 新製品の パッケージデザイン、率直な ご意見を お聞かせ願えますか。」",
               "options": [
                 "箱です。",
@@ -24402,7 +24454,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e9-l-24",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
+              "audioSrc": null,
               "question": "24. 「お約束の お時間に 少し 遅れてしまいそうなんですが…」",
               "options": [
                 "ご連絡 ありがとうございます。どうぞ 慌てずに お気をつけて お越しください。",
@@ -24416,7 +24468,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e9-l-25",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
+              "audioSrc": null,
               "question": "25. 「会議の 議事録の 作成、お願いしても よろしいですか。」",
               "options": [
                 "議事録を 読みました。",
@@ -24430,7 +24482,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e9-l-26",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
+              "audioSrc": null,
               "question": "26. 「こちらの サンプル、ご自由にお持ちください。」",
               "options": [
                 "サンプルです。",
@@ -24444,7 +24496,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e9-l-27",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
+              "audioSrc": null,
               "question": "27. 「明日は 氷点下の 厳しい 寒さに なるそうですよ。」",
               "options": [
                 "厚手の コートと マフラーを 着て 防寒対策を 徹底しますね。",
@@ -24458,7 +24510,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e9-l-28",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
+              "audioSrc": null,
               "question": "28. 「本日は 長時間の 運転、本当にお疲れ様でございました。」",
               "options": [
                 "車です。",
@@ -25417,7 +25469,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e10-l-1",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
+              "audioSrc": null,
               "question": "1. 試験会場で 監督員が 受験生に 説明しています。机の上に 出してよいものは 何ですか。",
               "options": [
                 "辞書と ノート",
@@ -25432,7 +25484,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e10-l-2",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
+              "audioSrc": null,
               "question": "2. 試験監督が 注意事項を アナウンスしています。スマートフォンの アラームについて どう指示しましたか。",
               "options": [
                 "マナーモードにする",
@@ -25447,7 +25499,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e10-l-3",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
+              "audioSrc": null,
               "question": "3. 試験会場で 受験生と 係員が 話しています。リスニング試験の 前に 音量確認が あります。聞こえにくい 場合は どうしますか。",
               "options": [
                 "手を 挙げて 知らせる",
@@ -25462,12 +25514,12 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e10-l-4",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
+              "audioSrc": null,
               "question": "4. 試験室で 監督員が 解答用紙の 記入について 指示しています。受験生は 最初に 何を 確認しますか。",
               "options": [
                 "問題の 難易度",
                 "名前と 受験番号の 印字",
-                "回答の 選択肢",
+                "問題の 印刷状態",
                 "時計の 時間"
               ],
               "correct": 1,
@@ -25477,7 +25529,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e10-l-5",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
+              "audioSrc": null,
               "question": "5. 休憩時間の 過ごし方について 係員が 説明しています。次の 試験室への 着席完了時刻は 何時ですか。",
               "options": [
                 "11時00分",
@@ -25492,7 +25544,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e10-l-6",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
+              "audioSrc": null,
               "question": "6. 監督員が 解答の マークについて 説明しています。正しい マークの 仕方は どれですか。",
               "options": [
                 "黒の ボールペン",
@@ -25507,7 +25559,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e10-l-7",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
+              "audioSrc": null,
               "question": "7. 試験終了時の 指示です。終了の チャイムが 鳴ったら 受験生は どうしますか。",
               "options": [
                 "直ちに 鉛筆を 置き 用紙を 裏返す",
@@ -25522,7 +25574,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e10-l-8",
               "type": "Mondai 1 (課題理解)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
+              "audioSrc": null,
               "question": "8. 試験会場の 出口で 係員が アナウンスしています。合否結果通知書の 発送時期は いつ頃ですか。",
               "options": [
                 "来週中",
@@ -25537,7 +25589,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e10-l-9",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
+              "audioSrc": null,
               "question": "9. 受験生二人が 試験会場で 話しています。早く 到着して 会場近くの カフェで 過ごした 理由は何ですか。",
               "options": [
                 "友達と おしゃべりするため",
@@ -25552,7 +25604,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e10-l-10",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
+              "audioSrc": null,
               "question": "10. 先生が JLPTの 得点配分について 説明しています。合格基準で 最も 注意すべき点は 何ですか。",
               "options": [
                 "リスニングが 満点でなければならないこと",
@@ -25567,10 +25619,10 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e10-l-11",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
+              "audioSrc": null,
               "question": "11. 受験生二人が 文法セクションについて 話しています。星印（★）の 並べ替え問題の コツは何ですか。",
               "options": [
-                "選択肢で 繋がる 単語の 塊（セット）を 先に 作ること",
+                "助詞や 接続詞で 繋がる 単語の 塊（セット）を 先に 作ること",
                 "適当に マークすること",
                 "後ろから 順番に 読むこと",
                 "★だけを 見ること"
@@ -25582,7 +25634,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e10-l-12",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
+              "audioSrc": null,
               "question": "12. 留学生二人が 読解セクションの 時間配分について 話しています。長文読解で 焦らないための 対策は何ですか。",
               "options": [
                 "長文を 最初に 解くこと",
@@ -25597,7 +25649,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e10-l-13",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
+              "audioSrc": null,
               "question": "13. 受験生が リスニング対策について 語っています。即時応答（Mondai 4）で 得点するための 秘訣は何ですか。",
               "options": [
                 "メモを たくさん 取ること",
@@ -25612,7 +25664,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e10-l-14",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
+              "audioSrc": null,
               "question": "14. 先生が 試験前日の 過ごし方について アドバイスしています。前日に 最も 推奨される 行動は何ですか。",
               "options": [
                 "夜通し 模試を 解くこと",
@@ -25627,7 +25679,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e10-l-15",
               "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
+              "audioSrc": null,
               "question": "15. 試験を 終えた 受験生二人が 手応えを 話しています。合格への 自信を 深めた 要因は何ですか。",
               "options": [
                 "模試と 過去問を 徹底反復して 時間内に 解き切ったこと",
@@ -25642,7 +25694,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e10-l-16",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
+              "audioSrc": null,
               "question": "16. 試験開始 直前、隣の 受験生と 励まし合います。何と言いますか。（矢印の人）",
               "options": [
                 "ごちそうさまでした。",
@@ -25656,7 +25708,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e10-l-17",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
+              "audioSrc": null,
               "question": "17. 監督員が 受験票と 本人確認に 来ました。何と言いますか。（矢印の人）",
               "options": [
                 "どういたしまして。",
@@ -25670,7 +25722,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e10-l-18",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
+              "audioSrc": null,
               "question": "18. 問題用紙の 印刷が 一部 薄くて 読めません。監督員に 何と言いますか。（矢印の人）",
               "options": [
                 "恐れ入ります。問題冊子の 印刷が 一部 かすれて おりますので、交換して いただけますでしょうか。",
@@ -25684,7 +25736,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e10-l-19",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
+              "audioSrc": null,
               "question": "19. 休憩時間に トイレの 場所を 係員に 尋ねます。何と言いますか。（矢印の人）",
               "options": [
                 "トイレに 行きなさい。",
@@ -25698,7 +25750,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e10-l-20",
               "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
+              "audioSrc": null,
               "question": "20. 試験が すべて 終了し、教室を 退室します。監督員に 何と言いますか。（矢印の人）",
               "options": [
                 "ただいま。",
@@ -25712,7 +25764,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e10-l-21",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
+              "audioSrc": null,
               "question": "21. 「いよいよ JLPT N4の 本番ですね。手応えは いかがですか。」",
               "options": [
                 "いいえ、N4です。",
@@ -25726,7 +25778,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e10-l-22",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
+              "audioSrc": null,
               "question": "22. 「受験票の 写真票に 剥がれは ありませんか。」",
               "options": [
                 "はい、しっかりと 貼り付けて 確認いたしました。",
@@ -25740,7 +25792,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e10-l-23",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
+              "audioSrc": null,
               "question": "23. 「リスニングの 音声スピードは 普段の 練習と 比べて どうですか。」",
               "options": [
                 "スピードです。",
@@ -25754,7 +25806,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e10-l-24",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
+              "audioSrc": null,
               "question": "24. 「マークシートの ズレは ありませんでしたか。」",
               "options": [
                 "鉛筆です。",
@@ -25768,7 +25820,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e10-l-25",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
+              "audioSrc": null,
               "question": "25. 「N4に 合格したら、次は N3に チャレンジしますか。」",
               "options": [
                 "はい！ 来年の 7月に N3合格を 目指して 勉強を 続けます。",
@@ -25782,7 +25834,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e10-l-26",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
+              "audioSrc": null,
               "question": "26. 「本日は 朝早くからの ご来場、大変 ご苦労様でした。」",
               "options": [
                 "朝です。",
@@ -25796,7 +25848,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e10-l-27",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
+              "audioSrc": null,
               "question": "27. 「模擬試験を 何回も 解いた 甲斐が ありましたね。」",
               "options": [
                 "模試です。",
@@ -25810,7 +25862,7 @@ export const EXAM_PAPERS_CATALOG = {
             {
               "id": "n4-e10-l-28",
               "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
+              "audioSrc": null,
               "question": "28. 「良い 結果が 届くことを 心より 祈っております！」",
               "options": [
                 "温かい お言葉を ありがとうございます。合格発表を 楽しみに 待ちます！",
