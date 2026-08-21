@@ -444,69 +444,95 @@ async function searchQuotations(filters = {}, customCookie = null) {
     salesOrderNo = '',
     personIncharge = '',
     page = '1',
+    limit = '100',
   } = filters;
 
-  const url = `${BASE_PORTAL_URL}/Inquiry/SearchResult`;
-  const bodyData = new URLSearchParams({
-    QuotationNo: quotationNo,
-    QuotationSubNo: '',
-    DistributerOrderNo: dbOrderNo,
-    SalesOrderNo: salesOrderNo,
-    Status: status,
-    FromDate: fromDate,
-    ToDate: toDate,
-    PersonIncharge: personIncharge,
-    CustomerCode: customerCode,
-    page: String(page || '1'),
-  });
+  const targetLimit = parseInt(limit, 10) || 100;
+  const maxPages = Math.min(10, Math.ceil(targetLimit / 10));
+  const startPage = parseInt(page, 10) || 1;
 
-  const response = await fetch(url, {
-    method: 'POST',
-    headers: {
-      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36 Edg/151.0.0.0',
-      'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-      'Accept': '*/*',
-      'X-Requested-With': 'XMLHttpRequest',
-      'Origin': 'https://www.komatsu.ae',
-      'Referer': `${BASE_PORTAL_URL}/Inquiry/Index`,
-      'Cookie': cookieStr,
-    },
-    body: bodyData.toString(),
-  });
+  const defaultHeaders = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36 Edg/151.0.0.0',
+    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+    'Accept': '*/*',
+    'X-Requested-With': 'XMLHttpRequest',
+    'Origin': 'https://www.komatsu.ae',
+    'Referer': `${BASE_PORTAL_URL}/Inquiry/Index`,
+    'Cookie': cookieStr,
+  };
 
-  const text = await response.text();
-  const trMatches = text.match(/<tr[^>]*>([\s\S]*?)<\/tr>/gi) || [];
   const quotations = [];
+  const seenQtns = new Set();
 
-  for (const tr of trMatches) {
-    const tdMatches = tr.match(/<td[^>]*>([\s\S]*?)<\/td>/gi) || [];
-    if (tdMatches.length < 9) continue;
-
-    const cleanTds = tdMatches.map((td) => {
-      let txt = td.replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ').trim();
-      return txt.replace(/\s+/g, ' ');
+  for (let p = startPage; p < startPage + maxPages; p++) {
+    const url = `${BASE_PORTAL_URL}/Inquiry/SearchResult`;
+    const bodyData = new URLSearchParams({
+      QuotationNo: quotationNo,
+      QuotationSubNo: '',
+      DistributerOrderNo: dbOrderNo,
+      SalesOrderNo: salesOrderNo,
+      Status: status,
+      FromDate: fromDate,
+      ToDate: toDate,
+      PersonIncharge: personIncharge,
+      CustomerCode: customerCode,
+      page: String(p),
     });
 
-    const qtnNo = cleanTds[0] || '';
-    if (!qtnNo || isNaN(Number(qtnNo))) continue;
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: defaultHeaders,
+        body: bodyData.toString(),
+      });
 
-    quotations.push({
-      quotation_no: qtnNo,
-      revision_no: cleanTds[1] || '00',
-      sales_order_no: cleanTds[2] || '',
-      db_order_no: cleanTds[3] || '',
-      db_code: cleanTds[4] || '536K',
-      customer_code: cleanTds[5] || '',
-      customer_name: cleanTds[6] || '',
-      person_in_charge: cleanTds[7] || '',
-      status: cleanTds[8] || '',
-      total_amount: cleanTds[9] || '0.00',
-    });
+      const text = await response.text();
+      const trMatches = text.match(/<tr[^>]*>([\s\S]*?)<\/tr>/gi) || [];
+      let pageRowsCount = 0;
+
+      for (const tr of trMatches) {
+        const tdMatches = tr.match(/<td[^>]*>([\s\S]*?)<\/td>/gi) || [];
+        if (tdMatches.length < 9) continue;
+
+        const cleanTds = tdMatches.map((td) => {
+          let txt = td.replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ').trim();
+          return txt.replace(/\s+/g, ' ');
+        });
+
+        const qtnNo = cleanTds[0] || '';
+        if (!qtnNo || isNaN(Number(qtnNo)) || seenQtns.has(qtnNo)) continue;
+
+        seenQtns.add(qtnNo);
+        pageRowsCount++;
+
+        quotations.push({
+          quotation_no: qtnNo,
+          revision_no: cleanTds[1] || '00',
+          sales_order_no: cleanTds[2] || '',
+          db_order_no: cleanTds[3] || '',
+          db_code: cleanTds[4] || '536K',
+          customer_code: cleanTds[5] || '',
+          customer_name: cleanTds[6] || '',
+          person_in_charge: cleanTds[7] || '',
+          status: cleanTds[8] || '',
+          total_amount: cleanTds[9] || '0.00',
+        });
+
+        if (quotations.length >= targetLimit) break;
+      }
+
+      if (pageRowsCount === 0 || quotations.length >= targetLimit) {
+        break;
+      }
+    } catch {
+      break;
+    }
   }
 
   return {
     total: quotations.length,
     status_filter: status,
+    limit: targetLimit,
     quotations,
   };
 }

@@ -122,6 +122,8 @@ export default function SparePartsPage() {
   const [loadingQuotations, setLoadingQuotations] = useState(false);
   const [qtnStatusFilter, setQtnStatusFilter] = useState('1'); // '1' = In-Process, '2' = Confirmed, '' = All
   const [qtnSearchFilter, setQtnSearchFilter] = useState('');
+  const [qtnLimit, setQtnLimit] = useState('100'); // '10', '25', '50', '100'
+  const [qtnPage, setQtnPage] = useState(1);
   const [selectedQtnNumbers, setSelectedQtnNumbers] = useState(new Set());
   const [isConvertingSo, setIsConvertingSo] = useState(false);
   const [soConversionProgress, setSoConversionProgress] = useState(null);
@@ -491,17 +493,17 @@ export default function SparePartsPage() {
   // ==========================================
   // TAB 2: QUOTATION TO SO CONVERTER LOGIC
   // ==========================================
-  async function loadInProcessQuotations() {
+  async function loadInProcessQuotations(pageToLoad = qtnPage, limitToLoad = qtnLimit, statusToLoad = qtnStatusFilter) {
     try {
       setLoadingQuotations(true);
-      addSoLog(`Searching Komatsu PDX quotations (Status Filter: ${qtnStatusFilter || 'ALL'})...`, 'info');
-      const res = await getKomatsuQuotations({ status: qtnStatusFilter });
+      addSoLog(`Searching Komatsu PDX quotations (Status: ${statusToLoad || 'ALL'}, Limit: ${limitToLoad}, Page: ${pageToLoad})...`, 'info');
+      const res = await getKomatsuQuotations({ status: statusToLoad, limit: limitToLoad, page: pageToLoad });
       if (res && res.quotations) {
         setInProcessQuotations(res.quotations);
         // Select all by default
         const newSet = new Set(res.quotations.map((q) => q.quotation_no));
         setSelectedQtnNumbers(newSet);
-        addSoLog(`Found ${res.quotations.length} quotations matching filter.`, 'success');
+        addSoLog(`Loaded ${res.quotations.length} quotations matching filter (Limit: ${limitToLoad}).`, 'success');
       }
     } catch (err) {
       addSoLog(`Failed to fetch quotations: ${err.message}`, 'error');
@@ -1375,23 +1377,48 @@ export default function SparePartsPage() {
                 </div>
               </div>
 
-              {/* Filters Bar */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <Field label="Status Filter">
-                  <select
-                    className="ds-input text-xs font-semibold"
-                    value={qtnStatusFilter}
-                    onChange={(e) => {
-                      setQtnStatusFilter(e.target.value);
-                    }}
-                  >
-                    <option value="1">Status: In-Process (Pending Confirmation)</option>
-                    <option value="2">Status: Confirmed (Ready for Copy to SO)</option>
-                    <option value="">Status: All Quotations</option>
-                  </select>
-                </Field>
+              {/* Filters & Pagination Bar */}
+              <div className="grid grid-cols-1 sm:grid-cols-12 gap-3 items-end">
+                <div className="sm:col-span-4">
+                  <Field label="Status Filter">
+                    <select
+                      className="ds-input text-xs font-semibold"
+                      value={qtnStatusFilter}
+                      onChange={(e) => {
+                        const newStatus = e.target.value;
+                        setQtnStatusFilter(newStatus);
+                        setQtnPage(1);
+                        loadInProcessQuotations(1, qtnLimit, newStatus);
+                      }}
+                    >
+                      <option value="1">Status: In-Process (Pending Confirmation)</option>
+                      <option value="2">Status: Confirmed (Ready for Copy to SO)</option>
+                      <option value="">Status: All Quotations</option>
+                    </select>
+                  </Field>
+                </div>
 
-                <div className="sm:col-span-2">
+                <div className="sm:col-span-3">
+                  <Field label="Orders to Load">
+                    <select
+                      className="ds-input text-xs font-bold text-amber-600"
+                      value={qtnLimit}
+                      onChange={(e) => {
+                        const newLimit = e.target.value;
+                        setQtnLimit(newLimit);
+                        setQtnPage(1);
+                        loadInProcessQuotations(1, newLimit, qtnStatusFilter);
+                      }}
+                    >
+                      <option value="10">Show: 10 Orders</option>
+                      <option value="25">Show: 25 Orders</option>
+                      <option value="50">Show: 50 Orders</option>
+                      <option value="100">Show: 100 Orders (Full Page)</option>
+                    </select>
+                  </Field>
+                </div>
+
+                <div className="sm:col-span-5">
                   <Field label="Search by Quotation / Order / Customer">
                     <input
                       type="text"
@@ -1401,6 +1428,79 @@ export default function SparePartsPage() {
                       onChange={(e) => setQtnSearchFilter(e.target.value)}
                     />
                   </Field>
+                </div>
+              </div>
+
+              {/* Pagination Controls Bar */}
+              <div className="flex flex-wrap items-center justify-between gap-3 bg-slate-50 p-2.5 rounded-lg border border-slate-200 text-xs">
+                <div className="flex items-center gap-2">
+                  <span className="font-bold text-slate-700">
+                    Loaded: <strong className="text-slate-900">{filteredQuotations.length}</strong> orders
+                  </span>
+                  <span className="text-slate-300">|</span>
+                  <span className="text-amber-700 font-semibold">
+                    Selected: <strong>{selectedQtnNumbers.size}</strong> for batch actions
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-1 font-mono text-xs">
+                  <button
+                    type="button"
+                    disabled={qtnPage <= 1 || loadingQuotations}
+                    onClick={() => {
+                      const p = 1;
+                      setQtnPage(p);
+                      loadInProcessQuotations(p, qtnLimit, qtnStatusFilter);
+                    }}
+                    className="px-2 py-1 bg-white border border-slate-300 rounded hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed font-bold"
+                    title="First Page"
+                  >
+                    &lt;&lt;
+                  </button>
+                  <button
+                    type="button"
+                    disabled={qtnPage <= 1 || loadingQuotations}
+                    onClick={() => {
+                      const p = Math.max(1, qtnPage - 1);
+                      setQtnPage(p);
+                      loadInProcessQuotations(p, qtnLimit, qtnStatusFilter);
+                    }}
+                    className="px-2 py-1 bg-white border border-slate-300 rounded hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed font-bold"
+                    title="Previous Page"
+                  >
+                    &lt;
+                  </button>
+                  {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((pNum) => (
+                    <button
+                      key={pNum}
+                      type="button"
+                      disabled={loadingQuotations}
+                      onClick={() => {
+                        setQtnPage(pNum);
+                        loadInProcessQuotations(pNum, qtnLimit, qtnStatusFilter);
+                      }}
+                      className={`px-2.5 py-1 rounded font-bold transition-all ${
+                        qtnPage === pNum
+                          ? 'bg-amber-500 text-slate-950 shadow-xs'
+                          : 'bg-white border border-slate-300 text-slate-700 hover:bg-slate-100'
+                      }`}
+                    >
+                      {pNum}
+                    </button>
+                  ))}
+                  <button
+                    type="button"
+                    disabled={loadingQuotations}
+                    onClick={() => {
+                      const p = qtnPage + 1;
+                      setQtnPage(p);
+                      loadInProcessQuotations(p, qtnLimit, qtnStatusFilter);
+                    }}
+                    className="px-2 py-1 bg-white border border-slate-300 rounded hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed font-bold"
+                    title="Next Page"
+                  >
+                    &gt;
+                  </button>
                 </div>
               </div>
 
