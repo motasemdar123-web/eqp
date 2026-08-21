@@ -387,17 +387,36 @@ export default function JLPTExamSimulator({ level = 'N5', onToast }) {
 
               {/* Listening Audio Player (If listening question) */}
               {currentQuestion.audioSrc && (
-                <div className="p-4 bg-slate-900 text-white rounded-xl space-y-2">
+                <div className="p-4 bg-slate-900 text-white rounded-2xl space-y-3 shadow-md border border-slate-800">
                   <div className="flex items-center justify-between text-xs text-slate-300">
-                    <span className="font-bold">🎧 Listening Audio Broadcast</span>
-                    <span className="font-mono">Real Test Track</span>
+                    <div className="flex items-center gap-2">
+                      <span className="flex h-2.5 w-2.5 rounded-full bg-red-500 animate-pulse" />
+                      <span className="font-bold text-white tracking-wide">🎧 Official JLPT Listening Broadcast</span>
+                    </div>
+                    <span className="font-mono text-[11px] px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">
+                      {currentSection?.shortTitle || '聴解'}
+                    </span>
                   </div>
                   <audio
                     ref={audioRef}
                     controls
-                    className="w-full h-8"
+                    className="w-full h-9 rounded-lg"
                     src={currentQuestion.audioSrc}
                     autoPlay={false}
+                  />
+                  <p className="text-[11px] text-slate-400">
+                    💡 Listen to the audio broadcast instructions, then select the best matching answer below.
+                  </p>
+                </div>
+              )}
+
+              {/* Question Illustration Image (If present) */}
+              {currentQuestion.image && (
+                <div className="flex justify-center p-3 bg-slate-50 border border-slate-200 rounded-2xl my-2 shadow-inner">
+                  <img
+                    src={currentQuestion.image}
+                    alt="Question Illustration"
+                    className="max-h-80 object-contain rounded-lg shadow-sm"
                   />
                 </div>
               )}
@@ -670,6 +689,17 @@ export default function JLPTExamSimulator({ level = 'N5', onToast }) {
                 <span className="text-xs font-mono text-slate-400">{q.type}</span>
               </div>
 
+              {/* Question Illustration (If present) */}
+              {q.image && (
+                <div className="flex justify-start p-2 bg-slate-50 border border-slate-200 rounded-xl my-2 max-w-sm">
+                  <img
+                    src={q.image}
+                    alt="Illustration"
+                    className="max-h-56 object-contain rounded"
+                  />
+                </div>
+              )}
+
               <div
                 className="text-base font-bold text-slate-900 whitespace-pre-line"
                 dangerouslySetInnerHTML={{ __html: q.question || q.prompt }}
@@ -695,6 +725,17 @@ export default function JLPTExamSimulator({ level = 'N5', onToast }) {
                   );
                 })}
               </div>
+
+              {/* Audio Transcript (For listening questions) */}
+              {q.transcript && (
+                <div className="p-3 bg-amber-50/90 border border-amber-200 rounded-lg text-xs text-amber-950 space-y-1.5 font-mono">
+                  <div className="flex items-center gap-1.5 text-[11px] font-bold text-amber-800 uppercase tracking-wide">
+                    <span>🎧</span>
+                    <span>Audio Dialogue Script & Transcript:</span>
+                  </div>
+                  <p className="whitespace-pre-line leading-relaxed">{q.transcript}</p>
+                </div>
+              )}
 
               {/* Explanation */}
               <div className="p-3 bg-blue-50/80 border border-blue-200 rounded-lg text-xs text-blue-950 space-y-1">
