@@ -180,3 +180,22 @@ export function dismissWorkspacePlannerTask(id) {
     method: 'PATCH',
   });
 }
+
+export function getKomatsuStatus() {
+  return request('/api/komatsu/status');
+}
+
+export function saveKomatsuCookie(cookie) {
+  return request('/api/komatsu/cookie', {
+    method: 'POST',
+    body: JSON.stringify({ cookie }),
+  });
+}
+
+export function runKomatsuInquiry(parts, cookie = null) {
+  return request('/api/komatsu/inquiry', {
+    method: 'POST',
+    body: JSON.stringify({ parts, cookie }),
+  });
+}
+

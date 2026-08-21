@@ -58,4 +58,9 @@ router.patch('/api/scheduling/tasks/:id', requirePlatformAuth, requirePermission
 router.delete('/api/scheduling/tasks/:id', requirePlatformAuth, requirePermission('SCHEDULE_MANAGE'), asyncHandler(platformController.deleteDailyScheduleTask));
 router.post('/api/scheduling/technician-schedules', requirePlatformAuth, requirePermission('SCHEDULE_MANAGE'), asyncHandler(platformController.upsertTechnicianSchedule));
 
+router.get('/api/komatsu/status', requirePlatformAuth, asyncHandler(platformController.getKomatsuStatus));
+router.post('/api/komatsu/cookie', requirePlatformAuth, asyncHandler(platformController.saveKomatsuCookie));
+router.post('/api/komatsu/inquiry', requirePlatformAuth, asyncHandler(platformController.runKomatsuInquiry));
+
 module.exports = router;
+

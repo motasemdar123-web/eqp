@@ -1,0 +1,2303 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en">
+<![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie9 lt-ie8" lang="en">
+<![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en">
+<!--<![endif]-->
+<head>
+    <title>KME</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="" />
+    <meta name="author" content="templatemo" />
+    <script src="/kmewebportal/bundles/MainScripts?v=B7oJWqRkpGvTIsYEmAo4x5FNRvIJYFfRfNmMyncd1HM1"></script>
+
+    <link href="/kmewebportal/Content/MainStyles?v=s4PmybuCo9EwWNPDfEyj4uafZhJ2Yw_W-tbjmP1SRe01" rel="stylesheet"/>
+
+
+
+
+
+    <!--
+    Compass Template
+    http://www.templatemo.com/preview/templatemo_454_compass
+    -->
+    <meta charset="UTF-8" />
+    
+    <!-- CSS Bootstrap & Custom -->
+    
+    
+    <style type="text/css">
+        .info {
+            font-size: 11px !important;
+        }
+
+        @media screen and (min-width:767px) and (max-width:768px) {
+
+            .kmelogo label {
+                font-size: 10px !important;
+            }
+        }
+
+        @media screen and (max-width:1024px) {
+            .kmelogo label {
+                font-size: 10px !important;
+            }
+        }
+
+
+        @media screen and (max-width:521px) {
+            .clsImg {
+                float: right !important;
+            }
+
+            .lineBreak {
+                display: block !important;
+            }
+
+            .customeTopPadding {
+                padding-top: 8px !important;
+            }
+
+            .customHidden {
+                display: none !important
+            }
+        }
+
+        .lblLangDiv {
+            width: 200px;
+            text-align: right;
+            margin-bottom: -6px;
+        }
+
+        .main-header {
+            padding-top: 0 !important
+        }
+
+        div#home {
+            margin-bottom: -2px !important
+        }
+
+
+
+        @media screen and (min-width:768px) and (max-width:991px) {
+            #lblVersionInfo {
+                color: red;
+                font-size: 15px !important;
+                font-weight: bold;
+            }
+
+
+            .TestVersionDiv {
+                margin-right: -255px;
+            }
+        }
+
+        @media screen and (min-width:991px) and (max-width:1199px) {
+            #lblVersionInfo {
+                color: red;
+                font-size: 15px;
+                font-weight: bold;
+            }
+
+
+            .TestVersionDiv {
+                margin-right: -25px !important;
+            }
+        }
+
+        @media screen and (max-width:767px) {
+            .TestVersionDiv {
+                margin-right: 0px !important;
+                float: left !important
+            }
+        }
+
+        .clsBoldMsg {
+            font-weight: bold;
+            color: red !important;
+            font-size: 16px !important;
+        }
+
+        .clsNormalMsg {
+            font-weight: bold;
+            color: red !important;
+            font-size: 10px !important;
+        }
+    </style>
+    
+    <style type="text/css">
+        .multiselect-container {
+            overflow-x: hidden;
+            width: auto !important;
+            min-width: 185px;
+        }
+
+        .btn-group, .btn-group-vertical {
+            position: relative;
+            display: inline-block;
+            vertical-align: middle;
+            width: 75% !important;
+        }
+    </style>
+    
+    
+    <style>
+        /* width */
+        ::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+        }
+
+        /* Track */
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        /* Handle */
+        ::-webkit-scrollbar-thumb {
+            /*background: #888;*/
+            /*background: #fac902;*/
+            /*background: rgba(241, 196, 15,0.6);*/
+            background: rgba(189, 195, 199,0.7);
+            transition: 0.3s;
+        }
+
+            /* Handle on hover */
+            ::-webkit-scrollbar-thumb:hover {
+                /*background: rgba(241, 196, 15,1.0);*/
+                background: rgba(189, 195, 199,1.0);
+            }
+    </style>
+    
+
+    <script>
+        //This Method makes sure that No Further Search Queries should be made possible if
+        //1-There is already an AJAX request on going
+        //2-There is a popup opened
+
+        function PostGetPreCheck() {
+            if ($.active == 0 && !$("#MessageModal").hasClass("in")) { return true }
+            else { return false; }
+
+        }
+    </script>
+</head>
+<body>
+    <div>
+    </div>
+    <div id="home">
+        <div class="site-header">
+            <div class="top-header" style="display: none">
+                <div class="container">
+                </div>
+                <!-- /.container -->
+            </div>
+            <!-- /.top-header -->
+            <div class="main-header">
+                <div class=" container kowaTemp">
+                    <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 kowaTemp1">
+                <img src="/kmewebportal/images/banner.png" alt="Komatsu" style="width: 100%;" />
+            </div>                                                    <div class="col-md-7 pull-right col-sm-9 col-xs122  col-lg-6  DisplayInfo">
+                                <div id="languageSelector" class="pull-right lblLangDiv">
+                                    
+                                </div>
+                                
+                                <div id="KmelogoDiv" class="pull-right kmelogo">
+                                    <img src="/kmewebportal/images/KME_Name.png" alt="" class="clsImg" style=" display:inline;" />
+                                    <label id="FirstPipe" class="customHidden spitterPipe">
+                                        |
+                                    </label>
+                                    <br class="hidden-lg hidden-md hidden-sm  hidden-xs lineBreak " />
+                                    <label class="info" style="font-size: 11px; font-weight: 600;" style="display: inline;">
+                                        Motasem Ghanem, Database: PDXKME
+                                    </label>
+                                    <label id="ScndPipe" class="hideOnSmall spitterPipe">
+                                        |
+                                    </label>
+                                    <label id="HomeNav" class=" "><a href="/kmewebportal/Home/Index">Home</a></label>
+                                    <label id="ThrdPipe" class="hideOnSmall spitterPipe">
+                                        |
+                                    </label>
+<label id="lblLogout" style="display: inline;">
+                                            <a href="#" id="logOut">Logout</a>
+                                        </label>                                </div>
+                            </div>
+                                                <div class="col-md-2 pull-right col-sm-7 col-xs-12  col-lg-6  TestVersionDiv" style="float: left !important;
+                                margin-right: -255px;">
+                                                    <label id="lblVersionInfo" class="clsBoldMsg">
+                                                        <script>
+                                                            const labelElement = document.getElementById('lblVersionInfo');
+                                                            if (window.location.href.toUpperCase().indexOf("TEST") > -1) {
+                                                                labelElement.innerHTML = 'Test Version';
+                                                            }
+                                                            else {
+                                                                labelElement.innerHTML = '';
+                                                            }
+                                                        </script>
+                                                    </label>
+
+                                                </div> 
+                    </div>
+                </div>
+                <!-- /.container -->
+                <div class="container">
+                    
+
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    
+                            <li class="dropdown">
+
+                                <a href="#" class="dropdown-toggle" data-hover="dropdown" data-toggle="dropdown" role="button" aria-expanded="false">Master  </a>
+                                <ul class="dropdown-menu" role="menu">
+                                        <li><a href="/kmewebportal/StockInquiry/StockInquiry">Stock Inquiry </a></li>
+                                                                            <li><a href="/kmewebportal/StockInquiry/PartsMasterInquiry">Part Master Inquiry</a></li>
+                                                                            <li><a href="/kmewebportal/StockInquiry/MultiplePartsStockInquiry">Multiple Parts Stock Inquiry</a></li>
+                                                                            <li><a href="/kmewebportal/StockInquiry/StockStatus">Stock Status</a></li>
+                                    
+
+
+
+                                    
+
+
+
+                                </ul>
+
+                            </li>
+
+
+                    
+                            <li class="divider-vertical"></li>
+                            <li class="dropdown">
+
+                                <a href="#" class="dropdown-toggle" data-hover="dropdown" data-toggle="dropdown" role="button" aria-expanded="false">Quotation  </a>
+                                <ul class="dropdown-menu" role="menu">
+                                        <li><a href="/kmewebportal/Inquiry/QuotationInquiry">Quotation Inquiry </a></li>
+                                                                            <li><a href="/kmewebportal/QuotationCondition/Index">Quotation Condition </a></li>
+                                                                            <li><a href="/kmewebportal/QuotationDetails/Index">Quotation Details </a></li>
+                                                                    </ul>
+
+                            </li>
+
+                    
+
+
+
+                            <li class="divider-vertical"></li>
+                            <li class="dropdown">
+
+                                <a href="#" class="dropdown-toggle" data-hover="dropdown" data-toggle="dropdown" role="button" aria-expanded="false">Sales Order  </a>
+                                <ul class="dropdown-menu" role="menu">
+                                        <li><a href="/kmewebportal/SOStatusInquiry/SOStatusInquiryByOrderNo">Order Status Inquiry By Order No </a></li>
+
+                                        <li><a href="/kmewebportal/SOStatusInquiryByPartNo/SOStatusInquiryByPartNo">Order Status Inquiry By Part No </a></li>
+                                                                            <li><a href="/kmewebportal/SalesOrderExport/Index">Sales Order Export </a></li>
+                                </ul>
+                            </li>
+
+                    <li class="divider-vertical"></li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-hover="dropdown" data-toggle="dropdown" role="button" aria-expanded="false">Sales Invoice  </a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="/kmewebportal/SalesInvoiceInquiry/SalesInvoiceInquiry">Sales Invoice Inquiry </a></li>
+                            </ul>
+                        </li>
+                    
+
+                    
+
+
+
+
+
+
+
+
+
+                    <li class="divider-vertical"></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-hover="dropdown" data-toggle="dropdown" role="button" aria-expanded="false">Help  </a>
+
+                        <ul class="dropdown-menu" role="menu">
+
+                            <li><a href="/kmewebportal/Help/UserGuide/default.htm" target="_blank">User Guide </a></li>
+
+                        </ul>
+                    </li>
+                    <li class="divider-vertical"></li>
+
+
+                </ul>
+
+        </div>
+
+
+
+
+
+    </div>
+
+</nav>
+
+                </div>
+            </div>
+            <!-- /.header -->
+        </div>
+        <!-- /.site-header -->
+    </div>
+    <!-- /#home -->
+    <!-- //Shabbir-20161123 --Post currentUserID with all Post Request to intercept invalid data posting -->
+    <script>
+         var currentUserID = "motasemgha";
+                    $.ajaxSetup({
+                            data: {userID: currentUserID}
+                                });
+    </script>
+    
+
+
+
+
+
+
+
+<script src="/kmewebportal/bundles/InquiryJSBundle?v=Qr83DKBwmQyQpa9HlmGb4_-trPN3hUbEAXlh_EXmKyM1"></script>
+
+<link href="/kmewebportal/Content/InquiryCSSBundle?v=TaoQlafnPC8i9iWXGoDxUwUoNfJ8u0w2ZkPo_26XaZY1" rel="stylesheet"/>
+
+<script src="/kmewebportal/Scripts/FileUpload/bootstrap-filestyle.min.js" type="text/javascript"></script>
+<style>
+
+     .table tr td, .table tr th {
+        text-align: left;
+    }
+    .customHeader{  background-color: #000099;color: #fff;font-weight: bold;padding: 2px;text-align: center;border-bottom: 1px solid #ddd;vertical-align:bottom;}
+    .accordianRows{height: 150px !important;    min-height: 100px;}
+    .legColumn label{color: #0066ff !important;font-size: 11px;font-weight: bold;}
+    label.btn-default{  color: White !important;}
+    .legendTitle span{ width:3% !important;}
+    .bootstrap-filestyle input[type=text]{ height:30px}
+    .table tr {white-space: nowrap;   }
+    .redText{color: Red !important; }
+    .table{ margin: 0 !important;}
+    #btlInterchanginility{margin:0% !important; }
+
+        @media screen and (max-width:768px)
+    {
+    .fileContainer{  margin: 9px 0 1px 1px !important;}
+    .DropDownButtonContainer{width:100%; }
+    .bootstrap-filestyle{  margin: 0;    }
+    .DropDownButtonContainer button { width:94% !important; }
+    .fileContainer{  margin: 9px 0 1px 1px !important;}
+    .PartInput div{ margin-bottom:0% !important; }
+    .ExceedingColumn {   margin-left:0% !important;}
+    #ddlManufacturer,#lblDdlManufacturer{margin-left: -10px !important; margin-bottom:-5px; width:100%  !important;;}
+    .panel-body input    {width:100% !important; }
+    .panel-body button,  .panel-body select{margin-top:8px !important; width:100% !important; }
+
+    }
+
+
+     
+ @media screen and (min-width:768px)  and  (max-width:991px)
+{
+.ExportDataDiv{margin-right: 14px; margin-left: -17px;}
+
+    .fileContainer{ margin-left: -48px !important; margin-right: 38px !important;  }
+    #ddlManufacturer,#lblDdlManufacturer {   margin-left: -10px !important; margin-bottom:-5px;  }
+    #btnSearch{ width: 71px !important;    }
+    #btnIntrChngblty{width: 134px !important; margin-left: -45px !important;}
+   #btnExport {margin-left: -26px !important;width: 105px !important;}
+       #ddlFileType{margin-left: -40px; width: 160% !important; }
+    #FileUpload{ margin-left: -54px;margin-top:8px;}
+     #btnImport{margin-left:  -65px !important;padding: 0 !important; }
+    #btnExportPartsMasterData { margin-left: -90px !important;width: 132px !important; }
+
+
+
+
+
+    .ExceedingColumn
+    {
+         margin:0 0 0 0 !important;
+    }
+    .ModalDesign
+    {
+      background-color: #fac902 !important; color: black !important;
+      border-radius: 4px;
+      padding: 6px !important;
+    }
+}
+
+ @media screen and (min-width:992px)  and  (max-width:1200px)
+{
+    .ExportDataDiv{margin-right: 103px; }
+    .fileContainer
+    {
+     margin-left: -146px !important;
+    margin-right: 126px !important;
+    }
+
+    #ddlManufacturer,#lblDdlManufacturer
+    {
+
+
+    }
+   #btnSearch
+    {
+     width: 71px !important;
+    }
+    #btnIntrChngblty
+    {
+          margin-left: -80px;
+     width: 134px !important;
+
+    }
+   #btnExport
+    {
+
+    width: 105px !important;
+
+    }
+    #ddlFileType
+    {
+
+      width: 160% !important;
+    margin-left: -150px;
+    }
+
+     #FileUpload
+    {
+
+     margin-left:-147px;
+
+
+    }
+
+    #btnImport
+    {
+       margin-left:-188px;
+     padding: 0 !important;
+    }
+     #btnExportPartsMasterData
+    {
+     margin-left:-250px;
+    width: 140px !important;
+    }
+
+    .ExceedingColumn
+    {
+
+    }
+    .ModalDesign
+    {
+     background-color: #fac902 !important; color: black !important;
+    }
+ }
+
+ @media screen and (min-width:1201px)
+{
+    .IntrChngbltyDiv{ margin-right: 3px;}
+    .ExportDataDiv{  margin-right: -3px;}
+    .ExportPMDataDiv{ margin-right: 3px;}
+    .ImportDiv{ margin-right: 3px;}
+
+#btnExportPartsMasterData
+    {
+
+      width: 140px !important;
+    }
+   #btnSearch
+    {
+
+    }
+    #btnIntrChngblty
+    {
+
+     width: 134px !important;
+
+    }
+   #btnExport
+    {
+
+    width: 110px  !important;
+
+    }
+    #ddlFileType
+    {
+     margin-left: -43px;
+     width: 160% !important;
+
+    }
+
+     #FileUpload
+    {
+       margin-left: -30px;
+    }
+
+    #btnImport
+    {
+         margin-left: -32px;
+    width: 100px !important;
+
+    }
+     #btnExportPartsMasterData
+    {
+     margin-left: -24px !important;
+   width: 140px !important;
+    }
+
+    .ExceedingColumn
+    {
+
+    }
+    .ModalDesign
+    {
+     background-color: #fac902 !important; color: black !important;
+    }
+    }
+
+     tblSoStatus tbody>tr>td.col1
+    {
+
+    padding-top:2px !important;
+    }
+      .ChainedPart
+      {
+      background-color:#C6C6E6 !important;
+      }
+
+      .ChainedPart:hover
+      {
+
+      }
+
+      .chainParent
+      {
+      display:none;
+      }
+    /*hst005*/
+    .ExcessStock a {
+        text-decoration: underline !important;
+        color: blue !important;
+        text-align: center;
+    }
+
+    .ExcessStock label {
+        color: inherit !important; /* Inherit color from the parent link */
+        margin-right: 0 !important;
+        font-family: verdana !important;
+        font-size: 10px !important;
+        font-weight: normal;
+    }
+
+    .modal-ExcessStokdialog {
+        margin: 10px auto;
+        width: 80%;
+    }
+
+    .pagination > li > a, .pagination > li > span {
+        font-size: 12px !important;
+    }
+    /*End hst005*/
+    .pnumColumn {
+        padding-right: 45px !important;
+    }
+    .icColumn{padding-right: 13px ! important; }
+    .table tr td.pnumColumn { padding-right:10px  !important}
+
+    /*hst002 Start*/
+    .blink {
+        -webkit-transition: all 0.5s ease;
+        -moz-transition: all 0.5s ease;
+        -o-transition: all 0.5s ease;
+        transition: all 0.5s ease;
+        /*background-color: #fac902;
+        color: #000099;*/
+        background-color: black;
+        color: red;
+    }
+
+    .blink2 {
+        -webkit-transition: all 0.5s ease;
+        -moz-transition: all 0.5s ease;
+        -o-transition: all 0.5s ease;
+        transition: all 0.5s ease;
+        /*background-color: #000099;
+        color: white;*/
+        background-color: red;
+        color: black;
+    }
+    /*hst002 End*/
+
+</style>
+<div class="container childcontent ">
+    <div class="panel panelInquiryControls panel-primary panelWidth">
+        <div class="panel-heading PanelTitle">
+            <h3 class="panel-title pull-left ">
+                Multiple Parts Stock Inquiry
+            </h3>
+        </div>
+        <div class="panel-body">
+            <span id="lblMsg"></span>
+            <div class="row controlsGroup" style="margin-left: -4px; margin-top: -8px;">
+                <div class="col-lg-1 col-md-1 col-sm-2 col-xs-12">
+                    <button class="btn btn-sm btn-primary custom btnMargin" id="btnSearch">
+                        Search
+                    </button>
+                </div>
+                
+                <div class="col-lg-1 col-md-2 col-sm-2 col-xs-12 ExportDataDiv">
+                    <div class="btn-group DropDownButtonContainer">
+                        <button type="button" class="btn btn-secondary dropdown-toggle" id="btnExport" data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false">
+                            Export Data<span class="caret"></span>
+                        </button>
+                        <div class="dropdown-menu DownLoadDropDown">
+                            <a class="dropdown-item" href="#" onclick="DownloadFile('0')">CSV</a> <a class="dropdown-item"
+                                                                                                     href="#" onclick="DownloadFile('1')">XLS</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 fileContainer" style="margin-right: 6px;
+                    margin-left: 25px;">
+                        <input type="file" id="fuUploadCSV" class="filestyle" data-buttontext="Browse" style="display: none" />
+                </div>
+                <div class="col-lg-1 col-md-2 col-sm-2 col-xs-12 ImportDiv">
+                    <button class="btn btn-sm btn-primary custom btnMargin" id="btnImport">
+                        Import Data
+                    </button>
+                </div>
+                <div class="col-lg-1 col-md-1 col-sm-1 col-xs-12 ExportPMDataDiv">
+                    <div class="btn-group DropDownButtonContainer">
+                        <button type="button" class="btn btn-secondary dropdown-toggle" id="btnExportPartsMasterData"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Export PM Data<span class="caret"></span>
+                        </button>
+                        <div class="dropdown-menu DownLoadDropDown">
+                            <a class="dropdown-item" href="#" onclick="DownloadFile('0','pmFlag')">CSV</a> <a class="dropdown-item" href="#" onclick="DownloadFile('1','pmFlag')">XLS</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom: 10px; padding-left: 11px;">
+                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 ">
+                    <div>
+                        <label for="Manufacturer" id="lblDdlManufacturer">Manufacturer</label>
+                    </div>
+                    <div>
+                        <select class="btnMargin" id="ddlManufacturer" name="ddlManufacturer" style="height: 30px ! important; width:76%  "><option value="0000">0000</option>
+</select>
+                        
+
+                    </div>
+                </div>
+                
+                <div class="col-lg-6 col-md-4 col-sm-3 col-xs-12 " id="lbltmpPriceMsg"
+                     style=" color:red; margin-top:2%;">
+                </div>
+            </div>
+            <div class="PartInput">
+                <div class="row" style="margin-bottom: 10px;">
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                        <div>
+                            <label for="" style="display:inline">1</label> <input class="form-control InputElements" id="txtPart1" name="txtPart1" style="display:inline" type="text" value="" />
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                        <div>
+                            <label for="" style="display:inline">2</label> <input class="form-control InputElements" id="txtPart2" name="txtPart2" style="display:inline" type="text" value="" />
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                        <div>
+                            <label for="" style="display:inline">3</label> <input class="form-control InputElements" id="txtPart3" name="txtPart3" style="display:inline" type="text" value="" />
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                        <div>
+                            <label for="" style="display:inline">4</label> <input class="form-control InputElements" id="txtPart4" name="txtPart4" style="display:inline" type="text" value="" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="margin-bottom: 10px;">
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                        <div>
+                            <label for="" style="display:inline">5</label> <input class="form-control InputElements" id="txtPart5" name="txtPart5" style="display:inline" type="text" value="" />
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                        <div>
+                            <label for="" style="display:inline">6</label> <input class="form-control InputElements" id="txtPart6" name="txtPart6" style="display:inline" type="text" value="" />
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                        <div>
+                            <label for="" style="display:inline">7</label> <input class="form-control InputElements" id="txtPart7" name="txtPart7" style="display:inline" type="text" value="" />
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                        <div>
+                            <label for="" style="display:inline">8</label> <input class="form-control InputElements" id="txtPart8" name="txtPart8" style="display:inline" type="text" value="" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="margin-bottom: 10px;">
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                        <div>
+                            <label for="" style="display:inline">9</label> <input class="form-control InputElements" id="txtPart9" name="txtPart9" style="display:inline" type="text" value="" />
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 ExceedingColumn" style="margin: 0px 0px 0px -7px">
+                        <div>
+                            <label for="" style="display:inline">10</label> <input class="form-control InputElements" id="txtPart10" name="txtPart10" style="display:inline" type="text" value="" />
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                        <div>
+                            <label for="" style="display:inline">11</label> <input class="form-control InputElements" id="txtPart11" name="txtPart11" style="display:inline" type="text" value="" />
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                        <div>
+                            <label for="" style="display:inline">12</label> <input class="form-control InputElements" id="txtPart12" name="txtPart12" style="display:inline" type="text" value="" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container childcontent " style="padding-top: 0px ! important;">
+    <div class="panel panelInquiryControls panel-primary panelWidth">
+
+        <div id="divToUpdate" style="height: 185px; overflow: auto">
+        </div>
+        <div style="display:none;" id="OptionPartContainer">
+            <label style="padding-left:20px;"> Optional Parts: </label>
+            <div id="divToUpdateOptionPart" style="height:185px; max-height:185px; overflow: auto;">
+            </div>
+        </div>
+
+        <div>
+            <label>
+                Note: KLTD Stock data is not real-time, Allocation is subject to real-time availability and global demand dynamics.
+            </label>
+        </div>
+        
+        
+        <div class="lagends accordion hideonLoad table-responsive  table-striped table-hover"
+             style="display: none">
+            <a href="#">
+                Legends <span class="ui-accordion-header-icon ui-icon ui-icon-triangle-1-e">
+                </span>
+            </a>
+            <div class="accordianRows">
+                <div class=" row">
+                    <div class=" legColumn col-lg-1 col-md-1  col-sm-6 col-xs-6 ">
+                        <label>
+                            CC:
+                        </label>
+                    </div>
+                    <div class=" legDescColumn col-lg-3 col-md-3  col-sm-6 col-xs-6 ">
+                        <label>
+                            Character Code
+                        </label>
+                    </div>
+                    <div class=" legColumn col-lg-1 col-md-1  col-sm-6 col-xs-6 ">
+                        <label>
+                            CGC(New):
+                        </label>
+                    </div>
+                    <div class=" legDescColumn col-lg-2 col-md-3  col-sm-6 col-xs-6 ">
+                        <label>
+                            Commodity Group Code New
+                        </label>
+                    </div>
+                    
+                        <div class=" legColumn col-lg-1 col-md-1 col-sm-6 col-xs-6 ">
+                            <label>
+DNet Price                            </label>
+                        </div>
+                        <div class=" legDescColumn col-lg-2 col-md-3  col-sm-6 col-xs-6 ">
+                            <label>
+DNet Price                            </label>
+                        </div>
+                </div>
+                <div class=" row">
+                    <div class=" legColumn col-lg-1 col-md-1  col-sm-6 col-xs-6 ">
+                        <label>
+                            MGC:
+                        </label>
+                    </div>
+                    <div class=" legDescColumn col-lg-3 col-md-3  col-sm-6 col-xs-6 ">
+                        <label>
+                            Model Group Code
+                        </label>
+                    </div>
+                    <div class=" legColumn col-lg-1 col-md-1  col-sm-6 col-xs-6 ">
+                        <label>
+                            LPN:
+                        </label>
+                    </div>
+                    <div class=" legDescColumn col-lg-2 col-md-3  col-sm-6 col-xs-6 ">
+                        <label>
+                            Latest Part Number
+                        </label>
+                    </div>
+                    <div class=" legColumn col-lg-1 col-md-1  col-sm-6 col-xs-6 ">
+                        <label>
+                            MOR:
+                        </label>
+                    </div>
+                    <div class=" legDescColumn col-lg-2 col-md-3  col-sm-6 col-xs-6 ">
+                        <label>
+                            Mortality
+                        </label>
+                    </div>
+                </div>
+                <div class=" row">
+                    <div class=" legColumn col-lg-1 col-md-1  col-sm-6 col-xs-6 ">
+                        <label>
+                            CC(New):
+                        </label>
+                    </div>
+                    <div class=" legDescColumn col-lg-3 col-md-3  col-sm-6 col-xs-6 ">
+                        <label>
+                            Commodity Code New
+                        </label>
+                    </div>
+                    <div class=" legColumn col-lg-1 col-md-1  col-sm-6 col-xs-6 ">
+                        <label>
+                            MC:
+                        </label>
+                    </div>
+                    <div class=" legDescColumn col-lg-2 col-md-3  col-sm-6 col-xs-6 ">
+                        <label>
+                            Model Code
+                        </label>
+                    </div>
+                    <div class=" legColumn col-lg-1 col-md-1  col-sm-6 col-xs-6 ">
+                        <label>
+                            OR:
+                        </label>
+                    </div>
+                    <div class=" legDescColumn col-lg-2 col-md-3  col-sm-6 col-xs-6 ">
+                        <label>
+                            Order Rank
+                        </label>
+                    </div>
+                </div>
+                <div class=" row">
+                    <div class=" legColumn col-lg-1 col-md-1  col-sm-6 col-xs-6 ">
+                        <label>
+                            CGC(Old):
+                        </label>
+                    </div>
+                    <div class=" legDescColumn col-lg-3 col-md-3  col-sm-6 col-xs-6 ">
+                        <label>
+                            Commodity Group Code Old
+                        </label>
+                    </div>
+                    <div class=" legColumn col-lg-1 col-md-1  col-sm-6 col-xs-6 ">
+                        <label>
+                            HSCL:
+                        </label>
+                    </div>
+                    <div class=" legDescColumn col-lg-2 col-md-3  col-sm-6 col-xs-6 ">
+                        <label>
+                            HS Code Local
+                        </label>
+                    </div>
+                    <div class=" legColumn col-lg-1 col-md-1  col-sm-6 col-xs-6 ">
+                        <label>
+                            KME EOR:
+                        </label>
+                    </div>
+                    <div class=" legDescColumn col-lg-3 col-md-3  col-sm-6 col-xs-6 ">
+                        <label>
+                            KME Emergency Reserve Qty
+                        </label>
+                    </div>
+                </div>
+                <div class=" row">
+                    <div class=" legColumn col-lg-1 col-md-1  col-sm-6 col-xs-6 ">
+                        <label>
+                            QBU:
+                        </label>
+                    </div>
+                    <div class=" legDescColumn col-lg-3 col-md-3  col-sm-6 col-xs-6 ">
+                        <label>
+                            Quantity By Unit
+                        </label>
+                    </div>
+                    <div class=" legColumn col-lg-1 col-md-1  col-sm-6 col-xs-6 ">
+                        <label>
+                            CC(Old):
+                        </label>
+                    </div>
+                    <div class=" legDescColumn col-lg-2 col-md-3  col-sm-6 col-xs-6 ">
+                        <label>
+                            Commodity Code Old
+                        </label>
+                    </div>
+                    <div class=" legColumn col-lg-1 col-md-1  col-sm-6 col-xs-6 ">
+                        <label>
+                            SSN:
+                        </label>
+                    </div>
+                    <div class=" legDescColumn col-lg-2 col-md-3  col-sm-6 col-xs-6 ">
+                        <label>
+                            Service News Number
+                        </label>
+                    </div>
+                </div>
+                <div class=" row">
+                    <div class=" legColumn col-lg-1 col-md-1  col-sm-6  col-xs-6 ">
+                        <label>
+                            RC:
+                        </label>
+                    </div>
+                    <div class=" legDescColumn col-lg-3 col-md-3  col-sm-6  col-xs-6 ">
+                        <label>
+                            Returnable Code
+                        </label>
+                    </div>
+                    <div class=" legColumn col-lg-1 col-md-1  col-sm-6  col-xs-6 ">
+                        <label>
+                            Sup B. Date:
+                        </label>
+                    </div>
+                    <div class=" legDescColumn col-lg-2 col-md-3  col-sm-6  col-xs-6 ">
+                        <label>
+                            Supplier Born Date
+                        </label>
+                    </div>
+                    <div class=" legColumn col-lg-1 col-md-1  col-sm-6  col-xs-6 ">
+                        <label>
+                            PL:
+                        </label>
+                    </div>
+                    <div class=" legDescColumn col-lg-2 col-md-3  col-sm-6  col-xs-6 ">
+                        <label>
+                            Production Lot
+                        </label>
+                    </div>
+                </div>
+                <div class=" row">
+                    <div class=" legColumn col-lg-1 col-md-1  col-sm-6 col-xs-6 ">
+                        <label>
+                            KLTD LT:
+                        </label>
+                    </div>
+                    <div class=" legDescColumn col-lg-3 col-md-3  col-sm-6 col-xs-6 ">
+                        <label>
+                            KLTD Lead Production &quot;Months&quot;
+                        </label>
+                    </div>
+                    <div class=" legColumn col-lg-1 col-md-1  col-sm-6 col-xs-6 ">
+                        <label>
+                            BQ:
+                        </label>
+                    </div>
+                    <div class=" legDescColumn col-lg-2 col-md-3  col-sm-6 col-xs-6 ">
+                        <label>
+                            Box Quantity
+                        </label>
+                    </div>
+                    <div class=" legColumn col-lg-1 col-md-1  col-sm-6 col-xs-6 ">
+                        <label>
+                            IC:
+                        </label>
+                    </div>
+                    <div class=" legDescColumn col-lg-2 col-md-2  col-sm-6 col-xs-6 ">
+                        <label>
+                            Interchangeable Code
+                        </label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class=" legColumn col-lg-1 col-md-1  col-sm-6 col-xs-6 ">
+                        <label>
+                            DB Mortality:
+                        </label>
+                    </div>
+                    <div class=" legDescColumn col-lg-3 col-md-3  col-sm-6 col-xs-6 ">
+                        <label>
+                            Distributor Mortality
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modals">
+    <!-- Modal -->
+    <div class="modal fade" id="ErrorModal" role="dialog" style="padding-top: 220px;">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        &times;
+                    </button>
+                    <h4 class="modal-title">
+                        Multiple Parts Stock Inquiry
+                    </h4>
+                </div>
+                <div class="modal-body" id="divModalBody">
+                </div>
+                <div class="modal-footer">
+                    <button style="text-align: center; float: none !important;" id="btnOk" class="btn btn-default center-block"
+                            data-dismiss="modal">
+                        OK
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modals">
+    <!-- Modal -->
+    <div class="modal fade" id="MessageModal" role="dialog" style="padding-top: 169px;">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        &times;
+                    </button>
+                    <h4 class="modal-title">
+                        Multiple Parts Stock Inquiry
+                    </h4>
+                </div>
+                <div class="modal-body" id="modalBody">
+                    <img class="imgError" />
+                    <label id="lblMessageText" class="lblError">
+                    </label>
+                </div>
+                <div class="modal-footer">
+                    <button style="text-align: center; float: none !important;" id="btnOk" class="btn btn-default center-block"
+                            data-dismiss="modal">
+                        OK
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modals">
+    <!-- Modal hst005-->
+    <div class="modal fade" id="ExcessStockDetails" role="dialog" style="padding-top: 169px;">
+        <div class="modal-ExcessStokdialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        &times;
+                    </button>
+                    <h4 class="modal-title">
+                        Distributor Inventory
+                    </h4>
+
+                </div>
+                <div class="modal-body" id="ExcessStockModalBody">
+
+                </div>
+                <div class="modal-footer">
+                    <button style="text-align: center;margin-right:10px; float: none !important;" id="btnOk" class="btn btn-default center-block"
+                            data-dismiss="modal">
+                        OK
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="hiddenForm" style="display: none !important;">
+</div>
+<script>
+
+//hst002 start
+var PriceCalculationMethod;
+    function change_kmelistprice_text(type) {
+    if (type == "B") {
+        $(".col-dnet").text("KME LPR");
+    }
+    else {
+        $(".col-dnet").text("DNet Price");
+    }
+}
+function blink_text() {
+    if ($(".col-dnet").hasClass("blink")) {
+        $(".col-dnet").switchClass("blink", "blink2", 1000, "easeInOutQuad");
+    }
+    else {
+        $(".col-dnet").switchClass("blink2", "blink", 1000, "easeInOutQuad");
+    }
+}
+//hst002 end
+var resizeTimer;
+    var txtErrorType;
+        var txtError;
+ $(window).resize(function ()
+    {
+       // $("#ui-accordion-1-header-0").css("width",$("#ui-accordion-1-panel-0").width())
+    });
+
+    function Resized()
+    {
+
+
+
+    }
+
+ function GetOptionParts(formData)
+ {
+     //== hst001: Populating Option Parts Grid ==============================================
+    $.post("/kmewebportal/StockInquiry/MultiPartsStockInqSearchOptionParts",formData,function (data) {
+    if(CheckForSessionExpiry(data))
+    {
+        SessionExpiredRedirect();
+        return;
+    }
+    else
+    {
+        $("#lblMsg").html(lblMessage);
+        if(isRealValue(data))
+        {
+            if(data.trim()!="" && data.trim() !=null)
+            {
+            $("#OptionPartContainer").css("display","inline");
+            $("#divToUpdateOptionPart").html(data);
+            }
+            else
+            {
+                $("#OptionPartContainer").css("display","none");
+                $("#divToUpdateOptionPart").html("");
+            }
+            var pcmt = "D";
+            change_kmelistprice_text(pcmt);
+            if (pcmt == "B") {
+                $(".col-dnet").removeClass("blink").removeClass("blink2");
+            }
+        }
+    }
+
+    });
+//==========================================================================================
+        //hst003 started
+        var partno = {
+
+
+            strPartNumber: "",
+            strScreen: "MultiplePartsInquiry"
+        }
+
+        $.post("/kmewebportal/StockInquiry/PartInquiryAvailabilityAnalytics",
+            partno, function (data) {//, $("div#divLoading").removeClass('show') //hst004
+
+        });//hst003 ended
+ }
+
+
+$(document).ready(function () {
+$(".lagends").removeAttr("style");
+$(".accordion").accordion({autoHeight:true,
+            collapsible: true,
+            active: false
+        });
+$(".accordianRows label").attr("style","white-space: nowrap;");
+        var pcmt = "D";
+        //if (pcmt == "D") {
+        //    setInterval(blink_text, 1000);
+        //}
+
+
+$("#divToUpdate").parent("div").prepend("<div id='divLoading'></div>");
+ $("#txtPart1").focus();
+DisableControlsOnLoad();
+ $(".bootstrap-filestyle input[type=text]").addClass("hidden-sm hidden-md ");
+});
+
+
+
+// $('#ErrorModal').on('hidden.bs.modal', function () {
+//          $(".ClsSelect").each(function(){
+//          l
+//          $(this).attr("checked",false);
+//
+
+
+//          });
+
+//$("#btnIntrChngblty").attr("disabled",true);
+
+//        })
+
+var lblMessage;
+    $("#btnSearch").on("click", function () {
+  if( !PostGetPreCheck()){return;}//This Check makes sure that there is not any exsiting Ajax Request ,in other case the call is returned void and doesnt proceeds to next code
+    $("#lblMsg").html("");
+    var count=0;
+    $(".PartInput input[type=text]").each(function () {
+    if($(this).val()!=""){count++;}
+    });
+
+    if(count>0){}//Do nothing if Any textbox Contains Value
+    else
+    {
+    $("#divModalBody").html("");
+
+
+              //txtError="Please enter at least one Part No";
+               txtError="Please enter at least one Part No";
+               txtErrorType="0";
+               DisplayModal(txtErrorType,txtError) ;
+               DisableControlsOnLoad();
+           $('#tblSoStatus tbody').remove();
+
+    return;
+
+
+;}
+$("#txtPartNo").next("span").html(" ") ;
+var formData = {
+            txtPart1: $("#txtPart1").val(),
+            txtPart2: $("#txtPart2").val(),
+            txtPart3: $("#txtPart3").val(),
+            txtPart4: $("#txtPart4").val(),
+            txtPart5: $("#txtPart5").val(),
+            txtPart6: $("#txtPart6").val(),
+            txtPart7: $("#txtPart7").val(),
+            txtPart8: $("#txtPart8").val(),
+            txtPart9: $("#txtPart9").val(),
+            txtPart10: $("#txtPart10").val(),
+            txtPart11: $("#txtPart11").val(),
+            txtPart12: $("#txtPart12").val(),
+            ddlManufacturer: $("#ddlManufacturer").val(),
+            ddlStockPoint: $("#ddlStockPoint").val()
+            };
+            DisableControlsOnLoad();
+            $.post("/kmewebportal/StockInquiry/MultiPartsStockInqSearch",formData,function (data) {
+
+            if(CheckForSessionExpiry(data))
+           {
+
+           SessionExpiredRedirect();
+            return;
+           }
+           else
+           {
+
+            $("#lblMsg").html(lblMessage);
+            if(isRealValue(data))
+            {
+
+                //var data=data.replace("$(containerId).parent().delegate","$(containerId).parent().undelegate();$(containerId).parent().delegate ");
+                //var data=data.replace("$(containerId).swhgLoad($(this).attr('href'), containerId, callback);"," if( !($(this).parent('li').hasClass('disabled')) ) { $(containerId).swhgLoad($(this).attr('href'), containerId, callback);}");
+                $("#divToUpdate").html(data);
+                //hst006
+                var msg = $("#divToUpdate").find("#hdnTempPriceMsg").text();
+                $("#lbltmpPriceMsg").text(msg);
+
+                 var pcmt = "D";
+
+                if (pcmt == "B") {
+                    $(".col-dnet").removeClass("blink").removeClass("blink2");
+                }
+                change_kmelistprice_text(pcmt);
+               //== hst001: Populating Option Parts Grid ==============================================
+               var fromDataForOptionParts = {txtPart1: $("#txtPart1").val(),ddlManufacturer: $("#ddlManufacturer").val(),ddlStockPoint: $("#ddlStockPoint").val()}
+               GetOptionParts(fromDataForOptionParts);
+               //==========================================================================================
+            }
+           }
+
+
+});
+});
+     $(document).on('keydown', '.PartInput input[type=text]', function (e) {if (this.value.length >= 20 && e.keyCode != 8){e.preventDefault()  ;return false; } });
+     $( ".PartInput input[type=text]" ).on("paste change", function(event) {  var currentTxt=$(this) ;  setTimeout( function() {   if( currentTxt.val().trim().length>21   ){  currentTxt.val( jQuery.trim(currentTxt.val()).substring(0, 20))  }         }, 1); });
+
+
+$(document).on("click",".gridRow,.gridAltRow", function () {
+
+//Following loop will collapse all expanded rows
+
+//Shabbir 22-12-2016 isChain flag Column change its position based on
+//KME List Price right allocation, So added below check
+var flgColumnIndex = 0;
+flgColumnIndex = $(this).find('td').length - 1;
+//if($(this).find('td').hasClass('ListPrice'))
+//{
+
+//    //flgColumnIndex = 34;
+//}
+//else
+//{
+//    //flgColumnIndex = 33;
+//}
+    //hst006
+    var msgColumnIndex = 0;
+    msgColumnIndex = $(this).find('td').length - 2;
+    var msgTempPrice = $(this).find('td').eq(msgColumnIndex).text().trim();
+    $("#lbltmpPriceMsg").text(msgTempPrice);
+
+if($.trim($(this).find('td').eq(flgColumnIndex).text()) != "1")
+{
+    var expandedRows = $(".gridRow"); //hst001
+    var isIntExist = $.trim($(this).find("td.intExist").text());
+
+    expandedRows.not(this).each(function(){
+
+    $(this).removeClass("expanded");
+    $(this).removeClass("highlight");
+
+    $("tr.hideChild").each(function() {
+        var isChained = $.trim($(this).next('tr').find('td').eq(flgColumnIndex).text());
+        if(typeof isChained != 'undefined' && isChained == "0")
+        {
+            $(this).removeClass("hideChild").addClass("chainParent");
+            return false;
+        }
+        $(this).removeClass("hideChild").addClass("chainParent");
+        });
+    });
+    //============================================================================
+    //hst001 Start
+    if($(this).hasClass("highlight"))
+    {
+        $(this).removeClass("highlight");
+    }
+    else
+    {
+        $(this).addClass("highlight");
+        var tempPartNumber = $(this).find("td").eq(0).text().trim();
+        var indentificationString = $(this).find("td").eq(1).text().trim();
+        var fromDataForOptionParts = {txtPart1: tempPartNumber,ddlManufacturer: $("#ddlManufacturer").val(),ddlStockPoint: $("#ddlStockPoint").val()}
+        var mainDiv = $(this).parent().parent().parent().parent().attr("id");
+        if(mainDiv!="divToUpdateOptionPart")
+        {
+            if(indentificationString.includes("Opt"))
+            {
+                $("div#divLoading").addClass('show');//hst004
+                GetOptionParts(fromDataForOptionParts);
+
+            }
+            else
+            {
+                $("#OptionPartContainer").css("display","none");
+                $("#divToUpdateOptionPart").html("");
+            }
+
+        }
+
+    }
+    //hst001 End
+
+    if(!isIntExist.includes("Int")) //hst001 : Changed Location
+    return ;
+
+
+    if(!$(this).hasClass("expanded") && $.trim($(this).find('td').eq(flgColumnIndex).text())=="0")
+    {
+        $(this).addClass("expanded");
+        //$(this).addClass("highlight");
+
+        $(this).nextAll().each(function() {
+
+        if($(this).hasClass('chainParent'))
+        {
+            var isChained = $.trim($(this).next('tr').find('td').eq(flgColumnIndex).text());
+            if(typeof isChained != 'undefined' && isChained == "0")
+            {
+            $(this).find('td').eq(1).html('');
+            $(this).removeClass("chainParent").addClass("hideChild").addClass("ChainedPart");
+            return false;
+            }
+            $(this).find('td').eq(1).html('');
+            $(this).removeClass("chainParent").addClass("hideChild").addClass("ChainedPart");
+        }//end if
+        });//end each loop
+
+    }//end if
+    else if($(this).hasClass("expanded") && $.trim($(this).find('td').eq(flgColumnIndex).text())=="0")
+    {
+        $(this).removeClass("expanded");
+        //$(this).removeClass("highlight");
+
+        $("tr.hideChild").each(function() {
+
+            var isChained = $.trim($(this).next('tr').find('td').eq(flgColumnIndex).text());
+            if(typeof isChained != 'undefined' && isChained == "0")
+            {
+            $(this).removeClass("hideChild").addClass("chainParent");
+            return false;
+            }
+            $(this).removeClass("hideChild").addClass("chainParent");
+        });
+    }
+
+}
+
+
+//    $("tr.chainParent").each(function() {
+//    $(this).removeClass("chainParent").addClass("hideChild");
+
+//        var isChained = $.trim($(this).next('tr').find('td').eq(33).text());
+//        if(typeof isChained != 'undefined' && isChained == "0")
+//        {
+//        return false;
+//        }
+//});
+//    var description = $(this).closest("tr").find('td').eq(2).text();
+//
+//        if(description=="PartNo Error.")
+//        {
+//        return;
+//        }
+//         $(".InvoiceRow").remove();
+//    var check = { strPartNumber: $(this).closest("tr").find('td').eq(0).text(), strPartDesc: $(this).closest("tr").find('td').eq(2).text()}
+
+
+// $.post("/kmewebportal/StockInquiry/MultiPartsStockInq_Select",check,function(Result){
+//                     if (CheckForSessionExpiry(Result))
+//                     {
+//                      SessionExpiredRedirect();
+//                         return;
+//                      }
+//                    else
+//                      {
+//                      if($.trim(Result)!=""){  var result=Result.replace("$(containerId).parent().delegate","$(containerId).parent().undelegate();$(containerId).parent().delegate ");
+//                       var result=Result.replace("$(containerId).swhgLoad($(this).attr('href'), containerId, callback);"," if(  !($(this).parent('li').hasClass('disabled')) && !($(this).parent('li').hasClass('active')) ) { $(containerId).swhgLoad($(this).attr('href'), containerId, callback);}");
+//                       //$("#divInvoiceModalBody").html("");
+//
+//                        $(CurrntRow).after("<tr class='InvoiceRow'><td colspan=30 style=\"height:100px !important; \">"+result+"</tr></td>");  }
+//                          //$("#divToUpdate").html(Result);    }
+//                          //  $(CurrntRow).after('<tr><td>  <table> <thead> <tr ><th>Date</th> <th>Qty</th> </tr> </thead>    <tbody><tr><td>as</td><td>as</td>  </tr>     <tr><td>sds</td> <td>sds</td> </tr></tbody>   </table>    </td></tr>');
+//                      }
+//
+//           });
+   //else if(!this.checked){ $("#btnIntrChngblty").attr("disabled",true);}
+});
+
+
+$(document).on("click","#btnIntrChngblty",function () {
+
+var checkedPartNo;
+$(".ClsSelect").each(function () {
+if(this.checked)
+{
+checkedPartNo=$(this).val();
+return;
+}
+
+});//End of Each
+
+
+if(checkedPartNo!=null)
+{
+var arrr=checkedPartNo.split(",");
+    if(arrr.length>0)
+    {
+        var partNo=checkedPartNo.split(",")[0];
+        var discription=checkedPartNo.split(",")[1];
+        if(discription!="PartNo Error.")
+        {
+             window.location.href="/kmewebportal/StockInquiry/StockInquiry"+"?partno="+partNo;
+        }
+    }
+
+}
+
+});//End of Interchangibility Click eve
+
+
+$( document ).ajaxSuccess(function( event, xhr, settings ) {
+//      if( CheckForSessionExpiry(xhr.responseText))
+//      {
+//       /// SessionExpiredRedirect();
+//
+//      }
+
+});
+
+
+///This Method Unchecks all Checked checkboxes on Modal Dialogue close Event
+//$('#ErrorModal').on('hidden.bs.modal', function () {
+//$(".ClsSelect").each(function () {
+//    if(this.checked)
+//    {
+//    $(this).removeAttr("checked");
+//
+//    }
+//});
+//});
+
+
+</script>
+<script>
+ function DownloadFile()
+    {
+         if(arguments.length>1)
+         {
+         DownloadPartsMasterData(arguments[0]);
+         }
+         else
+         {
+         DownloadData(arguments[0]);
+         }
+    }
+
+
+function DownloadPartsMasterData(fileType)
+{
+
+$("#lblMsg").html("");
+var postData={txtFileFormate:fileType,ddlManufacturer:$("#ddlManufacturer").val()};
+$.post("/kmewebportal/StockInquiry/MultiPartsStockInq_ExportMasterDataToExcel",postData,function (data)
+{
+   if(CheckForSessionExpiry(postData))
+           {
+
+           SessionExpiredRedirect();
+            return;
+           }
+else
+{
+    if(isRealValue(data.ErrorOccured))
+    {
+     $(".modal-header").removeClass("ModalDesign");
+       $("#divModalBody").html("");
+               txtError=data.ErrorMessage;
+               txtErrorType="0";
+               DisplayModal(txtErrorType,txtError) ;
+
+    }
+    else
+    {
+      if(CheckForServerSideError(data))
+        {
+
+        $(".modal-header").removeClass("ModalDesign");
+        $(".hiddenForm").html(data);
+          DisplayModal(txtErrorType,txtError) ;
+
+
+
+        }
+        else
+        {
+            $(".modal-header").removeClass("ModalDesign");
+               txtError=data.ErrorMessage;
+               txtErrorType="1";
+               DisplayModal(txtErrorType,txtError) ;
+            window.location.href=data.RedirectToUrl;
+
+
+        }
+
+    }
+
+
+    }
+
+
+});///End of Post
+
+
+}
+function DownloadData(fileType)
+{
+$("#lblMsg").html("");
+var postData={txtFileFormate:fileType};
+    $.post("/kmewebportal/StockInquiry/MultiPartsStockInq_ExportToExcel",postData,function (data)
+    {
+        if(CheckForServerSideError(data))
+        {
+
+        $(".modal-header").removeClass("ModalDesign");
+        $("#divModalBody").html("");
+
+
+
+        }
+        else if(CheckForSessionExpiry(data))
+        {
+        SessionExpiredRedirect();
+        return;
+        }
+        else
+        {
+
+        $(".modal-header").removeClass("ModalDesign");
+        $(".hiddenForm").html(data);
+        //DisplayModal(txtErrorType,txtError) ;
+
+        }
+
+    });///End of Post
+
+
+
+
+}
+function DisableControlsOnLoad()
+{
+$("#btnIntrChngblty").attr("disabled",true);
+$("#btnExport").attr("disabled",true);
+$("#ddlFileType").attr("disabled",true);
+$("#btnExportPartsMasterData").attr("disabled",true);
+
+
+}
+function DisableControl()
+{
+
+
+}
+function EnableControls()
+{
+ // $("#btnIntrChngblty").removeAttr("disabled");
+$("#btnExport").removeAttr("disabled");
+$("#ddlFileType").removeAttr("disabled");
+//$("#btnExportPartsMasterData").removeAttr("disabled");
+}
+ function CheckForServerSideError(data)
+    {
+        var tempData = JSON.stringify(data);
+        if (tempData.indexOf("Sorry,") > -1)
+        {
+        return true;
+        }
+    }
+  function  AssignValuesToTxts(data)
+  {
+     for(var name in data)
+     {
+         $(".PartInput input[type=text]").each(function ()
+         {
+            if( $(this).attr("id")==name )
+            {
+                $(this).val(data[name]);
+          }}); //End to Each
+      }
+
+  } //End of Function AssignValuesToTxts()
+
+
+function isRealValue(obj)
+{
+    return obj && obj !== "null" && obj !== "undefined";
+}
+
+function AfterLoad()
+{
+
+    }
+    /*hst005*/
+    function afterLoad() {
+        $(".gridHead th a").each(function () {
+            $(this).addClass("a_" + $(this).attr("href").split("sort=")[1].split("&")[0]);
+
+            $(this).parent("th").addClass("header_" + $(this).attr("href").split("sort=")[1].split("&")[0]);
+        });
+        setArrowImages();
+        $('.NewPaging ul').addClass("pagination");
+    }
+    function setArrowImages() {
+        var dir = $('#dir').val();
+        var col = $('#col').val();
+        var header = $('th a[href*=' + col + ']');
+
+        if (dir == 'Ascending') {
+            header.text(header.text() + ' ▲');
+        }
+        if (dir == 'Descending') {
+            header.text(header.text() + ' ▼');
+        }
+    }
+    /*End hst005*/
+</script>
+    <script>
+ $("#btnImport").attr("disabled",true);
+
+$('#fuUploadCSV').on("change",function (){
+var totalFiles = document.getElementById("fuUploadCSV").files.length;
+         if (totalFiles.toString() == "0")
+         {
+          $("#btnImport").attr("disabled","disabled");
+
+         }
+         else
+         {
+                     var ext = $(this).val().split('.').pop().toLowerCase();
+                    if($.inArray(ext, ['CSV','csv']) == -1)
+                    {
+
+                        $("#btnImport").attr("disabled","disabled");
+                         // $("#divModalBody").html("");
+                        //  $("#divModalBody").prepend("<span id='lblMessage'></span>").attr("style","color:red;");
+                          //$("#lblMessage").html("Invalid file Formate ");
+                         // ("#lblMessage").html("");
+                         // $("#ErrorModal").modal();
+                         txtError="Invalid file Format";
+                         txtErrorType="0";
+                          DisplayModal(txtErrorType,txtError) ;
+
+                    }
+                    else
+                    {
+
+                    $("#btnImport").removeAttr("disabled");
+
+                    }
+
+         }
+
+
+
+
+
+});
+
+$('#btnImport').click(function ()
+{
+var formData = new FormData();
+var totalFiles = document.getElementById("fuUploadCSV").files.length;
+    if (totalFiles.toString() == "0")
+    {
+   // $("#divModalBody").html("");
+   // $("#divModalBody").prepend("<span>Please Select CSV File</span>").attr("style","color:red;");
+   // $("#divModalBody").prepend().attr("style","color:red;");
+   // $("#ErrorModal").modal();
+
+               txtError="Please select CSV  file";
+               txtErrorType="0";
+               DisplayModal(txtErrorType,txtError) ;
+
+    return false;
+    }
+    for (var i = 0; i < totalFiles; i++)
+    {
+    var file = document.getElementById("fuUploadCSV").files[i];
+    formData.append("fuUploadCSV", file);
+    }
+
+$.ajax({
+type: "POST",
+url:"https://www.komatsu.ae/kmewebportal/StockInquiry/MultiPartsStockInq_ImportFile",
+data: formData,
+contentType: false,
+processData: false ,
+success: function (data)
+{
+      if(CheckForSessionExpiry(data))
+        {
+        SessionExpiredRedirect();
+        return;
+        }
+        else
+
+        {
+            if(isRealValue(data.ErrorMessage))
+            {
+                $("#divModalBody").html("");
+                txtError=data.ErrorMessage;
+                txtErrorType="0";
+                DisplayModal(txtErrorType,txtError) ;
+                $("#btnExportPartsMasterData").attr("disabled" ,true)
+
+
+            }    else{AssignValuesToTxts(data);$("#btnExportPartsMasterData").removeAttr("disabled" );}
+
+         }
+},
+error: function (data) {
+//                 $.each(data, function (index, value) {
+//                     alert(index)
+//                 });
+//
+   // $("#divModalBody").html("");
+  //  $("#divModalBody").prepend("<span>Failed to retreive data</span>").attr("style","color:red;");
+   // $("#ErrorModal").modal();
+               txtError="An error occurred while processing request";
+               txtErrorType="0";
+               DisplayModal(txtErrorType,txtError) ;
+
+}
+})
+});
+    </script>
+<script type="text/javascript">
+    $(document).on('click', '#btnOk', function () {
+        $("#MessageModal").modal('hide');
+
+    });
+</script>
+
+<script>  /*hst005*/
+    function OpenExcessStockPage(PartNumber) {
+
+    // Construct the URL with the parameter
+       var url = '/kmewebportal/StockInquiry/ExcessInventoryDetails' + "?strPartNumber=" + PartNumber;
+
+    $.ajax({
+        cache: false,
+        type: "POST",
+        url: url,
+        data: { strPartNumber: PartNumber },
+        success: function (data) {
+
+
+            $("#ExcessStockModalBody").html(data); // Load the data into the modal
+            $('#ExcessStockDetails').modal('show');
+            $('.NewPaging ul').addClass("pagination");
+            // Handle pagination links within the modal
+            $("#ExcessStockModalBody").on("click", ".pagination a", function (e) {
+                e.preventDefault();
+                var newUrl = $(this).attr("href");
+                $.ajax({
+                    url: newUrl,
+                    success: function (newData) {
+                        $("#ExcessStockModalBody").html(newData);
+                    }
+                });
+            });
+
+        },
+        error: function(xhr, ajaxOptions, thrownError) {
+            var txtError = "An error occurred while processing request";
+            var txtErrorType = "0";
+            DisplayModal(txtErrorType, txtError);
+        }
+    });
+}
+</script>
+
+    <!-- /.site-footer -->
+    <div class="container childcontent">
+        <footer id="footerWrapper" class="footer4 FooterStyle">
+            <section id="mainFooter">
+                <div class="container">
+                    <div class="row">
+
+
+
+                        <div class="col-md-3 col-sm-2 hidden-xs hidden-sm">
+                            <div class="footerWidget">
+                                <h3>Useful Links:</h3>
+                                <ul class="list-unstyled iconList borderList">
+                                    <li><a href="/kmewebportal/Home/Index">Home</a></li>
+                                    <li><a href="https://www.komatsu.jp/en" target="_blank">Komatsu Global</a></li>
+                                    
+
+
+
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-4">
+                            <div class="footerWidget">
+                                <h3>About Komatsu:</h3>
+                                <article class="boxTestimonial">
+
+                                    <blockquote style="font-size: 11px;">
+                                        Komatsu is one of the largest manufacturer of construction  and mining equipment
+                                    </blockquote>
+
+                                    <div class="clientIcon">
+
+
+                                    </div>
+
+                                </article>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-4">
+                            <div class="footerWidget">
+                                <h3>Komatsu Genuine Parts:</h3>
+                                <ul class="list-unstyled iconList borderList">
+                        <li><a href="/kmewebportal/StockInquiry/PartsMasterInquiry">Parts Information</a></li>                                                            <li><a href="/kmewebportal/StockInquiry/StockInquiry">Stock Inquiry</a></li>
+
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-4">
+                            <div class="footerWidget">
+
+                                <h3>Contact Us:</h3>
+
+                                <h4> Komatsu Middle East FZE</h4>
+                                <address>
+                                    <p style=" font-size:11px !important;">
+                                        ADDRESS: JAFZA South, Gate 15, Street S300, ,
+                                        <br /> Plot S21313
+                                        <br />
+                                        Jebel Ali Free Zone, 
+                                        <br />
+                                        Dubai, U.A.E.
+
+
+                                        <br /> TEL: +971-04-876 7502<br />
+                                        <i class="icon-mail-alt"></i>EMAIL:<a href="mailto:info@komatsu.ae"> info@komatsu.ae</a>
+                                    </p>
+                                </address>
+
+
+                            </div>
+                        </div>
+
+
+
+                    </div>
+
+
+
+                </div>
+            </section>
+
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
+                    <div class="panel-heading PanelTitle">
+
+                        <div class="row">
+
+                            <div class="col-lg-2 col-md-3 col-sm-3 col-xs-4  ">
+                                <img src="/kmewebportal/images/Proven1.jpg" alt="Komatsu" />
+
+                            </div>
+
+                            <div class="col-lg-5 col-md-4 col-sm-5 col-xs-5  ">
+                                <p id="copyRight"> Copyright &copy; 2026 -   Komatsu Middle East FZE<br />ALL RIGHTS RESERVED.</p>
+
+                            </div>
+
+                            <div class="col-md-5 hidden-xs col-lg-3 col-sm-5 col-xs-4 pull-right" style="padding-top: 25px;">
+
+                                <span class="pull-right" style="font-size: 10px;"> Powered by:   <a href="https://home.kps.komatsu/" target="_blank" style="font-size: 10px ! important;">  Komatsu Pakistan Soft </a> </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+
+
+            </div>
+        </footer>
+    </div>
+    </footer>
+    <script>
+
+    var CurrentUserRole="3";
+
+        $(document).ready(function () {
+
+          //Test Run animation
+//          var sppOffMessage = "";
+//          if(sppOffMessage=='Y')
+//          {
+//          if($(".TestVersionDiv").length>0)
+//          {
+//          setInterval(
+//          function(){
+//         $("#lblVersionInfo").html('KME Webiste will be offline').show().fadeToggle("slow")},
+//          100);
+//          }
+//          }
+//          else
+//          {
+//            $("#lblVersionInfo").html('');
+//          }
+
+
+
+            var selectedLang = "";
+            if (selectedLang==null )
+            {
+             $("#ddlLanguage").val("en-US");
+            }else{ $("#ddlLanguage").val(selectedLang);  }
+
+        });
+    </script>
+    <script>
+
+
+
+         $("#ddlLanguage").change(function () {
+
+
+
+               $.ajax({
+                             type: "POST",
+                             data: {culture:$("#ddlLanguage").val()},
+                             url:"https://www.komatsu.ae/kmewebportal/Language/ChangeCurrentCulture",
+                             success: function (redUrl)
+                             {
+
+
+                                 //window.location.href="/kmewebportal/Home/Index";
+                                        window.location.href=    redUrl;
+
+                             }
+
+                         });
+
+
+         });
+
+
+            $("#logOut").click(function () {
+            $.post("/kmewebportal/User/LogOff","",function (url)
+                {
+                  //  window.location.href=url;
+                    window.location.href="/kmewebportal/";
+                 });
+                 });
+
+
+    </script>
+    <script>
+   //set focus to first textbox in the screen
+  $("body input[type=text]").eq(0).focus();
+  ///This Method Redirects to the Login Screen when session is expired,used by different methods
+   function SessionExpiredRedirect()
+   {
+       window.location.href =  "https://www.komatsu.ae/SSO/Dashboard";
+   }
+//this Method checks the response data
+//if it contains a redirect due to session expiry
+//then Page is redirected to Login Screen
+    function CheckForSessionExpiry(data)
+    {
+        var ssoAppURL="SSO";
+        var ssoDashboard = "https://www.komatsu.ae/SSO/Dashboard"; //20161029 Hassan
+
+       var tempData = JSON.stringify(data);
+       var zTempData = tempData.replace(/^"(.*)"$/,'$1');
+       if ((tempData.indexOf(ssoAppURL) > -1 && tempData.length == ssoAppURL.length) || zTempData.toUpperCase() == ssoDashboard.toUpperCase()) { //20161029 Hassan
+           return true;
+       }
+       else
+       {
+           return false;
+       }
+    }
+
+ //this Events checks the response data
+//if it contains a redirect due to session expiry
+//then Page is redirected to Login Screen
+   	$(document).ajaxSuccess(function (event, xhr, settings) {
+	if (CheckForSessionExpiry(xhr.responseText))
+	 {
+		SessionExpiredRedirect();
+	 }
+     if(JSON.stringify(xhr.responseText).indexOf("Redirector") > 1)
+     {
+        window.location.href = "https://www.komatsu.ae/SSO/Dashboard";
+     }
+});
+	function CheckForServerSideError(data)
+	{
+		var tempData = JSON.stringify(data);
+		if (tempData.indexOf("Sorry,") > -1)
+		{
+		return true;
+		}
+	}
+
+//this method adds the spinner classs to div when an ajax operation starts
+  $( document ).ajaxStart(function(event) {
+
+    $("div#divLoading").addClass('show');
+
+    });
+    //this method Removes  the spinner classs to div when an ajax operation Ends
+    $( document ).ajaxStop(function() {
+    $("div#divLoading").removeClass('show');
+    });
+     //this method Removes  the spinner classs to div when an ajax operation ended due to an error
+     $( document ).ajaxError(function(event, jqxhr, settings, thrownError) {
+   // $("div#divLoading").removeClass('show');
+    if (CheckForSessionExpiry(jqxhr.responseText))
+	 {
+		SessionExpiredRedirect();
+	 }
+    });
+
+         //Event for handling Enter Key Press Behaviour
+         $(document).keypress(function (e) {
+      //if pressed key is Enter
+      if (e.which == 13) {
+
+       var $firstTxT=  $("body input[type=text]").eq(0);
+       //check if first textbox of the screen is focused ,if not then do do anything
+       if(!$firstTxT.is(":focus")){return;}
+       ///check if search button is focused then trigger only one event from search and Enter Press
+             var  $focused = $(':focus');
+             if(   ($focused!=null && $focused.attr("id")=="btnSearch" )    )
+             {
+             //prevent multiple postbacks to server using PostGetPreCheck() method
+             if( !PostGetPreCheck()){e.stopPropagation() }
+           else{   }
+             }
+             else{ if(PostGetPreCheck()){ $("#btnSearch").trigger("click")}}
+           }
+       });
+
+  $('div[role=dialog]').on('shown.bs.modal', function () {
+ $(".modal-footer").find("button").focus();
+})  ;
+
+    </script>
+    <script type="text/javascript">
+        var rightsArray = '';
+        var ScreenRights = [];
+        if (rightsArray.length > 0)
+            ScreenRights = JSON.parse(rightsArray);
+
+        function HasRight(rightID) {
+            var count = 0;
+            for (var i = 0; i < ScreenRights.length; i++) {
+                if (ScreenRights[i]["RightId"] == rightID && ScreenRights[i]["HasRight"] == "True") {
+                    count++;
+                }
+            }
+
+            if (count > 0) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+
+        ///hst107
+        ///For now,the Sorting is enabled but behaviour is stopped
+        function Unbind() {
+
+            $('th[scope=col] a[data-swhglnk="true"]').click(function (event) {
+                event.stopPropagation()
+                event.preventDefault();
+
+            });
+        }
+    </script>
+    <div class="modal fade" id="AbouModal" role="dialog" style="padding-top: 169px;">
+        <div class="modal-dialog modal-sm" style="margin: 10px auto; width: 45%;">
+            <!-- Modal content-->
+            <div class="modal-content" style="width: 400px; margin: 0 auto;">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        &times;
+                    </button>
+                    <h4 class="modal-title">
+                        About
+                    </h4>
+                </div>
+                <div class="modal-body" id="ConfirmModalBody" style="display: inline;">
+                    <img src="/SSO/Images/pdx.png" width="15%" height="15%" style="vertical-align:top" />
+                    <label id="lbl1" style="font-weight: bold">
+                        KME Distributor Portal</br>
+                        <label id="lbl4">
+                            Parts System (PDX)
+                        </label></br>
+                        <label style="font-weight: bold" id="lbl2">
+                            </br>Version 1.26.5.1</br>
+                        </label></br>
+                        <label style="text-decoration: none" id="lbl3">
+                            Last Release: (May 07, 2026)
+                        </label> <!--Last Release: Last Release:  (Apr 27, 2026),(Last Release: (Apr 7, 2026)(Mar 31, 2026)(Jan 23, 2026)(Nov 21, 2025)(Mar 17, 2025)(Mar 7, 2025)(Jan 30, 2025)(Jan 27, 2025)(Dec 29, 2024),Dec 2, 2024)(Aug 29, 2024) (Jul 18, 2024)(Jun 28, 2024)(May 13, 2024)(May 2, 2024)(Apr 19, 2024)(Apr 17, 2024)(Apr 15, 2024)(Mar 20, 2024)(Mar 07, 2024)(Jan 30, 2024)(Jan 19, 2024)(Dec 08, 2023)(Nov 29, 2023)(Nov 15, 2023)(Oct 06, 2023)(Aug 28, 2023)(Jun 02, 2023)(May 04, 2023) (Feb 07, 2023)(Feb 03, 2023)(Jan 12, 2023)(Dec 01, 2022)(Nov 16, 2022)(Oct 26, 2022)(Oct 12, 2022)(Jul 22, 2022)(Apr 13, 2022,(Mar 1, 2022,Jan 19, 2022,Dec 28, 2021 - KWMS)(Nov 18, 2021 - KWMS, Nov 09, 2021 - KWMS,Oct 15, 2021 - KWMS,Oct 13, 2021 - KWMS,Oct 05, 2021 - KWMS, Aug 20, 2021 - KWMS)(Jul 12, 2021 - KWMS)(Jul 08, 2021 - KWMS)(Jul 06, 2021 - KWMS)(Jun 25, 2021 - KWMS)(Jun 14, 2021 - KWMS)((Jun 10, 2021 - KWMS)(May 28, 2021 - KWMS)(May 7, 2021 - KWMS)(May 5, 2021 - KWMS)(Apr 5, 2021 - KWMS)(Feb 17, 2021 - KWMS)(Jan 22, 2021 - KWMS) -->
+                    </label>
+                    
+                </div>
+                <div class="modal-footer" style="font-size: smaller; margin: 0px auto; text-align: center;">
+                    Copyright © 2016. Komatsu Middle East FZE. All rights reserved.
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+
+        $(document).on('click', "#btnAbout", function () {
+
+            $("#AbouModal").modal();
+        });
+
+    </script>
+    
+    
+    <script src="/kmewebportal/Scripts/SignalR/jquery.signalR-1.1.4.min.js" type="text/javascript"></script>
+    <script src="/kmewebportal/signalr/hubs" type="text/javascript"></script>
+    <script type="text/javascript">
+
+    $(function () {
+        ///This is proxy method call to Start Communication
+        $.connection.hub.start().done(function () {
+        });
+    });
+
+        var chat = $.connection.clientAlertHub;
+
+        chat.client.BroadCastClient = function (Message, dtOffLine, dtAtWhichShowMessage, dtCurrent, dtOnLine)
+        {
+          //Cond: Current server time is less than PDX offline DateTime and difference is also less than 15 mins.
+          //      Notification is shown to loggedin users
+          if(new Date(dtCurrent) >= new Date(dtAtWhichShowMessage) && new Date(dtCurrent) < new Date(dtOffLine))
+          {
+            if($(".TestVersionDiv").length>0)
+            {
+                $("#lblVersionInfo").html(Message);
+                $("#lblVersionInfo").removeClass('clsBoldMsg');
+                $("#lblVersionInfo").addClass('clsNormalMsg');
+            }
+          }
+          else
+          {
+              $("#lblVersionInfo").html('');
+          }
+
+          //Cond: Current server time is greater than eqaul to offline DateTime.
+          //      Logout and redirect to SSO dashboard
+          if(new Date(dtCurrent) >= new Date(dtOffLine) && new Date(dtCurrent) <= new Date(dtOnLine))
+          {
+               $.post("/kmewebportal/User/LogOff","",function (url)
+               {
+                  window.location.href=url;
+                    //window.location.href="/kmewebportal/";
+
+                 });
+          }
+            $.connection.hub.stop();
+            console.log('connection closed...');
+        };
+
+
+
+    </script>
+</body>
+</html>

@@ -12,6 +12,7 @@ import { getManagementDashboard } from '../../lib/api';
 const modules = [
   { title: 'Technicians Management', href: '/management/technicians', status: 'Live', tone: 'live', icon: 'technicians', description: 'Technician records, shifts, regions, skills, and dispatch availability.' },
   { title: 'Scheduling', href: '/management/scheduling', status: 'Live', tone: 'live', icon: 'scheduling', description: 'Daily roster control, work windows, task groups, and technician assignment.' },
+  { title: 'Parts Inquiry Hub', href: '/management/parts-inquiry', status: 'Live', tone: 'live', icon: 'parts', description: 'Komatsu PDX multi-part inquiry tool with live stock and alternative parts.' },
   { title: 'Engineering Workspace', href: '/workspace', status: 'Live', tone: 'live', icon: 'workspace', description: 'Creative canvas and day planner for engineering productivity.' },
   { title: 'EQP Module', href: '/eqp', status: 'Preserved / Live', tone: 'preserved', icon: 'eqp', description: 'Reports, machines, PDF archive, and report builder under one EQP workspace.' },
 ];
@@ -28,6 +29,13 @@ function ModuleIcon({ type }) {
     return (
       <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+      </svg>
+    );
+  }
+  if (type === 'parts') {
+    return (
+      <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
       </svg>
     );
   }

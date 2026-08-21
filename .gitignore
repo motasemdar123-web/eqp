@@ -14,3 +14,10 @@
 tmp-*
 backend/*.html
 backend/*.png
+**/__pycache__
+*.pyc
+**/browser_session/
+**/pdx_cookies.txt
+**/auth_state.json
+
+

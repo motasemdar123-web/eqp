@@ -242,6 +242,32 @@ async function dismissMyWorkspacePlannerTaskPush(req, res) {
   res.json({ success: true, task });
 }
 
+const komatsuInquiryService = require('../services/komatsuInquiryService');
+
+async function getKomatsuStatus(req, res) {
+  const status = await komatsuInquiryService.testPdxConnection();
+  res.json({ success: true, ...status, hasSavedCookie: Boolean(komatsuInquiryService.loadCookie()) });
+}
+
+async function saveKomatsuCookie(req, res) {
+  const { cookie } = req.body || {};
+  if (!cookie) {
+    return res.status(400).json({ success: false, message: 'Cookie content is required' });
+  }
+  const saved = komatsuInquiryService.saveCookie(cookie);
+  const status = await komatsuInquiryService.testPdxConnection(saved);
+  res.json({ success: true, ...status });
+}
+
+async function runKomatsuInquiry(req, res) {
+  const { parts, cookie } = req.body || {};
+  if (!Array.isArray(parts) || parts.length === 0) {
+    return res.status(400).json({ success: false, message: 'Array of parts is required' });
+  }
+  const results = await komatsuInquiryService.runBulkInquiry(parts, cookie);
+  res.json({ success: true, ...results });
+}
+
 module.exports = {
   login,
   unifiedLogin,
@@ -286,4 +312,8 @@ module.exports = {
   listMyWorkspacePlannerTaskPushes,
   planMyWorkspacePlannerTaskPush,
   dismissMyWorkspacePlannerTaskPush,
+  getKomatsuStatus,
+  saveKomatsuCookie,
+  runKomatsuInquiry,
 };
+
