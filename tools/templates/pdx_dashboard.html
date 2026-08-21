@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Komatsu PDX - Emergency Order Automation Engine</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        komatsu: {
+                            blue: '#002B7F',
+                            yellow: '#FFCC00',
+                            dark: '#0B1B3D',
+                            light: '#F4F7FB'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #1e293b;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #475569;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen font-sans">
+
+    <!-- Top Navigation Bar -->
+    <nav class="bg-komatsu-dark border-b border-slate-800 px-6 py-4 sticky top-0 z-50 shadow-md">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="flex items-center space-x-4">
+                <div class="bg-komatsu-blue px-3 py-1.5 rounded-lg border border-yellow-400/40 flex items-center space-x-2">
+                    <i class="fa-solid fa-truck-monster text-yellow-400 text-xl"></i>
+                    <span class="font-black tracking-wider text-white text-lg">KOMATSU</span>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold text-white flex items-center gap-2">
+                        PDX Emergency Order Automation
+                        <span class="text-xs bg-yellow-500/20 text-yellow-400 border border-yellow-500/40 px-2 py-0.5 rounded-full uppercase tracking-wider font-semibold">EO Multi-Batch</span>
+                    </h1>
+                    <p class="text-xs text-slate-400">Parts Distribution Express Batch Processing Engine</p>
+                </div>
+            </div>
+
+            <!-- Session Status & Quick Actions -->
+            <div class="flex items-center space-x-3 text-sm">
+                <div id="sessionStatusBadge" class="flex items-center space-x-2 bg-slate-800/80 border border-slate-700 px-3 py-1.5 rounded-lg">
+                    <span class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse" id="statusDot"></span>
+                    <span id="sessionStatusText" class="text-xs font-medium text-slate-300">Checking Session...</span>
+                </div>
+                <button onclick="openCookieModal()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-1.5 rounded-lg border border-slate-700 text-xs font-medium flex items-center space-x-1.5 transition">
+                    <i class="fa-solid fa-key text-yellow-400"></i>
+                    <span>Session Cookies</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <main class="max-w-7xl mx-auto p-6 space-y-6">
+
+        <!-- Navigation Tabs -->
+        <div class="flex border-b border-slate-800 space-x-4">
+            <button onclick="switchTab('tab-planner')" id="btn-tab-planner" class="tab-btn pb-3 px-2 font-semibold text-sm border-b-2 border-yellow-400 text-yellow-400 flex items-center space-x-2">
+                <i class="fa-solid fa-layer-group"></i>
+                <span>Emergency Order Planner & Runner</span>
+            </button>
+            <button onclick="switchTab('tab-part-lookup')" id="btn-tab-part-lookup" class="tab-btn pb-3 px-2 font-semibold text-sm border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center space-x-2">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <span>Part Master Explorer</span>
+            </button>
+            <button onclick="switchTab('tab-fleet')" id="btn-tab-fleet" class="tab-btn pb-3 px-2 font-semibold text-sm border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center space-x-2">
+                <i class="fa-solid fa-list-check"></i>
+                <span>Customer Fleet Database (<span id="totalFleetCount">281</span>)</span>
+            </button>
+        </div>
+
+        <!-- TAB 1: ORDER PLANNER & RUNNER -->
+        <div id="tab-planner" class="space-y-6">
+
+            <!-- Top Grid: Part Config + Fleet Selection -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+                <!-- Column 1: Part & Order Parameters (5 cols) -->
+                <div class="lg:col-span-5 bg-slate-800/60 border border-slate-700/70 rounded-xl p-5 space-y-4 shadow-sm backdrop-blur-sm">
+                    <div class="flex items-center justify-between border-b border-slate-700 pb-3">
+                        <h2 class="font-bold text-white flex items-center space-x-2 text-sm uppercase tracking-wide">
+                            <i class="fa-solid fa-cube text-yellow-400"></i>
+                            <span>1. Part & Quantity Setup</span>
+                        </h2>
+                        <span class="text-xs text-slate-400">Step 1 of 3</span>
+                    </div>
+
+                    <!-- Part Number Input & Live Search -->
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-semibold text-slate-300">Komatsu Part Number</label>
+                        <div class="flex space-x-2">
+                            <div class="relative flex-1">
+                                <input type="text" id="inputPartNo" placeholder="e.g. 6745-12-3100 or 600-319-3750" 
+                                    class="w-full bg-slate-900 border border-slate-600 rounded-lg px-3.5 py-2 text-sm text-white focus:outline-none focus:border-yellow-400 uppercase font-mono">
+                            </div>
+                            <button onclick="lookupPart()" id="btnLookup" class="bg-komatsu-blue hover:bg-blue-800 text-white px-4 py-2 rounded-lg text-xs font-bold transition flex items-center space-x-1.5 border border-blue-500/30 shadow">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                                <span>Lookup</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Part Info Card (Live Readout) -->
+                    <div id="partInfoCard" class="hidden bg-slate-900/90 border border-slate-700 rounded-lg p-3.5 space-y-2 text-xs">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <span class="text-slate-400 block text-[10px] uppercase">Description</span>
+                                <span id="partDesc" class="font-bold text-yellow-400 text-sm">-</span>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-slate-400 block text-[10px] uppercase">Qty By Unit (txtQBYU)</span>
+                                <span id="partQbyuBadge" class="inline-block bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded font-mono font-bold text-sm">1</span>
+                            </div>
+                        </div>
+                        <div class="border-t border-slate-800 pt-2 flex justify-between text-slate-300">
+                            <div>List Price: <span id="partPrice" class="font-semibold text-white">-</span></div>
+                            <div>Weight: <span id="partWeight" class="font-semibold text-white">-</span> gm</div>
+                            <div>Rank: <span id="partRank" class="font-semibold text-white">-</span></div>
+                        </div>
+                        <div class="border-t border-slate-800 pt-2">
+                            <span class="text-slate-400 block text-[10px] uppercase mb-1">Applicable Models</span>
+                            <p id="partModelsSnippet" class="text-slate-300 font-mono text-[11px] max-h-16 overflow-y-auto custom-scrollbar bg-slate-950 p-1.5 rounded border border-slate-800">-</p>
+                        </div>
+                    </div>
+
+                    <!-- Quantities & Splitting -->
+                    <div class="grid grid-cols-2 gap-3 pt-1">
+                        <div class="space-y-1.5">
+                            <label class="text-xs font-semibold text-slate-300">Total Qty Needed</label>
+                            <input type="number" id="inputTotalQty" value="30" min="1" oninput="updatePlanCalculations()"
+                                class="w-full bg-slate-900 border border-slate-600 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-yellow-400 font-mono font-bold">
+                        </div>
+                        <div class="space-y-1.5">
+                            <label class="text-xs font-semibold text-slate-300 flex items-center justify-between">
+                                <span>Max Qty / Machine</span>
+                                <span class="text-[10px] text-yellow-400" title="Auto-filled from Part Master txtQBYU">Auto-Sync</span>
+                            </label>
+                            <input type="number" id="inputMaxQtyPerOrder" value="6" min="1" oninput="updatePlanCalculations()"
+                                class="w-full bg-slate-900 border border-slate-600 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-yellow-400 font-mono font-bold">
+                        </div>
+                    </div>
+
+                    <!-- Calculation Summary Banner -->
+                    <div class="bg-komatsu-blue/20 border border-blue-500/30 rounded-lg p-3 flex items-center justify-between">
+                        <div>
+                            <span class="text-xs text-slate-300 block">Orders Required:</span>
+                            <span id="badgeTotalOrders" class="text-lg font-black text-yellow-400">5 Orders</span>
+                        </div>
+                        <div class="text-right text-xs text-slate-300">
+                            <div>Batch size: <span id="badgeBatchAlloc" class="font-bold text-white">6 pcs × 5</span></div>
+                            <div class="text-[11px] text-slate-400">Total: <span id="badgeTotalParts" class="font-bold text-white">30 pcs</span></div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Column 2: Fleet & Machine Matching (7 cols) -->
+                <div class="lg:col-span-7 bg-slate-800/60 border border-slate-700/70 rounded-xl p-5 space-y-4 shadow-sm backdrop-blur-sm">
+                    <div class="flex items-center justify-between border-b border-slate-700 pb-3">
+                        <h2 class="font-bold text-white flex items-center space-x-2 text-sm uppercase tracking-wide">
+                            <i class="fa-solid fa-truck-ramp-box text-yellow-400"></i>
+                            <span>2. Target Customer & Machine Fleet</span>
+                        </h2>
+                        <button onclick="toggleCustomMachineModal()" class="text-xs text-yellow-400 hover:text-yellow-300 flex items-center space-x-1 underline">
+                            <i class="fa-solid fa-plus"></i>
+                            <span>Custom / Unlisted Machine</span>
+                        </button>
+                    </div>
+
+                    <!-- Dropdowns Row -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div class="space-y-1.5">
+                            <label class="text-xs font-semibold text-slate-300">Customer</label>
+                            <select id="selectCustomer" onchange="onCustomerChange()"
+                                class="w-full bg-slate-900 border border-slate-600 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-yellow-400">
+                                <option value="">-- Select Customer --</option>
+                            </select>
+                        </div>
+                        <div class="space-y-1.5">
+                            <label class="text-xs font-semibold text-slate-300">Machine Type</label>
+                            <select id="selectMachineType" onchange="onMachineTypeChange()"
+                                class="w-full bg-slate-900 border border-slate-600 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-yellow-400">
+                                <option value="">-- All Types --</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Model Dropdown with Compatibility Flag -->
+                    <div class="space-y-1.5">
+                        <div class="flex justify-between items-center">
+                            <label class="text-xs font-semibold text-slate-300">Machine Model</label>
+                            <span id="modelFilterNote" class="text-[11px] text-emerald-400 hidden"><i class="fa-solid fa-filter"></i> Highlighting compatible models</span>
+                        </div>
+                        <select id="selectModel" onchange="onModelChange()"
+                            class="w-full bg-slate-900 border border-slate-600 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-yellow-400">
+                            <option value="">-- Select Model --</option>
+                        </select>
+                    </div>
+
+                    <!-- Available Fleet Serials List -->
+                    <div class="space-y-1.5">
+                        <div class="flex justify-between items-center text-xs">
+                            <span class="font-semibold text-slate-300">Matching Machine Serials in Fleet:</span>
+                            <span id="matchingSerialsCount" class="text-slate-400 font-mono">0 machines</span>
+                        </div>
+                        <div id="fleetSerialsContainer" class="bg-slate-900 border border-slate-700/80 rounded-lg p-3 max-h-36 overflow-y-auto custom-scrollbar flex flex-wrap gap-2">
+                            <span class="text-xs text-slate-500 italic">Select a customer & model above to view available serial numbers</span>
+                        </div>
+                    </div>
+
+                    <!-- Sequence & Comments Config -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2 border-t border-slate-700">
+                        <div class="space-y-1.5">
+                            <label class="text-xs font-semibold text-slate-300 flex items-center justify-between">
+                                <span>Starting DB Order No</span>
+                                <button onclick="fetchLatestDbOrderNo()" class="text-[10px] text-yellow-400 hover:underline"><i class="fa-solid fa-rotate"></i> Auto-Detect</button>
+                            </label>
+                            <input type="text" id="inputStartingOrderNo" value="R153/2026"
+                                class="w-full bg-slate-900 border border-slate-600 rounded-lg px-3 py-1.5 text-xs text-white font-mono focus:outline-none focus:border-yellow-400 uppercase">
+                        </div>
+                        <div class="space-y-1.5">
+                            <label class="text-xs font-semibold text-slate-300">Comments</label>
+                            <input type="text" id="inputComments" value="Urgent"
+                                class="w-full bg-slate-900 border border-slate-600 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-yellow-400">
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Batch Preview Table -->
+            <div class="bg-slate-800/60 border border-slate-700/70 rounded-xl p-5 space-y-4 shadow-sm backdrop-blur-sm">
+                <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-3 border-b border-slate-700 pb-3">
+                    <div>
+                        <h2 class="font-bold text-white flex items-center space-x-2 text-sm uppercase tracking-wide">
+                            <i class="fa-solid fa-table-list text-yellow-400"></i>
+                            <span>3. Batch Order Plan Preview</span>
+                        </h2>
+                        <p class="text-xs text-slate-400">Review sequence of emergency orders before starting automated dispatch</p>
+                    </div>
+
+                    <!-- Actions & Safe Mode -->
+                    <div class="flex items-center space-x-3">
+                        <label class="flex items-center space-x-2 text-xs text-slate-300 cursor-pointer bg-slate-900 px-3 py-1.5 rounded-lg border border-slate-700">
+                            <input type="checkbox" id="chkDryRun" class="rounded text-yellow-400 focus:ring-0">
+                            <span>Safe Dry-Run (Simulation)</span>
+                        </label>
+
+                        <button onclick="generatePlanPreview()" class="bg-slate-700 hover:bg-slate-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold transition flex items-center space-x-1.5">
+                            <i class="fa-solid fa-arrows-rotate"></i>
+                            <span>Refresh Plan</span>
+                        </button>
+
+                        <button onclick="startBatchExecution()" id="btnStartBatch" class="bg-emerald-600 hover:bg-emerald-500 text-white px-5 py-1.5 rounded-lg text-xs font-bold transition flex items-center space-x-2 shadow-lg shadow-emerald-900/30">
+                            <i class="fa-solid fa-play"></i>
+                            <span>Execute Orders</span>
+                        </button>
+
+                        <button onclick="stopExecution()" id="btnStopBatch" class="hidden bg-rose-600 hover:bg-rose-500 text-white px-4 py-1.5 rounded-lg text-xs font-bold transition flex items-center space-x-1.5">
+                            <i class="fa-solid fa-stop"></i>
+                            <span>Stop</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Progress Bar (Active During Execution) -->
+                <div id="progressSection" class="hidden space-y-2 bg-slate-900 p-4 rounded-lg border border-slate-700">
+                    <div class="flex justify-between text-xs font-semibold">
+                        <span id="progressStatusText" class="text-yellow-400">Executing Orders: 0 / 0</span>
+                        <span id="progressPercentage" class="text-white font-mono">0%</span>
+                    </div>
+                    <div class="w-full bg-slate-800 rounded-full h-2.5 overflow-hidden">
+                        <div id="progressBarFill" class="bg-yellow-400 h-2.5 rounded-full transition-all duration-300" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <!-- Table -->
+                <div class="overflow-x-auto custom-scrollbar border border-slate-700/80 rounded-lg">
+                    <table class="w-full text-left text-xs text-slate-300">
+                        <thead class="bg-slate-900 text-slate-400 uppercase font-semibold text-[11px] border-b border-slate-700">
+                            <tr>
+                                <th class="py-2.5 px-3">#</th>
+                                <th class="py-2.5 px-3">DB Order No</th>
+                                <th class="py-2.5 px-3">Customer</th>
+                                <th class="py-2.5 px-3">Machine Model</th>
+                                <th class="py-2.5 px-3">Serial No</th>
+                                <th class="py-2.5 px-3">Part No</th>
+                                <th class="py-2.5 px-3 text-center">Batch Qty</th>
+                                <th class="py-2.5 px-3 text-center">Cycle Note</th>
+                                <th class="py-2.5 px-3">Quotation No</th>
+                                <th class="py-2.5 px-3 text-center">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="planTableBody" class="divide-y divide-slate-800 font-mono">
+                            <tr>
+                                <td colspan="10" class="py-6 text-center text-slate-500 font-sans">
+                                    Configure Part and Fleet parameters above to generate plan preview
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Live Log Terminal & Export -->
+                <div class="space-y-2 pt-2">
+                    <div class="flex justify-between items-center text-xs">
+                        <span class="font-bold text-slate-300 flex items-center space-x-1.5">
+                            <i class="fa-solid fa-terminal text-yellow-400"></i>
+                            <span>Live Execution Terminal</span>
+                        </span>
+                        <div class="flex space-x-2">
+                            <button onclick="clearLogs()" class="text-[11px] text-slate-400 hover:text-white"><i class="fa-solid fa-trash-can"></i> Clear</button>
+                            <button onclick="exportResultsCsv()" class="text-[11px] text-yellow-400 hover:underline"><i class="fa-solid fa-file-excel"></i> Export Report (CSV)</button>
+                        </div>
+                    </div>
+                    <div id="liveTerminal" class="bg-slate-950 border border-slate-800 rounded-lg p-3 font-mono text-[11px] text-emerald-400 h-40 overflow-y-auto custom-scrollbar space-y-1">
+                        <div class="text-slate-500">[Ready] Komatsu PDX Automation Engine initialized.</div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- TAB 2: PART MASTER EXPLORER -->
+        <div id="tab-part-lookup" class="hidden space-y-6">
+            <div class="bg-slate-800/60 border border-slate-700/70 rounded-xl p-5 space-y-4">
+                <h2 class="font-bold text-white text-sm uppercase tracking-wide flex items-center space-x-2">
+                    <i class="fa-solid fa-magnifying-glass text-yellow-400"></i>
+                    <span>Part Master Search & Applicable Fleet Models</span>
+                </h2>
+                <div class="flex space-x-3 max-w-xl">
+                    <input type="text" id="tabLookupPartNo" placeholder="Enter Part No (e.g. 6745-12-3100)"
+                        class="flex-1 bg-slate-900 border border-slate-600 rounded-lg px-3.5 py-2 text-sm text-white focus:outline-none focus:border-yellow-400 uppercase font-mono">
+                    <button onclick="explorePartMaster()" class="bg-komatsu-blue hover:bg-blue-800 text-white px-5 py-2 rounded-lg text-xs font-bold transition">Search Master</button>
+                </div>
+
+                <div id="tabLookupResults" class="hidden bg-slate-900 border border-slate-700 rounded-lg p-4 space-y-3">
+                    <!-- Dynamic Details Injected Here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 3: CUSTOMER FLEET DATABASE -->
+        <div id="tab-fleet" class="hidden space-y-6">
+            <div class="bg-slate-800/60 border border-slate-700/70 rounded-xl p-5 space-y-4">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
+                    <h2 class="font-bold text-white text-sm uppercase tracking-wide flex items-center space-x-2">
+                        <i class="fa-solid fa-database text-yellow-400"></i>
+                        <span>Customer Machine Database</span>
+                    </h2>
+                    <div class="flex items-center space-x-3">
+                        <input type="text" id="fleetSearchFilter" placeholder="Filter customer, model, serial..." oninput="filterFleetTable()"
+                            class="bg-slate-900 border border-slate-600 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-yellow-400">
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto custom-scrollbar border border-slate-700 rounded-lg max-h-96">
+                    <table class="w-full text-left text-xs text-slate-300">
+                        <thead class="bg-slate-900 text-slate-400 uppercase font-semibold text-[11px] sticky top-0 border-b border-slate-700">
+                            <tr>
+                                <th class="py-2.5 px-3">Customer</th>
+                                <th class="py-2.5 px-3">Machine Type</th>
+                                <th class="py-2.5 px-3">Model - Type</th>
+                                <th class="py-2.5 px-3 font-mono">Serial</th>
+                            </tr>
+                        </thead>
+                        <tbody id="fleetDatabaseBody" class="divide-y divide-slate-800">
+                            <!-- Populated via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Modal: Session Cookie Editor -->
+    <div id="cookieModal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-slate-800 border border-slate-700 rounded-xl max-w-lg w-full p-5 space-y-4 shadow-2xl">
+            <div class="flex justify-between items-center border-b border-slate-700 pb-3">
+                <h3 class="font-bold text-white flex items-center space-x-2 text-sm">
+                    <i class="fa-solid fa-cookie-bite text-yellow-400"></i>
+                    <span>PDX Session Cookies</span>
+                </h3>
+                <button onclick="closeCookieModal()" class="text-slate-400 hover:text-white text-lg">&times;</button>
+            </div>
+            <p class="text-xs text-slate-300">Paste your `.AspNet.Cookies` or full cookie string from browser DevTools:</p>
+            <textarea id="txtModalCookies" rows="5" class="w-full bg-slate-900 border border-slate-600 rounded-lg p-2.5 text-xs text-slate-200 font-mono focus:outline-none focus:border-yellow-400 custom-scrollbar" placeholder="SelectedLanguage=; .AspNet.Cookies=...; ASP.NET_SessionId=..."></textarea>
+            <div class="flex justify-between items-center pt-2">
+                <button onclick="testSessionConnection()" class="bg-slate-700 hover:bg-slate-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold">Test Connection</button>
+                <div class="space-x-2">
+                    <button onclick="closeCookieModal()" class="bg-slate-700 text-slate-300 px-3 py-1.5 rounded-lg text-xs">Cancel</button>
+                    <button onclick="saveCookiesFromModal()" class="bg-komatsu-blue hover:bg-blue-800 text-white px-4 py-1.5 rounded-lg text-xs font-bold">Save & Apply</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Custom Machine Adder -->
+    <div id="customMachineModal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-slate-800 border border-slate-700 rounded-xl max-w-md w-full p-5 space-y-4 shadow-2xl">
+            <div class="flex justify-between items-center border-b border-slate-700 pb-3">
+                <h3 class="font-bold text-white flex items-center space-x-2 text-sm">
+                    <i class="fa-solid fa-plus-circle text-yellow-400"></i>
+                    <span>Add Custom Customer & Machine</span>
+                </h3>
+                <button onclick="toggleCustomMachineModal()" class="text-slate-400 hover:text-white text-lg">&times;</button>
+            </div>
+            <div class="space-y-3 text-xs">
+                <div>
+                    <label class="font-semibold text-slate-300 block mb-1">Customer Name</label>
+                    <input type="text" id="customCustName" placeholder="e.g. LAALA AL-KUWAIT REAL ESTATE" class="w-full bg-slate-900 border border-slate-600 rounded-lg p-2 text-white">
+                </div>
+                <div>
+                    <label class="font-semibold text-slate-300 block mb-1">Machine Type</label>
+                    <input type="text" id="customMachineType" placeholder="e.g. Excavator" class="w-full bg-slate-900 border border-slate-600 rounded-lg p-2 text-white">
+                </div>
+                <div>
+                    <label class="font-semibold text-slate-300 block mb-1">Model Code</label>
+                    <input type="text" id="customModelCode" placeholder="e.g. PC500LC-10R" class="w-full bg-slate-900 border border-slate-600 rounded-lg p-2 text-white uppercase font-mono">
+                </div>
+                <div>
+                    <label class="font-semibold text-slate-300 block mb-1">Serial Numbers (comma separated)</label>
+                    <input type="text" id="customSerials" placeholder="e.g. 100433, 100434, 100435" class="w-full bg-slate-900 border border-slate-600 rounded-lg p-2 text-white font-mono">
+                </div>
+            </div>
+            <div class="flex justify-end space-x-2 pt-2 border-t border-slate-700">
+                <button onclick="toggleCustomMachineModal()" class="bg-slate-700 text-slate-300 px-3 py-1.5 rounded-lg text-xs">Cancel</button>
+                <button onclick="saveCustomMachine()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-1.5 rounded-lg text-xs font-bold">Add to Fleet</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Application Script -->
+    <script>
+        // Global State
+        let fleetData = [];
+        let allCustomers = [];
+        let currentLookedUpPart = null;
+        let plannedOrders = [];
+        let isExecuting = false;
+        let shouldStop = false;
+
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', async () => {
+            await checkSession();
+            await loadFleet();
+            await fetchLatestDbOrderNo();
+        });
+
+        // Tab Switcher
+        function switchTab(tabId) {
+            ['tab-planner', 'tab-part-lookup', 'tab-fleet'].forEach(id => {
+                document.getElementById(id).classList.add('hidden');
+                document.getElementById('btn-' + id).classList.remove('border-yellow-400', 'text-yellow-400');
+                document.getElementById('btn-' + id).classList.add('border-transparent', 'text-slate-400');
+            });
+            document.getElementById(tabId).classList.remove('hidden');
+            document.getElementById('btn-' + tabId).classList.add('border-yellow-400', 'text-yellow-400');
+            document.getElementById('btn-' + tabId).classList.remove('border-transparent', 'text-slate-400');
+        }
+
+        // Session Checking
+        async function checkSession() {
+            try {
+                const res = await fetch('/api/session/status');
+                const data = await res.json();
+                const dot = document.getElementById('statusDot');
+                const txt = document.getElementById('sessionStatusText');
+                if (data.active) {
+                    dot.className = 'w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-sm shadow-emerald-400';
+                    txt.innerText = 'Connected: ' + data.user;
+                    txt.className = 'text-xs font-medium text-emerald-400';
+                } else {
+                    dot.className = 'w-2.5 h-2.5 rounded-full bg-rose-500';
+                    txt.innerText = 'Session Expired';
+                    txt.className = 'text-xs font-medium text-rose-400';
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        // Load Fleet
+        async function loadFleet() {
+            try {
+                const res = await fetch('/api/fleet/all');
+                const data = await res.json();
+                fleetData = data.machines || [];
+                allCustomers = data.customers || [];
+                document.getElementById('totalFleetCount').innerText = fleetData.length;
+
+                populateCustomerDropdown();
+                populateFleetTable(fleetData);
+            } catch (e) {
+                logTerminal('Error loading fleet: ' + e, 'error');
+            }
+        }
+
+        function populateCustomerDropdown() {
+            const sel = document.getElementById('selectCustomer');
+            sel.innerHTML = '<option value="">-- Select Customer --</option>';
+            allCustomers.forEach(c => {
+                const opt = document.createElement('option');
+                opt.value = c;
+                opt.innerText = c;
+                sel.appendChild(opt);
+            });
+        }
+
+        function onCustomerChange() {
+            const cust = document.getElementById('selectCustomer').value;
+            const typeSel = document.getElementById('selectMachineType');
+            typeSel.innerHTML = '<option value="">-- All Types --</option>';
+            
+            const filtered = cust ? fleetData.filter(m => m.customer.toLowerCase() === cust.toLowerCase()) : fleetData;
+            const types = [...new Set(filtered.map(m => m.machine_type).filter(Boolean))].sort();
+            types.forEach(t => {
+                const opt = document.createElement('option');
+                opt.value = t;
+                opt.innerText = t;
+                typeSel.appendChild(opt);
+            });
+
+            onMachineTypeChange();
+        }
+
+        function onMachineTypeChange() {
+            const cust = document.getElementById('selectCustomer').value;
+            const type = document.getElementById('selectMachineType').value;
+            const modelSel = document.getElementById('selectModel');
+            modelSel.innerHTML = '<option value="">-- Select Model --</option>';
+
+            let filtered = fleetData;
+            if (cust) filtered = filtered.filter(m => m.customer.toLowerCase() === cust.toLowerCase());
+            if (type) filtered = filtered.filter(m => m.machine_type.toLowerCase() === type.toLowerCase());
+
+            const models = [...new Set(filtered.map(m => m.model).filter(Boolean))].sort();
+            const compatModels = currentLookedUpPart ? currentLookedUpPart.models.map(m => m.toUpperCase()) : [];
+
+            models.forEach(m => {
+                const opt = document.createElement('option');
+                opt.value = m;
+                // Check compatibility
+                const isCompat = compatModels.some(cm => cm.includes(m.toUpperCase()) || m.toUpperCase().includes(cm));
+                opt.innerText = isCompat ? `⭐ ${m} (Compatible)` : m;
+                if (isCompat) opt.className = 'font-bold text-yellow-400 bg-slate-900';
+                modelSel.appendChild(opt);
+            });
+
+            onModelChange();
+        }
+
+        function onModelChange() {
+            const cust = document.getElementById('selectCustomer').value;
+            const type = document.getElementById('selectMachineType').value;
+            const model = document.getElementById('selectModel').value;
+
+            let filtered = fleetData;
+            if (cust) filtered = filtered.filter(m => m.customer.toLowerCase() === cust.toLowerCase());
+            if (type) filtered = filtered.filter(m => m.machine_type.toLowerCase() === type.toLowerCase());
+            if (model) filtered = filtered.filter(m => m.model.toLowerCase() === model.toLowerCase());
+
+            const container = document.getElementById('fleetSerialsContainer');
+            document.getElementById('matchingSerialsCount').innerText = `${filtered.length} machines`;
+
+            if (filtered.length === 0) {
+                container.innerHTML = '<span class="text-xs text-slate-500 italic">No machines match selected criteria</span>';
+                return;
+            }
+
+            container.innerHTML = '';
+            filtered.forEach(m => {
+                const chip = document.createElement('div');
+                chip.className = 'bg-slate-800 border border-slate-700 px-2.5 py-1 rounded text-xs text-slate-200 font-mono flex items-center space-x-1';
+                chip.innerHTML = `<span class="text-yellow-400 font-bold">${m.model}</span> <span class="text-slate-500">|</span> <span>SN: ${m.serial}</span>`;
+                container.appendChild(chip);
+            });
+
+            generatePlanPreview();
+        }
+
+        // Part Lookup
+        async function lookupPart() {
+            const partNo = document.getElementById('inputPartNo').value.trim();
+            if (!partNo) {
+                alert('Please enter a Part Number');
+                return;
+            }
+
+            const btn = document.getElementById('btnLookup');
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Searching...';
+            btn.disabled = true;
+
+            try {
+                const res = await fetch(`/api/part/lookup?part_no=${encodeURIComponent(partNo)}`);
+                const data = await res.json();
+                if (data.error) {
+                    alert('Error: ' + data.error);
+                    return;
+                }
+
+                currentLookedUpPart = data;
+                document.getElementById('partDesc').innerText = data.description || 'Unknown Part';
+                document.getElementById('partQbyuBadge').innerText = data.qty_by_unit || 1;
+                document.getElementById('partPrice').innerText = `$${data.price}`;
+                document.getElementById('partWeight').innerText = data.weight;
+                document.getElementById('partRank').innerText = data.rank || '-';
+                document.getElementById('partModelsSnippet').innerText = data.models.length > 0 ? data.models.join('; ') : 'No specific model restrictions';
+
+                document.getElementById('partInfoCard').classList.remove('hidden');
+
+                // Auto-fill Max Qty per Order from txtQBYU
+                if (data.qty_by_unit && data.qty_by_unit > 0) {
+                    document.getElementById('inputMaxQtyPerOrder').value = data.qty_by_unit;
+                }
+
+                document.getElementById('modelFilterNote').classList.remove('hidden');
+                onMachineTypeChange(); // re-sort/highlight compatible models
+                updatePlanCalculations();
+                logTerminal(`[Lookup Success] Part: ${partNo} (${data.description}), QtyByUnit: ${data.qty_by_unit}, Compatible Models: ${data.models.length}`, 'success');
+            } catch (e) {
+                logTerminal(`Lookup failed for ${partNo}: ${e}`, 'error');
+            } finally {
+                btn.innerHTML = '<i class="fa-solid fa-magnifying-glass"></i> <span>Lookup</span>';
+                btn.disabled = false;
+            }
+        }
+
+        function updatePlanCalculations() {
+            const totalQty = parseInt(document.getElementById('inputTotalQty').value) || 0;
+            const maxPerOrder = parseInt(document.getElementById('inputMaxQtyPerOrder').value) || 1;
+            const totalOrders = Math.ceil(totalQty / maxPerOrder);
+
+            document.getElementById('badgeTotalOrders').innerText = `${totalOrders} Orders`;
+            document.getElementById('badgeBatchAlloc').innerText = `${maxPerOrder} pcs × ${totalOrders}`;
+            document.getElementById('badgeTotalParts').innerText = `${totalQty} pcs`;
+
+            generatePlanPreview();
+        }
+
+        // Fetch Latest DB Order No
+        async function fetchLatestDbOrderNo() {
+            try {
+                const res = await fetch('/api/db-order-no/latest');
+                const data = await res.json();
+                if (data.next_order_no) {
+                    document.getElementById('inputStartingOrderNo').value = data.next_order_no;
+                    logTerminal(`Detected latest DB sequence. Starting at ${data.next_order_no}`, 'info');
+                    generatePlanPreview();
+                }
+            } catch (e) {
+                console.error('Error fetching DB Order No:', e);
+            }
+        }
+
+        // Generate Plan Preview Table
+        function generatePlanPreview() {
+            const tbody = document.getElementById('planTableBody');
+            const partNo = document.getElementById('inputPartNo').value.trim() || '6745-12-3100';
+            const totalQty = parseInt(document.getElementById('inputTotalQty').value) || 0;
+            const maxPerOrder = parseInt(document.getElementById('inputMaxQtyPerOrder').value) || 1;
+            const cust = document.getElementById('selectCustomer').value || 'DAR AL HAI';
+            const model = document.getElementById('selectModel').value || 'PC500LC-10R';
+            const startingOrderNo = document.getElementById('inputStartingOrderNo').value.trim() || 'R153/2026';
+
+            if (totalQty <= 0) {
+                tbody.innerHTML = '<tr><td colspan="10" class="py-6 text-center text-slate-500 font-sans">Enter valid total quantity</td></tr>';
+                return;
+            }
+
+            // Get available machines for this selection
+            let matchingMachines = fleetData.filter(m => {
+                let match = true;
+                if (cust && m.customer.toLowerCase() !== cust.toLowerCase()) match = false;
+                if (model && m.model.toLowerCase() !== model.toLowerCase()) match = false;
+                return match;
+            });
+
+            if (matchingMachines.length === 0) {
+                matchingMachines = [{ customer: cust, model: model, serial: '100433' }];
+            }
+
+            // Parse starting DB order sequence
+            const match = startingOrderNo.match(/R(\d+)\/(\d{4})/);
+            let seq = match ? parseInt(match[1]) : 1;
+            let year = match ? match[2] : '2026';
+
+            let remainingQty = totalQty;
+            plannedOrders = [];
+            let orderIdx = 0;
+
+            tbody.innerHTML = '';
+            while (remainingQty > 0) {
+                const batchQty = Math.min(remainingQty, maxPerOrder);
+                remainingQty -= batchQty;
+                orderIdx++;
+
+                const currentDbOrderNo = `R${seq}/${year}`;
+                seq++;
+
+                // Cycle machines
+                const machineIdx = (orderIdx - 1) % matchingMachines.length;
+                const cycleNum = Math.floor((orderIdx - 1) / matchingMachines.length) + 1;
+                const machine = matchingMachines[machineIdx];
+
+                const orderItem = {
+                    index: orderIdx,
+                    db_order_no: currentDbOrderNo,
+                    customer: cust,
+                    model: machine.model,
+                    serial: machine.serial,
+                    part_no: partNo,
+                    quantity: batchQty,
+                    cycle_num: cycleNum,
+                    quotation_no: '',
+                    status: 'PENDING'
+                };
+                plannedOrders.push(orderItem);
+
+                const tr = document.createElement('tr');
+                tr.id = `order-row-${orderIdx}`;
+                tr.className = 'hover:bg-slate-800/50 transition';
+                tr.innerHTML = `
+                    <td class="py-2.5 px-3 text-slate-400 font-semibold">${orderIdx}</td>
+                    <td class="py-2.5 px-3 font-bold text-yellow-400">${currentDbOrderNo}</td>
+                    <td class="py-2.5 px-3 text-slate-300 font-sans">${cust}</td>
+                    <td class="py-2.5 px-3 text-white">${machine.model}</td>
+                    <td class="py-2.5 px-3 text-slate-300">${machine.serial}</td>
+                    <td class="py-2.5 px-3 text-white">${partNo}</td>
+                    <td class="py-2.5 px-3 text-center font-bold text-emerald-400">${batchQty}</td>
+                    <td class="py-2.5 px-3 text-center text-xs">
+                        <span class="bg-slate-800 text-slate-400 px-2 py-0.5 rounded text-[10px]">Cycle ${cycleNum}</span>
+                    </td>
+                    <td class="py-2.5 px-3 text-yellow-300 font-bold" id="qtn-cell-${orderIdx}">-</td>
+                    <td class="py-2.5 px-3 text-center" id="status-cell-${orderIdx}">
+                        <span class="bg-slate-800 text-slate-400 px-2 py-0.5 rounded text-[10px]">Ready</span>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            }
+        }
+
+        // Batch Execution Engine
+        async function startBatchExecution() {
+            if (plannedOrders.length === 0) {
+                alert('No orders planned. Please configure parameters.');
+                return;
+            }
+
+            const isDryRun = document.getElementById('chkDryRun').checked;
+            const comments = document.getElementById('inputComments').value.trim() || 'Urgent';
+
+            if (!isDryRun) {
+                const confirmed = confirm(`Are you sure you want to create ${plannedOrders.length} LIVE Emergency Orders on Komatsu PDX?`);
+                if (!confirmed) return;
+            }
+
+            isExecuting = true;
+            shouldStop = false;
+            document.getElementById('btnStartBatch').classList.add('hidden');
+            document.getElementById('btnStopBatch').classList.remove('hidden');
+            document.getElementById('progressSection').classList.remove('hidden');
+
+            logTerminal(`[START] Starting batch execution (${plannedOrders.length} orders) - Mode: ${isDryRun ? 'DRY-RUN (Simulation)' : 'LIVE PDX'}`, 'info');
+
+            let successCount = 0;
+
+            for (let i = 0; i < plannedOrders.length; i++) {
+                if (shouldStop) {
+                    logTerminal('[STOPPED] Batch execution halted by user.', 'warn');
+                    break;
+                }
+
+                const order = plannedOrders[i];
+                const rowIdx = order.index;
+                const rowEl = document.getElementById(`order-row-${rowIdx}`);
+                const statusCell = document.getElementById(`status-cell-${rowIdx}`);
+                const qtnCell = document.getElementById(`qtn-cell-${rowIdx}`);
+
+                // Update UI state
+                statusCell.innerHTML = '<span class="bg-amber-500/20 text-amber-400 px-2 py-0.5 rounded text-[10px] animate-pulse">Running...</span>';
+                rowEl.classList.add('bg-slate-800');
+
+                // Update Progress bar
+                const progressPct = Math.round(((i) / plannedOrders.length) * 100);
+                document.getElementById('progressBarFill').style.width = `${progressPct}%`;
+                document.getElementById('progressPercentage').innerText = `${progressPct}%`;
+                document.getElementById('progressStatusText').innerText = `Processing Order ${rowIdx} of ${plannedOrders.length} (${order.db_order_no})...`;
+
+                logTerminal(`Processing #${rowIdx}: Order ${order.db_order_no}, Serial: ${order.serial}, Part: ${order.part_no} (Qty: ${order.quantity})...`, 'info');
+
+                try {
+                    const payload = {
+                        db_order_no: order.db_order_no,
+                        model_code: order.model,
+                        serial_no: order.serial,
+                        customer_detail: order.customer,
+                        comments: comments,
+                        parts: [{ part_no: order.part_no, quantity: order.quantity }],
+                        dry_run: isDryRun
+                    };
+
+                    const resp = await fetch('/api/order/execute', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    const result = await resp.json();
+
+                    if (result.status === 'SUCCESS') {
+                        order.quotation_no = result.quotation_no;
+                        order.status = 'SUCCESS';
+                        qtnCell.innerText = result.quotation_no;
+                        statusCell.innerHTML = '<span class="bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded text-[10px] font-bold">SUCCESS</span>';
+                        logTerminal(`✅ [#${rowIdx} SUCCESS] Created Quotation: ${result.quotation_no} for ${order.db_order_no}`, 'success');
+                        successCount++;
+                    } else {
+                        order.status = 'FAILED';
+                        statusCell.innerHTML = `<span class="bg-rose-500/20 text-rose-400 px-2 py-0.5 rounded text-[10px] font-bold" title="${result.error || 'Failed'}">FAILED</span>`;
+                        logTerminal(`❌ [#${rowIdx} FAILED] ${order.db_order_no}: ${result.error}`, 'error');
+                    }
+                } catch (err) {
+                    order.status = 'ERROR';
+                    statusCell.innerHTML = '<span class="bg-rose-500/20 text-rose-400 px-2 py-0.5 rounded text-[10px] font-bold">ERROR</span>';
+                    logTerminal(`❌ Network / Script error on #${rowIdx}: ${err}`, 'error');
+                }
+
+                // Brief pause between requests for server stability
+                await new Promise(r => setTimeout(r, 600));
+            }
+
+            // Finish
+            document.getElementById('progressBarFill').style.width = '100%';
+            document.getElementById('progressPercentage').innerText = '100%';
+            document.getElementById('progressStatusText').innerText = `Completed! ${successCount} / ${plannedOrders.length} orders created successfully.`;
+            document.getElementById('btnStartBatch').classList.remove('hidden');
+            document.getElementById('btnStopBatch').classList.add('hidden');
+            isExecuting = false;
+
+            logTerminal(`[FINISHED] Batch complete. ${successCount}/${plannedOrders.length} orders created successfully!`, 'success');
+        }
+
+        function stopExecution() {
+            shouldStop = true;
+            logTerminal('Stopping batch after current order completes...', 'warn');
+        }
+
+        // Terminal Logger
+        function logTerminal(msg, type = 'info') {
+            const term = document.getElementById('liveTerminal');
+            const line = document.createElement('div');
+            const time = new Date().toLocaleTimeString();
+            let colorClass = 'text-slate-300';
+            if (type === 'success') colorClass = 'text-emerald-400 font-semibold';
+            if (type === 'error') colorClass = 'text-rose-400 font-semibold';
+            if (type === 'warn') colorClass = 'text-yellow-400';
+            if (type === 'info') colorClass = 'text-blue-300';
+
+            line.className = `${colorClass}`;
+            line.innerText = `[${time}] ${msg}`;
+            term.appendChild(line);
+            term.scrollTop = term.scrollHeight;
+        }
+
+        function clearLogs() {
+            document.getElementById('liveTerminal').innerHTML = '';
+        }
+
+        // Export Results to CSV
+        function exportResultsCsv() {
+            if (plannedOrders.length === 0) {
+                alert('No orders to export');
+                return;
+            }
+            let csv = 'Index,DB Order No,Customer,Machine Model,Serial No,Part No,Batch Quantity,Quotation No,Status,Cycle\n';
+            plannedOrders.forEach(o => {
+                csv += `"${o.index}","${o.db_order_no}","${o.customer}","${o.model}","${o.serial}","${o.part_no}","${o.quantity}","${o.quotation_no}","${o.status}","Cycle ${o.cycle_num}"\n`;
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.setAttribute('href', url);
+            a.setAttribute('download', `Komatsu_EO_Orders_${new Date().toISOString().slice(0,10)}.csv`);
+            a.click();
+        }
+
+        // Fleet Table Populator
+        function populateFleetTable(machines) {
+            const tbody = document.getElementById('fleetDatabaseBody');
+            tbody.innerHTML = '';
+            machines.forEach(m => {
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-slate-800/50';
+                tr.innerHTML = `
+                    <td class="py-2 px-3 font-medium text-white">${m.customer}</td>
+                    <td class="py-2 px-3 text-slate-300">${m.machine_type}</td>
+                    <td class="py-2 px-3 text-yellow-400 font-bold font-mono">${m.model}</td>
+                    <td class="py-2 px-3 text-slate-300 font-mono">${m.serial}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function filterFleetTable() {
+            const q = document.getElementById('fleetSearchFilter').value.toLowerCase();
+            const filtered = fleetData.filter(m => 
+                m.customer.toLowerCase().includes(q) ||
+                m.machine_type.toLowerCase().includes(q) ||
+                m.model.toLowerCase().includes(q) ||
+                m.serial.toLowerCase().includes(q)
+            );
+            populateFleetTable(filtered);
+        }
+
+        // Modal Helpers
+        function openCookieModal() {
+            document.getElementById('cookieModal').classList.remove('hidden');
+        }
+        function closeCookieModal() {
+            document.getElementById('cookieModal').classList.add('hidden');
+        }
+        async function saveCookiesFromModal() {
+            const cookies = document.getElementById('txtModalCookies').value.trim();
+            if (!cookies) return;
+            const res = await fetch('/api/session/update', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ cookies: cookies })
+            });
+            const data = await res.json();
+            if (data.status === 'OK') {
+                closeCookieModal();
+                await checkSession();
+                logTerminal('Cookies updated successfully.', 'success');
+            }
+        }
+        async function testSessionConnection() {
+            const cookies = document.getElementById('txtModalCookies').value.trim();
+            const res = await fetch('/api/session/test', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ cookies: cookies })
+            });
+            const data = await res.json();
+            alert(data.message);
+        }
+
+        function toggleCustomMachineModal() {
+            const modal = document.getElementById('customMachineModal');
+            modal.classList.toggle('hidden');
+        }
+        async function saveCustomMachine() {
+            const cust = document.getElementById('customCustName').value.trim();
+            const type = document.getElementById('customMachineType').value.trim();
+            const model = document.getElementById('customModelCode').value.trim();
+            const serialsRaw = document.getElementById('customSerials').value.trim();
+
+            if (!cust || !model || !serialsRaw) {
+                alert('Please fill customer, model code, and serial numbers');
+                return;
+            }
+
+            const res = await fetch('/api/fleet/add-custom', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ customer: cust, machine_type: type, model: model, serials: serialsRaw })
+            });
+            const data = await res.json();
+            if (data.status === 'OK') {
+                toggleCustomMachineModal();
+                await loadFleet();
+                document.getElementById('selectCustomer').value = cust;
+                onCustomerChange();
+                document.getElementById('selectModel').value = model;
+                onModelChange();
+                logTerminal(`Added custom machine ${model} for ${cust}`, 'success');
+            }
+        }
+    </script>
+</body>
+</html>

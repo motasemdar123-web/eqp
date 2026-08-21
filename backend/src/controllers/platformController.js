@@ -243,6 +243,7 @@ async function dismissMyWorkspacePlannerTaskPush(req, res) {
 }
 
 const komatsuInquiryService = require('../services/komatsuInquiryService');
+const komatsuEoService = require('../services/komatsuEoService');
 
 async function getKomatsuStatus(req, res) {
   const status = await komatsuInquiryService.testPdxConnection();
@@ -266,6 +267,51 @@ async function runKomatsuInquiry(req, res) {
   }
   const results = await komatsuInquiryService.runBulkInquiry(parts, cookie);
   res.json({ success: true, ...results });
+}
+
+async function getKomatsuFleet(req, res) {
+  const data = await komatsuEoService.loadFleetData();
+  res.json({ success: true, ...data });
+}
+
+async function addKomatsuCustomMachine(req, res) {
+  const data = await komatsuEoService.addCustomMachine(req.body || {});
+  res.json({ success: true, ...data });
+}
+
+async function lookupKomatsuPartMaster(req, res) {
+  const { partNo } = req.query || {};
+  if (!partNo) {
+    return res.status(400).json({ success: false, message: 'Part number is required' });
+  }
+  const data = await komatsuEoService.lookupPartMaster(partNo);
+  res.json({ success: true, ...data });
+}
+
+async function getKomatsuLatestOrderNo(req, res) {
+  const { customerCode } = req.query || {};
+  const data = await komatsuEoService.getLatestDbOrderNo(customerCode || 'REG');
+  res.json({ success: true, ...data });
+}
+
+async function executeKomatsuEoOrder(req, res) {
+  const { dryRun, ...orderData } = req.body || {};
+  if (dryRun) {
+    const mockQtn = `0000${Math.floor(280350 + Math.random() * 9000)}`;
+    return res.json({
+      success: true,
+      status: 'SUCCESS',
+      quotation_no: mockQtn,
+      db_order_no: orderData.db_order_no,
+      model_code: orderData.model_code,
+      serial_no: orderData.serial_no,
+      customer: orderData.customer_detail,
+      dry_run: true,
+    });
+  }
+
+  const result = await komatsuEoService.executeSingleEmergencyOrder(orderData);
+  res.json({ success: true, ...result });
 }
 
 module.exports = {
@@ -315,5 +361,10 @@ module.exports = {
   getKomatsuStatus,
   saveKomatsuCookie,
   runKomatsuInquiry,
+  getKomatsuFleet,
+  addKomatsuCustomMachine,
+  lookupKomatsuPartMaster,
+  getKomatsuLatestOrderNo,
+  executeKomatsuEoOrder,
 };
 

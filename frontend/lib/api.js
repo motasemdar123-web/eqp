@@ -199,3 +199,29 @@ export function runKomatsuInquiry(parts, cookie = null) {
   });
 }
 
+export function getKomatsuFleet() {
+  return request('/api/komatsu/fleet');
+}
+
+export function addKomatsuCustomMachine(payload) {
+  return request('/api/komatsu/custom-machine', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+}
+
+export function lookupKomatsuPart(partNo) {
+  return request(`/api/komatsu/part-lookup?partNo=${encodeURIComponent(partNo)}`);
+}
+
+export function getKomatsuLatestOrderNo(customerCode = 'REG') {
+  return request(`/api/komatsu/latest-order-no?customerCode=${encodeURIComponent(customerCode)}`);
+}
+
+export function executeKomatsuEoOrder(payload) {
+  return request('/api/komatsu/eo-execute', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+}
+

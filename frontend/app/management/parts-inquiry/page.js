@@ -1,14 +1,22 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, useRef } from 'react';
 import SystemShell from '../../../components/SystemShell';
 import Card from '../../../components/ui/Card';
 import Badge from '../../../components/ui/Badge';
 import Button from '../../../components/ui/Button';
 import Field from '../../../components/ui/Field';
 import Toast from '../../../components/ui/Toast';
-import EmptyState from '../../../components/ui/EmptyState';
-import { getKomatsuStatus, saveKomatsuCookie, runKomatsuInquiry } from '../../../lib/api';
+import {
+  getKomatsuStatus,
+  saveKomatsuCookie,
+  runKomatsuInquiry,
+  getKomatsuFleet,
+  lookupKomatsuPart,
+  getKomatsuLatestOrderNo,
+  executeKomatsuEoOrder,
+  addKomatsuCustomMachine,
+} from '../../../lib/api';
 
 const SAMPLE_PARTS = [
   '6742-01-4540, 6',
@@ -36,7 +44,6 @@ function parseInputText(text) {
     const rawLine = lines[idx].trim();
     if (!rawLine) continue;
 
-    // Split on comma, semicolon, or tab
     const tokens = rawLine
       .replace(/\t/g, ',')
       .replace(/;/g, ',')
@@ -47,7 +54,6 @@ function parseInputText(text) {
     if (tokens.length === 0) continue;
     const partNo = tokens[0];
 
-    // Skip header row if present
     if (['sn', 'part number', 'part no', 'part_number', 'item', 'part', 'number'].includes(partNo.toLowerCase())) {
       continue;
     }
@@ -68,33 +74,74 @@ function parseInputText(text) {
   return rows;
 }
 
-export default function PartsInquiryPage() {
-  const [activeTab, setActiveTab] = useState('inquiry');
+export default function SparePartsPage() {
+  const [activeTab, setActiveTab] = useState('eo-dispatcher'); // 'eo-dispatcher' | 'inquiry' | 'split' | 'fleet'
   const [status, setStatus] = useState({ connected: false, message: 'Checking PDX status...' });
   const [loadingStatus, setLoadingStatus] = useState(true);
   const [cookieModalOpen, setCookieModalOpen] = useState(false);
   const [cookieInput, setCookieInput] = useState('');
   const [savingCookie, setSavingCookie] = useState(false);
+  const [toast, setToast] = useState(null);
 
+  // ==========================================
+  // TAB 1: EMERGENCY ORDER (EO) DISPATCHER STATE
+  // ==========================================
+  const [eoPartNo, setEoPartNo] = useState('6745-12-3100');
+  const [eoLookingUp, setEoLookingUp] = useState(false);
+  const [eoPartInfo, setEoPartInfo] = useState(null);
+  const [eoTotalQty, setEoTotalQty] = useState(30);
+  const [eoMaxQtyPerOrder, setEoMaxQtyPerOrder] = useState(6);
+  const [eoComments, setEoComments] = useState('Urgent');
+  const [eoStartingOrderNo, setEoStartingOrderNo] = useState('R153/2026');
+  const [eoDryRun, setEoDryRun] = useState(false);
+
+  // Fleet Selection
+  const [fleetData, setFleetData] = useState([]);
+  const [allCustomers, setAllCustomers] = useState([]);
+  const [selectedCustomer, setSelectedCustomer] = useState('');
+  const [selectedMachineType, setSelectedMachineType] = useState('');
+  const [selectedModel, setSelectedModel] = useState('');
+  const [customModalOpen, setCustomModalOpen] = useState(false);
+  const [customForm, setCustomForm] = useState({ customer: '', machine_type: 'Excavator', model: '', serials: '' });
+
+  // Execution Engine
+  const [plannedOrders, setPlannedOrders] = useState([]);
+  const [isExecutingEo, setIsExecutingEo] = useState(false);
+  const [eoExecutionIndex, setEoExecutionIndex] = useState(0);
+  const [eoLogs, setEoLogs] = useState([]);
+  const shouldStopEoRef = useRef(false);
+  const terminalBottomRef = useRef(null);
+
+  // ==========================================
+  // TAB 2 & 3: BULK INQUIRY STATE
+  // ==========================================
   const [pastedText, setPastedText] = useState(SAMPLE_PARTS.join('\n'));
   const [parsedQueue, setParsedQueue] = useState([]);
   const [isQuerying, setIsQuerying] = useState(false);
   const [queryProgress, setQueryProgress] = useState(null);
   const [results, setResults] = useState([]);
-  const [toast, setToast] = useState(null);
-
-  // Filters & Search
   const [searchFilter, setSearchFilter] = useState('');
-  const [typeFilter, setTypeFilter] = useState('ALL'); // 'ALL' | 'MAIN' | 'IN_STOCK'
+  const [typeFilter, setTypeFilter] = useState('ALL');
+  const [fleetSearchFilter, setFleetSearchFilter] = useState('');
 
   useEffect(() => {
     loadConnectionStatus();
+    loadFleetDatabase();
+    loadLatestOrderNumber();
   }, []);
 
   useEffect(() => {
     const parsed = parseInputText(pastedText);
     setParsedQueue(parsed);
   }, [pastedText]);
+
+  useEffect(() => {
+    generatePlan();
+  }, [eoPartNo, eoTotalQty, eoMaxQtyPerOrder, selectedCustomer, selectedModel, eoStartingOrderNo, fleetData]);
+
+  useEffect(() => {
+    terminalBottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [eoLogs]);
 
   async function loadConnectionStatus() {
     try {
@@ -105,6 +152,32 @@ export default function PartsInquiryPage() {
       setStatus({ connected: false, message: err.message || 'Unable to connect to PDX server' });
     } finally {
       setLoadingStatus(false);
+    }
+  }
+
+  async function loadFleetDatabase() {
+    try {
+      const res = await getKomatsuFleet();
+      if (res && res.machines) {
+        setFleetData(res.machines || []);
+        setAllCustomers(res.customers || []);
+        if (!selectedCustomer && res.customers?.length > 0) {
+          setSelectedCustomer(res.customers[0]);
+        }
+      }
+    } catch (err) {
+      addLog(`Failed to load fleet database: ${err.message}`, 'error');
+    }
+  }
+
+  async function loadLatestOrderNumber() {
+    try {
+      const res = await getKomatsuLatestOrderNo();
+      if (res && res.next_order_no) {
+        setEoStartingOrderNo(res.next_order_no);
+      }
+    } catch {
+      // Non-blocking fallback
     }
   }
 
@@ -123,6 +196,7 @@ export default function PartsInquiryPage() {
         setToast({ type: 'success', message: 'PDX session authenticated successfully!' });
         setCookieModalOpen(false);
         setCookieInput('');
+        loadLatestOrderNumber();
       } else {
         setToast({ type: 'error', message: res.message || 'Cookie verification failed' });
       }
@@ -133,6 +207,260 @@ export default function PartsInquiryPage() {
     }
   }
 
+  function addLog(msg, type = 'info') {
+    const timestamp = new Date().toLocaleTimeString();
+    setEoLogs((prev) => [...prev, { timestamp, text: msg, type }]);
+  }
+
+  // ==========================================
+  // EO DISPATCHER LOGIC
+  // ==========================================
+  async function handleLookupPart() {
+    const pNo = eoPartNo.trim();
+    if (!pNo) {
+      setToast({ type: 'error', message: 'Please enter a Part Number' });
+      return;
+    }
+
+    try {
+      setEoLookingUp(true);
+      const res = await lookupKomatsuPart(pNo);
+      if (res && !res.error) {
+        setEoPartInfo(res);
+        if (res.qty_by_unit && res.qty_by_unit > 0) {
+          setEoMaxQtyPerOrder(res.qty_by_unit);
+        }
+        addLog(`[Lookup Success] ${res.part_no}: ${res.description} (QtyByUnit: ${res.qty_by_unit}, ${res.models?.length || 0} compatible models)`, 'success');
+        setToast({ type: 'success', message: `Part verified: ${res.description}` });
+      } else {
+        setToast({ type: 'error', message: res.error || 'Part not found in PDX Master' });
+      }
+    } catch (err) {
+      addLog(`Lookup failed for ${pNo}: ${err.message}`, 'error');
+      setToast({ type: 'error', message: err.message || 'Failed to lookup part' });
+    } finally {
+      setEoLookingUp(false);
+    }
+  }
+
+  // Available Models for current customer & machine type selection
+  const availableModels = useMemo(() => {
+    let filtered = fleetData;
+    if (selectedCustomer) {
+      filtered = filtered.filter((m) => m.customer.toLowerCase() === selectedCustomer.toLowerCase());
+    }
+    if (selectedMachineType) {
+      filtered = filtered.filter((m) => m.machine_type.toLowerCase() === selectedMachineType.toLowerCase());
+    }
+    const distinct = [...new Set(filtered.map((m) => m.model).filter(Boolean))].sort();
+
+    const compatModels = eoPartInfo?.models ? eoPartInfo.models.map((m) => m.toUpperCase()) : [];
+
+    return distinct.map((m) => {
+      const isCompat = compatModels.some((cm) => cm.includes(m.toUpperCase()) || m.toUpperCase().includes(cm));
+      return { model: m, isCompat };
+    });
+  }, [fleetData, selectedCustomer, selectedMachineType, eoPartInfo]);
+
+  // Machine types for customer
+  const availableMachineTypes = useMemo(() => {
+    let filtered = fleetData;
+    if (selectedCustomer) {
+      filtered = filtered.filter((m) => m.customer.toLowerCase() === selectedCustomer.toLowerCase());
+    }
+    return [...new Set(filtered.map((m) => m.machine_type).filter(Boolean))].sort();
+  }, [fleetData, selectedCustomer]);
+
+  // Matching serial numbers
+  const matchingMachines = useMemo(() => {
+    let filtered = fleetData;
+    if (selectedCustomer) filtered = filtered.filter((m) => m.customer.toLowerCase() === selectedCustomer.toLowerCase());
+    if (selectedMachineType) filtered = filtered.filter((m) => m.machine_type.toLowerCase() === selectedMachineType.toLowerCase());
+    if (selectedModel) filtered = filtered.filter((m) => m.model.toLowerCase() === selectedModel.toLowerCase());
+    return filtered;
+  }, [fleetData, selectedCustomer, selectedMachineType, selectedModel]);
+
+  function generatePlan() {
+    const totalQty = parseInt(eoTotalQty, 10) || 0;
+    const maxPerOrder = parseInt(eoMaxQtyPerOrder, 10) || 1;
+    const pNo = eoPartNo.trim() || '6745-12-3100';
+    const cust = selectedCustomer || 'DAR AL HAI';
+    const model = selectedModel || (availableModels[0]?.model || 'PC500LC-10R');
+
+    if (totalQty <= 0) {
+      setPlannedOrders([]);
+      return;
+    }
+
+    let machinesPool = matchingMachines;
+    if (machinesPool.length === 0) {
+      machinesPool = [{ customer: cust, model: model, serial: '100433' }];
+    }
+
+    const match = eoStartingOrderNo.match(/R(\d+)\/(\d{4})/);
+    let seq = match ? parseInt(match[1], 10) : 1;
+    let year = match ? match[2] : '2026';
+
+    let remainingQty = totalQty;
+    const orders = [];
+    let orderIdx = 0;
+
+    while (remainingQty > 0) {
+      const batchQty = Math.min(remainingQty, maxPerOrder);
+      remainingQty -= batchQty;
+      orderIdx++;
+
+      const currentDbOrderNo = `R${seq}/${year}`;
+      seq++;
+
+      const machineIdx = (orderIdx - 1) % machinesPool.length;
+      const cycleNum = Math.floor((orderIdx - 1) / machinesPool.length) + 1;
+      const machine = machinesPool[machineIdx];
+
+      orders.push({
+        index: orderIdx,
+        db_order_no: currentDbOrderNo,
+        customer: cust,
+        model: machine.model,
+        serial: machine.serial,
+        part_no: pNo,
+        quantity: batchQty,
+        cycle_num: cycleNum,
+        quotation_no: '',
+        status: 'READY',
+      });
+    }
+
+    setPlannedOrders(orders);
+  }
+
+  async function handleAddCustomMachine(e) {
+    e.preventDefault();
+    if (!customForm.customer || !customForm.model || !customForm.serials) {
+      setToast({ type: 'error', message: 'Please fill all required custom machine fields' });
+      return;
+    }
+
+    try {
+      const res = await addKomatsuCustomMachine(customForm);
+      if (res && res.machines) {
+        setFleetData(res.machines);
+        setAllCustomers(res.customers);
+        setSelectedCustomer(customForm.customer);
+        setSelectedModel(customForm.model);
+        setCustomModalOpen(false);
+        setCustomForm({ customer: '', machine_type: 'Excavator', model: '', serials: '' });
+        setToast({ type: 'success', message: 'Custom machine added to fleet.' });
+        addLog(`Added custom machine ${customForm.model} for customer ${customForm.customer}`, 'success');
+      }
+    } catch (err) {
+      setToast({ type: 'error', message: err.message || 'Failed to add custom machine' });
+    }
+  }
+
+  async function startBatchExecution() {
+    if (plannedOrders.length === 0) {
+      setToast({ type: 'error', message: 'No orders to execute' });
+      return;
+    }
+
+    if (!eoDryRun) {
+      const confirmed = window.confirm(`Are you sure you want to dispatch ${plannedOrders.length} LIVE Emergency Orders on Komatsu PDX?`);
+      if (!confirmed) return;
+    }
+
+    setIsExecutingEo(true);
+    shouldStopEoRef.current = false;
+    addLog(`[START] Dispatching ${plannedOrders.length} orders - Mode: ${eoDryRun ? 'DRY-RUN (Simulated)' : 'LIVE PDX'}`, 'info');
+
+    let successCount = 0;
+    const updatedOrders = [...plannedOrders];
+
+    for (let i = 0; i < updatedOrders.length; i++) {
+      if (shouldStopEoRef.current) {
+        addLog('[HALTED] Order execution stopped by user.', 'warn');
+        break;
+      }
+
+      setEoExecutionIndex(i + 1);
+      const current = updatedOrders[i];
+      current.status = 'RUNNING';
+      setPlannedOrders([...updatedOrders]);
+
+      addLog(`[#${current.index}] Creating ${current.db_order_no} (Serial: ${current.serial}, Model: ${current.model}, Part: ${current.part_no}, Qty: ${current.quantity})...`, 'info');
+
+      try {
+        const payload = {
+          db_order_no: current.db_order_no,
+          model_code: current.model,
+          serial_no: current.serial,
+          customer_detail: current.customer,
+          comments: eoComments,
+          parts: [{ part_no: current.part_no, quantity: current.quantity }],
+          dryRun: eoDryRun,
+        };
+
+        const res = await executeKomatsuEoOrder(payload);
+
+        if (res && (res.status === 'SUCCESS' || res.quotation_no)) {
+          current.quotation_no = res.quotation_no;
+          current.status = 'SUCCESS';
+          successCount++;
+          addLog(`✅ [#${current.index} SUCCESS] Created Quotation: ${res.quotation_no} for ${current.db_order_no}`, 'success');
+        } else {
+          current.status = 'FAILED';
+          addLog(`❌ [#${current.index} FAILED] ${current.db_order_no}: ${res.error || 'Unknown error'}`, 'error');
+        }
+      } catch (err) {
+        current.status = 'ERROR';
+        addLog(`❌ [#${current.index} ERROR] ${err.message}`, 'error');
+      }
+
+      setPlannedOrders([...updatedOrders]);
+      // Small spacing between requests
+      await new Promise((r) => setTimeout(r, 600));
+    }
+
+    setIsExecutingEo(false);
+    addLog(`[FINISHED] Execution complete: ${successCount} / ${updatedOrders.length} orders created successfully.`, 'success');
+    setToast({ type: 'success', message: `Batch complete: ${successCount} / ${updatedOrders.length} orders placed.` });
+  }
+
+  function stopBatchExecution() {
+    shouldStopEoRef.current = true;
+    addLog('Stopping execution after current order...', 'warn');
+  }
+
+  function downloadEoCsv() {
+    if (plannedOrders.length === 0) return;
+    const headers = ['Order Index', 'DB Order No', 'Customer', 'Machine Model', 'Serial No', 'Part No', 'Batch Qty', 'Quotation No', 'Status', 'Cycle'];
+    const rows = plannedOrders.map((o) => [
+      o.index,
+      `"${o.db_order_no}"`,
+      `"${o.customer}"`,
+      `"${o.model}"`,
+      `"${o.serial}"`,
+      `"${o.part_no}"`,
+      o.quantity,
+      `"${o.quotation_no || ''}"`,
+      `"${o.status}"`,
+      `"Cycle ${o.cycle_num}"`,
+    ]);
+
+    const csvContent = '\uFEFF' + [headers.join(','), ...rows.map((row) => row.join(','))].join('\r\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `komatsu-eo-batch-report-${new Date().toISOString().slice(0, 10)}.csv`;
+    link.click();
+    URL.revokeObjectURL(url);
+    setToast({ type: 'success', message: 'Emergency Order report downloaded.' });
+  }
+
+  // ==========================================
+  // BULK INQUIRY LOGIC
+  // ==========================================
   function handleFileUpload(event) {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -155,18 +483,14 @@ export default function PartsInquiryPage() {
     try {
       setIsQuerying(true);
       const totalBatches = Math.ceil(parsedQueue.length / 12);
-      setQueryProgress({
-        currentBatch: 1,
-        totalBatches,
-        totalParts: parsedQueue.length,
-      });
+      setQueryProgress({ currentBatch: 1, totalBatches, totalParts: parsedQueue.length });
 
       const response = await runKomatsuInquiry(parsedQueue);
       if (response && response.results) {
         setResults(response.results);
         setToast({
           type: 'success',
-          message: `Inquiry completed: ${response.results.length} total item records retrieved (${response.totalBatches} batches).`,
+          message: `Inquiry completed: ${response.results.length} total records retrieved.`,
         });
       }
     } catch (err) {
@@ -177,7 +501,6 @@ export default function PartsInquiryPage() {
     }
   }
 
-  // Filtered results
   const filteredResults = useMemo(() => {
     const query = searchFilter.trim().toLowerCase();
     return results.filter((item) => {
@@ -197,7 +520,6 @@ export default function PartsInquiryPage() {
     });
   }, [results, searchFilter, typeFilter]);
 
-  // Summary Metrics
   const stats = useMemo(() => {
     const totalRecords = results.length;
     const mainParts = results.filter((r) => !r.isAlternative).length;
@@ -214,7 +536,6 @@ export default function PartsInquiryPage() {
     };
   }, [results]);
 
-  // Export CSV
   function downloadCsv() {
     if (results.length === 0) return;
     const headers = [
@@ -226,14 +547,11 @@ export default function PartsInquiryPage() {
       'KME Stock',
       'DNet Price (USD)',
       'KME On Order',
-      'KME EOR',
       'Weight (gm)',
-      'KLTD Lead Time (wks)',
+      'Lead Time',
       'Character Code (CC)',
       'Interchangeable Code (IC)',
-      'Regional Inventory',
-      'KLTD Japan Total',
-      'KMEQA Stock',
+      'Japan (KLTD)',
     ];
 
     const rows = results.map((r) => [
@@ -245,14 +563,11 @@ export default function PartsInquiryPage() {
       r.kmeStock || 0,
       r.dnetPrice || 0,
       r.onOrder || 0,
-      `"${r.eor || ''}"`,
       r.weight || 0,
       `"${r.leadTime || ''}"`,
       `"${r.characterCode || ''}"`,
       `"${r.interchangeableCode || ''}"`,
-      `"${r.regionalInventory || ''}"`,
       r.kltdTotal || 0,
-      r.kmeqa || 0,
     ]);
 
     const csvContent = '\uFEFF' + [headers.join(','), ...rows.map((row) => row.join(','))].join('\r\n');
@@ -266,7 +581,6 @@ export default function PartsInquiryPage() {
     setToast({ type: 'success', message: 'CSV report downloaded.' });
   }
 
-  // Split into 12-item CSV batches
   function download12ItemBatches() {
     if (parsedQueue.length === 0) return;
     const batches = [];
@@ -288,12 +602,24 @@ export default function PartsInquiryPage() {
     setToast({ type: 'success', message: `Downloaded ${batches.length} batch CSV files.` });
   }
 
+  const filteredFleetTable = useMemo(() => {
+    const q = fleetSearchFilter.trim().toLowerCase();
+    if (!q) return fleetData;
+    return fleetData.filter(
+      (m) =>
+        m.customer?.toLowerCase().includes(q) ||
+        m.machine_type?.toLowerCase().includes(q) ||
+        m.model?.toLowerCase().includes(q) ||
+        m.serial?.toLowerCase().includes(q)
+    );
+  }, [fleetData, fleetSearchFilter]);
+
   return (
     <SystemShell
       activePath="/management/parts-inquiry"
-      eyebrow="KOMATSU PDX HUB"
-      title="Parts Stock & Price Inquiry"
-      description="Automate multi-part inquiries without the 12-item limit. Query live stock across KME & Japan warehouses, verify interchangeable parts, and export consolidated reports."
+      eyebrow="KOMATSU PDX & FLEET LOGISTICS"
+      title="Spare Parts Hub"
+      description="Automate Emergency Orders (EO) across multi-machine customer fleets, query live stock & pricing from Komatsu PDX, and manage machine part compatibility."
       actions={
         <div className="flex items-center gap-2">
           <Button
@@ -305,9 +631,14 @@ export default function PartsInquiryPage() {
             <span className={`h-2 w-2 rounded-full mr-1.5 ${status.connected ? 'bg-emerald-500' : 'bg-amber-500'}`} />
             {status.connected ? 'PDX Connected' : 'Configure PDX Cookie'}
           </Button>
-          {results.length > 0 && (
+          {activeTab === 'eo-dispatcher' && plannedOrders.length > 0 && (
+            <Button type="button" variant="secondary" size="sm" onClick={downloadEoCsv}>
+              Export Order Plan
+            </Button>
+          )}
+          {activeTab === 'inquiry' && results.length > 0 && (
             <Button type="button" variant="secondary" size="sm" onClick={downloadCsv}>
-              Download CSV Report
+              Download Inquiry CSV
             </Button>
           )}
         </div>
@@ -318,7 +649,7 @@ export default function PartsInquiryPage() {
         <div className={`ds-alert ${status.connected ? 'ds-alert-success' : 'ds-alert-warning'} flex items-center justify-between`}>
           <div className="flex items-center gap-2">
             <span className="font-bold text-sm">
-              {status.connected ? '🟢 Komatsu PDX Live Connection' : '🟡 Action Required: Connect to Komatsu PDX'}
+              {status.connected ? '🟢 Komatsu PDX Live Portal Connected' : '🟡 Action Required: Connect to Komatsu PDX'}
             </span>
             <span className="text-xs text-slate-600">— {status.message}</span>
           </div>
@@ -327,29 +658,433 @@ export default function PartsInquiryPage() {
             className="text-xs font-bold underline hover:opacity-80 ml-4 cursor-pointer"
             onClick={() => setCookieModalOpen(true)}
           >
-            {status.connected ? 'Change Cookie' : 'Connect in 10s'}
+            {status.connected ? 'Update Session' : 'Connect in 10s'}
           </button>
         </div>
 
         {/* Workspace Mode Tabs */}
-        <div className="flex gap-2 border-b border-slate-200 pb-3">
+        <div className="flex flex-wrap gap-2 border-b border-slate-200 pb-3">
           <button
             type="button"
-            className={`px-4 py-2 text-xs font-bold rounded-lg transition-all ${activeTab === 'inquiry' ? 'bg-slate-900 text-white shadow-sm' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}`}
-            onClick={() => setActiveTab('inquiry')}
+            className={`px-4 py-2 text-xs font-bold rounded-lg transition-all flex items-center gap-1.5 ${
+              activeTab === 'eo-dispatcher' ? 'bg-amber-500 text-slate-950 shadow-sm font-black' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+            }`}
+            onClick={() => setActiveTab('eo-dispatcher')}
           >
-            🚀 Automated Bulk Inquiry
+            <span>🚨</span> Emergency Order (EO) Dispatcher
           </button>
           <button
             type="button"
-            className={`px-4 py-2 text-xs font-bold rounded-lg transition-all ${activeTab === 'split' ? 'bg-slate-900 text-white shadow-sm' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}`}
+            className={`px-4 py-2 text-xs font-bold rounded-lg transition-all flex items-center gap-1.5 ${
+              activeTab === 'inquiry' ? 'bg-slate-900 text-white shadow-sm' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+            }`}
+            onClick={() => setActiveTab('inquiry')}
+          >
+            <span>🔍</span> Stock & Price Bulk Inquiry
+          </button>
+          <button
+            type="button"
+            className={`px-4 py-2 text-xs font-bold rounded-lg transition-all flex items-center gap-1.5 ${
+              activeTab === 'split' ? 'bg-slate-900 text-white shadow-sm' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+            }`}
             onClick={() => setActiveTab('split')}
           >
-            📦 Split into 12-Item Batches
+            <span>📦</span> 12-Item Batch Splitter
+          </button>
+          <button
+            type="button"
+            className={`px-4 py-2 text-xs font-bold rounded-lg transition-all flex items-center gap-1.5 ${
+              activeTab === 'fleet' ? 'bg-slate-900 text-white shadow-sm' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+            }`}
+            onClick={() => setActiveTab('fleet')}
+          >
+            <span>🚜</span> Customer Machine Fleet ({fleetData.length})
           </button>
         </div>
 
-        {/* Tab 1: Automated Inquiry */}
+        {/* ============================================================ */}
+        {/* TAB 1: EMERGENCY ORDER (EO) DISPATCHER */}
+        {/* ============================================================ */}
+        {activeTab === 'eo-dispatcher' && (
+          <div className="space-y-6">
+            {/* Top Config Grid */}
+            <div className="grid gap-6 lg:grid-cols-12">
+              {/* Part Setup & Quantities (5 cols) */}
+              <Card className="p-5 space-y-4 lg:col-span-5">
+                <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                  <div>
+                    <h2 className="text-sm font-bold text-slate-900 flex items-center gap-1.5">
+                      <span className="text-amber-500 font-black">1.</span> Part Number & Quantity Rules
+                    </h2>
+                    <p className="text-xs text-slate-500">Auto-detects max unit capacity (txtQBYU)</p>
+                  </div>
+                  <Badge tone="warning">Step 1</Badge>
+                </div>
+
+                <div className="space-y-3">
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Part Number</label>
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        className="ds-input font-mono uppercase text-xs flex-1 font-bold"
+                        value={eoPartNo}
+                        onChange={(e) => setEoPartNo(e.target.value)}
+                        placeholder="e.g. 6745-12-3100"
+                      />
+                      <Button type="button" variant="primary" size="sm" onClick={handleLookupPart} disabled={eoLookingUp}>
+                        {eoLookingUp ? '...' : 'Lookup'}
+                      </Button>
+                    </div>
+                  </div>
+
+                  {/* Part Details Readout Card */}
+                  {eoPartInfo && (
+                    <div className="p-3 bg-slate-50 border border-slate-200 rounded-lg space-y-2 text-xs">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <span className="text-[10px] font-bold uppercase text-slate-400 block">Description</span>
+                          <span className="font-bold text-slate-900">{eoPartInfo.description || '—'}</span>
+                        </div>
+                        <div className="text-right">
+                          <span className="text-[10px] font-bold uppercase text-slate-400 block">Qty By Unit (txtQBYU)</span>
+                          <span className="inline-flex items-center px-2 py-0.5 rounded font-mono font-bold text-xs bg-emerald-100 text-emerald-800">
+                            {eoPartInfo.qty_by_unit} pcs / machine
+                          </span>
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-3 gap-2 pt-1 border-t border-slate-200 text-slate-600 text-[11px]">
+                        <div>Price: <strong className="text-slate-900">${eoPartInfo.price}</strong></div>
+                        <div>Weight: <strong className="text-slate-900">{eoPartInfo.weight}g</strong></div>
+                        <div>Rank: <strong className="text-slate-900">{eoPartInfo.rank || '—'}</strong></div>
+                      </div>
+                      <div className="pt-1 border-t border-slate-200">
+                        <span className="text-[10px] font-bold uppercase text-slate-400 block mb-0.5">Compatible Models ({eoPartInfo.models?.length || 0})</span>
+                        <p className="font-mono text-[11px] text-slate-700 bg-white p-1.5 rounded border border-slate-200 max-h-16 overflow-y-auto leading-tight">
+                          {eoPartInfo.models?.join('; ') || 'No restrictions listed'}
+                        </p>
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="grid grid-cols-2 gap-3 pt-1">
+                    <Field label="Total Qty Needed">
+                      <input
+                        type="number"
+                        min="1"
+                        className="ds-input font-mono font-bold text-sm"
+                        value={eoTotalQty}
+                        onChange={(e) => setEoTotalQty(e.target.value)}
+                      />
+                    </Field>
+                    <Field label="Max Qty / Machine">
+                      <input
+                        type="number"
+                        min="1"
+                        className="ds-input font-mono font-bold text-sm"
+                        value={eoMaxQtyPerOrder}
+                        onChange={(e) => setEoMaxQtyPerOrder(e.target.value)}
+                      />
+                    </Field>
+                  </div>
+
+                  {/* Calculated Plan Banner */}
+                  <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg flex items-center justify-between">
+                    <div>
+                      <span className="text-xs text-amber-900 block font-medium">Orders Required:</span>
+                      <span className="text-lg font-black text-amber-900">{plannedOrders.length} Orders</span>
+                    </div>
+                    <div className="text-right text-xs text-amber-950 font-medium">
+                      <div>Alloc: <strong>{eoMaxQtyPerOrder} pcs × {plannedOrders.length}</strong></div>
+                      <div>Total: <strong>{eoTotalQty} pcs</strong></div>
+                    </div>
+                  </div>
+                </div>
+              </Card>
+
+              {/* Customer & Machine Fleet Matching (7 cols) */}
+              <Card className="p-5 space-y-4 lg:col-span-7">
+                <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                  <div>
+                    <h2 className="text-sm font-bold text-slate-900 flex items-center gap-1.5">
+                      <span className="text-amber-500 font-black">2.</span> Customer Fleet & Model Matching
+                    </h2>
+                    <p className="text-xs text-slate-500">Auto-matches machines from your Excel fleet register</p>
+                  </div>
+                  <button
+                    type="button"
+                    className="text-xs font-bold text-amber-600 hover:text-amber-700 underline cursor-pointer"
+                    onClick={() => setCustomModalOpen(true)}
+                  >
+                    + Custom / Unlisted Machine
+                  </button>
+                </div>
+
+                <div className="space-y-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <Field label="Customer">
+                      <select
+                        className="ds-input text-xs"
+                        value={selectedCustomer}
+                        onChange={(e) => setSelectedCustomer(e.target.value)}
+                      >
+                        <option value="">-- All Customers --</option>
+                        {allCustomers.map((c) => (
+                          <option key={c} value={c}>
+                            {c}
+                          </option>
+                        ))}
+                      </select>
+                    </Field>
+                    <Field label="Machine Type">
+                      <select
+                        className="ds-input text-xs"
+                        value={selectedMachineType}
+                        onChange={(e) => setSelectedMachineType(e.target.value)}
+                      >
+                        <option value="">-- All Types --</option>
+                        {availableMachineTypes.map((t) => (
+                          <option key={t} value={t}>
+                            {t}
+                          </option>
+                        ))}
+                      </select>
+                    </Field>
+                  </div>
+
+                  <Field label="Machine Model">
+                    <select
+                      className="ds-input text-xs font-semibold"
+                      value={selectedModel}
+                      onChange={(e) => setSelectedModel(e.target.value)}
+                    >
+                      <option value="">-- Select Model --</option>
+                      {availableModels.map((item) => (
+                        <option key={item.model} value={item.model} className={item.isCompat ? 'font-bold text-amber-600' : ''}>
+                          {item.isCompat ? `⭐ ${item.model} (Compatible)` : item.model}
+                        </option>
+                      ))}
+                    </select>
+                  </Field>
+
+                  {/* Matching Serials Chips */}
+                  <div>
+                    <div className="flex justify-between items-center text-xs mb-1.5">
+                      <span className="font-bold text-slate-700">Available Machine Serials in Fleet:</span>
+                      <span className="font-mono text-slate-500">{matchingMachines.length} machines</span>
+                    </div>
+                    <div className="p-2.5 bg-slate-50 border border-slate-200 rounded-lg max-h-28 overflow-y-auto flex flex-wrap gap-1.5">
+                      {matchingMachines.length === 0 ? (
+                        <span className="text-xs text-slate-400 italic">No machines match current selection.</span>
+                      ) : (
+                        matchingMachines.map((m, idx) => (
+                          <span
+                            key={`${m.serial}-${idx}`}
+                            className="inline-flex items-center px-2 py-1 rounded bg-white border border-slate-300 text-[11px] font-mono text-slate-700 shadow-2xs"
+                          >
+                            <strong className="text-slate-900 mr-1">{m.model}</strong> SN: {m.serial}
+                          </span>
+                        ))
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3 pt-2 border-t border-slate-100">
+                    <Field label="Starting DB Order No">
+                      <div className="flex gap-1.5">
+                        <input
+                          type="text"
+                          className="ds-input font-mono uppercase text-xs font-bold"
+                          value={eoStartingOrderNo}
+                          onChange={(e) => setEoStartingOrderNo(e.target.value)}
+                        />
+                        <Button type="button" variant="ghost" size="sm" onClick={loadLatestOrderNumber} title="Detect latest DB order number">
+                          🔄
+                        </Button>
+                      </div>
+                    </Field>
+                    <Field label="Comments">
+                      <input
+                        type="text"
+                        className="ds-input text-xs"
+                        value={eoComments}
+                        onChange={(e) => setEoComments(e.target.value)}
+                      />
+                    </Field>
+                  </div>
+                </div>
+              </Card>
+            </div>
+
+            {/* Batch Order Plan Preview Card */}
+            <Card className="p-5 space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-slate-100 pb-3">
+                <div>
+                  <h2 className="text-sm font-bold text-slate-900 flex items-center gap-1.5">
+                    <span className="text-amber-500 font-black">3.</span> Batch Order Plan Preview
+                  </h2>
+                  <p className="text-xs text-slate-500">Review sequence of emergency orders before automated dispatch</p>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <label className="flex items-center gap-1.5 text-xs text-slate-700 cursor-pointer bg-slate-100 px-2.5 py-1.5 rounded-lg border border-slate-200">
+                    <input
+                      type="checkbox"
+                      className="rounded text-amber-500 focus:ring-0"
+                      checked={eoDryRun}
+                      onChange={(e) => setEoDryRun(e.target.checked)}
+                    />
+                    <span className="font-semibold">Safe Dry-Run</span>
+                  </label>
+
+                  <Button type="button" variant="secondary" size="sm" onClick={generatePlan}>
+                    Refresh Plan
+                  </Button>
+
+                  {!isExecutingEo ? (
+                    <Button
+                      type="button"
+                      variant="primary"
+                      size="sm"
+                      disabled={plannedOrders.length === 0}
+                      onClick={startBatchExecution}
+                    >
+                      🚀 Execute Orders ({plannedOrders.length})
+                    </Button>
+                  ) : (
+                    <Button type="button" variant="danger" size="sm" onClick={stopBatchExecution}>
+                      ⏹ Stop Execution
+                    </Button>
+                  )}
+                </div>
+              </div>
+
+              {/* Progress Bar (Visible during execution) */}
+              {isExecutingEo && (
+                <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg space-y-1.5 animate-pulse">
+                  <div className="flex justify-between text-xs font-bold text-amber-900">
+                    <span>Dispatching Emergency Orders to Komatsu PDX...</span>
+                    <span>Order {eoExecutionIndex} / {plannedOrders.length}</span>
+                  </div>
+                  <div className="h-2 w-full bg-amber-200 rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-amber-500 transition-all duration-300"
+                      style={{ width: `${Math.round((eoExecutionIndex / plannedOrders.length) * 100)}%` }}
+                    />
+                  </div>
+                </div>
+              )}
+
+              {/* Data Grid Table */}
+              <div className="ds-table-wrap">
+                <table className="ds-table font-mono text-xs">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>DB Order No</th>
+                      <th>Customer</th>
+                      <th>Machine Model</th>
+                      <th>Serial No</th>
+                      <th>Part No</th>
+                      <th className="text-center">Batch Qty</th>
+                      <th className="text-center">Cycle</th>
+                      <th>Quotation No</th>
+                      <th className="text-center">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {plannedOrders.length === 0 ? (
+                      <tr>
+                        <td colSpan={10} className="text-center py-6 text-slate-400 font-sans">
+                          No orders planned. Configure parameters above to generate plan.
+                        </td>
+                      </tr>
+                    ) : (
+                      plannedOrders.map((o) => (
+                        <tr key={o.index} className={o.status === 'RUNNING' ? 'bg-amber-50 font-bold' : o.status === 'SUCCESS' ? 'bg-emerald-50/50' : 'bg-white'}>
+                          <td className="font-semibold text-slate-500">{o.index}</td>
+                          <td className="font-bold text-slate-900">{o.db_order_no}</td>
+                          <td className="font-sans text-slate-700 truncate max-w-xs">{o.customer}</td>
+                          <td className="font-bold text-slate-900">{o.model}</td>
+                          <td className="text-slate-700">{o.serial}</td>
+                          <td className="text-slate-900">{o.part_no}</td>
+                          <td className="text-center font-bold text-emerald-700">{o.quantity}</td>
+                          <td className="text-center">
+                            <span className="bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded text-[10px]">
+                              Cycle {o.cycle_num}
+                            </span>
+                          </td>
+                          <td className="font-bold text-amber-600">{o.quotation_no || '—'}</td>
+                          <td className="text-center">
+                            <Badge
+                              tone={
+                                o.status === 'SUCCESS'
+                                  ? 'success'
+                                  : o.status === 'RUNNING'
+                                  ? 'warning'
+                                  : o.status === 'FAILED' || o.status === 'ERROR'
+                                  ? 'danger'
+                                  : 'neutral'
+                              }
+                            >
+                              {o.status}
+                            </Badge>
+                          </td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Execution Terminal */}
+              <div className="space-y-1.5 pt-2">
+                <div className="flex justify-between items-center text-xs">
+                  <span className="font-bold text-slate-700 flex items-center gap-1.5">
+                    <span>🖥️</span> Live Execution Terminal
+                  </span>
+                  <div className="flex items-center gap-2">
+                    <button type="button" className="text-slate-400 hover:text-slate-600 text-xs" onClick={() => setEoLogs([])}>
+                      Clear
+                    </button>
+                    {plannedOrders.length > 0 && (
+                      <button type="button" className="text-amber-600 font-bold hover:underline text-xs" onClick={downloadEoCsv}>
+                        Download Report (CSV)
+                      </button>
+                    )}
+                  </div>
+                </div>
+                <div className="p-3 bg-slate-950 rounded-lg font-mono text-[11px] h-36 overflow-y-auto text-emerald-400 space-y-1 border border-slate-800">
+                  {eoLogs.length === 0 ? (
+                    <div className="text-slate-500">[Ready] Komatsu PDX Emergency Order Automation Engine ready.</div>
+                  ) : (
+                    eoLogs.map((l, i) => (
+                      <div
+                        key={i}
+                        className={
+                          l.type === 'success'
+                            ? 'text-emerald-400 font-semibold'
+                            : l.type === 'error'
+                            ? 'text-rose-400 font-semibold'
+                            : l.type === 'warn'
+                            ? 'text-amber-400'
+                            : 'text-slate-300'
+                        }
+                      >
+                        [{l.timestamp}] {l.text}
+                      </div>
+                    ))
+                  )}
+                  <div ref={terminalBottomRef} />
+                </div>
+              </div>
+            </Card>
+          </div>
+        )}
+
+        {/* ============================================================ */}
+        {/* TAB 2: STOCK & PRICE BULK INQUIRY */}
+        {/* ============================================================ */}
         {activeTab === 'inquiry' && (
           <div className="space-y-6">
             <div className="grid gap-6 lg:grid-cols-[1fr_360px]">
@@ -396,7 +1131,7 @@ export default function PartsInquiryPage() {
                     disabled={isQuerying || parsedQueue.length === 0}
                     onClick={executeInquiry}
                   >
-                    {isQuerying ? 'Querying Komatsu PDX...' : `Start Inquiry (${parsedQueue.length} Parts)`}
+                    {isQuerying ? 'Querying Komatsu PDX...' : `Start Bulk Inquiry (${parsedQueue.length} Parts)`}
                   </Button>
                 </div>
 
@@ -416,16 +1151,16 @@ export default function PartsInquiryPage() {
                 )}
               </Card>
 
-              {/* Side Summary & Guide */}
+              {/* Side Summary */}
               <Card className="p-5 space-y-4 h-fit">
                 <div className="border-b border-slate-100 pb-3">
-                  <h3 className="text-sm font-bold text-slate-900">Inquiry Capabilities</h3>
-                  <p className="text-xs text-slate-500">Direct integration with Komatsu Middle East PDX</p>
+                  <h3 className="text-sm font-bold text-slate-900">Bulk Inquiry Capabilities</h3>
+                  <p className="text-xs text-slate-500">Live multi-warehouse catalog queries</p>
                 </div>
                 <div className="space-y-2.5 text-xs text-slate-600 leading-relaxed">
                   <div className="flex items-start gap-2">
                     <span className="text-emerald-500 font-bold">✓</span>
-                    <span><strong>12-Item Limit Bypassed</strong>: Batched automatically in background.</span>
+                    <span><strong>12-Item Limit Bypassed</strong>: Auto-batched in background.</span>
                   </div>
                   <div className="flex items-start gap-2">
                     <span className="text-emerald-500 font-bold">✓</span>
@@ -433,24 +1168,17 @@ export default function PartsInquiryPage() {
                   </div>
                   <div className="flex items-start gap-2">
                     <span className="text-emerald-500 font-bold">✓</span>
-                    <span><strong>Multi-Warehouse Stock</strong>: KME Dubai, Japan KLTD, Regional, and QA.</span>
+                    <span><strong>Multi-Warehouse Stock</strong>: KME Dubai, Japan KLTD, Regional, QA.</span>
                   </div>
                   <div className="flex items-start gap-2">
                     <span className="text-emerald-500 font-bold">✓</span>
-                    <span><strong>DNet Price & Weight</strong>: Full commercial & logistics metadata.</span>
+                    <span><strong>DNet Price & Weight</strong>: Commercial and shipping weights.</span>
                   </div>
-                </div>
-
-                <div className="pt-2 border-t border-slate-100">
-                  <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Connection Guide</p>
-                  <p className="text-xs text-slate-500 mt-1">
-                    Open Komatsu PDX in Edge ➔ Press F12 ➔ Console ➔ <code>copy(document.cookie)</code> ➔ Paste here.
-                  </p>
                 </div>
               </Card>
             </div>
 
-            {/* Results KPIs & Data Grid */}
+            {/* Results KPIs & Table */}
             {results.length > 0 && (
               <div className="space-y-4">
                 <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
@@ -476,7 +1204,6 @@ export default function PartsInquiryPage() {
                   </div>
                 </div>
 
-                {/* Table Card */}
                 <Card className="overflow-hidden">
                   <div className="p-4 bg-slate-50/80 border-b border-slate-200 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                     <div className="flex items-center gap-3">
@@ -500,7 +1227,7 @@ export default function PartsInquiryPage() {
                           className={`px-2.5 py-1 rounded font-semibold transition-all ${typeFilter === 'MAIN' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600'}`}
                           onClick={() => setTypeFilter('MAIN')}
                         >
-                          Main Only ({stats.mainParts})
+                          Main ({stats.mainParts})
                         </button>
                         <button
                           type="button"
@@ -511,11 +1238,9 @@ export default function PartsInquiryPage() {
                         </button>
                       </div>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <Button type="button" variant="secondary" size="sm" onClick={downloadCsv}>
-                        Export CSV
-                      </Button>
-                    </div>
+                    <Button type="button" variant="secondary" size="sm" onClick={downloadCsv}>
+                      Export CSV
+                    </Button>
                   </div>
 
                   <div className="ds-table-wrap">
@@ -548,38 +1273,20 @@ export default function PartsInquiryPage() {
                                   {item.itemType}
                                 </Badge>
                               </td>
-                              <td className="font-mono font-bold text-slate-900">
-                                {item.partNumber}
-                              </td>
-                              <td className="font-mono text-center font-bold">
-                                {item.requestedQty}
-                              </td>
-                              <td className="max-w-xs truncate text-slate-700" title={item.description}>
-                                {item.description}
-                              </td>
-                              <td className="font-mono text-xs text-slate-500">
-                                {item.lpn}
-                              </td>
+                              <td className="font-mono font-bold text-slate-900">{item.partNumber}</td>
+                              <td className="font-mono text-center font-bold">{item.requestedQty}</td>
+                              <td className="max-w-xs truncate text-slate-700" title={item.description}>{item.description}</td>
+                              <td className="font-mono text-xs text-slate-500">{item.lpn}</td>
                               <td>
                                 <span className={`inline-flex items-center px-2 py-0.5 rounded font-bold text-xs ${hasStock ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100 text-slate-600'}`}>
                                   {item.kmeStock}
                                 </span>
                               </td>
-                              <td className="font-mono text-slate-900 font-bold">
-                                ${item.dnetPrice}
-                              </td>
-                              <td className="font-mono text-slate-600">
-                                {item.onOrder}
-                              </td>
-                              <td className="font-mono text-slate-500">
-                                {item.weight}
-                              </td>
-                              <td className="text-xs text-slate-500">
-                                {item.leadTime || '—'}
-                              </td>
-                              <td className="font-mono text-slate-600">
-                                {item.kltdTotal || '—'}
-                              </td>
+                              <td className="font-mono text-slate-900 font-bold">${item.dnetPrice}</td>
+                              <td className="font-mono text-slate-600">{item.onOrder}</td>
+                              <td className="font-mono text-slate-500">{item.weight}</td>
+                              <td className="text-xs text-slate-500">{item.leadTime || '—'}</td>
+                              <td className="font-mono text-slate-600">{item.kltdTotal || '—'}</td>
                             </tr>
                           );
                         })}
@@ -592,13 +1299,15 @@ export default function PartsInquiryPage() {
           </div>
         )}
 
-        {/* Tab 2: Split 12-Item Batches */}
+        {/* ============================================================ */}
+        {/* TAB 3: 12-ITEM BATCH SPLITTER */}
+        {/* ============================================================ */}
         {activeTab === 'split' && (
           <Card className="p-6 space-y-4">
             <div>
-              <h2 className="text-base font-bold text-slate-900">Split Large File into 12-Item PDX CSVs</h2>
+              <h2 className="text-base font-bold text-slate-900">Split Large Master List into 12-Item PDX CSVs</h2>
               <p className="text-xs text-slate-500">
-                If you prefer uploading manually to the Komatsu PDX portal, split your master list into individual 12-part CSVs ready for upload.
+                Generate individual 12-part CSVs for manual portal uploads.
               </p>
             </div>
             <div className="p-4 bg-slate-50 rounded-xl border border-slate-200">
@@ -614,6 +1323,57 @@ export default function PartsInquiryPage() {
             >
               Download All 12-Item Batch CSVs ({Math.ceil(parsedQueue.length / 12)} files)
             </Button>
+          </Card>
+        )}
+
+        {/* ============================================================ */}
+        {/* TAB 4: CUSTOMER FLEET REGISTER */}
+        {/* ============================================================ */}
+        {activeTab === 'fleet' && (
+          <Card className="p-5 space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-slate-100 pb-3">
+              <div>
+                <h2 className="text-sm font-bold text-slate-900 flex items-center gap-1.5">
+                  <span>🚜</span> Customer Machine Fleet Register ({fleetData.length} Total Machines)
+                </h2>
+                <p className="text-xs text-slate-500">All registered customer equipment and serial numbers</p>
+              </div>
+              <div className="flex items-center gap-2">
+                <input
+                  type="text"
+                  placeholder="Filter customer, model, serial..."
+                  className="ds-input text-xs w-64"
+                  value={fleetSearchFilter}
+                  onChange={(e) => setFleetSearchFilter(e.target.value)}
+                />
+                <Button type="button" variant="primary" size="sm" onClick={() => setCustomModalOpen(true)}>
+                  + Add Machine
+                </Button>
+              </div>
+            </div>
+
+            <div className="ds-table-wrap max-h-96">
+              <table className="ds-table text-xs">
+                <thead className="sticky top-0 bg-slate-50">
+                  <tr>
+                    <th>Customer Name</th>
+                    <th>Machine Type</th>
+                    <th>Model - Type</th>
+                    <th>Serial Number</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredFleetTable.map((m, idx) => (
+                    <tr key={`${m.serial}-${idx}`} className="hover:bg-slate-50/70">
+                      <td className="font-bold text-slate-900">{m.customer}</td>
+                      <td className="text-slate-600">{m.machine_type}</td>
+                      <td className="font-mono font-bold text-amber-600">{m.model}</td>
+                      <td className="font-mono font-bold text-slate-800">{m.serial}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </Card>
         )}
       </div>
@@ -651,7 +1411,7 @@ export default function PartsInquiryPage() {
                 <textarea
                   rows={4}
                   className="ds-input font-mono text-xs"
-                  placeholder="ASP.NET_SessionId=...; user_auth=..."
+                  placeholder="ASP.NET_SessionId=...; .AspNet.Cookies=..."
                   value={cookieInput}
                   onChange={(e) => setCookieInput(e.target.value)}
                   required
@@ -664,6 +1424,78 @@ export default function PartsInquiryPage() {
                 </Button>
                 <Button type="submit" variant="primary" disabled={savingCookie}>
                   {savingCookie ? 'Testing Connection...' : 'Save & Test Connection'}
+                </Button>
+              </div>
+            </form>
+          </Card>
+        </div>
+      )}
+
+      {/* Add Custom Machine Modal */}
+      {customModalOpen && (
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <Card className="w-full max-w-md p-6 space-y-4 shadow-2xl">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <div>
+                <h3 className="text-base font-bold text-slate-900">Add Custom Machine / Customer</h3>
+                <p className="text-xs text-slate-500">Add unlisted fleet machines to the database</p>
+              </div>
+              <button
+                type="button"
+                className="text-slate-400 hover:text-slate-600 text-sm font-bold cursor-pointer"
+                onClick={() => setCustomModalOpen(false)}
+              >
+                ✕
+              </button>
+            </div>
+
+            <form onSubmit={handleAddCustomMachine} className="space-y-3 text-xs">
+              <Field label="Customer Name">
+                <input
+                  type="text"
+                  className="ds-input text-xs"
+                  placeholder="e.g. LAALA AL-KUWAIT REAL ESTATE"
+                  value={customForm.customer}
+                  onChange={(e) => setCustomForm({ ...customForm, customer: e.target.value })}
+                  required
+                />
+              </Field>
+              <Field label="Machine Type">
+                <input
+                  type="text"
+                  className="ds-input text-xs"
+                  placeholder="e.g. Excavator"
+                  value={customForm.machine_type}
+                  onChange={(e) => setCustomForm({ ...customForm, machine_type: e.target.value })}
+                />
+              </Field>
+              <Field label="Model Code">
+                <input
+                  type="text"
+                  className="ds-input font-mono uppercase text-xs"
+                  placeholder="e.g. PC500LC-10R"
+                  value={customForm.model}
+                  onChange={(e) => setCustomForm({ ...customForm, model: e.target.value })}
+                  required
+                />
+              </Field>
+              <Field label="Serial Numbers (comma-separated)">
+                <input
+                  type="text"
+                  className="ds-input font-mono text-xs"
+                  placeholder="e.g. 100433, 100434, 100435"
+                  value={customForm.serials}
+                  onChange={(e) => setCustomForm({ ...customForm, serials: e.target.value })}
+                  required
+                />
+              </Field>
+
+              <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
+                <Button type="button" variant="secondary" onClick={() => setCustomModalOpen(false)}>
+                  Cancel
+                </Button>
+                <Button type="submit" variant="primary">
+                  Add to Fleet
                 </Button>
               </div>
             </form>

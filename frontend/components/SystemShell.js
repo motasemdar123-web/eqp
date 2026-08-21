@@ -11,7 +11,7 @@ const navItems = [
   { href: '/management/technicians', label: 'Technicians', icon: 'users' },
   { href: '/management/scheduling', label: 'Scheduling', icon: 'calendar' },
   { href: '/management/daily-planner', label: 'Daily Planner', icon: 'planner' },
-  { href: '/management/parts-inquiry', label: 'Parts Inquiry', icon: 'parts' },
+  { href: '/management/parts-inquiry', label: 'Spare Parts', icon: 'parts' },
   { href: '/workspace', label: 'Workspace', icon: 'workspace' },
   { href: '/eqp', label: 'EQP Module', icon: 'hub' },
   { href: '/japanese', label: 'Japanese Corner', icon: 'japanese' },
@@ -124,7 +124,7 @@ const COMMAND_ITEMS = [
   { id: 'nav-technicians', title: 'Technicians Management', subtitle: 'Staff records, shifts, regions, skills & dispatch', href: '/management/technicians', category: 'Navigation', badge: 'Staff' },
   { id: 'nav-scheduling', title: 'Scheduling & Work Windows', subtitle: 'Gantt timeline, work windows, shop manuals AI', href: '/management/scheduling', category: 'Navigation', badge: 'Schedule' },
   { id: 'nav-daily-planner', title: 'Daily Schedule Planner', subtitle: 'Shift task sequencing and supervisor dispatch', href: '/management/daily-planner', category: 'Navigation', badge: 'Planner' },
-  { id: 'nav-parts-inquiry', title: 'Komatsu PDX Parts Inquiry', subtitle: 'Bulk stock inquiry, interchangeable parts, DNet price', href: '/management/parts-inquiry', category: 'Navigation', badge: 'Parts Hub' },
+  { id: 'nav-parts-inquiry', title: 'Spare Parts Hub & Emergency Orders', subtitle: 'Komatsu PDX bulk stock inquiry, Emergency Orders (EO) batching, machine fleet matching', href: '/management/parts-inquiry', category: 'Navigation', badge: 'Spare Parts' },
   { id: 'nav-workspace', title: 'Engineering Whiteboard', subtitle: 'Miro-grade canvas, 5-whys, maintenance templates', href: '/workspace', category: 'Navigation', badge: 'Canvas' },
   { id: 'nav-eqp', title: 'EQP Module Hub', subtitle: 'Certified reports, machines register & lifecycle', href: '/eqp', category: 'Navigation', badge: 'EQP' },
   { id: 'nav-japanese', title: 'Japanese Learning Hub', subtitle: 'JLPT N5 & N4 active recall, kanji dojo & audio exams', href: '/japanese', category: 'Navigation', badge: 'Language' },
@@ -134,6 +134,7 @@ const COMMAND_ITEMS = [
   { id: 'nav-technician-app', title: 'Field Technician Mobile App', subtitle: 'Voice transcription, audio tasks, weather advice', href: '/technician', category: 'Navigation', badge: 'Mobile' },
   
   // Quick Actions
+  { id: 'act-new-eo', title: 'Create Emergency Order (EO) Batch', subtitle: 'Automate multi-order dispatch for high-quantity parts', href: '/management/parts-inquiry', category: 'Quick Action', badge: 'EO Batch' },
   { id: 'act-new-task', title: 'Add Daily Schedule Task', subtitle: 'Create timed task block for today', href: '/management/daily-planner', category: 'Quick Action', badge: 'Action' },
   { id: 'act-search-parts', title: 'Run Komatsu PDX Inquiry', subtitle: 'Batch inquiry for parts stock & pricing', href: '/management/parts-inquiry', category: 'Quick Action', badge: 'Action' },
   { id: 'act-japanese', title: 'Practice Japanese SRS Flashcards', subtitle: 'Open JLPT N5/N4 flashcard dojo', href: '/japanese', category: 'Quick Action', badge: 'Learn' },

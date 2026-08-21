@@ -61,6 +61,11 @@ router.post('/api/scheduling/technician-schedules', requirePlatformAuth, require
 router.get('/api/komatsu/status', requirePlatformAuth, asyncHandler(platformController.getKomatsuStatus));
 router.post('/api/komatsu/cookie', requirePlatformAuth, asyncHandler(platformController.saveKomatsuCookie));
 router.post('/api/komatsu/inquiry', requirePlatformAuth, asyncHandler(platformController.runKomatsuInquiry));
+router.get('/api/komatsu/fleet', requirePlatformAuth, asyncHandler(platformController.getKomatsuFleet));
+router.post('/api/komatsu/custom-machine', requirePlatformAuth, asyncHandler(platformController.addKomatsuCustomMachine));
+router.get('/api/komatsu/part-lookup', requirePlatformAuth, asyncHandler(platformController.lookupKomatsuPartMaster));
+router.get('/api/komatsu/latest-order-no', requirePlatformAuth, asyncHandler(platformController.getKomatsuLatestOrderNo));
+router.post('/api/komatsu/eo-execute', requirePlatformAuth, asyncHandler(platformController.executeKomatsuEoOrder));
 
 module.exports = router;
 
