@@ -17,6 +17,8 @@ import {
   N4_MOCK_EXAM,
 } from '../../lib/japaneseData';
 
+import JLPTExamSimulator from './JLPTExamSimulator';
+
 function speakJapanese(text) {
   if (typeof window === 'undefined' || !window.speechSynthesis) return;
   window.speechSynthesis.cancel();
@@ -98,7 +100,7 @@ export default function JapaneseLearningHub() {
             className={`px-4 py-2 text-xs font-bold rounded-lg whitespace-nowrap transition-all ${activeTab === 'exam' ? 'bg-slate-900 text-white shadow-sm' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}`}
             onClick={() => setActiveTab('exam')}
           >
-            🎧 JLPT Exam & Audio
+            ⏱️ JLPT Exam Simulator
           </button>
         </div>
 
@@ -122,9 +124,9 @@ export default function JapaneseLearningHub() {
           <VocabularyVault vocabList={currentVocab} level={level} onToast={setToast} />
         )}
 
-        {/* Product 5: JLPT Exam Hall & Audio Center */}
+        {/* Product 5: JLPT Exam Simulator */}
         {activeTab === 'exam' && (
-          <ExamHall examData={currentExam} level={level} onToast={setToast} />
+          <JLPTExamSimulator level={level} onToast={setToast} />
         )}
       </div>
 
