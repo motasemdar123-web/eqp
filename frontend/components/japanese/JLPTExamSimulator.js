@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import Card from '../ui/Card';
 import Badge from '../ui/Badge';
 import Button from '../ui/Button';
-import { N5_SECTIONS_DATA, N4_SECTIONS_DATA } from '../../lib/japanese/examQuestionsData';
+import { EXAM_PAPERS_CATALOG, N5_SECTIONS_DATA, N4_SECTIONS_DATA } from '../../lib/japanese/examQuestionsData';
 
 function formatTimer(seconds) {
   const mins = Math.floor(seconds / 60);
@@ -13,7 +13,19 @@ function formatTimer(seconds) {
 }
 
 export default function JLPTExamSimulator({ level = 'N5', onToast }) {
-  const sections = level === 'N5' ? N5_SECTIONS_DATA : N4_SECTIONS_DATA;
+  const availablePapers = EXAM_PAPERS_CATALOG[level] || [];
+  const [selectedPaperId, setSelectedPaperId] = useState(availablePapers[0]?.id || (level === 'N5' ? 'n5-vol1' : 'n4-vol1'));
+
+  // Sync selected paper if level changes
+  useEffect(() => {
+    const papers = EXAM_PAPERS_CATALOG[level] || [];
+    if (papers.length > 0 && !papers.some((p) => p.id === selectedPaperId)) {
+      setSelectedPaperId(papers[0].id);
+    }
+  }, [level]);
+
+  const activePaper = availablePapers.find((p) => p.id === selectedPaperId) || availablePapers[0];
+  const sections = activePaper?.sections || (level === 'N5' ? N5_SECTIONS_DATA : N4_SECTIONS_DATA);
 
   // Exam Workflow State: 'BRIEFING' | 'EXAM' | 'SECTION_TRANSITION' | 'RESULTS'
   const [examState, setExamState] = useState('BRIEFING');
@@ -176,7 +188,7 @@ export default function JLPTExamSimulator({ level = 'N5', onToast }) {
           <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-1">
             <span className="text-xs font-bold uppercase text-slate-400">Total Duration</span>
             <p className="text-xl font-bold text-slate-900">
-              {level === 'N5' ? '90 Minutes' : '115 Minutes'}
+              {level === 'N5' ? '90 Minutes' : '105 Minutes'}
             </p>
             <p className="text-[11px] text-slate-500">3 Timed Test Sections</p>
           </div>
@@ -192,11 +204,80 @@ export default function JLPTExamSimulator({ level = 'N5', onToast }) {
           </div>
         </div>
 
+        {/* Mock Exam Paper Selection Gallery */}
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wide flex items-center gap-2">
+              <span>📚</span>
+              <span>Select Mock Exam Paper (模擬試験の選択):</span>
+            </h3>
+            <span className="text-xs text-blue-600 font-bold font-mono">
+              {availablePapers.length} Full Papers Available
+            </span>
+          </div>
+
+          <div className="grid gap-3 sm:grid-cols-2">
+            {availablePapers.map((paper) => {
+              const isSelected = selectedPaperId === paper.id;
+              return (
+                <div
+                  key={paper.id}
+                  onClick={() => {
+                    setSelectedPaperId(paper.id);
+                    setActiveSectionIndex(0);
+                    setActiveQuestionIndex(0);
+                    setUserAnswers({});
+                    setFlaggedQuestions(new Set());
+                  }}
+                  className={`p-4 rounded-2xl border-2 transition-all cursor-pointer text-left space-y-2.5 ${
+                    isSelected
+                      ? 'border-blue-600 bg-blue-50/70 shadow-md ring-2 ring-blue-500/20'
+                      : 'border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50/80'
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <span
+                      className={`text-[10px] font-bold px-2 py-0.5 rounded font-mono ${
+                        isSelected ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-700'
+                      }`}
+                    >
+                      {paper.badge}
+                    </span>
+                    <span className="text-xs font-bold font-mono text-slate-700 bg-white/80 px-2 py-0.5 rounded border border-slate-200">
+                      {paper.totalQuestions} Questions
+                    </span>
+                  </div>
+
+                  <h4 className="text-sm font-bold text-slate-900 leading-snug">
+                    {paper.title}
+                  </h4>
+
+                  <p className="text-xs text-slate-500 line-clamp-2 leading-relaxed">
+                    {paper.description}
+                  </p>
+
+                  <div className="flex items-center justify-between pt-1 border-t border-slate-100 text-[11px] text-slate-600 font-medium">
+                    <span>⏱ 3 Official Sections</span>
+                    <span className={isSelected ? 'text-blue-700 font-bold' : 'text-slate-400'}>
+                      {isSelected ? '✓ Selected Paper' : 'Select Paper ➔'}
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
         {/* Section Schedule */}
         <div className="space-y-3">
-          <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wide">
-            Test Section Sequence & Timing:
-          </h3>
+          <div className="flex items-center justify-between">
+            <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wide">
+              {activePaper.shortTitle || activePaper.title} — Schedule:
+            </h3>
+            <span className="text-xs text-slate-500 font-mono">
+              Total: {activePaper.totalQuestions} Questions
+            </span>
+          </div>
           <div className="divide-y divide-slate-100 border border-slate-200 rounded-xl overflow-hidden">
             {sections.map((sec, idx) => (
               <div key={sec.id} className="p-4 flex items-center justify-between bg-white hover:bg-slate-50">
@@ -312,9 +393,14 @@ export default function JLPTExamSimulator({ level = 'N5', onToast }) {
               {level}
             </span>
             <div>
-              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                Section {activeSectionIndex + 1} of {sections.length}
-              </span>
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                  Section {activeSectionIndex + 1} of {sections.length}
+                </span>
+                <span className="text-[10px] font-mono font-semibold px-1.5 py-0.5 rounded bg-slate-800 text-blue-300 border border-slate-700">
+                  {activePaper?.shortTitle || 'Official'}
+                </span>
+              </div>
               <p className="text-sm font-bold text-white truncate max-w-xs sm:max-w-md">
                 {currentSection.shortTitle}
               </p>
@@ -571,11 +657,16 @@ export default function JLPTExamSimulator({ level = 'N5', onToast }) {
       <Card className="p-6 md:p-8 space-y-6 border-2 border-slate-300 shadow-2xl bg-white">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-200 pb-5">
           <div>
-            <span className="text-xs font-bold uppercase tracking-widest text-slate-400">
-              Official JLPT Simulation Result
-            </span>
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-bold uppercase tracking-widest text-slate-400">
+                Official JLPT Simulation Result
+              </span>
+              <span className="text-[10px] font-bold font-mono px-2 py-0.5 rounded bg-blue-100 text-blue-900 border border-blue-200">
+                {activePaper?.shortTitle || 'Official Paper'}
+              </span>
+            </div>
             <h2 className="text-2xl font-bold text-slate-900 mt-0.5">
-              JLPT {level} Examination Score Report (合否結果通知書)
+              {activePaper?.title || `JLPT ${level} Examination Score Report`} (合否結果通知書)
             </h2>
           </div>
           <div
