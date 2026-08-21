@@ -505,78 +505,31 @@ export default function JLPTExamSimulator({ level = 'N5', onToast }) {
                 </button>
               </div>
 
-              {/* Listening Audio Player (For listening questions) */}
-              {(currentQuestion.audioSrc || currentQuestion.transcript || currentSection?.id?.includes('listening')) && (
+              {/* Listening Audio Player (Only for real official broadcast audio) */}
+              {currentQuestion.audioSrc && (
                 <div className="p-4 bg-slate-900 text-white rounded-2xl space-y-3 shadow-md border border-slate-800">
                   <div className="flex items-center justify-between text-xs text-slate-300">
                     <div className="flex items-center gap-2">
                       <span className="flex h-2.5 w-2.5 rounded-full bg-red-500 animate-pulse" />
                       <span className="font-bold text-white tracking-wide">
-                        {currentQuestion.audioSrc ? '🎧 Official JLPT Broadcast Audio' : '🎧 JLPT Listening Dialogue Broadcast'}
+                        🎧 Official JLPT Studio Audio Broadcast (実物の公式音声)
                       </span>
                     </div>
-                    <div className="flex items-center gap-2">
-                      {currentQuestion.transcript && (
-                        <button
-                          type="button"
-                          className="text-[11px] font-bold px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white transition-all cursor-pointer flex items-center gap-1.5 shadow-sm active:scale-95"
-                          onClick={() => {
-                            if (typeof window !== 'undefined' && window.speechSynthesis) {
-                              window.speechSynthesis.cancel();
-                              const text = currentQuestion.transcript.replace(/<[^>]*>?/gm, '');
-                              const u = new SpeechSynthesisUtterance(text);
-                              u.lang = 'ja-JP';
-                              u.rate = 0.90;
-                              window.speechSynthesis.speak(u);
-                              if (onToast) onToast({ type: 'info', message: '🔊 Playing Japanese dialogue broadcast...' });
-                            }
-                          }}
-                        >
-                          <span>🔊</span>
-                          <span>Play Broadcast (音声再生)</span>
-                        </button>
-                      )}
-                      <button
-                        type="button"
-                        className="text-[11px] font-bold px-2 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition-all cursor-pointer flex items-center gap-1"
-                        onClick={() => {
-                          if (typeof window !== 'undefined' && window.speechSynthesis) {
-                            window.speechSynthesis.cancel();
-                            if (onToast) onToast({ type: 'neutral', message: '⏹ Audio stopped.' });
-                          }
-                        }}
-                      >
-                        <span>⏹</span>
-                        <span>Stop</span>
-                      </button>
-                      <span className="font-mono text-[11px] px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">
-                        {currentSection?.shortTitle || '聴解'}
-                      </span>
-                    </div>
+                    <span className="font-mono text-[11px] px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">
+                      {currentSection?.shortTitle || '聴解'}
+                    </span>
                   </div>
 
-                  {currentQuestion.audioSrc ? (
-                    <audio
-                      ref={audioRef}
-                      controls
-                      className="w-full h-9 rounded-lg"
-                      src={currentQuestion.audioSrc}
-                      autoPlay={false}
-                    />
-                  ) : (
-                    <div className="flex items-center justify-between p-3 bg-slate-800/80 rounded-xl border border-slate-700/60">
-                      <div className="flex items-center gap-2.5 text-xs text-slate-300">
-                        <span className="text-base">📢</span>
-                        <span>Click <strong>Play Broadcast (音声再生)</strong> to listen to the dialogue and question.</span>
-                      </div>
-                      <span className="text-[10px] font-mono px-2 py-0.5 bg-blue-900/60 text-blue-300 rounded border border-blue-700/50">
-                        ja-JP Native Audio
-                      </span>
-                    </div>
-                  )}
+                  <audio
+                    ref={audioRef}
+                    controls
+                    className="w-full h-9 rounded-lg"
+                    src={currentQuestion.audioSrc}
+                    autoPlay={false}
+                  />
 
                   <p className="text-[11px] text-slate-400">
-                    💡 Listen to the broadcast dialogue carefully, then select the best matching answer below.
+                    💡 Listen to the real broadcast recording carefully, then select the best matching answer below.
                   </p>
                 </div>
               )}
@@ -902,33 +855,21 @@ export default function JLPTExamSimulator({ level = 'N5', onToast }) {
                 })}
               </div>
 
-              {/* Audio Transcript (For listening questions) */}
-              {q.transcript && (
+              {/* Audio Transcript & Real Audio Broadcast (For listening questions) */}
+              {(q.audioSrc || q.transcript) && (
                 <div className="p-3 bg-amber-50/90 border border-amber-200 rounded-lg text-xs text-amber-950 space-y-2 font-mono">
-                  <div className="flex items-center justify-between">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                     <div className="flex items-center gap-1.5 text-[11px] font-bold text-amber-800 uppercase tracking-wide">
                       <span>🎧</span>
-                      <span>Audio Dialogue Script & Transcript:</span>
+                      <span>Official Broadcast Audio & Transcript:</span>
                     </div>
-                    <button
-                      type="button"
-                      className="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-200 hover:bg-amber-300 text-amber-900 cursor-pointer flex items-center gap-1 transition-all active:scale-95"
-                      onClick={() => {
-                        if (typeof window !== 'undefined' && window.speechSynthesis) {
-                          window.speechSynthesis.cancel();
-                          const text = q.transcript.replace(/<[^>]*>?/gm, '');
-                          const u = new SpeechSynthesisUtterance(text);
-                          u.lang = 'ja-JP';
-                          u.rate = 0.90;
-                          window.speechSynthesis.speak(u);
-                        }
-                      }}
-                    >
-                      <span>🔊</span>
-                      <span>Listen to Audio Script</span>
-                    </button>
+                    {q.audioSrc && (
+                      <audio controls className="h-7 w-52 rounded" src={q.audioSrc} />
+                    )}
                   </div>
-                  <p className="whitespace-pre-line leading-relaxed">{q.transcript}</p>
+                  {q.transcript && (
+                    <p className="whitespace-pre-line leading-relaxed">{q.transcript}</p>
+                  )}
                 </div>
               )}
 
