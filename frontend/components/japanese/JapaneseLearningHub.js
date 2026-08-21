@@ -22,6 +22,10 @@ import TechnicalJapaneseHub from './TechnicalJapaneseHub';
 import SentenceScramblerGame from './SentenceScramblerGame';
 import MistakeBankModal from './MistakeBankModal';
 import LevelSelectorModal from './LevelSelectorModal';
+import MachinePartsExplorer from './MachinePartsExplorer';
+import WorkshopRoleplayCoach from './WorkshopRoleplayCoach';
+import BusinessEmailStudio from './BusinessEmailStudio';
+import SpeedKanjiRush from './SpeedKanjiRush';
 
 function speakJapanese(text) {
   if (typeof window === 'undefined' || !window.speechSynthesis) return;
@@ -83,7 +87,7 @@ export default function JapaneseLearningHub() {
     setActivePillar(pillar);
     if (pillar === 'exams') setActiveTab('exam');
     else if (pillar === 'foundations') setActiveTab('flashcards');
-    else if (pillar === 'workplace') setActiveTab('technical');
+    else if (pillar === 'workplace') setActiveTab('parts_explorer');
   };
 
   return (
@@ -141,7 +145,7 @@ export default function JapaneseLearningHub() {
             }`}
           >
             <span className="text-base">📖</span>
-            <span>Skills & Vocabulary (基礎ドリル)</span>
+            <span>Skills & Foundations (基礎ドリル)</span>
           </button>
 
           <button
@@ -154,7 +158,7 @@ export default function JapaneseLearningHub() {
             }`}
           >
             <span className="text-base">🏭</span>
-            <span>Factory & 5S (現場・保全)</span>
+            <span>Factory & Komatsu (現場・建機・敬語)</span>
           </button>
         </div>
 
@@ -171,13 +175,24 @@ export default function JapaneseLearningHub() {
                 }`}
                 onClick={() => setActiveTab('exam')}
               >
-                ⏱️ Full Mock Exams (10 Official & Diagnostic Papers)
+                ⏱️ Full Mock Exams
+              </button>
+              <button
+                type="button"
+                className={`px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+                  activeTab === 'rush'
+                    ? 'bg-rose-600 text-white shadow-xs'
+                    : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50'
+                }`}
+                onClick={() => setActiveTab('rush')}
+              >
+                ⚡ Speed Kanji Rush (60s Arcade)
               </button>
               <button
                 type="button"
                 className={`px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
                   activeTab === 'mistakes'
-                    ? 'bg-rose-600 text-white shadow-xs'
+                    ? 'bg-rose-700 text-white shadow-xs'
                     : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50'
                 }`}
                 onClick={() => setActiveTab('mistakes')}
@@ -193,7 +208,7 @@ export default function JapaneseLearningHub() {
                 }`}
                 onClick={() => setActiveTab('scramble')}
               >
-                🧩 Sentence Scrambler (Mondai 2 Stars)
+                🧩 Sentence Scrambler
               </button>
             </>
           )}
@@ -248,23 +263,62 @@ export default function JapaneseLearningHub() {
           )}
 
           {activePillar === 'workplace' && (
-            <button
-              type="button"
-              className={`px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
-                activeTab === 'technical'
-                  ? 'bg-indigo-600 text-white shadow-xs'
-                  : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50'
-              }`}
-              onClick={() => setActiveTab('technical')}
-            >
-              🏭 5S, Maintenance & Safety Suite
-            </button>
+            <>
+              <button
+                type="button"
+                className={`px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+                  activeTab === 'parts_explorer'
+                    ? 'bg-amber-500 text-slate-950 shadow-xs'
+                    : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50'
+                }`}
+                onClick={() => setActiveTab('parts_explorer')}
+              >
+                🚜 Komatsu Parts Explorer (建機部品図鑑)
+              </button>
+              <button
+                type="button"
+                className={`px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+                  activeTab === 'roleplay'
+                    ? 'bg-indigo-600 text-white shadow-xs'
+                    : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50'
+                }`}
+                onClick={() => setActiveTab('roleplay')}
+              >
+                🗣️ Workshop Dialogue Coach (現場会話特訓)
+              </button>
+              <button
+                type="button"
+                className={`px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+                  activeTab === 'business_email'
+                    ? 'bg-blue-600 text-white shadow-xs'
+                    : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50'
+                }`}
+                onClick={() => setActiveTab('business_email')}
+              >
+                ✉️ Business Email & Keigo Studio (敬語・メール)
+              </button>
+              <button
+                type="button"
+                className={`px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+                  activeTab === 'technical'
+                    ? 'bg-slate-900 text-white shadow-xs'
+                    : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50'
+                }`}
+                onClick={() => setActiveTab('technical')}
+              >
+                🏭 5S & Safety Glossary
+              </button>
+            </>
           )}
         </div>
 
         {/* Active Sub-Module View */}
         {activeTab === 'exam' && (
           <JLPTExamSimulator level={level} onToast={setToast} />
+        )}
+
+        {activeTab === 'rush' && (
+          <SpeedKanjiRush level={level} onToast={showToast} />
         )}
 
         {activeTab === 'mistakes' && (
@@ -289,6 +343,18 @@ export default function JapaneseLearningHub() {
 
         {activeTab === 'vocab' && (
           <VocabularyVault vocabList={currentVocab} level={level} onToast={setToast} />
+        )}
+
+        {activeTab === 'parts_explorer' && (
+          <MachinePartsExplorer onToast={showToast} />
+        )}
+
+        {activeTab === 'roleplay' && (
+          <WorkshopRoleplayCoach onToast={showToast} />
+        )}
+
+        {activeTab === 'business_email' && (
+          <BusinessEmailStudio onToast={showToast} />
         )}
 
         {activeTab === 'technical' && (
