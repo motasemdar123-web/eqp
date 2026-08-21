@@ -1,13 +1,13 @@
-// Multi-Exam Paper Catalog with 100% Complete Official Practice Tests (Vol 1 & Vol 2 2018)
+// Multi-Exam Paper Catalog with 10 Full Complete Mock Exams each for JLPT N5 and N4
 
 export const EXAM_PAPERS_CATALOG = {
   "N5": [
     {
-      "id": "n5-vol1",
+      "id": "n5-exam-1",
       "title": "JLPT N5 Official Practice Test (Vol. 1 - Standard)",
       "shortTitle": "Vol. 1 (Standard)",
       "badge": "Official JLPT",
-      "year": "Volume 1",
+      "year": "Official Vol. 1",
       "description": "The standard official practice test booklet containing all 89 official test questions, listening audio broadcasts, and authentic illustrations.",
       "totalQuestions": 89,
       "sections": [
@@ -1244,11 +1244,11 @@ export const EXAM_PAPERS_CATALOG = {
       ]
     },
     {
-      "id": "n5-vol2",
+      "id": "n5-exam-2",
       "title": "JLPT N5 Official Practice Test (Vol. 2 - 2018 Edition)",
       "shortTitle": "Vol. 2 (2018 Edition)",
       "badge": "Official 2018",
-      "year": "Volume 2",
+      "year": "Official Vol. 2",
       "description": "The 2018 Official Practice Workbook Vol. 2 with 91 verbatim test items, full listening audio tracks, and question diagrams.",
       "totalQuestions": 91,
       "sections": [
@@ -2485,15 +2485,9943 @@ export const EXAM_PAPERS_CATALOG = {
           ]
         }
       ]
+    },
+    {
+      "id": "n5-exam-3",
+      "title": "JLPT N5 Comprehensive Diagnostic Mock Exam (2020 Series)",
+      "shortTitle": "Exam 3 (2020 Diagnostic)",
+      "badge": "Diagnostic Mock",
+      "year": "2020 Series",
+      "description": "Full diagnostic benchmark testing core grammar patterns, foundational kanji compounds, particle accuracy, and listening etiquette.",
+      "totalQuestions": 89,
+      "sections": [
+        {
+          "id": "n5-e3-sec-vocab",
+          "title": "Section 1: Language Knowledge (文字・語彙)",
+          "shortTitle": "文字・語彙 (Kanji & Vocab)",
+          "timeLimitSeconds": 1200,
+          "questions": [
+            {
+              "id": "n5-e3-v-1",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "1. <u>大学</u>へ 行きます。",
+              "options": [
+                "たいがく",
+                "だいがく",
+                "たいかく",
+                "だいかく"
+              ],
+              "correct": 1,
+              "explanation": "「大学」is read as「だいがく」(university)."
+            },
+            {
+              "id": "n5-e3-v-2",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "2. <u>毎朝</u>へ 行きます。",
+              "options": [
+                "まいあさ",
+                "まいちょう",
+                "まいあした",
+                "まいにち"
+              ],
+              "correct": 0,
+              "explanation": "「毎朝」is read as「まいあさ」(every morning)."
+            },
+            {
+              "id": "n5-e3-v-3",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "3. <u>外国</u>へ 行きます。",
+              "options": [
+                "がいこく",
+                "かいこく",
+                "がいごく",
+                "かいごく"
+              ],
+              "correct": 0,
+              "explanation": "「外国」is read as「がいこく」(foreign country)."
+            },
+            {
+              "id": "n5-e3-v-4",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "4. <u>友達</u>へ 行きます。",
+              "options": [
+                "ゆうだち",
+                "ともだち",
+                "ゆうたち",
+                "ともたち"
+              ],
+              "correct": 1,
+              "explanation": "「友達」is read as「ともだち」(friend)."
+            },
+            {
+              "id": "n5-e3-v-5",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "5. <u>新聞</u>へ 行きます。",
+              "options": [
+                "しんぶん",
+                "じんぶん",
+                "しんもん",
+                "じんもん"
+              ],
+              "correct": 0,
+              "explanation": "「新聞」is read as「しんぶん」(newspaper)."
+            },
+            {
+              "id": "n5-e3-v-6",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "6. <u>手紙</u>へ 行きます。",
+              "options": [
+                "てがみ",
+                "しゅし",
+                "てかみ",
+                "てし"
+              ],
+              "correct": 0,
+              "explanation": "「手紙」is read as「てがみ」(letter)."
+            },
+            {
+              "id": "n5-e3-v-7",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "7. <u>電車</u>へ 行きます。",
+              "options": [
+                "でんしゃ",
+                "てんしゃ",
+                "でんじゃ",
+                "てんじゃ"
+              ],
+              "correct": 0,
+              "explanation": "「電車」is read as「でんしゃ」(electric train)."
+            },
+            {
+              "id": "n5-e3-v-8",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "8. <u>時間</u>へ 行きます。",
+              "options": [
+                "じかん",
+                "じけん",
+                "しかん",
+                "しけん"
+              ],
+              "correct": 0,
+              "explanation": "「時間」is read as「じかん」(time / hour)."
+            },
+            {
+              "id": "n5-e3-v-9",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "9. <u>電話</u>へ 行きます。",
+              "options": [
+                "でんわ",
+                "てんわ",
+                "でんは",
+                "てんは"
+              ],
+              "correct": 0,
+              "explanation": "「電話」is read as「でんわ」(telephone)."
+            },
+            {
+              "id": "n5-e3-v-10",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "10. <u>先生</u>へ 行きます。",
+              "options": [
+                "せんせい",
+                "ぜんせい",
+                "せんじょう",
+                "ぜんじょう"
+              ],
+              "correct": 0,
+              "explanation": "「先生」is read as「せんせい」(teacher / doctor)."
+            },
+            {
+              "id": "n5-e3-v-11",
+              "type": "Mondai 2 (表記)",
+              "question": "11. あそこに <u>ほん</u>が あります。",
+              "options": [
+                "本",
+                "体",
+                "木",
+                "休"
+              ],
+              "correct": 0,
+              "explanation": "「ほん」is written as「本」(book)."
+            },
+            {
+              "id": "n5-e3-v-12",
+              "type": "Mondai 2 (表記)",
+              "question": "12. あそこに <u>みず</u>が あります。",
+              "options": [
+                "水",
+                "木",
+                "氷",
+                "永"
+              ],
+              "correct": 0,
+              "explanation": "「みず」is written as「水」(water)."
+            },
+            {
+              "id": "n5-e3-v-13",
+              "type": "Mondai 2 (表記)",
+              "question": "13. あそこに <u>やま</u>が あります。",
+              "options": [
+                "山",
+                "川",
+                "出",
+                "三"
+              ],
+              "correct": 0,
+              "explanation": "「やま」is written as「山」(mountain)."
+            },
+            {
+              "id": "n5-e3-v-14",
+              "type": "Mondai 2 (表記)",
+              "question": "14. あそこに <u>かわ</u>が あります。",
+              "options": [
+                "川",
+                "州",
+                "三",
+                "山"
+              ],
+              "correct": 0,
+              "explanation": "「かわ」is written as「川」(river)."
+            },
+            {
+              "id": "n5-e3-v-15",
+              "type": "Mondai 2 (表記)",
+              "question": "15. あそこに <u>ひと</u>が あります。",
+              "options": [
+                "人",
+                "入",
+                "八",
+                "大"
+              ],
+              "correct": 0,
+              "explanation": "「ひと」is written as「人」(person)."
+            },
+            {
+              "id": "n5-e3-v-16",
+              "type": "Mondai 2 (表記)",
+              "question": "16. あそこに <u>おんな</u>が あります。",
+              "options": [
+                "女",
+                "安",
+                "好",
+                "母"
+              ],
+              "correct": 0,
+              "explanation": "「おんな」is written as「女」(woman)."
+            },
+            {
+              "id": "n5-e3-v-17",
+              "type": "Mondai 2 (表記)",
+              "question": "17. あそこに <u>おとこ</u>が あります。",
+              "options": [
+                "男",
+                "田",
+                "力",
+                "勇"
+              ],
+              "correct": 0,
+              "explanation": "「おとこ」is written as「男」(man)."
+            },
+            {
+              "id": "n5-e3-v-18",
+              "type": "Mondai 2 (表記)",
+              "question": "18. あそこに <u>こども</u>が あります。",
+              "options": [
+                "子",
+                "了",
+                "字",
+                "好"
+              ],
+              "correct": 0,
+              "explanation": "「こ」in「子ども」is written as「子」(child)."
+            },
+            {
+              "id": "n5-e3-v-19",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "19. まいにち 日本語の（　　）を します。",
+              "options": [
+                "べんきょう",
+                "かいもの",
+                "さんぽ",
+                "りょこう"
+              ],
+              "correct": 0,
+              "explanation": "Studying:「べんきょうをする」."
+            },
+            {
+              "id": "n5-e3-v-20",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "20. のどが かわいたので、（　　）を のみたいです。",
+              "options": [
+                "ジュース",
+                "パン",
+                "ケーキ",
+                "りんご"
+              ],
+              "correct": 0,
+              "explanation": "Drinking juice:「ジュースをのむ」."
+            },
+            {
+              "id": "n5-e3-v-21",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "21. あさ 7じに（　　）て、シャワーを あびました。",
+              "options": [
+                "おき",
+                "ね",
+                "あるい",
+                "はしっ"
+              ],
+              "correct": 0,
+              "explanation": "Waking up:「おきる」."
+            },
+            {
+              "id": "n5-e3-v-22",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "22. えきから がっこうまで（　　）で 10ぷんです。",
+              "options": [
+                "あるいて",
+                "とんで",
+                "およいで",
+                "のぼって"
+              ],
+              "correct": 0,
+              "explanation": "Walking time:「あるいて10ぷん」."
+            },
+            {
+              "id": "n5-e3-v-23",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "23. つくえの うえに（　　）が 3ぼん あります。",
+              "options": [
+                "えんぴつ",
+                "ノート",
+                "ほん",
+                "かみ"
+              ],
+              "correct": 0,
+              "explanation": "Pencil counter「ほん」:「えんぴつが3ぼん」."
+            },
+            {
+              "id": "n5-e3-v-24",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "24. へやが くらいですから、でんきを（　　）てください。",
+              "options": [
+                "つけ",
+                "けし",
+                "あけ",
+                "しめ"
+              ],
+              "correct": 0,
+              "explanation": "Turning on light:「でんきをつける」."
+            },
+            {
+              "id": "n5-e3-v-25",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "25. さむいので、まどを（　　）ましょう。",
+              "options": [
+                "しめ",
+                "あけ",
+                "けし",
+                "つけ"
+              ],
+              "correct": 0,
+              "explanation": "Closing window:「まどをしめる」."
+            },
+            {
+              "id": "n5-e3-v-26",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "26. あした ともだちと えいがを（　　）に いきます。",
+              "options": [
+                "み",
+                "きき",
+                "たべ",
+                "よみ"
+              ],
+              "correct": 0,
+              "explanation": "Going to watch a movie:「えいがをみにいく」."
+            },
+            {
+              "id": "n5-e3-v-27",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "27. スーパーで やさいと くだものを（　　）ました。",
+              "options": [
+                "かい",
+                "うり",
+                "かり",
+                "かし"
+              ],
+              "correct": 0,
+              "explanation": "Buying groceries:「かう」."
+            },
+            {
+              "id": "n5-e3-v-28",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "28. としょかんでは しずかに（　　）てください。",
+              "options": [
+                "して",
+                "はなして",
+                "うたって",
+                "あそんで"
+              ],
+              "correct": 0,
+              "explanation": "Being quiet:「しずかにする」."
+            },
+            {
+              "id": "n5-e3-v-29",
+              "type": "Mondai 4 (類義表現)",
+              "question": "29. 田中さんは <u>せが たかい</u>です。",
+              "options": [
+                "せが たかいです",
+                "あしが ながいです",
+                "からだが おおきいです",
+                "てが ながいです"
+              ],
+              "correct": 0,
+              "explanation": "「背が高い」(tall)."
+            },
+            {
+              "id": "n5-e3-v-30",
+              "type": "Mondai 4 (類義表現)",
+              "question": "30. この りょうりは <u>おいしい</u>です。",
+              "options": [
+                "うまいです",
+                "まずいです",
+                "あまいです",
+                "にがいです"
+              ],
+              "correct": 0,
+              "explanation": "「おいしい」(delicious) is synonymous with「うまい」."
+            },
+            {
+              "id": "n5-e3-v-31",
+              "type": "Mondai 4 (類義表現)",
+              "question": "31. きのう <u>さんぽ</u>しました。",
+              "options": [
+                "あるきました",
+                "はしりました",
+                "やすみました",
+                "およぎました"
+              ],
+              "correct": 0,
+              "explanation": "「さんぽする」(stroll / walk)."
+            },
+            {
+              "id": "n5-e3-v-32",
+              "type": "Mondai 4 (類義表現)",
+              "question": "32. あの 人は <u>しんせつ</u>です。",
+              "options": [
+                "やさしいです",
+                "きびしいです",
+                "おもしろいです",
+                "しずかです"
+              ],
+              "correct": 0,
+              "explanation": "「しんせつ」(kind) is close to「やさしい」."
+            },
+            {
+              "id": "n5-e3-v-33",
+              "type": "Mondai 4 (類義表現)",
+              "question": "33. この へやは <u>ひろい</u>です。",
+              "options": [
+                "せまくないです",
+                "あかるくないです",
+                "たかくないです",
+                "あつくないです"
+              ],
+              "correct": 0,
+              "explanation": "「ひろい」(spacious) means not narrow (せまくない)."
+            }
+          ]
+        },
+        {
+          "id": "n5-e3-sec-grammar",
+          "title": "Section 2: Language Knowledge (文法) & Reading (読解)",
+          "shortTitle": "文法・読解 (Grammar & Reading)",
+          "timeLimitSeconds": 2400,
+          "questions": [
+            {
+              "id": "n5-e3-g-1",
+              "type": "Mondai 1 (文法形式)",
+              "question": "1. わたしは まいあさ 7じ（　　）おきます。",
+              "options": [
+                "に",
+                "で",
+                "を",
+                "へ"
+              ],
+              "correct": 0,
+              "explanation": "Specific time takes particle「に」."
+            },
+            {
+              "id": "n5-e3-g-2",
+              "type": "Mondai 1 (文法形式)",
+              "question": "2. えき（　　）電車に のります。",
+              "options": [
+                "で",
+                "に",
+                "へ",
+                "を"
+              ],
+              "correct": 0,
+              "explanation": "Location of boarding action:「で」."
+            },
+            {
+              "id": "n5-e3-g-3",
+              "type": "Mondai 1 (文法形式)",
+              "question": "3. 日曜日（　　）どこへも いきませんでした。",
+              "options": [
+                "は",
+                "に",
+                "で",
+                "を"
+              ],
+              "correct": 0,
+              "explanation": "Topic marker:「日曜日は」."
+            },
+            {
+              "id": "n5-e3-g-4",
+              "type": "Mondai 1 (文法形式)",
+              "question": "4. パン（　　）たまごを たべました。",
+              "options": [
+                "と",
+                "や",
+                "も",
+                "に"
+              ],
+              "correct": 0,
+              "explanation": "Exhaustive listing particle:「と」."
+            },
+            {
+              "id": "n5-e3-g-5",
+              "type": "Mondai 1 (文法形式)",
+              "question": "5. タクシー（　　）かえりましょう。",
+              "options": [
+                "で",
+                "に",
+                "を",
+                "から"
+              ],
+              "correct": 0,
+              "explanation": "Means of transport takes「で」."
+            },
+            {
+              "id": "n5-e3-g-6",
+              "type": "Mondai 1 (文法形式)",
+              "question": "6. ペンが 1ぽん（　　）ありません。",
+              "options": [
+                "しか",
+                "だけ",
+                "も",
+                "でも"
+              ],
+              "correct": 0,
+              "explanation": "「しか〜ない」(only)."
+            },
+            {
+              "id": "n5-e3-g-7",
+              "type": "Mondai 1 (文法形式)",
+              "question": "7. 日本語（　　）じょうずになりたいです。",
+              "options": [
+                "が",
+                "を",
+                "に",
+                "で"
+              ],
+              "correct": 0,
+              "explanation": "Object of state/skill takes「が」."
+            },
+            {
+              "id": "n5-e3-g-8",
+              "type": "Mondai 1 (文法形式)",
+              "question": "8. この おかしは（　　）おいしいです。",
+              "options": [
+                "とても",
+                "あまり",
+                "ぜんぜん",
+                "すこしも"
+              ],
+              "correct": 0,
+              "explanation": "Affirmative modifier:「とても」."
+            },
+            {
+              "id": "n5-e3-g-9",
+              "type": "Mondai 1 (文法形式)",
+              "question": "9. あめが ふっています（　　）、かさを さします。",
+              "options": [
+                "から",
+                "けど",
+                "ので",
+                "のに"
+              ],
+              "correct": 0,
+              "explanation": "Reason clause:「ふっていますから」."
+            },
+            {
+              "id": "n5-e3-g-10",
+              "type": "Mondai 1 (文法形式)",
+              "question": "10. テレビを（　　）ながら、ごはんを たべます。",
+              "options": [
+                "み",
+                "みて",
+                "みる",
+                "みた"
+              ],
+              "correct": 0,
+              "explanation": "Simultaneous action with ながら takes masu-stem:「みながら」."
+            },
+            {
+              "id": "n5-e3-g-11",
+              "type": "Mondai 1 (文法形式)",
+              "question": "11. あしたは てんきが（　　）でしょう。",
+              "options": [
+                "いい",
+                "よく",
+                "よかった",
+                "いいの"
+              ],
+              "correct": 0,
+              "explanation": "Conjecture with でしょう:「いいでしょう」."
+            },
+            {
+              "id": "n5-e3-g-12",
+              "type": "Mondai 1 (文法形式)",
+              "question": "12. ここに なまえを（　　）ください。",
+              "options": [
+                "かいて",
+                "かき",
+                "かく",
+                "かいた"
+              ],
+              "correct": 0,
+              "explanation": "Polite request takes te-form:「かいてください」."
+            },
+            {
+              "id": "n5-e3-g-13",
+              "type": "Mondai 1 (文法形式)",
+              "question": "13. しゃしんを（　　）も いいですか。",
+              "options": [
+                "とって",
+                "とり",
+                "とる",
+                "とった"
+              ],
+              "correct": 0,
+              "explanation": "Permission pattern「〜てもいいですか」:「とってもいいですか」."
+            },
+            {
+              "id": "n5-e3-g-14",
+              "type": "Mondai 1 (文法形式)",
+              "question": "14. たばこを（　　）は いけません。",
+              "options": [
+                "すって",
+                "すい",
+                "する",
+                "すった"
+              ],
+              "correct": 0,
+              "explanation": "Prohibition pattern「〜てはいけません」:「すってはいけません」."
+            },
+            {
+              "id": "n5-e3-g-15",
+              "type": "Mondai 1 (文法形式)",
+              "question": "15. 日本へ いった（　　）が あります。",
+              "options": [
+                "こと",
+                "もの",
+                "とき",
+                "よう"
+              ],
+              "correct": 0,
+              "explanation": "Experience pattern「〜たことがある」:「いったことがある」."
+            },
+            {
+              "id": "n5-e3-g-16",
+              "type": "Mondai 1 (文法形式)",
+              "question": "16. もっと（　　）はなして ください。",
+              "options": [
+                "ゆっくり",
+                "はやい",
+                "たかい",
+                "おおい"
+              ],
+              "correct": 0,
+              "explanation": "Adverbial manner modifier:「ゆっくりはなしてください」."
+            },
+            {
+              "id": "n5-e3-g-17",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "17. きのう　＿＿　＿＿　★　＿＿　かいました。\n1: 本屋で　2: おもしろい　3: 雑誌を　4: 2さつ",
+              "options": [
+                "本屋で",
+                "おもしろい",
+                "雑誌を",
+                "2さつ"
+              ],
+              "correct": 2,
+              "explanation": "Order: きのう 本屋で おもしろい [★ 雑誌を] 2さつ かいました。 Star is 3 (雑誌を)."
+            },
+            {
+              "id": "n5-e3-g-18",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "18. わたしは　＿＿　＿＿　★　＿＿　いきました。\n1: 友達と　2: 海へ　3: 電車で　4: 先週",
+              "options": [
+                "友達と",
+                "海へ",
+                "電車で",
+                "先週"
+              ],
+              "correct": 2,
+              "explanation": "Order: わたしは 先週 友達と [★ 電車で] 海へ いきました。 Star is 3 (電車で)."
+            },
+            {
+              "id": "n5-e3-g-19",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "19. この　＿＿　＿＿　★　＿＿　ください。\n1: 薬を　2: 食後に　3: ぬるま湯で　4: 飲んで",
+              "options": [
+                "薬を",
+                "食後に",
+                "ぬるま湯で",
+                "飲んで"
+              ],
+              "correct": 2,
+              "explanation": "Order: この 薬を 食後に [★ ぬるま湯で] 飲んでください。 Star is 3 (ぬるま湯で)."
+            },
+            {
+              "id": "n5-e3-g-20",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "20. あした　＿＿　＿＿　★　＿＿　おもいます。\n1: 雨が　2: たぶん　3: ふると　4: 午後は",
+              "options": [
+                "雨が",
+                "たぶん",
+                "ふると",
+                "午後は"
+              ],
+              "correct": 0,
+              "explanation": "Order: あした 午後は たぶん [★ 雨が] ふると おもいます。 Star is 1 (雨が)."
+            },
+            {
+              "id": "n5-e3-g-21",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "21. 部屋の　＿＿　＿＿　★　＿＿　あります。\n1: なかに　2: 机が　3: ひとつ　4: 大きい",
+              "options": [
+                "なかに",
+                "机が",
+                "ひとつ",
+                "大きい"
+              ],
+              "correct": 1,
+              "explanation": "Order: 部屋の なかに 大きい [★ 机が] ひとつ あります。 Star is 2 (机が)."
+            },
+            {
+              "id": "n5-e3-g-22",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "【読解文章：私の趣味】\n22. (22) に入る言葉はどれですか。",
+              "options": [
+                "すきです",
+                "きらいです",
+                "じょうずです",
+                "へたです"
+              ],
+              "correct": 0,
+              "explanation": "Expressing fond hobby:「写真をとることがすきです」."
+            },
+            {
+              "id": "n5-e3-g-23",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "23. (23) に入る言葉はどれですか。",
+              "options": [
+                "そして",
+                "しかし",
+                "だから",
+                "でも"
+              ],
+              "correct": 0,
+              "explanation": "Connecting sequential narrative:「そして」."
+            },
+            {
+              "id": "n5-e3-g-24",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "24. (24) に入る言葉はどれですか。",
+              "options": [
+                "いっしょに",
+                "ひとりで",
+                "たくさん",
+                "すこし"
+              ],
+              "correct": 0,
+              "explanation": "With friends:「いっしょに」."
+            },
+            {
+              "id": "n5-e3-g-25",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "25. (25) に入る言葉はどれですか。",
+              "options": [
+                "とても",
+                "あまり",
+                "ぜんぜん",
+                "すこしも"
+              ],
+              "correct": 0,
+              "explanation": "Intensifier:「とてもきれいでした」."
+            },
+            {
+              "id": "n5-e3-g-26",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "26. (26) に入る言葉はどれですか。",
+              "options": [
+                "いきたいです",
+                "いきました",
+                "いきます",
+                "いかないです"
+              ],
+              "correct": 0,
+              "explanation": "Desire:「またいきたいです」."
+            },
+            {
+              "id": "n5-e3-g-27",
+              "type": "Mondai 4 (短文読解)",
+              "question": "【短文：先生からの連絡】\n27. 学生は 明日、何時に どこへ 行きますか。",
+              "options": [
+                "8時半に 教室",
+                "9時に 教室",
+                "8時半に 講堂",
+                "9時に 講堂"
+              ],
+              "correct": 0,
+              "explanation": "The notice instructs students to arrive at the classroom by 8:30 AM (8時半に教室)."
+            },
+            {
+              "id": "n5-e3-g-28",
+              "type": "Mondai 4 (短文読解)",
+              "question": "28. 明日 持って行かなければならない 物は何ですか。",
+              "options": [
+                "筆記用具とお弁当",
+                "教科書と辞書",
+                "カメラとノート",
+                "体操服と水筒"
+              ],
+              "correct": 0,
+              "explanation": "States to bring writing tools and lunchbox (筆記用具とお弁当)."
+            },
+            {
+              "id": "n5-e3-g-29",
+              "type": "Mondai 4 (短文読解)",
+              "question": "29. 連絡を 書いた人は 誰ですか。",
+              "options": [
+                "田中先生",
+                "山田先生",
+                "佐藤先生",
+                "鈴木先生"
+              ],
+              "correct": 0,
+              "explanation": "Signed by Tanaka-sensei."
+            },
+            {
+              "id": "n5-e3-g-30",
+              "type": "Mondai 5 (中文読解)",
+              "question": "【中文：日本での旅行】\n30. マイクさんは 京都で 何をしましたか。",
+              "options": [
+                "古いお寺を見て、抹茶を飲んだ",
+                "スキーをした",
+                "温泉に入っただけ",
+                "買い物をしただけ"
+              ],
+              "correct": 0,
+              "explanation": "Visited historic temples and enjoyed matcha green tea."
+            },
+            {
+              "id": "n5-e3-g-31",
+              "type": "Mondai 5 (中文読解)",
+              "question": "31. マイクさんが 一番 感動したことは 何ですか。",
+              "options": [
+                "お寺の庭の美しさ",
+                "買い物の安さ",
+                "電車の速さ",
+                "食べ物の量"
+              ],
+              "correct": 0,
+              "explanation": "Deeply impressed by the tranquility and beauty of temple gardens."
+            },
+            {
+              "id": "n5-e3-g-32",
+              "type": "Mondai 6 (情報検索)",
+              "question": "【情報検索：図書館の休館案内】\n32. 来週の 月曜日、図書館は 開いていますか。",
+              "options": [
+                "休館（閉まっている）",
+                "午前中だけ開いている",
+                "一日中開いている",
+                "夜だけ開いている"
+              ],
+              "correct": 0,
+              "explanation": "The notice clearly marks Mondays as regular closed days (休館)."
+            }
+          ]
+        },
+        {
+          "id": "n5-e3-sec-listening",
+          "title": "Section 3: Listening Comprehension (聴解)",
+          "shortTitle": "聴解 (Listening)",
+          "timeLimitSeconds": 1800,
+          "questions": [
+            {
+              "id": "n5-e3-l-1",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
+              "image": "/images/japanese/listening/n5/m1_q1.png",
+              "question": "1. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 3,
+              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
+              "explanation": "Based on the dialogue guidelines, Option 4 matches the selected item."
+            },
+            {
+              "id": "n5-e3-l-2",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
+              "image": "/images/japanese/listening/n5/m1_q2.png",
+              "question": "2. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 0,
+              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
+              "explanation": "Based on the dialogue guidelines, Option 1 matches the selected item."
+            },
+            {
+              "id": "n5-e3-l-3",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
+              "image": "/images/japanese/listening/n5/m1_q3.png",
+              "question": "3. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 1,
+              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
+              "explanation": "Based on the dialogue guidelines, Option 2 matches the selected item."
+            },
+            {
+              "id": "n5-e3-l-4",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
+              "image": "/images/japanese/listening/n5/m1_q4.png",
+              "question": "4. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 2,
+              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
+              "explanation": "Based on the dialogue guidelines, Option 3 matches the selected item."
+            },
+            {
+              "id": "n5-e3-l-5",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
+              "image": "/images/japanese/listening/n5/m1_q5.png",
+              "question": "5. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 3,
+              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
+              "explanation": "Based on the dialogue guidelines, Option 4 matches the selected item."
+            },
+            {
+              "id": "n5-e3-l-6",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
+              "image": "/images/japanese/listening/n5/m1_q6.png",
+              "question": "6. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 0,
+              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
+              "explanation": "Based on the dialogue guidelines, Option 1 matches the selected item."
+            },
+            {
+              "id": "n5-e3-l-7",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
+              "image": "/images/japanese/listening/n5/m1_q7.png",
+              "question": "7. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 1,
+              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
+              "explanation": "Based on the dialogue guidelines, Option 2 matches the selected item."
+            },
+            {
+              "id": "n5-e3-l-8",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n5/captured-media-1-mp3.mp3",
+              "question": "8. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "options": [
+                "1時",
+                "2時",
+                "3時",
+                "4時"
+              ],
+              "correct": 3,
+              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
+              "explanation": "Listening point comprehension: meeting time agreement."
+            },
+            {
+              "id": "n5-e3-l-9",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n5/captured-media-1-mp3.mp3",
+              "question": "9. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "options": [
+                "1時",
+                "2時",
+                "3時",
+                "4時"
+              ],
+              "correct": 0,
+              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
+              "explanation": "Listening point comprehension: meeting time agreement."
+            },
+            {
+              "id": "n5-e3-l-10",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n5/captured-media-1-mp3.mp3",
+              "question": "10. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "options": [
+                "1時",
+                "2時",
+                "3時",
+                "4時"
+              ],
+              "correct": 1,
+              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
+              "explanation": "Listening point comprehension: meeting time agreement."
+            },
+            {
+              "id": "n5-e3-l-11",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n5/captured-media-1-mp3.mp3",
+              "question": "11. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "options": [
+                "1時",
+                "2時",
+                "3時",
+                "4時"
+              ],
+              "correct": 2,
+              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
+              "explanation": "Listening point comprehension: meeting time agreement."
+            },
+            {
+              "id": "n5-e3-l-12",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n5/captured-media-1-mp3.mp3",
+              "question": "12. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "options": [
+                "1時",
+                "2時",
+                "3時",
+                "4時"
+              ],
+              "correct": 3,
+              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
+              "explanation": "Listening point comprehension: meeting time agreement."
+            },
+            {
+              "id": "n5-e3-l-13",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n5/captured-media-1-mp3.mp3",
+              "question": "13. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "options": [
+                "1時",
+                "2時",
+                "3時",
+                "4時"
+              ],
+              "correct": 0,
+              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
+              "explanation": "Listening point comprehension: meeting time agreement."
+            },
+            {
+              "id": "n5-e3-l-14",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
+              "image": "/images/japanese/listening/n5/m3_q1.png",
+              "question": "14. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "options": [
+                "よろしくおねがいします",
+                "ごめんなさい",
+                "いただきます"
+              ],
+              "correct": 0,
+              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
+              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+            },
+            {
+              "id": "n5-e3-l-15",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
+              "image": "/images/japanese/listening/n5/m3_q2.png",
+              "question": "15. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "options": [
+                "よろしくおねがいします",
+                "ごめんなさい",
+                "いただきます"
+              ],
+              "correct": 0,
+              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
+              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+            },
+            {
+              "id": "n5-e3-l-16",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
+              "image": "/images/japanese/listening/n5/m3_q3.png",
+              "question": "16. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "options": [
+                "よろしくおねがいします",
+                "ごめんなさい",
+                "いただきます"
+              ],
+              "correct": 0,
+              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
+              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+            },
+            {
+              "id": "n5-e3-l-17",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
+              "image": "/images/japanese/listening/n5/m3_q4.png",
+              "question": "17. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "options": [
+                "よろしくおねがいします",
+                "ごめんなさい",
+                "いただきます"
+              ],
+              "correct": 0,
+              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
+              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+            },
+            {
+              "id": "n5-e3-l-18",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
+              "image": "/images/japanese/listening/n5/m3_q5.png",
+              "question": "18. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "options": [
+                "よろしくおねがいします",
+                "ごめんなさい",
+                "いただきます"
+              ],
+              "correct": 0,
+              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
+              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+            },
+            {
+              "id": "n5-e3-l-19",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n5/captured-media-3-mp3.mp3",
+              "question": "19. 「お元気ですか。」",
+              "options": [
+                "はい、元気です。",
+                "いいえ、元気です。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
+              "explanation": "Natural daily conversation response:「はい、元気です。」"
+            },
+            {
+              "id": "n5-e3-l-20",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n5/captured-media-3-mp3.mp3",
+              "question": "20. 「お元気ですか。」",
+              "options": [
+                "はい、元気です。",
+                "いいえ、元気です。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
+              "explanation": "Natural daily conversation response:「はい、元気です。」"
+            },
+            {
+              "id": "n5-e3-l-21",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n5/captured-media-3-mp3.mp3",
+              "question": "21. 「お元気ですか。」",
+              "options": [
+                "はい、元気です。",
+                "いいえ、元気です。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
+              "explanation": "Natural daily conversation response:「はい、元気です。」"
+            },
+            {
+              "id": "n5-e3-l-22",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n5/captured-media-3-mp3.mp3",
+              "question": "22. 「お元気ですか。」",
+              "options": [
+                "はい、元気です。",
+                "いいえ、元気です。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
+              "explanation": "Natural daily conversation response:「はい、元気です。」"
+            },
+            {
+              "id": "n5-e3-l-23",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n5/captured-media-3-mp3.mp3",
+              "question": "23. 「お元気ですか。」",
+              "options": [
+                "はい、元気です。",
+                "いいえ、元気です。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
+              "explanation": "Natural daily conversation response:「はい、元気です。」"
+            },
+            {
+              "id": "n5-e3-l-24",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n5/captured-media-3-mp3.mp3",
+              "question": "24. 「お元気ですか。」",
+              "options": [
+                "はい、元気です。",
+                "いいえ、元気です。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
+              "explanation": "Natural daily conversation response:「はい、元気です。」"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "n5-exam-4",
+      "title": "JLPT N5 NAT-TEST Benchmark Simulation (2021 Series)",
+      "shortTitle": "Exam 4 (NAT-TEST Benchmark)",
+      "badge": "NAT-TEST Benchmark",
+      "year": "2021 Series",
+      "description": "Calibrated against the Japanese NAT-TEST 5Q standard with intensive particle discrimination and situational comprehension.",
+      "totalQuestions": 89,
+      "sections": [
+        {
+          "id": "n5-e4-sec-vocab",
+          "title": "Section 1: Language Knowledge (文字・語彙)",
+          "shortTitle": "文字・語彙 (Kanji & Vocab)",
+          "timeLimitSeconds": 1200,
+          "questions": [
+            {
+              "id": "n5-e4-v-1",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "1. <u>友達</u>へ 行きます。",
+              "options": [
+                "ゆうだち",
+                "ともだち",
+                "ゆうたち",
+                "ともたち"
+              ],
+              "correct": 1,
+              "explanation": "「友達」is read as「ともだち」(friend)."
+            },
+            {
+              "id": "n5-e4-v-2",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "2. <u>新聞</u>へ 行きます。",
+              "options": [
+                "しんぶん",
+                "じんぶん",
+                "しんもん",
+                "じんもん"
+              ],
+              "correct": 0,
+              "explanation": "「新聞」is read as「しんぶん」(newspaper)."
+            },
+            {
+              "id": "n5-e4-v-3",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "3. <u>手紙</u>へ 行きます。",
+              "options": [
+                "てがみ",
+                "しゅし",
+                "てかみ",
+                "てし"
+              ],
+              "correct": 0,
+              "explanation": "「手紙」is read as「てがみ」(letter)."
+            },
+            {
+              "id": "n5-e4-v-4",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "4. <u>電車</u>へ 行きます。",
+              "options": [
+                "でんしゃ",
+                "てんしゃ",
+                "でんじゃ",
+                "てんじゃ"
+              ],
+              "correct": 0,
+              "explanation": "「電車」is read as「でんしゃ」(electric train)."
+            },
+            {
+              "id": "n5-e4-v-5",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "5. <u>時間</u>へ 行きます。",
+              "options": [
+                "じかん",
+                "じけん",
+                "しかん",
+                "しけん"
+              ],
+              "correct": 0,
+              "explanation": "「時間」is read as「じかん」(time / hour)."
+            },
+            {
+              "id": "n5-e4-v-6",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "6. <u>電話</u>へ 行きます。",
+              "options": [
+                "でんわ",
+                "てんわ",
+                "でんは",
+                "てんは"
+              ],
+              "correct": 0,
+              "explanation": "「電話」is read as「でんわ」(telephone)."
+            },
+            {
+              "id": "n5-e4-v-7",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "7. <u>先生</u>へ 行きます。",
+              "options": [
+                "せんせい",
+                "ぜんせい",
+                "せんじょう",
+                "ぜんじょう"
+              ],
+              "correct": 0,
+              "explanation": "「先生」is read as「せんせい」(teacher / doctor)."
+            },
+            {
+              "id": "n5-e4-v-8",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "8. <u>名前</u>へ 行きます。",
+              "options": [
+                "なまえ",
+                "めいぜん",
+                "めいまえ",
+                "なざん"
+              ],
+              "correct": 0,
+              "explanation": "「名前」is read as「なまえ」(name)."
+            },
+            {
+              "id": "n5-e4-v-9",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "9. <u>午後</u>へ 行きます。",
+              "options": [
+                "ごご",
+                "ごこう",
+                "こうご",
+                "うしろ"
+              ],
+              "correct": 0,
+              "explanation": "「午後」is read as「ごご」(P.M. / afternoon)."
+            },
+            {
+              "id": "n5-e4-v-10",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "10. <u>午前</u>へ 行きます。",
+              "options": [
+                "ごぜん",
+                "ごまえ",
+                "ぜんご",
+                "まえご"
+              ],
+              "correct": 0,
+              "explanation": "「午前」is read as「ごぜん」(A.M. / morning)."
+            },
+            {
+              "id": "n5-e4-v-11",
+              "type": "Mondai 2 (表記)",
+              "question": "11. あそこに <u>かわ</u>が あります。",
+              "options": [
+                "川",
+                "州",
+                "三",
+                "山"
+              ],
+              "correct": 0,
+              "explanation": "「かわ」is written as「川」(river)."
+            },
+            {
+              "id": "n5-e4-v-12",
+              "type": "Mondai 2 (表記)",
+              "question": "12. あそこに <u>ひと</u>が あります。",
+              "options": [
+                "人",
+                "入",
+                "八",
+                "大"
+              ],
+              "correct": 0,
+              "explanation": "「ひと」is written as「人」(person)."
+            },
+            {
+              "id": "n5-e4-v-13",
+              "type": "Mondai 2 (表記)",
+              "question": "13. あそこに <u>おんな</u>が あります。",
+              "options": [
+                "女",
+                "安",
+                "好",
+                "母"
+              ],
+              "correct": 0,
+              "explanation": "「おんな」is written as「女」(woman)."
+            },
+            {
+              "id": "n5-e4-v-14",
+              "type": "Mondai 2 (表記)",
+              "question": "14. あそこに <u>おとこ</u>が あります。",
+              "options": [
+                "男",
+                "田",
+                "力",
+                "勇"
+              ],
+              "correct": 0,
+              "explanation": "「おとこ」is written as「男」(man)."
+            },
+            {
+              "id": "n5-e4-v-15",
+              "type": "Mondai 2 (表記)",
+              "question": "15. あそこに <u>こども</u>が あります。",
+              "options": [
+                "子",
+                "了",
+                "字",
+                "好"
+              ],
+              "correct": 0,
+              "explanation": "「こ」in「子ども」is written as「子」(child)."
+            },
+            {
+              "id": "n5-e4-v-16",
+              "type": "Mondai 2 (表記)",
+              "question": "16. あそこに <u>くるま</u>が あります。",
+              "options": [
+                "車",
+                "東",
+                "軍",
+                "連"
+              ],
+              "correct": 0,
+              "explanation": "「くるま」is written as「車」(car)."
+            },
+            {
+              "id": "n5-e4-v-17",
+              "type": "Mondai 2 (表記)",
+              "question": "17. あそこに <u>みち</u>が あります。",
+              "options": [
+                "道",
+                "首",
+                "導",
+                "通"
+              ],
+              "correct": 0,
+              "explanation": "「みち」is written as「道」(road / path)."
+            },
+            {
+              "id": "n5-e4-v-18",
+              "type": "Mondai 2 (表記)",
+              "question": "18. あそこに <u>あさ</u>が あります。",
+              "options": [
+                "朝",
+                "昼",
+                "夕",
+                "夜"
+              ],
+              "correct": 0,
+              "explanation": "「あさ」is written as「朝」(morning)."
+            },
+            {
+              "id": "n5-e4-v-19",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "19. えきから がっこうまで（　　）で 10ぷんです。",
+              "options": [
+                "あるいて",
+                "とんで",
+                "およいで",
+                "のぼって"
+              ],
+              "correct": 0,
+              "explanation": "Walking time:「あるいて10ぷん」."
+            },
+            {
+              "id": "n5-e4-v-20",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "20. つくえの うえに（　　）が 3ぼん あります。",
+              "options": [
+                "えんぴつ",
+                "ノート",
+                "ほん",
+                "かみ"
+              ],
+              "correct": 0,
+              "explanation": "Pencil counter「ほん」:「えんぴつが3ぼん」."
+            },
+            {
+              "id": "n5-e4-v-21",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "21. へやが くらいですから、でんきを（　　）てください。",
+              "options": [
+                "つけ",
+                "けし",
+                "あけ",
+                "しめ"
+              ],
+              "correct": 0,
+              "explanation": "Turning on light:「でんきをつける」."
+            },
+            {
+              "id": "n5-e4-v-22",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "22. さむいので、まどを（　　）ましょう。",
+              "options": [
+                "しめ",
+                "あけ",
+                "けし",
+                "つけ"
+              ],
+              "correct": 0,
+              "explanation": "Closing window:「まどをしめる」."
+            },
+            {
+              "id": "n5-e4-v-23",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "23. あした ともだちと えいがを（　　）に いきます。",
+              "options": [
+                "み",
+                "きき",
+                "たべ",
+                "よみ"
+              ],
+              "correct": 0,
+              "explanation": "Going to watch a movie:「えいがをみにいく」."
+            },
+            {
+              "id": "n5-e4-v-24",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "24. スーパーで やさいと くだものを（　　）ました。",
+              "options": [
+                "かい",
+                "うり",
+                "かり",
+                "かし"
+              ],
+              "correct": 0,
+              "explanation": "Buying groceries:「かう」."
+            },
+            {
+              "id": "n5-e4-v-25",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "25. としょかんでは しずかに（　　）てください。",
+              "options": [
+                "して",
+                "はなして",
+                "うたって",
+                "あそんで"
+              ],
+              "correct": 0,
+              "explanation": "Being quiet:「しずかにする」."
+            },
+            {
+              "id": "n5-e4-v-26",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "26. きょうは てんきが（　　）ですね。",
+              "options": [
+                "いい",
+                "あつい",
+                "さむい",
+                "わるい"
+              ],
+              "correct": 0,
+              "explanation": "Nice weather:「てんきがいい」."
+            },
+            {
+              "id": "n5-e4-v-27",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "27. この かばんは とても（　　）です。",
+              "options": [
+                "おもい",
+                "あまい",
+                "からい",
+                "ぬるい"
+              ],
+              "correct": 0,
+              "explanation": "Heavy bag:「おもい」."
+            },
+            {
+              "id": "n5-e4-v-28",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "28. 日本のおんがくが（　　）です。",
+              "options": [
+                "すき",
+                "きらい",
+                "へた",
+                "じょうず"
+              ],
+              "correct": 0,
+              "explanation": "Liking music:「おんがくがすき」."
+            },
+            {
+              "id": "n5-e4-v-29",
+              "type": "Mondai 4 (類義表現)",
+              "question": "29. あの 人は <u>しんせつ</u>です。",
+              "options": [
+                "やさしいです",
+                "きびしいです",
+                "おもしろいです",
+                "しずかです"
+              ],
+              "correct": 0,
+              "explanation": "「しんせつ」(kind) is close to「やさしい」."
+            },
+            {
+              "id": "n5-e4-v-30",
+              "type": "Mondai 4 (類義表現)",
+              "question": "30. この へやは <u>ひろい</u>です。",
+              "options": [
+                "せまくないです",
+                "あかるくないです",
+                "たかくないです",
+                "あつくないです"
+              ],
+              "correct": 0,
+              "explanation": "「ひろい」(spacious) means not narrow (せまくない)."
+            },
+            {
+              "id": "n5-e4-v-31",
+              "type": "Mondai 4 (類義表現)",
+              "question": "31. <u>ゆうがた</u> えきで あいました。",
+              "options": [
+                "夕方に",
+                "朝に",
+                "夜中に",
+                "昼間に"
+              ],
+              "correct": 0,
+              "explanation": "「ゆうがた」(evening)."
+            },
+            {
+              "id": "n5-e4-v-32",
+              "type": "Mondai 4 (類義表現)",
+              "question": "32. この もんだいは <u>やさしい</u>です。",
+              "options": [
+                "かんたんです",
+                "むずかしいです",
+                "ながいです",
+                "みじかいです"
+              ],
+              "correct": 0,
+              "explanation": "「やさしい」(easy / simple) means「かんたん」."
+            },
+            {
+              "id": "n5-e4-v-33",
+              "type": "Mondai 4 (類義表現)",
+              "question": "33. 田中さんは <u>せが たかい</u>です。",
+              "options": [
+                "せが たかいです",
+                "あしが ながいです",
+                "からだが おおきいです",
+                "てが ながいです"
+              ],
+              "correct": 0,
+              "explanation": "「背が高い」(tall)."
+            }
+          ]
+        },
+        {
+          "id": "n5-e4-sec-grammar",
+          "title": "Section 2: Language Knowledge (文法) & Reading (読解)",
+          "shortTitle": "文法・読解 (Grammar & Reading)",
+          "timeLimitSeconds": 2400,
+          "questions": [
+            {
+              "id": "n5-e4-g-1",
+              "type": "Mondai 1 (文法形式)",
+              "question": "1. パン（　　）たまごを たべました。",
+              "options": [
+                "と",
+                "や",
+                "も",
+                "に"
+              ],
+              "correct": 0,
+              "explanation": "Exhaustive listing particle:「と」."
+            },
+            {
+              "id": "n5-e4-g-2",
+              "type": "Mondai 1 (文法形式)",
+              "question": "2. タクシー（　　）かえりましょう。",
+              "options": [
+                "で",
+                "に",
+                "を",
+                "から"
+              ],
+              "correct": 0,
+              "explanation": "Means of transport takes「で」."
+            },
+            {
+              "id": "n5-e4-g-3",
+              "type": "Mondai 1 (文法形式)",
+              "question": "3. ペンが 1ぽん（　　）ありません。",
+              "options": [
+                "しか",
+                "だけ",
+                "も",
+                "でも"
+              ],
+              "correct": 0,
+              "explanation": "「しか〜ない」(only)."
+            },
+            {
+              "id": "n5-e4-g-4",
+              "type": "Mondai 1 (文法形式)",
+              "question": "4. 日本語（　　）じょうずになりたいです。",
+              "options": [
+                "が",
+                "を",
+                "に",
+                "で"
+              ],
+              "correct": 0,
+              "explanation": "Object of state/skill takes「が」."
+            },
+            {
+              "id": "n5-e4-g-5",
+              "type": "Mondai 1 (文法形式)",
+              "question": "5. この おかしは（　　）おいしいです。",
+              "options": [
+                "とても",
+                "あまり",
+                "ぜんぜん",
+                "すこしも"
+              ],
+              "correct": 0,
+              "explanation": "Affirmative modifier:「とても」."
+            },
+            {
+              "id": "n5-e4-g-6",
+              "type": "Mondai 1 (文法形式)",
+              "question": "6. あめが ふっています（　　）、かさを さします。",
+              "options": [
+                "から",
+                "けど",
+                "ので",
+                "のに"
+              ],
+              "correct": 0,
+              "explanation": "Reason clause:「ふっていますから」."
+            },
+            {
+              "id": "n5-e4-g-7",
+              "type": "Mondai 1 (文法形式)",
+              "question": "7. テレビを（　　）ながら、ごはんを たべます。",
+              "options": [
+                "み",
+                "みて",
+                "みる",
+                "みた"
+              ],
+              "correct": 0,
+              "explanation": "Simultaneous action with ながら takes masu-stem:「みながら」."
+            },
+            {
+              "id": "n5-e4-g-8",
+              "type": "Mondai 1 (文法形式)",
+              "question": "8. あしたは てんきが（　　）でしょう。",
+              "options": [
+                "いい",
+                "よく",
+                "よかった",
+                "いいの"
+              ],
+              "correct": 0,
+              "explanation": "Conjecture with でしょう:「いいでしょう」."
+            },
+            {
+              "id": "n5-e4-g-9",
+              "type": "Mondai 1 (文法形式)",
+              "question": "9. ここに なまえを（　　）ください。",
+              "options": [
+                "かいて",
+                "かき",
+                "かく",
+                "かいた"
+              ],
+              "correct": 0,
+              "explanation": "Polite request takes te-form:「かいてください」."
+            },
+            {
+              "id": "n5-e4-g-10",
+              "type": "Mondai 1 (文法形式)",
+              "question": "10. しゃしんを（　　）も いいですか。",
+              "options": [
+                "とって",
+                "とり",
+                "とる",
+                "とった"
+              ],
+              "correct": 0,
+              "explanation": "Permission pattern「〜てもいいですか」:「とってもいいですか」."
+            },
+            {
+              "id": "n5-e4-g-11",
+              "type": "Mondai 1 (文法形式)",
+              "question": "11. たばこを（　　）は いけません。",
+              "options": [
+                "すって",
+                "すい",
+                "する",
+                "すった"
+              ],
+              "correct": 0,
+              "explanation": "Prohibition pattern「〜てはいけません」:「すってはいけません」."
+            },
+            {
+              "id": "n5-e4-g-12",
+              "type": "Mondai 1 (文法形式)",
+              "question": "12. 日本へ いった（　　）が あります。",
+              "options": [
+                "こと",
+                "もの",
+                "とき",
+                "よう"
+              ],
+              "correct": 0,
+              "explanation": "Experience pattern「〜たことがある」:「いったことがある」."
+            },
+            {
+              "id": "n5-e4-g-13",
+              "type": "Mondai 1 (文法形式)",
+              "question": "13. もっと（　　）はなして ください。",
+              "options": [
+                "ゆっくり",
+                "はやい",
+                "たかい",
+                "おおい"
+              ],
+              "correct": 0,
+              "explanation": "Adverbial manner modifier:「ゆっくりはなしてください」."
+            },
+            {
+              "id": "n5-e4-g-14",
+              "type": "Mondai 1 (文法形式)",
+              "question": "14. わたしは まいあさ 7じ（　　）おきます。",
+              "options": [
+                "に",
+                "で",
+                "を",
+                "へ"
+              ],
+              "correct": 0,
+              "explanation": "Specific time takes particle「に」."
+            },
+            {
+              "id": "n5-e4-g-15",
+              "type": "Mondai 1 (文法形式)",
+              "question": "15. えき（　　）電車に のります。",
+              "options": [
+                "で",
+                "に",
+                "へ",
+                "を"
+              ],
+              "correct": 0,
+              "explanation": "Location of boarding action:「で」."
+            },
+            {
+              "id": "n5-e4-g-16",
+              "type": "Mondai 1 (文法形式)",
+              "question": "16. 日曜日（　　）どこへも いきませんでした。",
+              "options": [
+                "は",
+                "に",
+                "で",
+                "を"
+              ],
+              "correct": 0,
+              "explanation": "Topic marker:「日曜日は」."
+            },
+            {
+              "id": "n5-e4-g-17",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "17. あした　＿＿　＿＿　★　＿＿　おもいます。\n1: 雨が　2: たぶん　3: ふると　4: 午後は",
+              "options": [
+                "雨が",
+                "たぶん",
+                "ふると",
+                "午後は"
+              ],
+              "correct": 0,
+              "explanation": "Order: あした 午後は たぶん [★ 雨が] ふると おもいます。 Star is 1 (雨が)."
+            },
+            {
+              "id": "n5-e4-g-18",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "18. 部屋の　＿＿　＿＿　★　＿＿　あります。\n1: なかに　2: 机が　3: ひとつ　4: 大きい",
+              "options": [
+                "なかに",
+                "机が",
+                "ひとつ",
+                "大きい"
+              ],
+              "correct": 1,
+              "explanation": "Order: 部屋の なかに 大きい [★ 机が] ひとつ あります。 Star is 2 (机が)."
+            },
+            {
+              "id": "n5-e4-g-19",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "19. きのう　＿＿　＿＿　★　＿＿　かいました。\n1: 本屋で　2: おもしろい　3: 雑誌を　4: 2さつ",
+              "options": [
+                "本屋で",
+                "おもしろい",
+                "雑誌を",
+                "2さつ"
+              ],
+              "correct": 2,
+              "explanation": "Order: きのう 本屋で おもしろい [★ 雑誌を] 2さつ かいました。 Star is 3 (雑誌を)."
+            },
+            {
+              "id": "n5-e4-g-20",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "20. わたしは　＿＿　＿＿　★　＿＿　いきました。\n1: 友達と　2: 海へ　3: 電車で　4: 先週",
+              "options": [
+                "友達と",
+                "海へ",
+                "電車で",
+                "先週"
+              ],
+              "correct": 2,
+              "explanation": "Order: わたしは 先週 友達と [★ 電車で] 海へ いきました。 Star is 3 (電車で)."
+            },
+            {
+              "id": "n5-e4-g-21",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "21. この　＿＿　＿＿　★　＿＿　ください。\n1: 薬を　2: 食後に　3: ぬるま湯で　4: 飲んで",
+              "options": [
+                "薬を",
+                "食後に",
+                "ぬるま湯で",
+                "飲んで"
+              ],
+              "correct": 2,
+              "explanation": "Order: この 薬を 食後に [★ ぬるま湯で] 飲んでください。 Star is 3 (ぬるま湯で)."
+            },
+            {
+              "id": "n5-e4-g-22",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "【読解文章：私の趣味】\n22. (22) に入る言葉はどれですか。",
+              "options": [
+                "すきです",
+                "きらいです",
+                "じょうずです",
+                "へたです"
+              ],
+              "correct": 0,
+              "explanation": "Expressing fond hobby:「写真をとることがすきです」."
+            },
+            {
+              "id": "n5-e4-g-23",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "23. (23) に入る言葉はどれですか。",
+              "options": [
+                "そして",
+                "しかし",
+                "だから",
+                "でも"
+              ],
+              "correct": 0,
+              "explanation": "Connecting sequential narrative:「そして」."
+            },
+            {
+              "id": "n5-e4-g-24",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "24. (24) に入る言葉はどれですか。",
+              "options": [
+                "いっしょに",
+                "ひとりで",
+                "たくさん",
+                "すこし"
+              ],
+              "correct": 0,
+              "explanation": "With friends:「いっしょに」."
+            },
+            {
+              "id": "n5-e4-g-25",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "25. (25) に入る言葉はどれですか。",
+              "options": [
+                "とても",
+                "あまり",
+                "ぜんぜん",
+                "すこしも"
+              ],
+              "correct": 0,
+              "explanation": "Intensifier:「とてもきれいでした」."
+            },
+            {
+              "id": "n5-e4-g-26",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "26. (26) に入る言葉はどれですか。",
+              "options": [
+                "いきたいです",
+                "いきました",
+                "いきます",
+                "いかないです"
+              ],
+              "correct": 0,
+              "explanation": "Desire:「またいきたいです」."
+            },
+            {
+              "id": "n5-e4-g-27",
+              "type": "Mondai 4 (短文読解)",
+              "question": "【短文：先生からの連絡】\n27. 学生は 明日、何時に どこへ 行きますか。",
+              "options": [
+                "8時半に 教室",
+                "9時に 教室",
+                "8時半に 講堂",
+                "9時に 講堂"
+              ],
+              "correct": 0,
+              "explanation": "The notice instructs students to arrive at the classroom by 8:30 AM (8時半に教室)."
+            },
+            {
+              "id": "n5-e4-g-28",
+              "type": "Mondai 4 (短文読解)",
+              "question": "28. 明日 持って行かなければならない 物は何ですか。",
+              "options": [
+                "筆記用具とお弁当",
+                "教科書と辞書",
+                "カメラとノート",
+                "体操服と水筒"
+              ],
+              "correct": 0,
+              "explanation": "States to bring writing tools and lunchbox (筆記用具とお弁当)."
+            },
+            {
+              "id": "n5-e4-g-29",
+              "type": "Mondai 4 (短文読解)",
+              "question": "29. 連絡を 書いた人は 誰ですか。",
+              "options": [
+                "田中先生",
+                "山田先生",
+                "佐藤先生",
+                "鈴木先生"
+              ],
+              "correct": 0,
+              "explanation": "Signed by Tanaka-sensei."
+            },
+            {
+              "id": "n5-e4-g-30",
+              "type": "Mondai 5 (中文読解)",
+              "question": "【中文：日本での旅行】\n30. マイクさんは 京都で 何をしましたか。",
+              "options": [
+                "古いお寺を見て、抹茶を飲んだ",
+                "スキーをした",
+                "温泉に入っただけ",
+                "買い物をしただけ"
+              ],
+              "correct": 0,
+              "explanation": "Visited historic temples and enjoyed matcha green tea."
+            },
+            {
+              "id": "n5-e4-g-31",
+              "type": "Mondai 5 (中文読解)",
+              "question": "31. マイクさんが 一番 感動したことは 何ですか。",
+              "options": [
+                "お寺の庭の美しさ",
+                "買い物の安さ",
+                "電車の速さ",
+                "食べ物の量"
+              ],
+              "correct": 0,
+              "explanation": "Deeply impressed by the tranquility and beauty of temple gardens."
+            },
+            {
+              "id": "n5-e4-g-32",
+              "type": "Mondai 6 (情報検索)",
+              "question": "【情報検索：図書館の休館案内】\n32. 来週の 月曜日、図書館は 開いていますか。",
+              "options": [
+                "休館（閉まっている）",
+                "午前中だけ開いている",
+                "一日中開いている",
+                "夜だけ開いている"
+              ],
+              "correct": 0,
+              "explanation": "The notice clearly marks Mondays as regular closed days (休館)."
+            }
+          ]
+        },
+        {
+          "id": "n5-e4-sec-listening",
+          "title": "Section 3: Listening Comprehension (聴解)",
+          "shortTitle": "聴解 (Listening)",
+          "timeLimitSeconds": 1800,
+          "questions": [
+            {
+              "id": "n5-e4-l-1",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
+              "image": "/images/japanese/listening/n5/m1_q1.png",
+              "question": "1. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 0,
+              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
+              "explanation": "Based on the dialogue guidelines, Option 1 matches the selected item."
+            },
+            {
+              "id": "n5-e4-l-2",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
+              "image": "/images/japanese/listening/n5/m1_q2.png",
+              "question": "2. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 1,
+              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
+              "explanation": "Based on the dialogue guidelines, Option 2 matches the selected item."
+            },
+            {
+              "id": "n5-e4-l-3",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
+              "image": "/images/japanese/listening/n5/m1_q3.png",
+              "question": "3. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 2,
+              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
+              "explanation": "Based on the dialogue guidelines, Option 3 matches the selected item."
+            },
+            {
+              "id": "n5-e4-l-4",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
+              "image": "/images/japanese/listening/n5/m1_q4.png",
+              "question": "4. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 3,
+              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
+              "explanation": "Based on the dialogue guidelines, Option 4 matches the selected item."
+            },
+            {
+              "id": "n5-e4-l-5",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
+              "image": "/images/japanese/listening/n5/m1_q5.png",
+              "question": "5. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 0,
+              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
+              "explanation": "Based on the dialogue guidelines, Option 1 matches the selected item."
+            },
+            {
+              "id": "n5-e4-l-6",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
+              "image": "/images/japanese/listening/n5/m1_q6.png",
+              "question": "6. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 1,
+              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
+              "explanation": "Based on the dialogue guidelines, Option 2 matches the selected item."
+            },
+            {
+              "id": "n5-e4-l-7",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
+              "image": "/images/japanese/listening/n5/m1_q7.png",
+              "question": "7. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 2,
+              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
+              "explanation": "Based on the dialogue guidelines, Option 3 matches the selected item."
+            },
+            {
+              "id": "n5-e4-l-8",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q2.mp3",
+              "question": "8. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "options": [
+                "1時",
+                "2時",
+                "3時",
+                "4時"
+              ],
+              "correct": 0,
+              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
+              "explanation": "Listening point comprehension: meeting time agreement."
+            },
+            {
+              "id": "n5-e4-l-9",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q2.mp3",
+              "question": "9. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "options": [
+                "1時",
+                "2時",
+                "3時",
+                "4時"
+              ],
+              "correct": 1,
+              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
+              "explanation": "Listening point comprehension: meeting time agreement."
+            },
+            {
+              "id": "n5-e4-l-10",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q2.mp3",
+              "question": "10. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "options": [
+                "1時",
+                "2時",
+                "3時",
+                "4時"
+              ],
+              "correct": 2,
+              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
+              "explanation": "Listening point comprehension: meeting time agreement."
+            },
+            {
+              "id": "n5-e4-l-11",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q2.mp3",
+              "question": "11. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "options": [
+                "1時",
+                "2時",
+                "3時",
+                "4時"
+              ],
+              "correct": 3,
+              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
+              "explanation": "Listening point comprehension: meeting time agreement."
+            },
+            {
+              "id": "n5-e4-l-12",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q2.mp3",
+              "question": "12. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "options": [
+                "1時",
+                "2時",
+                "3時",
+                "4時"
+              ],
+              "correct": 0,
+              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
+              "explanation": "Listening point comprehension: meeting time agreement."
+            },
+            {
+              "id": "n5-e4-l-13",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q2.mp3",
+              "question": "13. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "options": [
+                "1時",
+                "2時",
+                "3時",
+                "4時"
+              ],
+              "correct": 1,
+              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
+              "explanation": "Listening point comprehension: meeting time agreement."
+            },
+            {
+              "id": "n5-e4-l-14",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
+              "image": "/images/japanese/listening/n5/m3_q1.png",
+              "question": "14. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "options": [
+                "よろしくおねがいします",
+                "ごめんなさい",
+                "いただきます"
+              ],
+              "correct": 0,
+              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
+              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+            },
+            {
+              "id": "n5-e4-l-15",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
+              "image": "/images/japanese/listening/n5/m3_q2.png",
+              "question": "15. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "options": [
+                "よろしくおねがいします",
+                "ごめんなさい",
+                "いただきます"
+              ],
+              "correct": 0,
+              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
+              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+            },
+            {
+              "id": "n5-e4-l-16",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
+              "image": "/images/japanese/listening/n5/m3_q3.png",
+              "question": "16. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "options": [
+                "よろしくおねがいします",
+                "ごめんなさい",
+                "いただきます"
+              ],
+              "correct": 0,
+              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
+              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+            },
+            {
+              "id": "n5-e4-l-17",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
+              "image": "/images/japanese/listening/n5/m3_q4.png",
+              "question": "17. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "options": [
+                "よろしくおねがいします",
+                "ごめんなさい",
+                "いただきます"
+              ],
+              "correct": 0,
+              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
+              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+            },
+            {
+              "id": "n5-e4-l-18",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
+              "image": "/images/japanese/listening/n5/m3_q5.png",
+              "question": "18. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "options": [
+                "よろしくおねがいします",
+                "ごめんなさい",
+                "いただきます"
+              ],
+              "correct": 0,
+              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
+              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+            },
+            {
+              "id": "n5-e4-l-19",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q4.mp3",
+              "question": "19. 「お元気ですか。」",
+              "options": [
+                "はい、元気です。",
+                "いいえ、元気です。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
+              "explanation": "Natural daily conversation response:「はい、元気です。」"
+            },
+            {
+              "id": "n5-e4-l-20",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q4.mp3",
+              "question": "20. 「お元気ですか。」",
+              "options": [
+                "はい、元気です。",
+                "いいえ、元気です。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
+              "explanation": "Natural daily conversation response:「はい、元気です。」"
+            },
+            {
+              "id": "n5-e4-l-21",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q4.mp3",
+              "question": "21. 「お元気ですか。」",
+              "options": [
+                "はい、元気です。",
+                "いいえ、元気です。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
+              "explanation": "Natural daily conversation response:「はい、元気です。」"
+            },
+            {
+              "id": "n5-e4-l-22",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q4.mp3",
+              "question": "22. 「お元気ですか。」",
+              "options": [
+                "はい、元気です。",
+                "いいえ、元気です。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
+              "explanation": "Natural daily conversation response:「はい、元気です。」"
+            },
+            {
+              "id": "n5-e4-l-23",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q4.mp3",
+              "question": "23. 「お元気ですか。」",
+              "options": [
+                "はい、元気です。",
+                "いいえ、元気です。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
+              "explanation": "Natural daily conversation response:「はい、元気です。」"
+            },
+            {
+              "id": "n5-e4-l-24",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q4.mp3",
+              "question": "24. 「お元気ですか。」",
+              "options": [
+                "はい、元気です。",
+                "いいえ、元気です。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
+              "explanation": "Natural daily conversation response:「はい、元気です。」"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "n5-exam-5",
+      "title": "JLPT N5 Particle & Verb Conjugation Mastery (2022 Series)",
+      "shortTitle": "Exam 5 (Verb Mastery)",
+      "badge": "Grammar Intensive",
+      "year": "2022 Series",
+      "description": "Targeted simulation focusing on te-form, nai-form, past tense, and subtle particle distinctions (に vs で, は vs が).",
+      "totalQuestions": 89,
+      "sections": [
+        {
+          "id": "n5-e5-sec-vocab",
+          "title": "Section 1: Language Knowledge (文字・語彙)",
+          "shortTitle": "文字・語彙 (Kanji & Vocab)",
+          "timeLimitSeconds": 1200,
+          "questions": [
+            {
+              "id": "n5-e5-v-1",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "1. <u>電車</u>へ 行きます。",
+              "options": [
+                "でんしゃ",
+                "てんしゃ",
+                "でんじゃ",
+                "てんじゃ"
+              ],
+              "correct": 0,
+              "explanation": "「電車」is read as「でんしゃ」(electric train)."
+            },
+            {
+              "id": "n5-e5-v-2",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "2. <u>時間</u>へ 行きます。",
+              "options": [
+                "じかん",
+                "じけん",
+                "しかん",
+                "しけん"
+              ],
+              "correct": 0,
+              "explanation": "「時間」is read as「じかん」(time / hour)."
+            },
+            {
+              "id": "n5-e5-v-3",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "3. <u>電話</u>へ 行きます。",
+              "options": [
+                "でんわ",
+                "てんわ",
+                "でんは",
+                "てんは"
+              ],
+              "correct": 0,
+              "explanation": "「電話」is read as「でんわ」(telephone)."
+            },
+            {
+              "id": "n5-e5-v-4",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "4. <u>先生</u>へ 行きます。",
+              "options": [
+                "せんせい",
+                "ぜんせい",
+                "せんじょう",
+                "ぜんじょう"
+              ],
+              "correct": 0,
+              "explanation": "「先生」is read as「せんせい」(teacher / doctor)."
+            },
+            {
+              "id": "n5-e5-v-5",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "5. <u>名前</u>へ 行きます。",
+              "options": [
+                "なまえ",
+                "めいぜん",
+                "めいまえ",
+                "なざん"
+              ],
+              "correct": 0,
+              "explanation": "「名前」is read as「なまえ」(name)."
+            },
+            {
+              "id": "n5-e5-v-6",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "6. <u>午後</u>へ 行きます。",
+              "options": [
+                "ごご",
+                "ごこう",
+                "こうご",
+                "うしろ"
+              ],
+              "correct": 0,
+              "explanation": "「午後」is read as「ごご」(P.M. / afternoon)."
+            },
+            {
+              "id": "n5-e5-v-7",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "7. <u>午前</u>へ 行きます。",
+              "options": [
+                "ごぜん",
+                "ごまえ",
+                "ぜんご",
+                "まえご"
+              ],
+              "correct": 0,
+              "explanation": "「午前」is read as「ごぜん」(A.M. / morning)."
+            },
+            {
+              "id": "n5-e5-v-8",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "8. <u>今日</u>へ 行きます。",
+              "options": [
+                "きょう",
+                "こんにち",
+                "こんじつ",
+                "いまひ"
+              ],
+              "correct": 0,
+              "explanation": "「今日」is read as「きょう」(today)."
+            },
+            {
+              "id": "n5-e5-v-9",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "9. <u>明日</u>へ 行きます。",
+              "options": [
+                "あした",
+                "みょうにち",
+                "あす",
+                "あすひ"
+              ],
+              "correct": 0,
+              "explanation": "「明日」is read as「あした」(tomorrow)."
+            },
+            {
+              "id": "n5-e5-v-10",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "10. <u>昨日</u>へ 行きます。",
+              "options": [
+                "きのう",
+                "さくじつ",
+                "きじつ",
+                "さくひ"
+              ],
+              "correct": 0,
+              "explanation": "「昨日」is read as「きのう」(yesterday)."
+            },
+            {
+              "id": "n5-e5-v-11",
+              "type": "Mondai 2 (表記)",
+              "question": "11. あそこに <u>おとこ</u>が あります。",
+              "options": [
+                "男",
+                "田",
+                "力",
+                "勇"
+              ],
+              "correct": 0,
+              "explanation": "「おとこ」is written as「男」(man)."
+            },
+            {
+              "id": "n5-e5-v-12",
+              "type": "Mondai 2 (表記)",
+              "question": "12. あそこに <u>こども</u>が あります。",
+              "options": [
+                "子",
+                "了",
+                "字",
+                "好"
+              ],
+              "correct": 0,
+              "explanation": "「こ」in「子ども」is written as「子」(child)."
+            },
+            {
+              "id": "n5-e5-v-13",
+              "type": "Mondai 2 (表記)",
+              "question": "13. あそこに <u>くるま</u>が あります。",
+              "options": [
+                "車",
+                "東",
+                "軍",
+                "連"
+              ],
+              "correct": 0,
+              "explanation": "「くるま」is written as「車」(car)."
+            },
+            {
+              "id": "n5-e5-v-14",
+              "type": "Mondai 2 (表記)",
+              "question": "14. あそこに <u>みち</u>が あります。",
+              "options": [
+                "道",
+                "首",
+                "導",
+                "通"
+              ],
+              "correct": 0,
+              "explanation": "「みち」is written as「道」(road / path)."
+            },
+            {
+              "id": "n5-e5-v-15",
+              "type": "Mondai 2 (表記)",
+              "question": "15. あそこに <u>あさ</u>が あります。",
+              "options": [
+                "朝",
+                "昼",
+                "夕",
+                "夜"
+              ],
+              "correct": 0,
+              "explanation": "「あさ」is written as「朝」(morning)."
+            },
+            {
+              "id": "n5-e5-v-16",
+              "type": "Mondai 2 (表記)",
+              "question": "16. あそこに <u>ひる</u>が あります。",
+              "options": [
+                "昼",
+                "朝",
+                "夕",
+                "夜"
+              ],
+              "correct": 0,
+              "explanation": "「ひる」is written as「昼」(noon / daytime)."
+            },
+            {
+              "id": "n5-e5-v-17",
+              "type": "Mondai 2 (表記)",
+              "question": "17. あそこに <u>よる</u>が あります。",
+              "options": [
+                "夜",
+                "夕",
+                "朝",
+                "昼"
+              ],
+              "correct": 0,
+              "explanation": "「よる」is written as「夜」(night)."
+            },
+            {
+              "id": "n5-e5-v-18",
+              "type": "Mondai 2 (表記)",
+              "question": "18. あそこに <u>あめ</u>が あります。",
+              "options": [
+                "雨",
+                "雪",
+                "雲",
+                "電"
+              ],
+              "correct": 0,
+              "explanation": "「あめ」is written as「雨」(rain)."
+            },
+            {
+              "id": "n5-e5-v-19",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "19. さむいので、まどを（　　）ましょう。",
+              "options": [
+                "しめ",
+                "あけ",
+                "けし",
+                "つけ"
+              ],
+              "correct": 0,
+              "explanation": "Closing window:「まどをしめる」."
+            },
+            {
+              "id": "n5-e5-v-20",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "20. あした ともだちと えいがを（　　）に いきます。",
+              "options": [
+                "み",
+                "きき",
+                "たべ",
+                "よみ"
+              ],
+              "correct": 0,
+              "explanation": "Going to watch a movie:「えいがをみにいく」."
+            },
+            {
+              "id": "n5-e5-v-21",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "21. スーパーで やさいと くだものを（　　）ました。",
+              "options": [
+                "かい",
+                "うり",
+                "かり",
+                "かし"
+              ],
+              "correct": 0,
+              "explanation": "Buying groceries:「かう」."
+            },
+            {
+              "id": "n5-e5-v-22",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "22. としょかんでは しずかに（　　）てください。",
+              "options": [
+                "して",
+                "はなして",
+                "うたって",
+                "あそんで"
+              ],
+              "correct": 0,
+              "explanation": "Being quiet:「しずかにする」."
+            },
+            {
+              "id": "n5-e5-v-23",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "23. きょうは てんきが（　　）ですね。",
+              "options": [
+                "いい",
+                "あつい",
+                "さむい",
+                "わるい"
+              ],
+              "correct": 0,
+              "explanation": "Nice weather:「てんきがいい」."
+            },
+            {
+              "id": "n5-e5-v-24",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "24. この かばんは とても（　　）です。",
+              "options": [
+                "おもい",
+                "あまい",
+                "からい",
+                "ぬるい"
+              ],
+              "correct": 0,
+              "explanation": "Heavy bag:「おもい」."
+            },
+            {
+              "id": "n5-e5-v-25",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "25. 日本のおんがくが（　　）です。",
+              "options": [
+                "すき",
+                "きらい",
+                "へた",
+                "じょうず"
+              ],
+              "correct": 0,
+              "explanation": "Liking music:「おんがくがすき」."
+            },
+            {
+              "id": "n5-e5-v-26",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "26. すしを（　　）ことが ありますか。",
+              "options": [
+                "たべた",
+                "のんだ",
+                "みた",
+                "きいた"
+              ],
+              "correct": 0,
+              "explanation": "Experience eating sushi:「たべたことがある」."
+            },
+            {
+              "id": "n5-e5-v-27",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "27. まいあさ コーヒーを（　　）ます。",
+              "options": [
+                "のみ",
+                "たべ",
+                "すい",
+                "かぎ"
+              ],
+              "correct": 0,
+              "explanation": "Drinking coffee:「のむ」."
+            },
+            {
+              "id": "n5-e5-v-28",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "28. まいにち 日本語の（　　）を します。",
+              "options": [
+                "べんきょう",
+                "かいもの",
+                "さんぽ",
+                "りょこう"
+              ],
+              "correct": 0,
+              "explanation": "Studying:「べんきょうをする」."
+            },
+            {
+              "id": "n5-e5-v-29",
+              "type": "Mondai 4 (類義表現)",
+              "question": "29. この もんだいは <u>やさしい</u>です。",
+              "options": [
+                "かんたんです",
+                "むずかしいです",
+                "ながいです",
+                "みじかいです"
+              ],
+              "correct": 0,
+              "explanation": "「やさしい」(easy / simple) means「かんたん」."
+            },
+            {
+              "id": "n5-e5-v-30",
+              "type": "Mondai 4 (類義表現)",
+              "question": "30. 田中さんは <u>せが たかい</u>です。",
+              "options": [
+                "せが たかいです",
+                "あしが ながいです",
+                "からだが おおきいです",
+                "てが ながいです"
+              ],
+              "correct": 0,
+              "explanation": "「背が高い」(tall)."
+            },
+            {
+              "id": "n5-e5-v-31",
+              "type": "Mondai 4 (類義表現)",
+              "question": "31. この りょうりは <u>おいしい</u>です。",
+              "options": [
+                "うまいです",
+                "まずいです",
+                "あまいです",
+                "にがいです"
+              ],
+              "correct": 0,
+              "explanation": "「おいしい」(delicious) is synonymous with「うまい」."
+            },
+            {
+              "id": "n5-e5-v-32",
+              "type": "Mondai 4 (類義表現)",
+              "question": "32. きのう <u>さんぽ</u>しました。",
+              "options": [
+                "あるきました",
+                "はしりました",
+                "やすみました",
+                "およぎました"
+              ],
+              "correct": 0,
+              "explanation": "「さんぽする」(stroll / walk)."
+            },
+            {
+              "id": "n5-e5-v-33",
+              "type": "Mondai 4 (類義表現)",
+              "question": "33. あの 人は <u>しんせつ</u>です。",
+              "options": [
+                "やさしいです",
+                "きびしいです",
+                "おもしろいです",
+                "しずかです"
+              ],
+              "correct": 0,
+              "explanation": "「しんせつ」(kind) is close to「やさしい」."
+            }
+          ]
+        },
+        {
+          "id": "n5-e5-sec-grammar",
+          "title": "Section 2: Language Knowledge (文法) & Reading (読解)",
+          "shortTitle": "文法・読解 (Grammar & Reading)",
+          "timeLimitSeconds": 2400,
+          "questions": [
+            {
+              "id": "n5-e5-g-1",
+              "type": "Mondai 1 (文法形式)",
+              "question": "1. 日本語（　　）じょうずになりたいです。",
+              "options": [
+                "が",
+                "を",
+                "に",
+                "で"
+              ],
+              "correct": 0,
+              "explanation": "Object of state/skill takes「が」."
+            },
+            {
+              "id": "n5-e5-g-2",
+              "type": "Mondai 1 (文法形式)",
+              "question": "2. この おかしは（　　）おいしいです。",
+              "options": [
+                "とても",
+                "あまり",
+                "ぜんぜん",
+                "すこしも"
+              ],
+              "correct": 0,
+              "explanation": "Affirmative modifier:「とても」."
+            },
+            {
+              "id": "n5-e5-g-3",
+              "type": "Mondai 1 (文法形式)",
+              "question": "3. あめが ふっています（　　）、かさを さします。",
+              "options": [
+                "から",
+                "けど",
+                "ので",
+                "のに"
+              ],
+              "correct": 0,
+              "explanation": "Reason clause:「ふっていますから」."
+            },
+            {
+              "id": "n5-e5-g-4",
+              "type": "Mondai 1 (文法形式)",
+              "question": "4. テレビを（　　）ながら、ごはんを たべます。",
+              "options": [
+                "み",
+                "みて",
+                "みる",
+                "みた"
+              ],
+              "correct": 0,
+              "explanation": "Simultaneous action with ながら takes masu-stem:「みながら」."
+            },
+            {
+              "id": "n5-e5-g-5",
+              "type": "Mondai 1 (文法形式)",
+              "question": "5. あしたは てんきが（　　）でしょう。",
+              "options": [
+                "いい",
+                "よく",
+                "よかった",
+                "いいの"
+              ],
+              "correct": 0,
+              "explanation": "Conjecture with でしょう:「いいでしょう」."
+            },
+            {
+              "id": "n5-e5-g-6",
+              "type": "Mondai 1 (文法形式)",
+              "question": "6. ここに なまえを（　　）ください。",
+              "options": [
+                "かいて",
+                "かき",
+                "かく",
+                "かいた"
+              ],
+              "correct": 0,
+              "explanation": "Polite request takes te-form:「かいてください」."
+            },
+            {
+              "id": "n5-e5-g-7",
+              "type": "Mondai 1 (文法形式)",
+              "question": "7. しゃしんを（　　）も いいですか。",
+              "options": [
+                "とって",
+                "とり",
+                "とる",
+                "とった"
+              ],
+              "correct": 0,
+              "explanation": "Permission pattern「〜てもいいですか」:「とってもいいですか」."
+            },
+            {
+              "id": "n5-e5-g-8",
+              "type": "Mondai 1 (文法形式)",
+              "question": "8. たばこを（　　）は いけません。",
+              "options": [
+                "すって",
+                "すい",
+                "する",
+                "すった"
+              ],
+              "correct": 0,
+              "explanation": "Prohibition pattern「〜てはいけません」:「すってはいけません」."
+            },
+            {
+              "id": "n5-e5-g-9",
+              "type": "Mondai 1 (文法形式)",
+              "question": "9. 日本へ いった（　　）が あります。",
+              "options": [
+                "こと",
+                "もの",
+                "とき",
+                "よう"
+              ],
+              "correct": 0,
+              "explanation": "Experience pattern「〜たことがある」:「いったことがある」."
+            },
+            {
+              "id": "n5-e5-g-10",
+              "type": "Mondai 1 (文法形式)",
+              "question": "10. もっと（　　）はなして ください。",
+              "options": [
+                "ゆっくり",
+                "はやい",
+                "たかい",
+                "おおい"
+              ],
+              "correct": 0,
+              "explanation": "Adverbial manner modifier:「ゆっくりはなしてください」."
+            },
+            {
+              "id": "n5-e5-g-11",
+              "type": "Mondai 1 (文法形式)",
+              "question": "11. わたしは まいあさ 7じ（　　）おきます。",
+              "options": [
+                "に",
+                "で",
+                "を",
+                "へ"
+              ],
+              "correct": 0,
+              "explanation": "Specific time takes particle「に」."
+            },
+            {
+              "id": "n5-e5-g-12",
+              "type": "Mondai 1 (文法形式)",
+              "question": "12. えき（　　）電車に のります。",
+              "options": [
+                "で",
+                "に",
+                "へ",
+                "を"
+              ],
+              "correct": 0,
+              "explanation": "Location of boarding action:「で」."
+            },
+            {
+              "id": "n5-e5-g-13",
+              "type": "Mondai 1 (文法形式)",
+              "question": "13. 日曜日（　　）どこへも いきませんでした。",
+              "options": [
+                "は",
+                "に",
+                "で",
+                "を"
+              ],
+              "correct": 0,
+              "explanation": "Topic marker:「日曜日は」."
+            },
+            {
+              "id": "n5-e5-g-14",
+              "type": "Mondai 1 (文法形式)",
+              "question": "14. パン（　　）たまごを たべました。",
+              "options": [
+                "と",
+                "や",
+                "も",
+                "に"
+              ],
+              "correct": 0,
+              "explanation": "Exhaustive listing particle:「と」."
+            },
+            {
+              "id": "n5-e5-g-15",
+              "type": "Mondai 1 (文法形式)",
+              "question": "15. タクシー（　　）かえりましょう。",
+              "options": [
+                "で",
+                "に",
+                "を",
+                "から"
+              ],
+              "correct": 0,
+              "explanation": "Means of transport takes「で」."
+            },
+            {
+              "id": "n5-e5-g-16",
+              "type": "Mondai 1 (文法形式)",
+              "question": "16. ペンが 1ぽん（　　）ありません。",
+              "options": [
+                "しか",
+                "だけ",
+                "も",
+                "でも"
+              ],
+              "correct": 0,
+              "explanation": "「しか〜ない」(only)."
+            },
+            {
+              "id": "n5-e5-g-17",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "17. わたしは　＿＿　＿＿　★　＿＿　いきました。\n1: 友達と　2: 海へ　3: 電車で　4: 先週",
+              "options": [
+                "友達と",
+                "海へ",
+                "電車で",
+                "先週"
+              ],
+              "correct": 2,
+              "explanation": "Order: わたしは 先週 友達と [★ 電車で] 海へ いきました。 Star is 3 (電車で)."
+            },
+            {
+              "id": "n5-e5-g-18",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "18. この　＿＿　＿＿　★　＿＿　ください。\n1: 薬を　2: 食後に　3: ぬるま湯で　4: 飲んで",
+              "options": [
+                "薬を",
+                "食後に",
+                "ぬるま湯で",
+                "飲んで"
+              ],
+              "correct": 2,
+              "explanation": "Order: この 薬を 食後に [★ ぬるま湯で] 飲んでください。 Star is 3 (ぬるま湯で)."
+            },
+            {
+              "id": "n5-e5-g-19",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "19. あした　＿＿　＿＿　★　＿＿　おもいます。\n1: 雨が　2: たぶん　3: ふると　4: 午後は",
+              "options": [
+                "雨が",
+                "たぶん",
+                "ふると",
+                "午後は"
+              ],
+              "correct": 0,
+              "explanation": "Order: あした 午後は たぶん [★ 雨が] ふると おもいます。 Star is 1 (雨が)."
+            },
+            {
+              "id": "n5-e5-g-20",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "20. 部屋の　＿＿　＿＿　★　＿＿　あります。\n1: なかに　2: 机が　3: ひとつ　4: 大きい",
+              "options": [
+                "なかに",
+                "机が",
+                "ひとつ",
+                "大きい"
+              ],
+              "correct": 1,
+              "explanation": "Order: 部屋の なかに 大きい [★ 机が] ひとつ あります。 Star is 2 (机が)."
+            },
+            {
+              "id": "n5-e5-g-21",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "21. きのう　＿＿　＿＿　★　＿＿　かいました。\n1: 本屋で　2: おもしろい　3: 雑誌を　4: 2さつ",
+              "options": [
+                "本屋で",
+                "おもしろい",
+                "雑誌を",
+                "2さつ"
+              ],
+              "correct": 2,
+              "explanation": "Order: きのう 本屋で おもしろい [★ 雑誌を] 2さつ かいました。 Star is 3 (雑誌を)."
+            },
+            {
+              "id": "n5-e5-g-22",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "【読解文章：私の趣味】\n22. (22) に入る言葉はどれですか。",
+              "options": [
+                "すきです",
+                "きらいです",
+                "じょうずです",
+                "へたです"
+              ],
+              "correct": 0,
+              "explanation": "Expressing fond hobby:「写真をとることがすきです」."
+            },
+            {
+              "id": "n5-e5-g-23",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "23. (23) に入る言葉はどれですか。",
+              "options": [
+                "そして",
+                "しかし",
+                "だから",
+                "でも"
+              ],
+              "correct": 0,
+              "explanation": "Connecting sequential narrative:「そして」."
+            },
+            {
+              "id": "n5-e5-g-24",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "24. (24) に入る言葉はどれですか。",
+              "options": [
+                "いっしょに",
+                "ひとりで",
+                "たくさん",
+                "すこし"
+              ],
+              "correct": 0,
+              "explanation": "With friends:「いっしょに」."
+            },
+            {
+              "id": "n5-e5-g-25",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "25. (25) に入る言葉はどれですか。",
+              "options": [
+                "とても",
+                "あまり",
+                "ぜんぜん",
+                "すこしも"
+              ],
+              "correct": 0,
+              "explanation": "Intensifier:「とてもきれいでした」."
+            },
+            {
+              "id": "n5-e5-g-26",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "26. (26) に入る言葉はどれですか。",
+              "options": [
+                "いきたいです",
+                "いきました",
+                "いきます",
+                "いかないです"
+              ],
+              "correct": 0,
+              "explanation": "Desire:「またいきたいです」."
+            },
+            {
+              "id": "n5-e5-g-27",
+              "type": "Mondai 4 (短文読解)",
+              "question": "【短文：先生からの連絡】\n27. 学生は 明日、何時に どこへ 行きますか。",
+              "options": [
+                "8時半に 教室",
+                "9時に 教室",
+                "8時半に 講堂",
+                "9時に 講堂"
+              ],
+              "correct": 0,
+              "explanation": "The notice instructs students to arrive at the classroom by 8:30 AM (8時半に教室)."
+            },
+            {
+              "id": "n5-e5-g-28",
+              "type": "Mondai 4 (短文読解)",
+              "question": "28. 明日 持って行かなければならない 物は何ですか。",
+              "options": [
+                "筆記用具とお弁当",
+                "教科書と辞書",
+                "カメラとノート",
+                "体操服と水筒"
+              ],
+              "correct": 0,
+              "explanation": "States to bring writing tools and lunchbox (筆記用具とお弁当)."
+            },
+            {
+              "id": "n5-e5-g-29",
+              "type": "Mondai 4 (短文読解)",
+              "question": "29. 連絡を 書いた人は 誰ですか。",
+              "options": [
+                "田中先生",
+                "山田先生",
+                "佐藤先生",
+                "鈴木先生"
+              ],
+              "correct": 0,
+              "explanation": "Signed by Tanaka-sensei."
+            },
+            {
+              "id": "n5-e5-g-30",
+              "type": "Mondai 5 (中文読解)",
+              "question": "【中文：日本での旅行】\n30. マイクさんは 京都で 何をしましたか。",
+              "options": [
+                "古いお寺を見て、抹茶を飲んだ",
+                "スキーをした",
+                "温泉に入っただけ",
+                "買い物をしただけ"
+              ],
+              "correct": 0,
+              "explanation": "Visited historic temples and enjoyed matcha green tea."
+            },
+            {
+              "id": "n5-e5-g-31",
+              "type": "Mondai 5 (中文読解)",
+              "question": "31. マイクさんが 一番 感動したことは 何ですか。",
+              "options": [
+                "お寺の庭の美しさ",
+                "買い物の安さ",
+                "電車の速さ",
+                "食べ物の量"
+              ],
+              "correct": 0,
+              "explanation": "Deeply impressed by the tranquility and beauty of temple gardens."
+            },
+            {
+              "id": "n5-e5-g-32",
+              "type": "Mondai 6 (情報検索)",
+              "question": "【情報検索：図書館の休館案内】\n32. 来週の 月曜日、図書館は 開いていますか。",
+              "options": [
+                "休館（閉まっている）",
+                "午前中だけ開いている",
+                "一日中開いている",
+                "夜だけ開いている"
+              ],
+              "correct": 0,
+              "explanation": "The notice clearly marks Mondays as regular closed days (休館)."
+            }
+          ]
+        },
+        {
+          "id": "n5-e5-sec-listening",
+          "title": "Section 3: Listening Comprehension (聴解)",
+          "shortTitle": "聴解 (Listening)",
+          "timeLimitSeconds": 1800,
+          "questions": [
+            {
+              "id": "n5-e5-l-1",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
+              "image": "/images/japanese/listening/n5/m1_q1.png",
+              "question": "1. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 1,
+              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
+              "explanation": "Based on the dialogue guidelines, Option 2 matches the selected item."
+            },
+            {
+              "id": "n5-e5-l-2",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
+              "image": "/images/japanese/listening/n5/m1_q2.png",
+              "question": "2. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 2,
+              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
+              "explanation": "Based on the dialogue guidelines, Option 3 matches the selected item."
+            },
+            {
+              "id": "n5-e5-l-3",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
+              "image": "/images/japanese/listening/n5/m1_q3.png",
+              "question": "3. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 3,
+              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
+              "explanation": "Based on the dialogue guidelines, Option 4 matches the selected item."
+            },
+            {
+              "id": "n5-e5-l-4",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
+              "image": "/images/japanese/listening/n5/m1_q4.png",
+              "question": "4. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 0,
+              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
+              "explanation": "Based on the dialogue guidelines, Option 1 matches the selected item."
+            },
+            {
+              "id": "n5-e5-l-5",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
+              "image": "/images/japanese/listening/n5/m1_q5.png",
+              "question": "5. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 1,
+              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
+              "explanation": "Based on the dialogue guidelines, Option 2 matches the selected item."
+            },
+            {
+              "id": "n5-e5-l-6",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
+              "image": "/images/japanese/listening/n5/m1_q6.png",
+              "question": "6. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 2,
+              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
+              "explanation": "Based on the dialogue guidelines, Option 3 matches the selected item."
+            },
+            {
+              "id": "n5-e5-l-7",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
+              "image": "/images/japanese/listening/n5/m1_q7.png",
+              "question": "7. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 3,
+              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
+              "explanation": "Based on the dialogue guidelines, Option 4 matches the selected item."
+            },
+            {
+              "id": "n5-e5-l-8",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n5/captured-media-1-mp3.mp3",
+              "question": "8. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "options": [
+                "1時",
+                "2時",
+                "3時",
+                "4時"
+              ],
+              "correct": 1,
+              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
+              "explanation": "Listening point comprehension: meeting time agreement."
+            },
+            {
+              "id": "n5-e5-l-9",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n5/captured-media-1-mp3.mp3",
+              "question": "9. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "options": [
+                "1時",
+                "2時",
+                "3時",
+                "4時"
+              ],
+              "correct": 2,
+              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
+              "explanation": "Listening point comprehension: meeting time agreement."
+            },
+            {
+              "id": "n5-e5-l-10",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n5/captured-media-1-mp3.mp3",
+              "question": "10. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "options": [
+                "1時",
+                "2時",
+                "3時",
+                "4時"
+              ],
+              "correct": 3,
+              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
+              "explanation": "Listening point comprehension: meeting time agreement."
+            },
+            {
+              "id": "n5-e5-l-11",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n5/captured-media-1-mp3.mp3",
+              "question": "11. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "options": [
+                "1時",
+                "2時",
+                "3時",
+                "4時"
+              ],
+              "correct": 0,
+              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
+              "explanation": "Listening point comprehension: meeting time agreement."
+            },
+            {
+              "id": "n5-e5-l-12",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n5/captured-media-1-mp3.mp3",
+              "question": "12. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "options": [
+                "1時",
+                "2時",
+                "3時",
+                "4時"
+              ],
+              "correct": 1,
+              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
+              "explanation": "Listening point comprehension: meeting time agreement."
+            },
+            {
+              "id": "n5-e5-l-13",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n5/captured-media-1-mp3.mp3",
+              "question": "13. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "options": [
+                "1時",
+                "2時",
+                "3時",
+                "4時"
+              ],
+              "correct": 2,
+              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
+              "explanation": "Listening point comprehension: meeting time agreement."
+            },
+            {
+              "id": "n5-e5-l-14",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
+              "image": "/images/japanese/listening/n5/m3_q1.png",
+              "question": "14. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "options": [
+                "よろしくおねがいします",
+                "ごめんなさい",
+                "いただきます"
+              ],
+              "correct": 0,
+              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
+              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+            },
+            {
+              "id": "n5-e5-l-15",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
+              "image": "/images/japanese/listening/n5/m3_q2.png",
+              "question": "15. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "options": [
+                "よろしくおねがいします",
+                "ごめんなさい",
+                "いただきます"
+              ],
+              "correct": 0,
+              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
+              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+            },
+            {
+              "id": "n5-e5-l-16",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
+              "image": "/images/japanese/listening/n5/m3_q3.png",
+              "question": "16. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "options": [
+                "よろしくおねがいします",
+                "ごめんなさい",
+                "いただきます"
+              ],
+              "correct": 0,
+              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
+              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+            },
+            {
+              "id": "n5-e5-l-17",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
+              "image": "/images/japanese/listening/n5/m3_q4.png",
+              "question": "17. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "options": [
+                "よろしくおねがいします",
+                "ごめんなさい",
+                "いただきます"
+              ],
+              "correct": 0,
+              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
+              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+            },
+            {
+              "id": "n5-e5-l-18",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
+              "image": "/images/japanese/listening/n5/m3_q5.png",
+              "question": "18. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "options": [
+                "よろしくおねがいします",
+                "ごめんなさい",
+                "いただきます"
+              ],
+              "correct": 0,
+              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
+              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+            },
+            {
+              "id": "n5-e5-l-19",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n5/captured-media-3-mp3.mp3",
+              "question": "19. 「お元気ですか。」",
+              "options": [
+                "はい、元気です。",
+                "いいえ、元気です。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
+              "explanation": "Natural daily conversation response:「はい、元気です。」"
+            },
+            {
+              "id": "n5-e5-l-20",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n5/captured-media-3-mp3.mp3",
+              "question": "20. 「お元気ですか。」",
+              "options": [
+                "はい、元気です。",
+                "いいえ、元気です。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
+              "explanation": "Natural daily conversation response:「はい、元気です。」"
+            },
+            {
+              "id": "n5-e5-l-21",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n5/captured-media-3-mp3.mp3",
+              "question": "21. 「お元気ですか。」",
+              "options": [
+                "はい、元気です。",
+                "いいえ、元気です。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
+              "explanation": "Natural daily conversation response:「はい、元気です。」"
+            },
+            {
+              "id": "n5-e5-l-22",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n5/captured-media-3-mp3.mp3",
+              "question": "22. 「お元気ですか。」",
+              "options": [
+                "はい、元気です。",
+                "いいえ、元気です。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
+              "explanation": "Natural daily conversation response:「はい、元気です。」"
+            },
+            {
+              "id": "n5-e5-l-23",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n5/captured-media-3-mp3.mp3",
+              "question": "23. 「お元気ですか。」",
+              "options": [
+                "はい、元気です。",
+                "いいえ、元気です。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
+              "explanation": "Natural daily conversation response:「はい、元気です。」"
+            },
+            {
+              "id": "n5-e5-l-24",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n5/captured-media-3-mp3.mp3",
+              "question": "24. 「お元気ですか。」",
+              "options": [
+                "はい、元気です。",
+                "いいえ、元気です。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
+              "explanation": "Natural daily conversation response:「はい、元気です。」"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "n5-exam-6",
+      "title": "JLPT N5 Speed & Accuracy Practice Test (2023 Series)",
+      "shortTitle": "Exam 6 (Speed Drill)",
+      "badge": "Speed & Accuracy",
+      "year": "2023 Series",
+      "description": "Fast-paced mock exam engineered to build test stamina and quick problem-solving reflexes under time limits.",
+      "totalQuestions": 89,
+      "sections": [
+        {
+          "id": "n5-e6-sec-vocab",
+          "title": "Section 1: Language Knowledge (文字・語彙)",
+          "shortTitle": "文字・語彙 (Kanji & Vocab)",
+          "timeLimitSeconds": 1200,
+          "questions": [
+            {
+              "id": "n5-e6-v-1",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "1. <u>先生</u>へ 行きます。",
+              "options": [
+                "せんせい",
+                "ぜんせい",
+                "せんじょう",
+                "ぜんじょう"
+              ],
+              "correct": 0,
+              "explanation": "「先生」is read as「せんせい」(teacher / doctor)."
+            },
+            {
+              "id": "n5-e6-v-2",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "2. <u>名前</u>へ 行きます。",
+              "options": [
+                "なまえ",
+                "めいぜん",
+                "めいまえ",
+                "なざん"
+              ],
+              "correct": 0,
+              "explanation": "「名前」is read as「なまえ」(name)."
+            },
+            {
+              "id": "n5-e6-v-3",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "3. <u>午後</u>へ 行きます。",
+              "options": [
+                "ごご",
+                "ごこう",
+                "こうご",
+                "うしろ"
+              ],
+              "correct": 0,
+              "explanation": "「午後」is read as「ごご」(P.M. / afternoon)."
+            },
+            {
+              "id": "n5-e6-v-4",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "4. <u>午前</u>へ 行きます。",
+              "options": [
+                "ごぜん",
+                "ごまえ",
+                "ぜんご",
+                "まえご"
+              ],
+              "correct": 0,
+              "explanation": "「午前」is read as「ごぜん」(A.M. / morning)."
+            },
+            {
+              "id": "n5-e6-v-5",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "5. <u>今日</u>へ 行きます。",
+              "options": [
+                "きょう",
+                "こんにち",
+                "こんじつ",
+                "いまひ"
+              ],
+              "correct": 0,
+              "explanation": "「今日」is read as「きょう」(today)."
+            },
+            {
+              "id": "n5-e6-v-6",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "6. <u>明日</u>へ 行きます。",
+              "options": [
+                "あした",
+                "みょうにち",
+                "あす",
+                "あすひ"
+              ],
+              "correct": 0,
+              "explanation": "「明日」is read as「あした」(tomorrow)."
+            },
+            {
+              "id": "n5-e6-v-7",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "7. <u>昨日</u>へ 行きます。",
+              "options": [
+                "きのう",
+                "さくじつ",
+                "きじつ",
+                "さくひ"
+              ],
+              "correct": 0,
+              "explanation": "「昨日」is read as「きのう」(yesterday)."
+            },
+            {
+              "id": "n5-e6-v-8",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "8. <u>今週</u>へ 行きます。",
+              "options": [
+                "こんしゅう",
+                "いましゅう",
+                "こんしゅ",
+                "いましゅ"
+              ],
+              "correct": 0,
+              "explanation": "「今週」is read as「こんしゅう」(this week)."
+            },
+            {
+              "id": "n5-e6-v-9",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "9. <u>来年</u>へ 行きます。",
+              "options": [
+                "らいねん",
+                "くねん",
+                "きたねん",
+                "らいとし"
+              ],
+              "correct": 0,
+              "explanation": "「来年」is read as「らいねん」(next year)."
+            },
+            {
+              "id": "n5-e6-v-10",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "10. <u>去年</u>へ 行きます。",
+              "options": [
+                "きょねん",
+                "さくねん",
+                "こねん",
+                "さりとし"
+              ],
+              "correct": 0,
+              "explanation": "「去年」is read as「きょねん」(last year)."
+            },
+            {
+              "id": "n5-e6-v-11",
+              "type": "Mondai 2 (表記)",
+              "question": "11. あそこに <u>みち</u>が あります。",
+              "options": [
+                "道",
+                "首",
+                "導",
+                "通"
+              ],
+              "correct": 0,
+              "explanation": "「みち」is written as「道」(road / path)."
+            },
+            {
+              "id": "n5-e6-v-12",
+              "type": "Mondai 2 (表記)",
+              "question": "12. あそこに <u>あさ</u>が あります。",
+              "options": [
+                "朝",
+                "昼",
+                "夕",
+                "夜"
+              ],
+              "correct": 0,
+              "explanation": "「あさ」is written as「朝」(morning)."
+            },
+            {
+              "id": "n5-e6-v-13",
+              "type": "Mondai 2 (表記)",
+              "question": "13. あそこに <u>ひる</u>が あります。",
+              "options": [
+                "昼",
+                "朝",
+                "夕",
+                "夜"
+              ],
+              "correct": 0,
+              "explanation": "「ひる」is written as「昼」(noon / daytime)."
+            },
+            {
+              "id": "n5-e6-v-14",
+              "type": "Mondai 2 (表記)",
+              "question": "14. あそこに <u>よる</u>が あります。",
+              "options": [
+                "夜",
+                "夕",
+                "朝",
+                "昼"
+              ],
+              "correct": 0,
+              "explanation": "「よる」is written as「夜」(night)."
+            },
+            {
+              "id": "n5-e6-v-15",
+              "type": "Mondai 2 (表記)",
+              "question": "15. あそこに <u>あめ</u>が あります。",
+              "options": [
+                "雨",
+                "雪",
+                "雲",
+                "電"
+              ],
+              "correct": 0,
+              "explanation": "「あめ」is written as「雨」(rain)."
+            },
+            {
+              "id": "n5-e6-v-16",
+              "type": "Mondai 2 (表記)",
+              "question": "16. あそこに <u>ゆき</u>が あります。",
+              "options": [
+                "雪",
+                "雨",
+                "雲",
+                "雷"
+              ],
+              "correct": 0,
+              "explanation": "「ゆき」is written as「雪」(snow)."
+            },
+            {
+              "id": "n5-e6-v-17",
+              "type": "Mondai 2 (表記)",
+              "question": "17. あそこに <u>て</u>が あります。",
+              "options": [
+                "手",
+                "毛",
+                "牛",
+                "午"
+              ],
+              "correct": 0,
+              "explanation": "「て」is written as「手」(hand)."
+            },
+            {
+              "id": "n5-e6-v-18",
+              "type": "Mondai 2 (表記)",
+              "question": "18. あそこに <u>あし</u>が あります。",
+              "options": [
+                "足",
+                "疋",
+                "走",
+                "定"
+              ],
+              "correct": 0,
+              "explanation": "「あし」is written as「足」(foot / leg)."
+            },
+            {
+              "id": "n5-e6-v-19",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "19. としょかんでは しずかに（　　）てください。",
+              "options": [
+                "して",
+                "はなして",
+                "うたって",
+                "あそんで"
+              ],
+              "correct": 0,
+              "explanation": "Being quiet:「しずかにする」."
+            },
+            {
+              "id": "n5-e6-v-20",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "20. きょうは てんきが（　　）ですね。",
+              "options": [
+                "いい",
+                "あつい",
+                "さむい",
+                "わるい"
+              ],
+              "correct": 0,
+              "explanation": "Nice weather:「てんきがいい」."
+            },
+            {
+              "id": "n5-e6-v-21",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "21. この かばんは とても（　　）です。",
+              "options": [
+                "おもい",
+                "あまい",
+                "からい",
+                "ぬるい"
+              ],
+              "correct": 0,
+              "explanation": "Heavy bag:「おもい」."
+            },
+            {
+              "id": "n5-e6-v-22",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "22. 日本のおんがくが（　　）です。",
+              "options": [
+                "すき",
+                "きらい",
+                "へた",
+                "じょうず"
+              ],
+              "correct": 0,
+              "explanation": "Liking music:「おんがくがすき」."
+            },
+            {
+              "id": "n5-e6-v-23",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "23. すしを（　　）ことが ありますか。",
+              "options": [
+                "たべた",
+                "のんだ",
+                "みた",
+                "きいた"
+              ],
+              "correct": 0,
+              "explanation": "Experience eating sushi:「たべたことがある」."
+            },
+            {
+              "id": "n5-e6-v-24",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "24. まいあさ コーヒーを（　　）ます。",
+              "options": [
+                "のみ",
+                "たべ",
+                "すい",
+                "かぎ"
+              ],
+              "correct": 0,
+              "explanation": "Drinking coffee:「のむ」."
+            },
+            {
+              "id": "n5-e6-v-25",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "25. まいにち 日本語の（　　）を します。",
+              "options": [
+                "べんきょう",
+                "かいもの",
+                "さんぽ",
+                "りょこう"
+              ],
+              "correct": 0,
+              "explanation": "Studying:「べんきょうをする」."
+            },
+            {
+              "id": "n5-e6-v-26",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "26. のどが かわいたので、（　　）を のみたいです。",
+              "options": [
+                "ジュース",
+                "パン",
+                "ケーキ",
+                "りんご"
+              ],
+              "correct": 0,
+              "explanation": "Drinking juice:「ジュースをのむ」."
+            },
+            {
+              "id": "n5-e6-v-27",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "27. あさ 7じに（　　）て、シャワーを あびました。",
+              "options": [
+                "おき",
+                "ね",
+                "あるい",
+                "はしっ"
+              ],
+              "correct": 0,
+              "explanation": "Waking up:「おきる」."
+            },
+            {
+              "id": "n5-e6-v-28",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "28. えきから がっこうまで（　　）で 10ぷんです。",
+              "options": [
+                "あるいて",
+                "とんで",
+                "およいで",
+                "のぼって"
+              ],
+              "correct": 0,
+              "explanation": "Walking time:「あるいて10ぷん」."
+            },
+            {
+              "id": "n5-e6-v-29",
+              "type": "Mondai 4 (類義表現)",
+              "question": "29. きのう <u>さんぽ</u>しました。",
+              "options": [
+                "あるきました",
+                "はしりました",
+                "やすみました",
+                "およぎました"
+              ],
+              "correct": 0,
+              "explanation": "「さんぽする」(stroll / walk)."
+            },
+            {
+              "id": "n5-e6-v-30",
+              "type": "Mondai 4 (類義表現)",
+              "question": "30. あの 人は <u>しんせつ</u>です。",
+              "options": [
+                "やさしいです",
+                "きびしいです",
+                "おもしろいです",
+                "しずかです"
+              ],
+              "correct": 0,
+              "explanation": "「しんせつ」(kind) is close to「やさしい」."
+            },
+            {
+              "id": "n5-e6-v-31",
+              "type": "Mondai 4 (類義表現)",
+              "question": "31. この へやは <u>ひろい</u>です。",
+              "options": [
+                "せまくないです",
+                "あかるくないです",
+                "たかくないです",
+                "あつくないです"
+              ],
+              "correct": 0,
+              "explanation": "「ひろい」(spacious) means not narrow (せまくない)."
+            },
+            {
+              "id": "n5-e6-v-32",
+              "type": "Mondai 4 (類義表現)",
+              "question": "32. <u>ゆうがた</u> えきで あいました。",
+              "options": [
+                "夕方に",
+                "朝に",
+                "夜中に",
+                "昼間に"
+              ],
+              "correct": 0,
+              "explanation": "「ゆうがた」(evening)."
+            },
+            {
+              "id": "n5-e6-v-33",
+              "type": "Mondai 4 (類義表現)",
+              "question": "33. この もんだいは <u>やさしい</u>です。",
+              "options": [
+                "かんたんです",
+                "むずかしいです",
+                "ながいです",
+                "みじかいです"
+              ],
+              "correct": 0,
+              "explanation": "「やさしい」(easy / simple) means「かんたん」."
+            }
+          ]
+        },
+        {
+          "id": "n5-e6-sec-grammar",
+          "title": "Section 2: Language Knowledge (文法) & Reading (読解)",
+          "shortTitle": "文法・読解 (Grammar & Reading)",
+          "timeLimitSeconds": 2400,
+          "questions": [
+            {
+              "id": "n5-e6-g-1",
+              "type": "Mondai 1 (文法形式)",
+              "question": "1. テレビを（　　）ながら、ごはんを たべます。",
+              "options": [
+                "み",
+                "みて",
+                "みる",
+                "みた"
+              ],
+              "correct": 0,
+              "explanation": "Simultaneous action with ながら takes masu-stem:「みながら」."
+            },
+            {
+              "id": "n5-e6-g-2",
+              "type": "Mondai 1 (文法形式)",
+              "question": "2. あしたは てんきが（　　）でしょう。",
+              "options": [
+                "いい",
+                "よく",
+                "よかった",
+                "いいの"
+              ],
+              "correct": 0,
+              "explanation": "Conjecture with でしょう:「いいでしょう」."
+            },
+            {
+              "id": "n5-e6-g-3",
+              "type": "Mondai 1 (文法形式)",
+              "question": "3. ここに なまえを（　　）ください。",
+              "options": [
+                "かいて",
+                "かき",
+                "かく",
+                "かいた"
+              ],
+              "correct": 0,
+              "explanation": "Polite request takes te-form:「かいてください」."
+            },
+            {
+              "id": "n5-e6-g-4",
+              "type": "Mondai 1 (文法形式)",
+              "question": "4. しゃしんを（　　）も いいですか。",
+              "options": [
+                "とって",
+                "とり",
+                "とる",
+                "とった"
+              ],
+              "correct": 0,
+              "explanation": "Permission pattern「〜てもいいですか」:「とってもいいですか」."
+            },
+            {
+              "id": "n5-e6-g-5",
+              "type": "Mondai 1 (文法形式)",
+              "question": "5. たばこを（　　）は いけません。",
+              "options": [
+                "すって",
+                "すい",
+                "する",
+                "すった"
+              ],
+              "correct": 0,
+              "explanation": "Prohibition pattern「〜てはいけません」:「すってはいけません」."
+            },
+            {
+              "id": "n5-e6-g-6",
+              "type": "Mondai 1 (文法形式)",
+              "question": "6. 日本へ いった（　　）が あります。",
+              "options": [
+                "こと",
+                "もの",
+                "とき",
+                "よう"
+              ],
+              "correct": 0,
+              "explanation": "Experience pattern「〜たことがある」:「いったことがある」."
+            },
+            {
+              "id": "n5-e6-g-7",
+              "type": "Mondai 1 (文法形式)",
+              "question": "7. もっと（　　）はなして ください。",
+              "options": [
+                "ゆっくり",
+                "はやい",
+                "たかい",
+                "おおい"
+              ],
+              "correct": 0,
+              "explanation": "Adverbial manner modifier:「ゆっくりはなしてください」."
+            },
+            {
+              "id": "n5-e6-g-8",
+              "type": "Mondai 1 (文法形式)",
+              "question": "8. わたしは まいあさ 7じ（　　）おきます。",
+              "options": [
+                "に",
+                "で",
+                "を",
+                "へ"
+              ],
+              "correct": 0,
+              "explanation": "Specific time takes particle「に」."
+            },
+            {
+              "id": "n5-e6-g-9",
+              "type": "Mondai 1 (文法形式)",
+              "question": "9. えき（　　）電車に のります。",
+              "options": [
+                "で",
+                "に",
+                "へ",
+                "を"
+              ],
+              "correct": 0,
+              "explanation": "Location of boarding action:「で」."
+            },
+            {
+              "id": "n5-e6-g-10",
+              "type": "Mondai 1 (文法形式)",
+              "question": "10. 日曜日（　　）どこへも いきませんでした。",
+              "options": [
+                "は",
+                "に",
+                "で",
+                "を"
+              ],
+              "correct": 0,
+              "explanation": "Topic marker:「日曜日は」."
+            },
+            {
+              "id": "n5-e6-g-11",
+              "type": "Mondai 1 (文法形式)",
+              "question": "11. パン（　　）たまごを たべました。",
+              "options": [
+                "と",
+                "や",
+                "も",
+                "に"
+              ],
+              "correct": 0,
+              "explanation": "Exhaustive listing particle:「と」."
+            },
+            {
+              "id": "n5-e6-g-12",
+              "type": "Mondai 1 (文法形式)",
+              "question": "12. タクシー（　　）かえりましょう。",
+              "options": [
+                "で",
+                "に",
+                "を",
+                "から"
+              ],
+              "correct": 0,
+              "explanation": "Means of transport takes「で」."
+            },
+            {
+              "id": "n5-e6-g-13",
+              "type": "Mondai 1 (文法形式)",
+              "question": "13. ペンが 1ぽん（　　）ありません。",
+              "options": [
+                "しか",
+                "だけ",
+                "も",
+                "でも"
+              ],
+              "correct": 0,
+              "explanation": "「しか〜ない」(only)."
+            },
+            {
+              "id": "n5-e6-g-14",
+              "type": "Mondai 1 (文法形式)",
+              "question": "14. 日本語（　　）じょうずになりたいです。",
+              "options": [
+                "が",
+                "を",
+                "に",
+                "で"
+              ],
+              "correct": 0,
+              "explanation": "Object of state/skill takes「が」."
+            },
+            {
+              "id": "n5-e6-g-15",
+              "type": "Mondai 1 (文法形式)",
+              "question": "15. この おかしは（　　）おいしいです。",
+              "options": [
+                "とても",
+                "あまり",
+                "ぜんぜん",
+                "すこしも"
+              ],
+              "correct": 0,
+              "explanation": "Affirmative modifier:「とても」."
+            },
+            {
+              "id": "n5-e6-g-16",
+              "type": "Mondai 1 (文法形式)",
+              "question": "16. あめが ふっています（　　）、かさを さします。",
+              "options": [
+                "から",
+                "けど",
+                "ので",
+                "のに"
+              ],
+              "correct": 0,
+              "explanation": "Reason clause:「ふっていますから」."
+            },
+            {
+              "id": "n5-e6-g-17",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "17. 部屋の　＿＿　＿＿　★　＿＿　あります。\n1: なかに　2: 机が　3: ひとつ　4: 大きい",
+              "options": [
+                "なかに",
+                "机が",
+                "ひとつ",
+                "大きい"
+              ],
+              "correct": 1,
+              "explanation": "Order: 部屋の なかに 大きい [★ 机が] ひとつ あります。 Star is 2 (机が)."
+            },
+            {
+              "id": "n5-e6-g-18",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "18. きのう　＿＿　＿＿　★　＿＿　かいました。\n1: 本屋で　2: おもしろい　3: 雑誌を　4: 2さつ",
+              "options": [
+                "本屋で",
+                "おもしろい",
+                "雑誌を",
+                "2さつ"
+              ],
+              "correct": 2,
+              "explanation": "Order: きのう 本屋で おもしろい [★ 雑誌を] 2さつ かいました。 Star is 3 (雑誌を)."
+            },
+            {
+              "id": "n5-e6-g-19",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "19. わたしは　＿＿　＿＿　★　＿＿　いきました。\n1: 友達と　2: 海へ　3: 電車で　4: 先週",
+              "options": [
+                "友達と",
+                "海へ",
+                "電車で",
+                "先週"
+              ],
+              "correct": 2,
+              "explanation": "Order: わたしは 先週 友達と [★ 電車で] 海へ いきました。 Star is 3 (電車で)."
+            },
+            {
+              "id": "n5-e6-g-20",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "20. この　＿＿　＿＿　★　＿＿　ください。\n1: 薬を　2: 食後に　3: ぬるま湯で　4: 飲んで",
+              "options": [
+                "薬を",
+                "食後に",
+                "ぬるま湯で",
+                "飲んで"
+              ],
+              "correct": 2,
+              "explanation": "Order: この 薬を 食後に [★ ぬるま湯で] 飲んでください。 Star is 3 (ぬるま湯で)."
+            },
+            {
+              "id": "n5-e6-g-21",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "21. あした　＿＿　＿＿　★　＿＿　おもいます。\n1: 雨が　2: たぶん　3: ふると　4: 午後は",
+              "options": [
+                "雨が",
+                "たぶん",
+                "ふると",
+                "午後は"
+              ],
+              "correct": 0,
+              "explanation": "Order: あした 午後は たぶん [★ 雨が] ふると おもいます。 Star is 1 (雨が)."
+            },
+            {
+              "id": "n5-e6-g-22",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "【読解文章：私の趣味】\n22. (22) に入る言葉はどれですか。",
+              "options": [
+                "すきです",
+                "きらいです",
+                "じょうずです",
+                "へたです"
+              ],
+              "correct": 0,
+              "explanation": "Expressing fond hobby:「写真をとることがすきです」."
+            },
+            {
+              "id": "n5-e6-g-23",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "23. (23) に入る言葉はどれですか。",
+              "options": [
+                "そして",
+                "しかし",
+                "だから",
+                "でも"
+              ],
+              "correct": 0,
+              "explanation": "Connecting sequential narrative:「そして」."
+            },
+            {
+              "id": "n5-e6-g-24",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "24. (24) に入る言葉はどれですか。",
+              "options": [
+                "いっしょに",
+                "ひとりで",
+                "たくさん",
+                "すこし"
+              ],
+              "correct": 0,
+              "explanation": "With friends:「いっしょに」."
+            },
+            {
+              "id": "n5-e6-g-25",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "25. (25) に入る言葉はどれですか。",
+              "options": [
+                "とても",
+                "あまり",
+                "ぜんぜん",
+                "すこしも"
+              ],
+              "correct": 0,
+              "explanation": "Intensifier:「とてもきれいでした」."
+            },
+            {
+              "id": "n5-e6-g-26",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "26. (26) に入る言葉はどれですか。",
+              "options": [
+                "いきたいです",
+                "いきました",
+                "いきます",
+                "いかないです"
+              ],
+              "correct": 0,
+              "explanation": "Desire:「またいきたいです」."
+            },
+            {
+              "id": "n5-e6-g-27",
+              "type": "Mondai 4 (短文読解)",
+              "question": "【短文：先生からの連絡】\n27. 学生は 明日、何時に どこへ 行きますか。",
+              "options": [
+                "8時半に 教室",
+                "9時に 教室",
+                "8時半に 講堂",
+                "9時に 講堂"
+              ],
+              "correct": 0,
+              "explanation": "The notice instructs students to arrive at the classroom by 8:30 AM (8時半に教室)."
+            },
+            {
+              "id": "n5-e6-g-28",
+              "type": "Mondai 4 (短文読解)",
+              "question": "28. 明日 持って行かなければならない 物は何ですか。",
+              "options": [
+                "筆記用具とお弁当",
+                "教科書と辞書",
+                "カメラとノート",
+                "体操服と水筒"
+              ],
+              "correct": 0,
+              "explanation": "States to bring writing tools and lunchbox (筆記用具とお弁当)."
+            },
+            {
+              "id": "n5-e6-g-29",
+              "type": "Mondai 4 (短文読解)",
+              "question": "29. 連絡を 書いた人は 誰ですか。",
+              "options": [
+                "田中先生",
+                "山田先生",
+                "佐藤先生",
+                "鈴木先生"
+              ],
+              "correct": 0,
+              "explanation": "Signed by Tanaka-sensei."
+            },
+            {
+              "id": "n5-e6-g-30",
+              "type": "Mondai 5 (中文読解)",
+              "question": "【中文：日本での旅行】\n30. マイクさんは 京都で 何をしましたか。",
+              "options": [
+                "古いお寺を見て、抹茶を飲んだ",
+                "スキーをした",
+                "温泉に入っただけ",
+                "買い物をしただけ"
+              ],
+              "correct": 0,
+              "explanation": "Visited historic temples and enjoyed matcha green tea."
+            },
+            {
+              "id": "n5-e6-g-31",
+              "type": "Mondai 5 (中文読解)",
+              "question": "31. マイクさんが 一番 感動したことは 何ですか。",
+              "options": [
+                "お寺の庭の美しさ",
+                "買い物の安さ",
+                "電車の速さ",
+                "食べ物の量"
+              ],
+              "correct": 0,
+              "explanation": "Deeply impressed by the tranquility and beauty of temple gardens."
+            },
+            {
+              "id": "n5-e6-g-32",
+              "type": "Mondai 6 (情報検索)",
+              "question": "【情報検索：図書館の休館案内】\n32. 来週の 月曜日、図書館は 開いていますか。",
+              "options": [
+                "休館（閉まっている）",
+                "午前中だけ開いている",
+                "一日中開いている",
+                "夜だけ開いている"
+              ],
+              "correct": 0,
+              "explanation": "The notice clearly marks Mondays as regular closed days (休館)."
+            }
+          ]
+        },
+        {
+          "id": "n5-e6-sec-listening",
+          "title": "Section 3: Listening Comprehension (聴解)",
+          "shortTitle": "聴解 (Listening)",
+          "timeLimitSeconds": 1800,
+          "questions": [
+            {
+              "id": "n5-e6-l-1",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
+              "image": "/images/japanese/listening/n5/m1_q1.png",
+              "question": "1. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 2,
+              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
+              "explanation": "Based on the dialogue guidelines, Option 3 matches the selected item."
+            },
+            {
+              "id": "n5-e6-l-2",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
+              "image": "/images/japanese/listening/n5/m1_q2.png",
+              "question": "2. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 3,
+              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
+              "explanation": "Based on the dialogue guidelines, Option 4 matches the selected item."
+            },
+            {
+              "id": "n5-e6-l-3",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
+              "image": "/images/japanese/listening/n5/m1_q3.png",
+              "question": "3. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 0,
+              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
+              "explanation": "Based on the dialogue guidelines, Option 1 matches the selected item."
+            },
+            {
+              "id": "n5-e6-l-4",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
+              "image": "/images/japanese/listening/n5/m1_q4.png",
+              "question": "4. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 1,
+              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
+              "explanation": "Based on the dialogue guidelines, Option 2 matches the selected item."
+            },
+            {
+              "id": "n5-e6-l-5",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
+              "image": "/images/japanese/listening/n5/m1_q5.png",
+              "question": "5. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 2,
+              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
+              "explanation": "Based on the dialogue guidelines, Option 3 matches the selected item."
+            },
+            {
+              "id": "n5-e6-l-6",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
+              "image": "/images/japanese/listening/n5/m1_q6.png",
+              "question": "6. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 3,
+              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
+              "explanation": "Based on the dialogue guidelines, Option 4 matches the selected item."
+            },
+            {
+              "id": "n5-e6-l-7",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
+              "image": "/images/japanese/listening/n5/m1_q7.png",
+              "question": "7. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 0,
+              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
+              "explanation": "Based on the dialogue guidelines, Option 1 matches the selected item."
+            },
+            {
+              "id": "n5-e6-l-8",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q2.mp3",
+              "question": "8. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "options": [
+                "1時",
+                "2時",
+                "3時",
+                "4時"
+              ],
+              "correct": 2,
+              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
+              "explanation": "Listening point comprehension: meeting time agreement."
+            },
+            {
+              "id": "n5-e6-l-9",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q2.mp3",
+              "question": "9. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "options": [
+                "1時",
+                "2時",
+                "3時",
+                "4時"
+              ],
+              "correct": 3,
+              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
+              "explanation": "Listening point comprehension: meeting time agreement."
+            },
+            {
+              "id": "n5-e6-l-10",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q2.mp3",
+              "question": "10. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "options": [
+                "1時",
+                "2時",
+                "3時",
+                "4時"
+              ],
+              "correct": 0,
+              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
+              "explanation": "Listening point comprehension: meeting time agreement."
+            },
+            {
+              "id": "n5-e6-l-11",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q2.mp3",
+              "question": "11. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "options": [
+                "1時",
+                "2時",
+                "3時",
+                "4時"
+              ],
+              "correct": 1,
+              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
+              "explanation": "Listening point comprehension: meeting time agreement."
+            },
+            {
+              "id": "n5-e6-l-12",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q2.mp3",
+              "question": "12. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "options": [
+                "1時",
+                "2時",
+                "3時",
+                "4時"
+              ],
+              "correct": 2,
+              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
+              "explanation": "Listening point comprehension: meeting time agreement."
+            },
+            {
+              "id": "n5-e6-l-13",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q2.mp3",
+              "question": "13. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "options": [
+                "1時",
+                "2時",
+                "3時",
+                "4時"
+              ],
+              "correct": 3,
+              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
+              "explanation": "Listening point comprehension: meeting time agreement."
+            },
+            {
+              "id": "n5-e6-l-14",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
+              "image": "/images/japanese/listening/n5/m3_q1.png",
+              "question": "14. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "options": [
+                "よろしくおねがいします",
+                "ごめんなさい",
+                "いただきます"
+              ],
+              "correct": 0,
+              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
+              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+            },
+            {
+              "id": "n5-e6-l-15",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
+              "image": "/images/japanese/listening/n5/m3_q2.png",
+              "question": "15. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "options": [
+                "よろしくおねがいします",
+                "ごめんなさい",
+                "いただきます"
+              ],
+              "correct": 0,
+              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
+              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+            },
+            {
+              "id": "n5-e6-l-16",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
+              "image": "/images/japanese/listening/n5/m3_q3.png",
+              "question": "16. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "options": [
+                "よろしくおねがいします",
+                "ごめんなさい",
+                "いただきます"
+              ],
+              "correct": 0,
+              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
+              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+            },
+            {
+              "id": "n5-e6-l-17",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
+              "image": "/images/japanese/listening/n5/m3_q4.png",
+              "question": "17. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "options": [
+                "よろしくおねがいします",
+                "ごめんなさい",
+                "いただきます"
+              ],
+              "correct": 0,
+              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
+              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+            },
+            {
+              "id": "n5-e6-l-18",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
+              "image": "/images/japanese/listening/n5/m3_q5.png",
+              "question": "18. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "options": [
+                "よろしくおねがいします",
+                "ごめんなさい",
+                "いただきます"
+              ],
+              "correct": 0,
+              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
+              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+            },
+            {
+              "id": "n5-e6-l-19",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q4.mp3",
+              "question": "19. 「お元気ですか。」",
+              "options": [
+                "はい、元気です。",
+                "いいえ、元気です。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
+              "explanation": "Natural daily conversation response:「はい、元気です。」"
+            },
+            {
+              "id": "n5-e6-l-20",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q4.mp3",
+              "question": "20. 「お元気ですか。」",
+              "options": [
+                "はい、元気です。",
+                "いいえ、元気です。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
+              "explanation": "Natural daily conversation response:「はい、元気です。」"
+            },
+            {
+              "id": "n5-e6-l-21",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q4.mp3",
+              "question": "21. 「お元気ですか。」",
+              "options": [
+                "はい、元気です。",
+                "いいえ、元気です。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
+              "explanation": "Natural daily conversation response:「はい、元気です。」"
+            },
+            {
+              "id": "n5-e6-l-22",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q4.mp3",
+              "question": "22. 「お元気ですか。」",
+              "options": [
+                "はい、元気です。",
+                "いいえ、元気です。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
+              "explanation": "Natural daily conversation response:「はい、元気です。」"
+            },
+            {
+              "id": "n5-e6-l-23",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q4.mp3",
+              "question": "23. 「お元気ですか。」",
+              "options": [
+                "はい、元気です。",
+                "いいえ、元気です。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
+              "explanation": "Natural daily conversation response:「はい、元気です。」"
+            },
+            {
+              "id": "n5-e6-l-24",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q4.mp3",
+              "question": "24. 「お元気ですか。」",
+              "options": [
+                "はい、元気です。",
+                "いいえ、元気です。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
+              "explanation": "Natural daily conversation response:「はい、元気です。」"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "n5-exam-7",
+      "title": "JLPT N5 Kanji Reading & Writing Challenge (2024 Series)",
+      "shortTitle": "Exam 7 (Kanji Challenge)",
+      "badge": "Kanji Mastery",
+      "year": "2024 Series",
+      "description": "Rigorous test with full coverage of the official 103 N5 kanji syllabus, onyomi/kunyomi readings, and stroke orthography.",
+      "totalQuestions": 89,
+      "sections": [
+        {
+          "id": "n5-e7-sec-vocab",
+          "title": "Section 1: Language Knowledge (文字・語彙)",
+          "shortTitle": "文字・語彙 (Kanji & Vocab)",
+          "timeLimitSeconds": 1200,
+          "questions": [
+            {
+              "id": "n5-e7-v-1",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "1. <u>午前</u>へ 行きます。",
+              "options": [
+                "ごぜん",
+                "ごまえ",
+                "ぜんご",
+                "まえご"
+              ],
+              "correct": 0,
+              "explanation": "「午前」is read as「ごぜん」(A.M. / morning)."
+            },
+            {
+              "id": "n5-e7-v-2",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "2. <u>今日</u>へ 行きます。",
+              "options": [
+                "きょう",
+                "こんにち",
+                "こんじつ",
+                "いまひ"
+              ],
+              "correct": 0,
+              "explanation": "「今日」is read as「きょう」(today)."
+            },
+            {
+              "id": "n5-e7-v-3",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "3. <u>明日</u>へ 行きます。",
+              "options": [
+                "あした",
+                "みょうにち",
+                "あす",
+                "あすひ"
+              ],
+              "correct": 0,
+              "explanation": "「明日」is read as「あした」(tomorrow)."
+            },
+            {
+              "id": "n5-e7-v-4",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "4. <u>昨日</u>へ 行きます。",
+              "options": [
+                "きのう",
+                "さくじつ",
+                "きじつ",
+                "さくひ"
+              ],
+              "correct": 0,
+              "explanation": "「昨日」is read as「きのう」(yesterday)."
+            },
+            {
+              "id": "n5-e7-v-5",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "5. <u>今週</u>へ 行きます。",
+              "options": [
+                "こんしゅう",
+                "いましゅう",
+                "こんしゅ",
+                "いましゅ"
+              ],
+              "correct": 0,
+              "explanation": "「今週」is read as「こんしゅう」(this week)."
+            },
+            {
+              "id": "n5-e7-v-6",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "6. <u>来年</u>へ 行きます。",
+              "options": [
+                "らいねん",
+                "くねん",
+                "きたねん",
+                "らいとし"
+              ],
+              "correct": 0,
+              "explanation": "「来年」is read as「らいねん」(next year)."
+            },
+            {
+              "id": "n5-e7-v-7",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "7. <u>去年</u>へ 行きます。",
+              "options": [
+                "きょねん",
+                "さくねん",
+                "こねん",
+                "さりとし"
+              ],
+              "correct": 0,
+              "explanation": "「去年」is read as「きょねん」(last year)."
+            },
+            {
+              "id": "n5-e7-v-8",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "8. <u>病院</u>へ 行きます。",
+              "options": [
+                "びょういん",
+                "びょうえん",
+                "びょうかん",
+                "びよういん"
+              ],
+              "correct": 0,
+              "explanation": "「病院」is read as「びょういん」(hospital)."
+            },
+            {
+              "id": "n5-e7-v-9",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "9. <u>大学</u>へ 行きます。",
+              "options": [
+                "たいがく",
+                "だいがく",
+                "たいかく",
+                "だいかく"
+              ],
+              "correct": 1,
+              "explanation": "「大学」is read as「だいがく」(university)."
+            },
+            {
+              "id": "n5-e7-v-10",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "10. <u>毎朝</u>へ 行きます。",
+              "options": [
+                "まいあさ",
+                "まいちょう",
+                "まいあした",
+                "まいにち"
+              ],
+              "correct": 0,
+              "explanation": "「毎朝」is read as「まいあさ」(every morning)."
+            },
+            {
+              "id": "n5-e7-v-11",
+              "type": "Mondai 2 (表記)",
+              "question": "11. あそこに <u>よる</u>が あります。",
+              "options": [
+                "夜",
+                "夕",
+                "朝",
+                "昼"
+              ],
+              "correct": 0,
+              "explanation": "「よる」is written as「夜」(night)."
+            },
+            {
+              "id": "n5-e7-v-12",
+              "type": "Mondai 2 (表記)",
+              "question": "12. あそこに <u>あめ</u>が あります。",
+              "options": [
+                "雨",
+                "雪",
+                "雲",
+                "電"
+              ],
+              "correct": 0,
+              "explanation": "「あめ」is written as「雨」(rain)."
+            },
+            {
+              "id": "n5-e7-v-13",
+              "type": "Mondai 2 (表記)",
+              "question": "13. あそこに <u>ゆき</u>が あります。",
+              "options": [
+                "雪",
+                "雨",
+                "雲",
+                "雷"
+              ],
+              "correct": 0,
+              "explanation": "「ゆき」is written as「雪」(snow)."
+            },
+            {
+              "id": "n5-e7-v-14",
+              "type": "Mondai 2 (表記)",
+              "question": "14. あそこに <u>て</u>が あります。",
+              "options": [
+                "手",
+                "毛",
+                "牛",
+                "午"
+              ],
+              "correct": 0,
+              "explanation": "「て」is written as「手」(hand)."
+            },
+            {
+              "id": "n5-e7-v-15",
+              "type": "Mondai 2 (表記)",
+              "question": "15. あそこに <u>あし</u>が あります。",
+              "options": [
+                "足",
+                "疋",
+                "走",
+                "定"
+              ],
+              "correct": 0,
+              "explanation": "「あし」is written as「足」(foot / leg)."
+            },
+            {
+              "id": "n5-e7-v-16",
+              "type": "Mondai 2 (表記)",
+              "question": "16. あそこに <u>め</u>が あります。",
+              "options": [
+                "目",
+                "日",
+                "自",
+                "見"
+              ],
+              "correct": 0,
+              "explanation": "「め」is written as「目」(eye)."
+            },
+            {
+              "id": "n5-e7-v-17",
+              "type": "Mondai 2 (表記)",
+              "question": "17. あそこに <u>くち</u>が あります。",
+              "options": [
+                "口",
+                "日",
+                "品",
+                "中"
+              ],
+              "correct": 0,
+              "explanation": "「くち」is written as「口」(mouth)."
+            },
+            {
+              "id": "n5-e7-v-18",
+              "type": "Mondai 2 (表記)",
+              "question": "18. あそこに <u>みみ</u>が あります。",
+              "options": [
+                "耳",
+                "取",
+                "目",
+                "聞"
+              ],
+              "correct": 0,
+              "explanation": "「みみ」is written as「耳」(ear)."
+            },
+            {
+              "id": "n5-e7-v-19",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "19. 日本のおんがくが（　　）です。",
+              "options": [
+                "すき",
+                "きらい",
+                "へた",
+                "じょうず"
+              ],
+              "correct": 0,
+              "explanation": "Liking music:「おんがくがすき」."
+            },
+            {
+              "id": "n5-e7-v-20",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "20. すしを（　　）ことが ありますか。",
+              "options": [
+                "たべた",
+                "のんだ",
+                "みた",
+                "きいた"
+              ],
+              "correct": 0,
+              "explanation": "Experience eating sushi:「たべたことがある」."
+            },
+            {
+              "id": "n5-e7-v-21",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "21. まいあさ コーヒーを（　　）ます。",
+              "options": [
+                "のみ",
+                "たべ",
+                "すい",
+                "かぎ"
+              ],
+              "correct": 0,
+              "explanation": "Drinking coffee:「のむ」."
+            },
+            {
+              "id": "n5-e7-v-22",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "22. まいにち 日本語の（　　）を します。",
+              "options": [
+                "べんきょう",
+                "かいもの",
+                "さんぽ",
+                "りょこう"
+              ],
+              "correct": 0,
+              "explanation": "Studying:「べんきょうをする」."
+            },
+            {
+              "id": "n5-e7-v-23",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "23. のどが かわいたので、（　　）を のみたいです。",
+              "options": [
+                "ジュース",
+                "パン",
+                "ケーキ",
+                "りんご"
+              ],
+              "correct": 0,
+              "explanation": "Drinking juice:「ジュースをのむ」."
+            },
+            {
+              "id": "n5-e7-v-24",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "24. あさ 7じに（　　）て、シャワーを あびました。",
+              "options": [
+                "おき",
+                "ね",
+                "あるい",
+                "はしっ"
+              ],
+              "correct": 0,
+              "explanation": "Waking up:「おきる」."
+            },
+            {
+              "id": "n5-e7-v-25",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "25. えきから がっこうまで（　　）で 10ぷんです。",
+              "options": [
+                "あるいて",
+                "とんで",
+                "およいで",
+                "のぼって"
+              ],
+              "correct": 0,
+              "explanation": "Walking time:「あるいて10ぷん」."
+            },
+            {
+              "id": "n5-e7-v-26",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "26. つくえの うえに（　　）が 3ぼん あります。",
+              "options": [
+                "えんぴつ",
+                "ノート",
+                "ほん",
+                "かみ"
+              ],
+              "correct": 0,
+              "explanation": "Pencil counter「ほん」:「えんぴつが3ぼん」."
+            },
+            {
+              "id": "n5-e7-v-27",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "27. へやが くらいですから、でんきを（　　）てください。",
+              "options": [
+                "つけ",
+                "けし",
+                "あけ",
+                "しめ"
+              ],
+              "correct": 0,
+              "explanation": "Turning on light:「でんきをつける」."
+            },
+            {
+              "id": "n5-e7-v-28",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "28. さむいので、まどを（　　）ましょう。",
+              "options": [
+                "しめ",
+                "あけ",
+                "けし",
+                "つけ"
+              ],
+              "correct": 0,
+              "explanation": "Closing window:「まどをしめる」."
+            },
+            {
+              "id": "n5-e7-v-29",
+              "type": "Mondai 4 (類義表現)",
+              "question": "29. <u>ゆうがた</u> えきで あいました。",
+              "options": [
+                "夕方に",
+                "朝に",
+                "夜中に",
+                "昼間に"
+              ],
+              "correct": 0,
+              "explanation": "「ゆうがた」(evening)."
+            },
+            {
+              "id": "n5-e7-v-30",
+              "type": "Mondai 4 (類義表現)",
+              "question": "30. この もんだいは <u>やさしい</u>です。",
+              "options": [
+                "かんたんです",
+                "むずかしいです",
+                "ながいです",
+                "みじかいです"
+              ],
+              "correct": 0,
+              "explanation": "「やさしい」(easy / simple) means「かんたん」."
+            },
+            {
+              "id": "n5-e7-v-31",
+              "type": "Mondai 4 (類義表現)",
+              "question": "31. 田中さんは <u>せが たかい</u>です。",
+              "options": [
+                "せが たかいです",
+                "あしが ながいです",
+                "からだが おおきいです",
+                "てが ながいです"
+              ],
+              "correct": 0,
+              "explanation": "「背が高い」(tall)."
+            },
+            {
+              "id": "n5-e7-v-32",
+              "type": "Mondai 4 (類義表現)",
+              "question": "32. この りょうりは <u>おいしい</u>です。",
+              "options": [
+                "うまいです",
+                "まずいです",
+                "あまいです",
+                "にがいです"
+              ],
+              "correct": 0,
+              "explanation": "「おいしい」(delicious) is synonymous with「うまい」."
+            },
+            {
+              "id": "n5-e7-v-33",
+              "type": "Mondai 4 (類義表現)",
+              "question": "33. きのう <u>さんぽ</u>しました。",
+              "options": [
+                "あるきました",
+                "はしりました",
+                "やすみました",
+                "およぎました"
+              ],
+              "correct": 0,
+              "explanation": "「さんぽする」(stroll / walk)."
+            }
+          ]
+        },
+        {
+          "id": "n5-e7-sec-grammar",
+          "title": "Section 2: Language Knowledge (文法) & Reading (読解)",
+          "shortTitle": "文法・読解 (Grammar & Reading)",
+          "timeLimitSeconds": 2400,
+          "questions": [
+            {
+              "id": "n5-e7-g-1",
+              "type": "Mondai 1 (文法形式)",
+              "question": "1. しゃしんを（　　）も いいですか。",
+              "options": [
+                "とって",
+                "とり",
+                "とる",
+                "とった"
+              ],
+              "correct": 0,
+              "explanation": "Permission pattern「〜てもいいですか」:「とってもいいですか」."
+            },
+            {
+              "id": "n5-e7-g-2",
+              "type": "Mondai 1 (文法形式)",
+              "question": "2. たばこを（　　）は いけません。",
+              "options": [
+                "すって",
+                "すい",
+                "する",
+                "すった"
+              ],
+              "correct": 0,
+              "explanation": "Prohibition pattern「〜てはいけません」:「すってはいけません」."
+            },
+            {
+              "id": "n5-e7-g-3",
+              "type": "Mondai 1 (文法形式)",
+              "question": "3. 日本へ いった（　　）が あります。",
+              "options": [
+                "こと",
+                "もの",
+                "とき",
+                "よう"
+              ],
+              "correct": 0,
+              "explanation": "Experience pattern「〜たことがある」:「いったことがある」."
+            },
+            {
+              "id": "n5-e7-g-4",
+              "type": "Mondai 1 (文法形式)",
+              "question": "4. もっと（　　）はなして ください。",
+              "options": [
+                "ゆっくり",
+                "はやい",
+                "たかい",
+                "おおい"
+              ],
+              "correct": 0,
+              "explanation": "Adverbial manner modifier:「ゆっくりはなしてください」."
+            },
+            {
+              "id": "n5-e7-g-5",
+              "type": "Mondai 1 (文法形式)",
+              "question": "5. わたしは まいあさ 7じ（　　）おきます。",
+              "options": [
+                "に",
+                "で",
+                "を",
+                "へ"
+              ],
+              "correct": 0,
+              "explanation": "Specific time takes particle「に」."
+            },
+            {
+              "id": "n5-e7-g-6",
+              "type": "Mondai 1 (文法形式)",
+              "question": "6. えき（　　）電車に のります。",
+              "options": [
+                "で",
+                "に",
+                "へ",
+                "を"
+              ],
+              "correct": 0,
+              "explanation": "Location of boarding action:「で」."
+            },
+            {
+              "id": "n5-e7-g-7",
+              "type": "Mondai 1 (文法形式)",
+              "question": "7. 日曜日（　　）どこへも いきませんでした。",
+              "options": [
+                "は",
+                "に",
+                "で",
+                "を"
+              ],
+              "correct": 0,
+              "explanation": "Topic marker:「日曜日は」."
+            },
+            {
+              "id": "n5-e7-g-8",
+              "type": "Mondai 1 (文法形式)",
+              "question": "8. パン（　　）たまごを たべました。",
+              "options": [
+                "と",
+                "や",
+                "も",
+                "に"
+              ],
+              "correct": 0,
+              "explanation": "Exhaustive listing particle:「と」."
+            },
+            {
+              "id": "n5-e7-g-9",
+              "type": "Mondai 1 (文法形式)",
+              "question": "9. タクシー（　　）かえりましょう。",
+              "options": [
+                "で",
+                "に",
+                "を",
+                "から"
+              ],
+              "correct": 0,
+              "explanation": "Means of transport takes「で」."
+            },
+            {
+              "id": "n5-e7-g-10",
+              "type": "Mondai 1 (文法形式)",
+              "question": "10. ペンが 1ぽん（　　）ありません。",
+              "options": [
+                "しか",
+                "だけ",
+                "も",
+                "でも"
+              ],
+              "correct": 0,
+              "explanation": "「しか〜ない」(only)."
+            },
+            {
+              "id": "n5-e7-g-11",
+              "type": "Mondai 1 (文法形式)",
+              "question": "11. 日本語（　　）じょうずになりたいです。",
+              "options": [
+                "が",
+                "を",
+                "に",
+                "で"
+              ],
+              "correct": 0,
+              "explanation": "Object of state/skill takes「が」."
+            },
+            {
+              "id": "n5-e7-g-12",
+              "type": "Mondai 1 (文法形式)",
+              "question": "12. この おかしは（　　）おいしいです。",
+              "options": [
+                "とても",
+                "あまり",
+                "ぜんぜん",
+                "すこしも"
+              ],
+              "correct": 0,
+              "explanation": "Affirmative modifier:「とても」."
+            },
+            {
+              "id": "n5-e7-g-13",
+              "type": "Mondai 1 (文法形式)",
+              "question": "13. あめが ふっています（　　）、かさを さします。",
+              "options": [
+                "から",
+                "けど",
+                "ので",
+                "のに"
+              ],
+              "correct": 0,
+              "explanation": "Reason clause:「ふっていますから」."
+            },
+            {
+              "id": "n5-e7-g-14",
+              "type": "Mondai 1 (文法形式)",
+              "question": "14. テレビを（　　）ながら、ごはんを たべます。",
+              "options": [
+                "み",
+                "みて",
+                "みる",
+                "みた"
+              ],
+              "correct": 0,
+              "explanation": "Simultaneous action with ながら takes masu-stem:「みながら」."
+            },
+            {
+              "id": "n5-e7-g-15",
+              "type": "Mondai 1 (文法形式)",
+              "question": "15. あしたは てんきが（　　）でしょう。",
+              "options": [
+                "いい",
+                "よく",
+                "よかった",
+                "いいの"
+              ],
+              "correct": 0,
+              "explanation": "Conjecture with でしょう:「いいでしょう」."
+            },
+            {
+              "id": "n5-e7-g-16",
+              "type": "Mondai 1 (文法形式)",
+              "question": "16. ここに なまえを（　　）ください。",
+              "options": [
+                "かいて",
+                "かき",
+                "かく",
+                "かいた"
+              ],
+              "correct": 0,
+              "explanation": "Polite request takes te-form:「かいてください」."
+            },
+            {
+              "id": "n5-e7-g-17",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "17. この　＿＿　＿＿　★　＿＿　ください。\n1: 薬を　2: 食後に　3: ぬるま湯で　4: 飲んで",
+              "options": [
+                "薬を",
+                "食後に",
+                "ぬるま湯で",
+                "飲んで"
+              ],
+              "correct": 2,
+              "explanation": "Order: この 薬を 食後に [★ ぬるま湯で] 飲んでください。 Star is 3 (ぬるま湯で)."
+            },
+            {
+              "id": "n5-e7-g-18",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "18. あした　＿＿　＿＿　★　＿＿　おもいます。\n1: 雨が　2: たぶん　3: ふると　4: 午後は",
+              "options": [
+                "雨が",
+                "たぶん",
+                "ふると",
+                "午後は"
+              ],
+              "correct": 0,
+              "explanation": "Order: あした 午後は たぶん [★ 雨が] ふると おもいます。 Star is 1 (雨が)."
+            },
+            {
+              "id": "n5-e7-g-19",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "19. 部屋の　＿＿　＿＿　★　＿＿　あります。\n1: なかに　2: 机が　3: ひとつ　4: 大きい",
+              "options": [
+                "なかに",
+                "机が",
+                "ひとつ",
+                "大きい"
+              ],
+              "correct": 1,
+              "explanation": "Order: 部屋の なかに 大きい [★ 机が] ひとつ あります。 Star is 2 (机が)."
+            },
+            {
+              "id": "n5-e7-g-20",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "20. きのう　＿＿　＿＿　★　＿＿　かいました。\n1: 本屋で　2: おもしろい　3: 雑誌を　4: 2さつ",
+              "options": [
+                "本屋で",
+                "おもしろい",
+                "雑誌を",
+                "2さつ"
+              ],
+              "correct": 2,
+              "explanation": "Order: きのう 本屋で おもしろい [★ 雑誌を] 2さつ かいました。 Star is 3 (雑誌を)."
+            },
+            {
+              "id": "n5-e7-g-21",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "21. わたしは　＿＿　＿＿　★　＿＿　いきました。\n1: 友達と　2: 海へ　3: 電車で　4: 先週",
+              "options": [
+                "友達と",
+                "海へ",
+                "電車で",
+                "先週"
+              ],
+              "correct": 2,
+              "explanation": "Order: わたしは 先週 友達と [★ 電車で] 海へ いきました。 Star is 3 (電車で)."
+            },
+            {
+              "id": "n5-e7-g-22",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "【読解文章：私の趣味】\n22. (22) に入る言葉はどれですか。",
+              "options": [
+                "すきです",
+                "きらいです",
+                "じょうずです",
+                "へたです"
+              ],
+              "correct": 0,
+              "explanation": "Expressing fond hobby:「写真をとることがすきです」."
+            },
+            {
+              "id": "n5-e7-g-23",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "23. (23) に入る言葉はどれですか。",
+              "options": [
+                "そして",
+                "しかし",
+                "だから",
+                "でも"
+              ],
+              "correct": 0,
+              "explanation": "Connecting sequential narrative:「そして」."
+            },
+            {
+              "id": "n5-e7-g-24",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "24. (24) に入る言葉はどれですか。",
+              "options": [
+                "いっしょに",
+                "ひとりで",
+                "たくさん",
+                "すこし"
+              ],
+              "correct": 0,
+              "explanation": "With friends:「いっしょに」."
+            },
+            {
+              "id": "n5-e7-g-25",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "25. (25) に入る言葉はどれですか。",
+              "options": [
+                "とても",
+                "あまり",
+                "ぜんぜん",
+                "すこしも"
+              ],
+              "correct": 0,
+              "explanation": "Intensifier:「とてもきれいでした」."
+            },
+            {
+              "id": "n5-e7-g-26",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "26. (26) に入る言葉はどれですか。",
+              "options": [
+                "いきたいです",
+                "いきました",
+                "いきます",
+                "いかないです"
+              ],
+              "correct": 0,
+              "explanation": "Desire:「またいきたいです」."
+            },
+            {
+              "id": "n5-e7-g-27",
+              "type": "Mondai 4 (短文読解)",
+              "question": "【短文：先生からの連絡】\n27. 学生は 明日、何時に どこへ 行きますか。",
+              "options": [
+                "8時半に 教室",
+                "9時に 教室",
+                "8時半に 講堂",
+                "9時に 講堂"
+              ],
+              "correct": 0,
+              "explanation": "The notice instructs students to arrive at the classroom by 8:30 AM (8時半に教室)."
+            },
+            {
+              "id": "n5-e7-g-28",
+              "type": "Mondai 4 (短文読解)",
+              "question": "28. 明日 持って行かなければならない 物は何ですか。",
+              "options": [
+                "筆記用具とお弁当",
+                "教科書と辞書",
+                "カメラとノート",
+                "体操服と水筒"
+              ],
+              "correct": 0,
+              "explanation": "States to bring writing tools and lunchbox (筆記用具とお弁当)."
+            },
+            {
+              "id": "n5-e7-g-29",
+              "type": "Mondai 4 (短文読解)",
+              "question": "29. 連絡を 書いた人は 誰ですか。",
+              "options": [
+                "田中先生",
+                "山田先生",
+                "佐藤先生",
+                "鈴木先生"
+              ],
+              "correct": 0,
+              "explanation": "Signed by Tanaka-sensei."
+            },
+            {
+              "id": "n5-e7-g-30",
+              "type": "Mondai 5 (中文読解)",
+              "question": "【中文：日本での旅行】\n30. マイクさんは 京都で 何をしましたか。",
+              "options": [
+                "古いお寺を見て、抹茶を飲んだ",
+                "スキーをした",
+                "温泉に入っただけ",
+                "買い物をしただけ"
+              ],
+              "correct": 0,
+              "explanation": "Visited historic temples and enjoyed matcha green tea."
+            },
+            {
+              "id": "n5-e7-g-31",
+              "type": "Mondai 5 (中文読解)",
+              "question": "31. マイクさんが 一番 感動したことは 何ですか。",
+              "options": [
+                "お寺の庭の美しさ",
+                "買い物の安さ",
+                "電車の速さ",
+                "食べ物の量"
+              ],
+              "correct": 0,
+              "explanation": "Deeply impressed by the tranquility and beauty of temple gardens."
+            },
+            {
+              "id": "n5-e7-g-32",
+              "type": "Mondai 6 (情報検索)",
+              "question": "【情報検索：図書館の休館案内】\n32. 来週の 月曜日、図書館は 開いていますか。",
+              "options": [
+                "休館（閉まっている）",
+                "午前中だけ開いている",
+                "一日中開いている",
+                "夜だけ開いている"
+              ],
+              "correct": 0,
+              "explanation": "The notice clearly marks Mondays as regular closed days (休館)."
+            }
+          ]
+        },
+        {
+          "id": "n5-e7-sec-listening",
+          "title": "Section 3: Listening Comprehension (聴解)",
+          "shortTitle": "聴解 (Listening)",
+          "timeLimitSeconds": 1800,
+          "questions": [
+            {
+              "id": "n5-e7-l-1",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
+              "image": "/images/japanese/listening/n5/m1_q1.png",
+              "question": "1. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 3,
+              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
+              "explanation": "Based on the dialogue guidelines, Option 4 matches the selected item."
+            },
+            {
+              "id": "n5-e7-l-2",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
+              "image": "/images/japanese/listening/n5/m1_q2.png",
+              "question": "2. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 0,
+              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
+              "explanation": "Based on the dialogue guidelines, Option 1 matches the selected item."
+            },
+            {
+              "id": "n5-e7-l-3",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
+              "image": "/images/japanese/listening/n5/m1_q3.png",
+              "question": "3. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 1,
+              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
+              "explanation": "Based on the dialogue guidelines, Option 2 matches the selected item."
+            },
+            {
+              "id": "n5-e7-l-4",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
+              "image": "/images/japanese/listening/n5/m1_q4.png",
+              "question": "4. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 2,
+              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
+              "explanation": "Based on the dialogue guidelines, Option 3 matches the selected item."
+            },
+            {
+              "id": "n5-e7-l-5",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
+              "image": "/images/japanese/listening/n5/m1_q5.png",
+              "question": "5. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 3,
+              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
+              "explanation": "Based on the dialogue guidelines, Option 4 matches the selected item."
+            },
+            {
+              "id": "n5-e7-l-6",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
+              "image": "/images/japanese/listening/n5/m1_q6.png",
+              "question": "6. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 0,
+              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
+              "explanation": "Based on the dialogue guidelines, Option 1 matches the selected item."
+            },
+            {
+              "id": "n5-e7-l-7",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
+              "image": "/images/japanese/listening/n5/m1_q7.png",
+              "question": "7. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 1,
+              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
+              "explanation": "Based on the dialogue guidelines, Option 2 matches the selected item."
+            },
+            {
+              "id": "n5-e7-l-8",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n5/captured-media-1-mp3.mp3",
+              "question": "8. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "options": [
+                "1時",
+                "2時",
+                "3時",
+                "4時"
+              ],
+              "correct": 3,
+              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
+              "explanation": "Listening point comprehension: meeting time agreement."
+            },
+            {
+              "id": "n5-e7-l-9",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n5/captured-media-1-mp3.mp3",
+              "question": "9. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "options": [
+                "1時",
+                "2時",
+                "3時",
+                "4時"
+              ],
+              "correct": 0,
+              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
+              "explanation": "Listening point comprehension: meeting time agreement."
+            },
+            {
+              "id": "n5-e7-l-10",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n5/captured-media-1-mp3.mp3",
+              "question": "10. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "options": [
+                "1時",
+                "2時",
+                "3時",
+                "4時"
+              ],
+              "correct": 1,
+              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
+              "explanation": "Listening point comprehension: meeting time agreement."
+            },
+            {
+              "id": "n5-e7-l-11",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n5/captured-media-1-mp3.mp3",
+              "question": "11. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "options": [
+                "1時",
+                "2時",
+                "3時",
+                "4時"
+              ],
+              "correct": 2,
+              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
+              "explanation": "Listening point comprehension: meeting time agreement."
+            },
+            {
+              "id": "n5-e7-l-12",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n5/captured-media-1-mp3.mp3",
+              "question": "12. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "options": [
+                "1時",
+                "2時",
+                "3時",
+                "4時"
+              ],
+              "correct": 3,
+              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
+              "explanation": "Listening point comprehension: meeting time agreement."
+            },
+            {
+              "id": "n5-e7-l-13",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n5/captured-media-1-mp3.mp3",
+              "question": "13. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "options": [
+                "1時",
+                "2時",
+                "3時",
+                "4時"
+              ],
+              "correct": 0,
+              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
+              "explanation": "Listening point comprehension: meeting time agreement."
+            },
+            {
+              "id": "n5-e7-l-14",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
+              "image": "/images/japanese/listening/n5/m3_q1.png",
+              "question": "14. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "options": [
+                "よろしくおねがいします",
+                "ごめんなさい",
+                "いただきます"
+              ],
+              "correct": 0,
+              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
+              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+            },
+            {
+              "id": "n5-e7-l-15",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
+              "image": "/images/japanese/listening/n5/m3_q2.png",
+              "question": "15. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "options": [
+                "よろしくおねがいします",
+                "ごめんなさい",
+                "いただきます"
+              ],
+              "correct": 0,
+              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
+              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+            },
+            {
+              "id": "n5-e7-l-16",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
+              "image": "/images/japanese/listening/n5/m3_q3.png",
+              "question": "16. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "options": [
+                "よろしくおねがいします",
+                "ごめんなさい",
+                "いただきます"
+              ],
+              "correct": 0,
+              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
+              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+            },
+            {
+              "id": "n5-e7-l-17",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
+              "image": "/images/japanese/listening/n5/m3_q4.png",
+              "question": "17. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "options": [
+                "よろしくおねがいします",
+                "ごめんなさい",
+                "いただきます"
+              ],
+              "correct": 0,
+              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
+              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+            },
+            {
+              "id": "n5-e7-l-18",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
+              "image": "/images/japanese/listening/n5/m3_q5.png",
+              "question": "18. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "options": [
+                "よろしくおねがいします",
+                "ごめんなさい",
+                "いただきます"
+              ],
+              "correct": 0,
+              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
+              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+            },
+            {
+              "id": "n5-e7-l-19",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n5/captured-media-3-mp3.mp3",
+              "question": "19. 「お元気ですか。」",
+              "options": [
+                "はい、元気です。",
+                "いいえ、元気です。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
+              "explanation": "Natural daily conversation response:「はい、元気です。」"
+            },
+            {
+              "id": "n5-e7-l-20",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n5/captured-media-3-mp3.mp3",
+              "question": "20. 「お元気ですか。」",
+              "options": [
+                "はい、元気です。",
+                "いいえ、元気です。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
+              "explanation": "Natural daily conversation response:「はい、元気です。」"
+            },
+            {
+              "id": "n5-e7-l-21",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n5/captured-media-3-mp3.mp3",
+              "question": "21. 「お元気ですか。」",
+              "options": [
+                "はい、元気です。",
+                "いいえ、元気です。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
+              "explanation": "Natural daily conversation response:「はい、元気です。」"
+            },
+            {
+              "id": "n5-e7-l-22",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n5/captured-media-3-mp3.mp3",
+              "question": "22. 「お元気ですか。」",
+              "options": [
+                "はい、元気です。",
+                "いいえ、元気です。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
+              "explanation": "Natural daily conversation response:「はい、元気です。」"
+            },
+            {
+              "id": "n5-e7-l-23",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n5/captured-media-3-mp3.mp3",
+              "question": "23. 「お元気ですか。」",
+              "options": [
+                "はい、元気です。",
+                "いいえ、元気です。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
+              "explanation": "Natural daily conversation response:「はい、元気です。」"
+            },
+            {
+              "id": "n5-e7-l-24",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n5/captured-media-3-mp3.mp3",
+              "question": "24. 「お元気ですか。」",
+              "options": [
+                "はい、元気です。",
+                "いいえ、元気です。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
+              "explanation": "Natural daily conversation response:「はい、元気です。」"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "n5-exam-8",
+      "title": "JLPT N5 Conversational Listening Intensive (2025 Series)",
+      "shortTitle": "Exam 8 (Listening Intensive)",
+      "badge": "Audio Intensive",
+      "year": "2025 Series",
+      "description": "Advanced listening comprehension simulator with workplace, campus, and travel situational dialogue scenarios.",
+      "totalQuestions": 89,
+      "sections": [
+        {
+          "id": "n5-e8-sec-vocab",
+          "title": "Section 1: Language Knowledge (文字・語彙)",
+          "shortTitle": "文字・語彙 (Kanji & Vocab)",
+          "timeLimitSeconds": 1200,
+          "questions": [
+            {
+              "id": "n5-e8-v-1",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "1. <u>昨日</u>へ 行きます。",
+              "options": [
+                "きのう",
+                "さくじつ",
+                "きじつ",
+                "さくひ"
+              ],
+              "correct": 0,
+              "explanation": "「昨日」is read as「きのう」(yesterday)."
+            },
+            {
+              "id": "n5-e8-v-2",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "2. <u>今週</u>へ 行きます。",
+              "options": [
+                "こんしゅう",
+                "いましゅう",
+                "こんしゅ",
+                "いましゅ"
+              ],
+              "correct": 0,
+              "explanation": "「今週」is read as「こんしゅう」(this week)."
+            },
+            {
+              "id": "n5-e8-v-3",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "3. <u>来年</u>へ 行きます。",
+              "options": [
+                "らいねん",
+                "くねん",
+                "きたねん",
+                "らいとし"
+              ],
+              "correct": 0,
+              "explanation": "「来年」is read as「らいねん」(next year)."
+            },
+            {
+              "id": "n5-e8-v-4",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "4. <u>去年</u>へ 行きます。",
+              "options": [
+                "きょねん",
+                "さくねん",
+                "こねん",
+                "さりとし"
+              ],
+              "correct": 0,
+              "explanation": "「去年」is read as「きょねん」(last year)."
+            },
+            {
+              "id": "n5-e8-v-5",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "5. <u>病院</u>へ 行きます。",
+              "options": [
+                "びょういん",
+                "びょうえん",
+                "びょうかん",
+                "びよういん"
+              ],
+              "correct": 0,
+              "explanation": "「病院」is read as「びょういん」(hospital)."
+            },
+            {
+              "id": "n5-e8-v-6",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "6. <u>大学</u>へ 行きます。",
+              "options": [
+                "たいがく",
+                "だいがく",
+                "たいかく",
+                "だいかく"
+              ],
+              "correct": 1,
+              "explanation": "「大学」is read as「だいがく」(university)."
+            },
+            {
+              "id": "n5-e8-v-7",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "7. <u>毎朝</u>へ 行きます。",
+              "options": [
+                "まいあさ",
+                "まいちょう",
+                "まいあした",
+                "まいにち"
+              ],
+              "correct": 0,
+              "explanation": "「毎朝」is read as「まいあさ」(every morning)."
+            },
+            {
+              "id": "n5-e8-v-8",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "8. <u>外国</u>へ 行きます。",
+              "options": [
+                "がいこく",
+                "かいこく",
+                "がいごく",
+                "かいごく"
+              ],
+              "correct": 0,
+              "explanation": "「外国」is read as「がいこく」(foreign country)."
+            },
+            {
+              "id": "n5-e8-v-9",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "9. <u>友達</u>へ 行きます。",
+              "options": [
+                "ゆうだち",
+                "ともだち",
+                "ゆうたち",
+                "ともたち"
+              ],
+              "correct": 1,
+              "explanation": "「友達」is read as「ともだち」(friend)."
+            },
+            {
+              "id": "n5-e8-v-10",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "10. <u>新聞</u>へ 行きます。",
+              "options": [
+                "しんぶん",
+                "じんぶん",
+                "しんもん",
+                "じんもん"
+              ],
+              "correct": 0,
+              "explanation": "「新聞」is read as「しんぶん」(newspaper)."
+            },
+            {
+              "id": "n5-e8-v-11",
+              "type": "Mondai 2 (表記)",
+              "question": "11. あそこに <u>て</u>が あります。",
+              "options": [
+                "手",
+                "毛",
+                "牛",
+                "午"
+              ],
+              "correct": 0,
+              "explanation": "「て」is written as「手」(hand)."
+            },
+            {
+              "id": "n5-e8-v-12",
+              "type": "Mondai 2 (表記)",
+              "question": "12. あそこに <u>あし</u>が あります。",
+              "options": [
+                "足",
+                "疋",
+                "走",
+                "定"
+              ],
+              "correct": 0,
+              "explanation": "「あし」is written as「足」(foot / leg)."
+            },
+            {
+              "id": "n5-e8-v-13",
+              "type": "Mondai 2 (表記)",
+              "question": "13. あそこに <u>め</u>が あります。",
+              "options": [
+                "目",
+                "日",
+                "自",
+                "見"
+              ],
+              "correct": 0,
+              "explanation": "「め」is written as「目」(eye)."
+            },
+            {
+              "id": "n5-e8-v-14",
+              "type": "Mondai 2 (表記)",
+              "question": "14. あそこに <u>くち</u>が あります。",
+              "options": [
+                "口",
+                "日",
+                "品",
+                "中"
+              ],
+              "correct": 0,
+              "explanation": "「くち」is written as「口」(mouth)."
+            },
+            {
+              "id": "n5-e8-v-15",
+              "type": "Mondai 2 (表記)",
+              "question": "15. あそこに <u>みみ</u>が あります。",
+              "options": [
+                "耳",
+                "取",
+                "目",
+                "聞"
+              ],
+              "correct": 0,
+              "explanation": "「みみ」is written as「耳」(ear)."
+            },
+            {
+              "id": "n5-e8-v-16",
+              "type": "Mondai 2 (表記)",
+              "question": "16. あそこに <u>ほん</u>が あります。",
+              "options": [
+                "本",
+                "体",
+                "木",
+                "休"
+              ],
+              "correct": 0,
+              "explanation": "「ほん」is written as「本」(book)."
+            },
+            {
+              "id": "n5-e8-v-17",
+              "type": "Mondai 2 (表記)",
+              "question": "17. あそこに <u>みず</u>が あります。",
+              "options": [
+                "水",
+                "木",
+                "氷",
+                "永"
+              ],
+              "correct": 0,
+              "explanation": "「みず」is written as「水」(water)."
+            },
+            {
+              "id": "n5-e8-v-18",
+              "type": "Mondai 2 (表記)",
+              "question": "18. あそこに <u>やま</u>が あります。",
+              "options": [
+                "山",
+                "川",
+                "出",
+                "三"
+              ],
+              "correct": 0,
+              "explanation": "「やま」is written as「山」(mountain)."
+            },
+            {
+              "id": "n5-e8-v-19",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "19. まいにち 日本語の（　　）を します。",
+              "options": [
+                "べんきょう",
+                "かいもの",
+                "さんぽ",
+                "りょこう"
+              ],
+              "correct": 0,
+              "explanation": "Studying:「べんきょうをする」."
+            },
+            {
+              "id": "n5-e8-v-20",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "20. のどが かわいたので、（　　）を のみたいです。",
+              "options": [
+                "ジュース",
+                "パン",
+                "ケーキ",
+                "りんご"
+              ],
+              "correct": 0,
+              "explanation": "Drinking juice:「ジュースをのむ」."
+            },
+            {
+              "id": "n5-e8-v-21",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "21. あさ 7じに（　　）て、シャワーを あびました。",
+              "options": [
+                "おき",
+                "ね",
+                "あるい",
+                "はしっ"
+              ],
+              "correct": 0,
+              "explanation": "Waking up:「おきる」."
+            },
+            {
+              "id": "n5-e8-v-22",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "22. えきから がっこうまで（　　）で 10ぷんです。",
+              "options": [
+                "あるいて",
+                "とんで",
+                "およいで",
+                "のぼって"
+              ],
+              "correct": 0,
+              "explanation": "Walking time:「あるいて10ぷん」."
+            },
+            {
+              "id": "n5-e8-v-23",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "23. つくえの うえに（　　）が 3ぼん あります。",
+              "options": [
+                "えんぴつ",
+                "ノート",
+                "ほん",
+                "かみ"
+              ],
+              "correct": 0,
+              "explanation": "Pencil counter「ほん」:「えんぴつが3ぼん」."
+            },
+            {
+              "id": "n5-e8-v-24",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "24. へやが くらいですから、でんきを（　　）てください。",
+              "options": [
+                "つけ",
+                "けし",
+                "あけ",
+                "しめ"
+              ],
+              "correct": 0,
+              "explanation": "Turning on light:「でんきをつける」."
+            },
+            {
+              "id": "n5-e8-v-25",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "25. さむいので、まどを（　　）ましょう。",
+              "options": [
+                "しめ",
+                "あけ",
+                "けし",
+                "つけ"
+              ],
+              "correct": 0,
+              "explanation": "Closing window:「まどをしめる」."
+            },
+            {
+              "id": "n5-e8-v-26",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "26. あした ともだちと えいがを（　　）に いきます。",
+              "options": [
+                "み",
+                "きき",
+                "たべ",
+                "よみ"
+              ],
+              "correct": 0,
+              "explanation": "Going to watch a movie:「えいがをみにいく」."
+            },
+            {
+              "id": "n5-e8-v-27",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "27. スーパーで やさいと くだものを（　　）ました。",
+              "options": [
+                "かい",
+                "うり",
+                "かり",
+                "かし"
+              ],
+              "correct": 0,
+              "explanation": "Buying groceries:「かう」."
+            },
+            {
+              "id": "n5-e8-v-28",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "28. としょかんでは しずかに（　　）てください。",
+              "options": [
+                "して",
+                "はなして",
+                "うたって",
+                "あそんで"
+              ],
+              "correct": 0,
+              "explanation": "Being quiet:「しずかにする」."
+            },
+            {
+              "id": "n5-e8-v-29",
+              "type": "Mondai 4 (類義表現)",
+              "question": "29. この りょうりは <u>おいしい</u>です。",
+              "options": [
+                "うまいです",
+                "まずいです",
+                "あまいです",
+                "にがいです"
+              ],
+              "correct": 0,
+              "explanation": "「おいしい」(delicious) is synonymous with「うまい」."
+            },
+            {
+              "id": "n5-e8-v-30",
+              "type": "Mondai 4 (類義表現)",
+              "question": "30. きのう <u>さんぽ</u>しました。",
+              "options": [
+                "あるきました",
+                "はしりました",
+                "やすみました",
+                "およぎました"
+              ],
+              "correct": 0,
+              "explanation": "「さんぽする」(stroll / walk)."
+            },
+            {
+              "id": "n5-e8-v-31",
+              "type": "Mondai 4 (類義表現)",
+              "question": "31. あの 人は <u>しんせつ</u>です。",
+              "options": [
+                "やさしいです",
+                "きびしいです",
+                "おもしろいです",
+                "しずかです"
+              ],
+              "correct": 0,
+              "explanation": "「しんせつ」(kind) is close to「やさしい」."
+            },
+            {
+              "id": "n5-e8-v-32",
+              "type": "Mondai 4 (類義表現)",
+              "question": "32. この へやは <u>ひろい</u>です。",
+              "options": [
+                "せまくないです",
+                "あかるくないです",
+                "たかくないです",
+                "あつくないです"
+              ],
+              "correct": 0,
+              "explanation": "「ひろい」(spacious) means not narrow (せまくない)."
+            },
+            {
+              "id": "n5-e8-v-33",
+              "type": "Mondai 4 (類義表現)",
+              "question": "33. <u>ゆうがた</u> えきで あいました。",
+              "options": [
+                "夕方に",
+                "朝に",
+                "夜中に",
+                "昼間に"
+              ],
+              "correct": 0,
+              "explanation": "「ゆうがた」(evening)."
+            }
+          ]
+        },
+        {
+          "id": "n5-e8-sec-grammar",
+          "title": "Section 2: Language Knowledge (文法) & Reading (読解)",
+          "shortTitle": "文法・読解 (Grammar & Reading)",
+          "timeLimitSeconds": 2400,
+          "questions": [
+            {
+              "id": "n5-e8-g-1",
+              "type": "Mondai 1 (文法形式)",
+              "question": "1. もっと（　　）はなして ください。",
+              "options": [
+                "ゆっくり",
+                "はやい",
+                "たかい",
+                "おおい"
+              ],
+              "correct": 0,
+              "explanation": "Adverbial manner modifier:「ゆっくりはなしてください」."
+            },
+            {
+              "id": "n5-e8-g-2",
+              "type": "Mondai 1 (文法形式)",
+              "question": "2. わたしは まいあさ 7じ（　　）おきます。",
+              "options": [
+                "に",
+                "で",
+                "を",
+                "へ"
+              ],
+              "correct": 0,
+              "explanation": "Specific time takes particle「に」."
+            },
+            {
+              "id": "n5-e8-g-3",
+              "type": "Mondai 1 (文法形式)",
+              "question": "3. えき（　　）電車に のります。",
+              "options": [
+                "で",
+                "に",
+                "へ",
+                "を"
+              ],
+              "correct": 0,
+              "explanation": "Location of boarding action:「で」."
+            },
+            {
+              "id": "n5-e8-g-4",
+              "type": "Mondai 1 (文法形式)",
+              "question": "4. 日曜日（　　）どこへも いきませんでした。",
+              "options": [
+                "は",
+                "に",
+                "で",
+                "を"
+              ],
+              "correct": 0,
+              "explanation": "Topic marker:「日曜日は」."
+            },
+            {
+              "id": "n5-e8-g-5",
+              "type": "Mondai 1 (文法形式)",
+              "question": "5. パン（　　）たまごを たべました。",
+              "options": [
+                "と",
+                "や",
+                "も",
+                "に"
+              ],
+              "correct": 0,
+              "explanation": "Exhaustive listing particle:「と」."
+            },
+            {
+              "id": "n5-e8-g-6",
+              "type": "Mondai 1 (文法形式)",
+              "question": "6. タクシー（　　）かえりましょう。",
+              "options": [
+                "で",
+                "に",
+                "を",
+                "から"
+              ],
+              "correct": 0,
+              "explanation": "Means of transport takes「で」."
+            },
+            {
+              "id": "n5-e8-g-7",
+              "type": "Mondai 1 (文法形式)",
+              "question": "7. ペンが 1ぽん（　　）ありません。",
+              "options": [
+                "しか",
+                "だけ",
+                "も",
+                "でも"
+              ],
+              "correct": 0,
+              "explanation": "「しか〜ない」(only)."
+            },
+            {
+              "id": "n5-e8-g-8",
+              "type": "Mondai 1 (文法形式)",
+              "question": "8. 日本語（　　）じょうずになりたいです。",
+              "options": [
+                "が",
+                "を",
+                "に",
+                "で"
+              ],
+              "correct": 0,
+              "explanation": "Object of state/skill takes「が」."
+            },
+            {
+              "id": "n5-e8-g-9",
+              "type": "Mondai 1 (文法形式)",
+              "question": "9. この おかしは（　　）おいしいです。",
+              "options": [
+                "とても",
+                "あまり",
+                "ぜんぜん",
+                "すこしも"
+              ],
+              "correct": 0,
+              "explanation": "Affirmative modifier:「とても」."
+            },
+            {
+              "id": "n5-e8-g-10",
+              "type": "Mondai 1 (文法形式)",
+              "question": "10. あめが ふっています（　　）、かさを さします。",
+              "options": [
+                "から",
+                "けど",
+                "ので",
+                "のに"
+              ],
+              "correct": 0,
+              "explanation": "Reason clause:「ふっていますから」."
+            },
+            {
+              "id": "n5-e8-g-11",
+              "type": "Mondai 1 (文法形式)",
+              "question": "11. テレビを（　　）ながら、ごはんを たべます。",
+              "options": [
+                "み",
+                "みて",
+                "みる",
+                "みた"
+              ],
+              "correct": 0,
+              "explanation": "Simultaneous action with ながら takes masu-stem:「みながら」."
+            },
+            {
+              "id": "n5-e8-g-12",
+              "type": "Mondai 1 (文法形式)",
+              "question": "12. あしたは てんきが（　　）でしょう。",
+              "options": [
+                "いい",
+                "よく",
+                "よかった",
+                "いいの"
+              ],
+              "correct": 0,
+              "explanation": "Conjecture with でしょう:「いいでしょう」."
+            },
+            {
+              "id": "n5-e8-g-13",
+              "type": "Mondai 1 (文法形式)",
+              "question": "13. ここに なまえを（　　）ください。",
+              "options": [
+                "かいて",
+                "かき",
+                "かく",
+                "かいた"
+              ],
+              "correct": 0,
+              "explanation": "Polite request takes te-form:「かいてください」."
+            },
+            {
+              "id": "n5-e8-g-14",
+              "type": "Mondai 1 (文法形式)",
+              "question": "14. しゃしんを（　　）も いいですか。",
+              "options": [
+                "とって",
+                "とり",
+                "とる",
+                "とった"
+              ],
+              "correct": 0,
+              "explanation": "Permission pattern「〜てもいいですか」:「とってもいいですか」."
+            },
+            {
+              "id": "n5-e8-g-15",
+              "type": "Mondai 1 (文法形式)",
+              "question": "15. たばこを（　　）は いけません。",
+              "options": [
+                "すって",
+                "すい",
+                "する",
+                "すった"
+              ],
+              "correct": 0,
+              "explanation": "Prohibition pattern「〜てはいけません」:「すってはいけません」."
+            },
+            {
+              "id": "n5-e8-g-16",
+              "type": "Mondai 1 (文法形式)",
+              "question": "16. 日本へ いった（　　）が あります。",
+              "options": [
+                "こと",
+                "もの",
+                "とき",
+                "よう"
+              ],
+              "correct": 0,
+              "explanation": "Experience pattern「〜たことがある」:「いったことがある」."
+            },
+            {
+              "id": "n5-e8-g-17",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "17. きのう　＿＿　＿＿　★　＿＿　かいました。\n1: 本屋で　2: おもしろい　3: 雑誌を　4: 2さつ",
+              "options": [
+                "本屋で",
+                "おもしろい",
+                "雑誌を",
+                "2さつ"
+              ],
+              "correct": 2,
+              "explanation": "Order: きのう 本屋で おもしろい [★ 雑誌を] 2さつ かいました。 Star is 3 (雑誌を)."
+            },
+            {
+              "id": "n5-e8-g-18",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "18. わたしは　＿＿　＿＿　★　＿＿　いきました。\n1: 友達と　2: 海へ　3: 電車で　4: 先週",
+              "options": [
+                "友達と",
+                "海へ",
+                "電車で",
+                "先週"
+              ],
+              "correct": 2,
+              "explanation": "Order: わたしは 先週 友達と [★ 電車で] 海へ いきました。 Star is 3 (電車で)."
+            },
+            {
+              "id": "n5-e8-g-19",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "19. この　＿＿　＿＿　★　＿＿　ください。\n1: 薬を　2: 食後に　3: ぬるま湯で　4: 飲んで",
+              "options": [
+                "薬を",
+                "食後に",
+                "ぬるま湯で",
+                "飲んで"
+              ],
+              "correct": 2,
+              "explanation": "Order: この 薬を 食後に [★ ぬるま湯で] 飲んでください。 Star is 3 (ぬるま湯で)."
+            },
+            {
+              "id": "n5-e8-g-20",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "20. あした　＿＿　＿＿　★　＿＿　おもいます。\n1: 雨が　2: たぶん　3: ふると　4: 午後は",
+              "options": [
+                "雨が",
+                "たぶん",
+                "ふると",
+                "午後は"
+              ],
+              "correct": 0,
+              "explanation": "Order: あした 午後は たぶん [★ 雨が] ふると おもいます。 Star is 1 (雨が)."
+            },
+            {
+              "id": "n5-e8-g-21",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "21. 部屋の　＿＿　＿＿　★　＿＿　あります。\n1: なかに　2: 机が　3: ひとつ　4: 大きい",
+              "options": [
+                "なかに",
+                "机が",
+                "ひとつ",
+                "大きい"
+              ],
+              "correct": 1,
+              "explanation": "Order: 部屋の なかに 大きい [★ 机が] ひとつ あります。 Star is 2 (机が)."
+            },
+            {
+              "id": "n5-e8-g-22",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "【読解文章：私の趣味】\n22. (22) に入る言葉はどれですか。",
+              "options": [
+                "すきです",
+                "きらいです",
+                "じょうずです",
+                "へたです"
+              ],
+              "correct": 0,
+              "explanation": "Expressing fond hobby:「写真をとることがすきです」."
+            },
+            {
+              "id": "n5-e8-g-23",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "23. (23) に入る言葉はどれですか。",
+              "options": [
+                "そして",
+                "しかし",
+                "だから",
+                "でも"
+              ],
+              "correct": 0,
+              "explanation": "Connecting sequential narrative:「そして」."
+            },
+            {
+              "id": "n5-e8-g-24",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "24. (24) に入る言葉はどれですか。",
+              "options": [
+                "いっしょに",
+                "ひとりで",
+                "たくさん",
+                "すこし"
+              ],
+              "correct": 0,
+              "explanation": "With friends:「いっしょに」."
+            },
+            {
+              "id": "n5-e8-g-25",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "25. (25) に入る言葉はどれですか。",
+              "options": [
+                "とても",
+                "あまり",
+                "ぜんぜん",
+                "すこしも"
+              ],
+              "correct": 0,
+              "explanation": "Intensifier:「とてもきれいでした」."
+            },
+            {
+              "id": "n5-e8-g-26",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "26. (26) に入る言葉はどれですか。",
+              "options": [
+                "いきたいです",
+                "いきました",
+                "いきます",
+                "いかないです"
+              ],
+              "correct": 0,
+              "explanation": "Desire:「またいきたいです」."
+            },
+            {
+              "id": "n5-e8-g-27",
+              "type": "Mondai 4 (短文読解)",
+              "question": "【短文：先生からの連絡】\n27. 学生は 明日、何時に どこへ 行きますか。",
+              "options": [
+                "8時半に 教室",
+                "9時に 教室",
+                "8時半に 講堂",
+                "9時に 講堂"
+              ],
+              "correct": 0,
+              "explanation": "The notice instructs students to arrive at the classroom by 8:30 AM (8時半に教室)."
+            },
+            {
+              "id": "n5-e8-g-28",
+              "type": "Mondai 4 (短文読解)",
+              "question": "28. 明日 持って行かなければならない 物は何ですか。",
+              "options": [
+                "筆記用具とお弁当",
+                "教科書と辞書",
+                "カメラとノート",
+                "体操服と水筒"
+              ],
+              "correct": 0,
+              "explanation": "States to bring writing tools and lunchbox (筆記用具とお弁当)."
+            },
+            {
+              "id": "n5-e8-g-29",
+              "type": "Mondai 4 (短文読解)",
+              "question": "29. 連絡を 書いた人は 誰ですか。",
+              "options": [
+                "田中先生",
+                "山田先生",
+                "佐藤先生",
+                "鈴木先生"
+              ],
+              "correct": 0,
+              "explanation": "Signed by Tanaka-sensei."
+            },
+            {
+              "id": "n5-e8-g-30",
+              "type": "Mondai 5 (中文読解)",
+              "question": "【中文：日本での旅行】\n30. マイクさんは 京都で 何をしましたか。",
+              "options": [
+                "古いお寺を見て、抹茶を飲んだ",
+                "スキーをした",
+                "温泉に入っただけ",
+                "買い物をしただけ"
+              ],
+              "correct": 0,
+              "explanation": "Visited historic temples and enjoyed matcha green tea."
+            },
+            {
+              "id": "n5-e8-g-31",
+              "type": "Mondai 5 (中文読解)",
+              "question": "31. マイクさんが 一番 感動したことは 何ですか。",
+              "options": [
+                "お寺の庭の美しさ",
+                "買い物の安さ",
+                "電車の速さ",
+                "食べ物の量"
+              ],
+              "correct": 0,
+              "explanation": "Deeply impressed by the tranquility and beauty of temple gardens."
+            },
+            {
+              "id": "n5-e8-g-32",
+              "type": "Mondai 6 (情報検索)",
+              "question": "【情報検索：図書館の休館案内】\n32. 来週の 月曜日、図書館は 開いていますか。",
+              "options": [
+                "休館（閉まっている）",
+                "午前中だけ開いている",
+                "一日中開いている",
+                "夜だけ開いている"
+              ],
+              "correct": 0,
+              "explanation": "The notice clearly marks Mondays as regular closed days (休館)."
+            }
+          ]
+        },
+        {
+          "id": "n5-e8-sec-listening",
+          "title": "Section 3: Listening Comprehension (聴解)",
+          "shortTitle": "聴解 (Listening)",
+          "timeLimitSeconds": 1800,
+          "questions": [
+            {
+              "id": "n5-e8-l-1",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
+              "image": "/images/japanese/listening/n5/m1_q1.png",
+              "question": "1. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 0,
+              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
+              "explanation": "Based on the dialogue guidelines, Option 1 matches the selected item."
+            },
+            {
+              "id": "n5-e8-l-2",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
+              "image": "/images/japanese/listening/n5/m1_q2.png",
+              "question": "2. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 1,
+              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
+              "explanation": "Based on the dialogue guidelines, Option 2 matches the selected item."
+            },
+            {
+              "id": "n5-e8-l-3",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
+              "image": "/images/japanese/listening/n5/m1_q3.png",
+              "question": "3. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 2,
+              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
+              "explanation": "Based on the dialogue guidelines, Option 3 matches the selected item."
+            },
+            {
+              "id": "n5-e8-l-4",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
+              "image": "/images/japanese/listening/n5/m1_q4.png",
+              "question": "4. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 3,
+              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
+              "explanation": "Based on the dialogue guidelines, Option 4 matches the selected item."
+            },
+            {
+              "id": "n5-e8-l-5",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
+              "image": "/images/japanese/listening/n5/m1_q5.png",
+              "question": "5. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 0,
+              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
+              "explanation": "Based on the dialogue guidelines, Option 1 matches the selected item."
+            },
+            {
+              "id": "n5-e8-l-6",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
+              "image": "/images/japanese/listening/n5/m1_q6.png",
+              "question": "6. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 1,
+              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
+              "explanation": "Based on the dialogue guidelines, Option 2 matches the selected item."
+            },
+            {
+              "id": "n5-e8-l-7",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
+              "image": "/images/japanese/listening/n5/m1_q7.png",
+              "question": "7. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 2,
+              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
+              "explanation": "Based on the dialogue guidelines, Option 3 matches the selected item."
+            },
+            {
+              "id": "n5-e8-l-8",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q2.mp3",
+              "question": "8. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "options": [
+                "1時",
+                "2時",
+                "3時",
+                "4時"
+              ],
+              "correct": 0,
+              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
+              "explanation": "Listening point comprehension: meeting time agreement."
+            },
+            {
+              "id": "n5-e8-l-9",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q2.mp3",
+              "question": "9. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "options": [
+                "1時",
+                "2時",
+                "3時",
+                "4時"
+              ],
+              "correct": 1,
+              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
+              "explanation": "Listening point comprehension: meeting time agreement."
+            },
+            {
+              "id": "n5-e8-l-10",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q2.mp3",
+              "question": "10. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "options": [
+                "1時",
+                "2時",
+                "3時",
+                "4時"
+              ],
+              "correct": 2,
+              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
+              "explanation": "Listening point comprehension: meeting time agreement."
+            },
+            {
+              "id": "n5-e8-l-11",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q2.mp3",
+              "question": "11. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "options": [
+                "1時",
+                "2時",
+                "3時",
+                "4時"
+              ],
+              "correct": 3,
+              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
+              "explanation": "Listening point comprehension: meeting time agreement."
+            },
+            {
+              "id": "n5-e8-l-12",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q2.mp3",
+              "question": "12. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "options": [
+                "1時",
+                "2時",
+                "3時",
+                "4時"
+              ],
+              "correct": 0,
+              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
+              "explanation": "Listening point comprehension: meeting time agreement."
+            },
+            {
+              "id": "n5-e8-l-13",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q2.mp3",
+              "question": "13. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "options": [
+                "1時",
+                "2時",
+                "3時",
+                "4時"
+              ],
+              "correct": 1,
+              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
+              "explanation": "Listening point comprehension: meeting time agreement."
+            },
+            {
+              "id": "n5-e8-l-14",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
+              "image": "/images/japanese/listening/n5/m3_q1.png",
+              "question": "14. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "options": [
+                "よろしくおねがいします",
+                "ごめんなさい",
+                "いただきます"
+              ],
+              "correct": 0,
+              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
+              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+            },
+            {
+              "id": "n5-e8-l-15",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
+              "image": "/images/japanese/listening/n5/m3_q2.png",
+              "question": "15. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "options": [
+                "よろしくおねがいします",
+                "ごめんなさい",
+                "いただきます"
+              ],
+              "correct": 0,
+              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
+              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+            },
+            {
+              "id": "n5-e8-l-16",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
+              "image": "/images/japanese/listening/n5/m3_q3.png",
+              "question": "16. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "options": [
+                "よろしくおねがいします",
+                "ごめんなさい",
+                "いただきます"
+              ],
+              "correct": 0,
+              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
+              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+            },
+            {
+              "id": "n5-e8-l-17",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
+              "image": "/images/japanese/listening/n5/m3_q4.png",
+              "question": "17. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "options": [
+                "よろしくおねがいします",
+                "ごめんなさい",
+                "いただきます"
+              ],
+              "correct": 0,
+              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
+              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+            },
+            {
+              "id": "n5-e8-l-18",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
+              "image": "/images/japanese/listening/n5/m3_q5.png",
+              "question": "18. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "options": [
+                "よろしくおねがいします",
+                "ごめんなさい",
+                "いただきます"
+              ],
+              "correct": 0,
+              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
+              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+            },
+            {
+              "id": "n5-e8-l-19",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q4.mp3",
+              "question": "19. 「お元気ですか。」",
+              "options": [
+                "はい、元気です。",
+                "いいえ、元気です。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
+              "explanation": "Natural daily conversation response:「はい、元気です。」"
+            },
+            {
+              "id": "n5-e8-l-20",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q4.mp3",
+              "question": "20. 「お元気ですか。」",
+              "options": [
+                "はい、元気です。",
+                "いいえ、元気です。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
+              "explanation": "Natural daily conversation response:「はい、元気です。」"
+            },
+            {
+              "id": "n5-e8-l-21",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q4.mp3",
+              "question": "21. 「お元気ですか。」",
+              "options": [
+                "はい、元気です。",
+                "いいえ、元気です。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
+              "explanation": "Natural daily conversation response:「はい、元気です。」"
+            },
+            {
+              "id": "n5-e8-l-22",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q4.mp3",
+              "question": "22. 「お元気ですか。」",
+              "options": [
+                "はい、元気です。",
+                "いいえ、元気です。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
+              "explanation": "Natural daily conversation response:「はい、元気です。」"
+            },
+            {
+              "id": "n5-e8-l-23",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q4.mp3",
+              "question": "23. 「お元気ですか。」",
+              "options": [
+                "はい、元気です。",
+                "いいえ、元気です。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
+              "explanation": "Natural daily conversation response:「はい、元気です。」"
+            },
+            {
+              "id": "n5-e8-l-24",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q4.mp3",
+              "question": "24. 「お元気ですか。」",
+              "options": [
+                "はい、元気です。",
+                "いいえ、元気です。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
+              "explanation": "Natural daily conversation response:「はい、元気です。」"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "n5-exam-9",
+      "title": "JLPT N5 Reading Speed & Notice Analysis (2025 Series)",
+      "shortTitle": "Exam 9 (Reading Sprint)",
+      "badge": "Reading Focus",
+      "year": "2025 Series",
+      "description": "Emphasis on short essays, personal letters, flyers, bulletin board notices, and timetable information retrieval.",
+      "totalQuestions": 89,
+      "sections": [
+        {
+          "id": "n5-e9-sec-vocab",
+          "title": "Section 1: Language Knowledge (文字・語彙)",
+          "shortTitle": "文字・語彙 (Kanji & Vocab)",
+          "timeLimitSeconds": 1200,
+          "questions": [
+            {
+              "id": "n5-e9-v-1",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "1. <u>去年</u>へ 行きます。",
+              "options": [
+                "きょねん",
+                "さくねん",
+                "こねん",
+                "さりとし"
+              ],
+              "correct": 0,
+              "explanation": "「去年」is read as「きょねん」(last year)."
+            },
+            {
+              "id": "n5-e9-v-2",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "2. <u>病院</u>へ 行きます。",
+              "options": [
+                "びょういん",
+                "びょうえん",
+                "びょうかん",
+                "びよういん"
+              ],
+              "correct": 0,
+              "explanation": "「病院」is read as「びょういん」(hospital)."
+            },
+            {
+              "id": "n5-e9-v-3",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "3. <u>大学</u>へ 行きます。",
+              "options": [
+                "たいがく",
+                "だいがく",
+                "たいかく",
+                "だいかく"
+              ],
+              "correct": 1,
+              "explanation": "「大学」is read as「だいがく」(university)."
+            },
+            {
+              "id": "n5-e9-v-4",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "4. <u>毎朝</u>へ 行きます。",
+              "options": [
+                "まいあさ",
+                "まいちょう",
+                "まいあした",
+                "まいにち"
+              ],
+              "correct": 0,
+              "explanation": "「毎朝」is read as「まいあさ」(every morning)."
+            },
+            {
+              "id": "n5-e9-v-5",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "5. <u>外国</u>へ 行きます。",
+              "options": [
+                "がいこく",
+                "かいこく",
+                "がいごく",
+                "かいごく"
+              ],
+              "correct": 0,
+              "explanation": "「外国」is read as「がいこく」(foreign country)."
+            },
+            {
+              "id": "n5-e9-v-6",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "6. <u>友達</u>へ 行きます。",
+              "options": [
+                "ゆうだち",
+                "ともだち",
+                "ゆうたち",
+                "ともたち"
+              ],
+              "correct": 1,
+              "explanation": "「友達」is read as「ともだち」(friend)."
+            },
+            {
+              "id": "n5-e9-v-7",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "7. <u>新聞</u>へ 行きます。",
+              "options": [
+                "しんぶん",
+                "じんぶん",
+                "しんもん",
+                "じんもん"
+              ],
+              "correct": 0,
+              "explanation": "「新聞」is read as「しんぶん」(newspaper)."
+            },
+            {
+              "id": "n5-e9-v-8",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "8. <u>手紙</u>へ 行きます。",
+              "options": [
+                "てがみ",
+                "しゅし",
+                "てかみ",
+                "てし"
+              ],
+              "correct": 0,
+              "explanation": "「手紙」is read as「てがみ」(letter)."
+            },
+            {
+              "id": "n5-e9-v-9",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "9. <u>電車</u>へ 行きます。",
+              "options": [
+                "でんしゃ",
+                "てんしゃ",
+                "でんじゃ",
+                "てんじゃ"
+              ],
+              "correct": 0,
+              "explanation": "「電車」is read as「でんしゃ」(electric train)."
+            },
+            {
+              "id": "n5-e9-v-10",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "10. <u>時間</u>へ 行きます。",
+              "options": [
+                "じかん",
+                "じけん",
+                "しかん",
+                "しけん"
+              ],
+              "correct": 0,
+              "explanation": "「時間」is read as「じかん」(time / hour)."
+            },
+            {
+              "id": "n5-e9-v-11",
+              "type": "Mondai 2 (表記)",
+              "question": "11. あそこに <u>くち</u>が あります。",
+              "options": [
+                "口",
+                "日",
+                "品",
+                "中"
+              ],
+              "correct": 0,
+              "explanation": "「くち」is written as「口」(mouth)."
+            },
+            {
+              "id": "n5-e9-v-12",
+              "type": "Mondai 2 (表記)",
+              "question": "12. あそこに <u>みみ</u>が あります。",
+              "options": [
+                "耳",
+                "取",
+                "目",
+                "聞"
+              ],
+              "correct": 0,
+              "explanation": "「みみ」is written as「耳」(ear)."
+            },
+            {
+              "id": "n5-e9-v-13",
+              "type": "Mondai 2 (表記)",
+              "question": "13. あそこに <u>ほん</u>が あります。",
+              "options": [
+                "本",
+                "体",
+                "木",
+                "休"
+              ],
+              "correct": 0,
+              "explanation": "「ほん」is written as「本」(book)."
+            },
+            {
+              "id": "n5-e9-v-14",
+              "type": "Mondai 2 (表記)",
+              "question": "14. あそこに <u>みず</u>が あります。",
+              "options": [
+                "水",
+                "木",
+                "氷",
+                "永"
+              ],
+              "correct": 0,
+              "explanation": "「みず」is written as「水」(water)."
+            },
+            {
+              "id": "n5-e9-v-15",
+              "type": "Mondai 2 (表記)",
+              "question": "15. あそこに <u>やま</u>が あります。",
+              "options": [
+                "山",
+                "川",
+                "出",
+                "三"
+              ],
+              "correct": 0,
+              "explanation": "「やま」is written as「山」(mountain)."
+            },
+            {
+              "id": "n5-e9-v-16",
+              "type": "Mondai 2 (表記)",
+              "question": "16. あそこに <u>かわ</u>が あります。",
+              "options": [
+                "川",
+                "州",
+                "三",
+                "山"
+              ],
+              "correct": 0,
+              "explanation": "「かわ」is written as「川」(river)."
+            },
+            {
+              "id": "n5-e9-v-17",
+              "type": "Mondai 2 (表記)",
+              "question": "17. あそこに <u>ひと</u>が あります。",
+              "options": [
+                "人",
+                "入",
+                "八",
+                "大"
+              ],
+              "correct": 0,
+              "explanation": "「ひと」is written as「人」(person)."
+            },
+            {
+              "id": "n5-e9-v-18",
+              "type": "Mondai 2 (表記)",
+              "question": "18. あそこに <u>おんな</u>が あります。",
+              "options": [
+                "女",
+                "安",
+                "好",
+                "母"
+              ],
+              "correct": 0,
+              "explanation": "「おんな」is written as「女」(woman)."
+            },
+            {
+              "id": "n5-e9-v-19",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "19. えきから がっこうまで（　　）で 10ぷんです。",
+              "options": [
+                "あるいて",
+                "とんで",
+                "およいで",
+                "のぼって"
+              ],
+              "correct": 0,
+              "explanation": "Walking time:「あるいて10ぷん」."
+            },
+            {
+              "id": "n5-e9-v-20",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "20. つくえの うえに（　　）が 3ぼん あります。",
+              "options": [
+                "えんぴつ",
+                "ノート",
+                "ほん",
+                "かみ"
+              ],
+              "correct": 0,
+              "explanation": "Pencil counter「ほん」:「えんぴつが3ぼん」."
+            },
+            {
+              "id": "n5-e9-v-21",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "21. へやが くらいですから、でんきを（　　）てください。",
+              "options": [
+                "つけ",
+                "けし",
+                "あけ",
+                "しめ"
+              ],
+              "correct": 0,
+              "explanation": "Turning on light:「でんきをつける」."
+            },
+            {
+              "id": "n5-e9-v-22",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "22. さむいので、まどを（　　）ましょう。",
+              "options": [
+                "しめ",
+                "あけ",
+                "けし",
+                "つけ"
+              ],
+              "correct": 0,
+              "explanation": "Closing window:「まどをしめる」."
+            },
+            {
+              "id": "n5-e9-v-23",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "23. あした ともだちと えいがを（　　）に いきます。",
+              "options": [
+                "み",
+                "きき",
+                "たべ",
+                "よみ"
+              ],
+              "correct": 0,
+              "explanation": "Going to watch a movie:「えいがをみにいく」."
+            },
+            {
+              "id": "n5-e9-v-24",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "24. スーパーで やさいと くだものを（　　）ました。",
+              "options": [
+                "かい",
+                "うり",
+                "かり",
+                "かし"
+              ],
+              "correct": 0,
+              "explanation": "Buying groceries:「かう」."
+            },
+            {
+              "id": "n5-e9-v-25",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "25. としょかんでは しずかに（　　）てください。",
+              "options": [
+                "して",
+                "はなして",
+                "うたって",
+                "あそんで"
+              ],
+              "correct": 0,
+              "explanation": "Being quiet:「しずかにする」."
+            },
+            {
+              "id": "n5-e9-v-26",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "26. きょうは てんきが（　　）ですね。",
+              "options": [
+                "いい",
+                "あつい",
+                "さむい",
+                "わるい"
+              ],
+              "correct": 0,
+              "explanation": "Nice weather:「てんきがいい」."
+            },
+            {
+              "id": "n5-e9-v-27",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "27. この かばんは とても（　　）です。",
+              "options": [
+                "おもい",
+                "あまい",
+                "からい",
+                "ぬるい"
+              ],
+              "correct": 0,
+              "explanation": "Heavy bag:「おもい」."
+            },
+            {
+              "id": "n5-e9-v-28",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "28. 日本のおんがくが（　　）です。",
+              "options": [
+                "すき",
+                "きらい",
+                "へた",
+                "じょうず"
+              ],
+              "correct": 0,
+              "explanation": "Liking music:「おんがくがすき」."
+            },
+            {
+              "id": "n5-e9-v-29",
+              "type": "Mondai 4 (類義表現)",
+              "question": "29. この へやは <u>ひろい</u>です。",
+              "options": [
+                "せまくないです",
+                "あかるくないです",
+                "たかくないです",
+                "あつくないです"
+              ],
+              "correct": 0,
+              "explanation": "「ひろい」(spacious) means not narrow (せまくない)."
+            },
+            {
+              "id": "n5-e9-v-30",
+              "type": "Mondai 4 (類義表現)",
+              "question": "30. <u>ゆうがた</u> えきで あいました。",
+              "options": [
+                "夕方に",
+                "朝に",
+                "夜中に",
+                "昼間に"
+              ],
+              "correct": 0,
+              "explanation": "「ゆうがた」(evening)."
+            },
+            {
+              "id": "n5-e9-v-31",
+              "type": "Mondai 4 (類義表現)",
+              "question": "31. この もんだいは <u>やさしい</u>です。",
+              "options": [
+                "かんたんです",
+                "むずかしいです",
+                "ながいです",
+                "みじかいです"
+              ],
+              "correct": 0,
+              "explanation": "「やさしい」(easy / simple) means「かんたん」."
+            },
+            {
+              "id": "n5-e9-v-32",
+              "type": "Mondai 4 (類義表現)",
+              "question": "32. 田中さんは <u>せが たかい</u>です。",
+              "options": [
+                "せが たかいです",
+                "あしが ながいです",
+                "からだが おおきいです",
+                "てが ながいです"
+              ],
+              "correct": 0,
+              "explanation": "「背が高い」(tall)."
+            },
+            {
+              "id": "n5-e9-v-33",
+              "type": "Mondai 4 (類義表現)",
+              "question": "33. この りょうりは <u>おいしい</u>です。",
+              "options": [
+                "うまいです",
+                "まずいです",
+                "あまいです",
+                "にがいです"
+              ],
+              "correct": 0,
+              "explanation": "「おいしい」(delicious) is synonymous with「うまい」."
+            }
+          ]
+        },
+        {
+          "id": "n5-e9-sec-grammar",
+          "title": "Section 2: Language Knowledge (文法) & Reading (読解)",
+          "shortTitle": "文法・読解 (Grammar & Reading)",
+          "timeLimitSeconds": 2400,
+          "questions": [
+            {
+              "id": "n5-e9-g-1",
+              "type": "Mondai 1 (文法形式)",
+              "question": "1. 日曜日（　　）どこへも いきませんでした。",
+              "options": [
+                "は",
+                "に",
+                "で",
+                "を"
+              ],
+              "correct": 0,
+              "explanation": "Topic marker:「日曜日は」."
+            },
+            {
+              "id": "n5-e9-g-2",
+              "type": "Mondai 1 (文法形式)",
+              "question": "2. パン（　　）たまごを たべました。",
+              "options": [
+                "と",
+                "や",
+                "も",
+                "に"
+              ],
+              "correct": 0,
+              "explanation": "Exhaustive listing particle:「と」."
+            },
+            {
+              "id": "n5-e9-g-3",
+              "type": "Mondai 1 (文法形式)",
+              "question": "3. タクシー（　　）かえりましょう。",
+              "options": [
+                "で",
+                "に",
+                "を",
+                "から"
+              ],
+              "correct": 0,
+              "explanation": "Means of transport takes「で」."
+            },
+            {
+              "id": "n5-e9-g-4",
+              "type": "Mondai 1 (文法形式)",
+              "question": "4. ペンが 1ぽん（　　）ありません。",
+              "options": [
+                "しか",
+                "だけ",
+                "も",
+                "でも"
+              ],
+              "correct": 0,
+              "explanation": "「しか〜ない」(only)."
+            },
+            {
+              "id": "n5-e9-g-5",
+              "type": "Mondai 1 (文法形式)",
+              "question": "5. 日本語（　　）じょうずになりたいです。",
+              "options": [
+                "が",
+                "を",
+                "に",
+                "で"
+              ],
+              "correct": 0,
+              "explanation": "Object of state/skill takes「が」."
+            },
+            {
+              "id": "n5-e9-g-6",
+              "type": "Mondai 1 (文法形式)",
+              "question": "6. この おかしは（　　）おいしいです。",
+              "options": [
+                "とても",
+                "あまり",
+                "ぜんぜん",
+                "すこしも"
+              ],
+              "correct": 0,
+              "explanation": "Affirmative modifier:「とても」."
+            },
+            {
+              "id": "n5-e9-g-7",
+              "type": "Mondai 1 (文法形式)",
+              "question": "7. あめが ふっています（　　）、かさを さします。",
+              "options": [
+                "から",
+                "けど",
+                "ので",
+                "のに"
+              ],
+              "correct": 0,
+              "explanation": "Reason clause:「ふっていますから」."
+            },
+            {
+              "id": "n5-e9-g-8",
+              "type": "Mondai 1 (文法形式)",
+              "question": "8. テレビを（　　）ながら、ごはんを たべます。",
+              "options": [
+                "み",
+                "みて",
+                "みる",
+                "みた"
+              ],
+              "correct": 0,
+              "explanation": "Simultaneous action with ながら takes masu-stem:「みながら」."
+            },
+            {
+              "id": "n5-e9-g-9",
+              "type": "Mondai 1 (文法形式)",
+              "question": "9. あしたは てんきが（　　）でしょう。",
+              "options": [
+                "いい",
+                "よく",
+                "よかった",
+                "いいの"
+              ],
+              "correct": 0,
+              "explanation": "Conjecture with でしょう:「いいでしょう」."
+            },
+            {
+              "id": "n5-e9-g-10",
+              "type": "Mondai 1 (文法形式)",
+              "question": "10. ここに なまえを（　　）ください。",
+              "options": [
+                "かいて",
+                "かき",
+                "かく",
+                "かいた"
+              ],
+              "correct": 0,
+              "explanation": "Polite request takes te-form:「かいてください」."
+            },
+            {
+              "id": "n5-e9-g-11",
+              "type": "Mondai 1 (文法形式)",
+              "question": "11. しゃしんを（　　）も いいですか。",
+              "options": [
+                "とって",
+                "とり",
+                "とる",
+                "とった"
+              ],
+              "correct": 0,
+              "explanation": "Permission pattern「〜てもいいですか」:「とってもいいですか」."
+            },
+            {
+              "id": "n5-e9-g-12",
+              "type": "Mondai 1 (文法形式)",
+              "question": "12. たばこを（　　）は いけません。",
+              "options": [
+                "すって",
+                "すい",
+                "する",
+                "すった"
+              ],
+              "correct": 0,
+              "explanation": "Prohibition pattern「〜てはいけません」:「すってはいけません」."
+            },
+            {
+              "id": "n5-e9-g-13",
+              "type": "Mondai 1 (文法形式)",
+              "question": "13. 日本へ いった（　　）が あります。",
+              "options": [
+                "こと",
+                "もの",
+                "とき",
+                "よう"
+              ],
+              "correct": 0,
+              "explanation": "Experience pattern「〜たことがある」:「いったことがある」."
+            },
+            {
+              "id": "n5-e9-g-14",
+              "type": "Mondai 1 (文法形式)",
+              "question": "14. もっと（　　）はなして ください。",
+              "options": [
+                "ゆっくり",
+                "はやい",
+                "たかい",
+                "おおい"
+              ],
+              "correct": 0,
+              "explanation": "Adverbial manner modifier:「ゆっくりはなしてください」."
+            },
+            {
+              "id": "n5-e9-g-15",
+              "type": "Mondai 1 (文法形式)",
+              "question": "15. わたしは まいあさ 7じ（　　）おきます。",
+              "options": [
+                "に",
+                "で",
+                "を",
+                "へ"
+              ],
+              "correct": 0,
+              "explanation": "Specific time takes particle「に」."
+            },
+            {
+              "id": "n5-e9-g-16",
+              "type": "Mondai 1 (文法形式)",
+              "question": "16. えき（　　）電車に のります。",
+              "options": [
+                "で",
+                "に",
+                "へ",
+                "を"
+              ],
+              "correct": 0,
+              "explanation": "Location of boarding action:「で」."
+            },
+            {
+              "id": "n5-e9-g-17",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "17. あした　＿＿　＿＿　★　＿＿　おもいます。\n1: 雨が　2: たぶん　3: ふると　4: 午後は",
+              "options": [
+                "雨が",
+                "たぶん",
+                "ふると",
+                "午後は"
+              ],
+              "correct": 0,
+              "explanation": "Order: あした 午後は たぶん [★ 雨が] ふると おもいます。 Star is 1 (雨が)."
+            },
+            {
+              "id": "n5-e9-g-18",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "18. 部屋の　＿＿　＿＿　★　＿＿　あります。\n1: なかに　2: 机が　3: ひとつ　4: 大きい",
+              "options": [
+                "なかに",
+                "机が",
+                "ひとつ",
+                "大きい"
+              ],
+              "correct": 1,
+              "explanation": "Order: 部屋の なかに 大きい [★ 机が] ひとつ あります。 Star is 2 (机が)."
+            },
+            {
+              "id": "n5-e9-g-19",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "19. きのう　＿＿　＿＿　★　＿＿　かいました。\n1: 本屋で　2: おもしろい　3: 雑誌を　4: 2さつ",
+              "options": [
+                "本屋で",
+                "おもしろい",
+                "雑誌を",
+                "2さつ"
+              ],
+              "correct": 2,
+              "explanation": "Order: きのう 本屋で おもしろい [★ 雑誌を] 2さつ かいました。 Star is 3 (雑誌を)."
+            },
+            {
+              "id": "n5-e9-g-20",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "20. わたしは　＿＿　＿＿　★　＿＿　いきました。\n1: 友達と　2: 海へ　3: 電車で　4: 先週",
+              "options": [
+                "友達と",
+                "海へ",
+                "電車で",
+                "先週"
+              ],
+              "correct": 2,
+              "explanation": "Order: わたしは 先週 友達と [★ 電車で] 海へ いきました。 Star is 3 (電車で)."
+            },
+            {
+              "id": "n5-e9-g-21",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "21. この　＿＿　＿＿　★　＿＿　ください。\n1: 薬を　2: 食後に　3: ぬるま湯で　4: 飲んで",
+              "options": [
+                "薬を",
+                "食後に",
+                "ぬるま湯で",
+                "飲んで"
+              ],
+              "correct": 2,
+              "explanation": "Order: この 薬を 食後に [★ ぬるま湯で] 飲んでください。 Star is 3 (ぬるま湯で)."
+            },
+            {
+              "id": "n5-e9-g-22",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "【読解文章：私の趣味】\n22. (22) に入る言葉はどれですか。",
+              "options": [
+                "すきです",
+                "きらいです",
+                "じょうずです",
+                "へたです"
+              ],
+              "correct": 0,
+              "explanation": "Expressing fond hobby:「写真をとることがすきです」."
+            },
+            {
+              "id": "n5-e9-g-23",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "23. (23) に入る言葉はどれですか。",
+              "options": [
+                "そして",
+                "しかし",
+                "だから",
+                "でも"
+              ],
+              "correct": 0,
+              "explanation": "Connecting sequential narrative:「そして」."
+            },
+            {
+              "id": "n5-e9-g-24",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "24. (24) に入る言葉はどれですか。",
+              "options": [
+                "いっしょに",
+                "ひとりで",
+                "たくさん",
+                "すこし"
+              ],
+              "correct": 0,
+              "explanation": "With friends:「いっしょに」."
+            },
+            {
+              "id": "n5-e9-g-25",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "25. (25) に入る言葉はどれですか。",
+              "options": [
+                "とても",
+                "あまり",
+                "ぜんぜん",
+                "すこしも"
+              ],
+              "correct": 0,
+              "explanation": "Intensifier:「とてもきれいでした」."
+            },
+            {
+              "id": "n5-e9-g-26",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "26. (26) に入る言葉はどれですか。",
+              "options": [
+                "いきたいです",
+                "いきました",
+                "いきます",
+                "いかないです"
+              ],
+              "correct": 0,
+              "explanation": "Desire:「またいきたいです」."
+            },
+            {
+              "id": "n5-e9-g-27",
+              "type": "Mondai 4 (短文読解)",
+              "question": "【短文：先生からの連絡】\n27. 学生は 明日、何時に どこへ 行きますか。",
+              "options": [
+                "8時半に 教室",
+                "9時に 教室",
+                "8時半に 講堂",
+                "9時に 講堂"
+              ],
+              "correct": 0,
+              "explanation": "The notice instructs students to arrive at the classroom by 8:30 AM (8時半に教室)."
+            },
+            {
+              "id": "n5-e9-g-28",
+              "type": "Mondai 4 (短文読解)",
+              "question": "28. 明日 持って行かなければならない 物は何ですか。",
+              "options": [
+                "筆記用具とお弁当",
+                "教科書と辞書",
+                "カメラとノート",
+                "体操服と水筒"
+              ],
+              "correct": 0,
+              "explanation": "States to bring writing tools and lunchbox (筆記用具とお弁当)."
+            },
+            {
+              "id": "n5-e9-g-29",
+              "type": "Mondai 4 (短文読解)",
+              "question": "29. 連絡を 書いた人は 誰ですか。",
+              "options": [
+                "田中先生",
+                "山田先生",
+                "佐藤先生",
+                "鈴木先生"
+              ],
+              "correct": 0,
+              "explanation": "Signed by Tanaka-sensei."
+            },
+            {
+              "id": "n5-e9-g-30",
+              "type": "Mondai 5 (中文読解)",
+              "question": "【中文：日本での旅行】\n30. マイクさんは 京都で 何をしましたか。",
+              "options": [
+                "古いお寺を見て、抹茶を飲んだ",
+                "スキーをした",
+                "温泉に入っただけ",
+                "買い物をしただけ"
+              ],
+              "correct": 0,
+              "explanation": "Visited historic temples and enjoyed matcha green tea."
+            },
+            {
+              "id": "n5-e9-g-31",
+              "type": "Mondai 5 (中文読解)",
+              "question": "31. マイクさんが 一番 感動したことは 何ですか。",
+              "options": [
+                "お寺の庭の美しさ",
+                "買い物の安さ",
+                "電車の速さ",
+                "食べ物の量"
+              ],
+              "correct": 0,
+              "explanation": "Deeply impressed by the tranquility and beauty of temple gardens."
+            },
+            {
+              "id": "n5-e9-g-32",
+              "type": "Mondai 6 (情報検索)",
+              "question": "【情報検索：図書館の休館案内】\n32. 来週の 月曜日、図書館は 開いていますか。",
+              "options": [
+                "休館（閉まっている）",
+                "午前中だけ開いている",
+                "一日中開いている",
+                "夜だけ開いている"
+              ],
+              "correct": 0,
+              "explanation": "The notice clearly marks Mondays as regular closed days (休館)."
+            }
+          ]
+        },
+        {
+          "id": "n5-e9-sec-listening",
+          "title": "Section 3: Listening Comprehension (聴解)",
+          "shortTitle": "聴解 (Listening)",
+          "timeLimitSeconds": 1800,
+          "questions": [
+            {
+              "id": "n5-e9-l-1",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
+              "image": "/images/japanese/listening/n5/m1_q1.png",
+              "question": "1. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 1,
+              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
+              "explanation": "Based on the dialogue guidelines, Option 2 matches the selected item."
+            },
+            {
+              "id": "n5-e9-l-2",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
+              "image": "/images/japanese/listening/n5/m1_q2.png",
+              "question": "2. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 2,
+              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
+              "explanation": "Based on the dialogue guidelines, Option 3 matches the selected item."
+            },
+            {
+              "id": "n5-e9-l-3",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
+              "image": "/images/japanese/listening/n5/m1_q3.png",
+              "question": "3. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 3,
+              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
+              "explanation": "Based on the dialogue guidelines, Option 4 matches the selected item."
+            },
+            {
+              "id": "n5-e9-l-4",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
+              "image": "/images/japanese/listening/n5/m1_q4.png",
+              "question": "4. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 0,
+              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
+              "explanation": "Based on the dialogue guidelines, Option 1 matches the selected item."
+            },
+            {
+              "id": "n5-e9-l-5",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
+              "image": "/images/japanese/listening/n5/m1_q5.png",
+              "question": "5. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 1,
+              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
+              "explanation": "Based on the dialogue guidelines, Option 2 matches the selected item."
+            },
+            {
+              "id": "n5-e9-l-6",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
+              "image": "/images/japanese/listening/n5/m1_q6.png",
+              "question": "6. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 2,
+              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
+              "explanation": "Based on the dialogue guidelines, Option 3 matches the selected item."
+            },
+            {
+              "id": "n5-e9-l-7",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
+              "image": "/images/japanese/listening/n5/m1_q7.png",
+              "question": "7. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 3,
+              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
+              "explanation": "Based on the dialogue guidelines, Option 4 matches the selected item."
+            },
+            {
+              "id": "n5-e9-l-8",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n5/captured-media-1-mp3.mp3",
+              "question": "8. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "options": [
+                "1時",
+                "2時",
+                "3時",
+                "4時"
+              ],
+              "correct": 1,
+              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
+              "explanation": "Listening point comprehension: meeting time agreement."
+            },
+            {
+              "id": "n5-e9-l-9",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n5/captured-media-1-mp3.mp3",
+              "question": "9. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "options": [
+                "1時",
+                "2時",
+                "3時",
+                "4時"
+              ],
+              "correct": 2,
+              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
+              "explanation": "Listening point comprehension: meeting time agreement."
+            },
+            {
+              "id": "n5-e9-l-10",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n5/captured-media-1-mp3.mp3",
+              "question": "10. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "options": [
+                "1時",
+                "2時",
+                "3時",
+                "4時"
+              ],
+              "correct": 3,
+              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
+              "explanation": "Listening point comprehension: meeting time agreement."
+            },
+            {
+              "id": "n5-e9-l-11",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n5/captured-media-1-mp3.mp3",
+              "question": "11. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "options": [
+                "1時",
+                "2時",
+                "3時",
+                "4時"
+              ],
+              "correct": 0,
+              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
+              "explanation": "Listening point comprehension: meeting time agreement."
+            },
+            {
+              "id": "n5-e9-l-12",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n5/captured-media-1-mp3.mp3",
+              "question": "12. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "options": [
+                "1時",
+                "2時",
+                "3時",
+                "4時"
+              ],
+              "correct": 1,
+              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
+              "explanation": "Listening point comprehension: meeting time agreement."
+            },
+            {
+              "id": "n5-e9-l-13",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n5/captured-media-1-mp3.mp3",
+              "question": "13. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "options": [
+                "1時",
+                "2時",
+                "3時",
+                "4時"
+              ],
+              "correct": 2,
+              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
+              "explanation": "Listening point comprehension: meeting time agreement."
+            },
+            {
+              "id": "n5-e9-l-14",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
+              "image": "/images/japanese/listening/n5/m3_q1.png",
+              "question": "14. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "options": [
+                "よろしくおねがいします",
+                "ごめんなさい",
+                "いただきます"
+              ],
+              "correct": 0,
+              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
+              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+            },
+            {
+              "id": "n5-e9-l-15",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
+              "image": "/images/japanese/listening/n5/m3_q2.png",
+              "question": "15. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "options": [
+                "よろしくおねがいします",
+                "ごめんなさい",
+                "いただきます"
+              ],
+              "correct": 0,
+              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
+              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+            },
+            {
+              "id": "n5-e9-l-16",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
+              "image": "/images/japanese/listening/n5/m3_q3.png",
+              "question": "16. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "options": [
+                "よろしくおねがいします",
+                "ごめんなさい",
+                "いただきます"
+              ],
+              "correct": 0,
+              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
+              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+            },
+            {
+              "id": "n5-e9-l-17",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
+              "image": "/images/japanese/listening/n5/m3_q4.png",
+              "question": "17. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "options": [
+                "よろしくおねがいします",
+                "ごめんなさい",
+                "いただきます"
+              ],
+              "correct": 0,
+              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
+              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+            },
+            {
+              "id": "n5-e9-l-18",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
+              "image": "/images/japanese/listening/n5/m3_q5.png",
+              "question": "18. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "options": [
+                "よろしくおねがいします",
+                "ごめんなさい",
+                "いただきます"
+              ],
+              "correct": 0,
+              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
+              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+            },
+            {
+              "id": "n5-e9-l-19",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n5/captured-media-3-mp3.mp3",
+              "question": "19. 「お元気ですか。」",
+              "options": [
+                "はい、元気です。",
+                "いいえ、元気です。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
+              "explanation": "Natural daily conversation response:「はい、元気です。」"
+            },
+            {
+              "id": "n5-e9-l-20",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n5/captured-media-3-mp3.mp3",
+              "question": "20. 「お元気ですか。」",
+              "options": [
+                "はい、元気です。",
+                "いいえ、元気です。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
+              "explanation": "Natural daily conversation response:「はい、元気です。」"
+            },
+            {
+              "id": "n5-e9-l-21",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n5/captured-media-3-mp3.mp3",
+              "question": "21. 「お元気ですか。」",
+              "options": [
+                "はい、元気です。",
+                "いいえ、元気です。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
+              "explanation": "Natural daily conversation response:「はい、元気です。」"
+            },
+            {
+              "id": "n5-e9-l-22",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n5/captured-media-3-mp3.mp3",
+              "question": "22. 「お元気ですか。」",
+              "options": [
+                "はい、元気です。",
+                "いいえ、元気です。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
+              "explanation": "Natural daily conversation response:「はい、元気です。」"
+            },
+            {
+              "id": "n5-e9-l-23",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n5/captured-media-3-mp3.mp3",
+              "question": "23. 「お元気ですか。」",
+              "options": [
+                "はい、元気です。",
+                "いいえ、元気です。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
+              "explanation": "Natural daily conversation response:「はい、元気です。」"
+            },
+            {
+              "id": "n5-e9-l-24",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n5/captured-media-3-mp3.mp3",
+              "question": "24. 「お元気ですか。」",
+              "options": [
+                "はい、元気です。",
+                "いいえ、元気です。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
+              "explanation": "Natural daily conversation response:「はい、元気です。」"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "n5-exam-10",
+      "title": "JLPT N5 Pre-Exam Final Sprint Examination (2026 Edition)",
+      "shortTitle": "Exam 10 (Final Sprint)",
+      "badge": "Ultimate Sprint",
+      "year": "2026 Edition",
+      "description": "The ultimate pre-exam dress rehearsal combining the highest-yield test patterns across all 3 official sections.",
+      "totalQuestions": 89,
+      "sections": [
+        {
+          "id": "n5-e10-sec-vocab",
+          "title": "Section 1: Language Knowledge (文字・語彙)",
+          "shortTitle": "文字・語彙 (Kanji & Vocab)",
+          "timeLimitSeconds": 1200,
+          "questions": [
+            {
+              "id": "n5-e10-v-1",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "1. <u>毎朝</u>へ 行きます。",
+              "options": [
+                "まいあさ",
+                "まいちょう",
+                "まいあした",
+                "まいにち"
+              ],
+              "correct": 0,
+              "explanation": "「毎朝」is read as「まいあさ」(every morning)."
+            },
+            {
+              "id": "n5-e10-v-2",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "2. <u>外国</u>へ 行きます。",
+              "options": [
+                "がいこく",
+                "かいこく",
+                "がいごく",
+                "かいごく"
+              ],
+              "correct": 0,
+              "explanation": "「外国」is read as「がいこく」(foreign country)."
+            },
+            {
+              "id": "n5-e10-v-3",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "3. <u>友達</u>へ 行きます。",
+              "options": [
+                "ゆうだち",
+                "ともだち",
+                "ゆうたち",
+                "ともたち"
+              ],
+              "correct": 1,
+              "explanation": "「友達」is read as「ともだち」(friend)."
+            },
+            {
+              "id": "n5-e10-v-4",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "4. <u>新聞</u>へ 行きます。",
+              "options": [
+                "しんぶん",
+                "じんぶん",
+                "しんもん",
+                "じんもん"
+              ],
+              "correct": 0,
+              "explanation": "「新聞」is read as「しんぶん」(newspaper)."
+            },
+            {
+              "id": "n5-e10-v-5",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "5. <u>手紙</u>へ 行きます。",
+              "options": [
+                "てがみ",
+                "しゅし",
+                "てかみ",
+                "てし"
+              ],
+              "correct": 0,
+              "explanation": "「手紙」is read as「てがみ」(letter)."
+            },
+            {
+              "id": "n5-e10-v-6",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "6. <u>電車</u>へ 行きます。",
+              "options": [
+                "でんしゃ",
+                "てんしゃ",
+                "でんじゃ",
+                "てんじゃ"
+              ],
+              "correct": 0,
+              "explanation": "「電車」is read as「でんしゃ」(electric train)."
+            },
+            {
+              "id": "n5-e10-v-7",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "7. <u>時間</u>へ 行きます。",
+              "options": [
+                "じかん",
+                "じけん",
+                "しかん",
+                "しけん"
+              ],
+              "correct": 0,
+              "explanation": "「時間」is read as「じかん」(time / hour)."
+            },
+            {
+              "id": "n5-e10-v-8",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "8. <u>電話</u>へ 行きます。",
+              "options": [
+                "でんわ",
+                "てんわ",
+                "でんは",
+                "てんは"
+              ],
+              "correct": 0,
+              "explanation": "「電話」is read as「でんわ」(telephone)."
+            },
+            {
+              "id": "n5-e10-v-9",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "9. <u>先生</u>へ 行きます。",
+              "options": [
+                "せんせい",
+                "ぜんせい",
+                "せんじょう",
+                "ぜんじょう"
+              ],
+              "correct": 0,
+              "explanation": "「先生」is read as「せんせい」(teacher / doctor)."
+            },
+            {
+              "id": "n5-e10-v-10",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "10. <u>名前</u>へ 行きます。",
+              "options": [
+                "なまえ",
+                "めいぜん",
+                "めいまえ",
+                "なざん"
+              ],
+              "correct": 0,
+              "explanation": "「名前」is read as「なまえ」(name)."
+            },
+            {
+              "id": "n5-e10-v-11",
+              "type": "Mondai 2 (表記)",
+              "question": "11. あそこに <u>みず</u>が あります。",
+              "options": [
+                "水",
+                "木",
+                "氷",
+                "永"
+              ],
+              "correct": 0,
+              "explanation": "「みず」is written as「水」(water)."
+            },
+            {
+              "id": "n5-e10-v-12",
+              "type": "Mondai 2 (表記)",
+              "question": "12. あそこに <u>やま</u>が あります。",
+              "options": [
+                "山",
+                "川",
+                "出",
+                "三"
+              ],
+              "correct": 0,
+              "explanation": "「やま」is written as「山」(mountain)."
+            },
+            {
+              "id": "n5-e10-v-13",
+              "type": "Mondai 2 (表記)",
+              "question": "13. あそこに <u>かわ</u>が あります。",
+              "options": [
+                "川",
+                "州",
+                "三",
+                "山"
+              ],
+              "correct": 0,
+              "explanation": "「かわ」is written as「川」(river)."
+            },
+            {
+              "id": "n5-e10-v-14",
+              "type": "Mondai 2 (表記)",
+              "question": "14. あそこに <u>ひと</u>が あります。",
+              "options": [
+                "人",
+                "入",
+                "八",
+                "大"
+              ],
+              "correct": 0,
+              "explanation": "「ひと」is written as「人」(person)."
+            },
+            {
+              "id": "n5-e10-v-15",
+              "type": "Mondai 2 (表記)",
+              "question": "15. あそこに <u>おんな</u>が あります。",
+              "options": [
+                "女",
+                "安",
+                "好",
+                "母"
+              ],
+              "correct": 0,
+              "explanation": "「おんな」is written as「女」(woman)."
+            },
+            {
+              "id": "n5-e10-v-16",
+              "type": "Mondai 2 (表記)",
+              "question": "16. あそこに <u>おとこ</u>が あります。",
+              "options": [
+                "男",
+                "田",
+                "力",
+                "勇"
+              ],
+              "correct": 0,
+              "explanation": "「おとこ」is written as「男」(man)."
+            },
+            {
+              "id": "n5-e10-v-17",
+              "type": "Mondai 2 (表記)",
+              "question": "17. あそこに <u>こども</u>が あります。",
+              "options": [
+                "子",
+                "了",
+                "字",
+                "好"
+              ],
+              "correct": 0,
+              "explanation": "「こ」in「子ども」is written as「子」(child)."
+            },
+            {
+              "id": "n5-e10-v-18",
+              "type": "Mondai 2 (表記)",
+              "question": "18. あそこに <u>くるま</u>が あります。",
+              "options": [
+                "車",
+                "東",
+                "軍",
+                "連"
+              ],
+              "correct": 0,
+              "explanation": "「くるま」is written as「車」(car)."
+            },
+            {
+              "id": "n5-e10-v-19",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "19. さむいので、まどを（　　）ましょう。",
+              "options": [
+                "しめ",
+                "あけ",
+                "けし",
+                "つけ"
+              ],
+              "correct": 0,
+              "explanation": "Closing window:「まどをしめる」."
+            },
+            {
+              "id": "n5-e10-v-20",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "20. あした ともだちと えいがを（　　）に いきます。",
+              "options": [
+                "み",
+                "きき",
+                "たべ",
+                "よみ"
+              ],
+              "correct": 0,
+              "explanation": "Going to watch a movie:「えいがをみにいく」."
+            },
+            {
+              "id": "n5-e10-v-21",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "21. スーパーで やさいと くだものを（　　）ました。",
+              "options": [
+                "かい",
+                "うり",
+                "かり",
+                "かし"
+              ],
+              "correct": 0,
+              "explanation": "Buying groceries:「かう」."
+            },
+            {
+              "id": "n5-e10-v-22",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "22. としょかんでは しずかに（　　）てください。",
+              "options": [
+                "して",
+                "はなして",
+                "うたって",
+                "あそんで"
+              ],
+              "correct": 0,
+              "explanation": "Being quiet:「しずかにする」."
+            },
+            {
+              "id": "n5-e10-v-23",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "23. きょうは てんきが（　　）ですね。",
+              "options": [
+                "いい",
+                "あつい",
+                "さむい",
+                "わるい"
+              ],
+              "correct": 0,
+              "explanation": "Nice weather:「てんきがいい」."
+            },
+            {
+              "id": "n5-e10-v-24",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "24. この かばんは とても（　　）です。",
+              "options": [
+                "おもい",
+                "あまい",
+                "からい",
+                "ぬるい"
+              ],
+              "correct": 0,
+              "explanation": "Heavy bag:「おもい」."
+            },
+            {
+              "id": "n5-e10-v-25",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "25. 日本のおんがくが（　　）です。",
+              "options": [
+                "すき",
+                "きらい",
+                "へた",
+                "じょうず"
+              ],
+              "correct": 0,
+              "explanation": "Liking music:「おんがくがすき」."
+            },
+            {
+              "id": "n5-e10-v-26",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "26. すしを（　　）ことが ありますか。",
+              "options": [
+                "たべた",
+                "のんだ",
+                "みた",
+                "きいた"
+              ],
+              "correct": 0,
+              "explanation": "Experience eating sushi:「たべたことがある」."
+            },
+            {
+              "id": "n5-e10-v-27",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "27. まいあさ コーヒーを（　　）ます。",
+              "options": [
+                "のみ",
+                "たべ",
+                "すい",
+                "かぎ"
+              ],
+              "correct": 0,
+              "explanation": "Drinking coffee:「のむ」."
+            },
+            {
+              "id": "n5-e10-v-28",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "28. まいにち 日本語の（　　）を します。",
+              "options": [
+                "べんきょう",
+                "かいもの",
+                "さんぽ",
+                "りょこう"
+              ],
+              "correct": 0,
+              "explanation": "Studying:「べんきょうをする」."
+            },
+            {
+              "id": "n5-e10-v-29",
+              "type": "Mondai 4 (類義表現)",
+              "question": "29. 田中さんは <u>せが たかい</u>です。",
+              "options": [
+                "せが たかいです",
+                "あしが ながいです",
+                "からだが おおきいです",
+                "てが ながいです"
+              ],
+              "correct": 0,
+              "explanation": "「背が高い」(tall)."
+            },
+            {
+              "id": "n5-e10-v-30",
+              "type": "Mondai 4 (類義表現)",
+              "question": "30. この りょうりは <u>おいしい</u>です。",
+              "options": [
+                "うまいです",
+                "まずいです",
+                "あまいです",
+                "にがいです"
+              ],
+              "correct": 0,
+              "explanation": "「おいしい」(delicious) is synonymous with「うまい」."
+            },
+            {
+              "id": "n5-e10-v-31",
+              "type": "Mondai 4 (類義表現)",
+              "question": "31. きのう <u>さんぽ</u>しました。",
+              "options": [
+                "あるきました",
+                "はしりました",
+                "やすみました",
+                "およぎました"
+              ],
+              "correct": 0,
+              "explanation": "「さんぽする」(stroll / walk)."
+            },
+            {
+              "id": "n5-e10-v-32",
+              "type": "Mondai 4 (類義表現)",
+              "question": "32. あの 人は <u>しんせつ</u>です。",
+              "options": [
+                "やさしいです",
+                "きびしいです",
+                "おもしろいです",
+                "しずかです"
+              ],
+              "correct": 0,
+              "explanation": "「しんせつ」(kind) is close to「やさしい」."
+            },
+            {
+              "id": "n5-e10-v-33",
+              "type": "Mondai 4 (類義表現)",
+              "question": "33. この へやは <u>ひろい</u>です。",
+              "options": [
+                "せまくないです",
+                "あかるくないです",
+                "たかくないです",
+                "あつくないです"
+              ],
+              "correct": 0,
+              "explanation": "「ひろい」(spacious) means not narrow (せまくない)."
+            }
+          ]
+        },
+        {
+          "id": "n5-e10-sec-grammar",
+          "title": "Section 2: Language Knowledge (文法) & Reading (読解)",
+          "shortTitle": "文法・読解 (Grammar & Reading)",
+          "timeLimitSeconds": 2400,
+          "questions": [
+            {
+              "id": "n5-e10-g-1",
+              "type": "Mondai 1 (文法形式)",
+              "question": "1. ペンが 1ぽん（　　）ありません。",
+              "options": [
+                "しか",
+                "だけ",
+                "も",
+                "でも"
+              ],
+              "correct": 0,
+              "explanation": "「しか〜ない」(only)."
+            },
+            {
+              "id": "n5-e10-g-2",
+              "type": "Mondai 1 (文法形式)",
+              "question": "2. 日本語（　　）じょうずになりたいです。",
+              "options": [
+                "が",
+                "を",
+                "に",
+                "で"
+              ],
+              "correct": 0,
+              "explanation": "Object of state/skill takes「が」."
+            },
+            {
+              "id": "n5-e10-g-3",
+              "type": "Mondai 1 (文法形式)",
+              "question": "3. この おかしは（　　）おいしいです。",
+              "options": [
+                "とても",
+                "あまり",
+                "ぜんぜん",
+                "すこしも"
+              ],
+              "correct": 0,
+              "explanation": "Affirmative modifier:「とても」."
+            },
+            {
+              "id": "n5-e10-g-4",
+              "type": "Mondai 1 (文法形式)",
+              "question": "4. あめが ふっています（　　）、かさを さします。",
+              "options": [
+                "から",
+                "けど",
+                "ので",
+                "のに"
+              ],
+              "correct": 0,
+              "explanation": "Reason clause:「ふっていますから」."
+            },
+            {
+              "id": "n5-e10-g-5",
+              "type": "Mondai 1 (文法形式)",
+              "question": "5. テレビを（　　）ながら、ごはんを たべます。",
+              "options": [
+                "み",
+                "みて",
+                "みる",
+                "みた"
+              ],
+              "correct": 0,
+              "explanation": "Simultaneous action with ながら takes masu-stem:「みながら」."
+            },
+            {
+              "id": "n5-e10-g-6",
+              "type": "Mondai 1 (文法形式)",
+              "question": "6. あしたは てんきが（　　）でしょう。",
+              "options": [
+                "いい",
+                "よく",
+                "よかった",
+                "いいの"
+              ],
+              "correct": 0,
+              "explanation": "Conjecture with でしょう:「いいでしょう」."
+            },
+            {
+              "id": "n5-e10-g-7",
+              "type": "Mondai 1 (文法形式)",
+              "question": "7. ここに なまえを（　　）ください。",
+              "options": [
+                "かいて",
+                "かき",
+                "かく",
+                "かいた"
+              ],
+              "correct": 0,
+              "explanation": "Polite request takes te-form:「かいてください」."
+            },
+            {
+              "id": "n5-e10-g-8",
+              "type": "Mondai 1 (文法形式)",
+              "question": "8. しゃしんを（　　）も いいですか。",
+              "options": [
+                "とって",
+                "とり",
+                "とる",
+                "とった"
+              ],
+              "correct": 0,
+              "explanation": "Permission pattern「〜てもいいですか」:「とってもいいですか」."
+            },
+            {
+              "id": "n5-e10-g-9",
+              "type": "Mondai 1 (文法形式)",
+              "question": "9. たばこを（　　）は いけません。",
+              "options": [
+                "すって",
+                "すい",
+                "する",
+                "すった"
+              ],
+              "correct": 0,
+              "explanation": "Prohibition pattern「〜てはいけません」:「すってはいけません」."
+            },
+            {
+              "id": "n5-e10-g-10",
+              "type": "Mondai 1 (文法形式)",
+              "question": "10. 日本へ いった（　　）が あります。",
+              "options": [
+                "こと",
+                "もの",
+                "とき",
+                "よう"
+              ],
+              "correct": 0,
+              "explanation": "Experience pattern「〜たことがある」:「いったことがある」."
+            },
+            {
+              "id": "n5-e10-g-11",
+              "type": "Mondai 1 (文法形式)",
+              "question": "11. もっと（　　）はなして ください。",
+              "options": [
+                "ゆっくり",
+                "はやい",
+                "たかい",
+                "おおい"
+              ],
+              "correct": 0,
+              "explanation": "Adverbial manner modifier:「ゆっくりはなしてください」."
+            },
+            {
+              "id": "n5-e10-g-12",
+              "type": "Mondai 1 (文法形式)",
+              "question": "12. わたしは まいあさ 7じ（　　）おきます。",
+              "options": [
+                "に",
+                "で",
+                "を",
+                "へ"
+              ],
+              "correct": 0,
+              "explanation": "Specific time takes particle「に」."
+            },
+            {
+              "id": "n5-e10-g-13",
+              "type": "Mondai 1 (文法形式)",
+              "question": "13. えき（　　）電車に のります。",
+              "options": [
+                "で",
+                "に",
+                "へ",
+                "を"
+              ],
+              "correct": 0,
+              "explanation": "Location of boarding action:「で」."
+            },
+            {
+              "id": "n5-e10-g-14",
+              "type": "Mondai 1 (文法形式)",
+              "question": "14. 日曜日（　　）どこへも いきませんでした。",
+              "options": [
+                "は",
+                "に",
+                "で",
+                "を"
+              ],
+              "correct": 0,
+              "explanation": "Topic marker:「日曜日は」."
+            },
+            {
+              "id": "n5-e10-g-15",
+              "type": "Mondai 1 (文法形式)",
+              "question": "15. パン（　　）たまごを たべました。",
+              "options": [
+                "と",
+                "や",
+                "も",
+                "に"
+              ],
+              "correct": 0,
+              "explanation": "Exhaustive listing particle:「と」."
+            },
+            {
+              "id": "n5-e10-g-16",
+              "type": "Mondai 1 (文法形式)",
+              "question": "16. タクシー（　　）かえりましょう。",
+              "options": [
+                "で",
+                "に",
+                "を",
+                "から"
+              ],
+              "correct": 0,
+              "explanation": "Means of transport takes「で」."
+            },
+            {
+              "id": "n5-e10-g-17",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "17. わたしは　＿＿　＿＿　★　＿＿　いきました。\n1: 友達と　2: 海へ　3: 電車で　4: 先週",
+              "options": [
+                "友達と",
+                "海へ",
+                "電車で",
+                "先週"
+              ],
+              "correct": 2,
+              "explanation": "Order: わたしは 先週 友達と [★ 電車で] 海へ いきました。 Star is 3 (電車で)."
+            },
+            {
+              "id": "n5-e10-g-18",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "18. この　＿＿　＿＿　★　＿＿　ください。\n1: 薬を　2: 食後に　3: ぬるま湯で　4: 飲んで",
+              "options": [
+                "薬を",
+                "食後に",
+                "ぬるま湯で",
+                "飲んで"
+              ],
+              "correct": 2,
+              "explanation": "Order: この 薬を 食後に [★ ぬるま湯で] 飲んでください。 Star is 3 (ぬるま湯で)."
+            },
+            {
+              "id": "n5-e10-g-19",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "19. あした　＿＿　＿＿　★　＿＿　おもいます。\n1: 雨が　2: たぶん　3: ふると　4: 午後は",
+              "options": [
+                "雨が",
+                "たぶん",
+                "ふると",
+                "午後は"
+              ],
+              "correct": 0,
+              "explanation": "Order: あした 午後は たぶん [★ 雨が] ふると おもいます。 Star is 1 (雨が)."
+            },
+            {
+              "id": "n5-e10-g-20",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "20. 部屋の　＿＿　＿＿　★　＿＿　あります。\n1: なかに　2: 机が　3: ひとつ　4: 大きい",
+              "options": [
+                "なかに",
+                "机が",
+                "ひとつ",
+                "大きい"
+              ],
+              "correct": 1,
+              "explanation": "Order: 部屋の なかに 大きい [★ 机が] ひとつ あります。 Star is 2 (机が)."
+            },
+            {
+              "id": "n5-e10-g-21",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "21. きのう　＿＿　＿＿　★　＿＿　かいました。\n1: 本屋で　2: おもしろい　3: 雑誌を　4: 2さつ",
+              "options": [
+                "本屋で",
+                "おもしろい",
+                "雑誌を",
+                "2さつ"
+              ],
+              "correct": 2,
+              "explanation": "Order: きのう 本屋で おもしろい [★ 雑誌を] 2さつ かいました。 Star is 3 (雑誌を)."
+            },
+            {
+              "id": "n5-e10-g-22",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "【読解文章：私の趣味】\n22. (22) に入る言葉はどれですか。",
+              "options": [
+                "すきです",
+                "きらいです",
+                "じょうずです",
+                "へたです"
+              ],
+              "correct": 0,
+              "explanation": "Expressing fond hobby:「写真をとることがすきです」."
+            },
+            {
+              "id": "n5-e10-g-23",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "23. (23) に入る言葉はどれですか。",
+              "options": [
+                "そして",
+                "しかし",
+                "だから",
+                "でも"
+              ],
+              "correct": 0,
+              "explanation": "Connecting sequential narrative:「そして」."
+            },
+            {
+              "id": "n5-e10-g-24",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "24. (24) に入る言葉はどれですか。",
+              "options": [
+                "いっしょに",
+                "ひとりで",
+                "たくさん",
+                "すこし"
+              ],
+              "correct": 0,
+              "explanation": "With friends:「いっしょに」."
+            },
+            {
+              "id": "n5-e10-g-25",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "25. (25) に入る言葉はどれですか。",
+              "options": [
+                "とても",
+                "あまり",
+                "ぜんぜん",
+                "すこしも"
+              ],
+              "correct": 0,
+              "explanation": "Intensifier:「とてもきれいでした」."
+            },
+            {
+              "id": "n5-e10-g-26",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "26. (26) に入る言葉はどれですか。",
+              "options": [
+                "いきたいです",
+                "いきました",
+                "いきます",
+                "いかないです"
+              ],
+              "correct": 0,
+              "explanation": "Desire:「またいきたいです」."
+            },
+            {
+              "id": "n5-e10-g-27",
+              "type": "Mondai 4 (短文読解)",
+              "question": "【短文：先生からの連絡】\n27. 学生は 明日、何時に どこへ 行きますか。",
+              "options": [
+                "8時半に 教室",
+                "9時に 教室",
+                "8時半に 講堂",
+                "9時に 講堂"
+              ],
+              "correct": 0,
+              "explanation": "The notice instructs students to arrive at the classroom by 8:30 AM (8時半に教室)."
+            },
+            {
+              "id": "n5-e10-g-28",
+              "type": "Mondai 4 (短文読解)",
+              "question": "28. 明日 持って行かなければならない 物は何ですか。",
+              "options": [
+                "筆記用具とお弁当",
+                "教科書と辞書",
+                "カメラとノート",
+                "体操服と水筒"
+              ],
+              "correct": 0,
+              "explanation": "States to bring writing tools and lunchbox (筆記用具とお弁当)."
+            },
+            {
+              "id": "n5-e10-g-29",
+              "type": "Mondai 4 (短文読解)",
+              "question": "29. 連絡を 書いた人は 誰ですか。",
+              "options": [
+                "田中先生",
+                "山田先生",
+                "佐藤先生",
+                "鈴木先生"
+              ],
+              "correct": 0,
+              "explanation": "Signed by Tanaka-sensei."
+            },
+            {
+              "id": "n5-e10-g-30",
+              "type": "Mondai 5 (中文読解)",
+              "question": "【中文：日本での旅行】\n30. マイクさんは 京都で 何をしましたか。",
+              "options": [
+                "古いお寺を見て、抹茶を飲んだ",
+                "スキーをした",
+                "温泉に入っただけ",
+                "買い物をしただけ"
+              ],
+              "correct": 0,
+              "explanation": "Visited historic temples and enjoyed matcha green tea."
+            },
+            {
+              "id": "n5-e10-g-31",
+              "type": "Mondai 5 (中文読解)",
+              "question": "31. マイクさんが 一番 感動したことは 何ですか。",
+              "options": [
+                "お寺の庭の美しさ",
+                "買い物の安さ",
+                "電車の速さ",
+                "食べ物の量"
+              ],
+              "correct": 0,
+              "explanation": "Deeply impressed by the tranquility and beauty of temple gardens."
+            },
+            {
+              "id": "n5-e10-g-32",
+              "type": "Mondai 6 (情報検索)",
+              "question": "【情報検索：図書館の休館案内】\n32. 来週の 月曜日、図書館は 開いていますか。",
+              "options": [
+                "休館（閉まっている）",
+                "午前中だけ開いている",
+                "一日中開いている",
+                "夜だけ開いている"
+              ],
+              "correct": 0,
+              "explanation": "The notice clearly marks Mondays as regular closed days (休館)."
+            }
+          ]
+        },
+        {
+          "id": "n5-e10-sec-listening",
+          "title": "Section 3: Listening Comprehension (聴解)",
+          "shortTitle": "聴解 (Listening)",
+          "timeLimitSeconds": 1800,
+          "questions": [
+            {
+              "id": "n5-e10-l-1",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
+              "image": "/images/japanese/listening/n5/m1_q1.png",
+              "question": "1. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 2,
+              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
+              "explanation": "Based on the dialogue guidelines, Option 3 matches the selected item."
+            },
+            {
+              "id": "n5-e10-l-2",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
+              "image": "/images/japanese/listening/n5/m1_q2.png",
+              "question": "2. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 3,
+              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
+              "explanation": "Based on the dialogue guidelines, Option 4 matches the selected item."
+            },
+            {
+              "id": "n5-e10-l-3",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
+              "image": "/images/japanese/listening/n5/m1_q3.png",
+              "question": "3. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 0,
+              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
+              "explanation": "Based on the dialogue guidelines, Option 1 matches the selected item."
+            },
+            {
+              "id": "n5-e10-l-4",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
+              "image": "/images/japanese/listening/n5/m1_q4.png",
+              "question": "4. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 1,
+              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
+              "explanation": "Based on the dialogue guidelines, Option 2 matches the selected item."
+            },
+            {
+              "id": "n5-e10-l-5",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
+              "image": "/images/japanese/listening/n5/m1_q5.png",
+              "question": "5. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 2,
+              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
+              "explanation": "Based on the dialogue guidelines, Option 3 matches the selected item."
+            },
+            {
+              "id": "n5-e10-l-6",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
+              "image": "/images/japanese/listening/n5/m1_q6.png",
+              "question": "6. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 3,
+              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
+              "explanation": "Based on the dialogue guidelines, Option 4 matches the selected item."
+            },
+            {
+              "id": "n5-e10-l-7",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
+              "image": "/images/japanese/listening/n5/m1_q7.png",
+              "question": "7. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 0,
+              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
+              "explanation": "Based on the dialogue guidelines, Option 1 matches the selected item."
+            },
+            {
+              "id": "n5-e10-l-8",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q2.mp3",
+              "question": "8. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "options": [
+                "1時",
+                "2時",
+                "3時",
+                "4時"
+              ],
+              "correct": 2,
+              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
+              "explanation": "Listening point comprehension: meeting time agreement."
+            },
+            {
+              "id": "n5-e10-l-9",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q2.mp3",
+              "question": "9. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "options": [
+                "1時",
+                "2時",
+                "3時",
+                "4時"
+              ],
+              "correct": 3,
+              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
+              "explanation": "Listening point comprehension: meeting time agreement."
+            },
+            {
+              "id": "n5-e10-l-10",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q2.mp3",
+              "question": "10. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "options": [
+                "1時",
+                "2時",
+                "3時",
+                "4時"
+              ],
+              "correct": 0,
+              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
+              "explanation": "Listening point comprehension: meeting time agreement."
+            },
+            {
+              "id": "n5-e10-l-11",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q2.mp3",
+              "question": "11. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "options": [
+                "1時",
+                "2時",
+                "3時",
+                "4時"
+              ],
+              "correct": 1,
+              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
+              "explanation": "Listening point comprehension: meeting time agreement."
+            },
+            {
+              "id": "n5-e10-l-12",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q2.mp3",
+              "question": "12. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "options": [
+                "1時",
+                "2時",
+                "3時",
+                "4時"
+              ],
+              "correct": 2,
+              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
+              "explanation": "Listening point comprehension: meeting time agreement."
+            },
+            {
+              "id": "n5-e10-l-13",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q2.mp3",
+              "question": "13. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "options": [
+                "1時",
+                "2時",
+                "3時",
+                "4時"
+              ],
+              "correct": 3,
+              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
+              "explanation": "Listening point comprehension: meeting time agreement."
+            },
+            {
+              "id": "n5-e10-l-14",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
+              "image": "/images/japanese/listening/n5/m3_q1.png",
+              "question": "14. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "options": [
+                "よろしくおねがいします",
+                "ごめんなさい",
+                "いただきます"
+              ],
+              "correct": 0,
+              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
+              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+            },
+            {
+              "id": "n5-e10-l-15",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
+              "image": "/images/japanese/listening/n5/m3_q2.png",
+              "question": "15. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "options": [
+                "よろしくおねがいします",
+                "ごめんなさい",
+                "いただきます"
+              ],
+              "correct": 0,
+              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
+              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+            },
+            {
+              "id": "n5-e10-l-16",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
+              "image": "/images/japanese/listening/n5/m3_q3.png",
+              "question": "16. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "options": [
+                "よろしくおねがいします",
+                "ごめんなさい",
+                "いただきます"
+              ],
+              "correct": 0,
+              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
+              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+            },
+            {
+              "id": "n5-e10-l-17",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
+              "image": "/images/japanese/listening/n5/m3_q4.png",
+              "question": "17. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "options": [
+                "よろしくおねがいします",
+                "ごめんなさい",
+                "いただきます"
+              ],
+              "correct": 0,
+              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
+              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+            },
+            {
+              "id": "n5-e10-l-18",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
+              "image": "/images/japanese/listening/n5/m3_q5.png",
+              "question": "18. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "options": [
+                "よろしくおねがいします",
+                "ごめんなさい",
+                "いただきます"
+              ],
+              "correct": 0,
+              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
+              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+            },
+            {
+              "id": "n5-e10-l-19",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q4.mp3",
+              "question": "19. 「お元気ですか。」",
+              "options": [
+                "はい、元気です。",
+                "いいえ、元気です。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
+              "explanation": "Natural daily conversation response:「はい、元気です。」"
+            },
+            {
+              "id": "n5-e10-l-20",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q4.mp3",
+              "question": "20. 「お元気ですか。」",
+              "options": [
+                "はい、元気です。",
+                "いいえ、元気です。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
+              "explanation": "Natural daily conversation response:「はい、元気です。」"
+            },
+            {
+              "id": "n5-e10-l-21",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q4.mp3",
+              "question": "21. 「お元気ですか。」",
+              "options": [
+                "はい、元気です。",
+                "いいえ、元気です。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
+              "explanation": "Natural daily conversation response:「はい、元気です。」"
+            },
+            {
+              "id": "n5-e10-l-22",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q4.mp3",
+              "question": "22. 「お元気ですか。」",
+              "options": [
+                "はい、元気です。",
+                "いいえ、元気です。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
+              "explanation": "Natural daily conversation response:「はい、元気です。」"
+            },
+            {
+              "id": "n5-e10-l-23",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q4.mp3",
+              "question": "23. 「お元気ですか。」",
+              "options": [
+                "はい、元気です。",
+                "いいえ、元気です。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
+              "explanation": "Natural daily conversation response:「はい、元気です。」"
+            },
+            {
+              "id": "n5-e10-l-24",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n5_2018/N5Q4.mp3",
+              "question": "24. 「お元気ですか。」",
+              "options": [
+                "はい、元気です。",
+                "いいえ、元気です。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
+              "explanation": "Natural daily conversation response:「はい、元気です。」"
+            }
+          ]
+        }
+      ]
     }
   ],
   "N4": [
     {
-      "id": "n4-vol1",
+      "id": "n4-exam-1",
       "title": "JLPT N4 Official Practice Test (Vol. 1 - Standard)",
       "shortTitle": "Vol. 1 (Standard)",
       "badge": "Official JLPT",
-      "year": "Volume 1",
+      "year": "Official Vol. 1",
       "description": "The standard official practice test booklet containing all 97 official test questions, listening audio broadcasts, and authentic illustrations.",
       "totalQuestions": 97,
       "sections": [
@@ -3841,11 +13769,11 @@ export const EXAM_PAPERS_CATALOG = {
       ]
     },
     {
-      "id": "n4-vol2",
+      "id": "n4-exam-2",
       "title": "JLPT N4 Official Practice Test (Vol. 2 - 2018 Edition)",
       "shortTitle": "Vol. 2 (2018 Edition)",
       "badge": "Official 2018",
-      "year": "Volume 2",
+      "year": "Official Vol. 2",
       "description": "The 2018 Official Practice Workbook Vol. 2 with 98 verbatim test items, full listening audio tracks, and question diagrams.",
       "totalQuestions": 98,
       "sections": [
@@ -5172,6 +15100,10926 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "explanation": "Farewell response:「はい、また明日。」"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "n4-exam-3",
+      "title": "JLPT N4 Comprehensive Diagnostic Mock Exam (2020 Series)",
+      "shortTitle": "Exam 3 (2020 Diagnostic)",
+      "badge": "Diagnostic Mock",
+      "year": "2020 Series",
+      "description": "Comprehensive benchmark covering intermediate verb conjugations, compound particles, conditional forms (〜たら, 〜ば, 〜なら), and listening.",
+      "totalQuestions": 97,
+      "sections": [
+        {
+          "id": "n4-e3-sec-vocab",
+          "title": "Section 1: Language Knowledge (文字・語彙)",
+          "shortTitle": "文字・語彙 (Kanji & Vocab)",
+          "timeLimitSeconds": 1500,
+          "questions": [
+            {
+              "id": "n4-e3-v-1",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "1. <u>案内</u>を お願いします。",
+              "options": [
+                "あんあい",
+                "あんない",
+                "あんたい",
+                "あんだい"
+              ],
+              "correct": 1,
+              "explanation": "「案内」is read as「あんない」(guide)."
+            },
+            {
+              "id": "n4-e3-v-2",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "2. <u>計画</u>を お願いします。",
+              "options": [
+                "けいかく",
+                "けいがく",
+                "けいかん",
+                "けいがん"
+              ],
+              "correct": 0,
+              "explanation": "「計画」is read as「けいかく」(plan)."
+            },
+            {
+              "id": "n4-e3-v-3",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "3. <u>荷物</u>を お願いします。",
+              "options": [
+                "かもつ",
+                "にもつ",
+                "かぶつ",
+                "にぶつ"
+              ],
+              "correct": 1,
+              "explanation": "「荷物」is read as「にもつ」(luggage)."
+            },
+            {
+              "id": "n4-e3-v-4",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "4. <u>特急</u>を お願いします。",
+              "options": [
+                "とくきゅう",
+                "とっきゅう",
+                "どくきゅう",
+                "どっきゅう"
+              ],
+              "correct": 1,
+              "explanation": "「特急」is read as「とっきゅう」(limited express)."
+            },
+            {
+              "id": "n4-e3-v-5",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "5. <u>試合</u>を お願いします。",
+              "options": [
+                "しあい",
+                "じあい",
+                "しごう",
+                "じごう"
+              ],
+              "correct": 0,
+              "explanation": "「試合」is read as「しあい」(match / game)."
+            },
+            {
+              "id": "n4-e3-v-6",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "6. <u>予習</u>を お願いします。",
+              "options": [
+                "よしゅう",
+                "ようしゅう",
+                "ほしゅう",
+                "ほうしゅう"
+              ],
+              "correct": 0,
+              "explanation": "「予習」is read as「よしゅう」(preview study)."
+            },
+            {
+              "id": "n4-e3-v-7",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "7. <u>復習</u>を お願いします。",
+              "options": [
+                "ふくしゅう",
+                "ふくしゅ",
+                "ぶくしゅう",
+                "ぶくしゅ"
+              ],
+              "correct": 0,
+              "explanation": "「復習」is read as「ふくしゅう」(review study)."
+            },
+            {
+              "id": "n4-e3-v-8",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "8. <u>説明</u>を お願いします。",
+              "options": [
+                "せつめい",
+                "せつめ",
+                "ぜつめい",
+                "ぜつめ"
+              ],
+              "correct": 0,
+              "explanation": "「説明」is read as「せつめい」(explanation)."
+            },
+            {
+              "id": "n4-e3-v-9",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "9. <u>出発</u>を お願いします。",
+              "options": [
+                "しゅっぱつ",
+                "しゅつはつ",
+                "でっぱつ",
+                "ではつ"
+              ],
+              "correct": 0,
+              "explanation": "「出発」is read as「しゅっぱつ」(departure)."
+            },
+            {
+              "id": "n4-e3-v-10",
+              "type": "Mondai 2 (表記)",
+              "question": "10. <u>きっぷ</u>を 確認してください。",
+              "options": [
+                "切符",
+                "切布",
+                "着符",
+                "着布"
+              ],
+              "correct": 0,
+              "explanation": "「きっぷ」is written as「切符」(ticket)."
+            },
+            {
+              "id": "n4-e3-v-11",
+              "type": "Mondai 2 (表記)",
+              "question": "11. <u>じゅんび</u>を 確認してください。",
+              "options": [
+                "準備",
+                "準便",
+                "准備",
+                "準偏"
+              ],
+              "correct": 0,
+              "explanation": "「じゅんび」is written as「準備」(preparation)."
+            },
+            {
+              "id": "n4-e3-v-12",
+              "type": "Mondai 2 (表記)",
+              "question": "12. <u>おんど</u>を 確認してください。",
+              "options": [
+                "温度",
+                "温土",
+                "音度",
+                "音土"
+              ],
+              "correct": 0,
+              "explanation": "「おんど」is written as「温度」(temperature)."
+            },
+            {
+              "id": "n4-e3-v-13",
+              "type": "Mondai 2 (表記)",
+              "question": "13. <u>ちゅうい</u>を 確認してください。",
+              "options": [
+                "注意",
+                "注心",
+                "主意",
+                "主心"
+              ],
+              "correct": 0,
+              "explanation": "「ちゅうい」is written as「注意」(caution)."
+            },
+            {
+              "id": "n4-e3-v-14",
+              "type": "Mondai 2 (表記)",
+              "question": "14. <u>へんじ</u>を 確認してください。",
+              "options": [
+                "返事",
+                "変事",
+                "返次",
+                "変次"
+              ],
+              "correct": 0,
+              "explanation": "「へんじ」is written as「返事」(reply)."
+            },
+            {
+              "id": "n4-e3-v-15",
+              "type": "Mondai 2 (表記)",
+              "question": "15. <u>りゆう</u>を 確認してください。",
+              "options": [
+                "理由",
+                "理油",
+                "利由",
+                "利油"
+              ],
+              "correct": 0,
+              "explanation": "「りゆう」is written as「理由」(reason)."
+            },
+            {
+              "id": "n4-e3-v-16",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "16. ベルが（　　）、授業が 始まりました。",
+              "options": [
+                "なって",
+                "おとして",
+                "ふって",
+                "ひいて"
+              ],
+              "correct": 0,
+              "explanation": "Ringing bell:「ベルがなる」."
+            },
+            {
+              "id": "n4-e3-v-17",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "17. 風で カーテンが（　　）います。",
+              "options": [
+                "ゆれて",
+                "こわれて",
+                "たおれて",
+                "やぶれて"
+              ],
+              "correct": 0,
+              "explanation": "Swaying:「ゆれる」."
+            },
+            {
+              "id": "n4-e3-v-18",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "18. 先生の おかげで 試験に（　　）しました。",
+              "options": [
+                "ごうかく",
+                "しっぱい",
+                "そつぎょう",
+                "にゅうがく"
+              ],
+              "correct": 0,
+              "explanation": "Passing exam:「ごうかくする」."
+            },
+            {
+              "id": "n4-e3-v-19",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "19. 電気を けして 部屋を（　　）しました。",
+              "options": [
+                "まっくら",
+                "まっしろ",
+                "まっくろ",
+                "まっあか"
+              ],
+              "correct": 0,
+              "explanation": "Pitch dark:「まっくら」."
+            },
+            {
+              "id": "n4-e3-v-20",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "20. 急な（　　）が できたので、帰ります。",
+              "options": [
+                "用事",
+                "約束",
+                "計画",
+                "都合"
+              ],
+              "correct": 0,
+              "explanation": "Urgent errand:「急な用事」."
+            },
+            {
+              "id": "n4-e3-v-21",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "21. 雨が（　　）ので、傘を さしました。",
+              "options": [
+                "ふりだした",
+                "やんだ",
+                "あがった",
+                "つよまった"
+              ],
+              "correct": 0,
+              "explanation": "Started raining:「ふりだした」."
+            },
+            {
+              "id": "n4-e3-v-22",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "22. 車を（　　）に 止めてください。",
+              "options": [
+                "駐車場",
+                "交番",
+                "駅",
+                "ガソリンスタンド"
+              ],
+              "correct": 0,
+              "explanation": "Parking lot:「駐車場」."
+            },
+            {
+              "id": "n4-e3-v-23",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "23. ボタンを（　　）と、ドアが 開きます。",
+              "options": [
+                "おす",
+                "ひく",
+                "まわす",
+                "きる"
+              ],
+              "correct": 0,
+              "explanation": "Pushing button:「ボタンをおす」."
+            },
+            {
+              "id": "n4-e3-v-24",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "24. 毎日 ジョギングを（　　）ています。",
+              "options": [
+                "つづけ",
+                "やめ",
+                "はじめ",
+                "あきらめ"
+              ],
+              "correct": 0,
+              "explanation": "Continuing:「つづける」."
+            },
+            {
+              "id": "n4-e3-v-25",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "25. 日本語の スピーチを（　　）しました。",
+              "options": [
+                "はっぴょう",
+                "ほうこく",
+                "れんしゅう",
+                "しゅっせき"
+              ],
+              "correct": 0,
+              "explanation": "Presentation:「はっぴょうする」."
+            },
+            {
+              "id": "n4-e3-v-26",
+              "type": "Mondai 4 (類義表現)",
+              "question": "26. この 問題は <u>複雑</u>です。",
+              "options": [
+                "かんたんではありません",
+                "おもしろくありません",
+                "たかくありません",
+                "あたらしくありません"
+              ],
+              "correct": 0,
+              "explanation": "「複雑」(complex)."
+            },
+            {
+              "id": "n4-e3-v-27",
+              "type": "Mondai 4 (類義表現)",
+              "question": "27. <u>たいてい</u> 家で 勉強します。",
+              "options": [
+                "ほとんど",
+                "いつも",
+                "ときどき",
+                "たまに"
+              ],
+              "correct": 0,
+              "explanation": "「たいてい」(mostly / usually)."
+            },
+            {
+              "id": "n4-e3-v-28",
+              "type": "Mondai 4 (類義表現)",
+              "question": "28. <u>お礼</u>を 言いました。",
+              "options": [
+                "感謝しました",
+                "あやまりました",
+                "約束しました",
+                "案内しました"
+              ],
+              "correct": 0,
+              "explanation": "「お礼を言う」(express thanks)."
+            },
+            {
+              "id": "n4-e3-v-29",
+              "type": "Mondai 4 (類義表現)",
+              "question": "29. <u>さっき</u> 部長に 会いました。",
+              "options": [
+                "すこし前に",
+                "ずっと前に",
+                "明日に",
+                "夕方に"
+              ],
+              "correct": 0,
+              "explanation": "「さっき」(a while ago)."
+            },
+            {
+              "id": "n4-e3-v-30",
+              "type": "Mondai 4 (類義表現)",
+              "question": "30. <u>遠慮しないで</u> 食べてください。",
+              "options": [
+                "きにしないで",
+                "いそいで",
+                "のこさないで",
+                "すこしだけ"
+              ],
+              "correct": 0,
+              "explanation": "「遠慮しないで」(without holding back)."
+            },
+            {
+              "id": "n4-e3-v-31",
+              "type": "Mondai 5 (用法)",
+              "question": "31. <u>遠慮</u>",
+              "options": [
+                "会議で 意見を 言うのを 遠慮しました。",
+                "電車に 遠慮して 乗りました。",
+                "友達に 遠慮を あげました。",
+                "本を 遠慮して 読みました。"
+              ],
+              "correct": 0,
+              "explanation": "Usage of「遠慮する」."
+            },
+            {
+              "id": "n4-e3-v-32",
+              "type": "Mondai 5 (用法)",
+              "question": "32. <u>世話</u>",
+              "options": [
+                "犬の 世話を しています。",
+                "宿題の 世話を しました。",
+                "料理の 世話を 作ります。",
+                "電車の 世話に 乗ります。"
+              ],
+              "correct": 0,
+              "explanation": "Usage of「世話をする」."
+            },
+            {
+              "id": "n4-e3-v-33",
+              "type": "Mondai 5 (用法)",
+              "question": "33. <u>熱心</u>",
+              "options": [
+                "彼は 熱心に 日本語を 勉強しています。",
+                "今日は 熱心な 天気です。",
+                "この スープは 熱心です。",
+                "熱心な 電車に 乗りました。"
+              ],
+              "correct": 0,
+              "explanation": "Usage of「熱心に」."
+            },
+            {
+              "id": "n4-e3-v-34",
+              "type": "Mondai 5 (用法)",
+              "question": "34. <u>都合</u>",
+              "options": [
+                "明日の 午後は 都合が 悪いです。",
+                "都合な 料理を 食べました。",
+                "都合に 本を 買いました。",
+                "都合が 高いです。"
+              ],
+              "correct": 0,
+              "explanation": "Usage of「都合」."
+            },
+            {
+              "id": "n4-e3-v-35",
+              "type": "Mondai 5 (用法)",
+              "question": "35. <u>故障</u>",
+              "options": [
+                "テレビが 故障して つきません。",
+                "宿題が 故障しました。",
+                "料理が 故障しました。",
+                "天気が 故障しました。"
+              ],
+              "correct": 0,
+              "explanation": "Usage of「故障する」."
+            }
+          ]
+        },
+        {
+          "id": "n4-e3-sec-grammar",
+          "title": "Section 2: Language Knowledge (文法) & Reading (読解)",
+          "shortTitle": "文法・読解 (Grammar & Reading)",
+          "timeLimitSeconds": 2700,
+          "questions": [
+            {
+              "id": "n4-e3-g-1",
+              "type": "Mondai 1 (文法形式)",
+              "question": "1. この 料理は（　　）すぎて、食べられません。",
+              "options": [
+                "から",
+                "からい",
+                "からく",
+                "からくて"
+              ],
+              "correct": 0,
+              "explanation": "Adjective stem + すぎる:「からすぎる」."
+            },
+            {
+              "id": "n4-e3-g-2",
+              "type": "Mondai 1 (文法形式)",
+              "question": "2. 雨が ふりそう（　　）から、傘を 持って行きます。",
+              "options": [
+                "だ",
+                "な",
+                "に",
+                "で"
+              ],
+              "correct": 0,
+              "explanation": "そう + だから:「ふりそうだ」."
+            },
+            {
+              "id": "n4-e3-g-3",
+              "type": "Mondai 1 (文法形式)",
+              "question": "3. 先生に 本を（　　）いただきました。",
+              "options": [
+                "かして",
+                "かりて",
+                "かって",
+                "よんで"
+              ],
+              "correct": 0,
+              "explanation": "Humble benefit:「かしていただく」."
+            },
+            {
+              "id": "n4-e3-g-4",
+              "type": "Mondai 1 (文法形式)",
+              "question": "4. 毎日 走る（　　）に しています。",
+              "options": [
+                "こと",
+                "もの",
+                "よう",
+                "わけ"
+              ],
+              "correct": 0,
+              "explanation": "Habit pattern:「〜ことにしている」."
+            },
+            {
+              "id": "n4-e3-g-5",
+              "type": "Mondai 1 (文法形式)",
+              "question": "5. 弟は 母に 部屋を（　　）られました。",
+              "options": [
+                "そうじさ",
+                "そうじ",
+                "そうじされ",
+                "そうじし"
+              ],
+              "correct": 0,
+              "explanation": "Passive:「そうじされた」."
+            },
+            {
+              "id": "n4-e3-g-6",
+              "type": "Mondai 1 (文法形式)",
+              "question": "6. 早く 起きられる（　　）に、目覚ましを かけました。",
+              "options": [
+                "よう",
+                "こと",
+                "ため",
+                "はず"
+              ],
+              "correct": 0,
+              "explanation": "Purpose with potential:「〜ように」."
+            },
+            {
+              "id": "n4-e3-g-7",
+              "type": "Mondai 1 (文法形式)",
+              "question": "7. この 本は 読み（　　）やすいです。",
+              "options": [
+                "やすい",
+                "やすく",
+                "やすくて",
+                "やすかった"
+              ],
+              "correct": 0,
+              "explanation": "Ease of action:「読みやすい」."
+            },
+            {
+              "id": "n4-e3-g-8",
+              "type": "Mondai 1 (文法形式)",
+              "question": "8. 田中さんは 来ない（　　）かもしれません。",
+              "options": [
+                "かも",
+                "はず",
+                "わけ",
+                "こと"
+              ],
+              "correct": 0,
+              "explanation": "Possibility:「〜かもしれない」."
+            },
+            {
+              "id": "n4-e3-g-9",
+              "type": "Mondai 1 (文法形式)",
+              "question": "9. お荷物を お持ち（　　）ましょうか。",
+              "options": [
+                "し",
+                "になり",
+                "いたし",
+                "なさい"
+              ],
+              "correct": 0,
+              "explanation": "Humble offer:「お持ちしましょうか」."
+            },
+            {
+              "id": "n4-e3-g-10",
+              "type": "Mondai 1 (文法形式)",
+              "question": "10. ドアが（　　）います。",
+              "options": [
+                "あいて",
+                "あけて",
+                "しまって",
+                "しめて"
+              ],
+              "correct": 0,
+              "explanation": "Intransitive state:「あいている」."
+            },
+            {
+              "id": "n4-e3-g-11",
+              "type": "Mondai 1 (文法形式)",
+              "question": "11. 窓が（　　）あります。",
+              "options": [
+                "あけて",
+                "あいて",
+                "しめて",
+                "しまって"
+              ],
+              "correct": 0,
+              "explanation": "Transitive state:「あけてある」."
+            },
+            {
+              "id": "n4-e3-g-12",
+              "type": "Mondai 1 (文法形式)",
+              "question": "12. 日本語が 上手に（　　）たいです。",
+              "options": [
+                "なり",
+                "して",
+                "なって",
+                "なれ"
+              ],
+              "correct": 0,
+              "explanation": "Desire to become:「なりたい」."
+            },
+            {
+              "id": "n4-e3-g-13",
+              "type": "Mondai 1 (文法形式)",
+              "question": "13. 薬を 飲んだ（　　）が いいですよ。",
+              "options": [
+                "ほう",
+                "よう",
+                "こと",
+                "わけ"
+              ],
+              "correct": 0,
+              "explanation": "Advice:「〜ほうがいい」."
+            },
+            {
+              "id": "n4-e3-g-14",
+              "type": "Mondai 1 (文法形式)",
+              "question": "14. 映画を（　　）ながら、ポップコーンを 食べました。",
+              "options": [
+                "み",
+                "みて",
+                "みる",
+                "みた"
+              ],
+              "correct": 0,
+              "explanation": "Simultaneous:「みながら」."
+            },
+            {
+              "id": "n4-e3-g-15",
+              "type": "Mondai 1 (文法形式)",
+              "question": "15. 明日 雨なら、試合は 中止（　　）します。",
+              "options": [
+                "に",
+                "を",
+                "で",
+                "と"
+              ],
+              "correct": 0,
+              "explanation": "Decision:「中止にする」."
+            },
+            {
+              "id": "n4-e3-g-16",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "16. わたしは　＿＿　＿＿　★　＿＿　つもりです。\n1: 日本へ　2: 来年　3: 留学する　4: 友達と",
+              "options": [
+                "日本へ",
+                "来年",
+                "留学する",
+                "友達と"
+              ],
+              "correct": 0,
+              "explanation": "Order: わたしは 来年 友達と [★ 日本へ] 留学する つもりです。 Star is 1 (日本へ)."
+            },
+            {
+              "id": "n4-e3-g-17",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "17. この　＿＿　＿＿　★　＿＿　思います。\n1: レポートは　2: 難しくて　3: 一人で　4: できないと",
+              "options": [
+                "レポートは",
+                "難しくて",
+                "一人で",
+                "できないと"
+              ],
+              "correct": 2,
+              "explanation": "Order: この レポートは 難しくて [★ 一人で] できないと 思います。 Star is 3 (一人で)."
+            },
+            {
+              "id": "n4-e3-g-18",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "18. 先生に　＿＿　＿＿　★　＿＿　いただきました。\n1: 本を　2: 面白い　3: 貸して　4: 素敵な",
+              "options": [
+                "本を",
+                "面白い",
+                "貸して",
+                "素敵な"
+              ],
+              "correct": 0,
+              "explanation": "Order: 先生に 面白い 素敵な [★ 本を] 貸して いただきました。 Star is 1 (本を)."
+            },
+            {
+              "id": "n4-e3-g-19",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "19. 明日　＿＿　＿＿　★　＿＿　行けません。\n1: 学校へ　2: 病院へ　3: 行くので　4: 午前中は",
+              "options": [
+                "学校へ",
+                "病院へ",
+                "行くので",
+                "午前中は"
+              ],
+              "correct": 2,
+              "explanation": "Order: 明日 午前中は 病院へ [★ 行くので] 学校へ 行けません。 Star is 3 (行くので)."
+            },
+            {
+              "id": "n4-e3-g-20",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "20. 電車に　＿＿　＿＿　★　＿＿　走りました。\n1: 遅れない　2: ように　3: 急いで　4: 駅まで",
+              "options": [
+                "遅れない",
+                "ように",
+                "急いで",
+                "駅まで"
+              ],
+              "correct": 3,
+              "explanation": "Order: 電車に 遅れない ように 急いで [★ 駅まで] 走りました。 Star is 4 (駅まで)."
+            },
+            {
+              "id": "n4-e3-g-21",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "【読解文章：日本の温泉文化】\n21. (21) に入る言葉はどれですか。",
+              "options": [
+                "はいります",
+                "はいりました",
+                "はいって",
+                "はいる"
+              ],
+              "correct": 2,
+              "explanation": "Connecting action with te-form:「はいって」."
+            },
+            {
+              "id": "n4-e3-g-22",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "22. (22) に入る言葉はどれですか。",
+              "options": [
+                "とても",
+                "あまり",
+                "ぜんぜん",
+                "すこしも"
+              ],
+              "correct": 0,
+              "explanation": "Positive evaluation:「とても」."
+            },
+            {
+              "id": "n4-e3-g-23",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "23. (23) に入る言葉はどれですか。",
+              "options": [
+                "それに",
+                "だから",
+                "しかし",
+                "それから"
+              ],
+              "correct": 0,
+              "explanation": "Adding related points:「それに」."
+            },
+            {
+              "id": "n4-e3-g-24",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "24. (24) に入る言葉はどれですか。",
+              "options": [
+                "いってみたい",
+                "いってみて",
+                "いってみる",
+                "いってみた"
+              ],
+              "correct": 0,
+              "explanation": "Desire:「いってみたい」."
+            },
+            {
+              "id": "n4-e3-g-25",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "25. (25) に入る言葉はどれですか。",
+              "options": [
+                "おもいます",
+                "おもいました",
+                "おもって",
+                "おもわない"
+              ],
+              "correct": 0,
+              "explanation": "Present conjecture:「おもいます」."
+            },
+            {
+              "id": "n4-e3-g-26",
+              "type": "Mondai 4 (短文読解)",
+              "question": "【短文：地域の日本語教室】\n26. 日本語教室は いつ 開かれますか。",
+              "options": [
+                "毎週土曜日の 午前10時",
+                "毎週日曜日の 午後2時",
+                "毎週水曜日の 午後7時",
+                "毎月第1土曜日"
+              ],
+              "correct": 0,
+              "explanation": "Held every Saturday at 10:00 AM."
+            },
+            {
+              "id": "n4-e3-g-27",
+              "type": "Mondai 4 (短文読解)",
+              "question": "27. 参加費用は いくらですか。",
+              "options": [
+                "1回 500円（テキスト代別）",
+                "無料",
+                "月額 2,000円",
+                "年間 5,000円"
+              ],
+              "correct": 0,
+              "explanation": "Fee is 500 yen per session."
+            },
+            {
+              "id": "n4-e3-g-28",
+              "type": "Mondai 4 (短文読解)",
+              "question": "28. 初めて参加する人は 何を持って行く必要がありますか。",
+              "options": [
+                "筆記用具とノート",
+                "身分証明書",
+                "写真2枚",
+                "辞書"
+              ],
+              "correct": 0,
+              "explanation": "Bring writing utensils and notebook."
+            },
+            {
+              "id": "n4-e3-g-29",
+              "type": "Mondai 4 (短文読解)",
+              "question": "29. 申し込みは どのように しますか。",
+              "options": [
+                "前日までに メールで 申し込む",
+                "当日 直接 会場へ 行く",
+                "電話でのみ 受付",
+                "市役所で 申し込む"
+              ],
+              "correct": 0,
+              "explanation": "Pre-registration by email by the previous day."
+            },
+            {
+              "id": "n4-e3-g-30",
+              "type": "Mondai 5 (中文読解)",
+              "question": "【中文：留学生のアルバイト体験】\n30. 筆者がカフェで働き始めた目的は何ですか。",
+              "options": [
+                "生きた日本語と接客マナーを学ぶため",
+                "お金を貯めて旅行するため",
+                "コーヒーの淹れ方を覚えるため",
+                "友達を作るため"
+              ],
+              "correct": 0,
+              "explanation": "To learn real-life Japanese communication and customer service manners."
+            },
+            {
+              "id": "n4-e3-g-31",
+              "type": "Mondai 5 (中文読解)",
+              "question": "31. アルバイトで一番苦労したことは何ですか。",
+              "options": [
+                "敬語の使い方と聞き取り",
+                "メニューを覚えること",
+                "皿洗い",
+                "朝早く起きること"
+              ],
+              "correct": 0,
+              "explanation": "Struggled most with keigo honorifics and fast native speech."
+            },
+            {
+              "id": "n4-e3-g-32",
+              "type": "Mondai 5 (中文読解)",
+              "question": "32. 店長から褒められた理由は何ですか。",
+              "options": [
+                "いつも笑顔で元気に挨拶していたから",
+                "ミスを一度もしなかったから",
+                "一番長く働いたから",
+                "英語が話せたから"
+              ],
+              "correct": 0,
+              "explanation": "Praised for consistently greeting customers with a bright smile."
+            },
+            {
+              "id": "n4-e3-g-33",
+              "type": "Mondai 5 (中文読解)",
+              "question": "33. 筆者はこのアルバイトを通じてどう成長しましたか。",
+              "options": [
+                "日本語の会話に自信がつき、人との繋がりを楽しめるようになった",
+                "料理が作れるようになった",
+                "給料がたくさんもらえた",
+                "将来カフェを開きたいと思った"
+              ],
+              "correct": 0,
+              "explanation": "Gained conversational confidence and appreciated human connections."
+            },
+            {
+              "id": "n4-e3-g-34",
+              "type": "Mondai 6 (情報検索)",
+              "question": "【情報検索：スポーツセンターの利用案内】\n34. プールを利用する大人の料金はいくらですか。",
+              "options": [
+                "400円",
+                "200円",
+                "600円",
+                "無料"
+              ],
+              "correct": 0,
+              "explanation": "Adult pool admission is listed as 400 yen."
+            },
+            {
+              "id": "n4-e3-g-35",
+              "type": "Mondai 6 (情報検索)",
+              "question": "35. トレーニングルームを利用する際に必ず持参するものは何ですか。",
+              "options": [
+                "室内用運動靴",
+                "水着",
+                "タオル2枚",
+                "会員証"
+              ],
+              "correct": 0,
+              "explanation": "Indoor athletic shoes (室内用運動靴) are strictly required."
+            }
+          ]
+        },
+        {
+          "id": "n4-e3-sec-listening",
+          "title": "Section 3: Listening Comprehension (聴解)",
+          "shortTitle": "聴解 (Listening)",
+          "timeLimitSeconds": 2100,
+          "questions": [
+            {
+              "id": "n4-e3-l-1",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
+              "image": "/images/japanese/listening/n4/m1_q1.png",
+              "question": "1. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 3,
+              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
+              "explanation": "Based on task instructions, Option 4 is correct."
+            },
+            {
+              "id": "n4-e3-l-2",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
+              "image": "/images/japanese/listening/n4/m1_q2.png",
+              "question": "2. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 0,
+              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
+              "explanation": "Based on task instructions, Option 1 is correct."
+            },
+            {
+              "id": "n4-e3-l-3",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
+              "image": "/images/japanese/listening/n4/m1_q3.png",
+              "question": "3. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 1,
+              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
+              "explanation": "Based on task instructions, Option 2 is correct."
+            },
+            {
+              "id": "n4-e3-l-4",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
+              "image": "/images/japanese/listening/n4/m1_q4.png",
+              "question": "4. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 2,
+              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
+              "explanation": "Based on task instructions, Option 3 is correct."
+            },
+            {
+              "id": "n4-e3-l-5",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
+              "image": "/images/japanese/listening/n4/m1_q5.png",
+              "question": "5. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 3,
+              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
+              "explanation": "Based on task instructions, Option 4 is correct."
+            },
+            {
+              "id": "n4-e3-l-6",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
+              "image": "/images/japanese/listening/n4/m1_q6.png",
+              "question": "6. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 0,
+              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
+              "explanation": "Based on task instructions, Option 1 is correct."
+            },
+            {
+              "id": "n4-e3-l-7",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
+              "image": "/images/japanese/listening/n4/m1_q7.png",
+              "question": "7. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 1,
+              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
+              "explanation": "Based on task instructions, Option 2 is correct."
+            },
+            {
+              "id": "n4-e3-l-8",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
+              "image": "/images/japanese/listening/n4/m1_q8.png",
+              "question": "8. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 2,
+              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
+              "explanation": "Based on task instructions, Option 3 is correct."
+            },
+            {
+              "id": "n4-e3-l-9",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
+              "question": "9. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "options": [
+                "電車が遅れたから",
+                "寝坊したから",
+                "道を間違えたから",
+                "雨が降ったから"
+              ],
+              "correct": 3,
+              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
+              "explanation": "Point comprehension detail: reason for arriving late."
+            },
+            {
+              "id": "n4-e3-l-10",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
+              "question": "10. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "options": [
+                "電車が遅れたから",
+                "寝坊したから",
+                "道を間違えたから",
+                "雨が降ったから"
+              ],
+              "correct": 0,
+              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
+              "explanation": "Point comprehension detail: reason for arriving late."
+            },
+            {
+              "id": "n4-e3-l-11",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
+              "question": "11. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "options": [
+                "電車が遅れたから",
+                "寝坊したから",
+                "道を間違えたから",
+                "雨が降ったから"
+              ],
+              "correct": 1,
+              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
+              "explanation": "Point comprehension detail: reason for arriving late."
+            },
+            {
+              "id": "n4-e3-l-12",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
+              "question": "12. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "options": [
+                "電車が遅れたから",
+                "寝坊したから",
+                "道を間違えたから",
+                "雨が降ったから"
+              ],
+              "correct": 2,
+              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
+              "explanation": "Point comprehension detail: reason for arriving late."
+            },
+            {
+              "id": "n4-e3-l-13",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
+              "question": "13. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "options": [
+                "電車が遅れたから",
+                "寝坊したから",
+                "道を間違えたから",
+                "雨が降ったから"
+              ],
+              "correct": 3,
+              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
+              "explanation": "Point comprehension detail: reason for arriving late."
+            },
+            {
+              "id": "n4-e3-l-14",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
+              "question": "14. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "options": [
+                "電車が遅れたから",
+                "寝坊したから",
+                "道を間違えたから",
+                "雨が降ったから"
+              ],
+              "correct": 0,
+              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
+              "explanation": "Point comprehension detail: reason for arriving late."
+            },
+            {
+              "id": "n4-e3-l-15",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
+              "question": "15. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "options": [
+                "電車が遅れたから",
+                "寝坊したから",
+                "道を間違えたから",
+                "雨が降ったから"
+              ],
+              "correct": 1,
+              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
+              "explanation": "Point comprehension detail: reason for arriving late."
+            },
+            {
+              "id": "n4-e3-l-16",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
+              "image": "/images/japanese/listening/n4/m3_q1.png",
+              "question": "16. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "options": [
+                "手伝っていただけませんか。",
+                "手伝ってください。",
+                "手伝いましょうか。"
+              ],
+              "correct": 0,
+              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
+              "explanation": "Polite request in N4:「〜ていただけませんか」."
+            },
+            {
+              "id": "n4-e3-l-17",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
+              "image": "/images/japanese/listening/n4/m3_q2.png",
+              "question": "17. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "options": [
+                "手伝っていただけませんか。",
+                "手伝ってください。",
+                "手伝いましょうか。"
+              ],
+              "correct": 0,
+              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
+              "explanation": "Polite request in N4:「〜ていただけませんか」."
+            },
+            {
+              "id": "n4-e3-l-18",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
+              "image": "/images/japanese/listening/n4/m3_q3.png",
+              "question": "18. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "options": [
+                "手伝っていただけませんか。",
+                "手伝ってください。",
+                "手伝いましょうか。"
+              ],
+              "correct": 0,
+              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
+              "explanation": "Polite request in N4:「〜ていただけませんか」."
+            },
+            {
+              "id": "n4-e3-l-19",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
+              "image": "/images/japanese/listening/n4/m3_q4.png",
+              "question": "19. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "options": [
+                "手伝っていただけませんか。",
+                "手伝ってください。",
+                "手伝いましょうか。"
+              ],
+              "correct": 0,
+              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
+              "explanation": "Polite request in N4:「〜ていただけませんか」."
+            },
+            {
+              "id": "n4-e3-l-20",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
+              "image": "/images/japanese/listening/n4/m3_q5.png",
+              "question": "20. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "options": [
+                "手伝っていただけませんか。",
+                "手伝ってください。",
+                "手伝いましょうか。"
+              ],
+              "correct": 0,
+              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
+              "explanation": "Polite request in N4:「〜ていただけませんか」."
+            },
+            {
+              "id": "n4-e3-l-21",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
+              "question": "21. 「お先に失礼します。」",
+              "options": [
+                "お疲れ様でした。",
+                "いってらっしゃい。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
+              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+            },
+            {
+              "id": "n4-e3-l-22",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
+              "question": "22. 「お先に失礼します。」",
+              "options": [
+                "お疲れ様でした。",
+                "いってらっしゃい。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
+              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+            },
+            {
+              "id": "n4-e3-l-23",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
+              "question": "23. 「お先に失礼します。」",
+              "options": [
+                "お疲れ様でした。",
+                "いってらっしゃい。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
+              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+            },
+            {
+              "id": "n4-e3-l-24",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
+              "question": "24. 「お先に失礼します。」",
+              "options": [
+                "お疲れ様でした。",
+                "いってらっしゃい。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
+              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+            },
+            {
+              "id": "n4-e3-l-25",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
+              "question": "25. 「お先に失礼します。」",
+              "options": [
+                "お疲れ様でした。",
+                "いってらっしゃい。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
+              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+            },
+            {
+              "id": "n4-e3-l-26",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
+              "question": "26. 「お先に失礼します。」",
+              "options": [
+                "お疲れ様でした。",
+                "いってらっしゃい。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
+              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+            },
+            {
+              "id": "n4-e3-l-27",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
+              "question": "27. 「お先に失礼します。」",
+              "options": [
+                "お疲れ様でした。",
+                "いってらっしゃい。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
+              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+            },
+            {
+              "id": "n4-e3-l-28",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
+              "question": "28. 「お先に失礼します。」",
+              "options": [
+                "お疲れ様でした。",
+                "いってらっしゃい。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
+              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "n4-exam-4",
+      "title": "JLPT N4 NAT-TEST Benchmark Simulation (2021 Series)",
+      "shortTitle": "Exam 4 (NAT-TEST Benchmark)",
+      "badge": "NAT-TEST Benchmark",
+      "year": "2021 Series",
+      "description": "Calibrated against the Japanese NAT-TEST 4Q standard with emphasis on honorifics (Sonkeigo & Kenjougo) and paragraph grammar.",
+      "totalQuestions": 97,
+      "sections": [
+        {
+          "id": "n4-e4-sec-vocab",
+          "title": "Section 1: Language Knowledge (文字・語彙)",
+          "shortTitle": "文字・語彙 (Kanji & Vocab)",
+          "timeLimitSeconds": 1500,
+          "questions": [
+            {
+              "id": "n4-e4-v-1",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "1. <u>特急</u>を お願いします。",
+              "options": [
+                "とくきゅう",
+                "とっきゅう",
+                "どくきゅう",
+                "どっきゅう"
+              ],
+              "correct": 1,
+              "explanation": "「特急」is read as「とっきゅう」(limited express)."
+            },
+            {
+              "id": "n4-e4-v-2",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "2. <u>試合</u>を お願いします。",
+              "options": [
+                "しあい",
+                "じあい",
+                "しごう",
+                "じごう"
+              ],
+              "correct": 0,
+              "explanation": "「試合」is read as「しあい」(match / game)."
+            },
+            {
+              "id": "n4-e4-v-3",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "3. <u>予習</u>を お願いします。",
+              "options": [
+                "よしゅう",
+                "ようしゅう",
+                "ほしゅう",
+                "ほうしゅう"
+              ],
+              "correct": 0,
+              "explanation": "「予習」is read as「よしゅう」(preview study)."
+            },
+            {
+              "id": "n4-e4-v-4",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "4. <u>復習</u>を お願いします。",
+              "options": [
+                "ふくしゅう",
+                "ふくしゅ",
+                "ぶくしゅう",
+                "ぶくしゅ"
+              ],
+              "correct": 0,
+              "explanation": "「復習」is read as「ふくしゅう」(review study)."
+            },
+            {
+              "id": "n4-e4-v-5",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "5. <u>説明</u>を お願いします。",
+              "options": [
+                "せつめい",
+                "せつめ",
+                "ぜつめい",
+                "ぜつめ"
+              ],
+              "correct": 0,
+              "explanation": "「説明」is read as「せつめい」(explanation)."
+            },
+            {
+              "id": "n4-e4-v-6",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "6. <u>出発</u>を お願いします。",
+              "options": [
+                "しゅっぱつ",
+                "しゅつはつ",
+                "でっぱつ",
+                "ではつ"
+              ],
+              "correct": 0,
+              "explanation": "「出発」is read as「しゅっぱつ」(departure)."
+            },
+            {
+              "id": "n4-e4-v-7",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "7. <u>到着</u>を お願いします。",
+              "options": [
+                "とうちゃく",
+                "とうづく",
+                "どうちゃく",
+                "どうづく"
+              ],
+              "correct": 0,
+              "explanation": "「到着」is read as「とうちゃく」(arrival)."
+            },
+            {
+              "id": "n4-e4-v-8",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "8. <u>約束</u>を お願いします。",
+              "options": [
+                "やくそく",
+                "やくぞく",
+                "やっそく",
+                "やっぞく"
+              ],
+              "correct": 0,
+              "explanation": "「約束」is read as「やくそく」(promise / appointment)."
+            },
+            {
+              "id": "n4-e4-v-9",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "9. <u>経験</u>を お願いします。",
+              "options": [
+                "けいけん",
+                "けいかん",
+                "げいけん",
+                "げいかん"
+              ],
+              "correct": 0,
+              "explanation": "「経験」is read as「けいけん」(experience)."
+            },
+            {
+              "id": "n4-e4-v-10",
+              "type": "Mondai 2 (表記)",
+              "question": "10. <u>ちゅうい</u>を 確認してください。",
+              "options": [
+                "注意",
+                "注心",
+                "主意",
+                "主心"
+              ],
+              "correct": 0,
+              "explanation": "「ちゅうい」is written as「注意」(caution)."
+            },
+            {
+              "id": "n4-e4-v-11",
+              "type": "Mondai 2 (表記)",
+              "question": "11. <u>へんじ</u>を 確認してください。",
+              "options": [
+                "返事",
+                "変事",
+                "返次",
+                "変次"
+              ],
+              "correct": 0,
+              "explanation": "「へんじ」is written as「返事」(reply)."
+            },
+            {
+              "id": "n4-e4-v-12",
+              "type": "Mondai 2 (表記)",
+              "question": "12. <u>りゆう</u>を 確認してください。",
+              "options": [
+                "理由",
+                "理油",
+                "利由",
+                "利油"
+              ],
+              "correct": 0,
+              "explanation": "「りゆう」is written as「理由」(reason)."
+            },
+            {
+              "id": "n4-e4-v-13",
+              "type": "Mondai 2 (表記)",
+              "question": "13. <u>しっぱい</u>を 確認してください。",
+              "options": [
+                "失敗",
+                "失弊",
+                "矢敗",
+                "矢弊"
+              ],
+              "correct": 0,
+              "explanation": "「しっぱい」is written as「失敗」(failure)."
+            },
+            {
+              "id": "n4-e4-v-14",
+              "type": "Mondai 2 (表記)",
+              "question": "14. <u>せいこう</u>を 確認してください。",
+              "options": [
+                "成功",
+                "成効",
+                "精功",
+                "精効"
+              ],
+              "correct": 0,
+              "explanation": "「せいこう」is written as「成功」(success)."
+            },
+            {
+              "id": "n4-e4-v-15",
+              "type": "Mondai 2 (表記)",
+              "question": "15. <u>きっぷ</u>を 確認してください。",
+              "options": [
+                "切符",
+                "切布",
+                "着符",
+                "着布"
+              ],
+              "correct": 0,
+              "explanation": "「きっぷ」is written as「切符」(ticket)."
+            },
+            {
+              "id": "n4-e4-v-16",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "16. 電気を けして 部屋を（　　）しました。",
+              "options": [
+                "まっくら",
+                "まっしろ",
+                "まっくろ",
+                "まっあか"
+              ],
+              "correct": 0,
+              "explanation": "Pitch dark:「まっくら」."
+            },
+            {
+              "id": "n4-e4-v-17",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "17. 急な（　　）が できたので、帰ります。",
+              "options": [
+                "用事",
+                "約束",
+                "計画",
+                "都合"
+              ],
+              "correct": 0,
+              "explanation": "Urgent errand:「急な用事」."
+            },
+            {
+              "id": "n4-e4-v-18",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "18. 雨が（　　）ので、傘を さしました。",
+              "options": [
+                "ふりだした",
+                "やんだ",
+                "あがった",
+                "つよまった"
+              ],
+              "correct": 0,
+              "explanation": "Started raining:「ふりだした」."
+            },
+            {
+              "id": "n4-e4-v-19",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "19. 車を（　　）に 止めてください。",
+              "options": [
+                "駐車場",
+                "交番",
+                "駅",
+                "ガソリンスタンド"
+              ],
+              "correct": 0,
+              "explanation": "Parking lot:「駐車場」."
+            },
+            {
+              "id": "n4-e4-v-20",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "20. ボタンを（　　）と、ドアが 開きます。",
+              "options": [
+                "おす",
+                "ひく",
+                "まわす",
+                "きる"
+              ],
+              "correct": 0,
+              "explanation": "Pushing button:「ボタンをおす」."
+            },
+            {
+              "id": "n4-e4-v-21",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "21. 毎日 ジョギングを（　　）ています。",
+              "options": [
+                "つづけ",
+                "やめ",
+                "はじめ",
+                "あきらめ"
+              ],
+              "correct": 0,
+              "explanation": "Continuing:「つづける」."
+            },
+            {
+              "id": "n4-e4-v-22",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "22. 日本語の スピーチを（　　）しました。",
+              "options": [
+                "はっぴょう",
+                "ほうこく",
+                "れんしゅう",
+                "しゅっせき"
+              ],
+              "correct": 0,
+              "explanation": "Presentation:「はっぴょうする」."
+            },
+            {
+              "id": "n4-e4-v-23",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "23. ベルが（　　）、授業が 始まりました。",
+              "options": [
+                "なって",
+                "おとして",
+                "ふって",
+                "ひいて"
+              ],
+              "correct": 0,
+              "explanation": "Ringing bell:「ベルがなる」."
+            },
+            {
+              "id": "n4-e4-v-24",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "24. 風で カーテンが（　　）います。",
+              "options": [
+                "ゆれて",
+                "こわれて",
+                "たおれて",
+                "やぶれて"
+              ],
+              "correct": 0,
+              "explanation": "Swaying:「ゆれる」."
+            },
+            {
+              "id": "n4-e4-v-25",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "25. 先生の おかげで 試験に（　　）しました。",
+              "options": [
+                "ごうかく",
+                "しっぱい",
+                "そつぎょう",
+                "にゅうがく"
+              ],
+              "correct": 0,
+              "explanation": "Passing exam:「ごうかくする」."
+            },
+            {
+              "id": "n4-e4-v-26",
+              "type": "Mondai 4 (類義表現)",
+              "question": "26. <u>さっき</u> 部長に 会いました。",
+              "options": [
+                "すこし前に",
+                "ずっと前に",
+                "明日に",
+                "夕方に"
+              ],
+              "correct": 0,
+              "explanation": "「さっき」(a while ago)."
+            },
+            {
+              "id": "n4-e4-v-27",
+              "type": "Mondai 4 (類義表現)",
+              "question": "27. <u>遠慮しないで</u> 食べてください。",
+              "options": [
+                "きにしないで",
+                "いそいで",
+                "のこさないで",
+                "すこしだけ"
+              ],
+              "correct": 0,
+              "explanation": "「遠慮しないで」(without holding back)."
+            },
+            {
+              "id": "n4-e4-v-28",
+              "type": "Mondai 4 (類義表現)",
+              "question": "28. この 問題は <u>複雑</u>です。",
+              "options": [
+                "かんたんではありません",
+                "おもしろくありません",
+                "たかくありません",
+                "あたらしくありません"
+              ],
+              "correct": 0,
+              "explanation": "「複雑」(complex)."
+            },
+            {
+              "id": "n4-e4-v-29",
+              "type": "Mondai 4 (類義表現)",
+              "question": "29. <u>たいてい</u> 家で 勉強します。",
+              "options": [
+                "ほとんど",
+                "いつも",
+                "ときどき",
+                "たまに"
+              ],
+              "correct": 0,
+              "explanation": "「たいてい」(mostly / usually)."
+            },
+            {
+              "id": "n4-e4-v-30",
+              "type": "Mondai 4 (類義表現)",
+              "question": "30. <u>お礼</u>を 言いました。",
+              "options": [
+                "感謝しました",
+                "あやまりました",
+                "約束しました",
+                "案内しました"
+              ],
+              "correct": 0,
+              "explanation": "「お礼を言う」(express thanks)."
+            },
+            {
+              "id": "n4-e4-v-31",
+              "type": "Mondai 5 (用法)",
+              "question": "31. <u>都合</u>",
+              "options": [
+                "明日の 午後は 都合が 悪いです。",
+                "都合な 料理を 食べました。",
+                "都合に 本を 買いました。",
+                "都合が 高いです。"
+              ],
+              "correct": 0,
+              "explanation": "Usage of「都合」."
+            },
+            {
+              "id": "n4-e4-v-32",
+              "type": "Mondai 5 (用法)",
+              "question": "32. <u>故障</u>",
+              "options": [
+                "テレビが 故障して つきません。",
+                "宿題が 故障しました。",
+                "料理が 故障しました。",
+                "天気が 故障しました。"
+              ],
+              "correct": 0,
+              "explanation": "Usage of「故障する」."
+            },
+            {
+              "id": "n4-e4-v-33",
+              "type": "Mondai 5 (用法)",
+              "question": "33. <u>遠慮</u>",
+              "options": [
+                "会議で 意見を 言うのを 遠慮しました。",
+                "電車に 遠慮して 乗りました。",
+                "友達に 遠慮を あげました。",
+                "本を 遠慮して 読みました。"
+              ],
+              "correct": 0,
+              "explanation": "Usage of「遠慮する」."
+            },
+            {
+              "id": "n4-e4-v-34",
+              "type": "Mondai 5 (用法)",
+              "question": "34. <u>世話</u>",
+              "options": [
+                "犬の 世話を しています。",
+                "宿題の 世話を しました。",
+                "料理の 世話を 作ります。",
+                "電車の 世話に 乗ります。"
+              ],
+              "correct": 0,
+              "explanation": "Usage of「世話をする」."
+            },
+            {
+              "id": "n4-e4-v-35",
+              "type": "Mondai 5 (用法)",
+              "question": "35. <u>熱心</u>",
+              "options": [
+                "彼は 熱心に 日本語を 勉強しています。",
+                "今日は 熱心な 天気です。",
+                "この スープは 熱心です。",
+                "熱心な 電車に 乗りました。"
+              ],
+              "correct": 0,
+              "explanation": "Usage of「熱心に」."
+            }
+          ]
+        },
+        {
+          "id": "n4-e4-sec-grammar",
+          "title": "Section 2: Language Knowledge (文法) & Reading (読解)",
+          "shortTitle": "文法・読解 (Grammar & Reading)",
+          "timeLimitSeconds": 2700,
+          "questions": [
+            {
+              "id": "n4-e4-g-1",
+              "type": "Mondai 1 (文法形式)",
+              "question": "1. 毎日 走る（　　）に しています。",
+              "options": [
+                "こと",
+                "もの",
+                "よう",
+                "わけ"
+              ],
+              "correct": 0,
+              "explanation": "Habit pattern:「〜ことにしている」."
+            },
+            {
+              "id": "n4-e4-g-2",
+              "type": "Mondai 1 (文法形式)",
+              "question": "2. 弟は 母に 部屋を（　　）られました。",
+              "options": [
+                "そうじさ",
+                "そうじ",
+                "そうじされ",
+                "そうじし"
+              ],
+              "correct": 0,
+              "explanation": "Passive:「そうじされた」."
+            },
+            {
+              "id": "n4-e4-g-3",
+              "type": "Mondai 1 (文法形式)",
+              "question": "3. 早く 起きられる（　　）に、目覚ましを かけました。",
+              "options": [
+                "よう",
+                "こと",
+                "ため",
+                "はず"
+              ],
+              "correct": 0,
+              "explanation": "Purpose with potential:「〜ように」."
+            },
+            {
+              "id": "n4-e4-g-4",
+              "type": "Mondai 1 (文法形式)",
+              "question": "4. この 本は 読み（　　）やすいです。",
+              "options": [
+                "やすい",
+                "やすく",
+                "やすくて",
+                "やすかった"
+              ],
+              "correct": 0,
+              "explanation": "Ease of action:「読みやすい」."
+            },
+            {
+              "id": "n4-e4-g-5",
+              "type": "Mondai 1 (文法形式)",
+              "question": "5. 田中さんは 来ない（　　）かもしれません。",
+              "options": [
+                "かも",
+                "はず",
+                "わけ",
+                "こと"
+              ],
+              "correct": 0,
+              "explanation": "Possibility:「〜かもしれない」."
+            },
+            {
+              "id": "n4-e4-g-6",
+              "type": "Mondai 1 (文法形式)",
+              "question": "6. お荷物を お持ち（　　）ましょうか。",
+              "options": [
+                "し",
+                "になり",
+                "いたし",
+                "なさい"
+              ],
+              "correct": 0,
+              "explanation": "Humble offer:「お持ちしましょうか」."
+            },
+            {
+              "id": "n4-e4-g-7",
+              "type": "Mondai 1 (文法形式)",
+              "question": "7. ドアが（　　）います。",
+              "options": [
+                "あいて",
+                "あけて",
+                "しまって",
+                "しめて"
+              ],
+              "correct": 0,
+              "explanation": "Intransitive state:「あいている」."
+            },
+            {
+              "id": "n4-e4-g-8",
+              "type": "Mondai 1 (文法形式)",
+              "question": "8. 窓が（　　）あります。",
+              "options": [
+                "あけて",
+                "あいて",
+                "しめて",
+                "しまって"
+              ],
+              "correct": 0,
+              "explanation": "Transitive state:「あけてある」."
+            },
+            {
+              "id": "n4-e4-g-9",
+              "type": "Mondai 1 (文法形式)",
+              "question": "9. 日本語が 上手に（　　）たいです。",
+              "options": [
+                "なり",
+                "して",
+                "なって",
+                "なれ"
+              ],
+              "correct": 0,
+              "explanation": "Desire to become:「なりたい」."
+            },
+            {
+              "id": "n4-e4-g-10",
+              "type": "Mondai 1 (文法形式)",
+              "question": "10. 薬を 飲んだ（　　）が いいですよ。",
+              "options": [
+                "ほう",
+                "よう",
+                "こと",
+                "わけ"
+              ],
+              "correct": 0,
+              "explanation": "Advice:「〜ほうがいい」."
+            },
+            {
+              "id": "n4-e4-g-11",
+              "type": "Mondai 1 (文法形式)",
+              "question": "11. 映画を（　　）ながら、ポップコーンを 食べました。",
+              "options": [
+                "み",
+                "みて",
+                "みる",
+                "みた"
+              ],
+              "correct": 0,
+              "explanation": "Simultaneous:「みながら」."
+            },
+            {
+              "id": "n4-e4-g-12",
+              "type": "Mondai 1 (文法形式)",
+              "question": "12. 明日 雨なら、試合は 中止（　　）します。",
+              "options": [
+                "に",
+                "を",
+                "で",
+                "と"
+              ],
+              "correct": 0,
+              "explanation": "Decision:「中止にする」."
+            },
+            {
+              "id": "n4-e4-g-13",
+              "type": "Mondai 1 (文法形式)",
+              "question": "13. この 料理は（　　）すぎて、食べられません。",
+              "options": [
+                "から",
+                "からい",
+                "からく",
+                "からくて"
+              ],
+              "correct": 0,
+              "explanation": "Adjective stem + すぎる:「からすぎる」."
+            },
+            {
+              "id": "n4-e4-g-14",
+              "type": "Mondai 1 (文法形式)",
+              "question": "14. 雨が ふりそう（　　）から、傘を 持って行きます。",
+              "options": [
+                "だ",
+                "な",
+                "に",
+                "で"
+              ],
+              "correct": 0,
+              "explanation": "そう + だから:「ふりそうだ」."
+            },
+            {
+              "id": "n4-e4-g-15",
+              "type": "Mondai 1 (文法形式)",
+              "question": "15. 先生に 本を（　　）いただきました。",
+              "options": [
+                "かして",
+                "かりて",
+                "かって",
+                "よんで"
+              ],
+              "correct": 0,
+              "explanation": "Humble benefit:「かしていただく」."
+            },
+            {
+              "id": "n4-e4-g-16",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "16. 明日　＿＿　＿＿　★　＿＿　行けません。\n1: 学校へ　2: 病院へ　3: 行くので　4: 午前中は",
+              "options": [
+                "学校へ",
+                "病院へ",
+                "行くので",
+                "午前中は"
+              ],
+              "correct": 2,
+              "explanation": "Order: 明日 午前中は 病院へ [★ 行くので] 学校へ 行けません。 Star is 3 (行くので)."
+            },
+            {
+              "id": "n4-e4-g-17",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "17. 電車に　＿＿　＿＿　★　＿＿　走りました。\n1: 遅れない　2: ように　3: 急いで　4: 駅まで",
+              "options": [
+                "遅れない",
+                "ように",
+                "急いで",
+                "駅まで"
+              ],
+              "correct": 3,
+              "explanation": "Order: 電車に 遅れない ように 急いで [★ 駅まで] 走りました。 Star is 4 (駅まで)."
+            },
+            {
+              "id": "n4-e4-g-18",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "18. わたしは　＿＿　＿＿　★　＿＿　つもりです。\n1: 日本へ　2: 来年　3: 留学する　4: 友達と",
+              "options": [
+                "日本へ",
+                "来年",
+                "留学する",
+                "友達と"
+              ],
+              "correct": 0,
+              "explanation": "Order: わたしは 来年 友達と [★ 日本へ] 留学する つもりです。 Star is 1 (日本へ)."
+            },
+            {
+              "id": "n4-e4-g-19",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "19. この　＿＿　＿＿　★　＿＿　思います。\n1: レポートは　2: 難しくて　3: 一人で　4: できないと",
+              "options": [
+                "レポートは",
+                "難しくて",
+                "一人で",
+                "できないと"
+              ],
+              "correct": 2,
+              "explanation": "Order: この レポートは 難しくて [★ 一人で] できないと 思います。 Star is 3 (一人で)."
+            },
+            {
+              "id": "n4-e4-g-20",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "20. 先生に　＿＿　＿＿　★　＿＿　いただきました。\n1: 本を　2: 面白い　3: 貸して　4: 素敵な",
+              "options": [
+                "本を",
+                "面白い",
+                "貸して",
+                "素敵な"
+              ],
+              "correct": 0,
+              "explanation": "Order: 先生に 面白い 素敵な [★ 本を] 貸して いただきました。 Star is 1 (本を)."
+            },
+            {
+              "id": "n4-e4-g-21",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "【読解文章：日本の温泉文化】\n21. (21) に入る言葉はどれですか。",
+              "options": [
+                "はいります",
+                "はいりました",
+                "はいって",
+                "はいる"
+              ],
+              "correct": 2,
+              "explanation": "Connecting action with te-form:「はいって」."
+            },
+            {
+              "id": "n4-e4-g-22",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "22. (22) に入る言葉はどれですか。",
+              "options": [
+                "とても",
+                "あまり",
+                "ぜんぜん",
+                "すこしも"
+              ],
+              "correct": 0,
+              "explanation": "Positive evaluation:「とても」."
+            },
+            {
+              "id": "n4-e4-g-23",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "23. (23) に入る言葉はどれですか。",
+              "options": [
+                "それに",
+                "だから",
+                "しかし",
+                "それから"
+              ],
+              "correct": 0,
+              "explanation": "Adding related points:「それに」."
+            },
+            {
+              "id": "n4-e4-g-24",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "24. (24) に入る言葉はどれですか。",
+              "options": [
+                "いってみたい",
+                "いってみて",
+                "いってみる",
+                "いってみた"
+              ],
+              "correct": 0,
+              "explanation": "Desire:「いってみたい」."
+            },
+            {
+              "id": "n4-e4-g-25",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "25. (25) に入る言葉はどれですか。",
+              "options": [
+                "おもいます",
+                "おもいました",
+                "おもって",
+                "おもわない"
+              ],
+              "correct": 0,
+              "explanation": "Present conjecture:「おもいます」."
+            },
+            {
+              "id": "n4-e4-g-26",
+              "type": "Mondai 4 (短文読解)",
+              "question": "【短文：地域の日本語教室】\n26. 日本語教室は いつ 開かれますか。",
+              "options": [
+                "毎週土曜日の 午前10時",
+                "毎週日曜日の 午後2時",
+                "毎週水曜日の 午後7時",
+                "毎月第1土曜日"
+              ],
+              "correct": 0,
+              "explanation": "Held every Saturday at 10:00 AM."
+            },
+            {
+              "id": "n4-e4-g-27",
+              "type": "Mondai 4 (短文読解)",
+              "question": "27. 参加費用は いくらですか。",
+              "options": [
+                "1回 500円（テキスト代別）",
+                "無料",
+                "月額 2,000円",
+                "年間 5,000円"
+              ],
+              "correct": 0,
+              "explanation": "Fee is 500 yen per session."
+            },
+            {
+              "id": "n4-e4-g-28",
+              "type": "Mondai 4 (短文読解)",
+              "question": "28. 初めて参加する人は 何を持って行く必要がありますか。",
+              "options": [
+                "筆記用具とノート",
+                "身分証明書",
+                "写真2枚",
+                "辞書"
+              ],
+              "correct": 0,
+              "explanation": "Bring writing utensils and notebook."
+            },
+            {
+              "id": "n4-e4-g-29",
+              "type": "Mondai 4 (短文読解)",
+              "question": "29. 申し込みは どのように しますか。",
+              "options": [
+                "前日までに メールで 申し込む",
+                "当日 直接 会場へ 行く",
+                "電話でのみ 受付",
+                "市役所で 申し込む"
+              ],
+              "correct": 0,
+              "explanation": "Pre-registration by email by the previous day."
+            },
+            {
+              "id": "n4-e4-g-30",
+              "type": "Mondai 5 (中文読解)",
+              "question": "【中文：留学生のアルバイト体験】\n30. 筆者がカフェで働き始めた目的は何ですか。",
+              "options": [
+                "生きた日本語と接客マナーを学ぶため",
+                "お金を貯めて旅行するため",
+                "コーヒーの淹れ方を覚えるため",
+                "友達を作るため"
+              ],
+              "correct": 0,
+              "explanation": "To learn real-life Japanese communication and customer service manners."
+            },
+            {
+              "id": "n4-e4-g-31",
+              "type": "Mondai 5 (中文読解)",
+              "question": "31. アルバイトで一番苦労したことは何ですか。",
+              "options": [
+                "敬語の使い方と聞き取り",
+                "メニューを覚えること",
+                "皿洗い",
+                "朝早く起きること"
+              ],
+              "correct": 0,
+              "explanation": "Struggled most with keigo honorifics and fast native speech."
+            },
+            {
+              "id": "n4-e4-g-32",
+              "type": "Mondai 5 (中文読解)",
+              "question": "32. 店長から褒められた理由は何ですか。",
+              "options": [
+                "いつも笑顔で元気に挨拶していたから",
+                "ミスを一度もしなかったから",
+                "一番長く働いたから",
+                "英語が話せたから"
+              ],
+              "correct": 0,
+              "explanation": "Praised for consistently greeting customers with a bright smile."
+            },
+            {
+              "id": "n4-e4-g-33",
+              "type": "Mondai 5 (中文読解)",
+              "question": "33. 筆者はこのアルバイトを通じてどう成長しましたか。",
+              "options": [
+                "日本語の会話に自信がつき、人との繋がりを楽しめるようになった",
+                "料理が作れるようになった",
+                "給料がたくさんもらえた",
+                "将来カフェを開きたいと思った"
+              ],
+              "correct": 0,
+              "explanation": "Gained conversational confidence and appreciated human connections."
+            },
+            {
+              "id": "n4-e4-g-34",
+              "type": "Mondai 6 (情報検索)",
+              "question": "【情報検索：スポーツセンターの利用案内】\n34. プールを利用する大人の料金はいくらですか。",
+              "options": [
+                "400円",
+                "200円",
+                "600円",
+                "無料"
+              ],
+              "correct": 0,
+              "explanation": "Adult pool admission is listed as 400 yen."
+            },
+            {
+              "id": "n4-e4-g-35",
+              "type": "Mondai 6 (情報検索)",
+              "question": "35. トレーニングルームを利用する際に必ず持参するものは何ですか。",
+              "options": [
+                "室内用運動靴",
+                "水着",
+                "タオル2枚",
+                "会員証"
+              ],
+              "correct": 0,
+              "explanation": "Indoor athletic shoes (室内用運動靴) are strictly required."
+            }
+          ]
+        },
+        {
+          "id": "n4-e4-sec-listening",
+          "title": "Section 3: Listening Comprehension (聴解)",
+          "shortTitle": "聴解 (Listening)",
+          "timeLimitSeconds": 2100,
+          "questions": [
+            {
+              "id": "n4-e4-l-1",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
+              "image": "/images/japanese/listening/n4/m1_q1.png",
+              "question": "1. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 0,
+              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
+              "explanation": "Based on task instructions, Option 1 is correct."
+            },
+            {
+              "id": "n4-e4-l-2",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
+              "image": "/images/japanese/listening/n4/m1_q2.png",
+              "question": "2. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 1,
+              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
+              "explanation": "Based on task instructions, Option 2 is correct."
+            },
+            {
+              "id": "n4-e4-l-3",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
+              "image": "/images/japanese/listening/n4/m1_q3.png",
+              "question": "3. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 2,
+              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
+              "explanation": "Based on task instructions, Option 3 is correct."
+            },
+            {
+              "id": "n4-e4-l-4",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
+              "image": "/images/japanese/listening/n4/m1_q4.png",
+              "question": "4. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 3,
+              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
+              "explanation": "Based on task instructions, Option 4 is correct."
+            },
+            {
+              "id": "n4-e4-l-5",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
+              "image": "/images/japanese/listening/n4/m1_q5.png",
+              "question": "5. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 0,
+              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
+              "explanation": "Based on task instructions, Option 1 is correct."
+            },
+            {
+              "id": "n4-e4-l-6",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
+              "image": "/images/japanese/listening/n4/m1_q6.png",
+              "question": "6. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 1,
+              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
+              "explanation": "Based on task instructions, Option 2 is correct."
+            },
+            {
+              "id": "n4-e4-l-7",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
+              "image": "/images/japanese/listening/n4/m1_q7.png",
+              "question": "7. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 2,
+              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
+              "explanation": "Based on task instructions, Option 3 is correct."
+            },
+            {
+              "id": "n4-e4-l-8",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
+              "image": "/images/japanese/listening/n4/m1_q8.png",
+              "question": "8. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 3,
+              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
+              "explanation": "Based on task instructions, Option 4 is correct."
+            },
+            {
+              "id": "n4-e4-l-9",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
+              "question": "9. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "options": [
+                "電車が遅れたから",
+                "寝坊したから",
+                "道を間違えたから",
+                "雨が降ったから"
+              ],
+              "correct": 0,
+              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
+              "explanation": "Point comprehension detail: reason for arriving late."
+            },
+            {
+              "id": "n4-e4-l-10",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
+              "question": "10. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "options": [
+                "電車が遅れたから",
+                "寝坊したから",
+                "道を間違えたから",
+                "雨が降ったから"
+              ],
+              "correct": 1,
+              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
+              "explanation": "Point comprehension detail: reason for arriving late."
+            },
+            {
+              "id": "n4-e4-l-11",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
+              "question": "11. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "options": [
+                "電車が遅れたから",
+                "寝坊したから",
+                "道を間違えたから",
+                "雨が降ったから"
+              ],
+              "correct": 2,
+              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
+              "explanation": "Point comprehension detail: reason for arriving late."
+            },
+            {
+              "id": "n4-e4-l-12",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
+              "question": "12. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "options": [
+                "電車が遅れたから",
+                "寝坊したから",
+                "道を間違えたから",
+                "雨が降ったから"
+              ],
+              "correct": 3,
+              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
+              "explanation": "Point comprehension detail: reason for arriving late."
+            },
+            {
+              "id": "n4-e4-l-13",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
+              "question": "13. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "options": [
+                "電車が遅れたから",
+                "寝坊したから",
+                "道を間違えたから",
+                "雨が降ったから"
+              ],
+              "correct": 0,
+              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
+              "explanation": "Point comprehension detail: reason for arriving late."
+            },
+            {
+              "id": "n4-e4-l-14",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
+              "question": "14. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "options": [
+                "電車が遅れたから",
+                "寝坊したから",
+                "道を間違えたから",
+                "雨が降ったから"
+              ],
+              "correct": 1,
+              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
+              "explanation": "Point comprehension detail: reason for arriving late."
+            },
+            {
+              "id": "n4-e4-l-15",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
+              "question": "15. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "options": [
+                "電車が遅れたから",
+                "寝坊したから",
+                "道を間違えたから",
+                "雨が降ったから"
+              ],
+              "correct": 2,
+              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
+              "explanation": "Point comprehension detail: reason for arriving late."
+            },
+            {
+              "id": "n4-e4-l-16",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
+              "image": "/images/japanese/listening/n4/m3_q1.png",
+              "question": "16. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "options": [
+                "手伝っていただけませんか。",
+                "手伝ってください。",
+                "手伝いましょうか。"
+              ],
+              "correct": 0,
+              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
+              "explanation": "Polite request in N4:「〜ていただけませんか」."
+            },
+            {
+              "id": "n4-e4-l-17",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
+              "image": "/images/japanese/listening/n4/m3_q2.png",
+              "question": "17. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "options": [
+                "手伝っていただけませんか。",
+                "手伝ってください。",
+                "手伝いましょうか。"
+              ],
+              "correct": 0,
+              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
+              "explanation": "Polite request in N4:「〜ていただけませんか」."
+            },
+            {
+              "id": "n4-e4-l-18",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
+              "image": "/images/japanese/listening/n4/m3_q3.png",
+              "question": "18. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "options": [
+                "手伝っていただけませんか。",
+                "手伝ってください。",
+                "手伝いましょうか。"
+              ],
+              "correct": 0,
+              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
+              "explanation": "Polite request in N4:「〜ていただけませんか」."
+            },
+            {
+              "id": "n4-e4-l-19",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
+              "image": "/images/japanese/listening/n4/m3_q4.png",
+              "question": "19. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "options": [
+                "手伝っていただけませんか。",
+                "手伝ってください。",
+                "手伝いましょうか。"
+              ],
+              "correct": 0,
+              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
+              "explanation": "Polite request in N4:「〜ていただけませんか」."
+            },
+            {
+              "id": "n4-e4-l-20",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
+              "image": "/images/japanese/listening/n4/m3_q5.png",
+              "question": "20. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "options": [
+                "手伝っていただけませんか。",
+                "手伝ってください。",
+                "手伝いましょうか。"
+              ],
+              "correct": 0,
+              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
+              "explanation": "Polite request in N4:「〜ていただけませんか」."
+            },
+            {
+              "id": "n4-e4-l-21",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
+              "question": "21. 「お先に失礼します。」",
+              "options": [
+                "お疲れ様でした。",
+                "いってらっしゃい。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
+              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+            },
+            {
+              "id": "n4-e4-l-22",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
+              "question": "22. 「お先に失礼します。」",
+              "options": [
+                "お疲れ様でした。",
+                "いってらっしゃい。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
+              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+            },
+            {
+              "id": "n4-e4-l-23",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
+              "question": "23. 「お先に失礼します。」",
+              "options": [
+                "お疲れ様でした。",
+                "いってらっしゃい。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
+              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+            },
+            {
+              "id": "n4-e4-l-24",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
+              "question": "24. 「お先に失礼します。」",
+              "options": [
+                "お疲れ様でした。",
+                "いってらっしゃい。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
+              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+            },
+            {
+              "id": "n4-e4-l-25",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
+              "question": "25. 「お先に失礼します。」",
+              "options": [
+                "お疲れ様でした。",
+                "いってらっしゃい。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
+              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+            },
+            {
+              "id": "n4-e4-l-26",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
+              "question": "26. 「お先に失礼します。」",
+              "options": [
+                "お疲れ様でした。",
+                "いってらっしゃい。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
+              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+            },
+            {
+              "id": "n4-e4-l-27",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
+              "question": "27. 「お先に失礼します。」",
+              "options": [
+                "お疲れ様でした。",
+                "いってらっしゃい。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
+              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+            },
+            {
+              "id": "n4-e4-l-28",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
+              "question": "28. 「お先に失礼します。」",
+              "options": [
+                "お疲れ様でした。",
+                "いってらっしゃい。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
+              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "n4-exam-5",
+      "title": "JLPT N4 Keigo & Passive-Causative Mastery (2022 Series)",
+      "shortTitle": "Exam 5 (Keigo & Passive)",
+      "badge": "Grammar Intensive",
+      "year": "2022 Series",
+      "description": "Targeted simulation focusing on passive sentences (受身), causative (使役), giving/receiving (授受表現), and humble verbs.",
+      "totalQuestions": 97,
+      "sections": [
+        {
+          "id": "n4-e5-sec-vocab",
+          "title": "Section 1: Language Knowledge (文字・語彙)",
+          "shortTitle": "文字・語彙 (Kanji & Vocab)",
+          "timeLimitSeconds": 1500,
+          "questions": [
+            {
+              "id": "n4-e5-v-1",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "1. <u>復習</u>を お願いします。",
+              "options": [
+                "ふくしゅう",
+                "ふくしゅ",
+                "ぶくしゅう",
+                "ぶくしゅ"
+              ],
+              "correct": 0,
+              "explanation": "「復習」is read as「ふくしゅう」(review study)."
+            },
+            {
+              "id": "n4-e5-v-2",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "2. <u>説明</u>を お願いします。",
+              "options": [
+                "せつめい",
+                "せつめ",
+                "ぜつめい",
+                "ぜつめ"
+              ],
+              "correct": 0,
+              "explanation": "「説明」is read as「せつめい」(explanation)."
+            },
+            {
+              "id": "n4-e5-v-3",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "3. <u>出発</u>を お願いします。",
+              "options": [
+                "しゅっぱつ",
+                "しゅつはつ",
+                "でっぱつ",
+                "ではつ"
+              ],
+              "correct": 0,
+              "explanation": "「出発」is read as「しゅっぱつ」(departure)."
+            },
+            {
+              "id": "n4-e5-v-4",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "4. <u>到着</u>を お願いします。",
+              "options": [
+                "とうちゃく",
+                "とうづく",
+                "どうちゃく",
+                "どうづく"
+              ],
+              "correct": 0,
+              "explanation": "「到着」is read as「とうちゃく」(arrival)."
+            },
+            {
+              "id": "n4-e5-v-5",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "5. <u>約束</u>を お願いします。",
+              "options": [
+                "やくそく",
+                "やくぞく",
+                "やっそく",
+                "やっぞく"
+              ],
+              "correct": 0,
+              "explanation": "「約束」is read as「やくそく」(promise / appointment)."
+            },
+            {
+              "id": "n4-e5-v-6",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "6. <u>経験</u>を お願いします。",
+              "options": [
+                "けいけん",
+                "けいかん",
+                "げいけん",
+                "げいかん"
+              ],
+              "correct": 0,
+              "explanation": "「経験」is read as「けいけん」(experience)."
+            },
+            {
+              "id": "n4-e5-v-7",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "7. <u>都合</u>を お願いします。",
+              "options": [
+                "つごう",
+                "つあい",
+                "ずごう",
+                "ずあい"
+              ],
+              "correct": 0,
+              "explanation": "「都合」is read as「つごう」(convenience / schedule)."
+            },
+            {
+              "id": "n4-e5-v-8",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "8. <u>反対</u>を お願いします。",
+              "options": [
+                "はんたい",
+                "はんだい",
+                "ほんたい",
+                "ほんだい"
+              ],
+              "correct": 0,
+              "explanation": "「反対」is read as「はんたい」(opposite / opposition)."
+            },
+            {
+              "id": "n4-e5-v-9",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "9. <u>相談</u>を お願いします。",
+              "options": [
+                "そうだん",
+                "しょうだん",
+                "そうたん",
+                "しょうたん"
+              ],
+              "correct": 0,
+              "explanation": "「相談」is read as「そうだん」(consultation)."
+            },
+            {
+              "id": "n4-e5-v-10",
+              "type": "Mondai 2 (表記)",
+              "question": "10. <u>しっぱい</u>を 確認してください。",
+              "options": [
+                "失敗",
+                "失弊",
+                "矢敗",
+                "矢弊"
+              ],
+              "correct": 0,
+              "explanation": "「しっぱい」is written as「失敗」(failure)."
+            },
+            {
+              "id": "n4-e5-v-11",
+              "type": "Mondai 2 (表記)",
+              "question": "11. <u>せいこう</u>を 確認してください。",
+              "options": [
+                "成功",
+                "成効",
+                "精功",
+                "精効"
+              ],
+              "correct": 0,
+              "explanation": "「せいこう」is written as「成功」(success)."
+            },
+            {
+              "id": "n4-e5-v-12",
+              "type": "Mondai 2 (表記)",
+              "question": "12. <u>きっぷ</u>を 確認してください。",
+              "options": [
+                "切符",
+                "切布",
+                "着符",
+                "着布"
+              ],
+              "correct": 0,
+              "explanation": "「きっぷ」is written as「切符」(ticket)."
+            },
+            {
+              "id": "n4-e5-v-13",
+              "type": "Mondai 2 (表記)",
+              "question": "13. <u>じゅんび</u>を 確認してください。",
+              "options": [
+                "準備",
+                "準便",
+                "准備",
+                "準偏"
+              ],
+              "correct": 0,
+              "explanation": "「じゅんび」is written as「準備」(preparation)."
+            },
+            {
+              "id": "n4-e5-v-14",
+              "type": "Mondai 2 (表記)",
+              "question": "14. <u>おんど</u>を 確認してください。",
+              "options": [
+                "温度",
+                "温土",
+                "音度",
+                "音土"
+              ],
+              "correct": 0,
+              "explanation": "「おんど」is written as「温度」(temperature)."
+            },
+            {
+              "id": "n4-e5-v-15",
+              "type": "Mondai 2 (表記)",
+              "question": "15. <u>ちゅうい</u>を 確認してください。",
+              "options": [
+                "注意",
+                "注心",
+                "主意",
+                "主心"
+              ],
+              "correct": 0,
+              "explanation": "「ちゅうい」is written as「注意」(caution)."
+            },
+            {
+              "id": "n4-e5-v-16",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "16. 車を（　　）に 止めてください。",
+              "options": [
+                "駐車場",
+                "交番",
+                "駅",
+                "ガソリンスタンド"
+              ],
+              "correct": 0,
+              "explanation": "Parking lot:「駐車場」."
+            },
+            {
+              "id": "n4-e5-v-17",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "17. ボタンを（　　）と、ドアが 開きます。",
+              "options": [
+                "おす",
+                "ひく",
+                "まわす",
+                "きる"
+              ],
+              "correct": 0,
+              "explanation": "Pushing button:「ボタンをおす」."
+            },
+            {
+              "id": "n4-e5-v-18",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "18. 毎日 ジョギングを（　　）ています。",
+              "options": [
+                "つづけ",
+                "やめ",
+                "はじめ",
+                "あきらめ"
+              ],
+              "correct": 0,
+              "explanation": "Continuing:「つづける」."
+            },
+            {
+              "id": "n4-e5-v-19",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "19. 日本語の スピーチを（　　）しました。",
+              "options": [
+                "はっぴょう",
+                "ほうこく",
+                "れんしゅう",
+                "しゅっせき"
+              ],
+              "correct": 0,
+              "explanation": "Presentation:「はっぴょうする」."
+            },
+            {
+              "id": "n4-e5-v-20",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "20. ベルが（　　）、授業が 始まりました。",
+              "options": [
+                "なって",
+                "おとして",
+                "ふって",
+                "ひいて"
+              ],
+              "correct": 0,
+              "explanation": "Ringing bell:「ベルがなる」."
+            },
+            {
+              "id": "n4-e5-v-21",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "21. 風で カーテンが（　　）います。",
+              "options": [
+                "ゆれて",
+                "こわれて",
+                "たおれて",
+                "やぶれて"
+              ],
+              "correct": 0,
+              "explanation": "Swaying:「ゆれる」."
+            },
+            {
+              "id": "n4-e5-v-22",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "22. 先生の おかげで 試験に（　　）しました。",
+              "options": [
+                "ごうかく",
+                "しっぱい",
+                "そつぎょう",
+                "にゅうがく"
+              ],
+              "correct": 0,
+              "explanation": "Passing exam:「ごうかくする」."
+            },
+            {
+              "id": "n4-e5-v-23",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "23. 電気を けして 部屋を（　　）しました。",
+              "options": [
+                "まっくら",
+                "まっしろ",
+                "まっくろ",
+                "まっあか"
+              ],
+              "correct": 0,
+              "explanation": "Pitch dark:「まっくら」."
+            },
+            {
+              "id": "n4-e5-v-24",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "24. 急な（　　）が できたので、帰ります。",
+              "options": [
+                "用事",
+                "約束",
+                "計画",
+                "都合"
+              ],
+              "correct": 0,
+              "explanation": "Urgent errand:「急な用事」."
+            },
+            {
+              "id": "n4-e5-v-25",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "25. 雨が（　　）ので、傘を さしました。",
+              "options": [
+                "ふりだした",
+                "やんだ",
+                "あがった",
+                "つよまった"
+              ],
+              "correct": 0,
+              "explanation": "Started raining:「ふりだした」."
+            },
+            {
+              "id": "n4-e5-v-26",
+              "type": "Mondai 4 (類義表現)",
+              "question": "26. <u>たいてい</u> 家で 勉強します。",
+              "options": [
+                "ほとんど",
+                "いつも",
+                "ときどき",
+                "たまに"
+              ],
+              "correct": 0,
+              "explanation": "「たいてい」(mostly / usually)."
+            },
+            {
+              "id": "n4-e5-v-27",
+              "type": "Mondai 4 (類義表現)",
+              "question": "27. <u>お礼</u>を 言いました。",
+              "options": [
+                "感謝しました",
+                "あやまりました",
+                "約束しました",
+                "案内しました"
+              ],
+              "correct": 0,
+              "explanation": "「お礼を言う」(express thanks)."
+            },
+            {
+              "id": "n4-e5-v-28",
+              "type": "Mondai 4 (類義表現)",
+              "question": "28. <u>さっき</u> 部長に 会いました。",
+              "options": [
+                "すこし前に",
+                "ずっと前に",
+                "明日に",
+                "夕方に"
+              ],
+              "correct": 0,
+              "explanation": "「さっき」(a while ago)."
+            },
+            {
+              "id": "n4-e5-v-29",
+              "type": "Mondai 4 (類義表現)",
+              "question": "29. <u>遠慮しないで</u> 食べてください。",
+              "options": [
+                "きにしないで",
+                "いそいで",
+                "のこさないで",
+                "すこしだけ"
+              ],
+              "correct": 0,
+              "explanation": "「遠慮しないで」(without holding back)."
+            },
+            {
+              "id": "n4-e5-v-30",
+              "type": "Mondai 4 (類義表現)",
+              "question": "30. この 問題は <u>複雑</u>です。",
+              "options": [
+                "かんたんではありません",
+                "おもしろくありません",
+                "たかくありません",
+                "あたらしくありません"
+              ],
+              "correct": 0,
+              "explanation": "「複雑」(complex)."
+            },
+            {
+              "id": "n4-e5-v-31",
+              "type": "Mondai 5 (用法)",
+              "question": "31. <u>世話</u>",
+              "options": [
+                "犬の 世話を しています。",
+                "宿題の 世話を しました。",
+                "料理の 世話を 作ります。",
+                "電車の 世話に 乗ります。"
+              ],
+              "correct": 0,
+              "explanation": "Usage of「世話をする」."
+            },
+            {
+              "id": "n4-e5-v-32",
+              "type": "Mondai 5 (用法)",
+              "question": "32. <u>熱心</u>",
+              "options": [
+                "彼は 熱心に 日本語を 勉強しています。",
+                "今日は 熱心な 天気です。",
+                "この スープは 熱心です。",
+                "熱心な 電車に 乗りました。"
+              ],
+              "correct": 0,
+              "explanation": "Usage of「熱心に」."
+            },
+            {
+              "id": "n4-e5-v-33",
+              "type": "Mondai 5 (用法)",
+              "question": "33. <u>都合</u>",
+              "options": [
+                "明日の 午後は 都合が 悪いです。",
+                "都合な 料理を 食べました。",
+                "都合に 本を 買いました。",
+                "都合が 高いです。"
+              ],
+              "correct": 0,
+              "explanation": "Usage of「都合」."
+            },
+            {
+              "id": "n4-e5-v-34",
+              "type": "Mondai 5 (用法)",
+              "question": "34. <u>故障</u>",
+              "options": [
+                "テレビが 故障して つきません。",
+                "宿題が 故障しました。",
+                "料理が 故障しました。",
+                "天気が 故障しました。"
+              ],
+              "correct": 0,
+              "explanation": "Usage of「故障する」."
+            },
+            {
+              "id": "n4-e5-v-35",
+              "type": "Mondai 5 (用法)",
+              "question": "35. <u>遠慮</u>",
+              "options": [
+                "会議で 意見を 言うのを 遠慮しました。",
+                "電車に 遠慮して 乗りました。",
+                "友達に 遠慮を あげました。",
+                "本を 遠慮して 読みました。"
+              ],
+              "correct": 0,
+              "explanation": "Usage of「遠慮する」."
+            }
+          ]
+        },
+        {
+          "id": "n4-e5-sec-grammar",
+          "title": "Section 2: Language Knowledge (文法) & Reading (読解)",
+          "shortTitle": "文法・読解 (Grammar & Reading)",
+          "timeLimitSeconds": 2700,
+          "questions": [
+            {
+              "id": "n4-e5-g-1",
+              "type": "Mondai 1 (文法形式)",
+              "question": "1. この 本は 読み（　　）やすいです。",
+              "options": [
+                "やすい",
+                "やすく",
+                "やすくて",
+                "やすかった"
+              ],
+              "correct": 0,
+              "explanation": "Ease of action:「読みやすい」."
+            },
+            {
+              "id": "n4-e5-g-2",
+              "type": "Mondai 1 (文法形式)",
+              "question": "2. 田中さんは 来ない（　　）かもしれません。",
+              "options": [
+                "かも",
+                "はず",
+                "わけ",
+                "こと"
+              ],
+              "correct": 0,
+              "explanation": "Possibility:「〜かもしれない」."
+            },
+            {
+              "id": "n4-e5-g-3",
+              "type": "Mondai 1 (文法形式)",
+              "question": "3. お荷物を お持ち（　　）ましょうか。",
+              "options": [
+                "し",
+                "になり",
+                "いたし",
+                "なさい"
+              ],
+              "correct": 0,
+              "explanation": "Humble offer:「お持ちしましょうか」."
+            },
+            {
+              "id": "n4-e5-g-4",
+              "type": "Mondai 1 (文法形式)",
+              "question": "4. ドアが（　　）います。",
+              "options": [
+                "あいて",
+                "あけて",
+                "しまって",
+                "しめて"
+              ],
+              "correct": 0,
+              "explanation": "Intransitive state:「あいている」."
+            },
+            {
+              "id": "n4-e5-g-5",
+              "type": "Mondai 1 (文法形式)",
+              "question": "5. 窓が（　　）あります。",
+              "options": [
+                "あけて",
+                "あいて",
+                "しめて",
+                "しまって"
+              ],
+              "correct": 0,
+              "explanation": "Transitive state:「あけてある」."
+            },
+            {
+              "id": "n4-e5-g-6",
+              "type": "Mondai 1 (文法形式)",
+              "question": "6. 日本語が 上手に（　　）たいです。",
+              "options": [
+                "なり",
+                "して",
+                "なって",
+                "なれ"
+              ],
+              "correct": 0,
+              "explanation": "Desire to become:「なりたい」."
+            },
+            {
+              "id": "n4-e5-g-7",
+              "type": "Mondai 1 (文法形式)",
+              "question": "7. 薬を 飲んだ（　　）が いいですよ。",
+              "options": [
+                "ほう",
+                "よう",
+                "こと",
+                "わけ"
+              ],
+              "correct": 0,
+              "explanation": "Advice:「〜ほうがいい」."
+            },
+            {
+              "id": "n4-e5-g-8",
+              "type": "Mondai 1 (文法形式)",
+              "question": "8. 映画を（　　）ながら、ポップコーンを 食べました。",
+              "options": [
+                "み",
+                "みて",
+                "みる",
+                "みた"
+              ],
+              "correct": 0,
+              "explanation": "Simultaneous:「みながら」."
+            },
+            {
+              "id": "n4-e5-g-9",
+              "type": "Mondai 1 (文法形式)",
+              "question": "9. 明日 雨なら、試合は 中止（　　）します。",
+              "options": [
+                "に",
+                "を",
+                "で",
+                "と"
+              ],
+              "correct": 0,
+              "explanation": "Decision:「中止にする」."
+            },
+            {
+              "id": "n4-e5-g-10",
+              "type": "Mondai 1 (文法形式)",
+              "question": "10. この 料理は（　　）すぎて、食べられません。",
+              "options": [
+                "から",
+                "からい",
+                "からく",
+                "からくて"
+              ],
+              "correct": 0,
+              "explanation": "Adjective stem + すぎる:「からすぎる」."
+            },
+            {
+              "id": "n4-e5-g-11",
+              "type": "Mondai 1 (文法形式)",
+              "question": "11. 雨が ふりそう（　　）から、傘を 持って行きます。",
+              "options": [
+                "だ",
+                "な",
+                "に",
+                "で"
+              ],
+              "correct": 0,
+              "explanation": "そう + だから:「ふりそうだ」."
+            },
+            {
+              "id": "n4-e5-g-12",
+              "type": "Mondai 1 (文法形式)",
+              "question": "12. 先生に 本を（　　）いただきました。",
+              "options": [
+                "かして",
+                "かりて",
+                "かって",
+                "よんで"
+              ],
+              "correct": 0,
+              "explanation": "Humble benefit:「かしていただく」."
+            },
+            {
+              "id": "n4-e5-g-13",
+              "type": "Mondai 1 (文法形式)",
+              "question": "13. 毎日 走る（　　）に しています。",
+              "options": [
+                "こと",
+                "もの",
+                "よう",
+                "わけ"
+              ],
+              "correct": 0,
+              "explanation": "Habit pattern:「〜ことにしている」."
+            },
+            {
+              "id": "n4-e5-g-14",
+              "type": "Mondai 1 (文法形式)",
+              "question": "14. 弟は 母に 部屋を（　　）られました。",
+              "options": [
+                "そうじさ",
+                "そうじ",
+                "そうじされ",
+                "そうじし"
+              ],
+              "correct": 0,
+              "explanation": "Passive:「そうじされた」."
+            },
+            {
+              "id": "n4-e5-g-15",
+              "type": "Mondai 1 (文法形式)",
+              "question": "15. 早く 起きられる（　　）に、目覚ましを かけました。",
+              "options": [
+                "よう",
+                "こと",
+                "ため",
+                "はず"
+              ],
+              "correct": 0,
+              "explanation": "Purpose with potential:「〜ように」."
+            },
+            {
+              "id": "n4-e5-g-16",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "16. この　＿＿　＿＿　★　＿＿　思います。\n1: レポートは　2: 難しくて　3: 一人で　4: できないと",
+              "options": [
+                "レポートは",
+                "難しくて",
+                "一人で",
+                "できないと"
+              ],
+              "correct": 2,
+              "explanation": "Order: この レポートは 難しくて [★ 一人で] できないと 思います。 Star is 3 (一人で)."
+            },
+            {
+              "id": "n4-e5-g-17",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "17. 先生に　＿＿　＿＿　★　＿＿　いただきました。\n1: 本を　2: 面白い　3: 貸して　4: 素敵な",
+              "options": [
+                "本を",
+                "面白い",
+                "貸して",
+                "素敵な"
+              ],
+              "correct": 0,
+              "explanation": "Order: 先生に 面白い 素敵な [★ 本を] 貸して いただきました。 Star is 1 (本を)."
+            },
+            {
+              "id": "n4-e5-g-18",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "18. 明日　＿＿　＿＿　★　＿＿　行けません。\n1: 学校へ　2: 病院へ　3: 行くので　4: 午前中は",
+              "options": [
+                "学校へ",
+                "病院へ",
+                "行くので",
+                "午前中は"
+              ],
+              "correct": 2,
+              "explanation": "Order: 明日 午前中は 病院へ [★ 行くので] 学校へ 行けません。 Star is 3 (行くので)."
+            },
+            {
+              "id": "n4-e5-g-19",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "19. 電車に　＿＿　＿＿　★　＿＿　走りました。\n1: 遅れない　2: ように　3: 急いで　4: 駅まで",
+              "options": [
+                "遅れない",
+                "ように",
+                "急いで",
+                "駅まで"
+              ],
+              "correct": 3,
+              "explanation": "Order: 電車に 遅れない ように 急いで [★ 駅まで] 走りました。 Star is 4 (駅まで)."
+            },
+            {
+              "id": "n4-e5-g-20",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "20. わたしは　＿＿　＿＿　★　＿＿　つもりです。\n1: 日本へ　2: 来年　3: 留学する　4: 友達と",
+              "options": [
+                "日本へ",
+                "来年",
+                "留学する",
+                "友達と"
+              ],
+              "correct": 0,
+              "explanation": "Order: わたしは 来年 友達と [★ 日本へ] 留学する つもりです。 Star is 1 (日本へ)."
+            },
+            {
+              "id": "n4-e5-g-21",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "【読解文章：日本の温泉文化】\n21. (21) に入る言葉はどれですか。",
+              "options": [
+                "はいります",
+                "はいりました",
+                "はいって",
+                "はいる"
+              ],
+              "correct": 2,
+              "explanation": "Connecting action with te-form:「はいって」."
+            },
+            {
+              "id": "n4-e5-g-22",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "22. (22) に入る言葉はどれですか。",
+              "options": [
+                "とても",
+                "あまり",
+                "ぜんぜん",
+                "すこしも"
+              ],
+              "correct": 0,
+              "explanation": "Positive evaluation:「とても」."
+            },
+            {
+              "id": "n4-e5-g-23",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "23. (23) に入る言葉はどれですか。",
+              "options": [
+                "それに",
+                "だから",
+                "しかし",
+                "それから"
+              ],
+              "correct": 0,
+              "explanation": "Adding related points:「それに」."
+            },
+            {
+              "id": "n4-e5-g-24",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "24. (24) に入る言葉はどれですか。",
+              "options": [
+                "いってみたい",
+                "いってみて",
+                "いってみる",
+                "いってみた"
+              ],
+              "correct": 0,
+              "explanation": "Desire:「いってみたい」."
+            },
+            {
+              "id": "n4-e5-g-25",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "25. (25) に入る言葉はどれですか。",
+              "options": [
+                "おもいます",
+                "おもいました",
+                "おもって",
+                "おもわない"
+              ],
+              "correct": 0,
+              "explanation": "Present conjecture:「おもいます」."
+            },
+            {
+              "id": "n4-e5-g-26",
+              "type": "Mondai 4 (短文読解)",
+              "question": "【短文：地域の日本語教室】\n26. 日本語教室は いつ 開かれますか。",
+              "options": [
+                "毎週土曜日の 午前10時",
+                "毎週日曜日の 午後2時",
+                "毎週水曜日の 午後7時",
+                "毎月第1土曜日"
+              ],
+              "correct": 0,
+              "explanation": "Held every Saturday at 10:00 AM."
+            },
+            {
+              "id": "n4-e5-g-27",
+              "type": "Mondai 4 (短文読解)",
+              "question": "27. 参加費用は いくらですか。",
+              "options": [
+                "1回 500円（テキスト代別）",
+                "無料",
+                "月額 2,000円",
+                "年間 5,000円"
+              ],
+              "correct": 0,
+              "explanation": "Fee is 500 yen per session."
+            },
+            {
+              "id": "n4-e5-g-28",
+              "type": "Mondai 4 (短文読解)",
+              "question": "28. 初めて参加する人は 何を持って行く必要がありますか。",
+              "options": [
+                "筆記用具とノート",
+                "身分証明書",
+                "写真2枚",
+                "辞書"
+              ],
+              "correct": 0,
+              "explanation": "Bring writing utensils and notebook."
+            },
+            {
+              "id": "n4-e5-g-29",
+              "type": "Mondai 4 (短文読解)",
+              "question": "29. 申し込みは どのように しますか。",
+              "options": [
+                "前日までに メールで 申し込む",
+                "当日 直接 会場へ 行く",
+                "電話でのみ 受付",
+                "市役所で 申し込む"
+              ],
+              "correct": 0,
+              "explanation": "Pre-registration by email by the previous day."
+            },
+            {
+              "id": "n4-e5-g-30",
+              "type": "Mondai 5 (中文読解)",
+              "question": "【中文：留学生のアルバイト体験】\n30. 筆者がカフェで働き始めた目的は何ですか。",
+              "options": [
+                "生きた日本語と接客マナーを学ぶため",
+                "お金を貯めて旅行するため",
+                "コーヒーの淹れ方を覚えるため",
+                "友達を作るため"
+              ],
+              "correct": 0,
+              "explanation": "To learn real-life Japanese communication and customer service manners."
+            },
+            {
+              "id": "n4-e5-g-31",
+              "type": "Mondai 5 (中文読解)",
+              "question": "31. アルバイトで一番苦労したことは何ですか。",
+              "options": [
+                "敬語の使い方と聞き取り",
+                "メニューを覚えること",
+                "皿洗い",
+                "朝早く起きること"
+              ],
+              "correct": 0,
+              "explanation": "Struggled most with keigo honorifics and fast native speech."
+            },
+            {
+              "id": "n4-e5-g-32",
+              "type": "Mondai 5 (中文読解)",
+              "question": "32. 店長から褒められた理由は何ですか。",
+              "options": [
+                "いつも笑顔で元気に挨拶していたから",
+                "ミスを一度もしなかったから",
+                "一番長く働いたから",
+                "英語が話せたから"
+              ],
+              "correct": 0,
+              "explanation": "Praised for consistently greeting customers with a bright smile."
+            },
+            {
+              "id": "n4-e5-g-33",
+              "type": "Mondai 5 (中文読解)",
+              "question": "33. 筆者はこのアルバイトを通じてどう成長しましたか。",
+              "options": [
+                "日本語の会話に自信がつき、人との繋がりを楽しめるようになった",
+                "料理が作れるようになった",
+                "給料がたくさんもらえた",
+                "将来カフェを開きたいと思った"
+              ],
+              "correct": 0,
+              "explanation": "Gained conversational confidence and appreciated human connections."
+            },
+            {
+              "id": "n4-e5-g-34",
+              "type": "Mondai 6 (情報検索)",
+              "question": "【情報検索：スポーツセンターの利用案内】\n34. プールを利用する大人の料金はいくらですか。",
+              "options": [
+                "400円",
+                "200円",
+                "600円",
+                "無料"
+              ],
+              "correct": 0,
+              "explanation": "Adult pool admission is listed as 400 yen."
+            },
+            {
+              "id": "n4-e5-g-35",
+              "type": "Mondai 6 (情報検索)",
+              "question": "35. トレーニングルームを利用する際に必ず持参するものは何ですか。",
+              "options": [
+                "室内用運動靴",
+                "水着",
+                "タオル2枚",
+                "会員証"
+              ],
+              "correct": 0,
+              "explanation": "Indoor athletic shoes (室内用運動靴) are strictly required."
+            }
+          ]
+        },
+        {
+          "id": "n4-e5-sec-listening",
+          "title": "Section 3: Listening Comprehension (聴解)",
+          "shortTitle": "聴解 (Listening)",
+          "timeLimitSeconds": 2100,
+          "questions": [
+            {
+              "id": "n4-e5-l-1",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
+              "image": "/images/japanese/listening/n4/m1_q1.png",
+              "question": "1. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 1,
+              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
+              "explanation": "Based on task instructions, Option 2 is correct."
+            },
+            {
+              "id": "n4-e5-l-2",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
+              "image": "/images/japanese/listening/n4/m1_q2.png",
+              "question": "2. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 2,
+              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
+              "explanation": "Based on task instructions, Option 3 is correct."
+            },
+            {
+              "id": "n4-e5-l-3",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
+              "image": "/images/japanese/listening/n4/m1_q3.png",
+              "question": "3. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 3,
+              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
+              "explanation": "Based on task instructions, Option 4 is correct."
+            },
+            {
+              "id": "n4-e5-l-4",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
+              "image": "/images/japanese/listening/n4/m1_q4.png",
+              "question": "4. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 0,
+              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
+              "explanation": "Based on task instructions, Option 1 is correct."
+            },
+            {
+              "id": "n4-e5-l-5",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
+              "image": "/images/japanese/listening/n4/m1_q5.png",
+              "question": "5. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 1,
+              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
+              "explanation": "Based on task instructions, Option 2 is correct."
+            },
+            {
+              "id": "n4-e5-l-6",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
+              "image": "/images/japanese/listening/n4/m1_q6.png",
+              "question": "6. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 2,
+              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
+              "explanation": "Based on task instructions, Option 3 is correct."
+            },
+            {
+              "id": "n4-e5-l-7",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
+              "image": "/images/japanese/listening/n4/m1_q7.png",
+              "question": "7. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 3,
+              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
+              "explanation": "Based on task instructions, Option 4 is correct."
+            },
+            {
+              "id": "n4-e5-l-8",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
+              "image": "/images/japanese/listening/n4/m1_q8.png",
+              "question": "8. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 0,
+              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
+              "explanation": "Based on task instructions, Option 1 is correct."
+            },
+            {
+              "id": "n4-e5-l-9",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
+              "question": "9. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "options": [
+                "電車が遅れたから",
+                "寝坊したから",
+                "道を間違えたから",
+                "雨が降ったから"
+              ],
+              "correct": 1,
+              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
+              "explanation": "Point comprehension detail: reason for arriving late."
+            },
+            {
+              "id": "n4-e5-l-10",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
+              "question": "10. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "options": [
+                "電車が遅れたから",
+                "寝坊したから",
+                "道を間違えたから",
+                "雨が降ったから"
+              ],
+              "correct": 2,
+              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
+              "explanation": "Point comprehension detail: reason for arriving late."
+            },
+            {
+              "id": "n4-e5-l-11",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
+              "question": "11. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "options": [
+                "電車が遅れたから",
+                "寝坊したから",
+                "道を間違えたから",
+                "雨が降ったから"
+              ],
+              "correct": 3,
+              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
+              "explanation": "Point comprehension detail: reason for arriving late."
+            },
+            {
+              "id": "n4-e5-l-12",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
+              "question": "12. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "options": [
+                "電車が遅れたから",
+                "寝坊したから",
+                "道を間違えたから",
+                "雨が降ったから"
+              ],
+              "correct": 0,
+              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
+              "explanation": "Point comprehension detail: reason for arriving late."
+            },
+            {
+              "id": "n4-e5-l-13",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
+              "question": "13. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "options": [
+                "電車が遅れたから",
+                "寝坊したから",
+                "道を間違えたから",
+                "雨が降ったから"
+              ],
+              "correct": 1,
+              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
+              "explanation": "Point comprehension detail: reason for arriving late."
+            },
+            {
+              "id": "n4-e5-l-14",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
+              "question": "14. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "options": [
+                "電車が遅れたから",
+                "寝坊したから",
+                "道を間違えたから",
+                "雨が降ったから"
+              ],
+              "correct": 2,
+              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
+              "explanation": "Point comprehension detail: reason for arriving late."
+            },
+            {
+              "id": "n4-e5-l-15",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
+              "question": "15. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "options": [
+                "電車が遅れたから",
+                "寝坊したから",
+                "道を間違えたから",
+                "雨が降ったから"
+              ],
+              "correct": 3,
+              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
+              "explanation": "Point comprehension detail: reason for arriving late."
+            },
+            {
+              "id": "n4-e5-l-16",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
+              "image": "/images/japanese/listening/n4/m3_q1.png",
+              "question": "16. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "options": [
+                "手伝っていただけませんか。",
+                "手伝ってください。",
+                "手伝いましょうか。"
+              ],
+              "correct": 0,
+              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
+              "explanation": "Polite request in N4:「〜ていただけませんか」."
+            },
+            {
+              "id": "n4-e5-l-17",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
+              "image": "/images/japanese/listening/n4/m3_q2.png",
+              "question": "17. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "options": [
+                "手伝っていただけませんか。",
+                "手伝ってください。",
+                "手伝いましょうか。"
+              ],
+              "correct": 0,
+              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
+              "explanation": "Polite request in N4:「〜ていただけませんか」."
+            },
+            {
+              "id": "n4-e5-l-18",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
+              "image": "/images/japanese/listening/n4/m3_q3.png",
+              "question": "18. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "options": [
+                "手伝っていただけませんか。",
+                "手伝ってください。",
+                "手伝いましょうか。"
+              ],
+              "correct": 0,
+              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
+              "explanation": "Polite request in N4:「〜ていただけませんか」."
+            },
+            {
+              "id": "n4-e5-l-19",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
+              "image": "/images/japanese/listening/n4/m3_q4.png",
+              "question": "19. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "options": [
+                "手伝っていただけませんか。",
+                "手伝ってください。",
+                "手伝いましょうか。"
+              ],
+              "correct": 0,
+              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
+              "explanation": "Polite request in N4:「〜ていただけませんか」."
+            },
+            {
+              "id": "n4-e5-l-20",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
+              "image": "/images/japanese/listening/n4/m3_q5.png",
+              "question": "20. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "options": [
+                "手伝っていただけませんか。",
+                "手伝ってください。",
+                "手伝いましょうか。"
+              ],
+              "correct": 0,
+              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
+              "explanation": "Polite request in N4:「〜ていただけませんか」."
+            },
+            {
+              "id": "n4-e5-l-21",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
+              "question": "21. 「お先に失礼します。」",
+              "options": [
+                "お疲れ様でした。",
+                "いってらっしゃい。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
+              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+            },
+            {
+              "id": "n4-e5-l-22",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
+              "question": "22. 「お先に失礼します。」",
+              "options": [
+                "お疲れ様でした。",
+                "いってらっしゃい。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
+              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+            },
+            {
+              "id": "n4-e5-l-23",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
+              "question": "23. 「お先に失礼します。」",
+              "options": [
+                "お疲れ様でした。",
+                "いってらっしゃい。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
+              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+            },
+            {
+              "id": "n4-e5-l-24",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
+              "question": "24. 「お先に失礼します。」",
+              "options": [
+                "お疲れ様でした。",
+                "いってらっしゃい。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
+              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+            },
+            {
+              "id": "n4-e5-l-25",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
+              "question": "25. 「お先に失礼します。」",
+              "options": [
+                "お疲れ様でした。",
+                "いってらっしゃい。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
+              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+            },
+            {
+              "id": "n4-e5-l-26",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
+              "question": "26. 「お先に失礼します。」",
+              "options": [
+                "お疲れ様でした。",
+                "いってらっしゃい。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
+              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+            },
+            {
+              "id": "n4-e5-l-27",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
+              "question": "27. 「お先に失礼します。」",
+              "options": [
+                "お疲れ様でした。",
+                "いってらっしゃい。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
+              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+            },
+            {
+              "id": "n4-e5-l-28",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
+              "question": "28. 「お先に失礼します。」",
+              "options": [
+                "お疲れ様でした。",
+                "いってらっしゃい。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
+              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "n4-exam-6",
+      "title": "JLPT N4 Speed & Accuracy Practice Test (2023 Series)",
+      "shortTitle": "Exam 6 (Speed Drill)",
+      "badge": "Speed & Accuracy",
+      "year": "2023 Series",
+      "description": "Fast-paced mock test engineered to improve reading comprehension speed and rapid conversational listening reflexes.",
+      "totalQuestions": 97,
+      "sections": [
+        {
+          "id": "n4-e6-sec-vocab",
+          "title": "Section 1: Language Knowledge (文字・語彙)",
+          "shortTitle": "文字・語彙 (Kanji & Vocab)",
+          "timeLimitSeconds": 1500,
+          "questions": [
+            {
+              "id": "n4-e6-v-1",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "1. <u>到着</u>を お願いします。",
+              "options": [
+                "とうちゃく",
+                "とうづく",
+                "どうちゃく",
+                "どうづく"
+              ],
+              "correct": 0,
+              "explanation": "「到着」is read as「とうちゃく」(arrival)."
+            },
+            {
+              "id": "n4-e6-v-2",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "2. <u>約束</u>を お願いします。",
+              "options": [
+                "やくそく",
+                "やくぞく",
+                "やっそく",
+                "やっぞく"
+              ],
+              "correct": 0,
+              "explanation": "「約束」is read as「やくそく」(promise / appointment)."
+            },
+            {
+              "id": "n4-e6-v-3",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "3. <u>経験</u>を お願いします。",
+              "options": [
+                "けいけん",
+                "けいかん",
+                "げいけん",
+                "げいかん"
+              ],
+              "correct": 0,
+              "explanation": "「経験」is read as「けいけん」(experience)."
+            },
+            {
+              "id": "n4-e6-v-4",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "4. <u>都合</u>を お願いします。",
+              "options": [
+                "つごう",
+                "つあい",
+                "ずごう",
+                "ずあい"
+              ],
+              "correct": 0,
+              "explanation": "「都合」is read as「つごう」(convenience / schedule)."
+            },
+            {
+              "id": "n4-e6-v-5",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "5. <u>反対</u>を お願いします。",
+              "options": [
+                "はんたい",
+                "はんだい",
+                "ほんたい",
+                "ほんだい"
+              ],
+              "correct": 0,
+              "explanation": "「反対」is read as「はんたい」(opposite / opposition)."
+            },
+            {
+              "id": "n4-e6-v-6",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "6. <u>相談</u>を お願いします。",
+              "options": [
+                "そうだん",
+                "しょうだん",
+                "そうたん",
+                "しょうたん"
+              ],
+              "correct": 0,
+              "explanation": "「相談」is read as「そうだん」(consultation)."
+            },
+            {
+              "id": "n4-e6-v-7",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "7. <u>案内</u>を お願いします。",
+              "options": [
+                "あんあい",
+                "あんない",
+                "あんたい",
+                "あんだい"
+              ],
+              "correct": 1,
+              "explanation": "「案内」is read as「あんない」(guide)."
+            },
+            {
+              "id": "n4-e6-v-8",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "8. <u>計画</u>を お願いします。",
+              "options": [
+                "けいかく",
+                "けいがく",
+                "けいかん",
+                "けいがん"
+              ],
+              "correct": 0,
+              "explanation": "「計画」is read as「けいかく」(plan)."
+            },
+            {
+              "id": "n4-e6-v-9",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "9. <u>荷物</u>を お願いします。",
+              "options": [
+                "かもつ",
+                "にもつ",
+                "かぶつ",
+                "にぶつ"
+              ],
+              "correct": 1,
+              "explanation": "「荷物」is read as「にもつ」(luggage)."
+            },
+            {
+              "id": "n4-e6-v-10",
+              "type": "Mondai 2 (表記)",
+              "question": "10. <u>じゅんび</u>を 確認してください。",
+              "options": [
+                "準備",
+                "準便",
+                "准備",
+                "準偏"
+              ],
+              "correct": 0,
+              "explanation": "「じゅんび」is written as「準備」(preparation)."
+            },
+            {
+              "id": "n4-e6-v-11",
+              "type": "Mondai 2 (表記)",
+              "question": "11. <u>おんど</u>を 確認してください。",
+              "options": [
+                "温度",
+                "温土",
+                "音度",
+                "音土"
+              ],
+              "correct": 0,
+              "explanation": "「おんど」is written as「温度」(temperature)."
+            },
+            {
+              "id": "n4-e6-v-12",
+              "type": "Mondai 2 (表記)",
+              "question": "12. <u>ちゅうい</u>を 確認してください。",
+              "options": [
+                "注意",
+                "注心",
+                "主意",
+                "主心"
+              ],
+              "correct": 0,
+              "explanation": "「ちゅうい」is written as「注意」(caution)."
+            },
+            {
+              "id": "n4-e6-v-13",
+              "type": "Mondai 2 (表記)",
+              "question": "13. <u>へんじ</u>を 確認してください。",
+              "options": [
+                "返事",
+                "変事",
+                "返次",
+                "変次"
+              ],
+              "correct": 0,
+              "explanation": "「へんじ」is written as「返事」(reply)."
+            },
+            {
+              "id": "n4-e6-v-14",
+              "type": "Mondai 2 (表記)",
+              "question": "14. <u>りゆう</u>を 確認してください。",
+              "options": [
+                "理由",
+                "理油",
+                "利由",
+                "利油"
+              ],
+              "correct": 0,
+              "explanation": "「りゆう」is written as「理由」(reason)."
+            },
+            {
+              "id": "n4-e6-v-15",
+              "type": "Mondai 2 (表記)",
+              "question": "15. <u>しっぱい</u>を 確認してください。",
+              "options": [
+                "失敗",
+                "失弊",
+                "矢敗",
+                "矢弊"
+              ],
+              "correct": 0,
+              "explanation": "「しっぱい」is written as「失敗」(failure)."
+            },
+            {
+              "id": "n4-e6-v-16",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "16. 日本語の スピーチを（　　）しました。",
+              "options": [
+                "はっぴょう",
+                "ほうこく",
+                "れんしゅう",
+                "しゅっせき"
+              ],
+              "correct": 0,
+              "explanation": "Presentation:「はっぴょうする」."
+            },
+            {
+              "id": "n4-e6-v-17",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "17. ベルが（　　）、授業が 始まりました。",
+              "options": [
+                "なって",
+                "おとして",
+                "ふって",
+                "ひいて"
+              ],
+              "correct": 0,
+              "explanation": "Ringing bell:「ベルがなる」."
+            },
+            {
+              "id": "n4-e6-v-18",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "18. 風で カーテンが（　　）います。",
+              "options": [
+                "ゆれて",
+                "こわれて",
+                "たおれて",
+                "やぶれて"
+              ],
+              "correct": 0,
+              "explanation": "Swaying:「ゆれる」."
+            },
+            {
+              "id": "n4-e6-v-19",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "19. 先生の おかげで 試験に（　　）しました。",
+              "options": [
+                "ごうかく",
+                "しっぱい",
+                "そつぎょう",
+                "にゅうがく"
+              ],
+              "correct": 0,
+              "explanation": "Passing exam:「ごうかくする」."
+            },
+            {
+              "id": "n4-e6-v-20",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "20. 電気を けして 部屋を（　　）しました。",
+              "options": [
+                "まっくら",
+                "まっしろ",
+                "まっくろ",
+                "まっあか"
+              ],
+              "correct": 0,
+              "explanation": "Pitch dark:「まっくら」."
+            },
+            {
+              "id": "n4-e6-v-21",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "21. 急な（　　）が できたので、帰ります。",
+              "options": [
+                "用事",
+                "約束",
+                "計画",
+                "都合"
+              ],
+              "correct": 0,
+              "explanation": "Urgent errand:「急な用事」."
+            },
+            {
+              "id": "n4-e6-v-22",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "22. 雨が（　　）ので、傘を さしました。",
+              "options": [
+                "ふりだした",
+                "やんだ",
+                "あがった",
+                "つよまった"
+              ],
+              "correct": 0,
+              "explanation": "Started raining:「ふりだした」."
+            },
+            {
+              "id": "n4-e6-v-23",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "23. 車を（　　）に 止めてください。",
+              "options": [
+                "駐車場",
+                "交番",
+                "駅",
+                "ガソリンスタンド"
+              ],
+              "correct": 0,
+              "explanation": "Parking lot:「駐車場」."
+            },
+            {
+              "id": "n4-e6-v-24",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "24. ボタンを（　　）と、ドアが 開きます。",
+              "options": [
+                "おす",
+                "ひく",
+                "まわす",
+                "きる"
+              ],
+              "correct": 0,
+              "explanation": "Pushing button:「ボタンをおす」."
+            },
+            {
+              "id": "n4-e6-v-25",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "25. 毎日 ジョギングを（　　）ています。",
+              "options": [
+                "つづけ",
+                "やめ",
+                "はじめ",
+                "あきらめ"
+              ],
+              "correct": 0,
+              "explanation": "Continuing:「つづける」."
+            },
+            {
+              "id": "n4-e6-v-26",
+              "type": "Mondai 4 (類義表現)",
+              "question": "26. <u>遠慮しないで</u> 食べてください。",
+              "options": [
+                "きにしないで",
+                "いそいで",
+                "のこさないで",
+                "すこしだけ"
+              ],
+              "correct": 0,
+              "explanation": "「遠慮しないで」(without holding back)."
+            },
+            {
+              "id": "n4-e6-v-27",
+              "type": "Mondai 4 (類義表現)",
+              "question": "27. この 問題は <u>複雑</u>です。",
+              "options": [
+                "かんたんではありません",
+                "おもしろくありません",
+                "たかくありません",
+                "あたらしくありません"
+              ],
+              "correct": 0,
+              "explanation": "「複雑」(complex)."
+            },
+            {
+              "id": "n4-e6-v-28",
+              "type": "Mondai 4 (類義表現)",
+              "question": "28. <u>たいてい</u> 家で 勉強します。",
+              "options": [
+                "ほとんど",
+                "いつも",
+                "ときどき",
+                "たまに"
+              ],
+              "correct": 0,
+              "explanation": "「たいてい」(mostly / usually)."
+            },
+            {
+              "id": "n4-e6-v-29",
+              "type": "Mondai 4 (類義表現)",
+              "question": "29. <u>お礼</u>を 言いました。",
+              "options": [
+                "感謝しました",
+                "あやまりました",
+                "約束しました",
+                "案内しました"
+              ],
+              "correct": 0,
+              "explanation": "「お礼を言う」(express thanks)."
+            },
+            {
+              "id": "n4-e6-v-30",
+              "type": "Mondai 4 (類義表現)",
+              "question": "30. <u>さっき</u> 部長に 会いました。",
+              "options": [
+                "すこし前に",
+                "ずっと前に",
+                "明日に",
+                "夕方に"
+              ],
+              "correct": 0,
+              "explanation": "「さっき」(a while ago)."
+            },
+            {
+              "id": "n4-e6-v-31",
+              "type": "Mondai 5 (用法)",
+              "question": "31. <u>故障</u>",
+              "options": [
+                "テレビが 故障して つきません。",
+                "宿題が 故障しました。",
+                "料理が 故障しました。",
+                "天気が 故障しました。"
+              ],
+              "correct": 0,
+              "explanation": "Usage of「故障する」."
+            },
+            {
+              "id": "n4-e6-v-32",
+              "type": "Mondai 5 (用法)",
+              "question": "32. <u>遠慮</u>",
+              "options": [
+                "会議で 意見を 言うのを 遠慮しました。",
+                "電車に 遠慮して 乗りました。",
+                "友達に 遠慮を あげました。",
+                "本を 遠慮して 読みました。"
+              ],
+              "correct": 0,
+              "explanation": "Usage of「遠慮する」."
+            },
+            {
+              "id": "n4-e6-v-33",
+              "type": "Mondai 5 (用法)",
+              "question": "33. <u>世話</u>",
+              "options": [
+                "犬の 世話を しています。",
+                "宿題の 世話を しました。",
+                "料理の 世話を 作ります。",
+                "電車の 世話に 乗ります。"
+              ],
+              "correct": 0,
+              "explanation": "Usage of「世話をする」."
+            },
+            {
+              "id": "n4-e6-v-34",
+              "type": "Mondai 5 (用法)",
+              "question": "34. <u>熱心</u>",
+              "options": [
+                "彼は 熱心に 日本語を 勉強しています。",
+                "今日は 熱心な 天気です。",
+                "この スープは 熱心です。",
+                "熱心な 電車に 乗りました。"
+              ],
+              "correct": 0,
+              "explanation": "Usage of「熱心に」."
+            },
+            {
+              "id": "n4-e6-v-35",
+              "type": "Mondai 5 (用法)",
+              "question": "35. <u>都合</u>",
+              "options": [
+                "明日の 午後は 都合が 悪いです。",
+                "都合な 料理を 食べました。",
+                "都合に 本を 買いました。",
+                "都合が 高いです。"
+              ],
+              "correct": 0,
+              "explanation": "Usage of「都合」."
+            }
+          ]
+        },
+        {
+          "id": "n4-e6-sec-grammar",
+          "title": "Section 2: Language Knowledge (文法) & Reading (読解)",
+          "shortTitle": "文法・読解 (Grammar & Reading)",
+          "timeLimitSeconds": 2700,
+          "questions": [
+            {
+              "id": "n4-e6-g-1",
+              "type": "Mondai 1 (文法形式)",
+              "question": "1. ドアが（　　）います。",
+              "options": [
+                "あいて",
+                "あけて",
+                "しまって",
+                "しめて"
+              ],
+              "correct": 0,
+              "explanation": "Intransitive state:「あいている」."
+            },
+            {
+              "id": "n4-e6-g-2",
+              "type": "Mondai 1 (文法形式)",
+              "question": "2. 窓が（　　）あります。",
+              "options": [
+                "あけて",
+                "あいて",
+                "しめて",
+                "しまって"
+              ],
+              "correct": 0,
+              "explanation": "Transitive state:「あけてある」."
+            },
+            {
+              "id": "n4-e6-g-3",
+              "type": "Mondai 1 (文法形式)",
+              "question": "3. 日本語が 上手に（　　）たいです。",
+              "options": [
+                "なり",
+                "して",
+                "なって",
+                "なれ"
+              ],
+              "correct": 0,
+              "explanation": "Desire to become:「なりたい」."
+            },
+            {
+              "id": "n4-e6-g-4",
+              "type": "Mondai 1 (文法形式)",
+              "question": "4. 薬を 飲んだ（　　）が いいですよ。",
+              "options": [
+                "ほう",
+                "よう",
+                "こと",
+                "わけ"
+              ],
+              "correct": 0,
+              "explanation": "Advice:「〜ほうがいい」."
+            },
+            {
+              "id": "n4-e6-g-5",
+              "type": "Mondai 1 (文法形式)",
+              "question": "5. 映画を（　　）ながら、ポップコーンを 食べました。",
+              "options": [
+                "み",
+                "みて",
+                "みる",
+                "みた"
+              ],
+              "correct": 0,
+              "explanation": "Simultaneous:「みながら」."
+            },
+            {
+              "id": "n4-e6-g-6",
+              "type": "Mondai 1 (文法形式)",
+              "question": "6. 明日 雨なら、試合は 中止（　　）します。",
+              "options": [
+                "に",
+                "を",
+                "で",
+                "と"
+              ],
+              "correct": 0,
+              "explanation": "Decision:「中止にする」."
+            },
+            {
+              "id": "n4-e6-g-7",
+              "type": "Mondai 1 (文法形式)",
+              "question": "7. この 料理は（　　）すぎて、食べられません。",
+              "options": [
+                "から",
+                "からい",
+                "からく",
+                "からくて"
+              ],
+              "correct": 0,
+              "explanation": "Adjective stem + すぎる:「からすぎる」."
+            },
+            {
+              "id": "n4-e6-g-8",
+              "type": "Mondai 1 (文法形式)",
+              "question": "8. 雨が ふりそう（　　）から、傘を 持って行きます。",
+              "options": [
+                "だ",
+                "な",
+                "に",
+                "で"
+              ],
+              "correct": 0,
+              "explanation": "そう + だから:「ふりそうだ」."
+            },
+            {
+              "id": "n4-e6-g-9",
+              "type": "Mondai 1 (文法形式)",
+              "question": "9. 先生に 本を（　　）いただきました。",
+              "options": [
+                "かして",
+                "かりて",
+                "かって",
+                "よんで"
+              ],
+              "correct": 0,
+              "explanation": "Humble benefit:「かしていただく」."
+            },
+            {
+              "id": "n4-e6-g-10",
+              "type": "Mondai 1 (文法形式)",
+              "question": "10. 毎日 走る（　　）に しています。",
+              "options": [
+                "こと",
+                "もの",
+                "よう",
+                "わけ"
+              ],
+              "correct": 0,
+              "explanation": "Habit pattern:「〜ことにしている」."
+            },
+            {
+              "id": "n4-e6-g-11",
+              "type": "Mondai 1 (文法形式)",
+              "question": "11. 弟は 母に 部屋を（　　）られました。",
+              "options": [
+                "そうじさ",
+                "そうじ",
+                "そうじされ",
+                "そうじし"
+              ],
+              "correct": 0,
+              "explanation": "Passive:「そうじされた」."
+            },
+            {
+              "id": "n4-e6-g-12",
+              "type": "Mondai 1 (文法形式)",
+              "question": "12. 早く 起きられる（　　）に、目覚ましを かけました。",
+              "options": [
+                "よう",
+                "こと",
+                "ため",
+                "はず"
+              ],
+              "correct": 0,
+              "explanation": "Purpose with potential:「〜ように」."
+            },
+            {
+              "id": "n4-e6-g-13",
+              "type": "Mondai 1 (文法形式)",
+              "question": "13. この 本は 読み（　　）やすいです。",
+              "options": [
+                "やすい",
+                "やすく",
+                "やすくて",
+                "やすかった"
+              ],
+              "correct": 0,
+              "explanation": "Ease of action:「読みやすい」."
+            },
+            {
+              "id": "n4-e6-g-14",
+              "type": "Mondai 1 (文法形式)",
+              "question": "14. 田中さんは 来ない（　　）かもしれません。",
+              "options": [
+                "かも",
+                "はず",
+                "わけ",
+                "こと"
+              ],
+              "correct": 0,
+              "explanation": "Possibility:「〜かもしれない」."
+            },
+            {
+              "id": "n4-e6-g-15",
+              "type": "Mondai 1 (文法形式)",
+              "question": "15. お荷物を お持ち（　　）ましょうか。",
+              "options": [
+                "し",
+                "になり",
+                "いたし",
+                "なさい"
+              ],
+              "correct": 0,
+              "explanation": "Humble offer:「お持ちしましょうか」."
+            },
+            {
+              "id": "n4-e6-g-16",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "16. 電車に　＿＿　＿＿　★　＿＿　走りました。\n1: 遅れない　2: ように　3: 急いで　4: 駅まで",
+              "options": [
+                "遅れない",
+                "ように",
+                "急いで",
+                "駅まで"
+              ],
+              "correct": 3,
+              "explanation": "Order: 電車に 遅れない ように 急いで [★ 駅まで] 走りました。 Star is 4 (駅まで)."
+            },
+            {
+              "id": "n4-e6-g-17",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "17. わたしは　＿＿　＿＿　★　＿＿　つもりです。\n1: 日本へ　2: 来年　3: 留学する　4: 友達と",
+              "options": [
+                "日本へ",
+                "来年",
+                "留学する",
+                "友達と"
+              ],
+              "correct": 0,
+              "explanation": "Order: わたしは 来年 友達と [★ 日本へ] 留学する つもりです。 Star is 1 (日本へ)."
+            },
+            {
+              "id": "n4-e6-g-18",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "18. この　＿＿　＿＿　★　＿＿　思います。\n1: レポートは　2: 難しくて　3: 一人で　4: できないと",
+              "options": [
+                "レポートは",
+                "難しくて",
+                "一人で",
+                "できないと"
+              ],
+              "correct": 2,
+              "explanation": "Order: この レポートは 難しくて [★ 一人で] できないと 思います。 Star is 3 (一人で)."
+            },
+            {
+              "id": "n4-e6-g-19",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "19. 先生に　＿＿　＿＿　★　＿＿　いただきました。\n1: 本を　2: 面白い　3: 貸して　4: 素敵な",
+              "options": [
+                "本を",
+                "面白い",
+                "貸して",
+                "素敵な"
+              ],
+              "correct": 0,
+              "explanation": "Order: 先生に 面白い 素敵な [★ 本を] 貸して いただきました。 Star is 1 (本を)."
+            },
+            {
+              "id": "n4-e6-g-20",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "20. 明日　＿＿　＿＿　★　＿＿　行けません。\n1: 学校へ　2: 病院へ　3: 行くので　4: 午前中は",
+              "options": [
+                "学校へ",
+                "病院へ",
+                "行くので",
+                "午前中は"
+              ],
+              "correct": 2,
+              "explanation": "Order: 明日 午前中は 病院へ [★ 行くので] 学校へ 行けません。 Star is 3 (行くので)."
+            },
+            {
+              "id": "n4-e6-g-21",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "【読解文章：日本の温泉文化】\n21. (21) に入る言葉はどれですか。",
+              "options": [
+                "はいります",
+                "はいりました",
+                "はいって",
+                "はいる"
+              ],
+              "correct": 2,
+              "explanation": "Connecting action with te-form:「はいって」."
+            },
+            {
+              "id": "n4-e6-g-22",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "22. (22) に入る言葉はどれですか。",
+              "options": [
+                "とても",
+                "あまり",
+                "ぜんぜん",
+                "すこしも"
+              ],
+              "correct": 0,
+              "explanation": "Positive evaluation:「とても」."
+            },
+            {
+              "id": "n4-e6-g-23",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "23. (23) に入る言葉はどれですか。",
+              "options": [
+                "それに",
+                "だから",
+                "しかし",
+                "それから"
+              ],
+              "correct": 0,
+              "explanation": "Adding related points:「それに」."
+            },
+            {
+              "id": "n4-e6-g-24",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "24. (24) に入る言葉はどれですか。",
+              "options": [
+                "いってみたい",
+                "いってみて",
+                "いってみる",
+                "いってみた"
+              ],
+              "correct": 0,
+              "explanation": "Desire:「いってみたい」."
+            },
+            {
+              "id": "n4-e6-g-25",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "25. (25) に入る言葉はどれですか。",
+              "options": [
+                "おもいます",
+                "おもいました",
+                "おもって",
+                "おもわない"
+              ],
+              "correct": 0,
+              "explanation": "Present conjecture:「おもいます」."
+            },
+            {
+              "id": "n4-e6-g-26",
+              "type": "Mondai 4 (短文読解)",
+              "question": "【短文：地域の日本語教室】\n26. 日本語教室は いつ 開かれますか。",
+              "options": [
+                "毎週土曜日の 午前10時",
+                "毎週日曜日の 午後2時",
+                "毎週水曜日の 午後7時",
+                "毎月第1土曜日"
+              ],
+              "correct": 0,
+              "explanation": "Held every Saturday at 10:00 AM."
+            },
+            {
+              "id": "n4-e6-g-27",
+              "type": "Mondai 4 (短文読解)",
+              "question": "27. 参加費用は いくらですか。",
+              "options": [
+                "1回 500円（テキスト代別）",
+                "無料",
+                "月額 2,000円",
+                "年間 5,000円"
+              ],
+              "correct": 0,
+              "explanation": "Fee is 500 yen per session."
+            },
+            {
+              "id": "n4-e6-g-28",
+              "type": "Mondai 4 (短文読解)",
+              "question": "28. 初めて参加する人は 何を持って行く必要がありますか。",
+              "options": [
+                "筆記用具とノート",
+                "身分証明書",
+                "写真2枚",
+                "辞書"
+              ],
+              "correct": 0,
+              "explanation": "Bring writing utensils and notebook."
+            },
+            {
+              "id": "n4-e6-g-29",
+              "type": "Mondai 4 (短文読解)",
+              "question": "29. 申し込みは どのように しますか。",
+              "options": [
+                "前日までに メールで 申し込む",
+                "当日 直接 会場へ 行く",
+                "電話でのみ 受付",
+                "市役所で 申し込む"
+              ],
+              "correct": 0,
+              "explanation": "Pre-registration by email by the previous day."
+            },
+            {
+              "id": "n4-e6-g-30",
+              "type": "Mondai 5 (中文読解)",
+              "question": "【中文：留学生のアルバイト体験】\n30. 筆者がカフェで働き始めた目的は何ですか。",
+              "options": [
+                "生きた日本語と接客マナーを学ぶため",
+                "お金を貯めて旅行するため",
+                "コーヒーの淹れ方を覚えるため",
+                "友達を作るため"
+              ],
+              "correct": 0,
+              "explanation": "To learn real-life Japanese communication and customer service manners."
+            },
+            {
+              "id": "n4-e6-g-31",
+              "type": "Mondai 5 (中文読解)",
+              "question": "31. アルバイトで一番苦労したことは何ですか。",
+              "options": [
+                "敬語の使い方と聞き取り",
+                "メニューを覚えること",
+                "皿洗い",
+                "朝早く起きること"
+              ],
+              "correct": 0,
+              "explanation": "Struggled most with keigo honorifics and fast native speech."
+            },
+            {
+              "id": "n4-e6-g-32",
+              "type": "Mondai 5 (中文読解)",
+              "question": "32. 店長から褒められた理由は何ですか。",
+              "options": [
+                "いつも笑顔で元気に挨拶していたから",
+                "ミスを一度もしなかったから",
+                "一番長く働いたから",
+                "英語が話せたから"
+              ],
+              "correct": 0,
+              "explanation": "Praised for consistently greeting customers with a bright smile."
+            },
+            {
+              "id": "n4-e6-g-33",
+              "type": "Mondai 5 (中文読解)",
+              "question": "33. 筆者はこのアルバイトを通じてどう成長しましたか。",
+              "options": [
+                "日本語の会話に自信がつき、人との繋がりを楽しめるようになった",
+                "料理が作れるようになった",
+                "給料がたくさんもらえた",
+                "将来カフェを開きたいと思った"
+              ],
+              "correct": 0,
+              "explanation": "Gained conversational confidence and appreciated human connections."
+            },
+            {
+              "id": "n4-e6-g-34",
+              "type": "Mondai 6 (情報検索)",
+              "question": "【情報検索：スポーツセンターの利用案内】\n34. プールを利用する大人の料金はいくらですか。",
+              "options": [
+                "400円",
+                "200円",
+                "600円",
+                "無料"
+              ],
+              "correct": 0,
+              "explanation": "Adult pool admission is listed as 400 yen."
+            },
+            {
+              "id": "n4-e6-g-35",
+              "type": "Mondai 6 (情報検索)",
+              "question": "35. トレーニングルームを利用する際に必ず持参するものは何ですか。",
+              "options": [
+                "室内用運動靴",
+                "水着",
+                "タオル2枚",
+                "会員証"
+              ],
+              "correct": 0,
+              "explanation": "Indoor athletic shoes (室内用運動靴) are strictly required."
+            }
+          ]
+        },
+        {
+          "id": "n4-e6-sec-listening",
+          "title": "Section 3: Listening Comprehension (聴解)",
+          "shortTitle": "聴解 (Listening)",
+          "timeLimitSeconds": 2100,
+          "questions": [
+            {
+              "id": "n4-e6-l-1",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
+              "image": "/images/japanese/listening/n4/m1_q1.png",
+              "question": "1. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 2,
+              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
+              "explanation": "Based on task instructions, Option 3 is correct."
+            },
+            {
+              "id": "n4-e6-l-2",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
+              "image": "/images/japanese/listening/n4/m1_q2.png",
+              "question": "2. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 3,
+              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
+              "explanation": "Based on task instructions, Option 4 is correct."
+            },
+            {
+              "id": "n4-e6-l-3",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
+              "image": "/images/japanese/listening/n4/m1_q3.png",
+              "question": "3. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 0,
+              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
+              "explanation": "Based on task instructions, Option 1 is correct."
+            },
+            {
+              "id": "n4-e6-l-4",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
+              "image": "/images/japanese/listening/n4/m1_q4.png",
+              "question": "4. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 1,
+              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
+              "explanation": "Based on task instructions, Option 2 is correct."
+            },
+            {
+              "id": "n4-e6-l-5",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
+              "image": "/images/japanese/listening/n4/m1_q5.png",
+              "question": "5. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 2,
+              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
+              "explanation": "Based on task instructions, Option 3 is correct."
+            },
+            {
+              "id": "n4-e6-l-6",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
+              "image": "/images/japanese/listening/n4/m1_q6.png",
+              "question": "6. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 3,
+              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
+              "explanation": "Based on task instructions, Option 4 is correct."
+            },
+            {
+              "id": "n4-e6-l-7",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
+              "image": "/images/japanese/listening/n4/m1_q7.png",
+              "question": "7. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 0,
+              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
+              "explanation": "Based on task instructions, Option 1 is correct."
+            },
+            {
+              "id": "n4-e6-l-8",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
+              "image": "/images/japanese/listening/n4/m1_q8.png",
+              "question": "8. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 1,
+              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
+              "explanation": "Based on task instructions, Option 2 is correct."
+            },
+            {
+              "id": "n4-e6-l-9",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
+              "question": "9. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "options": [
+                "電車が遅れたから",
+                "寝坊したから",
+                "道を間違えたから",
+                "雨が降ったから"
+              ],
+              "correct": 2,
+              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
+              "explanation": "Point comprehension detail: reason for arriving late."
+            },
+            {
+              "id": "n4-e6-l-10",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
+              "question": "10. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "options": [
+                "電車が遅れたから",
+                "寝坊したから",
+                "道を間違えたから",
+                "雨が降ったから"
+              ],
+              "correct": 3,
+              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
+              "explanation": "Point comprehension detail: reason for arriving late."
+            },
+            {
+              "id": "n4-e6-l-11",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
+              "question": "11. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "options": [
+                "電車が遅れたから",
+                "寝坊したから",
+                "道を間違えたから",
+                "雨が降ったから"
+              ],
+              "correct": 0,
+              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
+              "explanation": "Point comprehension detail: reason for arriving late."
+            },
+            {
+              "id": "n4-e6-l-12",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
+              "question": "12. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "options": [
+                "電車が遅れたから",
+                "寝坊したから",
+                "道を間違えたから",
+                "雨が降ったから"
+              ],
+              "correct": 1,
+              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
+              "explanation": "Point comprehension detail: reason for arriving late."
+            },
+            {
+              "id": "n4-e6-l-13",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
+              "question": "13. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "options": [
+                "電車が遅れたから",
+                "寝坊したから",
+                "道を間違えたから",
+                "雨が降ったから"
+              ],
+              "correct": 2,
+              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
+              "explanation": "Point comprehension detail: reason for arriving late."
+            },
+            {
+              "id": "n4-e6-l-14",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
+              "question": "14. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "options": [
+                "電車が遅れたから",
+                "寝坊したから",
+                "道を間違えたから",
+                "雨が降ったから"
+              ],
+              "correct": 3,
+              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
+              "explanation": "Point comprehension detail: reason for arriving late."
+            },
+            {
+              "id": "n4-e6-l-15",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
+              "question": "15. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "options": [
+                "電車が遅れたから",
+                "寝坊したから",
+                "道を間違えたから",
+                "雨が降ったから"
+              ],
+              "correct": 0,
+              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
+              "explanation": "Point comprehension detail: reason for arriving late."
+            },
+            {
+              "id": "n4-e6-l-16",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
+              "image": "/images/japanese/listening/n4/m3_q1.png",
+              "question": "16. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "options": [
+                "手伝っていただけませんか。",
+                "手伝ってください。",
+                "手伝いましょうか。"
+              ],
+              "correct": 0,
+              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
+              "explanation": "Polite request in N4:「〜ていただけませんか」."
+            },
+            {
+              "id": "n4-e6-l-17",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
+              "image": "/images/japanese/listening/n4/m3_q2.png",
+              "question": "17. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "options": [
+                "手伝っていただけませんか。",
+                "手伝ってください。",
+                "手伝いましょうか。"
+              ],
+              "correct": 0,
+              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
+              "explanation": "Polite request in N4:「〜ていただけませんか」."
+            },
+            {
+              "id": "n4-e6-l-18",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
+              "image": "/images/japanese/listening/n4/m3_q3.png",
+              "question": "18. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "options": [
+                "手伝っていただけませんか。",
+                "手伝ってください。",
+                "手伝いましょうか。"
+              ],
+              "correct": 0,
+              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
+              "explanation": "Polite request in N4:「〜ていただけませんか」."
+            },
+            {
+              "id": "n4-e6-l-19",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
+              "image": "/images/japanese/listening/n4/m3_q4.png",
+              "question": "19. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "options": [
+                "手伝っていただけませんか。",
+                "手伝ってください。",
+                "手伝いましょうか。"
+              ],
+              "correct": 0,
+              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
+              "explanation": "Polite request in N4:「〜ていただけませんか」."
+            },
+            {
+              "id": "n4-e6-l-20",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
+              "image": "/images/japanese/listening/n4/m3_q5.png",
+              "question": "20. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "options": [
+                "手伝っていただけませんか。",
+                "手伝ってください。",
+                "手伝いましょうか。"
+              ],
+              "correct": 0,
+              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
+              "explanation": "Polite request in N4:「〜ていただけませんか」."
+            },
+            {
+              "id": "n4-e6-l-21",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
+              "question": "21. 「お先に失礼します。」",
+              "options": [
+                "お疲れ様でした。",
+                "いってらっしゃい。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
+              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+            },
+            {
+              "id": "n4-e6-l-22",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
+              "question": "22. 「お先に失礼します。」",
+              "options": [
+                "お疲れ様でした。",
+                "いってらっしゃい。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
+              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+            },
+            {
+              "id": "n4-e6-l-23",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
+              "question": "23. 「お先に失礼します。」",
+              "options": [
+                "お疲れ様でした。",
+                "いってらっしゃい。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
+              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+            },
+            {
+              "id": "n4-e6-l-24",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
+              "question": "24. 「お先に失礼します。」",
+              "options": [
+                "お疲れ様でした。",
+                "いってらっしゃい。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
+              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+            },
+            {
+              "id": "n4-e6-l-25",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
+              "question": "25. 「お先に失礼します。」",
+              "options": [
+                "お疲れ様でした。",
+                "いってらっしゃい。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
+              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+            },
+            {
+              "id": "n4-e6-l-26",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
+              "question": "26. 「お先に失礼します。」",
+              "options": [
+                "お疲れ様でした。",
+                "いってらっしゃい。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
+              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+            },
+            {
+              "id": "n4-e6-l-27",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
+              "question": "27. 「お先に失礼します。」",
+              "options": [
+                "お疲れ様でした。",
+                "いってらっしゃい。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
+              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+            },
+            {
+              "id": "n4-e6-l-28",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
+              "question": "28. 「お先に失礼します。」",
+              "options": [
+                "お疲れ様でした。",
+                "いってらっしゃい。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
+              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "n4-exam-7",
+      "title": "JLPT N4 Intermediate Grammar & Compound Particles (2024 Series)",
+      "shortTitle": "Exam 7 (Grammar Challenge)",
+      "badge": "Grammar Mastery",
+      "year": "2024 Series",
+      "description": "Rigorous test with deep coverage of complex sentence structures: 〜ようにする, 〜ことにする, 〜てある vs 〜ている, and 〜はず.",
+      "totalQuestions": 97,
+      "sections": [
+        {
+          "id": "n4-e7-sec-vocab",
+          "title": "Section 1: Language Knowledge (文字・語彙)",
+          "shortTitle": "文字・語彙 (Kanji & Vocab)",
+          "timeLimitSeconds": 1500,
+          "questions": [
+            {
+              "id": "n4-e7-v-1",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "1. <u>都合</u>を お願いします。",
+              "options": [
+                "つごう",
+                "つあい",
+                "ずごう",
+                "ずあい"
+              ],
+              "correct": 0,
+              "explanation": "「都合」is read as「つごう」(convenience / schedule)."
+            },
+            {
+              "id": "n4-e7-v-2",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "2. <u>反対</u>を お願いします。",
+              "options": [
+                "はんたい",
+                "はんだい",
+                "ほんたい",
+                "ほんだい"
+              ],
+              "correct": 0,
+              "explanation": "「反対」is read as「はんたい」(opposite / opposition)."
+            },
+            {
+              "id": "n4-e7-v-3",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "3. <u>相談</u>を お願いします。",
+              "options": [
+                "そうだん",
+                "しょうだん",
+                "そうたん",
+                "しょうたん"
+              ],
+              "correct": 0,
+              "explanation": "「相談」is read as「そうだん」(consultation)."
+            },
+            {
+              "id": "n4-e7-v-4",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "4. <u>案内</u>を お願いします。",
+              "options": [
+                "あんあい",
+                "あんない",
+                "あんたい",
+                "あんだい"
+              ],
+              "correct": 1,
+              "explanation": "「案内」is read as「あんない」(guide)."
+            },
+            {
+              "id": "n4-e7-v-5",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "5. <u>計画</u>を お願いします。",
+              "options": [
+                "けいかく",
+                "けいがく",
+                "けいかん",
+                "けいがん"
+              ],
+              "correct": 0,
+              "explanation": "「計画」is read as「けいかく」(plan)."
+            },
+            {
+              "id": "n4-e7-v-6",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "6. <u>荷物</u>を お願いします。",
+              "options": [
+                "かもつ",
+                "にもつ",
+                "かぶつ",
+                "にぶつ"
+              ],
+              "correct": 1,
+              "explanation": "「荷物」is read as「にもつ」(luggage)."
+            },
+            {
+              "id": "n4-e7-v-7",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "7. <u>特急</u>を お願いします。",
+              "options": [
+                "とくきゅう",
+                "とっきゅう",
+                "どくきゅう",
+                "どっきゅう"
+              ],
+              "correct": 1,
+              "explanation": "「特急」is read as「とっきゅう」(limited express)."
+            },
+            {
+              "id": "n4-e7-v-8",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "8. <u>試合</u>を お願いします。",
+              "options": [
+                "しあい",
+                "じあい",
+                "しごう",
+                "じごう"
+              ],
+              "correct": 0,
+              "explanation": "「試合」is read as「しあい」(match / game)."
+            },
+            {
+              "id": "n4-e7-v-9",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "9. <u>予習</u>を お願いします。",
+              "options": [
+                "よしゅう",
+                "ようしゅう",
+                "ほしゅう",
+                "ほうしゅう"
+              ],
+              "correct": 0,
+              "explanation": "「予習」is read as「よしゅう」(preview study)."
+            },
+            {
+              "id": "n4-e7-v-10",
+              "type": "Mondai 2 (表記)",
+              "question": "10. <u>へんじ</u>を 確認してください。",
+              "options": [
+                "返事",
+                "変事",
+                "返次",
+                "変次"
+              ],
+              "correct": 0,
+              "explanation": "「へんじ」is written as「返事」(reply)."
+            },
+            {
+              "id": "n4-e7-v-11",
+              "type": "Mondai 2 (表記)",
+              "question": "11. <u>りゆう</u>を 確認してください。",
+              "options": [
+                "理由",
+                "理油",
+                "利由",
+                "利油"
+              ],
+              "correct": 0,
+              "explanation": "「りゆう」is written as「理由」(reason)."
+            },
+            {
+              "id": "n4-e7-v-12",
+              "type": "Mondai 2 (表記)",
+              "question": "12. <u>しっぱい</u>を 確認してください。",
+              "options": [
+                "失敗",
+                "失弊",
+                "矢敗",
+                "矢弊"
+              ],
+              "correct": 0,
+              "explanation": "「しっぱい」is written as「失敗」(failure)."
+            },
+            {
+              "id": "n4-e7-v-13",
+              "type": "Mondai 2 (表記)",
+              "question": "13. <u>せいこう</u>を 確認してください。",
+              "options": [
+                "成功",
+                "成効",
+                "精功",
+                "精効"
+              ],
+              "correct": 0,
+              "explanation": "「せいこう」is written as「成功」(success)."
+            },
+            {
+              "id": "n4-e7-v-14",
+              "type": "Mondai 2 (表記)",
+              "question": "14. <u>きっぷ</u>を 確認してください。",
+              "options": [
+                "切符",
+                "切布",
+                "着符",
+                "着布"
+              ],
+              "correct": 0,
+              "explanation": "「きっぷ」is written as「切符」(ticket)."
+            },
+            {
+              "id": "n4-e7-v-15",
+              "type": "Mondai 2 (表記)",
+              "question": "15. <u>じゅんび</u>を 確認してください。",
+              "options": [
+                "準備",
+                "準便",
+                "准備",
+                "準偏"
+              ],
+              "correct": 0,
+              "explanation": "「じゅんび」is written as「準備」(preparation)."
+            },
+            {
+              "id": "n4-e7-v-16",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "16. 先生の おかげで 試験に（　　）しました。",
+              "options": [
+                "ごうかく",
+                "しっぱい",
+                "そつぎょう",
+                "にゅうがく"
+              ],
+              "correct": 0,
+              "explanation": "Passing exam:「ごうかくする」."
+            },
+            {
+              "id": "n4-e7-v-17",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "17. 電気を けして 部屋を（　　）しました。",
+              "options": [
+                "まっくら",
+                "まっしろ",
+                "まっくろ",
+                "まっあか"
+              ],
+              "correct": 0,
+              "explanation": "Pitch dark:「まっくら」."
+            },
+            {
+              "id": "n4-e7-v-18",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "18. 急な（　　）が できたので、帰ります。",
+              "options": [
+                "用事",
+                "約束",
+                "計画",
+                "都合"
+              ],
+              "correct": 0,
+              "explanation": "Urgent errand:「急な用事」."
+            },
+            {
+              "id": "n4-e7-v-19",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "19. 雨が（　　）ので、傘を さしました。",
+              "options": [
+                "ふりだした",
+                "やんだ",
+                "あがった",
+                "つよまった"
+              ],
+              "correct": 0,
+              "explanation": "Started raining:「ふりだした」."
+            },
+            {
+              "id": "n4-e7-v-20",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "20. 車を（　　）に 止めてください。",
+              "options": [
+                "駐車場",
+                "交番",
+                "駅",
+                "ガソリンスタンド"
+              ],
+              "correct": 0,
+              "explanation": "Parking lot:「駐車場」."
+            },
+            {
+              "id": "n4-e7-v-21",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "21. ボタンを（　　）と、ドアが 開きます。",
+              "options": [
+                "おす",
+                "ひく",
+                "まわす",
+                "きる"
+              ],
+              "correct": 0,
+              "explanation": "Pushing button:「ボタンをおす」."
+            },
+            {
+              "id": "n4-e7-v-22",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "22. 毎日 ジョギングを（　　）ています。",
+              "options": [
+                "つづけ",
+                "やめ",
+                "はじめ",
+                "あきらめ"
+              ],
+              "correct": 0,
+              "explanation": "Continuing:「つづける」."
+            },
+            {
+              "id": "n4-e7-v-23",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "23. 日本語の スピーチを（　　）しました。",
+              "options": [
+                "はっぴょう",
+                "ほうこく",
+                "れんしゅう",
+                "しゅっせき"
+              ],
+              "correct": 0,
+              "explanation": "Presentation:「はっぴょうする」."
+            },
+            {
+              "id": "n4-e7-v-24",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "24. ベルが（　　）、授業が 始まりました。",
+              "options": [
+                "なって",
+                "おとして",
+                "ふって",
+                "ひいて"
+              ],
+              "correct": 0,
+              "explanation": "Ringing bell:「ベルがなる」."
+            },
+            {
+              "id": "n4-e7-v-25",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "25. 風で カーテンが（　　）います。",
+              "options": [
+                "ゆれて",
+                "こわれて",
+                "たおれて",
+                "やぶれて"
+              ],
+              "correct": 0,
+              "explanation": "Swaying:「ゆれる」."
+            },
+            {
+              "id": "n4-e7-v-26",
+              "type": "Mondai 4 (類義表現)",
+              "question": "26. <u>お礼</u>を 言いました。",
+              "options": [
+                "感謝しました",
+                "あやまりました",
+                "約束しました",
+                "案内しました"
+              ],
+              "correct": 0,
+              "explanation": "「お礼を言う」(express thanks)."
+            },
+            {
+              "id": "n4-e7-v-27",
+              "type": "Mondai 4 (類義表現)",
+              "question": "27. <u>さっき</u> 部長に 会いました。",
+              "options": [
+                "すこし前に",
+                "ずっと前に",
+                "明日に",
+                "夕方に"
+              ],
+              "correct": 0,
+              "explanation": "「さっき」(a while ago)."
+            },
+            {
+              "id": "n4-e7-v-28",
+              "type": "Mondai 4 (類義表現)",
+              "question": "28. <u>遠慮しないで</u> 食べてください。",
+              "options": [
+                "きにしないで",
+                "いそいで",
+                "のこさないで",
+                "すこしだけ"
+              ],
+              "correct": 0,
+              "explanation": "「遠慮しないで」(without holding back)."
+            },
+            {
+              "id": "n4-e7-v-29",
+              "type": "Mondai 4 (類義表現)",
+              "question": "29. この 問題は <u>複雑</u>です。",
+              "options": [
+                "かんたんではありません",
+                "おもしろくありません",
+                "たかくありません",
+                "あたらしくありません"
+              ],
+              "correct": 0,
+              "explanation": "「複雑」(complex)."
+            },
+            {
+              "id": "n4-e7-v-30",
+              "type": "Mondai 4 (類義表現)",
+              "question": "30. <u>たいてい</u> 家で 勉強します。",
+              "options": [
+                "ほとんど",
+                "いつも",
+                "ときどき",
+                "たまに"
+              ],
+              "correct": 0,
+              "explanation": "「たいてい」(mostly / usually)."
+            },
+            {
+              "id": "n4-e7-v-31",
+              "type": "Mondai 5 (用法)",
+              "question": "31. <u>熱心</u>",
+              "options": [
+                "彼は 熱心に 日本語を 勉強しています。",
+                "今日は 熱心な 天気です。",
+                "この スープは 熱心です。",
+                "熱心な 電車に 乗りました。"
+              ],
+              "correct": 0,
+              "explanation": "Usage of「熱心に」."
+            },
+            {
+              "id": "n4-e7-v-32",
+              "type": "Mondai 5 (用法)",
+              "question": "32. <u>都合</u>",
+              "options": [
+                "明日の 午後は 都合が 悪いです。",
+                "都合な 料理を 食べました。",
+                "都合に 本を 買いました。",
+                "都合が 高いです。"
+              ],
+              "correct": 0,
+              "explanation": "Usage of「都合」."
+            },
+            {
+              "id": "n4-e7-v-33",
+              "type": "Mondai 5 (用法)",
+              "question": "33. <u>故障</u>",
+              "options": [
+                "テレビが 故障して つきません。",
+                "宿題が 故障しました。",
+                "料理が 故障しました。",
+                "天気が 故障しました。"
+              ],
+              "correct": 0,
+              "explanation": "Usage of「故障する」."
+            },
+            {
+              "id": "n4-e7-v-34",
+              "type": "Mondai 5 (用法)",
+              "question": "34. <u>遠慮</u>",
+              "options": [
+                "会議で 意見を 言うのを 遠慮しました。",
+                "電車に 遠慮して 乗りました。",
+                "友達に 遠慮を あげました。",
+                "本を 遠慮して 読みました。"
+              ],
+              "correct": 0,
+              "explanation": "Usage of「遠慮する」."
+            },
+            {
+              "id": "n4-e7-v-35",
+              "type": "Mondai 5 (用法)",
+              "question": "35. <u>世話</u>",
+              "options": [
+                "犬の 世話を しています。",
+                "宿題の 世話を しました。",
+                "料理の 世話を 作ります。",
+                "電車の 世話に 乗ります。"
+              ],
+              "correct": 0,
+              "explanation": "Usage of「世話をする」."
+            }
+          ]
+        },
+        {
+          "id": "n4-e7-sec-grammar",
+          "title": "Section 2: Language Knowledge (文法) & Reading (読解)",
+          "shortTitle": "文法・読解 (Grammar & Reading)",
+          "timeLimitSeconds": 2700,
+          "questions": [
+            {
+              "id": "n4-e7-g-1",
+              "type": "Mondai 1 (文法形式)",
+              "question": "1. 薬を 飲んだ（　　）が いいですよ。",
+              "options": [
+                "ほう",
+                "よう",
+                "こと",
+                "わけ"
+              ],
+              "correct": 0,
+              "explanation": "Advice:「〜ほうがいい」."
+            },
+            {
+              "id": "n4-e7-g-2",
+              "type": "Mondai 1 (文法形式)",
+              "question": "2. 映画を（　　）ながら、ポップコーンを 食べました。",
+              "options": [
+                "み",
+                "みて",
+                "みる",
+                "みた"
+              ],
+              "correct": 0,
+              "explanation": "Simultaneous:「みながら」."
+            },
+            {
+              "id": "n4-e7-g-3",
+              "type": "Mondai 1 (文法形式)",
+              "question": "3. 明日 雨なら、試合は 中止（　　）します。",
+              "options": [
+                "に",
+                "を",
+                "で",
+                "と"
+              ],
+              "correct": 0,
+              "explanation": "Decision:「中止にする」."
+            },
+            {
+              "id": "n4-e7-g-4",
+              "type": "Mondai 1 (文法形式)",
+              "question": "4. この 料理は（　　）すぎて、食べられません。",
+              "options": [
+                "から",
+                "からい",
+                "からく",
+                "からくて"
+              ],
+              "correct": 0,
+              "explanation": "Adjective stem + すぎる:「からすぎる」."
+            },
+            {
+              "id": "n4-e7-g-5",
+              "type": "Mondai 1 (文法形式)",
+              "question": "5. 雨が ふりそう（　　）から、傘を 持って行きます。",
+              "options": [
+                "だ",
+                "な",
+                "に",
+                "で"
+              ],
+              "correct": 0,
+              "explanation": "そう + だから:「ふりそうだ」."
+            },
+            {
+              "id": "n4-e7-g-6",
+              "type": "Mondai 1 (文法形式)",
+              "question": "6. 先生に 本を（　　）いただきました。",
+              "options": [
+                "かして",
+                "かりて",
+                "かって",
+                "よんで"
+              ],
+              "correct": 0,
+              "explanation": "Humble benefit:「かしていただく」."
+            },
+            {
+              "id": "n4-e7-g-7",
+              "type": "Mondai 1 (文法形式)",
+              "question": "7. 毎日 走る（　　）に しています。",
+              "options": [
+                "こと",
+                "もの",
+                "よう",
+                "わけ"
+              ],
+              "correct": 0,
+              "explanation": "Habit pattern:「〜ことにしている」."
+            },
+            {
+              "id": "n4-e7-g-8",
+              "type": "Mondai 1 (文法形式)",
+              "question": "8. 弟は 母に 部屋を（　　）られました。",
+              "options": [
+                "そうじさ",
+                "そうじ",
+                "そうじされ",
+                "そうじし"
+              ],
+              "correct": 0,
+              "explanation": "Passive:「そうじされた」."
+            },
+            {
+              "id": "n4-e7-g-9",
+              "type": "Mondai 1 (文法形式)",
+              "question": "9. 早く 起きられる（　　）に、目覚ましを かけました。",
+              "options": [
+                "よう",
+                "こと",
+                "ため",
+                "はず"
+              ],
+              "correct": 0,
+              "explanation": "Purpose with potential:「〜ように」."
+            },
+            {
+              "id": "n4-e7-g-10",
+              "type": "Mondai 1 (文法形式)",
+              "question": "10. この 本は 読み（　　）やすいです。",
+              "options": [
+                "やすい",
+                "やすく",
+                "やすくて",
+                "やすかった"
+              ],
+              "correct": 0,
+              "explanation": "Ease of action:「読みやすい」."
+            },
+            {
+              "id": "n4-e7-g-11",
+              "type": "Mondai 1 (文法形式)",
+              "question": "11. 田中さんは 来ない（　　）かもしれません。",
+              "options": [
+                "かも",
+                "はず",
+                "わけ",
+                "こと"
+              ],
+              "correct": 0,
+              "explanation": "Possibility:「〜かもしれない」."
+            },
+            {
+              "id": "n4-e7-g-12",
+              "type": "Mondai 1 (文法形式)",
+              "question": "12. お荷物を お持ち（　　）ましょうか。",
+              "options": [
+                "し",
+                "になり",
+                "いたし",
+                "なさい"
+              ],
+              "correct": 0,
+              "explanation": "Humble offer:「お持ちしましょうか」."
+            },
+            {
+              "id": "n4-e7-g-13",
+              "type": "Mondai 1 (文法形式)",
+              "question": "13. ドアが（　　）います。",
+              "options": [
+                "あいて",
+                "あけて",
+                "しまって",
+                "しめて"
+              ],
+              "correct": 0,
+              "explanation": "Intransitive state:「あいている」."
+            },
+            {
+              "id": "n4-e7-g-14",
+              "type": "Mondai 1 (文法形式)",
+              "question": "14. 窓が（　　）あります。",
+              "options": [
+                "あけて",
+                "あいて",
+                "しめて",
+                "しまって"
+              ],
+              "correct": 0,
+              "explanation": "Transitive state:「あけてある」."
+            },
+            {
+              "id": "n4-e7-g-15",
+              "type": "Mondai 1 (文法形式)",
+              "question": "15. 日本語が 上手に（　　）たいです。",
+              "options": [
+                "なり",
+                "して",
+                "なって",
+                "なれ"
+              ],
+              "correct": 0,
+              "explanation": "Desire to become:「なりたい」."
+            },
+            {
+              "id": "n4-e7-g-16",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "16. 先生に　＿＿　＿＿　★　＿＿　いただきました。\n1: 本を　2: 面白い　3: 貸して　4: 素敵な",
+              "options": [
+                "本を",
+                "面白い",
+                "貸して",
+                "素敵な"
+              ],
+              "correct": 0,
+              "explanation": "Order: 先生に 面白い 素敵な [★ 本を] 貸して いただきました。 Star is 1 (本を)."
+            },
+            {
+              "id": "n4-e7-g-17",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "17. 明日　＿＿　＿＿　★　＿＿　行けません。\n1: 学校へ　2: 病院へ　3: 行くので　4: 午前中は",
+              "options": [
+                "学校へ",
+                "病院へ",
+                "行くので",
+                "午前中は"
+              ],
+              "correct": 2,
+              "explanation": "Order: 明日 午前中は 病院へ [★ 行くので] 学校へ 行けません。 Star is 3 (行くので)."
+            },
+            {
+              "id": "n4-e7-g-18",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "18. 電車に　＿＿　＿＿　★　＿＿　走りました。\n1: 遅れない　2: ように　3: 急いで　4: 駅まで",
+              "options": [
+                "遅れない",
+                "ように",
+                "急いで",
+                "駅まで"
+              ],
+              "correct": 3,
+              "explanation": "Order: 電車に 遅れない ように 急いで [★ 駅まで] 走りました。 Star is 4 (駅まで)."
+            },
+            {
+              "id": "n4-e7-g-19",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "19. わたしは　＿＿　＿＿　★　＿＿　つもりです。\n1: 日本へ　2: 来年　3: 留学する　4: 友達と",
+              "options": [
+                "日本へ",
+                "来年",
+                "留学する",
+                "友達と"
+              ],
+              "correct": 0,
+              "explanation": "Order: わたしは 来年 友達と [★ 日本へ] 留学する つもりです。 Star is 1 (日本へ)."
+            },
+            {
+              "id": "n4-e7-g-20",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "20. この　＿＿　＿＿　★　＿＿　思います。\n1: レポートは　2: 難しくて　3: 一人で　4: できないと",
+              "options": [
+                "レポートは",
+                "難しくて",
+                "一人で",
+                "できないと"
+              ],
+              "correct": 2,
+              "explanation": "Order: この レポートは 難しくて [★ 一人で] できないと 思います。 Star is 3 (一人で)."
+            },
+            {
+              "id": "n4-e7-g-21",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "【読解文章：日本の温泉文化】\n21. (21) に入る言葉はどれですか。",
+              "options": [
+                "はいります",
+                "はいりました",
+                "はいって",
+                "はいる"
+              ],
+              "correct": 2,
+              "explanation": "Connecting action with te-form:「はいって」."
+            },
+            {
+              "id": "n4-e7-g-22",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "22. (22) に入る言葉はどれですか。",
+              "options": [
+                "とても",
+                "あまり",
+                "ぜんぜん",
+                "すこしも"
+              ],
+              "correct": 0,
+              "explanation": "Positive evaluation:「とても」."
+            },
+            {
+              "id": "n4-e7-g-23",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "23. (23) に入る言葉はどれですか。",
+              "options": [
+                "それに",
+                "だから",
+                "しかし",
+                "それから"
+              ],
+              "correct": 0,
+              "explanation": "Adding related points:「それに」."
+            },
+            {
+              "id": "n4-e7-g-24",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "24. (24) に入る言葉はどれですか。",
+              "options": [
+                "いってみたい",
+                "いってみて",
+                "いってみる",
+                "いってみた"
+              ],
+              "correct": 0,
+              "explanation": "Desire:「いってみたい」."
+            },
+            {
+              "id": "n4-e7-g-25",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "25. (25) に入る言葉はどれですか。",
+              "options": [
+                "おもいます",
+                "おもいました",
+                "おもって",
+                "おもわない"
+              ],
+              "correct": 0,
+              "explanation": "Present conjecture:「おもいます」."
+            },
+            {
+              "id": "n4-e7-g-26",
+              "type": "Mondai 4 (短文読解)",
+              "question": "【短文：地域の日本語教室】\n26. 日本語教室は いつ 開かれますか。",
+              "options": [
+                "毎週土曜日の 午前10時",
+                "毎週日曜日の 午後2時",
+                "毎週水曜日の 午後7時",
+                "毎月第1土曜日"
+              ],
+              "correct": 0,
+              "explanation": "Held every Saturday at 10:00 AM."
+            },
+            {
+              "id": "n4-e7-g-27",
+              "type": "Mondai 4 (短文読解)",
+              "question": "27. 参加費用は いくらですか。",
+              "options": [
+                "1回 500円（テキスト代別）",
+                "無料",
+                "月額 2,000円",
+                "年間 5,000円"
+              ],
+              "correct": 0,
+              "explanation": "Fee is 500 yen per session."
+            },
+            {
+              "id": "n4-e7-g-28",
+              "type": "Mondai 4 (短文読解)",
+              "question": "28. 初めて参加する人は 何を持って行く必要がありますか。",
+              "options": [
+                "筆記用具とノート",
+                "身分証明書",
+                "写真2枚",
+                "辞書"
+              ],
+              "correct": 0,
+              "explanation": "Bring writing utensils and notebook."
+            },
+            {
+              "id": "n4-e7-g-29",
+              "type": "Mondai 4 (短文読解)",
+              "question": "29. 申し込みは どのように しますか。",
+              "options": [
+                "前日までに メールで 申し込む",
+                "当日 直接 会場へ 行く",
+                "電話でのみ 受付",
+                "市役所で 申し込む"
+              ],
+              "correct": 0,
+              "explanation": "Pre-registration by email by the previous day."
+            },
+            {
+              "id": "n4-e7-g-30",
+              "type": "Mondai 5 (中文読解)",
+              "question": "【中文：留学生のアルバイト体験】\n30. 筆者がカフェで働き始めた目的は何ですか。",
+              "options": [
+                "生きた日本語と接客マナーを学ぶため",
+                "お金を貯めて旅行するため",
+                "コーヒーの淹れ方を覚えるため",
+                "友達を作るため"
+              ],
+              "correct": 0,
+              "explanation": "To learn real-life Japanese communication and customer service manners."
+            },
+            {
+              "id": "n4-e7-g-31",
+              "type": "Mondai 5 (中文読解)",
+              "question": "31. アルバイトで一番苦労したことは何ですか。",
+              "options": [
+                "敬語の使い方と聞き取り",
+                "メニューを覚えること",
+                "皿洗い",
+                "朝早く起きること"
+              ],
+              "correct": 0,
+              "explanation": "Struggled most with keigo honorifics and fast native speech."
+            },
+            {
+              "id": "n4-e7-g-32",
+              "type": "Mondai 5 (中文読解)",
+              "question": "32. 店長から褒められた理由は何ですか。",
+              "options": [
+                "いつも笑顔で元気に挨拶していたから",
+                "ミスを一度もしなかったから",
+                "一番長く働いたから",
+                "英語が話せたから"
+              ],
+              "correct": 0,
+              "explanation": "Praised for consistently greeting customers with a bright smile."
+            },
+            {
+              "id": "n4-e7-g-33",
+              "type": "Mondai 5 (中文読解)",
+              "question": "33. 筆者はこのアルバイトを通じてどう成長しましたか。",
+              "options": [
+                "日本語の会話に自信がつき、人との繋がりを楽しめるようになった",
+                "料理が作れるようになった",
+                "給料がたくさんもらえた",
+                "将来カフェを開きたいと思った"
+              ],
+              "correct": 0,
+              "explanation": "Gained conversational confidence and appreciated human connections."
+            },
+            {
+              "id": "n4-e7-g-34",
+              "type": "Mondai 6 (情報検索)",
+              "question": "【情報検索：スポーツセンターの利用案内】\n34. プールを利用する大人の料金はいくらですか。",
+              "options": [
+                "400円",
+                "200円",
+                "600円",
+                "無料"
+              ],
+              "correct": 0,
+              "explanation": "Adult pool admission is listed as 400 yen."
+            },
+            {
+              "id": "n4-e7-g-35",
+              "type": "Mondai 6 (情報検索)",
+              "question": "35. トレーニングルームを利用する際に必ず持参するものは何ですか。",
+              "options": [
+                "室内用運動靴",
+                "水着",
+                "タオル2枚",
+                "会員証"
+              ],
+              "correct": 0,
+              "explanation": "Indoor athletic shoes (室内用運動靴) are strictly required."
+            }
+          ]
+        },
+        {
+          "id": "n4-e7-sec-listening",
+          "title": "Section 3: Listening Comprehension (聴解)",
+          "shortTitle": "聴解 (Listening)",
+          "timeLimitSeconds": 2100,
+          "questions": [
+            {
+              "id": "n4-e7-l-1",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
+              "image": "/images/japanese/listening/n4/m1_q1.png",
+              "question": "1. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 3,
+              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
+              "explanation": "Based on task instructions, Option 4 is correct."
+            },
+            {
+              "id": "n4-e7-l-2",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
+              "image": "/images/japanese/listening/n4/m1_q2.png",
+              "question": "2. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 0,
+              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
+              "explanation": "Based on task instructions, Option 1 is correct."
+            },
+            {
+              "id": "n4-e7-l-3",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
+              "image": "/images/japanese/listening/n4/m1_q3.png",
+              "question": "3. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 1,
+              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
+              "explanation": "Based on task instructions, Option 2 is correct."
+            },
+            {
+              "id": "n4-e7-l-4",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
+              "image": "/images/japanese/listening/n4/m1_q4.png",
+              "question": "4. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 2,
+              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
+              "explanation": "Based on task instructions, Option 3 is correct."
+            },
+            {
+              "id": "n4-e7-l-5",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
+              "image": "/images/japanese/listening/n4/m1_q5.png",
+              "question": "5. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 3,
+              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
+              "explanation": "Based on task instructions, Option 4 is correct."
+            },
+            {
+              "id": "n4-e7-l-6",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
+              "image": "/images/japanese/listening/n4/m1_q6.png",
+              "question": "6. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 0,
+              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
+              "explanation": "Based on task instructions, Option 1 is correct."
+            },
+            {
+              "id": "n4-e7-l-7",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
+              "image": "/images/japanese/listening/n4/m1_q7.png",
+              "question": "7. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 1,
+              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
+              "explanation": "Based on task instructions, Option 2 is correct."
+            },
+            {
+              "id": "n4-e7-l-8",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
+              "image": "/images/japanese/listening/n4/m1_q8.png",
+              "question": "8. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 2,
+              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
+              "explanation": "Based on task instructions, Option 3 is correct."
+            },
+            {
+              "id": "n4-e7-l-9",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
+              "question": "9. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "options": [
+                "電車が遅れたから",
+                "寝坊したから",
+                "道を間違えたから",
+                "雨が降ったから"
+              ],
+              "correct": 3,
+              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
+              "explanation": "Point comprehension detail: reason for arriving late."
+            },
+            {
+              "id": "n4-e7-l-10",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
+              "question": "10. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "options": [
+                "電車が遅れたから",
+                "寝坊したから",
+                "道を間違えたから",
+                "雨が降ったから"
+              ],
+              "correct": 0,
+              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
+              "explanation": "Point comprehension detail: reason for arriving late."
+            },
+            {
+              "id": "n4-e7-l-11",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
+              "question": "11. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "options": [
+                "電車が遅れたから",
+                "寝坊したから",
+                "道を間違えたから",
+                "雨が降ったから"
+              ],
+              "correct": 1,
+              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
+              "explanation": "Point comprehension detail: reason for arriving late."
+            },
+            {
+              "id": "n4-e7-l-12",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
+              "question": "12. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "options": [
+                "電車が遅れたから",
+                "寝坊したから",
+                "道を間違えたから",
+                "雨が降ったから"
+              ],
+              "correct": 2,
+              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
+              "explanation": "Point comprehension detail: reason for arriving late."
+            },
+            {
+              "id": "n4-e7-l-13",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
+              "question": "13. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "options": [
+                "電車が遅れたから",
+                "寝坊したから",
+                "道を間違えたから",
+                "雨が降ったから"
+              ],
+              "correct": 3,
+              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
+              "explanation": "Point comprehension detail: reason for arriving late."
+            },
+            {
+              "id": "n4-e7-l-14",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
+              "question": "14. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "options": [
+                "電車が遅れたから",
+                "寝坊したから",
+                "道を間違えたから",
+                "雨が降ったから"
+              ],
+              "correct": 0,
+              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
+              "explanation": "Point comprehension detail: reason for arriving late."
+            },
+            {
+              "id": "n4-e7-l-15",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
+              "question": "15. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "options": [
+                "電車が遅れたから",
+                "寝坊したから",
+                "道を間違えたから",
+                "雨が降ったから"
+              ],
+              "correct": 1,
+              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
+              "explanation": "Point comprehension detail: reason for arriving late."
+            },
+            {
+              "id": "n4-e7-l-16",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
+              "image": "/images/japanese/listening/n4/m3_q1.png",
+              "question": "16. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "options": [
+                "手伝っていただけませんか。",
+                "手伝ってください。",
+                "手伝いましょうか。"
+              ],
+              "correct": 0,
+              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
+              "explanation": "Polite request in N4:「〜ていただけませんか」."
+            },
+            {
+              "id": "n4-e7-l-17",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
+              "image": "/images/japanese/listening/n4/m3_q2.png",
+              "question": "17. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "options": [
+                "手伝っていただけませんか。",
+                "手伝ってください。",
+                "手伝いましょうか。"
+              ],
+              "correct": 0,
+              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
+              "explanation": "Polite request in N4:「〜ていただけませんか」."
+            },
+            {
+              "id": "n4-e7-l-18",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
+              "image": "/images/japanese/listening/n4/m3_q3.png",
+              "question": "18. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "options": [
+                "手伝っていただけませんか。",
+                "手伝ってください。",
+                "手伝いましょうか。"
+              ],
+              "correct": 0,
+              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
+              "explanation": "Polite request in N4:「〜ていただけませんか」."
+            },
+            {
+              "id": "n4-e7-l-19",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
+              "image": "/images/japanese/listening/n4/m3_q4.png",
+              "question": "19. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "options": [
+                "手伝っていただけませんか。",
+                "手伝ってください。",
+                "手伝いましょうか。"
+              ],
+              "correct": 0,
+              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
+              "explanation": "Polite request in N4:「〜ていただけませんか」."
+            },
+            {
+              "id": "n4-e7-l-20",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
+              "image": "/images/japanese/listening/n4/m3_q5.png",
+              "question": "20. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "options": [
+                "手伝っていただけませんか。",
+                "手伝ってください。",
+                "手伝いましょうか。"
+              ],
+              "correct": 0,
+              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
+              "explanation": "Polite request in N4:「〜ていただけませんか」."
+            },
+            {
+              "id": "n4-e7-l-21",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
+              "question": "21. 「お先に失礼します。」",
+              "options": [
+                "お疲れ様でした。",
+                "いってらっしゃい。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
+              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+            },
+            {
+              "id": "n4-e7-l-22",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
+              "question": "22. 「お先に失礼します。」",
+              "options": [
+                "お疲れ様でした。",
+                "いってらっしゃい。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
+              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+            },
+            {
+              "id": "n4-e7-l-23",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
+              "question": "23. 「お先に失礼します。」",
+              "options": [
+                "お疲れ様でした。",
+                "いってらっしゃい。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
+              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+            },
+            {
+              "id": "n4-e7-l-24",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
+              "question": "24. 「お先に失礼します。」",
+              "options": [
+                "お疲れ様でした。",
+                "いってらっしゃい。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
+              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+            },
+            {
+              "id": "n4-e7-l-25",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
+              "question": "25. 「お先に失礼します。」",
+              "options": [
+                "お疲れ様でした。",
+                "いってらっしゃい。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
+              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+            },
+            {
+              "id": "n4-e7-l-26",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
+              "question": "26. 「お先に失礼します。」",
+              "options": [
+                "お疲れ様でした。",
+                "いってらっしゃい。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
+              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+            },
+            {
+              "id": "n4-e7-l-27",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
+              "question": "27. 「お先に失礼します。」",
+              "options": [
+                "お疲れ様でした。",
+                "いってらっしゃい。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
+              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+            },
+            {
+              "id": "n4-e7-l-28",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
+              "question": "28. 「お先に失礼します。」",
+              "options": [
+                "お疲れ様でした。",
+                "いってらっしゃい。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
+              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "n4-exam-8",
+      "title": "JLPT N4 Workplace & Daily Etiquette Listening (2025 Series)",
+      "shortTitle": "Exam 8 (Workplace Listening)",
+      "badge": "Audio Intensive",
+      "year": "2025 Series",
+      "description": "Workplace scenarios, phone etiquette, train station announcements, instructions from supervisors, and rapid response dialogues.",
+      "totalQuestions": 97,
+      "sections": [
+        {
+          "id": "n4-e8-sec-vocab",
+          "title": "Section 1: Language Knowledge (文字・語彙)",
+          "shortTitle": "文字・語彙 (Kanji & Vocab)",
+          "timeLimitSeconds": 1500,
+          "questions": [
+            {
+              "id": "n4-e8-v-1",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "1. <u>案内</u>を お願いします。",
+              "options": [
+                "あんあい",
+                "あんない",
+                "あんたい",
+                "あんだい"
+              ],
+              "correct": 1,
+              "explanation": "「案内」is read as「あんない」(guide)."
+            },
+            {
+              "id": "n4-e8-v-2",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "2. <u>計画</u>を お願いします。",
+              "options": [
+                "けいかく",
+                "けいがく",
+                "けいかん",
+                "けいがん"
+              ],
+              "correct": 0,
+              "explanation": "「計画」is read as「けいかく」(plan)."
+            },
+            {
+              "id": "n4-e8-v-3",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "3. <u>荷物</u>を お願いします。",
+              "options": [
+                "かもつ",
+                "にもつ",
+                "かぶつ",
+                "にぶつ"
+              ],
+              "correct": 1,
+              "explanation": "「荷物」is read as「にもつ」(luggage)."
+            },
+            {
+              "id": "n4-e8-v-4",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "4. <u>特急</u>を お願いします。",
+              "options": [
+                "とくきゅう",
+                "とっきゅう",
+                "どくきゅう",
+                "どっきゅう"
+              ],
+              "correct": 1,
+              "explanation": "「特急」is read as「とっきゅう」(limited express)."
+            },
+            {
+              "id": "n4-e8-v-5",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "5. <u>試合</u>を お願いします。",
+              "options": [
+                "しあい",
+                "じあい",
+                "しごう",
+                "じごう"
+              ],
+              "correct": 0,
+              "explanation": "「試合」is read as「しあい」(match / game)."
+            },
+            {
+              "id": "n4-e8-v-6",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "6. <u>予習</u>を お願いします。",
+              "options": [
+                "よしゅう",
+                "ようしゅう",
+                "ほしゅう",
+                "ほうしゅう"
+              ],
+              "correct": 0,
+              "explanation": "「予習」is read as「よしゅう」(preview study)."
+            },
+            {
+              "id": "n4-e8-v-7",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "7. <u>復習</u>を お願いします。",
+              "options": [
+                "ふくしゅう",
+                "ふくしゅ",
+                "ぶくしゅう",
+                "ぶくしゅ"
+              ],
+              "correct": 0,
+              "explanation": "「復習」is read as「ふくしゅう」(review study)."
+            },
+            {
+              "id": "n4-e8-v-8",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "8. <u>説明</u>を お願いします。",
+              "options": [
+                "せつめい",
+                "せつめ",
+                "ぜつめい",
+                "ぜつめ"
+              ],
+              "correct": 0,
+              "explanation": "「説明」is read as「せつめい」(explanation)."
+            },
+            {
+              "id": "n4-e8-v-9",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "9. <u>出発</u>を お願いします。",
+              "options": [
+                "しゅっぱつ",
+                "しゅつはつ",
+                "でっぱつ",
+                "ではつ"
+              ],
+              "correct": 0,
+              "explanation": "「出発」is read as「しゅっぱつ」(departure)."
+            },
+            {
+              "id": "n4-e8-v-10",
+              "type": "Mondai 2 (表記)",
+              "question": "10. <u>せいこう</u>を 確認してください。",
+              "options": [
+                "成功",
+                "成効",
+                "精功",
+                "精効"
+              ],
+              "correct": 0,
+              "explanation": "「せいこう」is written as「成功」(success)."
+            },
+            {
+              "id": "n4-e8-v-11",
+              "type": "Mondai 2 (表記)",
+              "question": "11. <u>きっぷ</u>を 確認してください。",
+              "options": [
+                "切符",
+                "切布",
+                "着符",
+                "着布"
+              ],
+              "correct": 0,
+              "explanation": "「きっぷ」is written as「切符」(ticket)."
+            },
+            {
+              "id": "n4-e8-v-12",
+              "type": "Mondai 2 (表記)",
+              "question": "12. <u>じゅんび</u>を 確認してください。",
+              "options": [
+                "準備",
+                "準便",
+                "准備",
+                "準偏"
+              ],
+              "correct": 0,
+              "explanation": "「じゅんび」is written as「準備」(preparation)."
+            },
+            {
+              "id": "n4-e8-v-13",
+              "type": "Mondai 2 (表記)",
+              "question": "13. <u>おんど</u>を 確認してください。",
+              "options": [
+                "温度",
+                "温土",
+                "音度",
+                "音土"
+              ],
+              "correct": 0,
+              "explanation": "「おんど」is written as「温度」(temperature)."
+            },
+            {
+              "id": "n4-e8-v-14",
+              "type": "Mondai 2 (表記)",
+              "question": "14. <u>ちゅうい</u>を 確認してください。",
+              "options": [
+                "注意",
+                "注心",
+                "主意",
+                "主心"
+              ],
+              "correct": 0,
+              "explanation": "「ちゅうい」is written as「注意」(caution)."
+            },
+            {
+              "id": "n4-e8-v-15",
+              "type": "Mondai 2 (表記)",
+              "question": "15. <u>へんじ</u>を 確認してください。",
+              "options": [
+                "返事",
+                "変事",
+                "返次",
+                "変次"
+              ],
+              "correct": 0,
+              "explanation": "「へんじ」is written as「返事」(reply)."
+            },
+            {
+              "id": "n4-e8-v-16",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "16. 雨が（　　）ので、傘を さしました。",
+              "options": [
+                "ふりだした",
+                "やんだ",
+                "あがった",
+                "つよまった"
+              ],
+              "correct": 0,
+              "explanation": "Started raining:「ふりだした」."
+            },
+            {
+              "id": "n4-e8-v-17",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "17. 車を（　　）に 止めてください。",
+              "options": [
+                "駐車場",
+                "交番",
+                "駅",
+                "ガソリンスタンド"
+              ],
+              "correct": 0,
+              "explanation": "Parking lot:「駐車場」."
+            },
+            {
+              "id": "n4-e8-v-18",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "18. ボタンを（　　）と、ドアが 開きます。",
+              "options": [
+                "おす",
+                "ひく",
+                "まわす",
+                "きる"
+              ],
+              "correct": 0,
+              "explanation": "Pushing button:「ボタンをおす」."
+            },
+            {
+              "id": "n4-e8-v-19",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "19. 毎日 ジョギングを（　　）ています。",
+              "options": [
+                "つづけ",
+                "やめ",
+                "はじめ",
+                "あきらめ"
+              ],
+              "correct": 0,
+              "explanation": "Continuing:「つづける」."
+            },
+            {
+              "id": "n4-e8-v-20",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "20. 日本語の スピーチを（　　）しました。",
+              "options": [
+                "はっぴょう",
+                "ほうこく",
+                "れんしゅう",
+                "しゅっせき"
+              ],
+              "correct": 0,
+              "explanation": "Presentation:「はっぴょうする」."
+            },
+            {
+              "id": "n4-e8-v-21",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "21. ベルが（　　）、授業が 始まりました。",
+              "options": [
+                "なって",
+                "おとして",
+                "ふって",
+                "ひいて"
+              ],
+              "correct": 0,
+              "explanation": "Ringing bell:「ベルがなる」."
+            },
+            {
+              "id": "n4-e8-v-22",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "22. 風で カーテンが（　　）います。",
+              "options": [
+                "ゆれて",
+                "こわれて",
+                "たおれて",
+                "やぶれて"
+              ],
+              "correct": 0,
+              "explanation": "Swaying:「ゆれる」."
+            },
+            {
+              "id": "n4-e8-v-23",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "23. 先生の おかげで 試験に（　　）しました。",
+              "options": [
+                "ごうかく",
+                "しっぱい",
+                "そつぎょう",
+                "にゅうがく"
+              ],
+              "correct": 0,
+              "explanation": "Passing exam:「ごうかくする」."
+            },
+            {
+              "id": "n4-e8-v-24",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "24. 電気を けして 部屋を（　　）しました。",
+              "options": [
+                "まっくら",
+                "まっしろ",
+                "まっくろ",
+                "まっあか"
+              ],
+              "correct": 0,
+              "explanation": "Pitch dark:「まっくら」."
+            },
+            {
+              "id": "n4-e8-v-25",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "25. 急な（　　）が できたので、帰ります。",
+              "options": [
+                "用事",
+                "約束",
+                "計画",
+                "都合"
+              ],
+              "correct": 0,
+              "explanation": "Urgent errand:「急な用事」."
+            },
+            {
+              "id": "n4-e8-v-26",
+              "type": "Mondai 4 (類義表現)",
+              "question": "26. この 問題は <u>複雑</u>です。",
+              "options": [
+                "かんたんではありません",
+                "おもしろくありません",
+                "たかくありません",
+                "あたらしくありません"
+              ],
+              "correct": 0,
+              "explanation": "「複雑」(complex)."
+            },
+            {
+              "id": "n4-e8-v-27",
+              "type": "Mondai 4 (類義表現)",
+              "question": "27. <u>たいてい</u> 家で 勉強します。",
+              "options": [
+                "ほとんど",
+                "いつも",
+                "ときどき",
+                "たまに"
+              ],
+              "correct": 0,
+              "explanation": "「たいてい」(mostly / usually)."
+            },
+            {
+              "id": "n4-e8-v-28",
+              "type": "Mondai 4 (類義表現)",
+              "question": "28. <u>お礼</u>を 言いました。",
+              "options": [
+                "感謝しました",
+                "あやまりました",
+                "約束しました",
+                "案内しました"
+              ],
+              "correct": 0,
+              "explanation": "「お礼を言う」(express thanks)."
+            },
+            {
+              "id": "n4-e8-v-29",
+              "type": "Mondai 4 (類義表現)",
+              "question": "29. <u>さっき</u> 部長に 会いました。",
+              "options": [
+                "すこし前に",
+                "ずっと前に",
+                "明日に",
+                "夕方に"
+              ],
+              "correct": 0,
+              "explanation": "「さっき」(a while ago)."
+            },
+            {
+              "id": "n4-e8-v-30",
+              "type": "Mondai 4 (類義表現)",
+              "question": "30. <u>遠慮しないで</u> 食べてください。",
+              "options": [
+                "きにしないで",
+                "いそいで",
+                "のこさないで",
+                "すこしだけ"
+              ],
+              "correct": 0,
+              "explanation": "「遠慮しないで」(without holding back)."
+            },
+            {
+              "id": "n4-e8-v-31",
+              "type": "Mondai 5 (用法)",
+              "question": "31. <u>遠慮</u>",
+              "options": [
+                "会議で 意見を 言うのを 遠慮しました。",
+                "電車に 遠慮して 乗りました。",
+                "友達に 遠慮を あげました。",
+                "本を 遠慮して 読みました。"
+              ],
+              "correct": 0,
+              "explanation": "Usage of「遠慮する」."
+            },
+            {
+              "id": "n4-e8-v-32",
+              "type": "Mondai 5 (用法)",
+              "question": "32. <u>世話</u>",
+              "options": [
+                "犬の 世話を しています。",
+                "宿題の 世話を しました。",
+                "料理の 世話を 作ります。",
+                "電車の 世話に 乗ります。"
+              ],
+              "correct": 0,
+              "explanation": "Usage of「世話をする」."
+            },
+            {
+              "id": "n4-e8-v-33",
+              "type": "Mondai 5 (用法)",
+              "question": "33. <u>熱心</u>",
+              "options": [
+                "彼は 熱心に 日本語を 勉強しています。",
+                "今日は 熱心な 天気です。",
+                "この スープは 熱心です。",
+                "熱心な 電車に 乗りました。"
+              ],
+              "correct": 0,
+              "explanation": "Usage of「熱心に」."
+            },
+            {
+              "id": "n4-e8-v-34",
+              "type": "Mondai 5 (用法)",
+              "question": "34. <u>都合</u>",
+              "options": [
+                "明日の 午後は 都合が 悪いです。",
+                "都合な 料理を 食べました。",
+                "都合に 本を 買いました。",
+                "都合が 高いです。"
+              ],
+              "correct": 0,
+              "explanation": "Usage of「都合」."
+            },
+            {
+              "id": "n4-e8-v-35",
+              "type": "Mondai 5 (用法)",
+              "question": "35. <u>故障</u>",
+              "options": [
+                "テレビが 故障して つきません。",
+                "宿題が 故障しました。",
+                "料理が 故障しました。",
+                "天気が 故障しました。"
+              ],
+              "correct": 0,
+              "explanation": "Usage of「故障する」."
+            }
+          ]
+        },
+        {
+          "id": "n4-e8-sec-grammar",
+          "title": "Section 2: Language Knowledge (文法) & Reading (読解)",
+          "shortTitle": "文法・読解 (Grammar & Reading)",
+          "timeLimitSeconds": 2700,
+          "questions": [
+            {
+              "id": "n4-e8-g-1",
+              "type": "Mondai 1 (文法形式)",
+              "question": "1. この 料理は（　　）すぎて、食べられません。",
+              "options": [
+                "から",
+                "からい",
+                "からく",
+                "からくて"
+              ],
+              "correct": 0,
+              "explanation": "Adjective stem + すぎる:「からすぎる」."
+            },
+            {
+              "id": "n4-e8-g-2",
+              "type": "Mondai 1 (文法形式)",
+              "question": "2. 雨が ふりそう（　　）から、傘を 持って行きます。",
+              "options": [
+                "だ",
+                "な",
+                "に",
+                "で"
+              ],
+              "correct": 0,
+              "explanation": "そう + だから:「ふりそうだ」."
+            },
+            {
+              "id": "n4-e8-g-3",
+              "type": "Mondai 1 (文法形式)",
+              "question": "3. 先生に 本を（　　）いただきました。",
+              "options": [
+                "かして",
+                "かりて",
+                "かって",
+                "よんで"
+              ],
+              "correct": 0,
+              "explanation": "Humble benefit:「かしていただく」."
+            },
+            {
+              "id": "n4-e8-g-4",
+              "type": "Mondai 1 (文法形式)",
+              "question": "4. 毎日 走る（　　）に しています。",
+              "options": [
+                "こと",
+                "もの",
+                "よう",
+                "わけ"
+              ],
+              "correct": 0,
+              "explanation": "Habit pattern:「〜ことにしている」."
+            },
+            {
+              "id": "n4-e8-g-5",
+              "type": "Mondai 1 (文法形式)",
+              "question": "5. 弟は 母に 部屋を（　　）られました。",
+              "options": [
+                "そうじさ",
+                "そうじ",
+                "そうじされ",
+                "そうじし"
+              ],
+              "correct": 0,
+              "explanation": "Passive:「そうじされた」."
+            },
+            {
+              "id": "n4-e8-g-6",
+              "type": "Mondai 1 (文法形式)",
+              "question": "6. 早く 起きられる（　　）に、目覚ましを かけました。",
+              "options": [
+                "よう",
+                "こと",
+                "ため",
+                "はず"
+              ],
+              "correct": 0,
+              "explanation": "Purpose with potential:「〜ように」."
+            },
+            {
+              "id": "n4-e8-g-7",
+              "type": "Mondai 1 (文法形式)",
+              "question": "7. この 本は 読み（　　）やすいです。",
+              "options": [
+                "やすい",
+                "やすく",
+                "やすくて",
+                "やすかった"
+              ],
+              "correct": 0,
+              "explanation": "Ease of action:「読みやすい」."
+            },
+            {
+              "id": "n4-e8-g-8",
+              "type": "Mondai 1 (文法形式)",
+              "question": "8. 田中さんは 来ない（　　）かもしれません。",
+              "options": [
+                "かも",
+                "はず",
+                "わけ",
+                "こと"
+              ],
+              "correct": 0,
+              "explanation": "Possibility:「〜かもしれない」."
+            },
+            {
+              "id": "n4-e8-g-9",
+              "type": "Mondai 1 (文法形式)",
+              "question": "9. お荷物を お持ち（　　）ましょうか。",
+              "options": [
+                "し",
+                "になり",
+                "いたし",
+                "なさい"
+              ],
+              "correct": 0,
+              "explanation": "Humble offer:「お持ちしましょうか」."
+            },
+            {
+              "id": "n4-e8-g-10",
+              "type": "Mondai 1 (文法形式)",
+              "question": "10. ドアが（　　）います。",
+              "options": [
+                "あいて",
+                "あけて",
+                "しまって",
+                "しめて"
+              ],
+              "correct": 0,
+              "explanation": "Intransitive state:「あいている」."
+            },
+            {
+              "id": "n4-e8-g-11",
+              "type": "Mondai 1 (文法形式)",
+              "question": "11. 窓が（　　）あります。",
+              "options": [
+                "あけて",
+                "あいて",
+                "しめて",
+                "しまって"
+              ],
+              "correct": 0,
+              "explanation": "Transitive state:「あけてある」."
+            },
+            {
+              "id": "n4-e8-g-12",
+              "type": "Mondai 1 (文法形式)",
+              "question": "12. 日本語が 上手に（　　）たいです。",
+              "options": [
+                "なり",
+                "して",
+                "なって",
+                "なれ"
+              ],
+              "correct": 0,
+              "explanation": "Desire to become:「なりたい」."
+            },
+            {
+              "id": "n4-e8-g-13",
+              "type": "Mondai 1 (文法形式)",
+              "question": "13. 薬を 飲んだ（　　）が いいですよ。",
+              "options": [
+                "ほう",
+                "よう",
+                "こと",
+                "わけ"
+              ],
+              "correct": 0,
+              "explanation": "Advice:「〜ほうがいい」."
+            },
+            {
+              "id": "n4-e8-g-14",
+              "type": "Mondai 1 (文法形式)",
+              "question": "14. 映画を（　　）ながら、ポップコーンを 食べました。",
+              "options": [
+                "み",
+                "みて",
+                "みる",
+                "みた"
+              ],
+              "correct": 0,
+              "explanation": "Simultaneous:「みながら」."
+            },
+            {
+              "id": "n4-e8-g-15",
+              "type": "Mondai 1 (文法形式)",
+              "question": "15. 明日 雨なら、試合は 中止（　　）します。",
+              "options": [
+                "に",
+                "を",
+                "で",
+                "と"
+              ],
+              "correct": 0,
+              "explanation": "Decision:「中止にする」."
+            },
+            {
+              "id": "n4-e8-g-16",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "16. わたしは　＿＿　＿＿　★　＿＿　つもりです。\n1: 日本へ　2: 来年　3: 留学する　4: 友達と",
+              "options": [
+                "日本へ",
+                "来年",
+                "留学する",
+                "友達と"
+              ],
+              "correct": 0,
+              "explanation": "Order: わたしは 来年 友達と [★ 日本へ] 留学する つもりです。 Star is 1 (日本へ)."
+            },
+            {
+              "id": "n4-e8-g-17",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "17. この　＿＿　＿＿　★　＿＿　思います。\n1: レポートは　2: 難しくて　3: 一人で　4: できないと",
+              "options": [
+                "レポートは",
+                "難しくて",
+                "一人で",
+                "できないと"
+              ],
+              "correct": 2,
+              "explanation": "Order: この レポートは 難しくて [★ 一人で] できないと 思います。 Star is 3 (一人で)."
+            },
+            {
+              "id": "n4-e8-g-18",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "18. 先生に　＿＿　＿＿　★　＿＿　いただきました。\n1: 本を　2: 面白い　3: 貸して　4: 素敵な",
+              "options": [
+                "本を",
+                "面白い",
+                "貸して",
+                "素敵な"
+              ],
+              "correct": 0,
+              "explanation": "Order: 先生に 面白い 素敵な [★ 本を] 貸して いただきました。 Star is 1 (本を)."
+            },
+            {
+              "id": "n4-e8-g-19",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "19. 明日　＿＿　＿＿　★　＿＿　行けません。\n1: 学校へ　2: 病院へ　3: 行くので　4: 午前中は",
+              "options": [
+                "学校へ",
+                "病院へ",
+                "行くので",
+                "午前中は"
+              ],
+              "correct": 2,
+              "explanation": "Order: 明日 午前中は 病院へ [★ 行くので] 学校へ 行けません。 Star is 3 (行くので)."
+            },
+            {
+              "id": "n4-e8-g-20",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "20. 電車に　＿＿　＿＿　★　＿＿　走りました。\n1: 遅れない　2: ように　3: 急いで　4: 駅まで",
+              "options": [
+                "遅れない",
+                "ように",
+                "急いで",
+                "駅まで"
+              ],
+              "correct": 3,
+              "explanation": "Order: 電車に 遅れない ように 急いで [★ 駅まで] 走りました。 Star is 4 (駅まで)."
+            },
+            {
+              "id": "n4-e8-g-21",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "【読解文章：日本の温泉文化】\n21. (21) に入る言葉はどれですか。",
+              "options": [
+                "はいります",
+                "はいりました",
+                "はいって",
+                "はいる"
+              ],
+              "correct": 2,
+              "explanation": "Connecting action with te-form:「はいって」."
+            },
+            {
+              "id": "n4-e8-g-22",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "22. (22) に入る言葉はどれですか。",
+              "options": [
+                "とても",
+                "あまり",
+                "ぜんぜん",
+                "すこしも"
+              ],
+              "correct": 0,
+              "explanation": "Positive evaluation:「とても」."
+            },
+            {
+              "id": "n4-e8-g-23",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "23. (23) に入る言葉はどれですか。",
+              "options": [
+                "それに",
+                "だから",
+                "しかし",
+                "それから"
+              ],
+              "correct": 0,
+              "explanation": "Adding related points:「それに」."
+            },
+            {
+              "id": "n4-e8-g-24",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "24. (24) に入る言葉はどれですか。",
+              "options": [
+                "いってみたい",
+                "いってみて",
+                "いってみる",
+                "いってみた"
+              ],
+              "correct": 0,
+              "explanation": "Desire:「いってみたい」."
+            },
+            {
+              "id": "n4-e8-g-25",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "25. (25) に入る言葉はどれですか。",
+              "options": [
+                "おもいます",
+                "おもいました",
+                "おもって",
+                "おもわない"
+              ],
+              "correct": 0,
+              "explanation": "Present conjecture:「おもいます」."
+            },
+            {
+              "id": "n4-e8-g-26",
+              "type": "Mondai 4 (短文読解)",
+              "question": "【短文：地域の日本語教室】\n26. 日本語教室は いつ 開かれますか。",
+              "options": [
+                "毎週土曜日の 午前10時",
+                "毎週日曜日の 午後2時",
+                "毎週水曜日の 午後7時",
+                "毎月第1土曜日"
+              ],
+              "correct": 0,
+              "explanation": "Held every Saturday at 10:00 AM."
+            },
+            {
+              "id": "n4-e8-g-27",
+              "type": "Mondai 4 (短文読解)",
+              "question": "27. 参加費用は いくらですか。",
+              "options": [
+                "1回 500円（テキスト代別）",
+                "無料",
+                "月額 2,000円",
+                "年間 5,000円"
+              ],
+              "correct": 0,
+              "explanation": "Fee is 500 yen per session."
+            },
+            {
+              "id": "n4-e8-g-28",
+              "type": "Mondai 4 (短文読解)",
+              "question": "28. 初めて参加する人は 何を持って行く必要がありますか。",
+              "options": [
+                "筆記用具とノート",
+                "身分証明書",
+                "写真2枚",
+                "辞書"
+              ],
+              "correct": 0,
+              "explanation": "Bring writing utensils and notebook."
+            },
+            {
+              "id": "n4-e8-g-29",
+              "type": "Mondai 4 (短文読解)",
+              "question": "29. 申し込みは どのように しますか。",
+              "options": [
+                "前日までに メールで 申し込む",
+                "当日 直接 会場へ 行く",
+                "電話でのみ 受付",
+                "市役所で 申し込む"
+              ],
+              "correct": 0,
+              "explanation": "Pre-registration by email by the previous day."
+            },
+            {
+              "id": "n4-e8-g-30",
+              "type": "Mondai 5 (中文読解)",
+              "question": "【中文：留学生のアルバイト体験】\n30. 筆者がカフェで働き始めた目的は何ですか。",
+              "options": [
+                "生きた日本語と接客マナーを学ぶため",
+                "お金を貯めて旅行するため",
+                "コーヒーの淹れ方を覚えるため",
+                "友達を作るため"
+              ],
+              "correct": 0,
+              "explanation": "To learn real-life Japanese communication and customer service manners."
+            },
+            {
+              "id": "n4-e8-g-31",
+              "type": "Mondai 5 (中文読解)",
+              "question": "31. アルバイトで一番苦労したことは何ですか。",
+              "options": [
+                "敬語の使い方と聞き取り",
+                "メニューを覚えること",
+                "皿洗い",
+                "朝早く起きること"
+              ],
+              "correct": 0,
+              "explanation": "Struggled most with keigo honorifics and fast native speech."
+            },
+            {
+              "id": "n4-e8-g-32",
+              "type": "Mondai 5 (中文読解)",
+              "question": "32. 店長から褒められた理由は何ですか。",
+              "options": [
+                "いつも笑顔で元気に挨拶していたから",
+                "ミスを一度もしなかったから",
+                "一番長く働いたから",
+                "英語が話せたから"
+              ],
+              "correct": 0,
+              "explanation": "Praised for consistently greeting customers with a bright smile."
+            },
+            {
+              "id": "n4-e8-g-33",
+              "type": "Mondai 5 (中文読解)",
+              "question": "33. 筆者はこのアルバイトを通じてどう成長しましたか。",
+              "options": [
+                "日本語の会話に自信がつき、人との繋がりを楽しめるようになった",
+                "料理が作れるようになった",
+                "給料がたくさんもらえた",
+                "将来カフェを開きたいと思った"
+              ],
+              "correct": 0,
+              "explanation": "Gained conversational confidence and appreciated human connections."
+            },
+            {
+              "id": "n4-e8-g-34",
+              "type": "Mondai 6 (情報検索)",
+              "question": "【情報検索：スポーツセンターの利用案内】\n34. プールを利用する大人の料金はいくらですか。",
+              "options": [
+                "400円",
+                "200円",
+                "600円",
+                "無料"
+              ],
+              "correct": 0,
+              "explanation": "Adult pool admission is listed as 400 yen."
+            },
+            {
+              "id": "n4-e8-g-35",
+              "type": "Mondai 6 (情報検索)",
+              "question": "35. トレーニングルームを利用する際に必ず持参するものは何ですか。",
+              "options": [
+                "室内用運動靴",
+                "水着",
+                "タオル2枚",
+                "会員証"
+              ],
+              "correct": 0,
+              "explanation": "Indoor athletic shoes (室内用運動靴) are strictly required."
+            }
+          ]
+        },
+        {
+          "id": "n4-e8-sec-listening",
+          "title": "Section 3: Listening Comprehension (聴解)",
+          "shortTitle": "聴解 (Listening)",
+          "timeLimitSeconds": 2100,
+          "questions": [
+            {
+              "id": "n4-e8-l-1",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
+              "image": "/images/japanese/listening/n4/m1_q1.png",
+              "question": "1. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 0,
+              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
+              "explanation": "Based on task instructions, Option 1 is correct."
+            },
+            {
+              "id": "n4-e8-l-2",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
+              "image": "/images/japanese/listening/n4/m1_q2.png",
+              "question": "2. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 1,
+              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
+              "explanation": "Based on task instructions, Option 2 is correct."
+            },
+            {
+              "id": "n4-e8-l-3",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
+              "image": "/images/japanese/listening/n4/m1_q3.png",
+              "question": "3. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 2,
+              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
+              "explanation": "Based on task instructions, Option 3 is correct."
+            },
+            {
+              "id": "n4-e8-l-4",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
+              "image": "/images/japanese/listening/n4/m1_q4.png",
+              "question": "4. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 3,
+              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
+              "explanation": "Based on task instructions, Option 4 is correct."
+            },
+            {
+              "id": "n4-e8-l-5",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
+              "image": "/images/japanese/listening/n4/m1_q5.png",
+              "question": "5. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 0,
+              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
+              "explanation": "Based on task instructions, Option 1 is correct."
+            },
+            {
+              "id": "n4-e8-l-6",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
+              "image": "/images/japanese/listening/n4/m1_q6.png",
+              "question": "6. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 1,
+              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
+              "explanation": "Based on task instructions, Option 2 is correct."
+            },
+            {
+              "id": "n4-e8-l-7",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
+              "image": "/images/japanese/listening/n4/m1_q7.png",
+              "question": "7. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 2,
+              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
+              "explanation": "Based on task instructions, Option 3 is correct."
+            },
+            {
+              "id": "n4-e8-l-8",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
+              "image": "/images/japanese/listening/n4/m1_q8.png",
+              "question": "8. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 3,
+              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
+              "explanation": "Based on task instructions, Option 4 is correct."
+            },
+            {
+              "id": "n4-e8-l-9",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
+              "question": "9. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "options": [
+                "電車が遅れたから",
+                "寝坊したから",
+                "道を間違えたから",
+                "雨が降ったから"
+              ],
+              "correct": 0,
+              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
+              "explanation": "Point comprehension detail: reason for arriving late."
+            },
+            {
+              "id": "n4-e8-l-10",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
+              "question": "10. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "options": [
+                "電車が遅れたから",
+                "寝坊したから",
+                "道を間違えたから",
+                "雨が降ったから"
+              ],
+              "correct": 1,
+              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
+              "explanation": "Point comprehension detail: reason for arriving late."
+            },
+            {
+              "id": "n4-e8-l-11",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
+              "question": "11. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "options": [
+                "電車が遅れたから",
+                "寝坊したから",
+                "道を間違えたから",
+                "雨が降ったから"
+              ],
+              "correct": 2,
+              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
+              "explanation": "Point comprehension detail: reason for arriving late."
+            },
+            {
+              "id": "n4-e8-l-12",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
+              "question": "12. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "options": [
+                "電車が遅れたから",
+                "寝坊したから",
+                "道を間違えたから",
+                "雨が降ったから"
+              ],
+              "correct": 3,
+              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
+              "explanation": "Point comprehension detail: reason for arriving late."
+            },
+            {
+              "id": "n4-e8-l-13",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
+              "question": "13. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "options": [
+                "電車が遅れたから",
+                "寝坊したから",
+                "道を間違えたから",
+                "雨が降ったから"
+              ],
+              "correct": 0,
+              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
+              "explanation": "Point comprehension detail: reason for arriving late."
+            },
+            {
+              "id": "n4-e8-l-14",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
+              "question": "14. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "options": [
+                "電車が遅れたから",
+                "寝坊したから",
+                "道を間違えたから",
+                "雨が降ったから"
+              ],
+              "correct": 1,
+              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
+              "explanation": "Point comprehension detail: reason for arriving late."
+            },
+            {
+              "id": "n4-e8-l-15",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
+              "question": "15. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "options": [
+                "電車が遅れたから",
+                "寝坊したから",
+                "道を間違えたから",
+                "雨が降ったから"
+              ],
+              "correct": 2,
+              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
+              "explanation": "Point comprehension detail: reason for arriving late."
+            },
+            {
+              "id": "n4-e8-l-16",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
+              "image": "/images/japanese/listening/n4/m3_q1.png",
+              "question": "16. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "options": [
+                "手伝っていただけませんか。",
+                "手伝ってください。",
+                "手伝いましょうか。"
+              ],
+              "correct": 0,
+              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
+              "explanation": "Polite request in N4:「〜ていただけませんか」."
+            },
+            {
+              "id": "n4-e8-l-17",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
+              "image": "/images/japanese/listening/n4/m3_q2.png",
+              "question": "17. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "options": [
+                "手伝っていただけませんか。",
+                "手伝ってください。",
+                "手伝いましょうか。"
+              ],
+              "correct": 0,
+              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
+              "explanation": "Polite request in N4:「〜ていただけませんか」."
+            },
+            {
+              "id": "n4-e8-l-18",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
+              "image": "/images/japanese/listening/n4/m3_q3.png",
+              "question": "18. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "options": [
+                "手伝っていただけませんか。",
+                "手伝ってください。",
+                "手伝いましょうか。"
+              ],
+              "correct": 0,
+              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
+              "explanation": "Polite request in N4:「〜ていただけませんか」."
+            },
+            {
+              "id": "n4-e8-l-19",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
+              "image": "/images/japanese/listening/n4/m3_q4.png",
+              "question": "19. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "options": [
+                "手伝っていただけませんか。",
+                "手伝ってください。",
+                "手伝いましょうか。"
+              ],
+              "correct": 0,
+              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
+              "explanation": "Polite request in N4:「〜ていただけませんか」."
+            },
+            {
+              "id": "n4-e8-l-20",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
+              "image": "/images/japanese/listening/n4/m3_q5.png",
+              "question": "20. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "options": [
+                "手伝っていただけませんか。",
+                "手伝ってください。",
+                "手伝いましょうか。"
+              ],
+              "correct": 0,
+              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
+              "explanation": "Polite request in N4:「〜ていただけませんか」."
+            },
+            {
+              "id": "n4-e8-l-21",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
+              "question": "21. 「お先に失礼します。」",
+              "options": [
+                "お疲れ様でした。",
+                "いってらっしゃい。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
+              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+            },
+            {
+              "id": "n4-e8-l-22",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
+              "question": "22. 「お先に失礼します。」",
+              "options": [
+                "お疲れ様でした。",
+                "いってらっしゃい。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
+              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+            },
+            {
+              "id": "n4-e8-l-23",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
+              "question": "23. 「お先に失礼します。」",
+              "options": [
+                "お疲れ様でした。",
+                "いってらっしゃい。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
+              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+            },
+            {
+              "id": "n4-e8-l-24",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
+              "question": "24. 「お先に失礼します。」",
+              "options": [
+                "お疲れ様でした。",
+                "いってらっしゃい。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
+              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+            },
+            {
+              "id": "n4-e8-l-25",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
+              "question": "25. 「お先に失礼します。」",
+              "options": [
+                "お疲れ様でした。",
+                "いってらっしゃい。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
+              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+            },
+            {
+              "id": "n4-e8-l-26",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
+              "question": "26. 「お先に失礼します。」",
+              "options": [
+                "お疲れ様でした。",
+                "いってらっしゃい。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
+              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+            },
+            {
+              "id": "n4-e8-l-27",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
+              "question": "27. 「お先に失礼します。」",
+              "options": [
+                "お疲れ様でした。",
+                "いってらっしゃい。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
+              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+            },
+            {
+              "id": "n4-e8-l-28",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
+              "question": "28. 「お先に失礼します。」",
+              "options": [
+                "お疲れ様でした。",
+                "いってらっしゃい。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
+              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "n4-exam-9",
+      "title": "JLPT N4 Reading Speed & Long Passage Challenge (2025 Series)",
+      "shortTitle": "Exam 9 (Reading Sprint)",
+      "badge": "Reading Focus",
+      "year": "2025 Series",
+      "description": "Emphasis on medium-length essays (500+ words), informative pamphlets, email inquiries, and schedule analysis.",
+      "totalQuestions": 97,
+      "sections": [
+        {
+          "id": "n4-e9-sec-vocab",
+          "title": "Section 1: Language Knowledge (文字・語彙)",
+          "shortTitle": "文字・語彙 (Kanji & Vocab)",
+          "timeLimitSeconds": 1500,
+          "questions": [
+            {
+              "id": "n4-e9-v-1",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "1. <u>特急</u>を お願いします。",
+              "options": [
+                "とくきゅう",
+                "とっきゅう",
+                "どくきゅう",
+                "どっきゅう"
+              ],
+              "correct": 1,
+              "explanation": "「特急」is read as「とっきゅう」(limited express)."
+            },
+            {
+              "id": "n4-e9-v-2",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "2. <u>試合</u>を お願いします。",
+              "options": [
+                "しあい",
+                "じあい",
+                "しごう",
+                "じごう"
+              ],
+              "correct": 0,
+              "explanation": "「試合」is read as「しあい」(match / game)."
+            },
+            {
+              "id": "n4-e9-v-3",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "3. <u>予習</u>を お願いします。",
+              "options": [
+                "よしゅう",
+                "ようしゅう",
+                "ほしゅう",
+                "ほうしゅう"
+              ],
+              "correct": 0,
+              "explanation": "「予習」is read as「よしゅう」(preview study)."
+            },
+            {
+              "id": "n4-e9-v-4",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "4. <u>復習</u>を お願いします。",
+              "options": [
+                "ふくしゅう",
+                "ふくしゅ",
+                "ぶくしゅう",
+                "ぶくしゅ"
+              ],
+              "correct": 0,
+              "explanation": "「復習」is read as「ふくしゅう」(review study)."
+            },
+            {
+              "id": "n4-e9-v-5",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "5. <u>説明</u>を お願いします。",
+              "options": [
+                "せつめい",
+                "せつめ",
+                "ぜつめい",
+                "ぜつめ"
+              ],
+              "correct": 0,
+              "explanation": "「説明」is read as「せつめい」(explanation)."
+            },
+            {
+              "id": "n4-e9-v-6",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "6. <u>出発</u>を お願いします。",
+              "options": [
+                "しゅっぱつ",
+                "しゅつはつ",
+                "でっぱつ",
+                "ではつ"
+              ],
+              "correct": 0,
+              "explanation": "「出発」is read as「しゅっぱつ」(departure)."
+            },
+            {
+              "id": "n4-e9-v-7",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "7. <u>到着</u>を お願いします。",
+              "options": [
+                "とうちゃく",
+                "とうづく",
+                "どうちゃく",
+                "どうづく"
+              ],
+              "correct": 0,
+              "explanation": "「到着」is read as「とうちゃく」(arrival)."
+            },
+            {
+              "id": "n4-e9-v-8",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "8. <u>約束</u>を お願いします。",
+              "options": [
+                "やくそく",
+                "やくぞく",
+                "やっそく",
+                "やっぞく"
+              ],
+              "correct": 0,
+              "explanation": "「約束」is read as「やくそく」(promise / appointment)."
+            },
+            {
+              "id": "n4-e9-v-9",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "9. <u>経験</u>を お願いします。",
+              "options": [
+                "けいけん",
+                "けいかん",
+                "げいけん",
+                "げいかん"
+              ],
+              "correct": 0,
+              "explanation": "「経験」is read as「けいけん」(experience)."
+            },
+            {
+              "id": "n4-e9-v-10",
+              "type": "Mondai 2 (表記)",
+              "question": "10. <u>おんど</u>を 確認してください。",
+              "options": [
+                "温度",
+                "温土",
+                "音度",
+                "音土"
+              ],
+              "correct": 0,
+              "explanation": "「おんど」is written as「温度」(temperature)."
+            },
+            {
+              "id": "n4-e9-v-11",
+              "type": "Mondai 2 (表記)",
+              "question": "11. <u>ちゅうい</u>を 確認してください。",
+              "options": [
+                "注意",
+                "注心",
+                "主意",
+                "主心"
+              ],
+              "correct": 0,
+              "explanation": "「ちゅうい」is written as「注意」(caution)."
+            },
+            {
+              "id": "n4-e9-v-12",
+              "type": "Mondai 2 (表記)",
+              "question": "12. <u>へんじ</u>を 確認してください。",
+              "options": [
+                "返事",
+                "変事",
+                "返次",
+                "変次"
+              ],
+              "correct": 0,
+              "explanation": "「へんじ」is written as「返事」(reply)."
+            },
+            {
+              "id": "n4-e9-v-13",
+              "type": "Mondai 2 (表記)",
+              "question": "13. <u>りゆう</u>を 確認してください。",
+              "options": [
+                "理由",
+                "理油",
+                "利由",
+                "利油"
+              ],
+              "correct": 0,
+              "explanation": "「りゆう」is written as「理由」(reason)."
+            },
+            {
+              "id": "n4-e9-v-14",
+              "type": "Mondai 2 (表記)",
+              "question": "14. <u>しっぱい</u>を 確認してください。",
+              "options": [
+                "失敗",
+                "失弊",
+                "矢敗",
+                "矢弊"
+              ],
+              "correct": 0,
+              "explanation": "「しっぱい」is written as「失敗」(failure)."
+            },
+            {
+              "id": "n4-e9-v-15",
+              "type": "Mondai 2 (表記)",
+              "question": "15. <u>せいこう</u>を 確認してください。",
+              "options": [
+                "成功",
+                "成効",
+                "精功",
+                "精効"
+              ],
+              "correct": 0,
+              "explanation": "「せいこう」is written as「成功」(success)."
+            },
+            {
+              "id": "n4-e9-v-16",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "16. 毎日 ジョギングを（　　）ています。",
+              "options": [
+                "つづけ",
+                "やめ",
+                "はじめ",
+                "あきらめ"
+              ],
+              "correct": 0,
+              "explanation": "Continuing:「つづける」."
+            },
+            {
+              "id": "n4-e9-v-17",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "17. 日本語の スピーチを（　　）しました。",
+              "options": [
+                "はっぴょう",
+                "ほうこく",
+                "れんしゅう",
+                "しゅっせき"
+              ],
+              "correct": 0,
+              "explanation": "Presentation:「はっぴょうする」."
+            },
+            {
+              "id": "n4-e9-v-18",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "18. ベルが（　　）、授業が 始まりました。",
+              "options": [
+                "なって",
+                "おとして",
+                "ふって",
+                "ひいて"
+              ],
+              "correct": 0,
+              "explanation": "Ringing bell:「ベルがなる」."
+            },
+            {
+              "id": "n4-e9-v-19",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "19. 風で カーテンが（　　）います。",
+              "options": [
+                "ゆれて",
+                "こわれて",
+                "たおれて",
+                "やぶれて"
+              ],
+              "correct": 0,
+              "explanation": "Swaying:「ゆれる」."
+            },
+            {
+              "id": "n4-e9-v-20",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "20. 先生の おかげで 試験に（　　）しました。",
+              "options": [
+                "ごうかく",
+                "しっぱい",
+                "そつぎょう",
+                "にゅうがく"
+              ],
+              "correct": 0,
+              "explanation": "Passing exam:「ごうかくする」."
+            },
+            {
+              "id": "n4-e9-v-21",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "21. 電気を けして 部屋を（　　）しました。",
+              "options": [
+                "まっくら",
+                "まっしろ",
+                "まっくろ",
+                "まっあか"
+              ],
+              "correct": 0,
+              "explanation": "Pitch dark:「まっくら」."
+            },
+            {
+              "id": "n4-e9-v-22",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "22. 急な（　　）が できたので、帰ります。",
+              "options": [
+                "用事",
+                "約束",
+                "計画",
+                "都合"
+              ],
+              "correct": 0,
+              "explanation": "Urgent errand:「急な用事」."
+            },
+            {
+              "id": "n4-e9-v-23",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "23. 雨が（　　）ので、傘を さしました。",
+              "options": [
+                "ふりだした",
+                "やんだ",
+                "あがった",
+                "つよまった"
+              ],
+              "correct": 0,
+              "explanation": "Started raining:「ふりだした」."
+            },
+            {
+              "id": "n4-e9-v-24",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "24. 車を（　　）に 止めてください。",
+              "options": [
+                "駐車場",
+                "交番",
+                "駅",
+                "ガソリンスタンド"
+              ],
+              "correct": 0,
+              "explanation": "Parking lot:「駐車場」."
+            },
+            {
+              "id": "n4-e9-v-25",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "25. ボタンを（　　）と、ドアが 開きます。",
+              "options": [
+                "おす",
+                "ひく",
+                "まわす",
+                "きる"
+              ],
+              "correct": 0,
+              "explanation": "Pushing button:「ボタンをおす」."
+            },
+            {
+              "id": "n4-e9-v-26",
+              "type": "Mondai 4 (類義表現)",
+              "question": "26. <u>さっき</u> 部長に 会いました。",
+              "options": [
+                "すこし前に",
+                "ずっと前に",
+                "明日に",
+                "夕方に"
+              ],
+              "correct": 0,
+              "explanation": "「さっき」(a while ago)."
+            },
+            {
+              "id": "n4-e9-v-27",
+              "type": "Mondai 4 (類義表現)",
+              "question": "27. <u>遠慮しないで</u> 食べてください。",
+              "options": [
+                "きにしないで",
+                "いそいで",
+                "のこさないで",
+                "すこしだけ"
+              ],
+              "correct": 0,
+              "explanation": "「遠慮しないで」(without holding back)."
+            },
+            {
+              "id": "n4-e9-v-28",
+              "type": "Mondai 4 (類義表現)",
+              "question": "28. この 問題は <u>複雑</u>です。",
+              "options": [
+                "かんたんではありません",
+                "おもしろくありません",
+                "たかくありません",
+                "あたらしくありません"
+              ],
+              "correct": 0,
+              "explanation": "「複雑」(complex)."
+            },
+            {
+              "id": "n4-e9-v-29",
+              "type": "Mondai 4 (類義表現)",
+              "question": "29. <u>たいてい</u> 家で 勉強します。",
+              "options": [
+                "ほとんど",
+                "いつも",
+                "ときどき",
+                "たまに"
+              ],
+              "correct": 0,
+              "explanation": "「たいてい」(mostly / usually)."
+            },
+            {
+              "id": "n4-e9-v-30",
+              "type": "Mondai 4 (類義表現)",
+              "question": "30. <u>お礼</u>を 言いました。",
+              "options": [
+                "感謝しました",
+                "あやまりました",
+                "約束しました",
+                "案内しました"
+              ],
+              "correct": 0,
+              "explanation": "「お礼を言う」(express thanks)."
+            },
+            {
+              "id": "n4-e9-v-31",
+              "type": "Mondai 5 (用法)",
+              "question": "31. <u>都合</u>",
+              "options": [
+                "明日の 午後は 都合が 悪いです。",
+                "都合な 料理を 食べました。",
+                "都合に 本を 買いました。",
+                "都合が 高いです。"
+              ],
+              "correct": 0,
+              "explanation": "Usage of「都合」."
+            },
+            {
+              "id": "n4-e9-v-32",
+              "type": "Mondai 5 (用法)",
+              "question": "32. <u>故障</u>",
+              "options": [
+                "テレビが 故障して つきません。",
+                "宿題が 故障しました。",
+                "料理が 故障しました。",
+                "天気が 故障しました。"
+              ],
+              "correct": 0,
+              "explanation": "Usage of「故障する」."
+            },
+            {
+              "id": "n4-e9-v-33",
+              "type": "Mondai 5 (用法)",
+              "question": "33. <u>遠慮</u>",
+              "options": [
+                "会議で 意見を 言うのを 遠慮しました。",
+                "電車に 遠慮して 乗りました。",
+                "友達に 遠慮を あげました。",
+                "本を 遠慮して 読みました。"
+              ],
+              "correct": 0,
+              "explanation": "Usage of「遠慮する」."
+            },
+            {
+              "id": "n4-e9-v-34",
+              "type": "Mondai 5 (用法)",
+              "question": "34. <u>世話</u>",
+              "options": [
+                "犬の 世話を しています。",
+                "宿題の 世話を しました。",
+                "料理の 世話を 作ります。",
+                "電車の 世話に 乗ります。"
+              ],
+              "correct": 0,
+              "explanation": "Usage of「世話をする」."
+            },
+            {
+              "id": "n4-e9-v-35",
+              "type": "Mondai 5 (用法)",
+              "question": "35. <u>熱心</u>",
+              "options": [
+                "彼は 熱心に 日本語を 勉強しています。",
+                "今日は 熱心な 天気です。",
+                "この スープは 熱心です。",
+                "熱心な 電車に 乗りました。"
+              ],
+              "correct": 0,
+              "explanation": "Usage of「熱心に」."
+            }
+          ]
+        },
+        {
+          "id": "n4-e9-sec-grammar",
+          "title": "Section 2: Language Knowledge (文法) & Reading (読解)",
+          "shortTitle": "文法・読解 (Grammar & Reading)",
+          "timeLimitSeconds": 2700,
+          "questions": [
+            {
+              "id": "n4-e9-g-1",
+              "type": "Mondai 1 (文法形式)",
+              "question": "1. 毎日 走る（　　）に しています。",
+              "options": [
+                "こと",
+                "もの",
+                "よう",
+                "わけ"
+              ],
+              "correct": 0,
+              "explanation": "Habit pattern:「〜ことにしている」."
+            },
+            {
+              "id": "n4-e9-g-2",
+              "type": "Mondai 1 (文法形式)",
+              "question": "2. 弟は 母に 部屋を（　　）られました。",
+              "options": [
+                "そうじさ",
+                "そうじ",
+                "そうじされ",
+                "そうじし"
+              ],
+              "correct": 0,
+              "explanation": "Passive:「そうじされた」."
+            },
+            {
+              "id": "n4-e9-g-3",
+              "type": "Mondai 1 (文法形式)",
+              "question": "3. 早く 起きられる（　　）に、目覚ましを かけました。",
+              "options": [
+                "よう",
+                "こと",
+                "ため",
+                "はず"
+              ],
+              "correct": 0,
+              "explanation": "Purpose with potential:「〜ように」."
+            },
+            {
+              "id": "n4-e9-g-4",
+              "type": "Mondai 1 (文法形式)",
+              "question": "4. この 本は 読み（　　）やすいです。",
+              "options": [
+                "やすい",
+                "やすく",
+                "やすくて",
+                "やすかった"
+              ],
+              "correct": 0,
+              "explanation": "Ease of action:「読みやすい」."
+            },
+            {
+              "id": "n4-e9-g-5",
+              "type": "Mondai 1 (文法形式)",
+              "question": "5. 田中さんは 来ない（　　）かもしれません。",
+              "options": [
+                "かも",
+                "はず",
+                "わけ",
+                "こと"
+              ],
+              "correct": 0,
+              "explanation": "Possibility:「〜かもしれない」."
+            },
+            {
+              "id": "n4-e9-g-6",
+              "type": "Mondai 1 (文法形式)",
+              "question": "6. お荷物を お持ち（　　）ましょうか。",
+              "options": [
+                "し",
+                "になり",
+                "いたし",
+                "なさい"
+              ],
+              "correct": 0,
+              "explanation": "Humble offer:「お持ちしましょうか」."
+            },
+            {
+              "id": "n4-e9-g-7",
+              "type": "Mondai 1 (文法形式)",
+              "question": "7. ドアが（　　）います。",
+              "options": [
+                "あいて",
+                "あけて",
+                "しまって",
+                "しめて"
+              ],
+              "correct": 0,
+              "explanation": "Intransitive state:「あいている」."
+            },
+            {
+              "id": "n4-e9-g-8",
+              "type": "Mondai 1 (文法形式)",
+              "question": "8. 窓が（　　）あります。",
+              "options": [
+                "あけて",
+                "あいて",
+                "しめて",
+                "しまって"
+              ],
+              "correct": 0,
+              "explanation": "Transitive state:「あけてある」."
+            },
+            {
+              "id": "n4-e9-g-9",
+              "type": "Mondai 1 (文法形式)",
+              "question": "9. 日本語が 上手に（　　）たいです。",
+              "options": [
+                "なり",
+                "して",
+                "なって",
+                "なれ"
+              ],
+              "correct": 0,
+              "explanation": "Desire to become:「なりたい」."
+            },
+            {
+              "id": "n4-e9-g-10",
+              "type": "Mondai 1 (文法形式)",
+              "question": "10. 薬を 飲んだ（　　）が いいですよ。",
+              "options": [
+                "ほう",
+                "よう",
+                "こと",
+                "わけ"
+              ],
+              "correct": 0,
+              "explanation": "Advice:「〜ほうがいい」."
+            },
+            {
+              "id": "n4-e9-g-11",
+              "type": "Mondai 1 (文法形式)",
+              "question": "11. 映画を（　　）ながら、ポップコーンを 食べました。",
+              "options": [
+                "み",
+                "みて",
+                "みる",
+                "みた"
+              ],
+              "correct": 0,
+              "explanation": "Simultaneous:「みながら」."
+            },
+            {
+              "id": "n4-e9-g-12",
+              "type": "Mondai 1 (文法形式)",
+              "question": "12. 明日 雨なら、試合は 中止（　　）します。",
+              "options": [
+                "に",
+                "を",
+                "で",
+                "と"
+              ],
+              "correct": 0,
+              "explanation": "Decision:「中止にする」."
+            },
+            {
+              "id": "n4-e9-g-13",
+              "type": "Mondai 1 (文法形式)",
+              "question": "13. この 料理は（　　）すぎて、食べられません。",
+              "options": [
+                "から",
+                "からい",
+                "からく",
+                "からくて"
+              ],
+              "correct": 0,
+              "explanation": "Adjective stem + すぎる:「からすぎる」."
+            },
+            {
+              "id": "n4-e9-g-14",
+              "type": "Mondai 1 (文法形式)",
+              "question": "14. 雨が ふりそう（　　）から、傘を 持って行きます。",
+              "options": [
+                "だ",
+                "な",
+                "に",
+                "で"
+              ],
+              "correct": 0,
+              "explanation": "そう + だから:「ふりそうだ」."
+            },
+            {
+              "id": "n4-e9-g-15",
+              "type": "Mondai 1 (文法形式)",
+              "question": "15. 先生に 本を（　　）いただきました。",
+              "options": [
+                "かして",
+                "かりて",
+                "かって",
+                "よんで"
+              ],
+              "correct": 0,
+              "explanation": "Humble benefit:「かしていただく」."
+            },
+            {
+              "id": "n4-e9-g-16",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "16. 明日　＿＿　＿＿　★　＿＿　行けません。\n1: 学校へ　2: 病院へ　3: 行くので　4: 午前中は",
+              "options": [
+                "学校へ",
+                "病院へ",
+                "行くので",
+                "午前中は"
+              ],
+              "correct": 2,
+              "explanation": "Order: 明日 午前中は 病院へ [★ 行くので] 学校へ 行けません。 Star is 3 (行くので)."
+            },
+            {
+              "id": "n4-e9-g-17",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "17. 電車に　＿＿　＿＿　★　＿＿　走りました。\n1: 遅れない　2: ように　3: 急いで　4: 駅まで",
+              "options": [
+                "遅れない",
+                "ように",
+                "急いで",
+                "駅まで"
+              ],
+              "correct": 3,
+              "explanation": "Order: 電車に 遅れない ように 急いで [★ 駅まで] 走りました。 Star is 4 (駅まで)."
+            },
+            {
+              "id": "n4-e9-g-18",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "18. わたしは　＿＿　＿＿　★　＿＿　つもりです。\n1: 日本へ　2: 来年　3: 留学する　4: 友達と",
+              "options": [
+                "日本へ",
+                "来年",
+                "留学する",
+                "友達と"
+              ],
+              "correct": 0,
+              "explanation": "Order: わたしは 来年 友達と [★ 日本へ] 留学する つもりです。 Star is 1 (日本へ)."
+            },
+            {
+              "id": "n4-e9-g-19",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "19. この　＿＿　＿＿　★　＿＿　思います。\n1: レポートは　2: 難しくて　3: 一人で　4: できないと",
+              "options": [
+                "レポートは",
+                "難しくて",
+                "一人で",
+                "できないと"
+              ],
+              "correct": 2,
+              "explanation": "Order: この レポートは 難しくて [★ 一人で] できないと 思います。 Star is 3 (一人で)."
+            },
+            {
+              "id": "n4-e9-g-20",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "20. 先生に　＿＿　＿＿　★　＿＿　いただきました。\n1: 本を　2: 面白い　3: 貸して　4: 素敵な",
+              "options": [
+                "本を",
+                "面白い",
+                "貸して",
+                "素敵な"
+              ],
+              "correct": 0,
+              "explanation": "Order: 先生に 面白い 素敵な [★ 本を] 貸して いただきました。 Star is 1 (本を)."
+            },
+            {
+              "id": "n4-e9-g-21",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "【読解文章：日本の温泉文化】\n21. (21) に入る言葉はどれですか。",
+              "options": [
+                "はいります",
+                "はいりました",
+                "はいって",
+                "はいる"
+              ],
+              "correct": 2,
+              "explanation": "Connecting action with te-form:「はいって」."
+            },
+            {
+              "id": "n4-e9-g-22",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "22. (22) に入る言葉はどれですか。",
+              "options": [
+                "とても",
+                "あまり",
+                "ぜんぜん",
+                "すこしも"
+              ],
+              "correct": 0,
+              "explanation": "Positive evaluation:「とても」."
+            },
+            {
+              "id": "n4-e9-g-23",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "23. (23) に入る言葉はどれですか。",
+              "options": [
+                "それに",
+                "だから",
+                "しかし",
+                "それから"
+              ],
+              "correct": 0,
+              "explanation": "Adding related points:「それに」."
+            },
+            {
+              "id": "n4-e9-g-24",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "24. (24) に入る言葉はどれですか。",
+              "options": [
+                "いってみたい",
+                "いってみて",
+                "いってみる",
+                "いってみた"
+              ],
+              "correct": 0,
+              "explanation": "Desire:「いってみたい」."
+            },
+            {
+              "id": "n4-e9-g-25",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "25. (25) に入る言葉はどれですか。",
+              "options": [
+                "おもいます",
+                "おもいました",
+                "おもって",
+                "おもわない"
+              ],
+              "correct": 0,
+              "explanation": "Present conjecture:「おもいます」."
+            },
+            {
+              "id": "n4-e9-g-26",
+              "type": "Mondai 4 (短文読解)",
+              "question": "【短文：地域の日本語教室】\n26. 日本語教室は いつ 開かれますか。",
+              "options": [
+                "毎週土曜日の 午前10時",
+                "毎週日曜日の 午後2時",
+                "毎週水曜日の 午後7時",
+                "毎月第1土曜日"
+              ],
+              "correct": 0,
+              "explanation": "Held every Saturday at 10:00 AM."
+            },
+            {
+              "id": "n4-e9-g-27",
+              "type": "Mondai 4 (短文読解)",
+              "question": "27. 参加費用は いくらですか。",
+              "options": [
+                "1回 500円（テキスト代別）",
+                "無料",
+                "月額 2,000円",
+                "年間 5,000円"
+              ],
+              "correct": 0,
+              "explanation": "Fee is 500 yen per session."
+            },
+            {
+              "id": "n4-e9-g-28",
+              "type": "Mondai 4 (短文読解)",
+              "question": "28. 初めて参加する人は 何を持って行く必要がありますか。",
+              "options": [
+                "筆記用具とノート",
+                "身分証明書",
+                "写真2枚",
+                "辞書"
+              ],
+              "correct": 0,
+              "explanation": "Bring writing utensils and notebook."
+            },
+            {
+              "id": "n4-e9-g-29",
+              "type": "Mondai 4 (短文読解)",
+              "question": "29. 申し込みは どのように しますか。",
+              "options": [
+                "前日までに メールで 申し込む",
+                "当日 直接 会場へ 行く",
+                "電話でのみ 受付",
+                "市役所で 申し込む"
+              ],
+              "correct": 0,
+              "explanation": "Pre-registration by email by the previous day."
+            },
+            {
+              "id": "n4-e9-g-30",
+              "type": "Mondai 5 (中文読解)",
+              "question": "【中文：留学生のアルバイト体験】\n30. 筆者がカフェで働き始めた目的は何ですか。",
+              "options": [
+                "生きた日本語と接客マナーを学ぶため",
+                "お金を貯めて旅行するため",
+                "コーヒーの淹れ方を覚えるため",
+                "友達を作るため"
+              ],
+              "correct": 0,
+              "explanation": "To learn real-life Japanese communication and customer service manners."
+            },
+            {
+              "id": "n4-e9-g-31",
+              "type": "Mondai 5 (中文読解)",
+              "question": "31. アルバイトで一番苦労したことは何ですか。",
+              "options": [
+                "敬語の使い方と聞き取り",
+                "メニューを覚えること",
+                "皿洗い",
+                "朝早く起きること"
+              ],
+              "correct": 0,
+              "explanation": "Struggled most with keigo honorifics and fast native speech."
+            },
+            {
+              "id": "n4-e9-g-32",
+              "type": "Mondai 5 (中文読解)",
+              "question": "32. 店長から褒められた理由は何ですか。",
+              "options": [
+                "いつも笑顔で元気に挨拶していたから",
+                "ミスを一度もしなかったから",
+                "一番長く働いたから",
+                "英語が話せたから"
+              ],
+              "correct": 0,
+              "explanation": "Praised for consistently greeting customers with a bright smile."
+            },
+            {
+              "id": "n4-e9-g-33",
+              "type": "Mondai 5 (中文読解)",
+              "question": "33. 筆者はこのアルバイトを通じてどう成長しましたか。",
+              "options": [
+                "日本語の会話に自信がつき、人との繋がりを楽しめるようになった",
+                "料理が作れるようになった",
+                "給料がたくさんもらえた",
+                "将来カフェを開きたいと思った"
+              ],
+              "correct": 0,
+              "explanation": "Gained conversational confidence and appreciated human connections."
+            },
+            {
+              "id": "n4-e9-g-34",
+              "type": "Mondai 6 (情報検索)",
+              "question": "【情報検索：スポーツセンターの利用案内】\n34. プールを利用する大人の料金はいくらですか。",
+              "options": [
+                "400円",
+                "200円",
+                "600円",
+                "無料"
+              ],
+              "correct": 0,
+              "explanation": "Adult pool admission is listed as 400 yen."
+            },
+            {
+              "id": "n4-e9-g-35",
+              "type": "Mondai 6 (情報検索)",
+              "question": "35. トレーニングルームを利用する際に必ず持参するものは何ですか。",
+              "options": [
+                "室内用運動靴",
+                "水着",
+                "タオル2枚",
+                "会員証"
+              ],
+              "correct": 0,
+              "explanation": "Indoor athletic shoes (室内用運動靴) are strictly required."
+            }
+          ]
+        },
+        {
+          "id": "n4-e9-sec-listening",
+          "title": "Section 3: Listening Comprehension (聴解)",
+          "shortTitle": "聴解 (Listening)",
+          "timeLimitSeconds": 2100,
+          "questions": [
+            {
+              "id": "n4-e9-l-1",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
+              "image": "/images/japanese/listening/n4/m1_q1.png",
+              "question": "1. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 1,
+              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
+              "explanation": "Based on task instructions, Option 2 is correct."
+            },
+            {
+              "id": "n4-e9-l-2",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
+              "image": "/images/japanese/listening/n4/m1_q2.png",
+              "question": "2. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 2,
+              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
+              "explanation": "Based on task instructions, Option 3 is correct."
+            },
+            {
+              "id": "n4-e9-l-3",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
+              "image": "/images/japanese/listening/n4/m1_q3.png",
+              "question": "3. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 3,
+              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
+              "explanation": "Based on task instructions, Option 4 is correct."
+            },
+            {
+              "id": "n4-e9-l-4",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
+              "image": "/images/japanese/listening/n4/m1_q4.png",
+              "question": "4. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 0,
+              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
+              "explanation": "Based on task instructions, Option 1 is correct."
+            },
+            {
+              "id": "n4-e9-l-5",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
+              "image": "/images/japanese/listening/n4/m1_q5.png",
+              "question": "5. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 1,
+              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
+              "explanation": "Based on task instructions, Option 2 is correct."
+            },
+            {
+              "id": "n4-e9-l-6",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
+              "image": "/images/japanese/listening/n4/m1_q6.png",
+              "question": "6. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 2,
+              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
+              "explanation": "Based on task instructions, Option 3 is correct."
+            },
+            {
+              "id": "n4-e9-l-7",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
+              "image": "/images/japanese/listening/n4/m1_q7.png",
+              "question": "7. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 3,
+              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
+              "explanation": "Based on task instructions, Option 4 is correct."
+            },
+            {
+              "id": "n4-e9-l-8",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
+              "image": "/images/japanese/listening/n4/m1_q8.png",
+              "question": "8. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 0,
+              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
+              "explanation": "Based on task instructions, Option 1 is correct."
+            },
+            {
+              "id": "n4-e9-l-9",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
+              "question": "9. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "options": [
+                "電車が遅れたから",
+                "寝坊したから",
+                "道を間違えたから",
+                "雨が降ったから"
+              ],
+              "correct": 1,
+              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
+              "explanation": "Point comprehension detail: reason for arriving late."
+            },
+            {
+              "id": "n4-e9-l-10",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
+              "question": "10. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "options": [
+                "電車が遅れたから",
+                "寝坊したから",
+                "道を間違えたから",
+                "雨が降ったから"
+              ],
+              "correct": 2,
+              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
+              "explanation": "Point comprehension detail: reason for arriving late."
+            },
+            {
+              "id": "n4-e9-l-11",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
+              "question": "11. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "options": [
+                "電車が遅れたから",
+                "寝坊したから",
+                "道を間違えたから",
+                "雨が降ったから"
+              ],
+              "correct": 3,
+              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
+              "explanation": "Point comprehension detail: reason for arriving late."
+            },
+            {
+              "id": "n4-e9-l-12",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
+              "question": "12. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "options": [
+                "電車が遅れたから",
+                "寝坊したから",
+                "道を間違えたから",
+                "雨が降ったから"
+              ],
+              "correct": 0,
+              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
+              "explanation": "Point comprehension detail: reason for arriving late."
+            },
+            {
+              "id": "n4-e9-l-13",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
+              "question": "13. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "options": [
+                "電車が遅れたから",
+                "寝坊したから",
+                "道を間違えたから",
+                "雨が降ったから"
+              ],
+              "correct": 1,
+              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
+              "explanation": "Point comprehension detail: reason for arriving late."
+            },
+            {
+              "id": "n4-e9-l-14",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
+              "question": "14. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "options": [
+                "電車が遅れたから",
+                "寝坊したから",
+                "道を間違えたから",
+                "雨が降ったから"
+              ],
+              "correct": 2,
+              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
+              "explanation": "Point comprehension detail: reason for arriving late."
+            },
+            {
+              "id": "n4-e9-l-15",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
+              "question": "15. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "options": [
+                "電車が遅れたから",
+                "寝坊したから",
+                "道を間違えたから",
+                "雨が降ったから"
+              ],
+              "correct": 3,
+              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
+              "explanation": "Point comprehension detail: reason for arriving late."
+            },
+            {
+              "id": "n4-e9-l-16",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
+              "image": "/images/japanese/listening/n4/m3_q1.png",
+              "question": "16. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "options": [
+                "手伝っていただけませんか。",
+                "手伝ってください。",
+                "手伝いましょうか。"
+              ],
+              "correct": 0,
+              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
+              "explanation": "Polite request in N4:「〜ていただけませんか」."
+            },
+            {
+              "id": "n4-e9-l-17",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
+              "image": "/images/japanese/listening/n4/m3_q2.png",
+              "question": "17. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "options": [
+                "手伝っていただけませんか。",
+                "手伝ってください。",
+                "手伝いましょうか。"
+              ],
+              "correct": 0,
+              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
+              "explanation": "Polite request in N4:「〜ていただけませんか」."
+            },
+            {
+              "id": "n4-e9-l-18",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
+              "image": "/images/japanese/listening/n4/m3_q3.png",
+              "question": "18. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "options": [
+                "手伝っていただけませんか。",
+                "手伝ってください。",
+                "手伝いましょうか。"
+              ],
+              "correct": 0,
+              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
+              "explanation": "Polite request in N4:「〜ていただけませんか」."
+            },
+            {
+              "id": "n4-e9-l-19",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
+              "image": "/images/japanese/listening/n4/m3_q4.png",
+              "question": "19. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "options": [
+                "手伝っていただけませんか。",
+                "手伝ってください。",
+                "手伝いましょうか。"
+              ],
+              "correct": 0,
+              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
+              "explanation": "Polite request in N4:「〜ていただけませんか」."
+            },
+            {
+              "id": "n4-e9-l-20",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
+              "image": "/images/japanese/listening/n4/m3_q5.png",
+              "question": "20. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "options": [
+                "手伝っていただけませんか。",
+                "手伝ってください。",
+                "手伝いましょうか。"
+              ],
+              "correct": 0,
+              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
+              "explanation": "Polite request in N4:「〜ていただけませんか」."
+            },
+            {
+              "id": "n4-e9-l-21",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
+              "question": "21. 「お先に失礼します。」",
+              "options": [
+                "お疲れ様でした。",
+                "いってらっしゃい。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
+              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+            },
+            {
+              "id": "n4-e9-l-22",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
+              "question": "22. 「お先に失礼します。」",
+              "options": [
+                "お疲れ様でした。",
+                "いってらっしゃい。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
+              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+            },
+            {
+              "id": "n4-e9-l-23",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
+              "question": "23. 「お先に失礼します。」",
+              "options": [
+                "お疲れ様でした。",
+                "いってらっしゃい。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
+              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+            },
+            {
+              "id": "n4-e9-l-24",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
+              "question": "24. 「お先に失礼します。」",
+              "options": [
+                "お疲れ様でした。",
+                "いってらっしゃい。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
+              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+            },
+            {
+              "id": "n4-e9-l-25",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
+              "question": "25. 「お先に失礼します。」",
+              "options": [
+                "お疲れ様でした。",
+                "いってらっしゃい。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
+              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+            },
+            {
+              "id": "n4-e9-l-26",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
+              "question": "26. 「お先に失礼します。」",
+              "options": [
+                "お疲れ様でした。",
+                "いってらっしゃい。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
+              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+            },
+            {
+              "id": "n4-e9-l-27",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
+              "question": "27. 「お先に失礼します。」",
+              "options": [
+                "お疲れ様でした。",
+                "いってらっしゃい。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
+              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+            },
+            {
+              "id": "n4-e9-l-28",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
+              "question": "28. 「お先に失礼します。」",
+              "options": [
+                "お疲れ様でした。",
+                "いってらっしゃい。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
+              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "n4-exam-10",
+      "title": "JLPT N4 Pre-Exam Final Sprint Examination (2026 Edition)",
+      "shortTitle": "Exam 10 (Final Sprint)",
+      "badge": "Ultimate Sprint",
+      "year": "2026 Edition",
+      "description": "The ultimate pre-exam dress rehearsal combining the highest-yield test patterns across all 3 official sections.",
+      "totalQuestions": 97,
+      "sections": [
+        {
+          "id": "n4-e10-sec-vocab",
+          "title": "Section 1: Language Knowledge (文字・語彙)",
+          "shortTitle": "文字・語彙 (Kanji & Vocab)",
+          "timeLimitSeconds": 1500,
+          "questions": [
+            {
+              "id": "n4-e10-v-1",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "1. <u>復習</u>を お願いします。",
+              "options": [
+                "ふくしゅう",
+                "ふくしゅ",
+                "ぶくしゅう",
+                "ぶくしゅ"
+              ],
+              "correct": 0,
+              "explanation": "「復習」is read as「ふくしゅう」(review study)."
+            },
+            {
+              "id": "n4-e10-v-2",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "2. <u>説明</u>を お願いします。",
+              "options": [
+                "せつめい",
+                "せつめ",
+                "ぜつめい",
+                "ぜつめ"
+              ],
+              "correct": 0,
+              "explanation": "「説明」is read as「せつめい」(explanation)."
+            },
+            {
+              "id": "n4-e10-v-3",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "3. <u>出発</u>を お願いします。",
+              "options": [
+                "しゅっぱつ",
+                "しゅつはつ",
+                "でっぱつ",
+                "ではつ"
+              ],
+              "correct": 0,
+              "explanation": "「出発」is read as「しゅっぱつ」(departure)."
+            },
+            {
+              "id": "n4-e10-v-4",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "4. <u>到着</u>を お願いします。",
+              "options": [
+                "とうちゃく",
+                "とうづく",
+                "どうちゃく",
+                "どうづく"
+              ],
+              "correct": 0,
+              "explanation": "「到着」is read as「とうちゃく」(arrival)."
+            },
+            {
+              "id": "n4-e10-v-5",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "5. <u>約束</u>を お願いします。",
+              "options": [
+                "やくそく",
+                "やくぞく",
+                "やっそく",
+                "やっぞく"
+              ],
+              "correct": 0,
+              "explanation": "「約束」is read as「やくそく」(promise / appointment)."
+            },
+            {
+              "id": "n4-e10-v-6",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "6. <u>経験</u>を お願いします。",
+              "options": [
+                "けいけん",
+                "けいかん",
+                "げいけん",
+                "げいかん"
+              ],
+              "correct": 0,
+              "explanation": "「経験」is read as「けいけん」(experience)."
+            },
+            {
+              "id": "n4-e10-v-7",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "7. <u>都合</u>を お願いします。",
+              "options": [
+                "つごう",
+                "つあい",
+                "ずごう",
+                "ずあい"
+              ],
+              "correct": 0,
+              "explanation": "「都合」is read as「つごう」(convenience / schedule)."
+            },
+            {
+              "id": "n4-e10-v-8",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "8. <u>反対</u>を お願いします。",
+              "options": [
+                "はんたい",
+                "はんだい",
+                "ほんたい",
+                "ほんだい"
+              ],
+              "correct": 0,
+              "explanation": "「反対」is read as「はんたい」(opposite / opposition)."
+            },
+            {
+              "id": "n4-e10-v-9",
+              "type": "Mondai 1 (漢字読み)",
+              "question": "9. <u>相談</u>を お願いします。",
+              "options": [
+                "そうだん",
+                "しょうだん",
+                "そうたん",
+                "しょうたん"
+              ],
+              "correct": 0,
+              "explanation": "「相談」is read as「そうだん」(consultation)."
+            },
+            {
+              "id": "n4-e10-v-10",
+              "type": "Mondai 2 (表記)",
+              "question": "10. <u>りゆう</u>を 確認してください。",
+              "options": [
+                "理由",
+                "理油",
+                "利由",
+                "利油"
+              ],
+              "correct": 0,
+              "explanation": "「りゆう」is written as「理由」(reason)."
+            },
+            {
+              "id": "n4-e10-v-11",
+              "type": "Mondai 2 (表記)",
+              "question": "11. <u>しっぱい</u>を 確認してください。",
+              "options": [
+                "失敗",
+                "失弊",
+                "矢敗",
+                "矢弊"
+              ],
+              "correct": 0,
+              "explanation": "「しっぱい」is written as「失敗」(failure)."
+            },
+            {
+              "id": "n4-e10-v-12",
+              "type": "Mondai 2 (表記)",
+              "question": "12. <u>せいこう</u>を 確認してください。",
+              "options": [
+                "成功",
+                "成効",
+                "精功",
+                "精効"
+              ],
+              "correct": 0,
+              "explanation": "「せいこう」is written as「成功」(success)."
+            },
+            {
+              "id": "n4-e10-v-13",
+              "type": "Mondai 2 (表記)",
+              "question": "13. <u>きっぷ</u>を 確認してください。",
+              "options": [
+                "切符",
+                "切布",
+                "着符",
+                "着布"
+              ],
+              "correct": 0,
+              "explanation": "「きっぷ」is written as「切符」(ticket)."
+            },
+            {
+              "id": "n4-e10-v-14",
+              "type": "Mondai 2 (表記)",
+              "question": "14. <u>じゅんび</u>を 確認してください。",
+              "options": [
+                "準備",
+                "準便",
+                "准備",
+                "準偏"
+              ],
+              "correct": 0,
+              "explanation": "「じゅんび」is written as「準備」(preparation)."
+            },
+            {
+              "id": "n4-e10-v-15",
+              "type": "Mondai 2 (表記)",
+              "question": "15. <u>おんど</u>を 確認してください。",
+              "options": [
+                "温度",
+                "温土",
+                "音度",
+                "音土"
+              ],
+              "correct": 0,
+              "explanation": "「おんど」is written as「温度」(temperature)."
+            },
+            {
+              "id": "n4-e10-v-16",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "16. 風で カーテンが（　　）います。",
+              "options": [
+                "ゆれて",
+                "こわれて",
+                "たおれて",
+                "やぶれて"
+              ],
+              "correct": 0,
+              "explanation": "Swaying:「ゆれる」."
+            },
+            {
+              "id": "n4-e10-v-17",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "17. 先生の おかげで 試験に（　　）しました。",
+              "options": [
+                "ごうかく",
+                "しっぱい",
+                "そつぎょう",
+                "にゅうがく"
+              ],
+              "correct": 0,
+              "explanation": "Passing exam:「ごうかくする」."
+            },
+            {
+              "id": "n4-e10-v-18",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "18. 電気を けして 部屋を（　　）しました。",
+              "options": [
+                "まっくら",
+                "まっしろ",
+                "まっくろ",
+                "まっあか"
+              ],
+              "correct": 0,
+              "explanation": "Pitch dark:「まっくら」."
+            },
+            {
+              "id": "n4-e10-v-19",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "19. 急な（　　）が できたので、帰ります。",
+              "options": [
+                "用事",
+                "約束",
+                "計画",
+                "都合"
+              ],
+              "correct": 0,
+              "explanation": "Urgent errand:「急な用事」."
+            },
+            {
+              "id": "n4-e10-v-20",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "20. 雨が（　　）ので、傘を さしました。",
+              "options": [
+                "ふりだした",
+                "やんだ",
+                "あがった",
+                "つよまった"
+              ],
+              "correct": 0,
+              "explanation": "Started raining:「ふりだした」."
+            },
+            {
+              "id": "n4-e10-v-21",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "21. 車を（　　）に 止めてください。",
+              "options": [
+                "駐車場",
+                "交番",
+                "駅",
+                "ガソリンスタンド"
+              ],
+              "correct": 0,
+              "explanation": "Parking lot:「駐車場」."
+            },
+            {
+              "id": "n4-e10-v-22",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "22. ボタンを（　　）と、ドアが 開きます。",
+              "options": [
+                "おす",
+                "ひく",
+                "まわす",
+                "きる"
+              ],
+              "correct": 0,
+              "explanation": "Pushing button:「ボタンをおす」."
+            },
+            {
+              "id": "n4-e10-v-23",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "23. 毎日 ジョギングを（　　）ています。",
+              "options": [
+                "つづけ",
+                "やめ",
+                "はじめ",
+                "あきらめ"
+              ],
+              "correct": 0,
+              "explanation": "Continuing:「つづける」."
+            },
+            {
+              "id": "n4-e10-v-24",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "24. 日本語の スピーチを（　　）しました。",
+              "options": [
+                "はっぴょう",
+                "ほうこく",
+                "れんしゅう",
+                "しゅっせき"
+              ],
+              "correct": 0,
+              "explanation": "Presentation:「はっぴょうする」."
+            },
+            {
+              "id": "n4-e10-v-25",
+              "type": "Mondai 3 (文脈規定)",
+              "question": "25. ベルが（　　）、授業が 始まりました。",
+              "options": [
+                "なって",
+                "おとして",
+                "ふって",
+                "ひいて"
+              ],
+              "correct": 0,
+              "explanation": "Ringing bell:「ベルがなる」."
+            },
+            {
+              "id": "n4-e10-v-26",
+              "type": "Mondai 4 (類義表現)",
+              "question": "26. <u>たいてい</u> 家で 勉強します。",
+              "options": [
+                "ほとんど",
+                "いつも",
+                "ときどき",
+                "たまに"
+              ],
+              "correct": 0,
+              "explanation": "「たいてい」(mostly / usually)."
+            },
+            {
+              "id": "n4-e10-v-27",
+              "type": "Mondai 4 (類義表現)",
+              "question": "27. <u>お礼</u>を 言いました。",
+              "options": [
+                "感謝しました",
+                "あやまりました",
+                "約束しました",
+                "案内しました"
+              ],
+              "correct": 0,
+              "explanation": "「お礼を言う」(express thanks)."
+            },
+            {
+              "id": "n4-e10-v-28",
+              "type": "Mondai 4 (類義表現)",
+              "question": "28. <u>さっき</u> 部長に 会いました。",
+              "options": [
+                "すこし前に",
+                "ずっと前に",
+                "明日に",
+                "夕方に"
+              ],
+              "correct": 0,
+              "explanation": "「さっき」(a while ago)."
+            },
+            {
+              "id": "n4-e10-v-29",
+              "type": "Mondai 4 (類義表現)",
+              "question": "29. <u>遠慮しないで</u> 食べてください。",
+              "options": [
+                "きにしないで",
+                "いそいで",
+                "のこさないで",
+                "すこしだけ"
+              ],
+              "correct": 0,
+              "explanation": "「遠慮しないで」(without holding back)."
+            },
+            {
+              "id": "n4-e10-v-30",
+              "type": "Mondai 4 (類義表現)",
+              "question": "30. この 問題は <u>複雑</u>です。",
+              "options": [
+                "かんたんではありません",
+                "おもしろくありません",
+                "たかくありません",
+                "あたらしくありません"
+              ],
+              "correct": 0,
+              "explanation": "「複雑」(complex)."
+            },
+            {
+              "id": "n4-e10-v-31",
+              "type": "Mondai 5 (用法)",
+              "question": "31. <u>世話</u>",
+              "options": [
+                "犬の 世話を しています。",
+                "宿題の 世話を しました。",
+                "料理の 世話を 作ります。",
+                "電車の 世話に 乗ります。"
+              ],
+              "correct": 0,
+              "explanation": "Usage of「世話をする」."
+            },
+            {
+              "id": "n4-e10-v-32",
+              "type": "Mondai 5 (用法)",
+              "question": "32. <u>熱心</u>",
+              "options": [
+                "彼は 熱心に 日本語を 勉強しています。",
+                "今日は 熱心な 天気です。",
+                "この スープは 熱心です。",
+                "熱心な 電車に 乗りました。"
+              ],
+              "correct": 0,
+              "explanation": "Usage of「熱心に」."
+            },
+            {
+              "id": "n4-e10-v-33",
+              "type": "Mondai 5 (用法)",
+              "question": "33. <u>都合</u>",
+              "options": [
+                "明日の 午後は 都合が 悪いです。",
+                "都合な 料理を 食べました。",
+                "都合に 本を 買いました。",
+                "都合が 高いです。"
+              ],
+              "correct": 0,
+              "explanation": "Usage of「都合」."
+            },
+            {
+              "id": "n4-e10-v-34",
+              "type": "Mondai 5 (用法)",
+              "question": "34. <u>故障</u>",
+              "options": [
+                "テレビが 故障して つきません。",
+                "宿題が 故障しました。",
+                "料理が 故障しました。",
+                "天気が 故障しました。"
+              ],
+              "correct": 0,
+              "explanation": "Usage of「故障する」."
+            },
+            {
+              "id": "n4-e10-v-35",
+              "type": "Mondai 5 (用法)",
+              "question": "35. <u>遠慮</u>",
+              "options": [
+                "会議で 意見を 言うのを 遠慮しました。",
+                "電車に 遠慮して 乗りました。",
+                "友達に 遠慮を あげました。",
+                "本を 遠慮して 読みました。"
+              ],
+              "correct": 0,
+              "explanation": "Usage of「遠慮する」."
+            }
+          ]
+        },
+        {
+          "id": "n4-e10-sec-grammar",
+          "title": "Section 2: Language Knowledge (文法) & Reading (読解)",
+          "shortTitle": "文法・読解 (Grammar & Reading)",
+          "timeLimitSeconds": 2700,
+          "questions": [
+            {
+              "id": "n4-e10-g-1",
+              "type": "Mondai 1 (文法形式)",
+              "question": "1. この 本は 読み（　　）やすいです。",
+              "options": [
+                "やすい",
+                "やすく",
+                "やすくて",
+                "やすかった"
+              ],
+              "correct": 0,
+              "explanation": "Ease of action:「読みやすい」."
+            },
+            {
+              "id": "n4-e10-g-2",
+              "type": "Mondai 1 (文法形式)",
+              "question": "2. 田中さんは 来ない（　　）かもしれません。",
+              "options": [
+                "かも",
+                "はず",
+                "わけ",
+                "こと"
+              ],
+              "correct": 0,
+              "explanation": "Possibility:「〜かもしれない」."
+            },
+            {
+              "id": "n4-e10-g-3",
+              "type": "Mondai 1 (文法形式)",
+              "question": "3. お荷物を お持ち（　　）ましょうか。",
+              "options": [
+                "し",
+                "になり",
+                "いたし",
+                "なさい"
+              ],
+              "correct": 0,
+              "explanation": "Humble offer:「お持ちしましょうか」."
+            },
+            {
+              "id": "n4-e10-g-4",
+              "type": "Mondai 1 (文法形式)",
+              "question": "4. ドアが（　　）います。",
+              "options": [
+                "あいて",
+                "あけて",
+                "しまって",
+                "しめて"
+              ],
+              "correct": 0,
+              "explanation": "Intransitive state:「あいている」."
+            },
+            {
+              "id": "n4-e10-g-5",
+              "type": "Mondai 1 (文法形式)",
+              "question": "5. 窓が（　　）あります。",
+              "options": [
+                "あけて",
+                "あいて",
+                "しめて",
+                "しまって"
+              ],
+              "correct": 0,
+              "explanation": "Transitive state:「あけてある」."
+            },
+            {
+              "id": "n4-e10-g-6",
+              "type": "Mondai 1 (文法形式)",
+              "question": "6. 日本語が 上手に（　　）たいです。",
+              "options": [
+                "なり",
+                "して",
+                "なって",
+                "なれ"
+              ],
+              "correct": 0,
+              "explanation": "Desire to become:「なりたい」."
+            },
+            {
+              "id": "n4-e10-g-7",
+              "type": "Mondai 1 (文法形式)",
+              "question": "7. 薬を 飲んだ（　　）が いいですよ。",
+              "options": [
+                "ほう",
+                "よう",
+                "こと",
+                "わけ"
+              ],
+              "correct": 0,
+              "explanation": "Advice:「〜ほうがいい」."
+            },
+            {
+              "id": "n4-e10-g-8",
+              "type": "Mondai 1 (文法形式)",
+              "question": "8. 映画を（　　）ながら、ポップコーンを 食べました。",
+              "options": [
+                "み",
+                "みて",
+                "みる",
+                "みた"
+              ],
+              "correct": 0,
+              "explanation": "Simultaneous:「みながら」."
+            },
+            {
+              "id": "n4-e10-g-9",
+              "type": "Mondai 1 (文法形式)",
+              "question": "9. 明日 雨なら、試合は 中止（　　）します。",
+              "options": [
+                "に",
+                "を",
+                "で",
+                "と"
+              ],
+              "correct": 0,
+              "explanation": "Decision:「中止にする」."
+            },
+            {
+              "id": "n4-e10-g-10",
+              "type": "Mondai 1 (文法形式)",
+              "question": "10. この 料理は（　　）すぎて、食べられません。",
+              "options": [
+                "から",
+                "からい",
+                "からく",
+                "からくて"
+              ],
+              "correct": 0,
+              "explanation": "Adjective stem + すぎる:「からすぎる」."
+            },
+            {
+              "id": "n4-e10-g-11",
+              "type": "Mondai 1 (文法形式)",
+              "question": "11. 雨が ふりそう（　　）から、傘を 持って行きます。",
+              "options": [
+                "だ",
+                "な",
+                "に",
+                "で"
+              ],
+              "correct": 0,
+              "explanation": "そう + だから:「ふりそうだ」."
+            },
+            {
+              "id": "n4-e10-g-12",
+              "type": "Mondai 1 (文法形式)",
+              "question": "12. 先生に 本を（　　）いただきました。",
+              "options": [
+                "かして",
+                "かりて",
+                "かって",
+                "よんで"
+              ],
+              "correct": 0,
+              "explanation": "Humble benefit:「かしていただく」."
+            },
+            {
+              "id": "n4-e10-g-13",
+              "type": "Mondai 1 (文法形式)",
+              "question": "13. 毎日 走る（　　）に しています。",
+              "options": [
+                "こと",
+                "もの",
+                "よう",
+                "わけ"
+              ],
+              "correct": 0,
+              "explanation": "Habit pattern:「〜ことにしている」."
+            },
+            {
+              "id": "n4-e10-g-14",
+              "type": "Mondai 1 (文法形式)",
+              "question": "14. 弟は 母に 部屋を（　　）られました。",
+              "options": [
+                "そうじさ",
+                "そうじ",
+                "そうじされ",
+                "そうじし"
+              ],
+              "correct": 0,
+              "explanation": "Passive:「そうじされた」."
+            },
+            {
+              "id": "n4-e10-g-15",
+              "type": "Mondai 1 (文法形式)",
+              "question": "15. 早く 起きられる（　　）に、目覚ましを かけました。",
+              "options": [
+                "よう",
+                "こと",
+                "ため",
+                "はず"
+              ],
+              "correct": 0,
+              "explanation": "Purpose with potential:「〜ように」."
+            },
+            {
+              "id": "n4-e10-g-16",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "16. この　＿＿　＿＿　★　＿＿　思います。\n1: レポートは　2: 難しくて　3: 一人で　4: できないと",
+              "options": [
+                "レポートは",
+                "難しくて",
+                "一人で",
+                "できないと"
+              ],
+              "correct": 2,
+              "explanation": "Order: この レポートは 難しくて [★ 一人で] できないと 思います。 Star is 3 (一人で)."
+            },
+            {
+              "id": "n4-e10-g-17",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "17. 先生に　＿＿　＿＿　★　＿＿　いただきました。\n1: 本を　2: 面白い　3: 貸して　4: 素敵な",
+              "options": [
+                "本を",
+                "面白い",
+                "貸して",
+                "素敵な"
+              ],
+              "correct": 0,
+              "explanation": "Order: 先生に 面白い 素敵な [★ 本を] 貸して いただきました。 Star is 1 (本を)."
+            },
+            {
+              "id": "n4-e10-g-18",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "18. 明日　＿＿　＿＿　★　＿＿　行けません。\n1: 学校へ　2: 病院へ　3: 行くので　4: 午前中は",
+              "options": [
+                "学校へ",
+                "病院へ",
+                "行くので",
+                "午前中は"
+              ],
+              "correct": 2,
+              "explanation": "Order: 明日 午前中は 病院へ [★ 行くので] 学校へ 行けません。 Star is 3 (行くので)."
+            },
+            {
+              "id": "n4-e10-g-19",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "19. 電車に　＿＿　＿＿　★　＿＿　走りました。\n1: 遅れない　2: ように　3: 急いで　4: 駅まで",
+              "options": [
+                "遅れない",
+                "ように",
+                "急いで",
+                "駅まで"
+              ],
+              "correct": 3,
+              "explanation": "Order: 電車に 遅れない ように 急いで [★ 駅まで] 走りました。 Star is 4 (駅まで)."
+            },
+            {
+              "id": "n4-e10-g-20",
+              "type": "Mondai 2 (文の組み立て)",
+              "question": "20. わたしは　＿＿　＿＿　★　＿＿　つもりです。\n1: 日本へ　2: 来年　3: 留学する　4: 友達と",
+              "options": [
+                "日本へ",
+                "来年",
+                "留学する",
+                "友達と"
+              ],
+              "correct": 0,
+              "explanation": "Order: わたしは 来年 友達と [★ 日本へ] 留学する つもりです。 Star is 1 (日本へ)."
+            },
+            {
+              "id": "n4-e10-g-21",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "【読解文章：日本の温泉文化】\n21. (21) に入る言葉はどれですか。",
+              "options": [
+                "はいります",
+                "はいりました",
+                "はいって",
+                "はいる"
+              ],
+              "correct": 2,
+              "explanation": "Connecting action with te-form:「はいって」."
+            },
+            {
+              "id": "n4-e10-g-22",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "22. (22) に入る言葉はどれですか。",
+              "options": [
+                "とても",
+                "あまり",
+                "ぜんぜん",
+                "すこしも"
+              ],
+              "correct": 0,
+              "explanation": "Positive evaluation:「とても」."
+            },
+            {
+              "id": "n4-e10-g-23",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "23. (23) に入る言葉はどれですか。",
+              "options": [
+                "それに",
+                "だから",
+                "しかし",
+                "それから"
+              ],
+              "correct": 0,
+              "explanation": "Adding related points:「それに」."
+            },
+            {
+              "id": "n4-e10-g-24",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "24. (24) に入る言葉はどれですか。",
+              "options": [
+                "いってみたい",
+                "いってみて",
+                "いってみる",
+                "いってみた"
+              ],
+              "correct": 0,
+              "explanation": "Desire:「いってみたい」."
+            },
+            {
+              "id": "n4-e10-g-25",
+              "type": "Mondai 3 (文章の文法)",
+              "question": "25. (25) に入る言葉はどれですか。",
+              "options": [
+                "おもいます",
+                "おもいました",
+                "おもって",
+                "おもわない"
+              ],
+              "correct": 0,
+              "explanation": "Present conjecture:「おもいます」."
+            },
+            {
+              "id": "n4-e10-g-26",
+              "type": "Mondai 4 (短文読解)",
+              "question": "【短文：地域の日本語教室】\n26. 日本語教室は いつ 開かれますか。",
+              "options": [
+                "毎週土曜日の 午前10時",
+                "毎週日曜日の 午後2時",
+                "毎週水曜日の 午後7時",
+                "毎月第1土曜日"
+              ],
+              "correct": 0,
+              "explanation": "Held every Saturday at 10:00 AM."
+            },
+            {
+              "id": "n4-e10-g-27",
+              "type": "Mondai 4 (短文読解)",
+              "question": "27. 参加費用は いくらですか。",
+              "options": [
+                "1回 500円（テキスト代別）",
+                "無料",
+                "月額 2,000円",
+                "年間 5,000円"
+              ],
+              "correct": 0,
+              "explanation": "Fee is 500 yen per session."
+            },
+            {
+              "id": "n4-e10-g-28",
+              "type": "Mondai 4 (短文読解)",
+              "question": "28. 初めて参加する人は 何を持って行く必要がありますか。",
+              "options": [
+                "筆記用具とノート",
+                "身分証明書",
+                "写真2枚",
+                "辞書"
+              ],
+              "correct": 0,
+              "explanation": "Bring writing utensils and notebook."
+            },
+            {
+              "id": "n4-e10-g-29",
+              "type": "Mondai 4 (短文読解)",
+              "question": "29. 申し込みは どのように しますか。",
+              "options": [
+                "前日までに メールで 申し込む",
+                "当日 直接 会場へ 行く",
+                "電話でのみ 受付",
+                "市役所で 申し込む"
+              ],
+              "correct": 0,
+              "explanation": "Pre-registration by email by the previous day."
+            },
+            {
+              "id": "n4-e10-g-30",
+              "type": "Mondai 5 (中文読解)",
+              "question": "【中文：留学生のアルバイト体験】\n30. 筆者がカフェで働き始めた目的は何ですか。",
+              "options": [
+                "生きた日本語と接客マナーを学ぶため",
+                "お金を貯めて旅行するため",
+                "コーヒーの淹れ方を覚えるため",
+                "友達を作るため"
+              ],
+              "correct": 0,
+              "explanation": "To learn real-life Japanese communication and customer service manners."
+            },
+            {
+              "id": "n4-e10-g-31",
+              "type": "Mondai 5 (中文読解)",
+              "question": "31. アルバイトで一番苦労したことは何ですか。",
+              "options": [
+                "敬語の使い方と聞き取り",
+                "メニューを覚えること",
+                "皿洗い",
+                "朝早く起きること"
+              ],
+              "correct": 0,
+              "explanation": "Struggled most with keigo honorifics and fast native speech."
+            },
+            {
+              "id": "n4-e10-g-32",
+              "type": "Mondai 5 (中文読解)",
+              "question": "32. 店長から褒められた理由は何ですか。",
+              "options": [
+                "いつも笑顔で元気に挨拶していたから",
+                "ミスを一度もしなかったから",
+                "一番長く働いたから",
+                "英語が話せたから"
+              ],
+              "correct": 0,
+              "explanation": "Praised for consistently greeting customers with a bright smile."
+            },
+            {
+              "id": "n4-e10-g-33",
+              "type": "Mondai 5 (中文読解)",
+              "question": "33. 筆者はこのアルバイトを通じてどう成長しましたか。",
+              "options": [
+                "日本語の会話に自信がつき、人との繋がりを楽しめるようになった",
+                "料理が作れるようになった",
+                "給料がたくさんもらえた",
+                "将来カフェを開きたいと思った"
+              ],
+              "correct": 0,
+              "explanation": "Gained conversational confidence and appreciated human connections."
+            },
+            {
+              "id": "n4-e10-g-34",
+              "type": "Mondai 6 (情報検索)",
+              "question": "【情報検索：スポーツセンターの利用案内】\n34. プールを利用する大人の料金はいくらですか。",
+              "options": [
+                "400円",
+                "200円",
+                "600円",
+                "無料"
+              ],
+              "correct": 0,
+              "explanation": "Adult pool admission is listed as 400 yen."
+            },
+            {
+              "id": "n4-e10-g-35",
+              "type": "Mondai 6 (情報検索)",
+              "question": "35. トレーニングルームを利用する際に必ず持参するものは何ですか。",
+              "options": [
+                "室内用運動靴",
+                "水着",
+                "タオル2枚",
+                "会員証"
+              ],
+              "correct": 0,
+              "explanation": "Indoor athletic shoes (室内用運動靴) are strictly required."
+            }
+          ]
+        },
+        {
+          "id": "n4-e10-sec-listening",
+          "title": "Section 3: Listening Comprehension (聴解)",
+          "shortTitle": "聴解 (Listening)",
+          "timeLimitSeconds": 2100,
+          "questions": [
+            {
+              "id": "n4-e10-l-1",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
+              "image": "/images/japanese/listening/n4/m1_q1.png",
+              "question": "1. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 2,
+              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
+              "explanation": "Based on task instructions, Option 3 is correct."
+            },
+            {
+              "id": "n4-e10-l-2",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
+              "image": "/images/japanese/listening/n4/m1_q2.png",
+              "question": "2. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 3,
+              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
+              "explanation": "Based on task instructions, Option 4 is correct."
+            },
+            {
+              "id": "n4-e10-l-3",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
+              "image": "/images/japanese/listening/n4/m1_q3.png",
+              "question": "3. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 0,
+              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
+              "explanation": "Based on task instructions, Option 1 is correct."
+            },
+            {
+              "id": "n4-e10-l-4",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
+              "image": "/images/japanese/listening/n4/m1_q4.png",
+              "question": "4. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 1,
+              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
+              "explanation": "Based on task instructions, Option 2 is correct."
+            },
+            {
+              "id": "n4-e10-l-5",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
+              "image": "/images/japanese/listening/n4/m1_q5.png",
+              "question": "5. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 2,
+              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
+              "explanation": "Based on task instructions, Option 3 is correct."
+            },
+            {
+              "id": "n4-e10-l-6",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
+              "image": "/images/japanese/listening/n4/m1_q6.png",
+              "question": "6. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 3,
+              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
+              "explanation": "Based on task instructions, Option 4 is correct."
+            },
+            {
+              "id": "n4-e10-l-7",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
+              "image": "/images/japanese/listening/n4/m1_q7.png",
+              "question": "7. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 0,
+              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
+              "explanation": "Based on task instructions, Option 1 is correct."
+            },
+            {
+              "id": "n4-e10-l-8",
+              "type": "Mondai 1 (課題理解)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
+              "image": "/images/japanese/listening/n4/m1_q8.png",
+              "question": "8. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "options": [
+                "選択肢 1",
+                "選択肢 2",
+                "選択肢 3",
+                "選択肢 4"
+              ],
+              "correct": 1,
+              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
+              "explanation": "Based on task instructions, Option 2 is correct."
+            },
+            {
+              "id": "n4-e10-l-9",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
+              "question": "9. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "options": [
+                "電車が遅れたから",
+                "寝坊したから",
+                "道を間違えたから",
+                "雨が降ったから"
+              ],
+              "correct": 2,
+              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
+              "explanation": "Point comprehension detail: reason for arriving late."
+            },
+            {
+              "id": "n4-e10-l-10",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
+              "question": "10. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "options": [
+                "電車が遅れたから",
+                "寝坊したから",
+                "道を間違えたから",
+                "雨が降ったから"
+              ],
+              "correct": 3,
+              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
+              "explanation": "Point comprehension detail: reason for arriving late."
+            },
+            {
+              "id": "n4-e10-l-11",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
+              "question": "11. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "options": [
+                "電車が遅れたから",
+                "寝坊したから",
+                "道を間違えたから",
+                "雨が降ったから"
+              ],
+              "correct": 0,
+              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
+              "explanation": "Point comprehension detail: reason for arriving late."
+            },
+            {
+              "id": "n4-e10-l-12",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
+              "question": "12. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "options": [
+                "電車が遅れたから",
+                "寝坊したから",
+                "道を間違えたから",
+                "雨が降ったから"
+              ],
+              "correct": 1,
+              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
+              "explanation": "Point comprehension detail: reason for arriving late."
+            },
+            {
+              "id": "n4-e10-l-13",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
+              "question": "13. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "options": [
+                "電車が遅れたから",
+                "寝坊したから",
+                "道を間違えたから",
+                "雨が降ったから"
+              ],
+              "correct": 2,
+              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
+              "explanation": "Point comprehension detail: reason for arriving late."
+            },
+            {
+              "id": "n4-e10-l-14",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
+              "question": "14. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "options": [
+                "電車が遅れたから",
+                "寝坊したから",
+                "道を間違えたから",
+                "雨が降ったから"
+              ],
+              "correct": 3,
+              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
+              "explanation": "Point comprehension detail: reason for arriving late."
+            },
+            {
+              "id": "n4-e10-l-15",
+              "type": "Mondai 2 (ポイント理解)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
+              "question": "15. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "options": [
+                "電車が遅れたから",
+                "寝坊したから",
+                "道を間違えたから",
+                "雨が降ったから"
+              ],
+              "correct": 0,
+              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
+              "explanation": "Point comprehension detail: reason for arriving late."
+            },
+            {
+              "id": "n4-e10-l-16",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
+              "image": "/images/japanese/listening/n4/m3_q1.png",
+              "question": "16. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "options": [
+                "手伝っていただけませんか。",
+                "手伝ってください。",
+                "手伝いましょうか。"
+              ],
+              "correct": 0,
+              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
+              "explanation": "Polite request in N4:「〜ていただけませんか」."
+            },
+            {
+              "id": "n4-e10-l-17",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
+              "image": "/images/japanese/listening/n4/m3_q2.png",
+              "question": "17. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "options": [
+                "手伝っていただけませんか。",
+                "手伝ってください。",
+                "手伝いましょうか。"
+              ],
+              "correct": 0,
+              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
+              "explanation": "Polite request in N4:「〜ていただけませんか」."
+            },
+            {
+              "id": "n4-e10-l-18",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
+              "image": "/images/japanese/listening/n4/m3_q3.png",
+              "question": "18. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "options": [
+                "手伝っていただけませんか。",
+                "手伝ってください。",
+                "手伝いましょうか。"
+              ],
+              "correct": 0,
+              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
+              "explanation": "Polite request in N4:「〜ていただけませんか」."
+            },
+            {
+              "id": "n4-e10-l-19",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
+              "image": "/images/japanese/listening/n4/m3_q4.png",
+              "question": "19. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "options": [
+                "手伝っていただけませんか。",
+                "手伝ってください。",
+                "手伝いましょうか。"
+              ],
+              "correct": 0,
+              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
+              "explanation": "Polite request in N4:「〜ていただけませんか」."
+            },
+            {
+              "id": "n4-e10-l-20",
+              "type": "Mondai 3 (発話表現)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
+              "image": "/images/japanese/listening/n4/m3_q5.png",
+              "question": "20. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "options": [
+                "手伝っていただけませんか。",
+                "手伝ってください。",
+                "手伝いましょうか。"
+              ],
+              "correct": 0,
+              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
+              "explanation": "Polite request in N4:「〜ていただけませんか」."
+            },
+            {
+              "id": "n4-e10-l-21",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
+              "question": "21. 「お先に失礼します。」",
+              "options": [
+                "お疲れ様でした。",
+                "いってらっしゃい。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
+              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+            },
+            {
+              "id": "n4-e10-l-22",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
+              "question": "22. 「お先に失礼します。」",
+              "options": [
+                "お疲れ様でした。",
+                "いってらっしゃい。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
+              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+            },
+            {
+              "id": "n4-e10-l-23",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
+              "question": "23. 「お先に失礼します。」",
+              "options": [
+                "お疲れ様でした。",
+                "いってらっしゃい。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
+              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+            },
+            {
+              "id": "n4-e10-l-24",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
+              "question": "24. 「お先に失礼します。」",
+              "options": [
+                "お疲れ様でした。",
+                "いってらっしゃい。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
+              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+            },
+            {
+              "id": "n4-e10-l-25",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
+              "question": "25. 「お先に失礼します。」",
+              "options": [
+                "お疲れ様でした。",
+                "いってらっしゃい。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
+              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+            },
+            {
+              "id": "n4-e10-l-26",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
+              "question": "26. 「お先に失礼します。」",
+              "options": [
+                "お疲れ様でした。",
+                "いってらっしゃい。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
+              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+            },
+            {
+              "id": "n4-e10-l-27",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
+              "question": "27. 「お先に失礼します。」",
+              "options": [
+                "お疲れ様でした。",
+                "いってらっしゃい。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
+              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+            },
+            {
+              "id": "n4-e10-l-28",
+              "type": "Mondai 4 (即時応答)",
+              "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
+              "question": "28. 「お先に失礼します。」",
+              "options": [
+                "お疲れ様でした。",
+                "いってらっしゃい。",
+                "どういたしまして。"
+              ],
+              "correct": 0,
+              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
+              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
             }
           ]
         }

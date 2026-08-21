@@ -27,6 +27,16 @@ export default function JLPTExamSimulator({ level = 'N5', onToast }) {
   const activePaper = availablePapers.find((p) => p.id === selectedPaperId) || availablePapers[0];
   const sections = activePaper?.sections || (level === 'N5' ? N5_SECTIONS_DATA : N4_SECTIONS_DATA);
 
+  const [paperCategory, setPaperCategory] = useState('ALL');
+
+  const filteredPapers = useMemo(() => {
+    if (paperCategory === 'OFFICIAL') return availablePapers.filter((p) => p.badge.includes('Official'));
+    if (paperCategory === 'DIAGNOSTIC') return availablePapers.filter((p) => p.badge.includes('Diagnostic') || p.badge.includes('NAT-TEST') || p.badge.includes('Grammar'));
+    if (paperCategory === 'SKILLS') return availablePapers.filter((p) => p.badge.includes('Speed') || p.badge.includes('Kanji') || p.badge.includes('Audio') || p.badge.includes('Reading'));
+    if (paperCategory === 'SPRINT') return availablePapers.filter((p) => p.badge.includes('Sprint'));
+    return availablePapers;
+  }, [availablePapers, paperCategory]);
+
   // Exam Workflow State: 'BRIEFING' | 'EXAM' | 'SECTION_TRANSITION' | 'RESULTS'
   const [examState, setExamState] = useState('BRIEFING');
   const [activeSectionIndex, setActiveSectionIndex] = useState(0);
@@ -206,18 +216,42 @@ export default function JLPTExamSimulator({ level = 'N5', onToast }) {
 
         {/* Mock Exam Paper Selection Gallery */}
         <div className="space-y-3">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wide flex items-center gap-2">
               <span>📚</span>
               <span>Select Mock Exam Paper (模擬試験の選択):</span>
             </h3>
             <span className="text-xs text-blue-600 font-bold font-mono">
-              {availablePapers.length} Full Papers Available
+              {filteredPapers.length} of {availablePapers.length} Papers Shown
             </span>
           </div>
 
+          {/* Filter Tabs */}
+          <div className="flex flex-wrap items-center gap-1.5 pb-1">
+            {[
+              { id: 'ALL', label: 'All 10 Exams' },
+              { id: 'OFFICIAL', label: 'Official JLPT (Vol 1 & 2)' },
+              { id: 'DIAGNOSTIC', label: 'Diagnostic & Benchmark' },
+              { id: 'SKILLS', label: 'Skills & Thematic Focus' },
+              { id: 'SPRINT', label: 'Final Sprint 2026' }
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                type="button"
+                className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                  paperCategory === tab.id
+                    ? 'bg-slate-900 text-white shadow-xs'
+                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                }`}
+                onClick={() => setPaperCategory(tab.id)}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+
           <div className="grid gap-3 sm:grid-cols-2">
-            {availablePapers.map((paper) => {
+            {filteredPapers.map((paper) => {
               const isSelected = selectedPaperId === paper.id;
               return (
                 <div
