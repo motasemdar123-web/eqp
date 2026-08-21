@@ -524,11 +524,57 @@ async function confirmQuotation(quotationNo, seqNo = '00', customCookie = null) 
     'Cookie': cookieStr,
   };
 
-  // 1. Search QuotationCondition to load state & TimeStamp
+  const qtn = String(quotationNo).trim();
+  const seq = String(seqNo || '00').trim();
+
+  // STEP 1: Ensure Quotation Details are loaded and calculated in session
+  try {
+    const detailUrl = `${BASE_PORTAL_URL}/QuotationDetails/Index?strQUTN=${qtn}&strQutnSubNo=0&DBCode=536K`;
+    await fetch(detailUrl, { method: 'GET', headers: defaultHeaders });
+
+    const searchUrl = `${BASE_PORTAL_URL}/QuotationDetails/Search`;
+    await fetch(searchUrl, {
+      method: 'POST',
+      headers: {
+        ...defaultHeaders,
+        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+        'X-Requested-With': 'XMLHttpRequest',
+        'Referer': detailUrl,
+      },
+      body: new URLSearchParams({ qtno: qtn, subqtno: '0', DBCode: '536K' }).toString(),
+    });
+
+    const updateUrl = `${BASE_PORTAL_URL}/QuotationDetails/UpdateDetails`;
+    const updateData = new URLSearchParams({
+      userID: 'motasemgha',
+      currency: 'USD',
+      tax: '0.00',
+      nameOfOtherCharges1: '',
+      nameOfOtherCharges2: '',
+      otherCharges1: '0.00',
+      otherCharges2: '0.00',
+      sellingPrice: '0.00',
+      shippingCharges: '0.00',
+    });
+    await fetch(updateUrl, {
+      method: 'POST',
+      headers: {
+        ...defaultHeaders,
+        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+        'X-Requested-With': 'XMLHttpRequest',
+        'Referer': detailUrl,
+      },
+      body: updateData.toString(),
+    });
+  } catch {
+    // Non-blocking detail refresh
+  }
+
+  // STEP 2: Search QuotationCondition to load fresh state & TimeStamp
   const condSearchUrl = `${BASE_PORTAL_URL}/QuotationCondition/Search`;
   const condSearchData = new URLSearchParams({
-    strQuotationNo: String(quotationNo).trim(),
-    strQuotSeqNo: String(seqNo || '00').trim(),
+    strQuotationNo: qtn,
+    strQuotSeqNo: seq,
     DBCode: '536K',
   });
 
@@ -538,7 +584,7 @@ async function confirmQuotation(quotationNo, seqNo = '00', customCookie = null) 
       ...defaultHeaders,
       'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
       'X-Requested-With': 'XMLHttpRequest',
-      'Referer': `${BASE_PORTAL_URL}/QuotationCondition/Index?strQUTN=${quotationNo}&strQutnSubNo=${seqNo}&DBCode=536K`,
+      'Referer': `${BASE_PORTAL_URL}/QuotationCondition/Index?strQUTN=${qtn}&strQutnSubNo=${seq}&DBCode=536K`,
     },
     body: condSearchData.toString(),
   });
@@ -549,22 +595,22 @@ async function confirmQuotation(quotationNo, seqNo = '00', customCookie = null) 
   let rates = searchData.Rates || searchData.lstRates || [];
   if (!rates || rates.length === 0) {
     rates = ['A', 'B', 'C', 'D', 'DA', 'E', 'F', 'NA', 'Other', 'S'].map((grp) => ({
-      QuotationNo: quotationNo,
-      QuotationSubNo: seqNo,
+      QuotationNo: qtn,
+      QuotationSubNo: seq,
       RateType: '1',
       CommodityGroupCode: grp,
       RateValue: '0.00',
     }));
   }
 
-  // 2. Save with Status = '2' (Confirmed)
+  // STEP 3: Save with Status = '2' (Confirmed)
   const saveUrl = `${BASE_PORTAL_URL}/QuotationCondition/Save`;
   const savePayload = {
     objQuotationConditionPostModel: {
-      OrigQuotationNo: quotationNo,
-      OrigQuotationSeqNo: seqNo,
-      QuotationNo: quotationNo,
-      QuotationSeqNo: seqNo,
+      OrigQuotationNo: qtn,
+      OrigQuotationSeqNo: seq,
+      QuotationNo: qtn,
+      QuotationSeqNo: seq,
       DistributerOrderNo: searchData.DistributerOrderNo || '',
       DistributerCodes: '536K',
       DistributerName: searchData.DistributerName || 'DAR AL HAI',
@@ -612,7 +658,7 @@ async function confirmQuotation(quotationNo, seqNo = '00', customCookie = null) 
       TSINumber: '',
       ModelSVREMark: false,
       ExitPoint: 'JEA',
-      CustomerCode: searchData.CustomerCode || 'REG',
+      CustomerCode: searchData.SavedCustomerCode || searchData.CustomerCode || 'REG',
       lstRates: rates,
       MarkingCode: 'MCOIL',
       TimeStamp: timestamp,
@@ -626,7 +672,7 @@ async function confirmQuotation(quotationNo, seqNo = '00', customCookie = null) 
       'Content-Type': 'application/json',
       'Accept': 'application/json, text/javascript, */*; q=0.01',
       'X-Requested-With': 'XMLHttpRequest',
-      'Referer': `${BASE_PORTAL_URL}/QuotationCondition/Index?strQUTN=${quotationNo}&strQutnSubNo=${seqNo}&DBCode=536K`,
+      'Referer': `${BASE_PORTAL_URL}/QuotationCondition/Index?strQUTN=${qtn}&strQutnSubNo=${seq}&DBCode=536K`,
     },
     body: JSON.stringify(savePayload),
   });
@@ -638,7 +684,7 @@ async function confirmQuotation(quotationNo, seqNo = '00', customCookie = null) 
 
   return {
     status: 'CONFIRMED',
-    quotation_no: quotationNo,
+    quotation_no: qtn,
     db_order_no: searchData.DistributerOrderNo,
     timestamp,
     raw_response: saveJson,
