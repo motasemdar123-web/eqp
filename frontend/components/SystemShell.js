@@ -14,6 +14,7 @@ const navItems = [
   { href: '/management/parts-inquiry', label: 'Parts Inquiry', icon: 'parts' },
   { href: '/workspace', label: 'Workspace', icon: 'workspace' },
   { href: '/eqp', label: 'EQP Module', icon: 'hub' },
+  { href: '/japanese', label: 'Japanese Corner', icon: 'japanese' },
 ];
 
 const supportItems = [
@@ -73,6 +74,11 @@ const iconPaths = {
       <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
     </>
   ),
+  japanese: (
+    <>
+      <path d="M4 6h16M7 6v14M17 6v14M2 10h20M9 14h6" />
+    </>
+  ),
   mobile: (
     <>
       <rect x="5" y="2" width="14" height="20" rx="2" ry="2" />
@@ -121,6 +127,7 @@ const COMMAND_ITEMS = [
   { id: 'nav-parts-inquiry', title: 'Komatsu PDX Parts Inquiry', subtitle: 'Bulk stock inquiry, interchangeable parts, DNet price', href: '/management/parts-inquiry', category: 'Navigation', badge: 'Parts Hub' },
   { id: 'nav-workspace', title: 'Engineering Whiteboard', subtitle: 'Miro-grade canvas, 5-whys, maintenance templates', href: '/workspace', category: 'Navigation', badge: 'Canvas' },
   { id: 'nav-eqp', title: 'EQP Module Hub', subtitle: 'Certified reports, machines register & lifecycle', href: '/eqp', category: 'Navigation', badge: 'EQP' },
+  { id: 'nav-japanese', title: 'Japanese Learning Hub', subtitle: 'JLPT N5 & N4 active recall, kanji dojo & audio exams', href: '/japanese', category: 'Navigation', badge: 'Language' },
   { id: 'nav-eqp-reports', title: 'EQP PDF Archive', subtitle: 'Search, batch download & manage certified PDFs', href: '/eqp/reports', category: 'Navigation', badge: 'Archive' },
   { id: 'nav-eqp-gen', title: 'Report Builder', subtitle: 'Generate certified preventive maintenance reports', href: '/eqp/generate-reports', category: 'Navigation', badge: 'Builder' },
   { id: 'nav-eqp-machines', title: 'Machines Register', subtitle: 'Fleet counter progression, SMR & report readiness', href: '/eqp/machines', category: 'Navigation', badge: 'Fleet' },
@@ -129,6 +136,7 @@ const COMMAND_ITEMS = [
   // Quick Actions
   { id: 'act-new-task', title: 'Add Daily Schedule Task', subtitle: 'Create timed task block for today', href: '/management/daily-planner', category: 'Quick Action', badge: 'Action' },
   { id: 'act-search-parts', title: 'Run Komatsu PDX Inquiry', subtitle: 'Batch inquiry for parts stock & pricing', href: '/management/parts-inquiry', category: 'Quick Action', badge: 'Action' },
+  { id: 'act-japanese', title: 'Practice Japanese SRS Flashcards', subtitle: 'Open JLPT N5/N4 flashcard dojo', href: '/japanese', category: 'Quick Action', badge: 'Learn' },
   { id: 'act-new-report', title: 'Draft EQP Inspection Report', subtitle: 'Launch report builder wizard', href: '/eqp/generate-reports', category: 'Quick Action', badge: 'Action' },
   { id: 'act-add-tech', title: 'Register New Technician', subtitle: 'Add technician to company fleet roster', href: '/management/technicians', category: 'Quick Action', badge: 'Action' },
 ];
@@ -505,6 +513,13 @@ export default function SystemShell({
                     onClick={() => setQuickMenuOpen(false)}
                   >
                     <span>🎨</span> Open Whiteboard
+                  </Link>
+                  <Link
+                    href="/japanese"
+                    className="ds-quick-menu-item"
+                    onClick={() => setQuickMenuOpen(false)}
+                  >
+                    <span>🌸</span> Japanese Learning Hub
                   </Link>
                 </div>
               )}
