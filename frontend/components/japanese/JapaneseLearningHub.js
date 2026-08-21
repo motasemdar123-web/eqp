@@ -21,6 +21,7 @@ import JLPTExamSimulator from './JLPTExamSimulator';
 import TechnicalJapaneseHub from './TechnicalJapaneseHub';
 import SentenceScramblerGame from './SentenceScramblerGame';
 import MistakeBankModal from './MistakeBankModal';
+import LevelSelectorModal from './LevelSelectorModal';
 
 function speakJapanese(text) {
   if (typeof window === 'undefined' || !window.speechSynthesis) return;
@@ -36,6 +37,36 @@ export default function JapaneseLearningHub() {
   const [activePillar, setActivePillar] = useState('exams'); // 'exams' | 'foundations' | 'workplace'
   const [activeTab, setActiveTab] = useState('exam'); // 'exam' | 'mistakes' | 'scramble' | 'flashcards' | 'kanji' | 'grammar' | 'vocab' | 'technical'
   const [toast, setToast] = useState(null);
+  const [isLevelModalOpen, setIsLevelModalOpen] = useState(false);
+  const [isFirstTimeUser, setIsFirstTimeUser] = useState(false);
+
+  // Load persistent user level preference on first mount
+  useEffect(() => {
+    try {
+      const savedLevel = localStorage.getItem('jlpt_user_target_level');
+      if (savedLevel && (savedLevel === 'N5' || savedLevel === 'N4')) {
+        setLevel(savedLevel);
+      } else {
+        // First time user: show onboarding level selector
+        setIsFirstTimeUser(true);
+        setIsLevelModalOpen(true);
+      }
+    } catch (e) {
+      console.error('Failed to load level preference', e);
+    }
+  }, []);
+
+  const handleSelectLevel = (newLevel) => {
+    setLevel(newLevel);
+    setIsLevelModalOpen(false);
+    setIsFirstTimeUser(false);
+    try {
+      localStorage.setItem('jlpt_user_target_level', newLevel);
+    } catch (e) {
+      console.error('Failed to save level preference', e);
+    }
+    showToast(`🎯 Target set to JLPT ${newLevel}. Curriculum updated!`, 'success');
+  };
 
   const showToast = (message, type = 'info') => {
     setToast({ message, type });
@@ -62,25 +93,25 @@ export default function JapaneseLearningHub() {
       title="Japanese Active Learning Hub (日本語コーナー)"
       description="Streamlined Japanese mastery environment for JLPT proficiency (N5 & N4) and Factory 5S Operations."
       actions={
-        <div className="flex items-center gap-1.5 bg-slate-100 p-1 rounded-xl border border-slate-200 shadow-xs">
-          <button
-            type="button"
-            className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-              level === 'N5' ? 'bg-amber-500 text-white shadow-xs' : 'text-slate-700 hover:bg-slate-200'
+        <div className="flex items-center gap-2">
+          <div
+            className={`flex items-center gap-2 px-3.5 py-1.5 rounded-xl border text-xs font-bold shadow-xs transition-all ${
+              level === 'N5'
+                ? 'bg-amber-50 border-amber-300/80 text-amber-900'
+                : 'bg-blue-50 border-blue-300/80 text-blue-900'
             }`}
-            onClick={() => setLevel('N5')}
           >
-            🌸 JLPT N5
-          </button>
-          <button
-            type="button"
-            className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-              level === 'N4' ? 'bg-blue-600 text-white shadow-xs' : 'text-slate-700 hover:bg-slate-200'
-            }`}
-            onClick={() => setLevel('N4')}
-          >
-            ⛩️ JLPT N4
-          </button>
+            <span className="text-sm">{level === 'N5' ? '🌸' : '⛩️'}</span>
+            <span>Target: JLPT {level}</span>
+            <button
+              type="button"
+              onClick={() => setIsLevelModalOpen(true)}
+              className="ml-1 text-[11px] text-slate-500 hover:text-slate-900 font-semibold underline cursor-pointer"
+              title="Switch between JLPT N5 and N4"
+            >
+              Switch ▾
+            </button>
+          </div>
         </div>
       }
     >
@@ -266,6 +297,14 @@ export default function JapaneseLearningHub() {
       </div>
 
       <Toast message={toast?.message} type={toast?.type} onClose={() => setToast(null)} />
+
+      <LevelSelectorModal
+        isOpen={isLevelModalOpen}
+        isFirstTime={isFirstTimeUser}
+        currentLevel={level}
+        onClose={() => setIsLevelModalOpen(false)}
+        onSelectLevel={handleSelectLevel}
+      />
     </SystemShell>
   );
 }
