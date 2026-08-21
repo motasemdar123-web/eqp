@@ -33,7 +33,8 @@ function speakJapanese(text) {
 
 export default function JapaneseLearningHub() {
   const [level, setLevel] = useState('N5'); // 'N5' | 'N4'
-  const [activeTab, setActiveTab] = useState('flashcards'); // 'flashcards' | 'kanji' | 'grammar' | 'vocab' | 'scramble' | 'technical' | 'mistakes' | 'exam'
+  const [activePillar, setActivePillar] = useState('exams'); // 'exams' | 'foundations' | 'workplace'
+  const [activeTab, setActiveTab] = useState('exam'); // 'exam' | 'mistakes' | 'scramble' | 'flashcards' | 'kanji' | 'grammar' | 'vocab' | 'technical'
   const [toast, setToast] = useState(null);
 
   const showToast = (message, type = 'info') => {
@@ -46,130 +47,221 @@ export default function JapaneseLearningHub() {
   const currentVocab = level === 'N5' ? N5_VOCABULARY : N4_VOCABULARY;
   const currentExam = level === 'N5' ? N5_MOCK_EXAM : N4_MOCK_EXAM;
 
+  // Handle switching pillar
+  const handlePillarChange = (pillar) => {
+    setActivePillar(pillar);
+    if (pillar === 'exams') setActiveTab('exam');
+    else if (pillar === 'foundations') setActiveTab('flashcards');
+    else if (pillar === 'workplace') setActiveTab('technical');
+  };
+
   return (
     <SystemShell
       activePath="/japanese"
       eyebrow="LANGUAGE & EXCELLENCE"
       title="Japanese Active Learning Hub (日本語コーナー)"
-      description="Interactive mastery hub for Japanese proficiency (JLPT N5 & N4) and Factory 5S Operations. Practice active recall flashcards, sentence unscrambler, stroke-order kanji, engineering Japanese, error vault notebook, and full timed mock listening exams."
+      description="Streamlined Japanese mastery environment for JLPT proficiency (N5 & N4) and Factory 5S Operations."
       actions={
-        <div className="flex items-center gap-2 bg-slate-100 p-1 rounded-xl border border-slate-200 shadow-xs">
+        <div className="flex items-center gap-1.5 bg-slate-100 p-1 rounded-xl border border-slate-200 shadow-xs">
           <button
             type="button"
-            className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all ${level === 'N5' ? 'bg-amber-500 text-white shadow-xs' : 'text-slate-700 hover:bg-slate-200'}`}
+            className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+              level === 'N5' ? 'bg-amber-500 text-white shadow-xs' : 'text-slate-700 hover:bg-slate-200'
+            }`}
             onClick={() => setLevel('N5')}
           >
-            🌸 JLPT N5 Foundation
+            🌸 JLPT N5
           </button>
           <button
             type="button"
-            className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all ${level === 'N4' ? 'bg-blue-600 text-white shadow-xs' : 'text-slate-700 hover:bg-slate-200'}`}
+            className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+              level === 'N4' ? 'bg-blue-600 text-white shadow-xs' : 'text-slate-700 hover:bg-slate-200'
+            }`}
             onClick={() => setLevel('N4')}
           >
-            ⛩️ JLPT N4 Elementary
+            ⛩️ JLPT N4
           </button>
         </div>
       }
     >
       <div className="space-y-6">
-        {/* Navigation Tabs for all Products */}
-        <div className="flex gap-2 border-b border-slate-200 pb-3 overflow-x-auto">
+        {/* Tier 1: Main Learning Pillars */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 bg-slate-100 p-1.5 rounded-2xl border border-slate-200/80">
           <button
             type="button"
-            className={`px-3.5 py-2 text-xs font-bold rounded-lg whitespace-nowrap transition-all ${activeTab === 'flashcards' ? 'bg-slate-900 text-white shadow-sm' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}`}
-            onClick={() => setActiveTab('flashcards')}
+            onClick={() => handlePillarChange('exams')}
+            className={`py-2.5 px-4 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer ${
+              activePillar === 'exams'
+                ? 'bg-white text-slate-900 shadow-sm border border-slate-200/60'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
+            }`}
           >
-            📇 Flashcard Dojo (SRS)
+            <span className="text-base">⛩️</span>
+            <span>JLPT Exam Suite (試験対策)</span>
           </button>
+
           <button
             type="button"
-            className={`px-3.5 py-2 text-xs font-bold rounded-lg whitespace-nowrap transition-all ${activeTab === 'scramble' ? 'bg-slate-900 text-white shadow-sm' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}`}
-            onClick={() => setActiveTab('scramble')}
+            onClick={() => handlePillarChange('foundations')}
+            className={`py-2.5 px-4 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer ${
+              activePillar === 'foundations'
+                ? 'bg-white text-slate-900 shadow-sm border border-slate-200/60'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
+            }`}
           >
-            🧩 Sentence Builder (並び替え)
+            <span className="text-base">📖</span>
+            <span>Skills & Vocabulary (基礎ドリル)</span>
           </button>
+
           <button
             type="button"
-            className={`px-3.5 py-2 text-xs font-bold rounded-lg whitespace-nowrap transition-all ${activeTab === 'technical' ? 'bg-slate-900 text-white shadow-sm' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}`}
-            onClick={() => setActiveTab('technical')}
+            onClick={() => handlePillarChange('workplace')}
+            className={`py-2.5 px-4 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer ${
+              activePillar === 'workplace'
+                ? 'bg-white text-slate-900 shadow-sm border border-slate-200/60'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
+            }`}
           >
-            🏭 Factory & 5S (現場日本語)
-          </button>
-          <button
-            type="button"
-            className={`px-3.5 py-2 text-xs font-bold rounded-lg whitespace-nowrap transition-all ${activeTab === 'mistakes' ? 'bg-slate-900 text-white shadow-sm' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}`}
-            onClick={() => setActiveTab('mistakes')}
-          >
-            🎯 Error Vault (弱点復習)
-          </button>
-          <button
-            type="button"
-            className={`px-3.5 py-2 text-xs font-bold rounded-lg whitespace-nowrap transition-all ${activeTab === 'kanji' ? 'bg-slate-900 text-white shadow-sm' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}`}
-            onClick={() => setActiveTab('kanji')}
-          >
-            ⛩️ Kanji Dojo & Canvas
-          </button>
-          <button
-            type="button"
-            className={`px-3.5 py-2 text-xs font-bold rounded-lg whitespace-nowrap transition-all ${activeTab === 'grammar' ? 'bg-slate-900 text-white shadow-sm' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}`}
-            onClick={() => setActiveTab('grammar')}
-          >
-            📖 Grammar Master
-          </button>
-          <button
-            type="button"
-            className={`px-3.5 py-2 text-xs font-bold rounded-lg whitespace-nowrap transition-all ${activeTab === 'vocab' ? 'bg-slate-900 text-white shadow-sm' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}`}
-            onClick={() => setActiveTab('vocab')}
-          >
-            📚 Vocabulary Vault
-          </button>
-          <button
-            type="button"
-            className={`px-3.5 py-2 text-xs font-bold rounded-lg whitespace-nowrap transition-all ${activeTab === 'exam' ? 'bg-slate-900 text-white shadow-sm' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}`}
-            onClick={() => setActiveTab('exam')}
-          >
-            ⏱️ JLPT Exam Simulator
+            <span className="text-base">🏭</span>
+            <span>Factory & 5S (現場・保全)</span>
           </button>
         </div>
 
-        {/* Product 1: Flashcard Dojo */}
-        {activeTab === 'flashcards' && (
-          <FlashcardDojo grammarList={currentGrammar} level={level} onToast={showToast} />
+        {/* Tier 2: Submodule Pills based on selected Pillar */}
+        <div className="flex flex-wrap gap-2 items-center border-b border-slate-200 pb-3">
+          {activePillar === 'exams' && (
+            <>
+              <button
+                type="button"
+                className={`px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+                  activeTab === 'exam'
+                    ? 'bg-slate-900 text-white shadow-xs'
+                    : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50'
+                }`}
+                onClick={() => setActiveTab('exam')}
+              >
+                ⏱️ Full Mock Exams (10 Official & Diagnostic Papers)
+              </button>
+              <button
+                type="button"
+                className={`px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+                  activeTab === 'mistakes'
+                    ? 'bg-rose-600 text-white shadow-xs'
+                    : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50'
+                }`}
+                onClick={() => setActiveTab('mistakes')}
+              >
+                🎯 Error Vault (弱点ノート)
+              </button>
+              <button
+                type="button"
+                className={`px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+                  activeTab === 'scramble'
+                    ? 'bg-indigo-600 text-white shadow-xs'
+                    : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50'
+                }`}
+                onClick={() => setActiveTab('scramble')}
+              >
+                🧩 Sentence Scrambler (Mondai 2 Stars)
+              </button>
+            </>
+          )}
+
+          {activePillar === 'foundations' && (
+            <>
+              <button
+                type="button"
+                className={`px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+                  activeTab === 'flashcards'
+                    ? 'bg-slate-900 text-white shadow-xs'
+                    : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50'
+                }`}
+                onClick={() => setActiveTab('flashcards')}
+              >
+                📇 Flashcard Dojo (SRS)
+              </button>
+              <button
+                type="button"
+                className={`px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+                  activeTab === 'kanji'
+                    ? 'bg-slate-900 text-white shadow-xs'
+                    : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50'
+                }`}
+                onClick={() => setActiveTab('kanji')}
+              >
+                ⛩️ Kanji Matrix & Canvas
+              </button>
+              <button
+                type="button"
+                className={`px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+                  activeTab === 'grammar'
+                    ? 'bg-slate-900 text-white shadow-xs'
+                    : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50'
+                }`}
+                onClick={() => setActiveTab('grammar')}
+              >
+                📖 Grammar Master
+              </button>
+              <button
+                type="button"
+                className={`px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+                  activeTab === 'vocab'
+                    ? 'bg-slate-900 text-white shadow-xs'
+                    : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50'
+                }`}
+                onClick={() => setActiveTab('vocab')}
+              >
+                📚 Vocabulary Vault
+              </button>
+            </>
+          )}
+
+          {activePillar === 'workplace' && (
+            <button
+              type="button"
+              className={`px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+                activeTab === 'technical'
+                  ? 'bg-indigo-600 text-white shadow-xs'
+                  : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50'
+              }`}
+              onClick={() => setActiveTab('technical')}
+            >
+              🏭 5S, Maintenance & Safety Suite
+            </button>
+          )}
+        </div>
+
+        {/* Active Sub-Module View */}
+        {activeTab === 'exam' && (
+          <JLPTExamSimulator level={level} onToast={setToast} />
         )}
 
-        {/* Product: Sentence Builder Game */}
-        {activeTab === 'scramble' && (
-          <SentenceScramblerGame level={level} onToast={showToast} />
-        )}
-
-        {/* Product: Factory & 5S Technical Japanese */}
-        {activeTab === 'technical' && (
-          <TechnicalJapaneseHub onToast={showToast} />
-        )}
-
-        {/* Product: Mistake Bank Notebook */}
         {activeTab === 'mistakes' && (
           <MistakeBankModal onToast={showToast} />
         )}
 
-        {/* Product 2: Kanji Dojo & Scratchpad */}
+        {activeTab === 'scramble' && (
+          <SentenceScramblerGame level={level} onToast={showToast} />
+        )}
+
+        {activeTab === 'flashcards' && (
+          <FlashcardDojo grammarList={currentGrammar} level={level} onToast={showToast} />
+        )}
+
         {activeTab === 'kanji' && (
           <KanjiDojo kanjiList={currentKanji} level={level} onToast={setToast} />
         )}
 
-        {/* Product 3: Grammar Master */}
         {activeTab === 'grammar' && (
           <GrammarMaster grammarList={currentGrammar} level={level} onToast={setToast} />
         )}
 
-        {/* Product 4: Vocabulary Vault */}
         {activeTab === 'vocab' && (
           <VocabularyVault vocabList={currentVocab} level={level} onToast={setToast} />
         )}
 
-        {/* Product 5: JLPT Exam Simulator */}
-        {activeTab === 'exam' && (
-          <JLPTExamSimulator level={level} onToast={setToast} />
+        {activeTab === 'technical' && (
+          <TechnicalJapaneseHub onToast={showToast} />
         )}
       </div>
 
@@ -333,7 +425,7 @@ function FlashcardDojo({ grammarList, level, onToast }) {
 
             {!flipped ? (
               <div className="py-8 text-center space-y-3">
-                <h3 className="text-3xl font-black text-slate-900 font-sans tracking-wide">
+                <h3 className="text-3xl font-medium text-slate-800 tracking-wide">
                   {currentCard?.title}
                 </h3>
                 <p className="text-xs font-mono text-slate-500 bg-slate-100 inline-block px-3 py-1 rounded-full border border-slate-200">
@@ -344,7 +436,7 @@ function FlashcardDojo({ grammarList, level, onToast }) {
               <div className="py-4 space-y-4">
                 <div>
                   <span className="text-xs font-bold uppercase text-amber-600">English Meaning</span>
-                  <p className="text-xl font-black text-slate-900 mt-0.5">{currentCard?.meaning}</p>
+                  <p className="text-xl font-bold text-slate-800 mt-0.5">{currentCard?.meaning}</p>
                   <p className="text-xs text-slate-600 mt-1">{currentCard?.description}</p>
                 </div>
                 <div className="pt-2 border-t border-slate-100 space-y-2">
@@ -352,7 +444,7 @@ function FlashcardDojo({ grammarList, level, onToast }) {
                   {(currentCard?.examples || []).map((ex, idx) => (
                     <div key={idx} className="p-2.5 bg-white rounded-lg border border-slate-200/80 text-xs">
                       <div className="flex items-center justify-between">
-                        <span className="font-bold text-slate-900">{ex.jp}</span>
+                        <span className="font-medium text-slate-800">{ex.jp}</span>
                         <button
                           type="button"
                           className="text-indigo-600 hover:opacity-80 text-xs ml-1"
@@ -462,10 +554,10 @@ function KanjiDojo({ kanjiList, level }) {
   function handleCanvasPointerDown(e) {
     const canvas = canvasRef.current;
     if (!canvas) return;
+    isDrawingRef.current = true;
     const rect = canvas.getBoundingClientRect();
     const ctx = canvas.getContext('2d');
-    isDrawingRef.current = true;
-    ctx.strokeStyle = '#0F172A';
+    ctx.strokeStyle = '#1E293B';
     ctx.lineWidth = 6;
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
@@ -514,7 +606,7 @@ function KanjiDojo({ kanjiList, level }) {
                 className={`p-3 text-center rounded-xl border transition-all cursor-pointer ${isSelected ? 'bg-blue-50 border-blue-500 shadow-sm' : 'bg-white border-slate-200 hover:border-slate-400'}`}
                 onClick={() => setSelectedKanji(kanji)}
               >
-                <span className="text-3xl font-bold text-slate-900 block">{kanji.char}</span>
+                <span className="text-3xl font-normal text-slate-900 block">{kanji.char}</span>
                 <span className="text-[10px] text-slate-500 truncate block mt-1 font-medium">{kanji.meaning.split('/')[0]}</span>
               </div>
             );

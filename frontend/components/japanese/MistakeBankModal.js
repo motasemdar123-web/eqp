@@ -104,7 +104,7 @@ export default function MistakeBankModal({ onToast }) {
               弱点復習ノート
             </span>
           </div>
-          <h2 className="text-2xl font-black tracking-tight">
+          <h2 className="text-2xl font-bold tracking-tight">
             Targeted Mistake Bank ({missedQuestions.length} Items Saved)
           </h2>
           <p className="text-xs text-slate-300 leading-relaxed">
@@ -216,7 +216,7 @@ export default function MistakeBankModal({ onToast }) {
                     </button>
                   </div>
 
-                  <div className="text-sm font-bold text-slate-900 leading-relaxed flex items-baseline justify-between">
+                  <div className="text-sm font-medium text-slate-900 leading-relaxed flex items-baseline justify-between">
                     <span>{q.question}</span>
                     <button
                       type="button"

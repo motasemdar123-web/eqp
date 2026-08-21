@@ -166,7 +166,7 @@ export default function TechnicalJapaneseHub({ onToast }) {
                   <div className="flex items-start justify-between gap-2">
                     <div>
                       <div className="flex items-baseline gap-2">
-                        <span className="text-2xl font-black text-slate-900 tracking-tight">{t.term}</span>
+                        <span className="text-2xl font-semibold text-slate-900 tracking-normal">{t.term}</span>
                         <button
                           type="button"
                           onClick={() => speak(t.term)}

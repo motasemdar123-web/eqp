@@ -50,6 +50,7 @@ export default function JLPTExamSimulator({ level = 'N5', onToast }) {
   const currentSection = sections[activeSectionIndex] || sections[0];
   const currentQuestions = currentSection?.questions || [];
   const currentQuestion = currentQuestions[activeQuestionIndex] || currentQuestions[0];
+  const allQuestions = useMemo(() => sections.flatMap((s) => s.questions), [sections]);
 
   // Audio player ref for listening section
   const audioRef = useRef(null);
@@ -709,7 +710,6 @@ export default function JLPTExamSimulator({ level = 'N5', onToast }) {
   // 4. RESULTS & SCORE REPORT SCREEN (合否結果通知書)
   // -------------------------------------------------------------------------
   const isPassed = scoreReport.isOverallPassed;
-  const allQuestions = sections.flatMap((s) => s.questions);
 
   const filteredReviewQuestions = useMemo(() => {
     if (filterReview === 'INCORRECT') {

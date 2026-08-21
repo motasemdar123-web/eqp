@@ -147,9 +147,9 @@ export default function SentenceScramblerGame({ level = 'N5', onToast }) {
                     type="button"
                     disabled={isSubmitted}
                     onClick={() => handleRemoveToken(tok, idx)}
-                    className={`relative px-4 py-2.5 rounded-xl font-bold text-sm shadow-xs transition-all flex items-center gap-1.5 ${
+                    className={`relative px-4 py-2.5 rounded-xl font-medium text-sm shadow-xs transition-all flex items-center gap-1.5 ${
                       isStar
-                        ? 'bg-amber-500 text-slate-950 ring-2 ring-amber-400 font-black scale-105'
+                        ? 'bg-amber-500 text-slate-950 ring-2 ring-amber-400 font-semibold scale-105'
                         : 'bg-white text-slate-900 border border-slate-300 hover:border-rose-400 hover:bg-rose-50'
                     }`}
                   >
@@ -180,7 +180,7 @@ export default function SentenceScramblerGame({ level = 'N5', onToast }) {
                   key={idx}
                   type="button"
                   onClick={() => handleSelectToken(tok, idx)}
-                  className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-bold shadow-xs hover:scale-105 transition-all"
+                  className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-medium shadow-xs hover:scale-105 transition-all"
                 >
                   {tok}
                 </button>
@@ -232,7 +232,7 @@ export default function SentenceScramblerGame({ level = 'N5', onToast }) {
             }`}
           >
             <div className="flex items-center justify-between">
-              <div className="font-black text-base flex items-center gap-2">
+              <div className="font-bold text-base flex items-center gap-2">
                 <span>{isCorrect ? '✨ 正解！ Excellent syntax!' : '❌ Incorrect word order'}</span>
               </div>
               <button
@@ -246,7 +246,7 @@ export default function SentenceScramblerGame({ level = 'N5', onToast }) {
 
             <div className="bg-white/80 p-3 rounded-xl border border-slate-200 space-y-1">
               <div className="text-xs font-bold text-slate-500 uppercase">Correct Full Sentence:</div>
-              <div className="text-base font-black text-slate-900">
+              <div className="text-base font-semibold text-slate-900">
                 {currentPuzzle.correctOrder.join(' ')}
               </div>
               <div className="text-xs text-amber-700 font-bold mt-1">
