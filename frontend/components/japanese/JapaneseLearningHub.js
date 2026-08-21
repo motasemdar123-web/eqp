@@ -18,6 +18,9 @@ import {
 } from '../../lib/japaneseData';
 
 import JLPTExamSimulator from './JLPTExamSimulator';
+import TechnicalJapaneseHub from './TechnicalJapaneseHub';
+import SentenceScramblerGame from './SentenceScramblerGame';
+import MistakeBankModal from './MistakeBankModal';
 
 function speakJapanese(text) {
   if (typeof window === 'undefined' || !window.speechSynthesis) return;
@@ -30,8 +33,12 @@ function speakJapanese(text) {
 
 export default function JapaneseLearningHub() {
   const [level, setLevel] = useState('N5'); // 'N5' | 'N4'
-  const [activeTab, setActiveTab] = useState('flashcards'); // 'flashcards' | 'kanji' | 'grammar' | 'vocab' | 'exam'
+  const [activeTab, setActiveTab] = useState('flashcards'); // 'flashcards' | 'kanji' | 'grammar' | 'vocab' | 'scramble' | 'technical' | 'mistakes' | 'exam'
   const [toast, setToast] = useState(null);
+
+  const showToast = (message, type = 'info') => {
+    setToast({ message, type });
+  };
 
   // Active level data
   const currentGrammar = level === 'N5' ? N5_GRAMMAR : N4_GRAMMAR;
@@ -44,7 +51,7 @@ export default function JapaneseLearningHub() {
       activePath="/japanese"
       eyebrow="LANGUAGE & EXCELLENCE"
       title="Japanese Active Learning Hub (日本語コーナー)"
-      description="Interactive mastery hub for Japanese proficiency (JLPT N5 & N4). Practice active recall flashcards, stroke-order kanji, grammar formulas, audio vocabulary, and official mock listening exams."
+      description="Interactive mastery hub for Japanese proficiency (JLPT N5 & N4) and Factory 5S Operations. Practice active recall flashcards, sentence unscrambler, stroke-order kanji, engineering Japanese, error vault notebook, and full timed mock listening exams."
       actions={
         <div className="flex items-center gap-2 bg-slate-100 p-1 rounded-xl border border-slate-200 shadow-xs">
           <button
@@ -65,39 +72,60 @@ export default function JapaneseLearningHub() {
       }
     >
       <div className="space-y-6">
-        {/* Navigation Tabs for the 5 Products */}
+        {/* Navigation Tabs for all Products */}
         <div className="flex gap-2 border-b border-slate-200 pb-3 overflow-x-auto">
           <button
             type="button"
-            className={`px-4 py-2 text-xs font-bold rounded-lg whitespace-nowrap transition-all ${activeTab === 'flashcards' ? 'bg-slate-900 text-white shadow-sm' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}`}
+            className={`px-3.5 py-2 text-xs font-bold rounded-lg whitespace-nowrap transition-all ${activeTab === 'flashcards' ? 'bg-slate-900 text-white shadow-sm' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}`}
             onClick={() => setActiveTab('flashcards')}
           >
             📇 Flashcard Dojo (SRS)
           </button>
           <button
             type="button"
-            className={`px-4 py-2 text-xs font-bold rounded-lg whitespace-nowrap transition-all ${activeTab === 'kanji' ? 'bg-slate-900 text-white shadow-sm' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}`}
+            className={`px-3.5 py-2 text-xs font-bold rounded-lg whitespace-nowrap transition-all ${activeTab === 'scramble' ? 'bg-slate-900 text-white shadow-sm' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}`}
+            onClick={() => setActiveTab('scramble')}
+          >
+            🧩 Sentence Builder (並び替え)
+          </button>
+          <button
+            type="button"
+            className={`px-3.5 py-2 text-xs font-bold rounded-lg whitespace-nowrap transition-all ${activeTab === 'technical' ? 'bg-slate-900 text-white shadow-sm' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}`}
+            onClick={() => setActiveTab('technical')}
+          >
+            🏭 Factory & 5S (現場日本語)
+          </button>
+          <button
+            type="button"
+            className={`px-3.5 py-2 text-xs font-bold rounded-lg whitespace-nowrap transition-all ${activeTab === 'mistakes' ? 'bg-slate-900 text-white shadow-sm' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}`}
+            onClick={() => setActiveTab('mistakes')}
+          >
+            🎯 Error Vault (弱点復習)
+          </button>
+          <button
+            type="button"
+            className={`px-3.5 py-2 text-xs font-bold rounded-lg whitespace-nowrap transition-all ${activeTab === 'kanji' ? 'bg-slate-900 text-white shadow-sm' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}`}
             onClick={() => setActiveTab('kanji')}
           >
             ⛩️ Kanji Dojo & Canvas
           </button>
           <button
             type="button"
-            className={`px-4 py-2 text-xs font-bold rounded-lg whitespace-nowrap transition-all ${activeTab === 'grammar' ? 'bg-slate-900 text-white shadow-sm' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}`}
+            className={`px-3.5 py-2 text-xs font-bold rounded-lg whitespace-nowrap transition-all ${activeTab === 'grammar' ? 'bg-slate-900 text-white shadow-sm' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}`}
             onClick={() => setActiveTab('grammar')}
           >
             📖 Grammar Master
           </button>
           <button
             type="button"
-            className={`px-4 py-2 text-xs font-bold rounded-lg whitespace-nowrap transition-all ${activeTab === 'vocab' ? 'bg-slate-900 text-white shadow-sm' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}`}
+            className={`px-3.5 py-2 text-xs font-bold rounded-lg whitespace-nowrap transition-all ${activeTab === 'vocab' ? 'bg-slate-900 text-white shadow-sm' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}`}
             onClick={() => setActiveTab('vocab')}
           >
             📚 Vocabulary Vault
           </button>
           <button
             type="button"
-            className={`px-4 py-2 text-xs font-bold rounded-lg whitespace-nowrap transition-all ${activeTab === 'exam' ? 'bg-slate-900 text-white shadow-sm' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}`}
+            className={`px-3.5 py-2 text-xs font-bold rounded-lg whitespace-nowrap transition-all ${activeTab === 'exam' ? 'bg-slate-900 text-white shadow-sm' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}`}
             onClick={() => setActiveTab('exam')}
           >
             ⏱️ JLPT Exam Simulator
@@ -106,7 +134,22 @@ export default function JapaneseLearningHub() {
 
         {/* Product 1: Flashcard Dojo */}
         {activeTab === 'flashcards' && (
-          <FlashcardDojo grammarList={currentGrammar} level={level} onToast={setToast} />
+          <FlashcardDojo grammarList={currentGrammar} level={level} onToast={showToast} />
+        )}
+
+        {/* Product: Sentence Builder Game */}
+        {activeTab === 'scramble' && (
+          <SentenceScramblerGame level={level} onToast={showToast} />
+        )}
+
+        {/* Product: Factory & 5S Technical Japanese */}
+        {activeTab === 'technical' && (
+          <TechnicalJapaneseHub onToast={showToast} />
+        )}
+
+        {/* Product: Mistake Bank Notebook */}
+        {activeTab === 'mistakes' && (
+          <MistakeBankModal onToast={showToast} />
         )}
 
         {/* Product 2: Kanji Dojo & Scratchpad */}
@@ -141,17 +184,90 @@ export default function JapaneseLearningHub() {
 function FlashcardDojo({ grammarList, level, onToast }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
-  const [stats, setStats] = useState({ mastered: 0, reviewing: 0, streak: 1 });
+  const [srsState, setSrsState] = useState({});
+  const [streak, setStreak] = useState(1);
+
+  // Load persistent SRS state & streak
+  useEffect(() => {
+    try {
+      const storedSrs = localStorage.getItem(`jlpt_srs_${level}`);
+      if (storedSrs) setSrsState(JSON.parse(storedSrs));
+
+      const storedStreak = localStorage.getItem('jlpt_study_streak');
+      const lastStudyDate = localStorage.getItem('jlpt_last_study_date');
+      const today = new Date().toDateString();
+
+      if (lastStudyDate) {
+        const yesterday = new Date(Date.now() - 86400000).toDateString();
+        if (lastStudyDate === today) {
+          setStreak(storedStreak ? parseInt(storedStreak, 10) : 1);
+        } else if (lastStudyDate === yesterday) {
+          const newStreak = (storedStreak ? parseInt(storedStreak, 10) : 0) + 1;
+          setStreak(newStreak);
+          localStorage.setItem('jlpt_study_streak', newStreak.toString());
+          localStorage.setItem('jlpt_last_study_date', today);
+        } else {
+          setStreak(1);
+          localStorage.setItem('jlpt_study_streak', '1');
+          localStorage.setItem('jlpt_last_study_date', today);
+        }
+      } else {
+        localStorage.setItem('jlpt_study_streak', '1');
+        localStorage.setItem('jlpt_last_study_date', today);
+      }
+    } catch (e) {
+      console.error('Failed to load SRS state', e);
+    }
+  }, [level]);
 
   const currentCard = grammarList[currentIndex] || grammarList[0];
+  const cardKey = currentCard?.id || `card_${currentIndex}`;
+  const cardData = srsState[cardKey] || { interval: 0, repetitions: 0, status: 'new' };
+
+  const masteredCount = Object.values(srsState).filter((c) => c.status === 'mastered').length;
+  const learningCount = Object.values(srsState).filter((c) => c.status === 'learning').length;
 
   function handleNext(rating) {
     setFlipped(false);
-    if (rating === 'easy' || rating === 'good') {
-      setStats((prev) => ({ ...prev, mastered: prev.mastered + 1 }));
+    let newInterval = 1;
+    let newStatus = 'learning';
+
+    if (rating === 'again') {
+      newInterval = 1;
+      newStatus = 'learning';
+    } else if (rating === 'hard') {
+      newInterval = Math.max(2, (cardData.interval || 1) * 1.2);
+      newStatus = 'learning';
+    } else if (rating === 'good') {
+      newInterval = Math.max(4, (cardData.interval || 1) * 2.0);
+      newStatus = 'mastered';
+    } else if (rating === 'easy') {
+      newInterval = Math.max(7, (cardData.interval || 1) * 2.5);
+      newStatus = 'mastered';
     }
+
+    const updatedSrs = {
+      ...srsState,
+      [cardKey]: {
+        interval: Math.round(newInterval),
+        repetitions: (cardData.repetitions || 0) + 1,
+        status: newStatus,
+        lastReviewed: new Date().toISOString(),
+      },
+    };
+
+    setSrsState(updatedSrs);
+    try {
+      localStorage.setItem(`jlpt_srs_${level}`, JSON.stringify(updatedSrs));
+    } catch (e) {
+      console.error('Failed to save SRS state', e);
+    }
+
     setCurrentIndex((prev) => (prev + 1) % grammarList.length);
-    onToast({ type: 'info', message: `Card recorded as "${rating}". Next card loaded.` });
+    onToast({
+      message: `Card rated "${rating.toUpperCase()}". Next review in ${Math.round(newInterval)} days.`,
+      type: rating === 'easy' || rating === 'good' ? 'success' : 'info',
+    });
   }
 
   return (
@@ -159,42 +275,57 @@ function FlashcardDojo({ grammarList, level, onToast }) {
       {/* Top progress metrics */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <div className="p-3.5 bg-white border border-slate-200 rounded-xl shadow-xs">
-          <span className="text-xs font-bold uppercase text-slate-400">Current Level</span>
-          <p className="text-xl font-bold text-slate-900 mt-0.5">{level} Flashcard Deck</p>
+          <span className="text-xs font-bold uppercase text-slate-400">Current Deck</span>
+          <p className="text-lg font-black text-slate-900 mt-0.5">{level} Mastery</p>
         </div>
         <div className="p-3.5 bg-white border border-slate-200 rounded-xl shadow-xs">
-          <span className="text-xs font-bold uppercase text-slate-400">Card Progress</span>
-          <p className="text-xl font-bold text-slate-900 mt-0.5">{currentIndex + 1} / {grammarList.length}</p>
+          <span className="text-xs font-bold uppercase text-slate-400">Deck Progress</span>
+          <p className="text-lg font-black text-slate-900 mt-0.5">
+            {currentIndex + 1} / {grammarList.length}
+          </p>
         </div>
         <div className="p-3.5 bg-white border border-slate-200 rounded-xl shadow-xs">
-          <span className="text-xs font-bold uppercase text-slate-400">Mastered Today</span>
-          <p className="text-xl font-bold text-emerald-600 mt-0.5">{stats.mastered}</p>
+          <span className="text-xs font-bold uppercase text-slate-400">SRS Mastered</span>
+          <p className="text-lg font-black text-emerald-600 mt-0.5">
+            {masteredCount} Cards
+          </p>
         </div>
         <div className="p-3.5 bg-white border border-slate-200 rounded-xl shadow-xs">
-          <span className="text-xs font-bold uppercase text-slate-400">Review Streak</span>
-          <p className="text-xl font-bold text-amber-600 mt-0.5">🔥 {stats.streak} Days</p>
+          <span className="text-xs font-bold uppercase text-slate-400">Active Streak</span>
+          <p className="text-lg font-black text-amber-600 mt-0.5">
+            🔥 {streak} {streak === 1 ? 'Day' : 'Days'}
+          </p>
         </div>
       </div>
 
       {/* Interactive 3D Flip Card */}
       <div className="flex flex-col items-center justify-center p-6 bg-slate-900/5 rounded-2xl border border-slate-200 min-h-[380px]">
         <div
-          className={`w-full max-w-xl p-8 bg-white border-2 ${flipped ? 'border-amber-400 bg-amber-50/20' : 'border-slate-300'} rounded-2xl shadow-lg cursor-pointer transition-all duration-300 transform hover:-translate-y-1 flex flex-col justify-between min-h-[300px]`}
+          className={`w-full max-w-xl p-8 bg-white border-2 ${
+            flipped ? 'border-amber-400 bg-amber-50/20' : 'border-slate-300'
+          } rounded-2xl shadow-lg cursor-pointer transition-all duration-300 transform hover:-translate-y-1 flex flex-col justify-between min-h-[300px]`}
           onClick={() => setFlipped(!flipped)}
         >
           <div>
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <Badge tone="info">{currentCard?.category || 'Grammar'}</Badge>
+              <div className="flex items-center gap-2">
+                <Badge tone="info">{currentCard?.category || 'Grammar'}</Badge>
+                {cardData.status === 'mastered' && (
+                  <span className="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">
+                    ✓ Mastered
+                  </span>
+                )}
+              </div>
               <div className="flex items-center gap-2">
                 <button
                   type="button"
-                  className="text-xs text-blue-600 font-bold hover:underline"
+                  className="text-xs text-indigo-600 font-bold hover:underline flex items-center gap-1"
                   onClick={(e) => {
                     e.stopPropagation();
                     speakJapanese(currentCard?.title || '');
                   }}
                 >
-                  🔊 Pronounce
+                  <span>🔊</span> Listen
                 </button>
                 <span className="text-xs text-slate-400 font-mono">Click to Flip</span>
               </div>
@@ -202,10 +333,10 @@ function FlashcardDojo({ grammarList, level, onToast }) {
 
             {!flipped ? (
               <div className="py-8 text-center space-y-3">
-                <h3 className="text-3xl font-bold text-slate-900 font-sans tracking-wide">
+                <h3 className="text-3xl font-black text-slate-900 font-sans tracking-wide">
                   {currentCard?.title}
                 </h3>
-                <p className="text-xs font-mono text-slate-500 bg-slate-100 inline-block px-3 py-1 rounded-full">
+                <p className="text-xs font-mono text-slate-500 bg-slate-100 inline-block px-3 py-1 rounded-full border border-slate-200">
                   Formula: {currentCard?.formula}
                 </p>
               </div>
@@ -213,18 +344,18 @@ function FlashcardDojo({ grammarList, level, onToast }) {
               <div className="py-4 space-y-4">
                 <div>
                   <span className="text-xs font-bold uppercase text-amber-600">English Meaning</span>
-                  <p className="text-xl font-bold text-slate-900 mt-0.5">{currentCard?.meaning}</p>
+                  <p className="text-xl font-black text-slate-900 mt-0.5">{currentCard?.meaning}</p>
                   <p className="text-xs text-slate-600 mt-1">{currentCard?.description}</p>
                 </div>
                 <div className="pt-2 border-t border-slate-100 space-y-2">
                   <span className="text-xs font-bold uppercase text-slate-400">Example Dialogues</span>
                   {(currentCard?.examples || []).map((ex, idx) => (
-                    <div key={idx} className="p-2 bg-white rounded-lg border border-slate-200/80 text-xs">
+                    <div key={idx} className="p-2.5 bg-white rounded-lg border border-slate-200/80 text-xs">
                       <div className="flex items-center justify-between">
                         <span className="font-bold text-slate-900">{ex.jp}</span>
                         <button
                           type="button"
-                          className="text-blue-600 hover:opacity-80"
+                          className="text-indigo-600 hover:opacity-80 text-xs ml-1"
                           onClick={(e) => {
                             e.stopPropagation();
                             speakJapanese(ex.jp);
@@ -234,7 +365,7 @@ function FlashcardDojo({ grammarList, level, onToast }) {
                         </button>
                       </div>
                       <span className="text-[11px] text-slate-500 font-mono block">{ex.romaji}</span>
-                      <span className="text-slate-700 block mt-0.5">{ex.en}</span>
+                      <span className="text-slate-700 block mt-0.5 font-medium">{ex.en}</span>
                     </div>
                   ))}
                 </div>
@@ -243,7 +374,7 @@ function FlashcardDojo({ grammarList, level, onToast }) {
           </div>
 
           <div className="pt-3 border-t border-slate-100 text-center text-xs text-slate-400 font-medium">
-            {flipped ? 'Rate your recall memory below:' : '💡 Think of the meaning and formula, then click to check answer.'}
+            {flipped ? 'Rate your recall memory using the SM-2 buttons below:' : '💡 Think of the meaning and formula, then click to flip.'}
           </div>
         </div>
 
@@ -252,31 +383,31 @@ function FlashcardDojo({ grammarList, level, onToast }) {
           <div className="flex items-center gap-2 mt-4 max-w-xl w-full">
             <button
               type="button"
-              className="flex-1 py-2.5 rounded-xl bg-red-100 text-red-800 font-bold text-xs hover:bg-red-200 transition-all cursor-pointer"
+              className="flex-1 py-2.5 rounded-xl bg-rose-100 text-rose-800 font-bold text-xs hover:bg-rose-200 transition-all cursor-pointer shadow-xs"
               onClick={() => handleNext('again')}
             >
-              Again (1m)
+              Again (1d)
             </button>
             <button
               type="button"
-              className="flex-1 py-2.5 rounded-xl bg-amber-100 text-amber-800 font-bold text-xs hover:bg-amber-200 transition-all cursor-pointer"
+              className="flex-1 py-2.5 rounded-xl bg-amber-100 text-amber-800 font-bold text-xs hover:bg-amber-200 transition-all cursor-pointer shadow-xs"
               onClick={() => handleNext('hard')}
             >
-              Hard (10m)
+              Hard (2d)
             </button>
             <button
               type="button"
-              className="flex-1 py-2.5 rounded-xl bg-blue-100 text-blue-800 font-bold text-xs hover:bg-blue-200 transition-all cursor-pointer"
+              className="flex-1 py-2.5 rounded-xl bg-indigo-100 text-indigo-800 font-bold text-xs hover:bg-indigo-200 transition-all cursor-pointer shadow-xs"
               onClick={() => handleNext('good')}
             >
-              Good (1d)
+              Good (4d)
             </button>
             <button
               type="button"
-              className="flex-1 py-2.5 rounded-xl bg-emerald-100 text-emerald-800 font-bold text-xs hover:bg-emerald-200 transition-all cursor-pointer"
+              className="flex-1 py-2.5 rounded-xl bg-emerald-100 text-emerald-800 font-bold text-xs hover:bg-emerald-200 transition-all cursor-pointer shadow-xs"
               onClick={() => handleNext('easy')}
             >
-              Easy (4d)
+              Easy (7d)
             </button>
           </div>
         )}

@@ -142,6 +142,38 @@ export default function JLPTExamSimulator({ level = 'N5', onToast }) {
     }
   }
 
+  // Auto-record missed questions to Mistake Bank
+  useEffect(() => {
+    if (examState !== 'RESULTS') return;
+    try {
+      const missed = [];
+      allQuestions.forEach((q) => {
+        if (userAnswers[q.id] !== q.correct) {
+          missed.push({
+            ...q,
+            level: level,
+            missedAt: new Date().toISOString(),
+          });
+        }
+      });
+      if (missed.length > 0) {
+        const stored = localStorage.getItem('jlpt_missed_questions');
+        const existing = stored ? JSON.parse(stored) : [];
+        const existingIds = new Set(existing.map((item) => item.id));
+        const combined = [...existing];
+        missed.forEach((m) => {
+          if (!existingIds.has(m.id)) {
+            combined.push(m);
+            existingIds.add(m.id);
+          }
+        });
+        localStorage.setItem('jlpt_missed_questions', JSON.stringify(combined));
+      }
+    } catch (e) {
+      console.error('Failed to auto-archive missed questions', e);
+    }
+  }, [examState, allQuestions, userAnswers, level]);
+
   // Scoring computations
   const scoreReport = useMemo(() => {
     let totalScore = 0;
