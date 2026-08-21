@@ -324,8 +324,13 @@ async function confirmKomatsuQuotation(req, res) {
   if (!quotationNo) {
     return res.status(400).json({ success: false, message: 'Quotation number is required' });
   }
-  const result = await komatsuEoService.confirmQuotation(quotationNo, seqNo || '00');
-  res.json({ success: true, ...result });
+  try {
+    const result = await komatsuEoService.confirmQuotation(quotationNo, seqNo || '00');
+    res.json({ success: true, ...result });
+  } catch (err) {
+    console.error(`[confirmKomatsuQuotation] Error for ${quotationNo}:`, err.message);
+    res.status(500).json({ success: false, error: err.message });
+  }
 }
 
 async function copyKomatsuQuotationToSo(req, res) {
@@ -333,8 +338,13 @@ async function copyKomatsuQuotationToSo(req, res) {
   if (!quotationNo) {
     return res.status(400).json({ success: false, message: 'Quotation number is required' });
   }
-  const result = await komatsuEoService.copyQuotationToSo(quotationNo, seqNo || '00', options || {});
-  res.json({ success: true, ...result });
+  try {
+    const result = await komatsuEoService.copyQuotationToSo(quotationNo, seqNo || '00', options || {});
+    res.json({ success: true, ...result });
+  } catch (err) {
+    console.error(`[copyKomatsuQuotationToSo] Error for ${quotationNo}:`, err.message);
+    res.status(500).json({ success: false, error: err.message });
+  }
 }
 
 module.exports = {

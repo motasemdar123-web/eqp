@@ -619,8 +619,19 @@ async function confirmQuotation(quotationNo, seqNo = '00', customCookie = null) 
     body: condSearchData.toString(),
   });
 
-  const searchData = await searchResp.json();
+  const searchText = await searchResp.text();
+  console.log(`[confirmQuotation] ${qtn} CondSearch status=${searchResp.status} bodyLen=${searchText.length} isHTML=${searchText.includes('<html')}`);
+  
+  let searchData;
+  try {
+    searchData = JSON.parse(searchText);
+  } catch (parseErr) {
+    console.error(`[confirmQuotation] ${qtn} CondSearch parse error. First 500 chars:`, searchText.substring(0, 500));
+    throw new Error(`QuotationCondition/Search returned non-JSON (status ${searchResp.status}). Session may be expired.`);
+  }
+
   const timestamp = searchData.TimeStamp || '';
+  console.log(`[confirmQuotation] ${qtn} timestamp=${timestamp} status=${JSON.stringify(searchData.Status)}`);
 
   let rates = searchData.Rates || searchData.lstRates || [];
   if (!rates || rates.length === 0) {
@@ -707,7 +718,19 @@ async function confirmQuotation(quotationNo, seqNo = '00', customCookie = null) 
     body: JSON.stringify(savePayload),
   });
 
-  const saveJson = await saveResp.json();
+  const saveText = await saveResp.text();
+  console.log(`[confirmQuotation] ${qtn} Save status=${saveResp.status} bodyLen=${saveText.length}`);
+
+  let saveJson;
+  try {
+    saveJson = JSON.parse(saveText);
+  } catch (parseErr) {
+    console.error(`[confirmQuotation] ${qtn} Save parse error. First 500 chars:`, saveText.substring(0, 500));
+    throw new Error(`QuotationCondition/Save returned non-JSON (status ${saveResp.status}). Session may be expired.`);
+  }
+
+  console.log(`[confirmQuotation] ${qtn} Save result: ErrorOccured=${saveJson.ErrorOccured}(${typeof saveJson.ErrorOccured}) RecordUpdated=${saveJson.RecordUpdated}(${typeof saveJson.RecordUpdated}) ErrorMessage=${saveJson.ErrorMessage}`);
+
   const hasError = saveJson.ErrorOccured && Number(saveJson.ErrorOccured) !== 0;
   const isUpdated = Number(saveJson.RecordUpdated) === 1 || Number(saveJson.OperationSuccessful) === 1;
 
