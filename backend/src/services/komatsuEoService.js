@@ -554,10 +554,12 @@ async function confirmQuotation(quotationNo, seqNo = '00', customCookie = null) 
   const seq = String(seqNo || '00').trim();
 
   // STEP 1: Ensure Quotation Details are loaded and calculated in session
+  // (non-blocking — errors here do not fail the confirm; they just pre-warm the session)
   try {
-    const detailUrl = `${BASE_PORTAL_URL}/QuotationDetails/Index?strQUTN=${qtn}&strQutnSubNo=0&DBCode=536K`;
+    const detailUrl = `${BASE_PORTAL_URL}/QuotationDetails/Index?strQUTN=${qtn}&strQutnSubNo=${seq}&DBCode=536K`;
     await fetch(detailUrl, { method: 'GET', headers: defaultHeaders });
 
+    // Correct field names confirmed from live API inspection
     const searchUrl = `${BASE_PORTAL_URL}/QuotationDetails/Search`;
     await fetch(searchUrl, {
       method: 'POST',
@@ -567,21 +569,19 @@ async function confirmQuotation(quotationNo, seqNo = '00', customCookie = null) 
         'X-Requested-With': 'XMLHttpRequest',
         'Referer': detailUrl,
       },
-      body: new URLSearchParams({ qtno: qtn, subqtno: '0', DBCode: '536K' }).toString(),
+      body: new URLSearchParams({
+        strQuotationNo: qtn,
+        strQuotSeqNo: seq,
+        DBCode: '536K',
+        page: '1',
+        pageSize: '50',
+        group: '',
+        filter: '',
+      }).toString(),
     });
 
+    // UpdateDetails returns empty string "" — just call it to warm up session
     const updateUrl = `${BASE_PORTAL_URL}/QuotationDetails/UpdateDetails`;
-    const updateData = new URLSearchParams({
-      userID: 'motasemgha',
-      currency: 'USD',
-      tax: '0.00',
-      nameOfOtherCharges1: '',
-      nameOfOtherCharges2: '',
-      otherCharges1: '0.00',
-      otherCharges2: '0.00',
-      sellingPrice: '0.00',
-      shippingCharges: '0.00',
-    });
     await fetch(updateUrl, {
       method: 'POST',
       headers: {
@@ -590,10 +590,14 @@ async function confirmQuotation(quotationNo, seqNo = '00', customCookie = null) 
         'X-Requested-With': 'XMLHttpRequest',
         'Referer': detailUrl,
       },
-      body: updateData.toString(),
+      body: new URLSearchParams({
+        strQuotationNo: qtn,
+        strQuotSeqNo: seq,
+        DBCode: '536K',
+      }).toString(),
     });
   } catch {
-    // Non-blocking detail refresh
+    // Non-blocking detail refresh — safe to ignore
   }
 
   // STEP 2: Search QuotationCondition to load fresh state & TimeStamp
