@@ -1,4 +1,4 @@
-// Multi-Exam Paper Catalog with 10 Full Complete Mock Exams each for JLPT N5 and N4
+// Multi-Exam Paper Catalog with 10 Full Complete Mock Exams each for JLPT N5 and N4 with 100% Unique Listening Dialogues and Transcripts
 
 export const EXAM_PAPERS_CATALOG = {
   "N5": [
@@ -3367,361 +3367,361 @@ export const EXAM_PAPERS_CATALOG = {
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
               "image": "/images/japanese/listening/n5/m1_q1.png",
-              "question": "1. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "question": "1. 教室で 先生が 話しています。学生は 明日、何を 持って来ますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "鉛筆と消しゴム",
+                "辞書と教科書",
+                "消しゴムと辞書",
+                "教科書とノート"
               ],
-              "correct": 3,
-              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
-              "explanation": "Based on the dialogue guidelines, Option 4 matches the selected item."
+              "correct": 0,
+              "transcript": "女（先生）「明日は テストを しますから、鉛筆と 消しゴムを 忘れないでください。辞書は 使えません。」\n質問：学生は 明日、何を 持って来ますか。",
+              "explanation": "Brings pencil and eraser (鉛筆と消しゴム)."
             },
             {
               "id": "n5-e3-l-2",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
               "image": "/images/japanese/listening/n5/m1_q2.png",
-              "question": "2. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "question": "2. 駅で 男の人と 女の人が 話しています。二人は どの 電車に 乗りますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "10時15分の 急行",
+                "10時20分の 普通電車",
+                "10時30分の 特急",
+                "10時05分の 電車"
               ],
-              "correct": 0,
-              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
-              "explanation": "Based on the dialogue guidelines, Option 1 matches the selected item."
+              "correct": 1,
+              "transcript": "男「次の 急行は 10時15分だよ。」女「でも、急行は 目的の駅に 止まらないわ。10時20分の 普通電車に しよう。」\n質問：二人は どの 電車に 乗りますか。",
+              "explanation": "Takes 10:20 local train (10時20分の普通電車)."
             },
             {
               "id": "n5-e3-l-3",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
               "image": "/images/japanese/listening/n5/m1_q3.png",
-              "question": "3. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "question": "3. カフェで 男の人と 店員が 話しています。男の人は 何を 注文しますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "ホットコーヒー",
+                "アイスコーヒー",
+                "チーズケーキ",
+                "オレンジジュース"
               ],
-              "correct": 1,
-              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
-              "explanation": "Based on the dialogue guidelines, Option 2 matches the selected item."
+              "correct": 0,
+              "transcript": "男「ホットコーヒーと チーズケーキを ください。」店員「ケーキは 売り切れです。」男「じゃあ、ホットコーヒーだけ お願いします。」\n質問：男の人は 何を 注文しますか。",
+              "explanation": "Orders hot coffee only (ホットコーヒー)."
             },
             {
               "id": "n5-e3-l-4",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
               "image": "/images/japanese/listening/n5/m1_q4.png",
-              "question": "4. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "question": "4. 家で 母と 息子が 話しています。男の子は 先に 何を しますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "手を 洗う",
+                "宿題を カバンに 入れる",
+                "ご飯を 食べる",
+                "テレビを 見る"
               ],
-              "correct": 2,
-              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
-              "explanation": "Based on the dialogue guidelines, Option 3 matches the selected item."
+              "correct": 0,
+              "transcript": "母「ご飯の 前に 手を 洗ってね。」男の子「うん、宿題を カバンに 入れてから 洗うよ。」母「先に 手を 洗いなさい。」\n質問：男の子は 先に 何を しますか。",
+              "explanation": "Washes hands first (手を洗う)."
             },
             {
               "id": "n5-e3-l-5",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
               "image": "/images/japanese/listening/n5/m1_q5.png",
-              "question": "5. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "question": "5. 図書館で 女の人と 係員が 話しています。女の人は 本を 何冊 借りますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "3冊",
+                "4冊",
+                "1冊",
+                "2冊"
               ],
-              "correct": 3,
-              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
-              "explanation": "Based on the dialogue guidelines, Option 4 matches the selected item."
+              "correct": 0,
+              "transcript": "女「この 4冊を 借りたいです。」係員「貸出は 3冊までです。」女「では、この 3冊に します。」\n質問：女の人は 本を 何冊 借りますか。",
+              "explanation": "Borrows 3 books (3冊)."
             },
             {
               "id": "n5-e3-l-6",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
               "image": "/images/japanese/listening/n5/m1_q6.png",
-              "question": "6. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "question": "6. 店で 男の人と 女の人が 靴を 見ています。女の人は どの 靴を 買いますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "茶色い靴",
+                "黒い靴",
+                "白い靴",
+                "青い靴"
               ],
               "correct": 0,
-              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
-              "explanation": "Based on the dialogue guidelines, Option 1 matches the selected item."
+              "transcript": "女「黒い靴と 茶色い靴、どっちが いい？」男「黒い方が スーツに 合うよ。」女「でも 茶色い方が 歩きやすそう。茶色い方に するわ。」\n質問：女の人は どの 靴を 買いますか。",
+              "explanation": "Selects brown shoes (茶色い靴)."
             },
             {
               "id": "n5-e3-l-7",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
               "image": "/images/japanese/listening/n5/m1_q7.png",
-              "question": "7. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "question": "7. 留学生と 友達が 話しています。男の人は これから どこへ 行きますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "郵便局",
+                "カフェ",
+                "図書館",
+                "食堂"
               ],
-              "correct": 1,
-              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
-              "explanation": "Based on the dialogue guidelines, Option 2 matches the selected item."
+              "correct": 0,
+              "transcript": "女「カフェに 行かない？」男「郵便局で 切手を 買ってから 行くよ。」\n質問：男の人は これから どこへ 行きますか。",
+              "explanation": "Goes to the post office first (郵便局)."
             },
             {
               "id": "n5-e3-l-8",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-1-mp3.mp3",
-              "question": "8. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "question": "8. 男の人と 女の人が 話しています。美術館は 何曜日に 休みですか。",
               "options": [
-                "1時",
-                "2時",
-                "3時",
-                "4時"
+                "火曜日",
+                "月曜日",
+                "水曜日",
+                "日曜日"
               ],
-              "correct": 3,
-              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
-              "explanation": "Listening point comprehension: meeting time agreement."
+              "correct": 0,
+              "transcript": "男「明日、美術館に 行かない？」女「明日は 火曜日だから 休館日よ。水曜日に しよう。」\n質問：美術館は 何曜日に 休みですか。",
+              "explanation": "Closed on Tuesdays (火曜日)."
             },
             {
               "id": "n5-e3-l-9",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-1-mp3.mp3",
-              "question": "9. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "question": "9. 女の人と 男の人が 話しています。男の人は どうして 自転車で 来ましたか。",
               "options": [
-                "1時",
-                "2時",
-                "3時",
-                "4時"
+                "天気が良く、運動になるから",
+                "電車が 遅れたから",
+                "お金が なかったから",
+                "車が 壊れたから"
               ],
               "correct": 0,
-              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
-              "explanation": "Listening point comprehension: meeting time agreement."
+              "transcript": "女「今日は 自転車なのね。」男「天気が 良かったし、運動にも なるからね。」\n質問：男の人は どうして 自転車で 来ましたか。",
+              "explanation": "Nice weather and good exercise (運動になるから)."
             },
             {
               "id": "n5-e3-l-10",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-1-mp3.mp3",
-              "question": "10. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "question": "10. 男の人と 女の人が 話しています。男の人は どこに 傘を 忘れましたか。",
               "options": [
-                "1時",
-                "2時",
-                "3時",
-                "4時"
+                "レストランの 傘立て",
+                "電車の中",
+                "駅の ホーム",
+                "自分の 部屋"
               ],
-              "correct": 1,
-              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
-              "explanation": "Listening point comprehension: meeting time agreement."
+              "correct": 0,
+              "transcript": "男「傘が ないんだ。電車の中に 忘れたかな。」女「さっきの レストランの 傘立てに 置いたままじゃない？」男「あ、そうだ！」\n質問：男の人は どこに 傘を 忘れましたか。",
+              "explanation": "Forgot umbrella at restaurant (レストランの傘立て)."
             },
             {
               "id": "n5-e3-l-11",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-1-mp3.mp3",
-              "question": "11. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "question": "11. 女の人と 男の人が 時計を 見ています。この 時計は 誰から もらいましたか。",
               "options": [
-                "1時",
-                "2時",
-                "3時",
-                "4時"
+                "お父さん",
+                "お母さん",
+                "友達",
+                "先生"
               ],
-              "correct": 2,
-              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
-              "explanation": "Listening point comprehension: meeting time agreement."
+              "correct": 0,
+              "transcript": "女「素敵な 時計ね。」男「去年の 誕生日に 父から もらったんだ。」\n質問：時計は 誰から もらいましたか。",
+              "explanation": "Received from father (お父さん)."
             },
             {
               "id": "n5-e3-l-12",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-1-mp3.mp3",
-              "question": "12. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "question": "12. 男の人と 女の人が 話しています。京都まで 新幹線で 何時間 かかりますか。",
               "options": [
-                "1時",
-                "2時",
-                "3時",
-                "4時"
+                "約2時間",
+                "約1時間",
+                "約4時間",
+                "約30分"
               ],
-              "correct": 3,
-              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
-              "explanation": "Listening point comprehension: meeting time agreement."
+              "correct": 0,
+              "transcript": "男「東京から 京都まで 新幹線で どのくらい？」女「だいたい 2時間ちょっとよ。」\n質問：新幹線で どのくらい かかりますか。",
+              "explanation": "Takes approx 2 hours (約2時間)."
             },
             {
               "id": "n5-e3-l-13",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-1-mp3.mp3",
-              "question": "13. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "question": "13. スーパーの 案内放送が 流れています。スーパーは 何時に 閉まりますか。",
               "options": [
-                "1時",
-                "2時",
-                "3時",
-                "4時"
+                "夜9時",
+                "夜8時",
+                "夜10時",
+                "夕方6時"
               ],
               "correct": 0,
-              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
-              "explanation": "Listening point comprehension: meeting time agreement."
+              "transcript": "アナウンス「本日の 営業は 夜9時までと なっております。」\n質問：スーパーは 何時に 閉まりますか。",
+              "explanation": "Closes at 9:00 PM (夜9時)."
             },
             {
               "id": "n5-e3-l-14",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
               "image": "/images/japanese/listening/n5/m3_q1.png",
-              "question": "14. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "question": "14. 朝、近所の人に 会いました。何と言いますか。（矢印の人）",
               "options": [
-                "よろしくおねがいします",
-                "ごめんなさい",
-                "いただきます"
+                "おはようございます",
+                "こんばんは",
+                "さようなら"
               ],
               "correct": 0,
-              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
-              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+              "transcript": "状況：朝の 挨拶を します。\n質問：何と言いますか。\n1. おはようございます\n2. こんばんは\n3. さようなら",
+              "explanation": "Morning greeting:「おはようございます」."
             },
             {
               "id": "n5-e3-l-15",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
               "image": "/images/japanese/listening/n5/m3_q2.png",
-              "question": "15. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "question": "15. 友達の ペンを 借りたいです。何と言いますか。（矢印の人）",
               "options": [
-                "よろしくおねがいします",
-                "ごめんなさい",
-                "いただきます"
+                "ペンを 貸して ください",
+                "ペンを あげます",
+                "ペンを 買いました"
               ],
               "correct": 0,
-              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
-              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+              "transcript": "状況：ペンを 借ります。\n質問：何と言いますか。\n1. ペンを 貸して ください\n2. ペンを あげます\n3. ペンを 買いました",
+              "explanation": "Asking to borrow:「ペンを貸してください」."
             },
             {
               "id": "n5-e3-l-16",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
               "image": "/images/japanese/listening/n5/m3_q3.png",
-              "question": "16. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "question": "16. 先生の 部屋に 入ります。何と言いますか。（矢印の人）",
               "options": [
-                "よろしくおねがいします",
+                "失礼します",
                 "ごめんなさい",
-                "いただきます"
+                "いってきます"
               ],
               "correct": 0,
-              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
-              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+              "transcript": "状況：部屋に 入ります。\n質問：何と言いますか。\n1. 失礼します\n2. ごめんなさい\n3. いってきます",
+              "explanation": "Entering room:「失礼します」."
             },
             {
               "id": "n5-e3-l-17",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
               "image": "/images/japanese/listening/n5/m3_q4.png",
-              "question": "17. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "question": "17. 食事を 始める 前です。何と言いますか。（矢印の人）",
               "options": [
-                "よろしくおねがいします",
-                "ごめんなさい",
-                "いただきます"
+                "いただきます",
+                "ごちそうさまでした",
+                "いってらっしゃい"
               ],
               "correct": 0,
-              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
-              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+              "transcript": "状況：ご飯を 食べます。\n質問：何と言いますか。\n1. いただきます\n2. ごちそうさまでした\n3. いってらっしゃい",
+              "explanation": "Before meal:「いただきます」."
             },
             {
               "id": "n5-e3-l-18",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
               "image": "/images/japanese/listening/n5/m3_q5.png",
-              "question": "18. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "question": "18. 会社から 先に 帰ります。何と言いますか。（矢印の人）",
               "options": [
-                "よろしくおねがいします",
-                "ごめんなさい",
-                "いただきます"
+                "お先に 失礼します",
+                "おかえりなさい",
+                "お大事に"
               ],
               "correct": 0,
-              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
-              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+              "transcript": "状況：先に 帰ります。\n質問：何と言いますか。\n1. お先に 失礼します\n2. おかえりなさい\n3. お大事に",
+              "explanation": "Leaving early:「お先に失礼します」."
             },
             {
               "id": "n5-e3-l-19",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5/captured-media-3-mp3.mp3",
-              "question": "19. 「お元気ですか。」",
+              "question": "19. 「お茶を どうぞ。」",
               "options": [
-                "はい、元気です。",
-                "いいえ、元気です。",
-                "どういたしまして。"
+                "いただきます。",
+                "いってらっしゃい。",
+                "ごめんなさい。"
               ],
               "correct": 0,
-              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
-              "explanation": "Natural daily conversation response:「はい、元気です。」"
+              "transcript": "発話：「お茶を どうぞ。」\n1. いただきます。\n2. いってらっしゃい。\n3. ごめんなさい。",
+              "explanation": "Accepting tea:「いただきます。」"
             },
             {
               "id": "n5-e3-l-20",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5/captured-media-3-mp3.mp3",
-              "question": "20. 「お元気ですか。」",
+              "question": "20. 「この 席、空いていますか。」",
               "options": [
-                "はい、元気です。",
+                "はい、どうぞ。",
                 "いいえ、元気です。",
-                "どういたしまして。"
+                "こちらこそ。"
               ],
               "correct": 0,
-              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
-              "explanation": "Natural daily conversation response:「はい、元気です。」"
+              "transcript": "発話：「この 席、空いていますか。」\n1. はい、どうぞ。\n2. いいえ、元気です。\n3. こちらこそ。",
+              "explanation": "Seat available:「はい、どうぞ。」"
             },
             {
               "id": "n5-e3-l-21",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5/captured-media-3-mp3.mp3",
-              "question": "21. 「お元気ですか。」",
+              "question": "21. 「昨日の テストは どうでしたか。」",
               "options": [
-                "はい、元気です。",
-                "いいえ、元気です。",
-                "どういたしまして。"
+                "少し 難しかったです。",
+                "明日 あります。",
+                "いいえ、違います。"
               ],
               "correct": 0,
-              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
-              "explanation": "Natural daily conversation response:「はい、元気です。」"
+              "transcript": "発話：「昨日の テストは どうでしたか。」\n1. 少し 難しかったです。\n2. 明日 あります。\n3. いいえ、違います。",
+              "explanation": "Difficulty review:「少し難しかったです。」"
             },
             {
               "id": "n5-e3-l-22",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5/captured-media-3-mp3.mp3",
-              "question": "22. 「お元気ですか。」",
+              "question": "22. 「お国は どちらですか。」",
               "options": [
-                "はい、元気です。",
-                "いいえ、元気です。",
-                "どういたしまして。"
+                "アメリカです。",
+                "東京です。",
+                "学生です。"
               ],
               "correct": 0,
-              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
-              "explanation": "Natural daily conversation response:「はい、元気です。」"
+              "transcript": "発話：「お国は どちらですか。」\n1. アメリカです。\n2. 東京です。\n3. 学生です。",
+              "explanation": "Home country:「アメリカです。」"
             },
             {
               "id": "n5-e3-l-23",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5/captured-media-3-mp3.mp3",
-              "question": "23. 「お元気ですか。」",
+              "question": "23. 「一緒にお昼ご飯を食べませんか。」",
               "options": [
-                "はい、元気です。",
-                "いいえ、元気です。",
-                "どういたしまして。"
+                "ええ、行きましょう。",
+                "ごちそうさまでした。",
+                "いいえ、食べました。"
               ],
               "correct": 0,
-              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
-              "explanation": "Natural daily conversation response:「はい、元気です。」"
+              "transcript": "発話：「一緒にお昼ご飯を食べませんか。」\n1. ええ、行きましょう。\n2. ごちそうさまでした。\n3. いいえ、食べました。",
+              "explanation": "Accepting lunch invitation:「ええ、行きましょう。」"
             },
             {
               "id": "n5-e3-l-24",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5/captured-media-3-mp3.mp3",
-              "question": "24. 「お元気ですか。」",
+              "question": "24. 「宿題は もう 終わりましたか。」",
               "options": [
-                "はい、元気です。",
-                "いいえ、元気です。",
-                "どういたしまして。"
+                "はい、終わりました。",
+                "いいえ、始めました。",
+                "教室に あります。"
               ],
               "correct": 0,
-              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
-              "explanation": "Natural daily conversation response:「はい、元気です。」"
+              "transcript": "発話：「宿題は もう 終わりましたか。」\n1. はい、終わりました。\n2. いいえ、始めました。\n3. 教室に あります。",
+              "explanation": "Finished homework:「はい、終わりました。」"
             }
           ]
         }
@@ -4607,362 +4607,362 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e4-l-1",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
-              "image": "/images/japanese/listening/n5/m1_q1.png",
-              "question": "1. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "image": "/images/japanese/listening/n5_2018/m1_q1.png",
+              "question": "1. 会社で 男の人と 女の人が 話しています。男の人は コピーを 何枚 しますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "15枚",
+                "10枚",
+                "12枚",
+                "20枚"
               ],
               "correct": 0,
-              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
-              "explanation": "Based on the dialogue guidelines, Option 1 matches the selected item."
+              "transcript": "女「会議の 資料、10枚 コピーして。」男「参加者は 12人ですが、足りますか。」女「あ、そうね。じゃあ 予備も 入れて 15枚 お願い。」\n質問：男の人は コピーを 何枚 しますか。",
+              "explanation": "Makes 15 copies (15枚)."
             },
             {
               "id": "n5-e4-l-2",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
-              "image": "/images/japanese/listening/n5/m1_q2.png",
-              "question": "2. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "image": "/images/japanese/listening/n5_2018/m1_q2.png",
+              "question": "2. 八百屋で 女の人と 店員が 話しています。女の人は どの リンゴを 買いますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "1個150円の リンゴを 2個",
+                "3個400円の リンゴを 1袋",
+                "1個150円の リンゴを 1個",
+                "3個400円の リンゴを 2袋"
               ],
-              "correct": 1,
-              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
-              "explanation": "Based on the dialogue guidelines, Option 2 matches the selected item."
+              "correct": 0,
+              "transcript": "女「この 1個150円の リンゴと、3個400円の リンゴは どこが 違いますか。」店員「150円の 方が 大きくて 甘いですよ。」女「じゃあ、大きい方を 2つ ください。」\n質問：女の人は どの リンゴを 買いますか。",
+              "explanation": "Buys two 150-yen apples (1個150円のリンゴを2個)."
             },
             {
               "id": "n5-e4-l-3",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
-              "image": "/images/japanese/listening/n5/m1_q3.png",
-              "question": "3. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "image": "/images/japanese/listening/n5_2018/m1_q3.png",
+              "question": "3. 病院で 医者と 患者が 話しています。患者は 薬を いつ 飲みますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "朝と晩の 食後",
+                "毎食後（朝・昼・晩）",
+                "朝と昼の 食前",
+                "寝る前"
               ],
-              "correct": 2,
-              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
-              "explanation": "Based on the dialogue guidelines, Option 3 matches the selected item."
+              "correct": 0,
+              "transcript": "医者「この 薬は 朝と 晩の 食後に 飲んで ください。昼は 飲まなくて いいです。」\n質問：患者は 薬を いつ 飲みますか。",
+              "explanation": "Takes medicine after breakfast and dinner (朝と晩の食後)."
             },
             {
               "id": "n5-e4-l-4",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
-              "image": "/images/japanese/listening/n5/m1_q4.png",
-              "question": "4. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "image": "/images/japanese/listening/n5_2018/m1_q4.png",
+              "question": "4. 男の人と 女の人が 話しています。二人は どこで 待ち合わせますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "東口の 本屋の前",
+                "駅の 改札口",
+                "西口の カフェ",
+                "南口の バス停"
               ],
-              "correct": 3,
-              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
-              "explanation": "Based on the dialogue guidelines, Option 4 matches the selected item."
+              "correct": 0,
+              "transcript": "男「駅の 改札口で 待ってるよ。」女「改札口は 混むから、東口の 本屋の 前に しない？」男「いいね、そうしよう。」\n質問：二人は どこで 待ち合わせますか。",
+              "explanation": "Meets in front of East exit bookstore (東口の本屋の前)."
             },
             {
               "id": "n5-e4-l-5",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
-              "image": "/images/japanese/listening/n5/m1_q5.png",
-              "question": "5. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "image": "/images/japanese/listening/n5_2018/m1_q5.png",
+              "question": "5. 学校で 先生が 話しています。学生は 月曜日に 何を 出しますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "作文",
+                "日記",
+                "教科書",
+                "漢字ノート"
               ],
               "correct": 0,
-              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
-              "explanation": "Based on the dialogue guidelines, Option 1 matches the selected item."
+              "transcript": "先生「月曜日に 作文を 出して ください。日記は 水曜日で いいです。」\n質問：学生は 月曜日に 何を 出しますか。",
+              "explanation": "Submits essay on Monday (作文)."
             },
             {
               "id": "n5-e4-l-6",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
-              "image": "/images/japanese/listening/n5/m1_q6.png",
-              "question": "6. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "image": "/images/japanese/listening/n5_2018/m1_q6.png",
+              "question": "6. ホテルで 客と フロントが 話しています。朝食は どこで 食べますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "2階の レストラン",
+                "自分の 部屋",
+                "1階の ロビー",
+                "屋上の テラス"
               ],
-              "correct": 1,
-              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
-              "explanation": "Based on the dialogue guidelines, Option 2 matches the selected item."
+              "correct": 0,
+              "transcript": "客「朝食は 部屋で 食べられますか。」フロント「朝食は 2階の レストランに なっております。」\n質問：朝食は どこで 食べますか。",
+              "explanation": "Breakfast at 2F restaurant (2階のレストラン)."
             },
             {
               "id": "n5-e4-l-7",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
-              "image": "/images/japanese/listening/n5/m1_q7.png",
-              "question": "7. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "image": "/images/japanese/listening/n5_2018/m1_q7.png",
+              "question": "7. 男の人と 女の人が 話しています。男の人は 何時に 家を 出ますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "2時15分",
+                "2時30分",
+                "2時45分",
+                "3時00分"
               ],
-              "correct": 2,
-              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
-              "explanation": "Based on the dialogue guidelines, Option 3 matches the selected item."
+              "correct": 0,
+              "transcript": "女「映画は 3時よ。駅まで 30分かかるから 2時半には 出てね。」男「切符を 買うから、もう 15分早く 2時15分に 出るよ。」\n質問：男の人は 何時に 家を 出ますか。",
+              "explanation": "Leaves at 2:15 PM (2時15分)."
             },
             {
               "id": "n5-e4-l-8",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q2.mp3",
-              "question": "8. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "question": "8. 男の人と 女の人が 話しています。田中さんは どうして パーティーに 来られませんか。",
               "options": [
-                "1時",
-                "2時",
-                "3時",
-                "4時"
+                "風邪を 引いて 熱が あるから",
+                "仕事が 忙しいから",
+                "旅行に 行ったから",
+                "忘れていたから"
               ],
               "correct": 0,
-              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
-              "explanation": "Listening point comprehension: meeting time agreement."
+              "transcript": "男「田中さん、来ないの？」女「風邪を 引いて 熱が あるそうなの。」\n質問：田中さんは どうして 来られませんか。",
+              "explanation": "Has a fever (風邪を引いて熱があるから)."
             },
             {
               "id": "n5-e4-l-9",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q2.mp3",
-              "question": "9. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "question": "9. 女の人と 男の人が 話しています。電車が 遅れた 理由は何ですか。",
               "options": [
-                "1時",
-                "2時",
-                "3時",
-                "4時"
+                "大雨と 強風のため",
+                "事故の ため",
+                "電車の 故障のため",
+                "雪の ため"
               ],
-              "correct": 1,
-              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
-              "explanation": "Listening point comprehension: meeting time agreement."
+              "correct": 0,
+              "transcript": "女「電車が 止まっていたね。」男「強い 雨と 風の せいだったみたいだよ。」\n質問：電車が 遅れた 理由は何ですか。",
+              "explanation": "Due to heavy rain and wind (大雨と強風のため)."
             },
             {
               "id": "n5-e4-l-10",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q2.mp3",
-              "question": "10. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "question": "10. 男の人と 女の人が 話しています。女の人は どの 季節が 一番 好きですか。",
               "options": [
-                "1時",
-                "2時",
-                "3時",
-                "4時"
+                "春",
+                "夏",
+                "秋",
+                "冬"
               ],
-              "correct": 2,
-              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
-              "explanation": "Listening point comprehension: meeting time agreement."
+              "correct": 0,
+              "transcript": "男「どの 季節が 好き？」女「春は 桜が 綺麗だから 一番 好きよ。」\n質問：女の人は どの 季節が 一番 好きですか。",
+              "explanation": "Prefers Spring (春)."
             },
             {
               "id": "n5-e4-l-11",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q2.mp3",
-              "question": "11. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "question": "11. バス停で 男の人と 運転手が 話しています。動物園へ 行く バスは 何番ですか。",
               "options": [
-                "1時",
-                "2時",
-                "3時",
-                "4時"
+                "5番の バス",
+                "3番の バス",
+                "1番の バス",
+                "7番の バス"
               ],
-              "correct": 3,
-              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
-              "explanation": "Listening point comprehension: meeting time agreement."
+              "correct": 0,
+              "transcript": "男「動物園へ 行きたいのですが。」運転手「動物園へは 5番の バスに 乗って ください。」\n質問：動物園へ 行く バスは 何番ですか。",
+              "explanation": "Takes bus number 5 (5番のバス)."
             },
             {
               "id": "n5-e4-l-12",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q2.mp3",
-              "question": "12. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "question": "12. 女の人と 男の人が 話しています。誕生日の プレゼントは何に しましたか。",
               "options": [
-                "1時",
-                "2時",
-                "3時",
-                "4時"
+                "本",
+                "花",
+                "ケーキ",
+                "時計"
               ],
               "correct": 0,
-              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
-              "explanation": "Listening point comprehension: meeting time agreement."
+              "transcript": "女「妹の 誕生日に 何を あげたの？」男「花と 迷ったけど、好きな 本を あげたよ。」\n質問：プレゼントは何ですか。",
+              "explanation": "Gave a book (本)."
             },
             {
               "id": "n5-e4-l-13",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q2.mp3",
-              "question": "13. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "question": "13. 天気予報が 流れています。明日の 午後の 天気は どうなりますか。",
               "options": [
-                "1時",
-                "2時",
-                "3時",
-                "4時"
+                "雨が 降る",
+                "一日中 晴れる",
+                "雪が 降る",
+                "風だけ 吹く"
               ],
-              "correct": 1,
-              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
-              "explanation": "Listening point comprehension: meeting time agreement."
+              "correct": 0,
+              "transcript": "アナウンス「明日は 朝は 晴れますが、午後からは 雨が 降るでしょう。」\n質問：明日の 午後は どうなりますか。",
+              "explanation": "Rains in the afternoon (雨が降る)."
             },
             {
               "id": "n5-e4-l-14",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
-              "image": "/images/japanese/listening/n5/m3_q1.png",
-              "question": "14. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "image": "/images/japanese/listening/n5_2018/m3_q1.png",
+              "question": "14. 道を 尋ねたいです。何と言いますか。（矢印の人）",
               "options": [
-                "よろしくおねがいします",
-                "ごめんなさい",
-                "いただきます"
+                "すみません、駅は どこですか",
+                "駅に 行きましょう",
+                "駅は ここでした"
               ],
               "correct": 0,
-              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
-              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+              "transcript": "状況：道を 尋ねます。\n質問：何と言いますか。\n1. すみません、駅は どこですか\n2. 駅に 行きましょう\n3. 駅は ここでした",
+              "explanation": "Asking directions:「すみません、駅はどこですか」."
             },
             {
               "id": "n5-e4-l-15",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
-              "image": "/images/japanese/listening/n5/m3_q2.png",
-              "question": "15. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "image": "/images/japanese/listening/n5_2018/m3_q2.png",
+              "question": "15. プレゼントを 渡します。何と言いますか。（矢印の人）",
               "options": [
-                "よろしくおねがいします",
-                "ごめんなさい",
-                "いただきます"
+                "どうぞ",
+                "ごちそうさまでした",
+                "おめでとう"
               ],
               "correct": 0,
-              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
-              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+              "transcript": "状況：プレゼントを 渡します。\n質問：何と言いますか。\n1. どうぞ\n2. ごちそうさまでした\n3. おめでとう",
+              "explanation": "Handing over gift:「どうぞ」."
             },
             {
               "id": "n5-e4-l-16",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
-              "image": "/images/japanese/listening/n5/m3_q3.png",
-              "question": "16. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "image": "/images/japanese/listening/n5_2018/m3_q3.png",
+              "question": "16. 足を踏んでしまいました。何と言いますか。（矢印の人）",
               "options": [
-                "よろしくおねがいします",
-                "ごめんなさい",
-                "いただきます"
+                "すみません！",
+                "どういたしまして",
+                "おかげさまで"
               ],
               "correct": 0,
-              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
-              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+              "transcript": "状況：謝ります。\n質問：何と言いますか。\n1. すみません！\n2. どういたしまして\n3. おかげさまで",
+              "explanation": "Apologizing:「すみません！」."
             },
             {
               "id": "n5-e4-l-17",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
-              "image": "/images/japanese/listening/n5/m3_q4.png",
-              "question": "17. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "image": "/images/japanese/listening/n5_2018/m3_q4.png",
+              "question": "17. 食事を 終えました。何と言いますか。（矢印の人）",
               "options": [
-                "よろしくおねがいします",
-                "ごめんなさい",
-                "いただきます"
+                "ごちそうさまでした",
+                "いただきます",
+                "お邪魔しました"
               ],
               "correct": 0,
-              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
-              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+              "transcript": "状況：食事が 終わりました。\n質問：何と言いますか。\n1. ごちそうさまでした\n2. いただきます\n3. お邪魔しました",
+              "explanation": "After meal:「ごちそうさまでした」."
             },
             {
               "id": "n5-e4-l-18",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
-              "image": "/images/japanese/listening/n5/m3_q5.png",
-              "question": "18. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "image": "/images/japanese/listening/n5_2018/m3_q5.png",
+              "question": "18. 駅で 友達と 別れます。何と言いますか。（矢印の人）",
               "options": [
-                "よろしくおねがいします",
-                "ごめんなさい",
-                "いただきます"
+                "じゃ、また 明日！",
+                "ただいま",
+                "はじめまして"
               ],
               "correct": 0,
-              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
-              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+              "transcript": "状況：別れの 挨拶を します。\n質問：何と言いますか。\n1. じゃ、また 明日！\n2. ただいま\n3. はじめまして",
+              "explanation": "Parting:「じゃ、また明日！」."
             },
             {
               "id": "n5-e4-l-19",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q4.mp3",
-              "question": "19. 「お元気ですか。」",
+              "question": "19. 「今、お時間ありますか。」",
               "options": [
-                "はい、元気です。",
-                "いいえ、元気です。",
+                "はい、大丈夫ですよ。",
+                "いいえ、時間です。",
                 "どういたしまして。"
               ],
               "correct": 0,
-              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
-              "explanation": "Natural daily conversation response:「はい、元気です。」"
+              "transcript": "発話：「今、お時間ありますか。」\n1. はい、大丈夫ですよ。\n2. いいえ、時間です。\n3. どういたしまして。",
+              "explanation": "Available:「はい、大丈夫ですよ。」"
             },
             {
               "id": "n5-e4-l-20",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q4.mp3",
-              "question": "20. 「お元気ですか。」",
+              "question": "20. 「いいお天気ですね。」",
               "options": [
-                "はい、元気です。",
-                "いいえ、元気です。",
-                "どういたしまして。"
+                "そうですね、気持ちいいですね。",
+                "いいえ、雨です。",
+                "お大事に。"
               ],
               "correct": 0,
-              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
-              "explanation": "Natural daily conversation response:「はい、元気です。」"
+              "transcript": "発話：「いいお天気ですね。」\n1. そうですね、気持ちいいですね。\n2. いいえ、雨です。\n3. お大事に。",
+              "explanation": "Agreeing on weather:「そうですね、気持ちいいですね。」"
             },
             {
               "id": "n5-e4-l-21",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q4.mp3",
-              "question": "21. 「お元気ですか。」",
+              "question": "21. 「ここで写真を撮ってもいいですか。」",
               "options": [
-                "はい、元気です。",
-                "いいえ、元気です。",
-                "どういたしまして。"
+                "ええ、いいですよ。",
+                "はい、撮りました。",
+                "写真です。"
               ],
               "correct": 0,
-              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
-              "explanation": "Natural daily conversation response:「はい、元気です。」"
+              "transcript": "発話：「ここで写真を撮ってもいいですか。」\n1. ええ、いいですよ。\n2. はい、撮りました。\n3. 写真です。",
+              "explanation": "Granting permission:「ええ、いいですよ。」"
             },
             {
               "id": "n5-e4-l-22",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q4.mp3",
-              "question": "22. 「お元気ですか。」",
+              "question": "22. 「日本語がお上手ですね。」",
               "options": [
-                "はい、元気です。",
-                "いいえ、元気です。",
+                "いいえ、まだまだです。",
+                "はい、上手でした。",
                 "どういたしまして。"
               ],
               "correct": 0,
-              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
-              "explanation": "Natural daily conversation response:「はい、元気です。」"
+              "transcript": "発話：「日本語がお上手ですね。」\n1. いいえ、まだまだです。\n2. はい、上手でした。\n3. どういたしまして。",
+              "explanation": "Humble response:「いいえ、まだまだです。」"
             },
             {
               "id": "n5-e4-l-23",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q4.mp3",
-              "question": "23. 「お元気ですか。」",
+              "question": "23. 「これは誰のカバンですか。」",
               "options": [
-                "はい、元気です。",
-                "いいえ、元気です。",
-                "どういたしまして。"
+                "私のです。",
+                "カバンです。",
+                "机の上です。"
               ],
               "correct": 0,
-              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
-              "explanation": "Natural daily conversation response:「はい、元気です。」"
+              "transcript": "発話：「これは誰のカバンですか。」\n1. 私のです。\n2. カバンです。\n3. 机の上です。",
+              "explanation": "Ownership:「私のです。」"
             },
             {
               "id": "n5-e4-l-24",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q4.mp3",
-              "question": "24. 「お元気ですか。」",
+              "question": "24. 「少し休みましょうか。」",
               "options": [
-                "はい、元気です。",
-                "いいえ、元気です。",
-                "どういたしまして。"
+                "はい、そうしましょう。",
+                "いいえ、休みました。",
+                "疲れました。"
               ],
               "correct": 0,
-              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
-              "explanation": "Natural daily conversation response:「はい、元気です。」"
+              "transcript": "発話：「少し休みましょうか。」\n1. はい、そうしましょう。\n2. いいえ、休みました。\n3. 疲れました。",
+              "explanation": "Taking a break:「はい、そうしましょう。」"
             }
           ]
         }
@@ -5849,361 +5849,361 @@ export const EXAM_PAPERS_CATALOG = {
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
               "image": "/images/japanese/listening/n5/m1_q1.png",
-              "question": "1. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "question": "1. 教室で 先生が 話しています。学生は 明日、何を 持って来ますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "鉛筆と消しゴム",
+                "辞書と教科書",
+                "消しゴムと辞書",
+                "教科書とノート"
               ],
-              "correct": 1,
-              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
-              "explanation": "Based on the dialogue guidelines, Option 2 matches the selected item."
+              "correct": 0,
+              "transcript": "女（先生）「明日は テストを しますから、鉛筆と 消しゴムを 忘れないでください。辞書は 使えません。」\n質問：学生は 明日、何を 持って来ますか。",
+              "explanation": "Brings pencil and eraser (鉛筆と消しゴム)."
             },
             {
               "id": "n5-e5-l-2",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
               "image": "/images/japanese/listening/n5/m1_q2.png",
-              "question": "2. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "question": "2. 駅で 男の人と 女の人が 話しています。二人は どの 電車に 乗りますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "10時15分の 急行",
+                "10時20分の 普通電車",
+                "10時30分の 特急",
+                "10時05分の 電車"
               ],
-              "correct": 2,
-              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
-              "explanation": "Based on the dialogue guidelines, Option 3 matches the selected item."
+              "correct": 1,
+              "transcript": "男「次の 急行は 10時15分だよ。」女「でも、急行は 目的の駅に 止まらないわ。10時20分の 普通電車に しよう。」\n質問：二人は どの 電車に 乗りますか。",
+              "explanation": "Takes 10:20 local train (10時20分の普通電車)."
             },
             {
               "id": "n5-e5-l-3",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
               "image": "/images/japanese/listening/n5/m1_q3.png",
-              "question": "3. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "question": "3. カフェで 男の人と 店員が 話しています。男の人は 何を 注文しますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "ホットコーヒー",
+                "アイスコーヒー",
+                "チーズケーキ",
+                "オレンジジュース"
               ],
-              "correct": 3,
-              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
-              "explanation": "Based on the dialogue guidelines, Option 4 matches the selected item."
+              "correct": 0,
+              "transcript": "男「ホットコーヒーと チーズケーキを ください。」店員「ケーキは 売り切れです。」男「じゃあ、ホットコーヒーだけ お願いします。」\n質問：男の人は 何を 注文しますか。",
+              "explanation": "Orders hot coffee only (ホットコーヒー)."
             },
             {
               "id": "n5-e5-l-4",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
               "image": "/images/japanese/listening/n5/m1_q4.png",
-              "question": "4. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "question": "4. 家で 母と 息子が 話しています。男の子は 先に 何を しますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "手を 洗う",
+                "宿題を カバンに 入れる",
+                "ご飯を 食べる",
+                "テレビを 見る"
               ],
               "correct": 0,
-              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
-              "explanation": "Based on the dialogue guidelines, Option 1 matches the selected item."
+              "transcript": "母「ご飯の 前に 手を 洗ってね。」男の子「うん、宿題を カバンに 入れてから 洗うよ。」母「先に 手を 洗いなさい。」\n質問：男の子は 先に 何を しますか。",
+              "explanation": "Washes hands first (手を洗う)."
             },
             {
               "id": "n5-e5-l-5",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
               "image": "/images/japanese/listening/n5/m1_q5.png",
-              "question": "5. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "question": "5. 図書館で 女の人と 係員が 話しています。女の人は 本を 何冊 借りますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "3冊",
+                "4冊",
+                "1冊",
+                "2冊"
               ],
-              "correct": 1,
-              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
-              "explanation": "Based on the dialogue guidelines, Option 2 matches the selected item."
+              "correct": 0,
+              "transcript": "女「この 4冊を 借りたいです。」係員「貸出は 3冊までです。」女「では、この 3冊に します。」\n質問：女の人は 本を 何冊 借りますか。",
+              "explanation": "Borrows 3 books (3冊)."
             },
             {
               "id": "n5-e5-l-6",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
               "image": "/images/japanese/listening/n5/m1_q6.png",
-              "question": "6. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "question": "6. 店で 男の人と 女の人が 靴を 見ています。女の人は どの 靴を 買いますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "茶色い靴",
+                "黒い靴",
+                "白い靴",
+                "青い靴"
               ],
-              "correct": 2,
-              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
-              "explanation": "Based on the dialogue guidelines, Option 3 matches the selected item."
+              "correct": 0,
+              "transcript": "女「黒い靴と 茶色い靴、どっちが いい？」男「黒い方が スーツに 合うよ。」女「でも 茶色い方が 歩きやすそう。茶色い方に するわ。」\n質問：女の人は どの 靴を 買いますか。",
+              "explanation": "Selects brown shoes (茶色い靴)."
             },
             {
               "id": "n5-e5-l-7",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
               "image": "/images/japanese/listening/n5/m1_q7.png",
-              "question": "7. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "question": "7. 留学生と 友達が 話しています。男の人は これから どこへ 行きますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "郵便局",
+                "カフェ",
+                "図書館",
+                "食堂"
               ],
-              "correct": 3,
-              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
-              "explanation": "Based on the dialogue guidelines, Option 4 matches the selected item."
+              "correct": 0,
+              "transcript": "女「カフェに 行かない？」男「郵便局で 切手を 買ってから 行くよ。」\n質問：男の人は これから どこへ 行きますか。",
+              "explanation": "Goes to the post office first (郵便局)."
             },
             {
               "id": "n5-e5-l-8",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-1-mp3.mp3",
-              "question": "8. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "question": "8. 男の人と 女の人が 話しています。美術館は 何曜日に 休みですか。",
               "options": [
-                "1時",
-                "2時",
-                "3時",
-                "4時"
+                "火曜日",
+                "月曜日",
+                "水曜日",
+                "日曜日"
               ],
-              "correct": 1,
-              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
-              "explanation": "Listening point comprehension: meeting time agreement."
+              "correct": 0,
+              "transcript": "男「明日、美術館に 行かない？」女「明日は 火曜日だから 休館日よ。水曜日に しよう。」\n質問：美術館は 何曜日に 休みですか。",
+              "explanation": "Closed on Tuesdays (火曜日)."
             },
             {
               "id": "n5-e5-l-9",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-1-mp3.mp3",
-              "question": "9. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "question": "9. 女の人と 男の人が 話しています。男の人は どうして 自転車で 来ましたか。",
               "options": [
-                "1時",
-                "2時",
-                "3時",
-                "4時"
+                "天気が良く、運動になるから",
+                "電車が 遅れたから",
+                "お金が なかったから",
+                "車が 壊れたから"
               ],
-              "correct": 2,
-              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
-              "explanation": "Listening point comprehension: meeting time agreement."
+              "correct": 0,
+              "transcript": "女「今日は 自転車なのね。」男「天気が 良かったし、運動にも なるからね。」\n質問：男の人は どうして 自転車で 来ましたか。",
+              "explanation": "Nice weather and good exercise (運動になるから)."
             },
             {
               "id": "n5-e5-l-10",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-1-mp3.mp3",
-              "question": "10. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "question": "10. 男の人と 女の人が 話しています。男の人は どこに 傘を 忘れましたか。",
               "options": [
-                "1時",
-                "2時",
-                "3時",
-                "4時"
+                "レストランの 傘立て",
+                "電車の中",
+                "駅の ホーム",
+                "自分の 部屋"
               ],
-              "correct": 3,
-              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
-              "explanation": "Listening point comprehension: meeting time agreement."
+              "correct": 0,
+              "transcript": "男「傘が ないんだ。電車の中に 忘れたかな。」女「さっきの レストランの 傘立てに 置いたままじゃない？」男「あ、そうだ！」\n質問：男の人は どこに 傘を 忘れましたか。",
+              "explanation": "Forgot umbrella at restaurant (レストランの傘立て)."
             },
             {
               "id": "n5-e5-l-11",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-1-mp3.mp3",
-              "question": "11. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "question": "11. 女の人と 男の人が 時計を 見ています。この 時計は 誰から もらいましたか。",
               "options": [
-                "1時",
-                "2時",
-                "3時",
-                "4時"
+                "お父さん",
+                "お母さん",
+                "友達",
+                "先生"
               ],
               "correct": 0,
-              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
-              "explanation": "Listening point comprehension: meeting time agreement."
+              "transcript": "女「素敵な 時計ね。」男「去年の 誕生日に 父から もらったんだ。」\n質問：時計は 誰から もらいましたか。",
+              "explanation": "Received from father (お父さん)."
             },
             {
               "id": "n5-e5-l-12",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-1-mp3.mp3",
-              "question": "12. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "question": "12. 男の人と 女の人が 話しています。京都まで 新幹線で 何時間 かかりますか。",
               "options": [
-                "1時",
-                "2時",
-                "3時",
-                "4時"
+                "約2時間",
+                "約1時間",
+                "約4時間",
+                "約30分"
               ],
-              "correct": 1,
-              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
-              "explanation": "Listening point comprehension: meeting time agreement."
+              "correct": 0,
+              "transcript": "男「東京から 京都まで 新幹線で どのくらい？」女「だいたい 2時間ちょっとよ。」\n質問：新幹線で どのくらい かかりますか。",
+              "explanation": "Takes approx 2 hours (約2時間)."
             },
             {
               "id": "n5-e5-l-13",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-1-mp3.mp3",
-              "question": "13. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "question": "13. スーパーの 案内放送が 流れています。スーパーは 何時に 閉まりますか。",
               "options": [
-                "1時",
-                "2時",
-                "3時",
-                "4時"
+                "夜9時",
+                "夜8時",
+                "夜10時",
+                "夕方6時"
               ],
-              "correct": 2,
-              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
-              "explanation": "Listening point comprehension: meeting time agreement."
+              "correct": 0,
+              "transcript": "アナウンス「本日の 営業は 夜9時までと なっております。」\n質問：スーパーは 何時に 閉まりますか。",
+              "explanation": "Closes at 9:00 PM (夜9時)."
             },
             {
               "id": "n5-e5-l-14",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
               "image": "/images/japanese/listening/n5/m3_q1.png",
-              "question": "14. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "question": "14. 朝、近所の人に 会いました。何と言いますか。（矢印の人）",
               "options": [
-                "よろしくおねがいします",
-                "ごめんなさい",
-                "いただきます"
+                "おはようございます",
+                "こんばんは",
+                "さようなら"
               ],
               "correct": 0,
-              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
-              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+              "transcript": "状況：朝の 挨拶を します。\n質問：何と言いますか。\n1. おはようございます\n2. こんばんは\n3. さようなら",
+              "explanation": "Morning greeting:「おはようございます」."
             },
             {
               "id": "n5-e5-l-15",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
               "image": "/images/japanese/listening/n5/m3_q2.png",
-              "question": "15. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "question": "15. 友達の ペンを 借りたいです。何と言いますか。（矢印の人）",
               "options": [
-                "よろしくおねがいします",
-                "ごめんなさい",
-                "いただきます"
+                "ペンを 貸して ください",
+                "ペンを あげます",
+                "ペンを 買いました"
               ],
               "correct": 0,
-              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
-              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+              "transcript": "状況：ペンを 借ります。\n質問：何と言いますか。\n1. ペンを 貸して ください\n2. ペンを あげます\n3. ペンを 買いました",
+              "explanation": "Asking to borrow:「ペンを貸してください」."
             },
             {
               "id": "n5-e5-l-16",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
               "image": "/images/japanese/listening/n5/m3_q3.png",
-              "question": "16. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "question": "16. 先生の 部屋に 入ります。何と言いますか。（矢印の人）",
               "options": [
-                "よろしくおねがいします",
+                "失礼します",
                 "ごめんなさい",
-                "いただきます"
+                "いってきます"
               ],
               "correct": 0,
-              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
-              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+              "transcript": "状況：部屋に 入ります。\n質問：何と言いますか。\n1. 失礼します\n2. ごめんなさい\n3. いってきます",
+              "explanation": "Entering room:「失礼します」."
             },
             {
               "id": "n5-e5-l-17",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
               "image": "/images/japanese/listening/n5/m3_q4.png",
-              "question": "17. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "question": "17. 食事を 始める 前です。何と言いますか。（矢印の人）",
               "options": [
-                "よろしくおねがいします",
-                "ごめんなさい",
-                "いただきます"
+                "いただきます",
+                "ごちそうさまでした",
+                "いってらっしゃい"
               ],
               "correct": 0,
-              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
-              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+              "transcript": "状況：ご飯を 食べます。\n質問：何と言いますか。\n1. いただきます\n2. ごちそうさまでした\n3. いってらっしゃい",
+              "explanation": "Before meal:「いただきます」."
             },
             {
               "id": "n5-e5-l-18",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
               "image": "/images/japanese/listening/n5/m3_q5.png",
-              "question": "18. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "question": "18. 会社から 先に 帰ります。何と言いますか。（矢印の人）",
               "options": [
-                "よろしくおねがいします",
-                "ごめんなさい",
-                "いただきます"
+                "お先に 失礼します",
+                "おかえりなさい",
+                "お大事に"
               ],
               "correct": 0,
-              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
-              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+              "transcript": "状況：先に 帰ります。\n質問：何と言いますか。\n1. お先に 失礼します\n2. おかえりなさい\n3. お大事に",
+              "explanation": "Leaving early:「お先に失礼します」."
             },
             {
               "id": "n5-e5-l-19",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5/captured-media-3-mp3.mp3",
-              "question": "19. 「お元気ですか。」",
+              "question": "19. 「お茶を どうぞ。」",
               "options": [
-                "はい、元気です。",
-                "いいえ、元気です。",
-                "どういたしまして。"
+                "いただきます。",
+                "いってらっしゃい。",
+                "ごめんなさい。"
               ],
               "correct": 0,
-              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
-              "explanation": "Natural daily conversation response:「はい、元気です。」"
+              "transcript": "発話：「お茶を どうぞ。」\n1. いただきます。\n2. いってらっしゃい。\n3. ごめんなさい。",
+              "explanation": "Accepting tea:「いただきます。」"
             },
             {
               "id": "n5-e5-l-20",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5/captured-media-3-mp3.mp3",
-              "question": "20. 「お元気ですか。」",
+              "question": "20. 「この 席、空いていますか。」",
               "options": [
-                "はい、元気です。",
+                "はい、どうぞ。",
                 "いいえ、元気です。",
-                "どういたしまして。"
+                "こちらこそ。"
               ],
               "correct": 0,
-              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
-              "explanation": "Natural daily conversation response:「はい、元気です。」"
+              "transcript": "発話：「この 席、空いていますか。」\n1. はい、どうぞ。\n2. いいえ、元気です。\n3. こちらこそ。",
+              "explanation": "Seat available:「はい、どうぞ。」"
             },
             {
               "id": "n5-e5-l-21",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5/captured-media-3-mp3.mp3",
-              "question": "21. 「お元気ですか。」",
+              "question": "21. 「昨日の テストは どうでしたか。」",
               "options": [
-                "はい、元気です。",
-                "いいえ、元気です。",
-                "どういたしまして。"
+                "少し 難しかったです。",
+                "明日 あります。",
+                "いいえ、違います。"
               ],
               "correct": 0,
-              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
-              "explanation": "Natural daily conversation response:「はい、元気です。」"
+              "transcript": "発話：「昨日の テストは どうでしたか。」\n1. 少し 難しかったです。\n2. 明日 あります。\n3. いいえ、違います。",
+              "explanation": "Difficulty review:「少し難しかったです。」"
             },
             {
               "id": "n5-e5-l-22",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5/captured-media-3-mp3.mp3",
-              "question": "22. 「お元気ですか。」",
+              "question": "22. 「お国は どちらですか。」",
               "options": [
-                "はい、元気です。",
-                "いいえ、元気です。",
-                "どういたしまして。"
+                "アメリカです。",
+                "東京です。",
+                "学生です。"
               ],
               "correct": 0,
-              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
-              "explanation": "Natural daily conversation response:「はい、元気です。」"
+              "transcript": "発話：「お国は どちらですか。」\n1. アメリカです。\n2. 東京です。\n3. 学生です。",
+              "explanation": "Home country:「アメリカです。」"
             },
             {
               "id": "n5-e5-l-23",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5/captured-media-3-mp3.mp3",
-              "question": "23. 「お元気ですか。」",
+              "question": "23. 「一緒にお昼ご飯を食べませんか。」",
               "options": [
-                "はい、元気です。",
-                "いいえ、元気です。",
-                "どういたしまして。"
+                "ええ、行きましょう。",
+                "ごちそうさまでした。",
+                "いいえ、食べました。"
               ],
               "correct": 0,
-              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
-              "explanation": "Natural daily conversation response:「はい、元気です。」"
+              "transcript": "発話：「一緒にお昼ご飯を食べませんか。」\n1. ええ、行きましょう。\n2. ごちそうさまでした。\n3. いいえ、食べました。",
+              "explanation": "Accepting lunch invitation:「ええ、行きましょう。」"
             },
             {
               "id": "n5-e5-l-24",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5/captured-media-3-mp3.mp3",
-              "question": "24. 「お元気ですか。」",
+              "question": "24. 「宿題は もう 終わりましたか。」",
               "options": [
-                "はい、元気です。",
-                "いいえ、元気です。",
-                "どういたしまして。"
+                "はい、終わりました。",
+                "いいえ、始めました。",
+                "教室に あります。"
               ],
               "correct": 0,
-              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
-              "explanation": "Natural daily conversation response:「はい、元気です。」"
+              "transcript": "発話：「宿題は もう 終わりましたか。」\n1. はい、終わりました。\n2. いいえ、始めました。\n3. 教室に あります。",
+              "explanation": "Finished homework:「はい、終わりました。」"
             }
           ]
         }
@@ -7089,362 +7089,362 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e6-l-1",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
-              "image": "/images/japanese/listening/n5/m1_q1.png",
-              "question": "1. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "image": "/images/japanese/listening/n5_2018/m1_q1.png",
+              "question": "1. 会社で 男の人と 女の人が 話しています。男の人は コピーを 何枚 しますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "15枚",
+                "10枚",
+                "12枚",
+                "20枚"
               ],
-              "correct": 2,
-              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
-              "explanation": "Based on the dialogue guidelines, Option 3 matches the selected item."
+              "correct": 0,
+              "transcript": "女「会議の 資料、10枚 コピーして。」男「参加者は 12人ですが、足りますか。」女「あ、そうね。じゃあ 予備も 入れて 15枚 お願い。」\n質問：男の人は コピーを 何枚 しますか。",
+              "explanation": "Makes 15 copies (15枚)."
             },
             {
               "id": "n5-e6-l-2",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
-              "image": "/images/japanese/listening/n5/m1_q2.png",
-              "question": "2. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "image": "/images/japanese/listening/n5_2018/m1_q2.png",
+              "question": "2. 八百屋で 女の人と 店員が 話しています。女の人は どの リンゴを 買いますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "1個150円の リンゴを 2個",
+                "3個400円の リンゴを 1袋",
+                "1個150円の リンゴを 1個",
+                "3個400円の リンゴを 2袋"
               ],
-              "correct": 3,
-              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
-              "explanation": "Based on the dialogue guidelines, Option 4 matches the selected item."
+              "correct": 0,
+              "transcript": "女「この 1個150円の リンゴと、3個400円の リンゴは どこが 違いますか。」店員「150円の 方が 大きくて 甘いですよ。」女「じゃあ、大きい方を 2つ ください。」\n質問：女の人は どの リンゴを 買いますか。",
+              "explanation": "Buys two 150-yen apples (1個150円のリンゴを2個)."
             },
             {
               "id": "n5-e6-l-3",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
-              "image": "/images/japanese/listening/n5/m1_q3.png",
-              "question": "3. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "image": "/images/japanese/listening/n5_2018/m1_q3.png",
+              "question": "3. 病院で 医者と 患者が 話しています。患者は 薬を いつ 飲みますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "朝と晩の 食後",
+                "毎食後（朝・昼・晩）",
+                "朝と昼の 食前",
+                "寝る前"
               ],
               "correct": 0,
-              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
-              "explanation": "Based on the dialogue guidelines, Option 1 matches the selected item."
+              "transcript": "医者「この 薬は 朝と 晩の 食後に 飲んで ください。昼は 飲まなくて いいです。」\n質問：患者は 薬を いつ 飲みますか。",
+              "explanation": "Takes medicine after breakfast and dinner (朝と晩の食後)."
             },
             {
               "id": "n5-e6-l-4",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
-              "image": "/images/japanese/listening/n5/m1_q4.png",
-              "question": "4. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "image": "/images/japanese/listening/n5_2018/m1_q4.png",
+              "question": "4. 男の人と 女の人が 話しています。二人は どこで 待ち合わせますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "東口の 本屋の前",
+                "駅の 改札口",
+                "西口の カフェ",
+                "南口の バス停"
               ],
-              "correct": 1,
-              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
-              "explanation": "Based on the dialogue guidelines, Option 2 matches the selected item."
+              "correct": 0,
+              "transcript": "男「駅の 改札口で 待ってるよ。」女「改札口は 混むから、東口の 本屋の 前に しない？」男「いいね、そうしよう。」\n質問：二人は どこで 待ち合わせますか。",
+              "explanation": "Meets in front of East exit bookstore (東口の本屋の前)."
             },
             {
               "id": "n5-e6-l-5",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
-              "image": "/images/japanese/listening/n5/m1_q5.png",
-              "question": "5. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "image": "/images/japanese/listening/n5_2018/m1_q5.png",
+              "question": "5. 学校で 先生が 話しています。学生は 月曜日に 何を 出しますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "作文",
+                "日記",
+                "教科書",
+                "漢字ノート"
               ],
-              "correct": 2,
-              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
-              "explanation": "Based on the dialogue guidelines, Option 3 matches the selected item."
+              "correct": 0,
+              "transcript": "先生「月曜日に 作文を 出して ください。日記は 水曜日で いいです。」\n質問：学生は 月曜日に 何を 出しますか。",
+              "explanation": "Submits essay on Monday (作文)."
             },
             {
               "id": "n5-e6-l-6",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
-              "image": "/images/japanese/listening/n5/m1_q6.png",
-              "question": "6. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "image": "/images/japanese/listening/n5_2018/m1_q6.png",
+              "question": "6. ホテルで 客と フロントが 話しています。朝食は どこで 食べますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "2階の レストラン",
+                "自分の 部屋",
+                "1階の ロビー",
+                "屋上の テラス"
               ],
-              "correct": 3,
-              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
-              "explanation": "Based on the dialogue guidelines, Option 4 matches the selected item."
+              "correct": 0,
+              "transcript": "客「朝食は 部屋で 食べられますか。」フロント「朝食は 2階の レストランに なっております。」\n質問：朝食は どこで 食べますか。",
+              "explanation": "Breakfast at 2F restaurant (2階のレストラン)."
             },
             {
               "id": "n5-e6-l-7",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
-              "image": "/images/japanese/listening/n5/m1_q7.png",
-              "question": "7. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "image": "/images/japanese/listening/n5_2018/m1_q7.png",
+              "question": "7. 男の人と 女の人が 話しています。男の人は 何時に 家を 出ますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "2時15分",
+                "2時30分",
+                "2時45分",
+                "3時00分"
               ],
               "correct": 0,
-              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
-              "explanation": "Based on the dialogue guidelines, Option 1 matches the selected item."
+              "transcript": "女「映画は 3時よ。駅まで 30分かかるから 2時半には 出てね。」男「切符を 買うから、もう 15分早く 2時15分に 出るよ。」\n質問：男の人は 何時に 家を 出ますか。",
+              "explanation": "Leaves at 2:15 PM (2時15分)."
             },
             {
               "id": "n5-e6-l-8",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q2.mp3",
-              "question": "8. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "question": "8. 男の人と 女の人が 話しています。田中さんは どうして パーティーに 来られませんか。",
               "options": [
-                "1時",
-                "2時",
-                "3時",
-                "4時"
+                "風邪を 引いて 熱が あるから",
+                "仕事が 忙しいから",
+                "旅行に 行ったから",
+                "忘れていたから"
               ],
-              "correct": 2,
-              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
-              "explanation": "Listening point comprehension: meeting time agreement."
+              "correct": 0,
+              "transcript": "男「田中さん、来ないの？」女「風邪を 引いて 熱が あるそうなの。」\n質問：田中さんは どうして 来られませんか。",
+              "explanation": "Has a fever (風邪を引いて熱があるから)."
             },
             {
               "id": "n5-e6-l-9",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q2.mp3",
-              "question": "9. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "question": "9. 女の人と 男の人が 話しています。電車が 遅れた 理由は何ですか。",
               "options": [
-                "1時",
-                "2時",
-                "3時",
-                "4時"
+                "大雨と 強風のため",
+                "事故の ため",
+                "電車の 故障のため",
+                "雪の ため"
               ],
-              "correct": 3,
-              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
-              "explanation": "Listening point comprehension: meeting time agreement."
+              "correct": 0,
+              "transcript": "女「電車が 止まっていたね。」男「強い 雨と 風の せいだったみたいだよ。」\n質問：電車が 遅れた 理由は何ですか。",
+              "explanation": "Due to heavy rain and wind (大雨と強風のため)."
             },
             {
               "id": "n5-e6-l-10",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q2.mp3",
-              "question": "10. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "question": "10. 男の人と 女の人が 話しています。女の人は どの 季節が 一番 好きですか。",
               "options": [
-                "1時",
-                "2時",
-                "3時",
-                "4時"
+                "春",
+                "夏",
+                "秋",
+                "冬"
               ],
               "correct": 0,
-              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
-              "explanation": "Listening point comprehension: meeting time agreement."
+              "transcript": "男「どの 季節が 好き？」女「春は 桜が 綺麗だから 一番 好きよ。」\n質問：女の人は どの 季節が 一番 好きですか。",
+              "explanation": "Prefers Spring (春)."
             },
             {
               "id": "n5-e6-l-11",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q2.mp3",
-              "question": "11. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "question": "11. バス停で 男の人と 運転手が 話しています。動物園へ 行く バスは 何番ですか。",
               "options": [
-                "1時",
-                "2時",
-                "3時",
-                "4時"
+                "5番の バス",
+                "3番の バス",
+                "1番の バス",
+                "7番の バス"
               ],
-              "correct": 1,
-              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
-              "explanation": "Listening point comprehension: meeting time agreement."
+              "correct": 0,
+              "transcript": "男「動物園へ 行きたいのですが。」運転手「動物園へは 5番の バスに 乗って ください。」\n質問：動物園へ 行く バスは 何番ですか。",
+              "explanation": "Takes bus number 5 (5番のバス)."
             },
             {
               "id": "n5-e6-l-12",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q2.mp3",
-              "question": "12. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "question": "12. 女の人と 男の人が 話しています。誕生日の プレゼントは何に しましたか。",
               "options": [
-                "1時",
-                "2時",
-                "3時",
-                "4時"
+                "本",
+                "花",
+                "ケーキ",
+                "時計"
               ],
-              "correct": 2,
-              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
-              "explanation": "Listening point comprehension: meeting time agreement."
+              "correct": 0,
+              "transcript": "女「妹の 誕生日に 何を あげたの？」男「花と 迷ったけど、好きな 本を あげたよ。」\n質問：プレゼントは何ですか。",
+              "explanation": "Gave a book (本)."
             },
             {
               "id": "n5-e6-l-13",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q2.mp3",
-              "question": "13. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "question": "13. 天気予報が 流れています。明日の 午後の 天気は どうなりますか。",
               "options": [
-                "1時",
-                "2時",
-                "3時",
-                "4時"
+                "雨が 降る",
+                "一日中 晴れる",
+                "雪が 降る",
+                "風だけ 吹く"
               ],
-              "correct": 3,
-              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
-              "explanation": "Listening point comprehension: meeting time agreement."
+              "correct": 0,
+              "transcript": "アナウンス「明日は 朝は 晴れますが、午後からは 雨が 降るでしょう。」\n質問：明日の 午後は どうなりますか。",
+              "explanation": "Rains in the afternoon (雨が降る)."
             },
             {
               "id": "n5-e6-l-14",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
-              "image": "/images/japanese/listening/n5/m3_q1.png",
-              "question": "14. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "image": "/images/japanese/listening/n5_2018/m3_q1.png",
+              "question": "14. 道を 尋ねたいです。何と言いますか。（矢印の人）",
               "options": [
-                "よろしくおねがいします",
-                "ごめんなさい",
-                "いただきます"
+                "すみません、駅は どこですか",
+                "駅に 行きましょう",
+                "駅は ここでした"
               ],
               "correct": 0,
-              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
-              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+              "transcript": "状況：道を 尋ねます。\n質問：何と言いますか。\n1. すみません、駅は どこですか\n2. 駅に 行きましょう\n3. 駅は ここでした",
+              "explanation": "Asking directions:「すみません、駅はどこですか」."
             },
             {
               "id": "n5-e6-l-15",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
-              "image": "/images/japanese/listening/n5/m3_q2.png",
-              "question": "15. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "image": "/images/japanese/listening/n5_2018/m3_q2.png",
+              "question": "15. プレゼントを 渡します。何と言いますか。（矢印の人）",
               "options": [
-                "よろしくおねがいします",
-                "ごめんなさい",
-                "いただきます"
+                "どうぞ",
+                "ごちそうさまでした",
+                "おめでとう"
               ],
               "correct": 0,
-              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
-              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+              "transcript": "状況：プレゼントを 渡します。\n質問：何と言いますか。\n1. どうぞ\n2. ごちそうさまでした\n3. おめでとう",
+              "explanation": "Handing over gift:「どうぞ」."
             },
             {
               "id": "n5-e6-l-16",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
-              "image": "/images/japanese/listening/n5/m3_q3.png",
-              "question": "16. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "image": "/images/japanese/listening/n5_2018/m3_q3.png",
+              "question": "16. 足を踏んでしまいました。何と言いますか。（矢印の人）",
               "options": [
-                "よろしくおねがいします",
-                "ごめんなさい",
-                "いただきます"
+                "すみません！",
+                "どういたしまして",
+                "おかげさまで"
               ],
               "correct": 0,
-              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
-              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+              "transcript": "状況：謝ります。\n質問：何と言いますか。\n1. すみません！\n2. どういたしまして\n3. おかげさまで",
+              "explanation": "Apologizing:「すみません！」."
             },
             {
               "id": "n5-e6-l-17",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
-              "image": "/images/japanese/listening/n5/m3_q4.png",
-              "question": "17. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "image": "/images/japanese/listening/n5_2018/m3_q4.png",
+              "question": "17. 食事を 終えました。何と言いますか。（矢印の人）",
               "options": [
-                "よろしくおねがいします",
-                "ごめんなさい",
-                "いただきます"
+                "ごちそうさまでした",
+                "いただきます",
+                "お邪魔しました"
               ],
               "correct": 0,
-              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
-              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+              "transcript": "状況：食事が 終わりました。\n質問：何と言いますか。\n1. ごちそうさまでした\n2. いただきます\n3. お邪魔しました",
+              "explanation": "After meal:「ごちそうさまでした」."
             },
             {
               "id": "n5-e6-l-18",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
-              "image": "/images/japanese/listening/n5/m3_q5.png",
-              "question": "18. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "image": "/images/japanese/listening/n5_2018/m3_q5.png",
+              "question": "18. 駅で 友達と 別れます。何と言いますか。（矢印の人）",
               "options": [
-                "よろしくおねがいします",
-                "ごめんなさい",
-                "いただきます"
+                "じゃ、また 明日！",
+                "ただいま",
+                "はじめまして"
               ],
               "correct": 0,
-              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
-              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+              "transcript": "状況：別れの 挨拶を します。\n質問：何と言いますか。\n1. じゃ、また 明日！\n2. ただいま\n3. はじめまして",
+              "explanation": "Parting:「じゃ、また明日！」."
             },
             {
               "id": "n5-e6-l-19",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q4.mp3",
-              "question": "19. 「お元気ですか。」",
+              "question": "19. 「今、お時間ありますか。」",
               "options": [
-                "はい、元気です。",
-                "いいえ、元気です。",
+                "はい、大丈夫ですよ。",
+                "いいえ、時間です。",
                 "どういたしまして。"
               ],
               "correct": 0,
-              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
-              "explanation": "Natural daily conversation response:「はい、元気です。」"
+              "transcript": "発話：「今、お時間ありますか。」\n1. はい、大丈夫ですよ。\n2. いいえ、時間です。\n3. どういたしまして。",
+              "explanation": "Available:「はい、大丈夫ですよ。」"
             },
             {
               "id": "n5-e6-l-20",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q4.mp3",
-              "question": "20. 「お元気ですか。」",
+              "question": "20. 「いいお天気ですね。」",
               "options": [
-                "はい、元気です。",
-                "いいえ、元気です。",
-                "どういたしまして。"
+                "そうですね、気持ちいいですね。",
+                "いいえ、雨です。",
+                "お大事に。"
               ],
               "correct": 0,
-              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
-              "explanation": "Natural daily conversation response:「はい、元気です。」"
+              "transcript": "発話：「いいお天気ですね。」\n1. そうですね、気持ちいいですね。\n2. いいえ、雨です。\n3. お大事に。",
+              "explanation": "Agreeing on weather:「そうですね、気持ちいいですね。」"
             },
             {
               "id": "n5-e6-l-21",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q4.mp3",
-              "question": "21. 「お元気ですか。」",
+              "question": "21. 「ここで写真を撮ってもいいですか。」",
               "options": [
-                "はい、元気です。",
-                "いいえ、元気です。",
-                "どういたしまして。"
+                "ええ、いいですよ。",
+                "はい、撮りました。",
+                "写真です。"
               ],
               "correct": 0,
-              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
-              "explanation": "Natural daily conversation response:「はい、元気です。」"
+              "transcript": "発話：「ここで写真を撮ってもいいですか。」\n1. ええ、いいですよ。\n2. はい、撮りました。\n3. 写真です。",
+              "explanation": "Granting permission:「ええ、いいですよ。」"
             },
             {
               "id": "n5-e6-l-22",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q4.mp3",
-              "question": "22. 「お元気ですか。」",
+              "question": "22. 「日本語がお上手ですね。」",
               "options": [
-                "はい、元気です。",
-                "いいえ、元気です。",
+                "いいえ、まだまだです。",
+                "はい、上手でした。",
                 "どういたしまして。"
               ],
               "correct": 0,
-              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
-              "explanation": "Natural daily conversation response:「はい、元気です。」"
+              "transcript": "発話：「日本語がお上手ですね。」\n1. いいえ、まだまだです。\n2. はい、上手でした。\n3. どういたしまして。",
+              "explanation": "Humble response:「いいえ、まだまだです。」"
             },
             {
               "id": "n5-e6-l-23",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q4.mp3",
-              "question": "23. 「お元気ですか。」",
+              "question": "23. 「これは誰のカバンですか。」",
               "options": [
-                "はい、元気です。",
-                "いいえ、元気です。",
-                "どういたしまして。"
+                "私のです。",
+                "カバンです。",
+                "机の上です。"
               ],
               "correct": 0,
-              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
-              "explanation": "Natural daily conversation response:「はい、元気です。」"
+              "transcript": "発話：「これは誰のカバンですか。」\n1. 私のです。\n2. カバンです。\n3. 机の上です。",
+              "explanation": "Ownership:「私のです。」"
             },
             {
               "id": "n5-e6-l-24",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q4.mp3",
-              "question": "24. 「お元気ですか。」",
+              "question": "24. 「少し休みましょうか。」",
               "options": [
-                "はい、元気です。",
-                "いいえ、元気です。",
-                "どういたしまして。"
+                "はい、そうしましょう。",
+                "いいえ、休みました。",
+                "疲れました。"
               ],
               "correct": 0,
-              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
-              "explanation": "Natural daily conversation response:「はい、元気です。」"
+              "transcript": "発話：「少し休みましょうか。」\n1. はい、そうしましょう。\n2. いいえ、休みました。\n3. 疲れました。",
+              "explanation": "Taking a break:「はい、そうしましょう。」"
             }
           ]
         }
@@ -8331,361 +8331,361 @@ export const EXAM_PAPERS_CATALOG = {
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
               "image": "/images/japanese/listening/n5/m1_q1.png",
-              "question": "1. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "question": "1. 教室で 先生が 話しています。学生は 明日、何を 持って来ますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "鉛筆と消しゴム",
+                "辞書と教科書",
+                "消しゴムと辞書",
+                "教科書とノート"
               ],
-              "correct": 3,
-              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
-              "explanation": "Based on the dialogue guidelines, Option 4 matches the selected item."
+              "correct": 0,
+              "transcript": "女（先生）「明日は テストを しますから、鉛筆と 消しゴムを 忘れないでください。辞書は 使えません。」\n質問：学生は 明日、何を 持って来ますか。",
+              "explanation": "Brings pencil and eraser (鉛筆と消しゴム)."
             },
             {
               "id": "n5-e7-l-2",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
               "image": "/images/japanese/listening/n5/m1_q2.png",
-              "question": "2. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "question": "2. 駅で 男の人と 女の人が 話しています。二人は どの 電車に 乗りますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "10時15分の 急行",
+                "10時20分の 普通電車",
+                "10時30分の 特急",
+                "10時05分の 電車"
               ],
-              "correct": 0,
-              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
-              "explanation": "Based on the dialogue guidelines, Option 1 matches the selected item."
+              "correct": 1,
+              "transcript": "男「次の 急行は 10時15分だよ。」女「でも、急行は 目的の駅に 止まらないわ。10時20分の 普通電車に しよう。」\n質問：二人は どの 電車に 乗りますか。",
+              "explanation": "Takes 10:20 local train (10時20分の普通電車)."
             },
             {
               "id": "n5-e7-l-3",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
               "image": "/images/japanese/listening/n5/m1_q3.png",
-              "question": "3. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "question": "3. カフェで 男の人と 店員が 話しています。男の人は 何を 注文しますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "ホットコーヒー",
+                "アイスコーヒー",
+                "チーズケーキ",
+                "オレンジジュース"
               ],
-              "correct": 1,
-              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
-              "explanation": "Based on the dialogue guidelines, Option 2 matches the selected item."
+              "correct": 0,
+              "transcript": "男「ホットコーヒーと チーズケーキを ください。」店員「ケーキは 売り切れです。」男「じゃあ、ホットコーヒーだけ お願いします。」\n質問：男の人は 何を 注文しますか。",
+              "explanation": "Orders hot coffee only (ホットコーヒー)."
             },
             {
               "id": "n5-e7-l-4",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
               "image": "/images/japanese/listening/n5/m1_q4.png",
-              "question": "4. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "question": "4. 家で 母と 息子が 話しています。男の子は 先に 何を しますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "手を 洗う",
+                "宿題を カバンに 入れる",
+                "ご飯を 食べる",
+                "テレビを 見る"
               ],
-              "correct": 2,
-              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
-              "explanation": "Based on the dialogue guidelines, Option 3 matches the selected item."
+              "correct": 0,
+              "transcript": "母「ご飯の 前に 手を 洗ってね。」男の子「うん、宿題を カバンに 入れてから 洗うよ。」母「先に 手を 洗いなさい。」\n質問：男の子は 先に 何を しますか。",
+              "explanation": "Washes hands first (手を洗う)."
             },
             {
               "id": "n5-e7-l-5",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
               "image": "/images/japanese/listening/n5/m1_q5.png",
-              "question": "5. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "question": "5. 図書館で 女の人と 係員が 話しています。女の人は 本を 何冊 借りますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "3冊",
+                "4冊",
+                "1冊",
+                "2冊"
               ],
-              "correct": 3,
-              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
-              "explanation": "Based on the dialogue guidelines, Option 4 matches the selected item."
+              "correct": 0,
+              "transcript": "女「この 4冊を 借りたいです。」係員「貸出は 3冊までです。」女「では、この 3冊に します。」\n質問：女の人は 本を 何冊 借りますか。",
+              "explanation": "Borrows 3 books (3冊)."
             },
             {
               "id": "n5-e7-l-6",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
               "image": "/images/japanese/listening/n5/m1_q6.png",
-              "question": "6. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "question": "6. 店で 男の人と 女の人が 靴を 見ています。女の人は どの 靴を 買いますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "茶色い靴",
+                "黒い靴",
+                "白い靴",
+                "青い靴"
               ],
               "correct": 0,
-              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
-              "explanation": "Based on the dialogue guidelines, Option 1 matches the selected item."
+              "transcript": "女「黒い靴と 茶色い靴、どっちが いい？」男「黒い方が スーツに 合うよ。」女「でも 茶色い方が 歩きやすそう。茶色い方に するわ。」\n質問：女の人は どの 靴を 買いますか。",
+              "explanation": "Selects brown shoes (茶色い靴)."
             },
             {
               "id": "n5-e7-l-7",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
               "image": "/images/japanese/listening/n5/m1_q7.png",
-              "question": "7. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "question": "7. 留学生と 友達が 話しています。男の人は これから どこへ 行きますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "郵便局",
+                "カフェ",
+                "図書館",
+                "食堂"
               ],
-              "correct": 1,
-              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
-              "explanation": "Based on the dialogue guidelines, Option 2 matches the selected item."
+              "correct": 0,
+              "transcript": "女「カフェに 行かない？」男「郵便局で 切手を 買ってから 行くよ。」\n質問：男の人は これから どこへ 行きますか。",
+              "explanation": "Goes to the post office first (郵便局)."
             },
             {
               "id": "n5-e7-l-8",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-1-mp3.mp3",
-              "question": "8. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "question": "8. 男の人と 女の人が 話しています。美術館は 何曜日に 休みですか。",
               "options": [
-                "1時",
-                "2時",
-                "3時",
-                "4時"
+                "火曜日",
+                "月曜日",
+                "水曜日",
+                "日曜日"
               ],
-              "correct": 3,
-              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
-              "explanation": "Listening point comprehension: meeting time agreement."
+              "correct": 0,
+              "transcript": "男「明日、美術館に 行かない？」女「明日は 火曜日だから 休館日よ。水曜日に しよう。」\n質問：美術館は 何曜日に 休みですか。",
+              "explanation": "Closed on Tuesdays (火曜日)."
             },
             {
               "id": "n5-e7-l-9",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-1-mp3.mp3",
-              "question": "9. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "question": "9. 女の人と 男の人が 話しています。男の人は どうして 自転車で 来ましたか。",
               "options": [
-                "1時",
-                "2時",
-                "3時",
-                "4時"
+                "天気が良く、運動になるから",
+                "電車が 遅れたから",
+                "お金が なかったから",
+                "車が 壊れたから"
               ],
               "correct": 0,
-              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
-              "explanation": "Listening point comprehension: meeting time agreement."
+              "transcript": "女「今日は 自転車なのね。」男「天気が 良かったし、運動にも なるからね。」\n質問：男の人は どうして 自転車で 来ましたか。",
+              "explanation": "Nice weather and good exercise (運動になるから)."
             },
             {
               "id": "n5-e7-l-10",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-1-mp3.mp3",
-              "question": "10. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "question": "10. 男の人と 女の人が 話しています。男の人は どこに 傘を 忘れましたか。",
               "options": [
-                "1時",
-                "2時",
-                "3時",
-                "4時"
+                "レストランの 傘立て",
+                "電車の中",
+                "駅の ホーム",
+                "自分の 部屋"
               ],
-              "correct": 1,
-              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
-              "explanation": "Listening point comprehension: meeting time agreement."
+              "correct": 0,
+              "transcript": "男「傘が ないんだ。電車の中に 忘れたかな。」女「さっきの レストランの 傘立てに 置いたままじゃない？」男「あ、そうだ！」\n質問：男の人は どこに 傘を 忘れましたか。",
+              "explanation": "Forgot umbrella at restaurant (レストランの傘立て)."
             },
             {
               "id": "n5-e7-l-11",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-1-mp3.mp3",
-              "question": "11. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "question": "11. 女の人と 男の人が 時計を 見ています。この 時計は 誰から もらいましたか。",
               "options": [
-                "1時",
-                "2時",
-                "3時",
-                "4時"
+                "お父さん",
+                "お母さん",
+                "友達",
+                "先生"
               ],
-              "correct": 2,
-              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
-              "explanation": "Listening point comprehension: meeting time agreement."
+              "correct": 0,
+              "transcript": "女「素敵な 時計ね。」男「去年の 誕生日に 父から もらったんだ。」\n質問：時計は 誰から もらいましたか。",
+              "explanation": "Received from father (お父さん)."
             },
             {
               "id": "n5-e7-l-12",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-1-mp3.mp3",
-              "question": "12. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "question": "12. 男の人と 女の人が 話しています。京都まで 新幹線で 何時間 かかりますか。",
               "options": [
-                "1時",
-                "2時",
-                "3時",
-                "4時"
+                "約2時間",
+                "約1時間",
+                "約4時間",
+                "約30分"
               ],
-              "correct": 3,
-              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
-              "explanation": "Listening point comprehension: meeting time agreement."
+              "correct": 0,
+              "transcript": "男「東京から 京都まで 新幹線で どのくらい？」女「だいたい 2時間ちょっとよ。」\n質問：新幹線で どのくらい かかりますか。",
+              "explanation": "Takes approx 2 hours (約2時間)."
             },
             {
               "id": "n5-e7-l-13",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-1-mp3.mp3",
-              "question": "13. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "question": "13. スーパーの 案内放送が 流れています。スーパーは 何時に 閉まりますか。",
               "options": [
-                "1時",
-                "2時",
-                "3時",
-                "4時"
+                "夜9時",
+                "夜8時",
+                "夜10時",
+                "夕方6時"
               ],
               "correct": 0,
-              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
-              "explanation": "Listening point comprehension: meeting time agreement."
+              "transcript": "アナウンス「本日の 営業は 夜9時までと なっております。」\n質問：スーパーは 何時に 閉まりますか。",
+              "explanation": "Closes at 9:00 PM (夜9時)."
             },
             {
               "id": "n5-e7-l-14",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
               "image": "/images/japanese/listening/n5/m3_q1.png",
-              "question": "14. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "question": "14. 朝、近所の人に 会いました。何と言いますか。（矢印の人）",
               "options": [
-                "よろしくおねがいします",
-                "ごめんなさい",
-                "いただきます"
+                "おはようございます",
+                "こんばんは",
+                "さようなら"
               ],
               "correct": 0,
-              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
-              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+              "transcript": "状況：朝の 挨拶を します。\n質問：何と言いますか。\n1. おはようございます\n2. こんばんは\n3. さようなら",
+              "explanation": "Morning greeting:「おはようございます」."
             },
             {
               "id": "n5-e7-l-15",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
               "image": "/images/japanese/listening/n5/m3_q2.png",
-              "question": "15. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "question": "15. 友達の ペンを 借りたいです。何と言いますか。（矢印の人）",
               "options": [
-                "よろしくおねがいします",
-                "ごめんなさい",
-                "いただきます"
+                "ペンを 貸して ください",
+                "ペンを あげます",
+                "ペンを 買いました"
               ],
               "correct": 0,
-              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
-              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+              "transcript": "状況：ペンを 借ります。\n質問：何と言いますか。\n1. ペンを 貸して ください\n2. ペンを あげます\n3. ペンを 買いました",
+              "explanation": "Asking to borrow:「ペンを貸してください」."
             },
             {
               "id": "n5-e7-l-16",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
               "image": "/images/japanese/listening/n5/m3_q3.png",
-              "question": "16. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "question": "16. 先生の 部屋に 入ります。何と言いますか。（矢印の人）",
               "options": [
-                "よろしくおねがいします",
+                "失礼します",
                 "ごめんなさい",
-                "いただきます"
+                "いってきます"
               ],
               "correct": 0,
-              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
-              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+              "transcript": "状況：部屋に 入ります。\n質問：何と言いますか。\n1. 失礼します\n2. ごめんなさい\n3. いってきます",
+              "explanation": "Entering room:「失礼します」."
             },
             {
               "id": "n5-e7-l-17",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
               "image": "/images/japanese/listening/n5/m3_q4.png",
-              "question": "17. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "question": "17. 食事を 始める 前です。何と言いますか。（矢印の人）",
               "options": [
-                "よろしくおねがいします",
-                "ごめんなさい",
-                "いただきます"
+                "いただきます",
+                "ごちそうさまでした",
+                "いってらっしゃい"
               ],
               "correct": 0,
-              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
-              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+              "transcript": "状況：ご飯を 食べます。\n質問：何と言いますか。\n1. いただきます\n2. ごちそうさまでした\n3. いってらっしゃい",
+              "explanation": "Before meal:「いただきます」."
             },
             {
               "id": "n5-e7-l-18",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
               "image": "/images/japanese/listening/n5/m3_q5.png",
-              "question": "18. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "question": "18. 会社から 先に 帰ります。何と言いますか。（矢印の人）",
               "options": [
-                "よろしくおねがいします",
-                "ごめんなさい",
-                "いただきます"
+                "お先に 失礼します",
+                "おかえりなさい",
+                "お大事に"
               ],
               "correct": 0,
-              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
-              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+              "transcript": "状況：先に 帰ります。\n質問：何と言いますか。\n1. お先に 失礼します\n2. おかえりなさい\n3. お大事に",
+              "explanation": "Leaving early:「お先に失礼します」."
             },
             {
               "id": "n5-e7-l-19",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5/captured-media-3-mp3.mp3",
-              "question": "19. 「お元気ですか。」",
+              "question": "19. 「お茶を どうぞ。」",
               "options": [
-                "はい、元気です。",
-                "いいえ、元気です。",
-                "どういたしまして。"
+                "いただきます。",
+                "いってらっしゃい。",
+                "ごめんなさい。"
               ],
               "correct": 0,
-              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
-              "explanation": "Natural daily conversation response:「はい、元気です。」"
+              "transcript": "発話：「お茶を どうぞ。」\n1. いただきます。\n2. いってらっしゃい。\n3. ごめんなさい。",
+              "explanation": "Accepting tea:「いただきます。」"
             },
             {
               "id": "n5-e7-l-20",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5/captured-media-3-mp3.mp3",
-              "question": "20. 「お元気ですか。」",
+              "question": "20. 「この 席、空いていますか。」",
               "options": [
-                "はい、元気です。",
+                "はい、どうぞ。",
                 "いいえ、元気です。",
-                "どういたしまして。"
+                "こちらこそ。"
               ],
               "correct": 0,
-              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
-              "explanation": "Natural daily conversation response:「はい、元気です。」"
+              "transcript": "発話：「この 席、空いていますか。」\n1. はい、どうぞ。\n2. いいえ、元気です。\n3. こちらこそ。",
+              "explanation": "Seat available:「はい、どうぞ。」"
             },
             {
               "id": "n5-e7-l-21",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5/captured-media-3-mp3.mp3",
-              "question": "21. 「お元気ですか。」",
+              "question": "21. 「昨日の テストは どうでしたか。」",
               "options": [
-                "はい、元気です。",
-                "いいえ、元気です。",
-                "どういたしまして。"
+                "少し 難しかったです。",
+                "明日 あります。",
+                "いいえ、違います。"
               ],
               "correct": 0,
-              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
-              "explanation": "Natural daily conversation response:「はい、元気です。」"
+              "transcript": "発話：「昨日の テストは どうでしたか。」\n1. 少し 難しかったです。\n2. 明日 あります。\n3. いいえ、違います。",
+              "explanation": "Difficulty review:「少し難しかったです。」"
             },
             {
               "id": "n5-e7-l-22",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5/captured-media-3-mp3.mp3",
-              "question": "22. 「お元気ですか。」",
+              "question": "22. 「お国は どちらですか。」",
               "options": [
-                "はい、元気です。",
-                "いいえ、元気です。",
-                "どういたしまして。"
+                "アメリカです。",
+                "東京です。",
+                "学生です。"
               ],
               "correct": 0,
-              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
-              "explanation": "Natural daily conversation response:「はい、元気です。」"
+              "transcript": "発話：「お国は どちらですか。」\n1. アメリカです。\n2. 東京です。\n3. 学生です。",
+              "explanation": "Home country:「アメリカです。」"
             },
             {
               "id": "n5-e7-l-23",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5/captured-media-3-mp3.mp3",
-              "question": "23. 「お元気ですか。」",
+              "question": "23. 「一緒にお昼ご飯を食べませんか。」",
               "options": [
-                "はい、元気です。",
-                "いいえ、元気です。",
-                "どういたしまして。"
+                "ええ、行きましょう。",
+                "ごちそうさまでした。",
+                "いいえ、食べました。"
               ],
               "correct": 0,
-              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
-              "explanation": "Natural daily conversation response:「はい、元気です。」"
+              "transcript": "発話：「一緒にお昼ご飯を食べませんか。」\n1. ええ、行きましょう。\n2. ごちそうさまでした。\n3. いいえ、食べました。",
+              "explanation": "Accepting lunch invitation:「ええ、行きましょう。」"
             },
             {
               "id": "n5-e7-l-24",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5/captured-media-3-mp3.mp3",
-              "question": "24. 「お元気ですか。」",
+              "question": "24. 「宿題は もう 終わりましたか。」",
               "options": [
-                "はい、元気です。",
-                "いいえ、元気です。",
-                "どういたしまして。"
+                "はい、終わりました。",
+                "いいえ、始めました。",
+                "教室に あります。"
               ],
               "correct": 0,
-              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
-              "explanation": "Natural daily conversation response:「はい、元気です。」"
+              "transcript": "発話：「宿題は もう 終わりましたか。」\n1. はい、終わりました。\n2. いいえ、始めました。\n3. 教室に あります。",
+              "explanation": "Finished homework:「はい、終わりました。」"
             }
           ]
         }
@@ -9571,362 +9571,362 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e8-l-1",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
-              "image": "/images/japanese/listening/n5/m1_q1.png",
-              "question": "1. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "image": "/images/japanese/listening/n5_2018/m1_q1.png",
+              "question": "1. 会社で 男の人と 女の人が 話しています。男の人は コピーを 何枚 しますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "15枚",
+                "10枚",
+                "12枚",
+                "20枚"
               ],
               "correct": 0,
-              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
-              "explanation": "Based on the dialogue guidelines, Option 1 matches the selected item."
+              "transcript": "女「会議の 資料、10枚 コピーして。」男「参加者は 12人ですが、足りますか。」女「あ、そうね。じゃあ 予備も 入れて 15枚 お願い。」\n質問：男の人は コピーを 何枚 しますか。",
+              "explanation": "Makes 15 copies (15枚)."
             },
             {
               "id": "n5-e8-l-2",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
-              "image": "/images/japanese/listening/n5/m1_q2.png",
-              "question": "2. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "image": "/images/japanese/listening/n5_2018/m1_q2.png",
+              "question": "2. 八百屋で 女の人と 店員が 話しています。女の人は どの リンゴを 買いますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "1個150円の リンゴを 2個",
+                "3個400円の リンゴを 1袋",
+                "1個150円の リンゴを 1個",
+                "3個400円の リンゴを 2袋"
               ],
-              "correct": 1,
-              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
-              "explanation": "Based on the dialogue guidelines, Option 2 matches the selected item."
+              "correct": 0,
+              "transcript": "女「この 1個150円の リンゴと、3個400円の リンゴは どこが 違いますか。」店員「150円の 方が 大きくて 甘いですよ。」女「じゃあ、大きい方を 2つ ください。」\n質問：女の人は どの リンゴを 買いますか。",
+              "explanation": "Buys two 150-yen apples (1個150円のリンゴを2個)."
             },
             {
               "id": "n5-e8-l-3",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
-              "image": "/images/japanese/listening/n5/m1_q3.png",
-              "question": "3. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "image": "/images/japanese/listening/n5_2018/m1_q3.png",
+              "question": "3. 病院で 医者と 患者が 話しています。患者は 薬を いつ 飲みますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "朝と晩の 食後",
+                "毎食後（朝・昼・晩）",
+                "朝と昼の 食前",
+                "寝る前"
               ],
-              "correct": 2,
-              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
-              "explanation": "Based on the dialogue guidelines, Option 3 matches the selected item."
+              "correct": 0,
+              "transcript": "医者「この 薬は 朝と 晩の 食後に 飲んで ください。昼は 飲まなくて いいです。」\n質問：患者は 薬を いつ 飲みますか。",
+              "explanation": "Takes medicine after breakfast and dinner (朝と晩の食後)."
             },
             {
               "id": "n5-e8-l-4",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
-              "image": "/images/japanese/listening/n5/m1_q4.png",
-              "question": "4. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "image": "/images/japanese/listening/n5_2018/m1_q4.png",
+              "question": "4. 男の人と 女の人が 話しています。二人は どこで 待ち合わせますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "東口の 本屋の前",
+                "駅の 改札口",
+                "西口の カフェ",
+                "南口の バス停"
               ],
-              "correct": 3,
-              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
-              "explanation": "Based on the dialogue guidelines, Option 4 matches the selected item."
+              "correct": 0,
+              "transcript": "男「駅の 改札口で 待ってるよ。」女「改札口は 混むから、東口の 本屋の 前に しない？」男「いいね、そうしよう。」\n質問：二人は どこで 待ち合わせますか。",
+              "explanation": "Meets in front of East exit bookstore (東口の本屋の前)."
             },
             {
               "id": "n5-e8-l-5",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
-              "image": "/images/japanese/listening/n5/m1_q5.png",
-              "question": "5. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "image": "/images/japanese/listening/n5_2018/m1_q5.png",
+              "question": "5. 学校で 先生が 話しています。学生は 月曜日に 何を 出しますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "作文",
+                "日記",
+                "教科書",
+                "漢字ノート"
               ],
               "correct": 0,
-              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
-              "explanation": "Based on the dialogue guidelines, Option 1 matches the selected item."
+              "transcript": "先生「月曜日に 作文を 出して ください。日記は 水曜日で いいです。」\n質問：学生は 月曜日に 何を 出しますか。",
+              "explanation": "Submits essay on Monday (作文)."
             },
             {
               "id": "n5-e8-l-6",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
-              "image": "/images/japanese/listening/n5/m1_q6.png",
-              "question": "6. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "image": "/images/japanese/listening/n5_2018/m1_q6.png",
+              "question": "6. ホテルで 客と フロントが 話しています。朝食は どこで 食べますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "2階の レストラン",
+                "自分の 部屋",
+                "1階の ロビー",
+                "屋上の テラス"
               ],
-              "correct": 1,
-              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
-              "explanation": "Based on the dialogue guidelines, Option 2 matches the selected item."
+              "correct": 0,
+              "transcript": "客「朝食は 部屋で 食べられますか。」フロント「朝食は 2階の レストランに なっております。」\n質問：朝食は どこで 食べますか。",
+              "explanation": "Breakfast at 2F restaurant (2階のレストラン)."
             },
             {
               "id": "n5-e8-l-7",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
-              "image": "/images/japanese/listening/n5/m1_q7.png",
-              "question": "7. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "image": "/images/japanese/listening/n5_2018/m1_q7.png",
+              "question": "7. 男の人と 女の人が 話しています。男の人は 何時に 家を 出ますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "2時15分",
+                "2時30分",
+                "2時45分",
+                "3時00分"
               ],
-              "correct": 2,
-              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
-              "explanation": "Based on the dialogue guidelines, Option 3 matches the selected item."
+              "correct": 0,
+              "transcript": "女「映画は 3時よ。駅まで 30分かかるから 2時半には 出てね。」男「切符を 買うから、もう 15分早く 2時15分に 出るよ。」\n質問：男の人は 何時に 家を 出ますか。",
+              "explanation": "Leaves at 2:15 PM (2時15分)."
             },
             {
               "id": "n5-e8-l-8",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q2.mp3",
-              "question": "8. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "question": "8. 男の人と 女の人が 話しています。田中さんは どうして パーティーに 来られませんか。",
               "options": [
-                "1時",
-                "2時",
-                "3時",
-                "4時"
+                "風邪を 引いて 熱が あるから",
+                "仕事が 忙しいから",
+                "旅行に 行ったから",
+                "忘れていたから"
               ],
               "correct": 0,
-              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
-              "explanation": "Listening point comprehension: meeting time agreement."
+              "transcript": "男「田中さん、来ないの？」女「風邪を 引いて 熱が あるそうなの。」\n質問：田中さんは どうして 来られませんか。",
+              "explanation": "Has a fever (風邪を引いて熱があるから)."
             },
             {
               "id": "n5-e8-l-9",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q2.mp3",
-              "question": "9. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "question": "9. 女の人と 男の人が 話しています。電車が 遅れた 理由は何ですか。",
               "options": [
-                "1時",
-                "2時",
-                "3時",
-                "4時"
+                "大雨と 強風のため",
+                "事故の ため",
+                "電車の 故障のため",
+                "雪の ため"
               ],
-              "correct": 1,
-              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
-              "explanation": "Listening point comprehension: meeting time agreement."
+              "correct": 0,
+              "transcript": "女「電車が 止まっていたね。」男「強い 雨と 風の せいだったみたいだよ。」\n質問：電車が 遅れた 理由は何ですか。",
+              "explanation": "Due to heavy rain and wind (大雨と強風のため)."
             },
             {
               "id": "n5-e8-l-10",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q2.mp3",
-              "question": "10. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "question": "10. 男の人と 女の人が 話しています。女の人は どの 季節が 一番 好きですか。",
               "options": [
-                "1時",
-                "2時",
-                "3時",
-                "4時"
+                "春",
+                "夏",
+                "秋",
+                "冬"
               ],
-              "correct": 2,
-              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
-              "explanation": "Listening point comprehension: meeting time agreement."
+              "correct": 0,
+              "transcript": "男「どの 季節が 好き？」女「春は 桜が 綺麗だから 一番 好きよ。」\n質問：女の人は どの 季節が 一番 好きですか。",
+              "explanation": "Prefers Spring (春)."
             },
             {
               "id": "n5-e8-l-11",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q2.mp3",
-              "question": "11. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "question": "11. バス停で 男の人と 運転手が 話しています。動物園へ 行く バスは 何番ですか。",
               "options": [
-                "1時",
-                "2時",
-                "3時",
-                "4時"
+                "5番の バス",
+                "3番の バス",
+                "1番の バス",
+                "7番の バス"
               ],
-              "correct": 3,
-              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
-              "explanation": "Listening point comprehension: meeting time agreement."
+              "correct": 0,
+              "transcript": "男「動物園へ 行きたいのですが。」運転手「動物園へは 5番の バスに 乗って ください。」\n質問：動物園へ 行く バスは 何番ですか。",
+              "explanation": "Takes bus number 5 (5番のバス)."
             },
             {
               "id": "n5-e8-l-12",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q2.mp3",
-              "question": "12. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "question": "12. 女の人と 男の人が 話しています。誕生日の プレゼントは何に しましたか。",
               "options": [
-                "1時",
-                "2時",
-                "3時",
-                "4時"
+                "本",
+                "花",
+                "ケーキ",
+                "時計"
               ],
               "correct": 0,
-              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
-              "explanation": "Listening point comprehension: meeting time agreement."
+              "transcript": "女「妹の 誕生日に 何を あげたの？」男「花と 迷ったけど、好きな 本を あげたよ。」\n質問：プレゼントは何ですか。",
+              "explanation": "Gave a book (本)."
             },
             {
               "id": "n5-e8-l-13",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q2.mp3",
-              "question": "13. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "question": "13. 天気予報が 流れています。明日の 午後の 天気は どうなりますか。",
               "options": [
-                "1時",
-                "2時",
-                "3時",
-                "4時"
+                "雨が 降る",
+                "一日中 晴れる",
+                "雪が 降る",
+                "風だけ 吹く"
               ],
-              "correct": 1,
-              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
-              "explanation": "Listening point comprehension: meeting time agreement."
+              "correct": 0,
+              "transcript": "アナウンス「明日は 朝は 晴れますが、午後からは 雨が 降るでしょう。」\n質問：明日の 午後は どうなりますか。",
+              "explanation": "Rains in the afternoon (雨が降る)."
             },
             {
               "id": "n5-e8-l-14",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
-              "image": "/images/japanese/listening/n5/m3_q1.png",
-              "question": "14. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "image": "/images/japanese/listening/n5_2018/m3_q1.png",
+              "question": "14. 道を 尋ねたいです。何と言いますか。（矢印の人）",
               "options": [
-                "よろしくおねがいします",
-                "ごめんなさい",
-                "いただきます"
+                "すみません、駅は どこですか",
+                "駅に 行きましょう",
+                "駅は ここでした"
               ],
               "correct": 0,
-              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
-              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+              "transcript": "状況：道を 尋ねます。\n質問：何と言いますか。\n1. すみません、駅は どこですか\n2. 駅に 行きましょう\n3. 駅は ここでした",
+              "explanation": "Asking directions:「すみません、駅はどこですか」."
             },
             {
               "id": "n5-e8-l-15",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
-              "image": "/images/japanese/listening/n5/m3_q2.png",
-              "question": "15. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "image": "/images/japanese/listening/n5_2018/m3_q2.png",
+              "question": "15. プレゼントを 渡します。何と言いますか。（矢印の人）",
               "options": [
-                "よろしくおねがいします",
-                "ごめんなさい",
-                "いただきます"
+                "どうぞ",
+                "ごちそうさまでした",
+                "おめでとう"
               ],
               "correct": 0,
-              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
-              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+              "transcript": "状況：プレゼントを 渡します。\n質問：何と言いますか。\n1. どうぞ\n2. ごちそうさまでした\n3. おめでとう",
+              "explanation": "Handing over gift:「どうぞ」."
             },
             {
               "id": "n5-e8-l-16",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
-              "image": "/images/japanese/listening/n5/m3_q3.png",
-              "question": "16. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "image": "/images/japanese/listening/n5_2018/m3_q3.png",
+              "question": "16. 足を踏んでしまいました。何と言いますか。（矢印の人）",
               "options": [
-                "よろしくおねがいします",
-                "ごめんなさい",
-                "いただきます"
+                "すみません！",
+                "どういたしまして",
+                "おかげさまで"
               ],
               "correct": 0,
-              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
-              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+              "transcript": "状況：謝ります。\n質問：何と言いますか。\n1. すみません！\n2. どういたしまして\n3. おかげさまで",
+              "explanation": "Apologizing:「すみません！」."
             },
             {
               "id": "n5-e8-l-17",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
-              "image": "/images/japanese/listening/n5/m3_q4.png",
-              "question": "17. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "image": "/images/japanese/listening/n5_2018/m3_q4.png",
+              "question": "17. 食事を 終えました。何と言いますか。（矢印の人）",
               "options": [
-                "よろしくおねがいします",
-                "ごめんなさい",
-                "いただきます"
+                "ごちそうさまでした",
+                "いただきます",
+                "お邪魔しました"
               ],
               "correct": 0,
-              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
-              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+              "transcript": "状況：食事が 終わりました。\n質問：何と言いますか。\n1. ごちそうさまでした\n2. いただきます\n3. お邪魔しました",
+              "explanation": "After meal:「ごちそうさまでした」."
             },
             {
               "id": "n5-e8-l-18",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
-              "image": "/images/japanese/listening/n5/m3_q5.png",
-              "question": "18. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "image": "/images/japanese/listening/n5_2018/m3_q5.png",
+              "question": "18. 駅で 友達と 別れます。何と言いますか。（矢印の人）",
               "options": [
-                "よろしくおねがいします",
-                "ごめんなさい",
-                "いただきます"
+                "じゃ、また 明日！",
+                "ただいま",
+                "はじめまして"
               ],
               "correct": 0,
-              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
-              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+              "transcript": "状況：別れの 挨拶を します。\n質問：何と言いますか。\n1. じゃ、また 明日！\n2. ただいま\n3. はじめまして",
+              "explanation": "Parting:「じゃ、また明日！」."
             },
             {
               "id": "n5-e8-l-19",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q4.mp3",
-              "question": "19. 「お元気ですか。」",
+              "question": "19. 「今、お時間ありますか。」",
               "options": [
-                "はい、元気です。",
-                "いいえ、元気です。",
+                "はい、大丈夫ですよ。",
+                "いいえ、時間です。",
                 "どういたしまして。"
               ],
               "correct": 0,
-              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
-              "explanation": "Natural daily conversation response:「はい、元気です。」"
+              "transcript": "発話：「今、お時間ありますか。」\n1. はい、大丈夫ですよ。\n2. いいえ、時間です。\n3. どういたしまして。",
+              "explanation": "Available:「はい、大丈夫ですよ。」"
             },
             {
               "id": "n5-e8-l-20",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q4.mp3",
-              "question": "20. 「お元気ですか。」",
+              "question": "20. 「いいお天気ですね。」",
               "options": [
-                "はい、元気です。",
-                "いいえ、元気です。",
-                "どういたしまして。"
+                "そうですね、気持ちいいですね。",
+                "いいえ、雨です。",
+                "お大事に。"
               ],
               "correct": 0,
-              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
-              "explanation": "Natural daily conversation response:「はい、元気です。」"
+              "transcript": "発話：「いいお天気ですね。」\n1. そうですね、気持ちいいですね。\n2. いいえ、雨です。\n3. お大事に。",
+              "explanation": "Agreeing on weather:「そうですね、気持ちいいですね。」"
             },
             {
               "id": "n5-e8-l-21",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q4.mp3",
-              "question": "21. 「お元気ですか。」",
+              "question": "21. 「ここで写真を撮ってもいいですか。」",
               "options": [
-                "はい、元気です。",
-                "いいえ、元気です。",
-                "どういたしまして。"
+                "ええ、いいですよ。",
+                "はい、撮りました。",
+                "写真です。"
               ],
               "correct": 0,
-              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
-              "explanation": "Natural daily conversation response:「はい、元気です。」"
+              "transcript": "発話：「ここで写真を撮ってもいいですか。」\n1. ええ、いいですよ。\n2. はい、撮りました。\n3. 写真です。",
+              "explanation": "Granting permission:「ええ、いいですよ。」"
             },
             {
               "id": "n5-e8-l-22",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q4.mp3",
-              "question": "22. 「お元気ですか。」",
+              "question": "22. 「日本語がお上手ですね。」",
               "options": [
-                "はい、元気です。",
-                "いいえ、元気です。",
+                "いいえ、まだまだです。",
+                "はい、上手でした。",
                 "どういたしまして。"
               ],
               "correct": 0,
-              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
-              "explanation": "Natural daily conversation response:「はい、元気です。」"
+              "transcript": "発話：「日本語がお上手ですね。」\n1. いいえ、まだまだです。\n2. はい、上手でした。\n3. どういたしまして。",
+              "explanation": "Humble response:「いいえ、まだまだです。」"
             },
             {
               "id": "n5-e8-l-23",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q4.mp3",
-              "question": "23. 「お元気ですか。」",
+              "question": "23. 「これは誰のカバンですか。」",
               "options": [
-                "はい、元気です。",
-                "いいえ、元気です。",
-                "どういたしまして。"
+                "私のです。",
+                "カバンです。",
+                "机の上です。"
               ],
               "correct": 0,
-              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
-              "explanation": "Natural daily conversation response:「はい、元気です。」"
+              "transcript": "発話：「これは誰のカバンですか。」\n1. 私のです。\n2. カバンです。\n3. 机の上です。",
+              "explanation": "Ownership:「私のです。」"
             },
             {
               "id": "n5-e8-l-24",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q4.mp3",
-              "question": "24. 「お元気ですか。」",
+              "question": "24. 「少し休みましょうか。」",
               "options": [
-                "はい、元気です。",
-                "いいえ、元気です。",
-                "どういたしまして。"
+                "はい、そうしましょう。",
+                "いいえ、休みました。",
+                "疲れました。"
               ],
               "correct": 0,
-              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
-              "explanation": "Natural daily conversation response:「はい、元気です。」"
+              "transcript": "発話：「少し休みましょうか。」\n1. はい、そうしましょう。\n2. いいえ、休みました。\n3. 疲れました。",
+              "explanation": "Taking a break:「はい、そうしましょう。」"
             }
           ]
         }
@@ -10813,361 +10813,361 @@ export const EXAM_PAPERS_CATALOG = {
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
               "image": "/images/japanese/listening/n5/m1_q1.png",
-              "question": "1. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "question": "1. 教室で 先生が 話しています。学生は 明日、何を 持って来ますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "鉛筆と消しゴム",
+                "辞書と教科書",
+                "消しゴムと辞書",
+                "教科書とノート"
               ],
-              "correct": 1,
-              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
-              "explanation": "Based on the dialogue guidelines, Option 2 matches the selected item."
+              "correct": 0,
+              "transcript": "女（先生）「明日は テストを しますから、鉛筆と 消しゴムを 忘れないでください。辞書は 使えません。」\n質問：学生は 明日、何を 持って来ますか。",
+              "explanation": "Brings pencil and eraser (鉛筆と消しゴム)."
             },
             {
               "id": "n5-e9-l-2",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
               "image": "/images/japanese/listening/n5/m1_q2.png",
-              "question": "2. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "question": "2. 駅で 男の人と 女の人が 話しています。二人は どの 電車に 乗りますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "10時15分の 急行",
+                "10時20分の 普通電車",
+                "10時30分の 特急",
+                "10時05分の 電車"
               ],
-              "correct": 2,
-              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
-              "explanation": "Based on the dialogue guidelines, Option 3 matches the selected item."
+              "correct": 1,
+              "transcript": "男「次の 急行は 10時15分だよ。」女「でも、急行は 目的の駅に 止まらないわ。10時20分の 普通電車に しよう。」\n質問：二人は どの 電車に 乗りますか。",
+              "explanation": "Takes 10:20 local train (10時20分の普通電車)."
             },
             {
               "id": "n5-e9-l-3",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
               "image": "/images/japanese/listening/n5/m1_q3.png",
-              "question": "3. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "question": "3. カフェで 男の人と 店員が 話しています。男の人は 何を 注文しますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "ホットコーヒー",
+                "アイスコーヒー",
+                "チーズケーキ",
+                "オレンジジュース"
               ],
-              "correct": 3,
-              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
-              "explanation": "Based on the dialogue guidelines, Option 4 matches the selected item."
+              "correct": 0,
+              "transcript": "男「ホットコーヒーと チーズケーキを ください。」店員「ケーキは 売り切れです。」男「じゃあ、ホットコーヒーだけ お願いします。」\n質問：男の人は 何を 注文しますか。",
+              "explanation": "Orders hot coffee only (ホットコーヒー)."
             },
             {
               "id": "n5-e9-l-4",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
               "image": "/images/japanese/listening/n5/m1_q4.png",
-              "question": "4. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "question": "4. 家で 母と 息子が 話しています。男の子は 先に 何を しますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "手を 洗う",
+                "宿題を カバンに 入れる",
+                "ご飯を 食べる",
+                "テレビを 見る"
               ],
               "correct": 0,
-              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
-              "explanation": "Based on the dialogue guidelines, Option 1 matches the selected item."
+              "transcript": "母「ご飯の 前に 手を 洗ってね。」男の子「うん、宿題を カバンに 入れてから 洗うよ。」母「先に 手を 洗いなさい。」\n質問：男の子は 先に 何を しますか。",
+              "explanation": "Washes hands first (手を洗う)."
             },
             {
               "id": "n5-e9-l-5",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
               "image": "/images/japanese/listening/n5/m1_q5.png",
-              "question": "5. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "question": "5. 図書館で 女の人と 係員が 話しています。女の人は 本を 何冊 借りますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "3冊",
+                "4冊",
+                "1冊",
+                "2冊"
               ],
-              "correct": 1,
-              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
-              "explanation": "Based on the dialogue guidelines, Option 2 matches the selected item."
+              "correct": 0,
+              "transcript": "女「この 4冊を 借りたいです。」係員「貸出は 3冊までです。」女「では、この 3冊に します。」\n質問：女の人は 本を 何冊 借りますか。",
+              "explanation": "Borrows 3 books (3冊)."
             },
             {
               "id": "n5-e9-l-6",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
               "image": "/images/japanese/listening/n5/m1_q6.png",
-              "question": "6. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "question": "6. 店で 男の人と 女の人が 靴を 見ています。女の人は どの 靴を 買いますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "茶色い靴",
+                "黒い靴",
+                "白い靴",
+                "青い靴"
               ],
-              "correct": 2,
-              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
-              "explanation": "Based on the dialogue guidelines, Option 3 matches the selected item."
+              "correct": 0,
+              "transcript": "女「黒い靴と 茶色い靴、どっちが いい？」男「黒い方が スーツに 合うよ。」女「でも 茶色い方が 歩きやすそう。茶色い方に するわ。」\n質問：女の人は どの 靴を 買いますか。",
+              "explanation": "Selects brown shoes (茶色い靴)."
             },
             {
               "id": "n5-e9-l-7",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
               "image": "/images/japanese/listening/n5/m1_q7.png",
-              "question": "7. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "question": "7. 留学生と 友達が 話しています。男の人は これから どこへ 行きますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "郵便局",
+                "カフェ",
+                "図書館",
+                "食堂"
               ],
-              "correct": 3,
-              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
-              "explanation": "Based on the dialogue guidelines, Option 4 matches the selected item."
+              "correct": 0,
+              "transcript": "女「カフェに 行かない？」男「郵便局で 切手を 買ってから 行くよ。」\n質問：男の人は これから どこへ 行きますか。",
+              "explanation": "Goes to the post office first (郵便局)."
             },
             {
               "id": "n5-e9-l-8",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-1-mp3.mp3",
-              "question": "8. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "question": "8. 男の人と 女の人が 話しています。美術館は 何曜日に 休みですか。",
               "options": [
-                "1時",
-                "2時",
-                "3時",
-                "4時"
+                "火曜日",
+                "月曜日",
+                "水曜日",
+                "日曜日"
               ],
-              "correct": 1,
-              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
-              "explanation": "Listening point comprehension: meeting time agreement."
+              "correct": 0,
+              "transcript": "男「明日、美術館に 行かない？」女「明日は 火曜日だから 休館日よ。水曜日に しよう。」\n質問：美術館は 何曜日に 休みですか。",
+              "explanation": "Closed on Tuesdays (火曜日)."
             },
             {
               "id": "n5-e9-l-9",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-1-mp3.mp3",
-              "question": "9. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "question": "9. 女の人と 男の人が 話しています。男の人は どうして 自転車で 来ましたか。",
               "options": [
-                "1時",
-                "2時",
-                "3時",
-                "4時"
+                "天気が良く、運動になるから",
+                "電車が 遅れたから",
+                "お金が なかったから",
+                "車が 壊れたから"
               ],
-              "correct": 2,
-              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
-              "explanation": "Listening point comprehension: meeting time agreement."
+              "correct": 0,
+              "transcript": "女「今日は 自転車なのね。」男「天気が 良かったし、運動にも なるからね。」\n質問：男の人は どうして 自転車で 来ましたか。",
+              "explanation": "Nice weather and good exercise (運動になるから)."
             },
             {
               "id": "n5-e9-l-10",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-1-mp3.mp3",
-              "question": "10. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "question": "10. 男の人と 女の人が 話しています。男の人は どこに 傘を 忘れましたか。",
               "options": [
-                "1時",
-                "2時",
-                "3時",
-                "4時"
+                "レストランの 傘立て",
+                "電車の中",
+                "駅の ホーム",
+                "自分の 部屋"
               ],
-              "correct": 3,
-              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
-              "explanation": "Listening point comprehension: meeting time agreement."
+              "correct": 0,
+              "transcript": "男「傘が ないんだ。電車の中に 忘れたかな。」女「さっきの レストランの 傘立てに 置いたままじゃない？」男「あ、そうだ！」\n質問：男の人は どこに 傘を 忘れましたか。",
+              "explanation": "Forgot umbrella at restaurant (レストランの傘立て)."
             },
             {
               "id": "n5-e9-l-11",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-1-mp3.mp3",
-              "question": "11. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "question": "11. 女の人と 男の人が 時計を 見ています。この 時計は 誰から もらいましたか。",
               "options": [
-                "1時",
-                "2時",
-                "3時",
-                "4時"
+                "お父さん",
+                "お母さん",
+                "友達",
+                "先生"
               ],
               "correct": 0,
-              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
-              "explanation": "Listening point comprehension: meeting time agreement."
+              "transcript": "女「素敵な 時計ね。」男「去年の 誕生日に 父から もらったんだ。」\n質問：時計は 誰から もらいましたか。",
+              "explanation": "Received from father (お父さん)."
             },
             {
               "id": "n5-e9-l-12",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-1-mp3.mp3",
-              "question": "12. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "question": "12. 男の人と 女の人が 話しています。京都まで 新幹線で 何時間 かかりますか。",
               "options": [
-                "1時",
-                "2時",
-                "3時",
-                "4時"
+                "約2時間",
+                "約1時間",
+                "約4時間",
+                "約30分"
               ],
-              "correct": 1,
-              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
-              "explanation": "Listening point comprehension: meeting time agreement."
+              "correct": 0,
+              "transcript": "男「東京から 京都まで 新幹線で どのくらい？」女「だいたい 2時間ちょっとよ。」\n質問：新幹線で どのくらい かかりますか。",
+              "explanation": "Takes approx 2 hours (約2時間)."
             },
             {
               "id": "n5-e9-l-13",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-1-mp3.mp3",
-              "question": "13. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "question": "13. スーパーの 案内放送が 流れています。スーパーは 何時に 閉まりますか。",
               "options": [
-                "1時",
-                "2時",
-                "3時",
-                "4時"
+                "夜9時",
+                "夜8時",
+                "夜10時",
+                "夕方6時"
               ],
-              "correct": 2,
-              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
-              "explanation": "Listening point comprehension: meeting time agreement."
+              "correct": 0,
+              "transcript": "アナウンス「本日の 営業は 夜9時までと なっております。」\n質問：スーパーは 何時に 閉まりますか。",
+              "explanation": "Closes at 9:00 PM (夜9時)."
             },
             {
               "id": "n5-e9-l-14",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
               "image": "/images/japanese/listening/n5/m3_q1.png",
-              "question": "14. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "question": "14. 朝、近所の人に 会いました。何と言いますか。（矢印の人）",
               "options": [
-                "よろしくおねがいします",
-                "ごめんなさい",
-                "いただきます"
+                "おはようございます",
+                "こんばんは",
+                "さようなら"
               ],
               "correct": 0,
-              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
-              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+              "transcript": "状況：朝の 挨拶を します。\n質問：何と言いますか。\n1. おはようございます\n2. こんばんは\n3. さようなら",
+              "explanation": "Morning greeting:「おはようございます」."
             },
             {
               "id": "n5-e9-l-15",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
               "image": "/images/japanese/listening/n5/m3_q2.png",
-              "question": "15. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "question": "15. 友達の ペンを 借りたいです。何と言いますか。（矢印の人）",
               "options": [
-                "よろしくおねがいします",
-                "ごめんなさい",
-                "いただきます"
+                "ペンを 貸して ください",
+                "ペンを あげます",
+                "ペンを 買いました"
               ],
               "correct": 0,
-              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
-              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+              "transcript": "状況：ペンを 借ります。\n質問：何と言いますか。\n1. ペンを 貸して ください\n2. ペンを あげます\n3. ペンを 買いました",
+              "explanation": "Asking to borrow:「ペンを貸してください」."
             },
             {
               "id": "n5-e9-l-16",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
               "image": "/images/japanese/listening/n5/m3_q3.png",
-              "question": "16. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "question": "16. 先生の 部屋に 入ります。何と言いますか。（矢印の人）",
               "options": [
-                "よろしくおねがいします",
+                "失礼します",
                 "ごめんなさい",
-                "いただきます"
+                "いってきます"
               ],
               "correct": 0,
-              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
-              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+              "transcript": "状況：部屋に 入ります。\n質問：何と言いますか。\n1. 失礼します\n2. ごめんなさい\n3. いってきます",
+              "explanation": "Entering room:「失礼します」."
             },
             {
               "id": "n5-e9-l-17",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
               "image": "/images/japanese/listening/n5/m3_q4.png",
-              "question": "17. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "question": "17. 食事を 始める 前です。何と言いますか。（矢印の人）",
               "options": [
-                "よろしくおねがいします",
-                "ごめんなさい",
-                "いただきます"
+                "いただきます",
+                "ごちそうさまでした",
+                "いってらっしゃい"
               ],
               "correct": 0,
-              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
-              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+              "transcript": "状況：ご飯を 食べます。\n質問：何と言いますか。\n1. いただきます\n2. ごちそうさまでした\n3. いってらっしゃい",
+              "explanation": "Before meal:「いただきます」."
             },
             {
               "id": "n5-e9-l-18",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
               "image": "/images/japanese/listening/n5/m3_q5.png",
-              "question": "18. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "question": "18. 会社から 先に 帰ります。何と言いますか。（矢印の人）",
               "options": [
-                "よろしくおねがいします",
-                "ごめんなさい",
-                "いただきます"
+                "お先に 失礼します",
+                "おかえりなさい",
+                "お大事に"
               ],
               "correct": 0,
-              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
-              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+              "transcript": "状況：先に 帰ります。\n質問：何と言いますか。\n1. お先に 失礼します\n2. おかえりなさい\n3. お大事に",
+              "explanation": "Leaving early:「お先に失礼します」."
             },
             {
               "id": "n5-e9-l-19",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5/captured-media-3-mp3.mp3",
-              "question": "19. 「お元気ですか。」",
+              "question": "19. 「お茶を どうぞ。」",
               "options": [
-                "はい、元気です。",
-                "いいえ、元気です。",
-                "どういたしまして。"
+                "いただきます。",
+                "いってらっしゃい。",
+                "ごめんなさい。"
               ],
               "correct": 0,
-              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
-              "explanation": "Natural daily conversation response:「はい、元気です。」"
+              "transcript": "発話：「お茶を どうぞ。」\n1. いただきます。\n2. いってらっしゃい。\n3. ごめんなさい。",
+              "explanation": "Accepting tea:「いただきます。」"
             },
             {
               "id": "n5-e9-l-20",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5/captured-media-3-mp3.mp3",
-              "question": "20. 「お元気ですか。」",
+              "question": "20. 「この 席、空いていますか。」",
               "options": [
-                "はい、元気です。",
+                "はい、どうぞ。",
                 "いいえ、元気です。",
-                "どういたしまして。"
+                "こちらこそ。"
               ],
               "correct": 0,
-              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
-              "explanation": "Natural daily conversation response:「はい、元気です。」"
+              "transcript": "発話：「この 席、空いていますか。」\n1. はい、どうぞ。\n2. いいえ、元気です。\n3. こちらこそ。",
+              "explanation": "Seat available:「はい、どうぞ。」"
             },
             {
               "id": "n5-e9-l-21",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5/captured-media-3-mp3.mp3",
-              "question": "21. 「お元気ですか。」",
+              "question": "21. 「昨日の テストは どうでしたか。」",
               "options": [
-                "はい、元気です。",
-                "いいえ、元気です。",
-                "どういたしまして。"
+                "少し 難しかったです。",
+                "明日 あります。",
+                "いいえ、違います。"
               ],
               "correct": 0,
-              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
-              "explanation": "Natural daily conversation response:「はい、元気です。」"
+              "transcript": "発話：「昨日の テストは どうでしたか。」\n1. 少し 難しかったです。\n2. 明日 あります。\n3. いいえ、違います。",
+              "explanation": "Difficulty review:「少し難しかったです。」"
             },
             {
               "id": "n5-e9-l-22",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5/captured-media-3-mp3.mp3",
-              "question": "22. 「お元気ですか。」",
+              "question": "22. 「お国は どちらですか。」",
               "options": [
-                "はい、元気です。",
-                "いいえ、元気です。",
-                "どういたしまして。"
+                "アメリカです。",
+                "東京です。",
+                "学生です。"
               ],
               "correct": 0,
-              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
-              "explanation": "Natural daily conversation response:「はい、元気です。」"
+              "transcript": "発話：「お国は どちらですか。」\n1. アメリカです。\n2. 東京です。\n3. 学生です。",
+              "explanation": "Home country:「アメリカです。」"
             },
             {
               "id": "n5-e9-l-23",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5/captured-media-3-mp3.mp3",
-              "question": "23. 「お元気ですか。」",
+              "question": "23. 「一緒にお昼ご飯を食べませんか。」",
               "options": [
-                "はい、元気です。",
-                "いいえ、元気です。",
-                "どういたしまして。"
+                "ええ、行きましょう。",
+                "ごちそうさまでした。",
+                "いいえ、食べました。"
               ],
               "correct": 0,
-              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
-              "explanation": "Natural daily conversation response:「はい、元気です。」"
+              "transcript": "発話：「一緒にお昼ご飯を食べませんか。」\n1. ええ、行きましょう。\n2. ごちそうさまでした。\n3. いいえ、食べました。",
+              "explanation": "Accepting lunch invitation:「ええ、行きましょう。」"
             },
             {
               "id": "n5-e9-l-24",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5/captured-media-3-mp3.mp3",
-              "question": "24. 「お元気ですか。」",
+              "question": "24. 「宿題は もう 終わりましたか。」",
               "options": [
-                "はい、元気です。",
-                "いいえ、元気です。",
-                "どういたしまして。"
+                "はい、終わりました。",
+                "いいえ、始めました。",
+                "教室に あります。"
               ],
               "correct": 0,
-              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
-              "explanation": "Natural daily conversation response:「はい、元気です。」"
+              "transcript": "発話：「宿題は もう 終わりましたか。」\n1. はい、終わりました。\n2. いいえ、始めました。\n3. 教室に あります。",
+              "explanation": "Finished homework:「はい、終わりました。」"
             }
           ]
         }
@@ -12053,362 +12053,362 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e10-l-1",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
-              "image": "/images/japanese/listening/n5/m1_q1.png",
-              "question": "1. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "image": "/images/japanese/listening/n5_2018/m1_q1.png",
+              "question": "1. 会社で 男の人と 女の人が 話しています。男の人は コピーを 何枚 しますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "15枚",
+                "10枚",
+                "12枚",
+                "20枚"
               ],
-              "correct": 2,
-              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
-              "explanation": "Based on the dialogue guidelines, Option 3 matches the selected item."
+              "correct": 0,
+              "transcript": "女「会議の 資料、10枚 コピーして。」男「参加者は 12人ですが、足りますか。」女「あ、そうね。じゃあ 予備も 入れて 15枚 お願い。」\n質問：男の人は コピーを 何枚 しますか。",
+              "explanation": "Makes 15 copies (15枚)."
             },
             {
               "id": "n5-e10-l-2",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
-              "image": "/images/japanese/listening/n5/m1_q2.png",
-              "question": "2. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "image": "/images/japanese/listening/n5_2018/m1_q2.png",
+              "question": "2. 八百屋で 女の人と 店員が 話しています。女の人は どの リンゴを 買いますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "1個150円の リンゴを 2個",
+                "3個400円の リンゴを 1袋",
+                "1個150円の リンゴを 1個",
+                "3個400円の リンゴを 2袋"
               ],
-              "correct": 3,
-              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
-              "explanation": "Based on the dialogue guidelines, Option 4 matches the selected item."
+              "correct": 0,
+              "transcript": "女「この 1個150円の リンゴと、3個400円の リンゴは どこが 違いますか。」店員「150円の 方が 大きくて 甘いですよ。」女「じゃあ、大きい方を 2つ ください。」\n質問：女の人は どの リンゴを 買いますか。",
+              "explanation": "Buys two 150-yen apples (1個150円のリンゴを2個)."
             },
             {
               "id": "n5-e10-l-3",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
-              "image": "/images/japanese/listening/n5/m1_q3.png",
-              "question": "3. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "image": "/images/japanese/listening/n5_2018/m1_q3.png",
+              "question": "3. 病院で 医者と 患者が 話しています。患者は 薬を いつ 飲みますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "朝と晩の 食後",
+                "毎食後（朝・昼・晩）",
+                "朝と昼の 食前",
+                "寝る前"
               ],
               "correct": 0,
-              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
-              "explanation": "Based on the dialogue guidelines, Option 1 matches the selected item."
+              "transcript": "医者「この 薬は 朝と 晩の 食後に 飲んで ください。昼は 飲まなくて いいです。」\n質問：患者は 薬を いつ 飲みますか。",
+              "explanation": "Takes medicine after breakfast and dinner (朝と晩の食後)."
             },
             {
               "id": "n5-e10-l-4",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
-              "image": "/images/japanese/listening/n5/m1_q4.png",
-              "question": "4. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "image": "/images/japanese/listening/n5_2018/m1_q4.png",
+              "question": "4. 男の人と 女の人が 話しています。二人は どこで 待ち合わせますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "東口の 本屋の前",
+                "駅の 改札口",
+                "西口の カフェ",
+                "南口の バス停"
               ],
-              "correct": 1,
-              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
-              "explanation": "Based on the dialogue guidelines, Option 2 matches the selected item."
+              "correct": 0,
+              "transcript": "男「駅の 改札口で 待ってるよ。」女「改札口は 混むから、東口の 本屋の 前に しない？」男「いいね、そうしよう。」\n質問：二人は どこで 待ち合わせますか。",
+              "explanation": "Meets in front of East exit bookstore (東口の本屋の前)."
             },
             {
               "id": "n5-e10-l-5",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
-              "image": "/images/japanese/listening/n5/m1_q5.png",
-              "question": "5. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "image": "/images/japanese/listening/n5_2018/m1_q5.png",
+              "question": "5. 学校で 先生が 話しています。学生は 月曜日に 何を 出しますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "作文",
+                "日記",
+                "教科書",
+                "漢字ノート"
               ],
-              "correct": 2,
-              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
-              "explanation": "Based on the dialogue guidelines, Option 3 matches the selected item."
+              "correct": 0,
+              "transcript": "先生「月曜日に 作文を 出して ください。日記は 水曜日で いいです。」\n質問：学生は 月曜日に 何を 出しますか。",
+              "explanation": "Submits essay on Monday (作文)."
             },
             {
               "id": "n5-e10-l-6",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
-              "image": "/images/japanese/listening/n5/m1_q6.png",
-              "question": "6. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "image": "/images/japanese/listening/n5_2018/m1_q6.png",
+              "question": "6. ホテルで 客と フロントが 話しています。朝食は どこで 食べますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "2階の レストラン",
+                "自分の 部屋",
+                "1階の ロビー",
+                "屋上の テラス"
               ],
-              "correct": 3,
-              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
-              "explanation": "Based on the dialogue guidelines, Option 4 matches the selected item."
+              "correct": 0,
+              "transcript": "客「朝食は 部屋で 食べられますか。」フロント「朝食は 2階の レストランに なっております。」\n質問：朝食は どこで 食べますか。",
+              "explanation": "Breakfast at 2F restaurant (2階のレストラン)."
             },
             {
               "id": "n5-e10-l-7",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
-              "image": "/images/japanese/listening/n5/m1_q7.png",
-              "question": "7. 男の人と女の人が話しています。男の人はどの物を選びますか。",
+              "image": "/images/japanese/listening/n5_2018/m1_q7.png",
+              "question": "7. 男の人と 女の人が 話しています。男の人は 何時に 家を 出ますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "2時15分",
+                "2時30分",
+                "2時45分",
+                "3時00分"
               ],
               "correct": 0,
-              "transcript": "男「これにします。」女「かしこまりました。」\n質問：男の人はどの物を選びますか。",
-              "explanation": "Based on the dialogue guidelines, Option 1 matches the selected item."
+              "transcript": "女「映画は 3時よ。駅まで 30分かかるから 2時半には 出てね。」男「切符を 買うから、もう 15分早く 2時15分に 出るよ。」\n質問：男の人は 何時に 家を 出ますか。",
+              "explanation": "Leaves at 2:15 PM (2時15分)."
             },
             {
               "id": "n5-e10-l-8",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q2.mp3",
-              "question": "8. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "question": "8. 男の人と 女の人が 話しています。田中さんは どうして パーティーに 来られませんか。",
               "options": [
-                "1時",
-                "2時",
-                "3時",
-                "4時"
+                "風邪を 引いて 熱が あるから",
+                "仕事が 忙しいから",
+                "旅行に 行ったから",
+                "忘れていたから"
               ],
-              "correct": 2,
-              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
-              "explanation": "Listening point comprehension: meeting time agreement."
+              "correct": 0,
+              "transcript": "男「田中さん、来ないの？」女「風邪を 引いて 熱が あるそうなの。」\n質問：田中さんは どうして 来られませんか。",
+              "explanation": "Has a fever (風邪を引いて熱があるから)."
             },
             {
               "id": "n5-e10-l-9",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q2.mp3",
-              "question": "9. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "question": "9. 女の人と 男の人が 話しています。電車が 遅れた 理由は何ですか。",
               "options": [
-                "1時",
-                "2時",
-                "3時",
-                "4時"
+                "大雨と 強風のため",
+                "事故の ため",
+                "電車の 故障のため",
+                "雪の ため"
               ],
-              "correct": 3,
-              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
-              "explanation": "Listening point comprehension: meeting time agreement."
+              "correct": 0,
+              "transcript": "女「電車が 止まっていたね。」男「強い 雨と 風の せいだったみたいだよ。」\n質問：電車が 遅れた 理由は何ですか。",
+              "explanation": "Due to heavy rain and wind (大雨と強風のため)."
             },
             {
               "id": "n5-e10-l-10",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q2.mp3",
-              "question": "10. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "question": "10. 男の人と 女の人が 話しています。女の人は どの 季節が 一番 好きですか。",
               "options": [
-                "1時",
-                "2時",
-                "3時",
-                "4時"
+                "春",
+                "夏",
+                "秋",
+                "冬"
               ],
               "correct": 0,
-              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
-              "explanation": "Listening point comprehension: meeting time agreement."
+              "transcript": "男「どの 季節が 好き？」女「春は 桜が 綺麗だから 一番 好きよ。」\n質問：女の人は どの 季節が 一番 好きですか。",
+              "explanation": "Prefers Spring (春)."
             },
             {
               "id": "n5-e10-l-11",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q2.mp3",
-              "question": "11. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "question": "11. バス停で 男の人と 運転手が 話しています。動物園へ 行く バスは 何番ですか。",
               "options": [
-                "1時",
-                "2時",
-                "3時",
-                "4時"
+                "5番の バス",
+                "3番の バス",
+                "1番の バス",
+                "7番の バス"
               ],
-              "correct": 1,
-              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
-              "explanation": "Listening point comprehension: meeting time agreement."
+              "correct": 0,
+              "transcript": "男「動物園へ 行きたいのですが。」運転手「動物園へは 5番の バスに 乗って ください。」\n質問：動物園へ 行く バスは 何番ですか。",
+              "explanation": "Takes bus number 5 (5番のバス)."
             },
             {
               "id": "n5-e10-l-12",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q2.mp3",
-              "question": "12. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "question": "12. 女の人と 男の人が 話しています。誕生日の プレゼントは何に しましたか。",
               "options": [
-                "1時",
-                "2時",
-                "3時",
-                "4時"
+                "本",
+                "花",
+                "ケーキ",
+                "時計"
               ],
-              "correct": 2,
-              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
-              "explanation": "Listening point comprehension: meeting time agreement."
+              "correct": 0,
+              "transcript": "女「妹の 誕生日に 何を あげたの？」男「花と 迷ったけど、好きな 本を あげたよ。」\n質問：プレゼントは何ですか。",
+              "explanation": "Gave a book (本)."
             },
             {
               "id": "n5-e10-l-13",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q2.mp3",
-              "question": "13. 男の人と女の人が話しています。二人は何時に会いますか。",
+              "question": "13. 天気予報が 流れています。明日の 午後の 天気は どうなりますか。",
               "options": [
-                "1時",
-                "2時",
-                "3時",
-                "4時"
+                "雨が 降る",
+                "一日中 晴れる",
+                "雪が 降る",
+                "風だけ 吹く"
               ],
-              "correct": 3,
-              "transcript": "男「何時に待ち合わせる？」女「2時にしよう。」\n質問：二人は何時に会いますか。",
-              "explanation": "Listening point comprehension: meeting time agreement."
+              "correct": 0,
+              "transcript": "アナウンス「明日は 朝は 晴れますが、午後からは 雨が 降るでしょう。」\n質問：明日の 午後は どうなりますか。",
+              "explanation": "Rains in the afternoon (雨が降る)."
             },
             {
               "id": "n5-e10-l-14",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
-              "image": "/images/japanese/listening/n5/m3_q1.png",
-              "question": "14. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "image": "/images/japanese/listening/n5_2018/m3_q1.png",
+              "question": "14. 道を 尋ねたいです。何と言いますか。（矢印の人）",
               "options": [
-                "よろしくおねがいします",
-                "ごめんなさい",
-                "いただきます"
+                "すみません、駅は どこですか",
+                "駅に 行きましょう",
+                "駅は ここでした"
               ],
               "correct": 0,
-              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
-              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+              "transcript": "状況：道を 尋ねます。\n質問：何と言いますか。\n1. すみません、駅は どこですか\n2. 駅に 行きましょう\n3. 駅は ここでした",
+              "explanation": "Asking directions:「すみません、駅はどこですか」."
             },
             {
               "id": "n5-e10-l-15",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
-              "image": "/images/japanese/listening/n5/m3_q2.png",
-              "question": "15. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "image": "/images/japanese/listening/n5_2018/m3_q2.png",
+              "question": "15. プレゼントを 渡します。何と言いますか。（矢印の人）",
               "options": [
-                "よろしくおねがいします",
-                "ごめんなさい",
-                "いただきます"
+                "どうぞ",
+                "ごちそうさまでした",
+                "おめでとう"
               ],
               "correct": 0,
-              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
-              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+              "transcript": "状況：プレゼントを 渡します。\n質問：何と言いますか。\n1. どうぞ\n2. ごちそうさまでした\n3. おめでとう",
+              "explanation": "Handing over gift:「どうぞ」."
             },
             {
               "id": "n5-e10-l-16",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
-              "image": "/images/japanese/listening/n5/m3_q3.png",
-              "question": "16. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "image": "/images/japanese/listening/n5_2018/m3_q3.png",
+              "question": "16. 足を踏んでしまいました。何と言いますか。（矢印の人）",
               "options": [
-                "よろしくおねがいします",
-                "ごめんなさい",
-                "いただきます"
+                "すみません！",
+                "どういたしまして",
+                "おかげさまで"
               ],
               "correct": 0,
-              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
-              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+              "transcript": "状況：謝ります。\n質問：何と言いますか。\n1. すみません！\n2. どういたしまして\n3. おかげさまで",
+              "explanation": "Apologizing:「すみません！」."
             },
             {
               "id": "n5-e10-l-17",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
-              "image": "/images/japanese/listening/n5/m3_q4.png",
-              "question": "17. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "image": "/images/japanese/listening/n5_2018/m3_q4.png",
+              "question": "17. 食事を 終えました。何と言いますか。（矢印の人）",
               "options": [
-                "よろしくおねがいします",
-                "ごめんなさい",
-                "いただきます"
+                "ごちそうさまでした",
+                "いただきます",
+                "お邪魔しました"
               ],
               "correct": 0,
-              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
-              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+              "transcript": "状況：食事が 終わりました。\n質問：何と言いますか。\n1. ごちそうさまでした\n2. いただきます\n3. お邪魔しました",
+              "explanation": "After meal:「ごちそうさまでした」."
             },
             {
               "id": "n5-e10-l-18",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
-              "image": "/images/japanese/listening/n5/m3_q5.png",
-              "question": "18. 相手に丁寧に挨拶します。何と言いますか。（矢印の人）",
+              "image": "/images/japanese/listening/n5_2018/m3_q5.png",
+              "question": "18. 駅で 友達と 別れます。何と言いますか。（矢印の人）",
               "options": [
-                "よろしくおねがいします",
-                "ごめんなさい",
-                "いただきます"
+                "じゃ、また 明日！",
+                "ただいま",
+                "はじめまして"
               ],
               "correct": 0,
-              "transcript": "状況：挨拶をします。\n質問：何と言いますか。\n1. よろしくおねがいします\n2. ごめんなさい\n3. いただきます",
-              "explanation": "Standard polite Japanese greeting:「よろしくおねがいします」."
+              "transcript": "状況：別れの 挨拶を します。\n質問：何と言いますか。\n1. じゃ、また 明日！\n2. ただいま\n3. はじめまして",
+              "explanation": "Parting:「じゃ、また明日！」."
             },
             {
               "id": "n5-e10-l-19",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q4.mp3",
-              "question": "19. 「お元気ですか。」",
+              "question": "19. 「今、お時間ありますか。」",
               "options": [
-                "はい、元気です。",
-                "いいえ、元気です。",
+                "はい、大丈夫ですよ。",
+                "いいえ、時間です。",
                 "どういたしまして。"
               ],
               "correct": 0,
-              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
-              "explanation": "Natural daily conversation response:「はい、元気です。」"
+              "transcript": "発話：「今、お時間ありますか。」\n1. はい、大丈夫ですよ。\n2. いいえ、時間です。\n3. どういたしまして。",
+              "explanation": "Available:「はい、大丈夫ですよ。」"
             },
             {
               "id": "n5-e10-l-20",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q4.mp3",
-              "question": "20. 「お元気ですか。」",
+              "question": "20. 「いいお天気ですね。」",
               "options": [
-                "はい、元気です。",
-                "いいえ、元気です。",
-                "どういたしまして。"
+                "そうですね、気持ちいいですね。",
+                "いいえ、雨です。",
+                "お大事に。"
               ],
               "correct": 0,
-              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
-              "explanation": "Natural daily conversation response:「はい、元気です。」"
+              "transcript": "発話：「いいお天気ですね。」\n1. そうですね、気持ちいいですね。\n2. いいえ、雨です。\n3. お大事に。",
+              "explanation": "Agreeing on weather:「そうですね、気持ちいいですね。」"
             },
             {
               "id": "n5-e10-l-21",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q4.mp3",
-              "question": "21. 「お元気ですか。」",
+              "question": "21. 「ここで写真を撮ってもいいですか。」",
               "options": [
-                "はい、元気です。",
-                "いいえ、元気です。",
-                "どういたしまして。"
+                "ええ、いいですよ。",
+                "はい、撮りました。",
+                "写真です。"
               ],
               "correct": 0,
-              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
-              "explanation": "Natural daily conversation response:「はい、元気です。」"
+              "transcript": "発話：「ここで写真を撮ってもいいですか。」\n1. ええ、いいですよ。\n2. はい、撮りました。\n3. 写真です。",
+              "explanation": "Granting permission:「ええ、いいですよ。」"
             },
             {
               "id": "n5-e10-l-22",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q4.mp3",
-              "question": "22. 「お元気ですか。」",
+              "question": "22. 「日本語がお上手ですね。」",
               "options": [
-                "はい、元気です。",
-                "いいえ、元気です。",
+                "いいえ、まだまだです。",
+                "はい、上手でした。",
                 "どういたしまして。"
               ],
               "correct": 0,
-              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
-              "explanation": "Natural daily conversation response:「はい、元気です。」"
+              "transcript": "発話：「日本語がお上手ですね。」\n1. いいえ、まだまだです。\n2. はい、上手でした。\n3. どういたしまして。",
+              "explanation": "Humble response:「いいえ、まだまだです。」"
             },
             {
               "id": "n5-e10-l-23",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q4.mp3",
-              "question": "23. 「お元気ですか。」",
+              "question": "23. 「これは誰のカバンですか。」",
               "options": [
-                "はい、元気です。",
-                "いいえ、元気です。",
-                "どういたしまして。"
+                "私のです。",
+                "カバンです。",
+                "机の上です。"
               ],
               "correct": 0,
-              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
-              "explanation": "Natural daily conversation response:「はい、元気です。」"
+              "transcript": "発話：「これは誰のカバンですか。」\n1. 私のです。\n2. カバンです。\n3. 机の上です。",
+              "explanation": "Ownership:「私のです。」"
             },
             {
               "id": "n5-e10-l-24",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q4.mp3",
-              "question": "24. 「お元気ですか。」",
+              "question": "24. 「少し休みましょうか。」",
               "options": [
-                "はい、元気です。",
-                "いいえ、元気です。",
-                "どういたしまして。"
+                "はい、そうしましょう。",
+                "いいえ、休みました。",
+                "疲れました。"
               ],
               "correct": 0,
-              "transcript": "発話：「お元気ですか。」\n1. はい、元気です。\n2. いいえ、元気です。\n3. どういたしまして。",
-              "explanation": "Natural daily conversation response:「はい、元気です。」"
+              "transcript": "発話：「少し休みましょうか。」\n1. はい、そうしましょう。\n2. いいえ、休みました。\n3. 疲れました。",
+              "explanation": "Taking a break:「はい、そうしましょう。」"
             }
           ]
         }
@@ -15112,7 +15112,7 @@ export const EXAM_PAPERS_CATALOG = {
       "badge": "Diagnostic Mock",
       "year": "2020 Series",
       "description": "Comprehensive benchmark covering intermediate verb conjugations, compound particles, conditional forms (〜たら, 〜ば, 〜なら), and listening.",
-      "totalQuestions": 97,
+      "totalQuestions": 98,
       "sections": [
         {
           "id": "n4-e3-sec-vocab",
@@ -16051,420 +16051,420 @@ export const EXAM_PAPERS_CATALOG = {
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
               "image": "/images/japanese/listening/n4/m1_q1.png",
-              "question": "1. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "question": "1. 会社で 男の人と 女の人が 話しています。女の人は この後 まず 何を しますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "プロジェクターの 接続を 確認する",
+                "資料を コピーする",
+                "参加者に 連絡する",
+                "お茶を 用意する"
               ],
-              "correct": 3,
-              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
-              "explanation": "Based on task instructions, Option 4 is correct."
+              "correct": 0,
+              "transcript": "男「会議室の プロジェクターの 準備を お願いできる？」女「はい。資料の コピーも しておきましょうか。」男「資料は 僕が やるから、先に プロジェクターの 接続を 確認して。」女「わかりました。」\n質問：女の人は この後 まず 何を しますか。",
+              "explanation": "First checks the projector connection (プロジェクターの接続を確認する)."
             },
             {
               "id": "n4-e3-l-2",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
               "image": "/images/japanese/listening/n4/m1_q2.png",
-              "question": "2. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "question": "2. 病院で 看護師と 患者が 話しています。患者は どこで 待ちますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "2階の 放射線科の前",
+                "1階の 会計窓口",
+                "3階の 手術室",
+                "薬局"
               ],
               "correct": 0,
-              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
-              "explanation": "Based on task instructions, Option 1 is correct."
+              "transcript": "看護師「診察の 前に レントゲンを 撮りますので、2階の 放射線科の 前で お待ちください。」患者「会計は どこですか。」看護師「会計は 診察が すべて 終わった後、1階です。」\n質問：患者は これから どこへ 行きますか。",
+              "explanation": "Goes to 2nd floor radiology (2階の放射線科の前)."
             },
             {
               "id": "n4-e3-l-3",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
               "image": "/images/japanese/listening/n4/m1_q3.png",
-              "question": "3. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "question": "3. 引越し業者と 客が 話しています。客は どの 箱に 食器を 入れますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "赤い テープの 小さい箱",
+                "青い テープの 箱",
+                "黄色い 大きい箱",
+                "段ボールの 袋"
               ],
-              "correct": 1,
-              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
-              "explanation": "Based on task instructions, Option 2 is correct."
+              "correct": 0,
+              "transcript": "業者「割れやすい 食器は 赤い テープが 貼ってある 小さい 箱に お入れください。本は 青い 箱です。」客「わかりました。」\n質問：食器は どの 箱に 入れますか。",
+              "explanation": "Packs dishes in small box with red tape (赤いテープの小さい箱)."
             },
             {
               "id": "n4-e3-l-4",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
               "image": "/images/japanese/listening/n4/m1_q4.png",
-              "question": "4. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "question": "4. 大学の 事務室で 学生と 職員が 話しています。学生は いつまでに 奨学金の 書類を 出しますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "来週の 金曜日 17時",
+                "来週の 水曜日",
+                "今週の 金曜日",
+                "月末"
               ],
-              "correct": 2,
-              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
-              "explanation": "Based on task instructions, Option 3 is correct."
+              "correct": 0,
+              "transcript": "職員「締め切りは 来週の 金曜日 17時です。ただし、推薦書は 水曜日までに 教授に もらって ください。」学生「わかりました。」\n質問：書類の 最終締め切りは いつですか。",
+              "explanation": "Final deadline is next Friday at 17:00 (来週の金曜日17時)."
             },
             {
               "id": "n4-e3-l-5",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
               "image": "/images/japanese/listening/n4/m1_q5.png",
-              "question": "5. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "question": "5. レストランの 厨房で 店長と アルバイトが 話しています。アルバイトは どの テーブルを 片付けますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "3番テーブル",
+                "7番テーブル",
+                "1番テーブル",
+                "カウンター席"
               ],
-              "correct": 3,
-              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
-              "explanation": "Based on task instructions, Option 4 is correct."
+              "correct": 0,
+              "transcript": "店長「3番テーブルと 7番テーブル、どっちが 空いた？」バイト「3番テーブルの お客様が お帰りになりました。」店長「じゃあ、急いで 3番テーブルを 拭いて 次の お客様を 案内して。」\n質問：アルバイトは どの テーブルを 片付けますか。",
+              "explanation": "Cleans table 3 (3番テーブル)."
             },
             {
               "id": "n4-e3-l-6",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
               "image": "/images/japanese/listening/n4/m1_q6.png",
-              "question": "6. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "question": "6. 旅行会社で 客と 案内係が 話しています。客は どの プランを 選びましたか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "温泉旅館の Aプラン",
+                "ホテルの Bプラン",
+                "日帰り Cプラン",
+                "キャンプ Dプラン"
               ],
               "correct": 0,
-              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
-              "explanation": "Based on task instructions, Option 1 is correct."
+              "transcript": "案内係「温泉旅館に 泊まる Aプランと、ホテルの Bプランが ございます。」客「露天風呂に 入りたくて 来たので、Aプランに します。」\n質問：客は どの プランを 選びましたか。",
+              "explanation": "Selects onsen ryokan Plan A (温泉旅館のAプラン)."
             },
             {
               "id": "n4-e3-l-7",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
               "image": "/images/japanese/listening/n4/m1_q7.png",
-              "question": "7. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "question": "7. 図書館で 係員と 利用者が 話しています。利用者は DVDを 何枚 借りられますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "1枚",
+                "2枚",
+                "3枚",
+                "0枚"
               ],
-              "correct": 1,
-              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
-              "explanation": "Based on task instructions, Option 2 is correct."
+              "correct": 0,
+              "transcript": "利用者「本 3冊と DVD 2枚を 借りたいです。」係員「DVDは お一人様 1枚までとなって おります。」利用者「では、この 1枚だけに します。」\n質問：利用者は DVDを 何枚 借りますか。",
+              "explanation": "Borrows 1 DVD (1枚)."
             },
             {
               "id": "n4-e3-l-8",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
               "image": "/images/japanese/listening/n4/m1_q8.png",
-              "question": "8. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "question": "8. 男の人と 女の人が 買い物の 相談を しています。二人は 何を 買いますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "テントだけ",
+                "寝袋だけ",
+                "テントと 寝袋の両方",
+                "ランタン"
               ],
-              "correct": 2,
-              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
-              "explanation": "Based on task instructions, Option 3 is correct."
+              "correct": 0,
+              "transcript": "男「キャンプ用の テントと 寝袋、両方 買う？」女「寝袋は 兄に 借りられるから、テントだけ 買いましょう。」男「オッケー。」\n質問：二人は 何を 買いますか。",
+              "explanation": "Buys tent only (テントだけ)."
             },
             {
               "id": "n4-e3-l-9",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
-              "question": "9. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "question": "9. 男の人と 女の人が 話しています。男の人が 遅刻した 理由は何ですか。",
               "options": [
-                "電車が遅れたから",
+                "電車が 事故で 止まったから",
                 "寝坊したから",
-                "道を間違えたから",
-                "雨が降ったから"
+                "バスを 乗り間違えたから",
+                "鍵を 探していたから"
               ],
-              "correct": 3,
-              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
-              "explanation": "Point comprehension detail: reason for arriving late."
+              "correct": 0,
+              "transcript": "男「遅れて すみません。途中で 人身事故が あって 電車が 30分 止まって しまいました。」女「大変だったわね。」\n質問：男の人が 遅刻した 理由は 何ですか。",
+              "explanation": "Train halted due to accident (電車が事故で止まったから)."
             },
             {
               "id": "n4-e3-l-10",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
-              "question": "10. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "question": "10. 女の人と 男の人が 新しい パソコンについて 話しています。女の人が この パソコンを 選んだ 理由は何ですか。",
               "options": [
-                "電車が遅れたから",
-                "寝坊したから",
-                "道を間違えたから",
-                "雨が降ったから"
+                "軽くて 持ち歩きやすいから",
+                "画面が 一番 大きいから",
+                "値段が 最も 安かったから",
+                "色が 好きだったから"
               ],
               "correct": 0,
-              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
-              "explanation": "Point comprehension detail: reason for arriving late."
+              "transcript": "男「軽くて 薄い パソコンだね。」女「ええ、毎日 持ち歩くから、重さが 1キロ未満の 物を 探していたの。」\n質問：選んだ 理由は 何ですか。",
+              "explanation": "Lightweight for commuting (軽くて持ち歩きやすいから)."
             },
             {
               "id": "n4-e3-l-11",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
-              "question": "11. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "question": "11. 男の人と 女の人が 話しています。二人は どうして 旅行の 日程を 変更しましたか。",
               "options": [
-                "電車が遅れたから",
-                "寝坊したから",
-                "道を間違えたから",
-                "雨が降ったから"
+                "台風が 来る 予報だから",
+                "仕事が 入ったから",
+                "ホテルが 満室だったから",
+                "体調を 崩したから"
               ],
-              "correct": 1,
-              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
-              "explanation": "Point comprehension detail: reason for arriving late."
+              "correct": 0,
+              "transcript": "男「来週の 週末、台風が 直撃する 予報に なったね。」女「危ないから、再来週の 連休に 延期しましょう。」\n質問：変更した 理由は 何ですか。",
+              "explanation": "Typhoon forecast (台風が来る予報だから)."
             },
             {
               "id": "n4-e3-l-12",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
-              "question": "12. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "question": "12. 店で 店員と 客が 話しています。この シャツの セールは いつまでですか。",
               "options": [
-                "電車が遅れたから",
-                "寝坊したから",
-                "道を間違えたから",
-                "雨が降ったから"
+                "今週の 日曜日まで",
+                "来週の 月曜日まで",
+                "今日中",
+                "月末まで"
               ],
-              "correct": 2,
-              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
-              "explanation": "Point comprehension detail: reason for arriving late."
+              "correct": 0,
+              "transcript": "客「この 20%割引は いつまで やっていますか。」店員「今週の 日曜日の 閉店時間までで ございます。」\n質問：セールは いつまでですか。",
+              "explanation": "Until this Sunday (今週の日曜日まで)."
             },
             {
               "id": "n4-e3-l-13",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
-              "question": "13. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "question": "13. 男の人と 女の人が 話しています。女の人は どうして アルバイトを 辞めましたか。",
               "options": [
-                "電車が遅れたから",
-                "寝坊したから",
-                "道を間違えたから",
-                "雨が降ったから"
+                "卒業論文で 忙しくなったから",
+                "時給が 安かったから",
+                "人間関係が 悪かったから",
+                "遠かったから"
               ],
-              "correct": 3,
-              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
-              "explanation": "Point comprehension detail: reason for arriving late."
+              "correct": 0,
+              "transcript": "男「カフェの バイト、辞めたの？」女「ええ、大学の 卒業論文の 執筆が 忙しくなってきたから。」\n質問：辞めた 理由は 何ですか。",
+              "explanation": "Busy writing graduation thesis (卒業論文で忙しくなったから)."
             },
             {
               "id": "n4-e3-l-14",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
-              "question": "14. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "question": "14. 留学生と 日本人の 友達が 話しています。留学生が 日本の 居酒屋で 驚いたことは 何ですか。",
               "options": [
-                "電車が遅れたから",
-                "寝坊したから",
-                "道を間違えたから",
-                "雨が降ったから"
+                "お通し（最初の小鉢）の 仕組み",
+                "メニューの 多さ",
+                "席の 狭さ",
+                "お酒の 種類"
               ],
               "correct": 0,
-              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
-              "explanation": "Point comprehension detail: reason for arriving late."
+              "transcript": "留学生「注文していないのに 最初に出てくる 小鉢（お通し）の 仕組みに びっくりしたよ。」\n質問：何に 驚きましたか。",
+              "explanation": "Otoshi appetizer system (お通しの仕組み)."
             },
             {
               "id": "n4-e3-l-15",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
-              "question": "15. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "question": "15. 会社で 部長と 社員が 話しています。プレゼンが 成功した 要因は何ですか。",
               "options": [
-                "電車が遅れたから",
-                "寝坊したから",
-                "道を間違えたから",
-                "雨が降ったから"
+                "グラフや データが 具体的で わかりやすかったこと",
+                "声が 大きかったこと",
+                "時間が 短かったこと",
+                "英語で 発表したこと"
               ],
-              "correct": 1,
-              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
-              "explanation": "Point comprehension detail: reason for arriving late."
+              "correct": 0,
+              "transcript": "部長「今日の プレゼン、グラフや データが 具体的で 大変わかりやすかったよ。」\n質問：成功の 要因は何ですか。",
+              "explanation": "Clear data and graphics (グラフやデータが具体的でわかりやすかったこと)."
             },
             {
               "id": "n4-e3-l-16",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
               "image": "/images/japanese/listening/n4/m3_q1.png",
-              "question": "16. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "question": "16. 先輩に 仕事を 教えてもらいたいです。何と言いますか。（矢印の人）",
               "options": [
-                "手伝っていただけませんか。",
-                "手伝ってください。",
-                "手伝いましょうか。"
+                "この やり方を 教えて いただけませんか。",
+                "この やり方を 教えますよ。",
+                "この やり方を 勉強しなさい。"
               ],
               "correct": 0,
-              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
-              "explanation": "Polite request in N4:「〜ていただけませんか」."
+              "transcript": "状況：先輩に 仕事の やり方を 尋ねます。\n質問：何と言いますか。\n1. この やり方を 教えて いただけませんか。\n2. この やり方を 教えますよ。\n3. この やり方を 勉強しなさい。",
+              "explanation": "Polite request:「〜ていただけませんか」."
             },
             {
               "id": "n4-e3-l-17",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
               "image": "/images/japanese/listening/n4/m3_q2.png",
-              "question": "17. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "question": "17. 上司の 荷物が 重そうです。手伝いたいです。何と言いますか。（矢印の人）",
               "options": [
-                "手伝っていただけませんか。",
-                "手伝ってください。",
-                "手伝いましょうか。"
+                "お荷物を お持ち しましょうか。",
+                "荷物を 持って ください。",
+                "荷物を 持ちました。"
               ],
               "correct": 0,
-              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
-              "explanation": "Polite request in N4:「〜ていただけませんか」."
+              "transcript": "状況：上司の 荷物を 持ちます。\n質問：何と言いますか。\n1. お荷物を お持ち しましょうか。\n2. 荷物を 持って ください。\n3. 荷物を 持ちました。",
+              "explanation": "Humble offer:「お持ちしましょうか」."
             },
             {
               "id": "n4-e3-l-18",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
               "image": "/images/japanese/listening/n4/m3_q3.png",
-              "question": "18. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "question": "18. 取引先の 会社を 訪問しました。受付で 何と言いますか。（矢印の人）",
               "options": [
-                "手伝っていただけませんか。",
-                "手伝ってください。",
-                "手伝いましょうか。"
+                "○○社の 田中と 申します。山田部長に お約束を いただいております。",
+                "いらっしゃいませ、ご用件は 何でしょうか。",
+                "お邪魔しました、さようなら。"
               ],
               "correct": 0,
-              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
-              "explanation": "Polite request in N4:「〜ていただけませんか」."
+              "transcript": "状況：訪問先の 受付で 挨拶します。\n質問：何と言いますか。\n1. ○○社の 田中と 申します。山田部長に お約束を いただいております。\n2. いらっしゃいませ、ご用件は 何でしょうか。\n3. お邪魔しました、さようなら。",
+              "explanation": "Business visitor greeting."
             },
             {
               "id": "n4-e3-l-19",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
               "image": "/images/japanese/listening/n4/m3_q4.png",
-              "question": "19. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "question": "19. 会議中、電話が 鳴ってしまいました。何と言いますか。（矢印の人）",
               "options": [
-                "手伝っていただけませんか。",
-                "手伝ってください。",
-                "手伝いましょうか。"
+                "大変 失礼いたしました。",
+                "どういたしまして。",
+                "お疲れ様でした。"
               ],
               "correct": 0,
-              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
-              "explanation": "Polite request in N4:「〜ていただけませんか」."
+              "transcript": "状況：会議室で 謝ります。\n質問：何と言いますか。\n1. 大変 失礼いたしました。\n2. どういたしまして。\n3. お疲れ様でした。",
+              "explanation": "Apology:「大変失礼いたしました。」"
             },
             {
               "id": "n4-e3-l-20",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
               "image": "/images/japanese/listening/n4/m3_q5.png",
-              "question": "20. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "question": "20. 先生の お宅から 帰ります。何と言いますか。（矢印の人）",
               "options": [
-                "手伝っていただけませんか。",
-                "手伝ってください。",
-                "手伝いましょうか。"
+                "今日は ごちそうになり、本当に ありがとうございました。",
+                "いってらっしゃい。",
+                "お大事に。"
               ],
               "correct": 0,
-              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
-              "explanation": "Polite request in N4:「〜ていただけませんか」."
+              "transcript": "状況：お礼を 言って 帰ります。\n質問：何と言いますか。\n1. 今日は ごちそうになり、本当に ありがとうございました。\n2. いってらっしゃい。\n3. お大事に。",
+              "explanation": "Expressing hospitality gratitude."
             },
             {
               "id": "n4-e3-l-21",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
-              "question": "21. 「お先に失礼します。」",
+              "question": "21. 「こちらの 書類を ご確認 いただけますでしょうか。」",
               "options": [
-                "お疲れ様でした。",
-                "いってらっしゃい。",
-                "どういたしまして。"
+                "はい、拝見いたします。",
+                "はい、確認させました。",
+                "いいえ、見ました。"
               ],
               "correct": 0,
-              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
-              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+              "transcript": "発話：「こちらの 書類を ご確認 いただけますでしょうか。」\n1. はい、拝見いたします。\n2. はい、確認させました。\n3. いいえ、見ました。",
+              "explanation": "Humble check response:「拝見いたします。」"
             },
             {
               "id": "n4-e3-l-22",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
-              "question": "22. 「お先に失礼します。」",
+              "question": "22. 「お先に 失礼しても よろしいでしょうか。」",
               "options": [
-                "お疲れ様でした。",
-                "いってらっしゃい。",
-                "どういたしまして。"
+                "ええ、お疲れ様でした。",
+                "はい、いってきます。",
+                "いいえ、失礼しました。"
               ],
               "correct": 0,
-              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
-              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+              "transcript": "発話：「お先に 失礼しても よろしいでしょうか。」\n1. ええ、お疲れ様でした。\n2. はい、いってきます。\n3. いいえ、失礼しました。",
+              "explanation": "Responding to early departure:「お疲れ様でした。」"
             },
             {
               "id": "n4-e3-l-23",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
-              "question": "23. 「お先に失礼します。」",
+              "question": "23. 「この プロジェクト、手伝ってもらえないかな。」",
               "options": [
-                "お疲れ様でした。",
-                "いってらっしゃい。",
+                "はい、喜んで お手伝いします。",
+                "いいえ、手伝いました。",
                 "どういたしまして。"
               ],
               "correct": 0,
-              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
-              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+              "transcript": "発話：「この プロジェクト、手伝ってもらえないかな。」\n1. はい、喜んで お手伝いします。\n2. いいえ、手伝いました。\n3. どういたしまして。",
+              "explanation": "Willing assistance:「喜んでお手伝いします。」"
             },
             {
               "id": "n4-e3-l-24",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
-              "question": "24. 「お先に失礼します。」",
+              "question": "24. 「部長、明日の 会議の 時間を 変更されたと 伺いました。」",
               "options": [
-                "お疲れ様でした。",
-                "いってらっしゃい。",
-                "どういたしまして。"
+                "ええ、14時からに 変更したよ。",
+                "はい、伺いました。",
+                "いいえ、変わりません。"
               ],
               "correct": 0,
-              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
-              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+              "transcript": "発話：「部長、明日の 会議の 時間を 変更されたと 伺いました。」\n1. ええ、14時からに 変更したよ。\n2. はい、伺いました。\n3. いいえ、変わりません。",
+              "explanation": "Confirming meeting adjustment."
             },
             {
               "id": "n4-e3-l-25",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
-              "question": "25. 「お先に失礼します。」",
+              "question": "25. 「コーヒーでも いかがですか。」",
               "options": [
-                "お疲れ様でした。",
-                "いってらっしゃい。",
-                "どういたしまして。"
+                "ありがとうございます、いただきます。",
+                "いいえ、コーヒーです。",
+                "ごちそうさまでした。"
               ],
               "correct": 0,
-              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
-              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+              "transcript": "発話：「コーヒーでも いかがですか。」\n1. ありがとうございます、いただきます。\n2. いいえ、コーヒーです。\n3. ごちそうさまでした。",
+              "explanation": "Polite acceptance:「いただきます。」"
             },
             {
               "id": "n4-e3-l-26",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
-              "question": "26. 「お先に失礼します。」",
+              "question": "26. 「少し 寒くありませんか。エアコンを 弱めましょうか。」",
               "options": [
-                "お疲れ様でした。",
-                "いってらっしゃい。",
-                "どういたしまして。"
+                "助かります、お願いします。",
+                "はい、寒いです。",
+                "いいえ、つけました。"
               ],
               "correct": 0,
-              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
-              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+              "transcript": "発話：「少し 寒くありませんか。エアコンを 弱めましょうか。」\n1. 助かります、お願いします。\n2. はい、寒いです。\n3. いいえ、つけました。",
+              "explanation": "Gratitude for consideration:「助かります、お願いします。」"
             },
             {
               "id": "n4-e3-l-27",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
-              "question": "27. 「お先に失礼します。」",
+              "question": "27. 「新幹線の 切符は もう 手配しましたか。」",
               "options": [
-                "お疲れ様でした。",
-                "いってらっしゃい。",
-                "どういたしまして。"
+                "はい、先ほど 予約を 済ませました。",
+                "いいえ、新幹線です。",
+                "駅に あります。"
               ],
               "correct": 0,
-              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
-              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+              "transcript": "発話：「新幹線の 切符は もう 手配しましたか。」\n1. はい、先ほど 予約を 済ませました。\n2. いいえ、新幹線です。\n3. 駅に あります。",
+              "explanation": "Booking confirmed:「予約を済ませました。」"
             },
             {
               "id": "n4-e3-l-28",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
-              "question": "28. 「お先に失礼します。」",
+              "question": "28. 「明日の 懇親会、参加されますか。」",
               "options": [
-                "お疲れ様でした。",
-                "いってらっしゃい。",
-                "どういたしまして。"
+                "はい、ぜひ 参加させていただきます。",
+                "いいえ、参加です。",
+                "お疲れ様でした。"
               ],
               "correct": 0,
-              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
-              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+              "transcript": "発話：「明日の 懇親会、参加されますか。」\n1. はい、ぜひ 参加させていただきます。\n2. いいえ、参加です。\n3. お疲れ様でした。",
+              "explanation": "Accepting invitation humbly:「参加させていただきます。」"
             }
           ]
         }
@@ -16477,7 +16477,7 @@ export const EXAM_PAPERS_CATALOG = {
       "badge": "NAT-TEST Benchmark",
       "year": "2021 Series",
       "description": "Calibrated against the Japanese NAT-TEST 4Q standard with emphasis on honorifics (Sonkeigo & Kenjougo) and paragraph grammar.",
-      "totalQuestions": 97,
+      "totalQuestions": 98,
       "sections": [
         {
           "id": "n4-e4-sec-vocab",
@@ -17415,421 +17415,421 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e4-l-1",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
-              "image": "/images/japanese/listening/n4/m1_q1.png",
-              "question": "1. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "image": "/images/japanese/listening/n4_2018/m1_q1.png",
+              "question": "1. 会社で 男の人と 女の人が 話しています。女の人は この後 まず 何を しますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "プロジェクターの 接続を 確認する",
+                "資料を コピーする",
+                "参加者に 連絡する",
+                "お茶を 用意する"
               ],
               "correct": 0,
-              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
-              "explanation": "Based on task instructions, Option 1 is correct."
+              "transcript": "男「会議室の プロジェクターの 準備を お願いできる？」女「はい。資料の コピーも しておきましょうか。」男「資料は 僕が やるから、先に プロジェクターの 接続を 確認して。」女「わかりました。」\n質問：女の人は この後 まず 何を しますか。",
+              "explanation": "First checks the projector connection (プロジェクターの接続を確認する)."
             },
             {
               "id": "n4-e4-l-2",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
-              "image": "/images/japanese/listening/n4/m1_q2.png",
-              "question": "2. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "image": "/images/japanese/listening/n4_2018/m1_q2.png",
+              "question": "2. 病院で 看護師と 患者が 話しています。患者は どこで 待ちますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "2階の 放射線科の前",
+                "1階の 会計窓口",
+                "3階の 手術室",
+                "薬局"
               ],
-              "correct": 1,
-              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
-              "explanation": "Based on task instructions, Option 2 is correct."
+              "correct": 0,
+              "transcript": "看護師「診察の 前に レントゲンを 撮りますので、2階の 放射線科の 前で お待ちください。」患者「会計は どこですか。」看護師「会計は 診察が すべて 終わった後、1階です。」\n質問：患者は これから どこへ 行きますか。",
+              "explanation": "Goes to 2nd floor radiology (2階の放射線科の前)."
             },
             {
               "id": "n4-e4-l-3",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
-              "image": "/images/japanese/listening/n4/m1_q3.png",
-              "question": "3. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "image": "/images/japanese/listening/n4_2018/m1_q3.png",
+              "question": "3. 引越し業者と 客が 話しています。客は どの 箱に 食器を 入れますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "赤い テープの 小さい箱",
+                "青い テープの 箱",
+                "黄色い 大きい箱",
+                "段ボールの 袋"
               ],
-              "correct": 2,
-              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
-              "explanation": "Based on task instructions, Option 3 is correct."
+              "correct": 0,
+              "transcript": "業者「割れやすい 食器は 赤い テープが 貼ってある 小さい 箱に お入れください。本は 青い 箱です。」客「わかりました。」\n質問：食器は どの 箱に 入れますか。",
+              "explanation": "Packs dishes in small box with red tape (赤いテープの小さい箱)."
             },
             {
               "id": "n4-e4-l-4",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
-              "image": "/images/japanese/listening/n4/m1_q4.png",
-              "question": "4. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "image": "/images/japanese/listening/n4_2018/m1_q4.png",
+              "question": "4. 大学の 事務室で 学生と 職員が 話しています。学生は いつまでに 奨学金の 書類を 出しますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "来週の 金曜日 17時",
+                "来週の 水曜日",
+                "今週の 金曜日",
+                "月末"
               ],
-              "correct": 3,
-              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
-              "explanation": "Based on task instructions, Option 4 is correct."
+              "correct": 0,
+              "transcript": "職員「締め切りは 来週の 金曜日 17時です。ただし、推薦書は 水曜日までに 教授に もらって ください。」学生「わかりました。」\n質問：書類の 最終締め切りは いつですか。",
+              "explanation": "Final deadline is next Friday at 17:00 (来週の金曜日17時)."
             },
             {
               "id": "n4-e4-l-5",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
-              "image": "/images/japanese/listening/n4/m1_q5.png",
-              "question": "5. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "image": "/images/japanese/listening/n4_2018/m1_q5.png",
+              "question": "5. レストランの 厨房で 店長と アルバイトが 話しています。アルバイトは どの テーブルを 片付けますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "3番テーブル",
+                "7番テーブル",
+                "1番テーブル",
+                "カウンター席"
               ],
               "correct": 0,
-              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
-              "explanation": "Based on task instructions, Option 1 is correct."
+              "transcript": "店長「3番テーブルと 7番テーブル、どっちが 空いた？」バイト「3番テーブルの お客様が お帰りになりました。」店長「じゃあ、急いで 3番テーブルを 拭いて 次の お客様を 案内して。」\n質問：アルバイトは どの テーブルを 片付けますか。",
+              "explanation": "Cleans table 3 (3番テーブル)."
             },
             {
               "id": "n4-e4-l-6",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
-              "image": "/images/japanese/listening/n4/m1_q6.png",
-              "question": "6. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "image": "/images/japanese/listening/n4_2018/m1_q6.png",
+              "question": "6. 旅行会社で 客と 案内係が 話しています。客は どの プランを 選びましたか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "温泉旅館の Aプラン",
+                "ホテルの Bプラン",
+                "日帰り Cプラン",
+                "キャンプ Dプラン"
               ],
-              "correct": 1,
-              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
-              "explanation": "Based on task instructions, Option 2 is correct."
+              "correct": 0,
+              "transcript": "案内係「温泉旅館に 泊まる Aプランと、ホテルの Bプランが ございます。」客「露天風呂に 入りたくて 来たので、Aプランに します。」\n質問：客は どの プランを 選びましたか。",
+              "explanation": "Selects onsen ryokan Plan A (温泉旅館のAプラン)."
             },
             {
               "id": "n4-e4-l-7",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
-              "image": "/images/japanese/listening/n4/m1_q7.png",
-              "question": "7. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "image": "/images/japanese/listening/n4_2018/m1_q7.png",
+              "question": "7. 図書館で 係員と 利用者が 話しています。利用者は DVDを 何枚 借りられますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "1枚",
+                "2枚",
+                "3枚",
+                "0枚"
               ],
-              "correct": 2,
-              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
-              "explanation": "Based on task instructions, Option 3 is correct."
+              "correct": 0,
+              "transcript": "利用者「本 3冊と DVD 2枚を 借りたいです。」係員「DVDは お一人様 1枚までとなって おります。」利用者「では、この 1枚だけに します。」\n質問：利用者は DVDを 何枚 借りますか。",
+              "explanation": "Borrows 1 DVD (1枚)."
             },
             {
               "id": "n4-e4-l-8",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
-              "image": "/images/japanese/listening/n4/m1_q8.png",
-              "question": "8. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "image": "/images/japanese/listening/n4_2018/m1_q8.png",
+              "question": "8. 男の人と 女の人が 買い物の 相談を しています。二人は 何を 買いますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "テントだけ",
+                "寝袋だけ",
+                "テントと 寝袋の両方",
+                "ランタン"
               ],
-              "correct": 3,
-              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
-              "explanation": "Based on task instructions, Option 4 is correct."
+              "correct": 0,
+              "transcript": "男「キャンプ用の テントと 寝袋、両方 買う？」女「寝袋は 兄に 借りられるから、テントだけ 買いましょう。」男「オッケー。」\n質問：二人は 何を 買いますか。",
+              "explanation": "Buys tent only (テントだけ)."
             },
             {
               "id": "n4-e4-l-9",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
-              "question": "9. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "question": "9. 男の人と 女の人が 話しています。男の人が 遅刻した 理由は何ですか。",
               "options": [
-                "電車が遅れたから",
+                "電車が 事故で 止まったから",
                 "寝坊したから",
-                "道を間違えたから",
-                "雨が降ったから"
+                "バスを 乗り間違えたから",
+                "鍵を 探していたから"
               ],
               "correct": 0,
-              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
-              "explanation": "Point comprehension detail: reason for arriving late."
+              "transcript": "男「遅れて すみません。途中で 人身事故が あって 電車が 30分 止まって しまいました。」女「大変だったわね。」\n質問：男の人が 遅刻した 理由は 何ですか。",
+              "explanation": "Train halted due to accident (電車が事故で止まったから)."
             },
             {
               "id": "n4-e4-l-10",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
-              "question": "10. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "question": "10. 女の人と 男の人が 新しい パソコンについて 話しています。女の人が この パソコンを 選んだ 理由は何ですか。",
               "options": [
-                "電車が遅れたから",
-                "寝坊したから",
-                "道を間違えたから",
-                "雨が降ったから"
+                "軽くて 持ち歩きやすいから",
+                "画面が 一番 大きいから",
+                "値段が 最も 安かったから",
+                "色が 好きだったから"
               ],
-              "correct": 1,
-              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
-              "explanation": "Point comprehension detail: reason for arriving late."
+              "correct": 0,
+              "transcript": "男「軽くて 薄い パソコンだね。」女「ええ、毎日 持ち歩くから、重さが 1キロ未満の 物を 探していたの。」\n質問：選んだ 理由は 何ですか。",
+              "explanation": "Lightweight for commuting (軽くて持ち歩きやすいから)."
             },
             {
               "id": "n4-e4-l-11",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
-              "question": "11. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "question": "11. 男の人と 女の人が 話しています。二人は どうして 旅行の 日程を 変更しましたか。",
               "options": [
-                "電車が遅れたから",
-                "寝坊したから",
-                "道を間違えたから",
-                "雨が降ったから"
+                "台風が 来る 予報だから",
+                "仕事が 入ったから",
+                "ホテルが 満室だったから",
+                "体調を 崩したから"
               ],
-              "correct": 2,
-              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
-              "explanation": "Point comprehension detail: reason for arriving late."
+              "correct": 0,
+              "transcript": "男「来週の 週末、台風が 直撃する 予報に なったね。」女「危ないから、再来週の 連休に 延期しましょう。」\n質問：変更した 理由は 何ですか。",
+              "explanation": "Typhoon forecast (台風が来る予報だから)."
             },
             {
               "id": "n4-e4-l-12",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
-              "question": "12. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "question": "12. 店で 店員と 客が 話しています。この シャツの セールは いつまでですか。",
               "options": [
-                "電車が遅れたから",
-                "寝坊したから",
-                "道を間違えたから",
-                "雨が降ったから"
+                "今週の 日曜日まで",
+                "来週の 月曜日まで",
+                "今日中",
+                "月末まで"
               ],
-              "correct": 3,
-              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
-              "explanation": "Point comprehension detail: reason for arriving late."
+              "correct": 0,
+              "transcript": "客「この 20%割引は いつまで やっていますか。」店員「今週の 日曜日の 閉店時間までで ございます。」\n質問：セールは いつまでですか。",
+              "explanation": "Until this Sunday (今週の日曜日まで)."
             },
             {
               "id": "n4-e4-l-13",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
-              "question": "13. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "question": "13. 男の人と 女の人が 話しています。女の人は どうして アルバイトを 辞めましたか。",
               "options": [
-                "電車が遅れたから",
-                "寝坊したから",
-                "道を間違えたから",
-                "雨が降ったから"
+                "卒業論文で 忙しくなったから",
+                "時給が 安かったから",
+                "人間関係が 悪かったから",
+                "遠かったから"
               ],
               "correct": 0,
-              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
-              "explanation": "Point comprehension detail: reason for arriving late."
+              "transcript": "男「カフェの バイト、辞めたの？」女「ええ、大学の 卒業論文の 執筆が 忙しくなってきたから。」\n質問：辞めた 理由は 何ですか。",
+              "explanation": "Busy writing graduation thesis (卒業論文で忙しくなったから)."
             },
             {
               "id": "n4-e4-l-14",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
-              "question": "14. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "question": "14. 留学生と 日本人の 友達が 話しています。留学生が 日本の 居酒屋で 驚いたことは 何ですか。",
               "options": [
-                "電車が遅れたから",
-                "寝坊したから",
-                "道を間違えたから",
-                "雨が降ったから"
+                "お通し（最初の小鉢）の 仕組み",
+                "メニューの 多さ",
+                "席の 狭さ",
+                "お酒の 種類"
               ],
-              "correct": 1,
-              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
-              "explanation": "Point comprehension detail: reason for arriving late."
+              "correct": 0,
+              "transcript": "留学生「注文していないのに 最初に出てくる 小鉢（お通し）の 仕組みに びっくりしたよ。」\n質問：何に 驚きましたか。",
+              "explanation": "Otoshi appetizer system (お通しの仕組み)."
             },
             {
               "id": "n4-e4-l-15",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
-              "question": "15. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "question": "15. 会社で 部長と 社員が 話しています。プレゼンが 成功した 要因は何ですか。",
               "options": [
-                "電車が遅れたから",
-                "寝坊したから",
-                "道を間違えたから",
-                "雨が降ったから"
+                "グラフや データが 具体的で わかりやすかったこと",
+                "声が 大きかったこと",
+                "時間が 短かったこと",
+                "英語で 発表したこと"
               ],
-              "correct": 2,
-              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
-              "explanation": "Point comprehension detail: reason for arriving late."
+              "correct": 0,
+              "transcript": "部長「今日の プレゼン、グラフや データが 具体的で 大変わかりやすかったよ。」\n質問：成功の 要因は何ですか。",
+              "explanation": "Clear data and graphics (グラフやデータが具体的でわかりやすかったこと)."
             },
             {
               "id": "n4-e4-l-16",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
-              "image": "/images/japanese/listening/n4/m3_q1.png",
-              "question": "16. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "image": "/images/japanese/listening/n4_2018/m3_q1.png",
+              "question": "16. 先輩に 仕事を 教えてもらいたいです。何と言いますか。（矢印の人）",
               "options": [
-                "手伝っていただけませんか。",
-                "手伝ってください。",
-                "手伝いましょうか。"
+                "この やり方を 教えて いただけませんか。",
+                "この やり方を 教えますよ。",
+                "この やり方を 勉強しなさい。"
               ],
               "correct": 0,
-              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
-              "explanation": "Polite request in N4:「〜ていただけませんか」."
+              "transcript": "状況：先輩に 仕事の やり方を 尋ねます。\n質問：何と言いますか。\n1. この やり方を 教えて いただけませんか。\n2. この やり方を 教えますよ。\n3. この やり方を 勉強しなさい。",
+              "explanation": "Polite request:「〜ていただけませんか」."
             },
             {
               "id": "n4-e4-l-17",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
-              "image": "/images/japanese/listening/n4/m3_q2.png",
-              "question": "17. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "image": "/images/japanese/listening/n4_2018/m3_q2.png",
+              "question": "17. 上司の 荷物が 重そうです。手伝いたいです。何と言いますか。（矢印の人）",
               "options": [
-                "手伝っていただけませんか。",
-                "手伝ってください。",
-                "手伝いましょうか。"
+                "お荷物を お持ち しましょうか。",
+                "荷物を 持って ください。",
+                "荷物を 持ちました。"
               ],
               "correct": 0,
-              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
-              "explanation": "Polite request in N4:「〜ていただけませんか」."
+              "transcript": "状況：上司の 荷物を 持ちます。\n質問：何と言いますか。\n1. お荷物を お持ち しましょうか。\n2. 荷物を 持って ください。\n3. 荷物を 持ちました。",
+              "explanation": "Humble offer:「お持ちしましょうか」."
             },
             {
               "id": "n4-e4-l-18",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
-              "image": "/images/japanese/listening/n4/m3_q3.png",
-              "question": "18. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "image": "/images/japanese/listening/n4_2018/m3_q3.png",
+              "question": "18. 取引先の 会社を 訪問しました。受付で 何と言いますか。（矢印の人）",
               "options": [
-                "手伝っていただけませんか。",
-                "手伝ってください。",
-                "手伝いましょうか。"
+                "○○社の 田中と 申します。山田部長に お約束を いただいております。",
+                "いらっしゃいませ、ご用件は 何でしょうか。",
+                "お邪魔しました、さようなら。"
               ],
               "correct": 0,
-              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
-              "explanation": "Polite request in N4:「〜ていただけませんか」."
+              "transcript": "状況：訪問先の 受付で 挨拶します。\n質問：何と言いますか。\n1. ○○社の 田中と 申します。山田部長に お約束を いただいております。\n2. いらっしゃいませ、ご用件は 何でしょうか。\n3. お邪魔しました、さようなら。",
+              "explanation": "Business visitor greeting."
             },
             {
               "id": "n4-e4-l-19",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
-              "image": "/images/japanese/listening/n4/m3_q4.png",
-              "question": "19. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "image": "/images/japanese/listening/n4_2018/m3_q4.png",
+              "question": "19. 会議中、電話が 鳴ってしまいました。何と言いますか。（矢印の人）",
               "options": [
-                "手伝っていただけませんか。",
-                "手伝ってください。",
-                "手伝いましょうか。"
+                "大変 失礼いたしました。",
+                "どういたしまして。",
+                "お疲れ様でした。"
               ],
               "correct": 0,
-              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
-              "explanation": "Polite request in N4:「〜ていただけませんか」."
+              "transcript": "状況：会議室で 謝ります。\n質問：何と言いますか。\n1. 大変 失礼いたしました。\n2. どういたしまして。\n3. お疲れ様でした。",
+              "explanation": "Apology:「大変失礼いたしました。」"
             },
             {
               "id": "n4-e4-l-20",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
-              "image": "/images/japanese/listening/n4/m3_q5.png",
-              "question": "20. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "image": "/images/japanese/listening/n4_2018/m3_q5.png",
+              "question": "20. 先生の お宅から 帰ります。何と言いますか。（矢印の人）",
               "options": [
-                "手伝っていただけませんか。",
-                "手伝ってください。",
-                "手伝いましょうか。"
+                "今日は ごちそうになり、本当に ありがとうございました。",
+                "いってらっしゃい。",
+                "お大事に。"
               ],
               "correct": 0,
-              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
-              "explanation": "Polite request in N4:「〜ていただけませんか」."
+              "transcript": "状況：お礼を 言って 帰ります。\n質問：何と言いますか。\n1. 今日は ごちそうになり、本当に ありがとうございました。\n2. いってらっしゃい。\n3. お大事に。",
+              "explanation": "Expressing hospitality gratitude."
             },
             {
               "id": "n4-e4-l-21",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
-              "question": "21. 「お先に失礼します。」",
+              "question": "21. 「こちらの 書類を ご確認 いただけますでしょうか。」",
               "options": [
-                "お疲れ様でした。",
-                "いってらっしゃい。",
-                "どういたしまして。"
+                "はい、拝見いたします。",
+                "はい、確認させました。",
+                "いいえ、見ました。"
               ],
               "correct": 0,
-              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
-              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+              "transcript": "発話：「こちらの 書類を ご確認 いただけますでしょうか。」\n1. はい、拝見いたします。\n2. はい、確認させました。\n3. いいえ、見ました。",
+              "explanation": "Humble check response:「拝見いたします。」"
             },
             {
               "id": "n4-e4-l-22",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
-              "question": "22. 「お先に失礼します。」",
+              "question": "22. 「お先に 失礼しても よろしいでしょうか。」",
               "options": [
-                "お疲れ様でした。",
-                "いってらっしゃい。",
-                "どういたしまして。"
+                "ええ、お疲れ様でした。",
+                "はい、いってきます。",
+                "いいえ、失礼しました。"
               ],
               "correct": 0,
-              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
-              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+              "transcript": "発話：「お先に 失礼しても よろしいでしょうか。」\n1. ええ、お疲れ様でした。\n2. はい、いってきます。\n3. いいえ、失礼しました。",
+              "explanation": "Responding to early departure:「お疲れ様でした。」"
             },
             {
               "id": "n4-e4-l-23",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
-              "question": "23. 「お先に失礼します。」",
+              "question": "23. 「この プロジェクト、手伝ってもらえないかな。」",
               "options": [
-                "お疲れ様でした。",
-                "いってらっしゃい。",
+                "はい、喜んで お手伝いします。",
+                "いいえ、手伝いました。",
                 "どういたしまして。"
               ],
               "correct": 0,
-              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
-              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+              "transcript": "発話：「この プロジェクト、手伝ってもらえないかな。」\n1. はい、喜んで お手伝いします。\n2. いいえ、手伝いました。\n3. どういたしまして。",
+              "explanation": "Willing assistance:「喜んでお手伝いします。」"
             },
             {
               "id": "n4-e4-l-24",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
-              "question": "24. 「お先に失礼します。」",
+              "question": "24. 「部長、明日の 会議の 時間を 変更されたと 伺いました。」",
               "options": [
-                "お疲れ様でした。",
-                "いってらっしゃい。",
-                "どういたしまして。"
+                "ええ、14時からに 変更したよ。",
+                "はい、伺いました。",
+                "いいえ、変わりません。"
               ],
               "correct": 0,
-              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
-              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+              "transcript": "発話：「部長、明日の 会議の 時間を 変更されたと 伺いました。」\n1. ええ、14時からに 変更したよ。\n2. はい、伺いました。\n3. いいえ、変わりません。",
+              "explanation": "Confirming meeting adjustment."
             },
             {
               "id": "n4-e4-l-25",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
-              "question": "25. 「お先に失礼します。」",
+              "question": "25. 「コーヒーでも いかがですか。」",
               "options": [
-                "お疲れ様でした。",
-                "いってらっしゃい。",
-                "どういたしまして。"
+                "ありがとうございます、いただきます。",
+                "いいえ、コーヒーです。",
+                "ごちそうさまでした。"
               ],
               "correct": 0,
-              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
-              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+              "transcript": "発話：「コーヒーでも いかがですか。」\n1. ありがとうございます、いただきます。\n2. いいえ、コーヒーです。\n3. ごちそうさまでした。",
+              "explanation": "Polite acceptance:「いただきます。」"
             },
             {
               "id": "n4-e4-l-26",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
-              "question": "26. 「お先に失礼します。」",
+              "question": "26. 「少し 寒くありませんか。エアコンを 弱めましょうか。」",
               "options": [
-                "お疲れ様でした。",
-                "いってらっしゃい。",
-                "どういたしまして。"
+                "助かります、お願いします。",
+                "はい、寒いです。",
+                "いいえ、つけました。"
               ],
               "correct": 0,
-              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
-              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+              "transcript": "発話：「少し 寒くありませんか。エアコンを 弱めましょうか。」\n1. 助かります、お願いします。\n2. はい、寒いです。\n3. いいえ、つけました。",
+              "explanation": "Gratitude for consideration:「助かります、お願いします。」"
             },
             {
               "id": "n4-e4-l-27",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
-              "question": "27. 「お先に失礼します。」",
+              "question": "27. 「新幹線の 切符は もう 手配しましたか。」",
               "options": [
-                "お疲れ様でした。",
-                "いってらっしゃい。",
-                "どういたしまして。"
+                "はい、先ほど 予約を 済ませました。",
+                "いいえ、新幹線です。",
+                "駅に あります。"
               ],
               "correct": 0,
-              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
-              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+              "transcript": "発話：「新幹線の 切符は もう 手配しましたか。」\n1. はい、先ほど 予約を 済ませました。\n2. いいえ、新幹線です。\n3. 駅に あります。",
+              "explanation": "Booking confirmed:「予約を済ませました。」"
             },
             {
               "id": "n4-e4-l-28",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
-              "question": "28. 「お先に失礼します。」",
+              "question": "28. 「明日の 懇親会、参加されますか。」",
               "options": [
-                "お疲れ様でした。",
-                "いってらっしゃい。",
-                "どういたしまして。"
+                "はい、ぜひ 参加させていただきます。",
+                "いいえ、参加です。",
+                "お疲れ様でした。"
               ],
               "correct": 0,
-              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
-              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+              "transcript": "発話：「明日の 懇親会、参加されますか。」\n1. はい、ぜひ 参加させていただきます。\n2. いいえ、参加です。\n3. お疲れ様でした。",
+              "explanation": "Accepting invitation humbly:「参加させていただきます。」"
             }
           ]
         }
@@ -17842,7 +17842,7 @@ export const EXAM_PAPERS_CATALOG = {
       "badge": "Grammar Intensive",
       "year": "2022 Series",
       "description": "Targeted simulation focusing on passive sentences (受身), causative (使役), giving/receiving (授受表現), and humble verbs.",
-      "totalQuestions": 97,
+      "totalQuestions": 98,
       "sections": [
         {
           "id": "n4-e5-sec-vocab",
@@ -18781,420 +18781,420 @@ export const EXAM_PAPERS_CATALOG = {
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
               "image": "/images/japanese/listening/n4/m1_q1.png",
-              "question": "1. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "question": "1. 会社で 男の人と 女の人が 話しています。女の人は この後 まず 何を しますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "プロジェクターの 接続を 確認する",
+                "資料を コピーする",
+                "参加者に 連絡する",
+                "お茶を 用意する"
               ],
-              "correct": 1,
-              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
-              "explanation": "Based on task instructions, Option 2 is correct."
+              "correct": 0,
+              "transcript": "男「会議室の プロジェクターの 準備を お願いできる？」女「はい。資料の コピーも しておきましょうか。」男「資料は 僕が やるから、先に プロジェクターの 接続を 確認して。」女「わかりました。」\n質問：女の人は この後 まず 何を しますか。",
+              "explanation": "First checks the projector connection (プロジェクターの接続を確認する)."
             },
             {
               "id": "n4-e5-l-2",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
               "image": "/images/japanese/listening/n4/m1_q2.png",
-              "question": "2. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "question": "2. 病院で 看護師と 患者が 話しています。患者は どこで 待ちますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "2階の 放射線科の前",
+                "1階の 会計窓口",
+                "3階の 手術室",
+                "薬局"
               ],
-              "correct": 2,
-              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
-              "explanation": "Based on task instructions, Option 3 is correct."
+              "correct": 0,
+              "transcript": "看護師「診察の 前に レントゲンを 撮りますので、2階の 放射線科の 前で お待ちください。」患者「会計は どこですか。」看護師「会計は 診察が すべて 終わった後、1階です。」\n質問：患者は これから どこへ 行きますか。",
+              "explanation": "Goes to 2nd floor radiology (2階の放射線科の前)."
             },
             {
               "id": "n4-e5-l-3",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
               "image": "/images/japanese/listening/n4/m1_q3.png",
-              "question": "3. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "question": "3. 引越し業者と 客が 話しています。客は どの 箱に 食器を 入れますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "赤い テープの 小さい箱",
+                "青い テープの 箱",
+                "黄色い 大きい箱",
+                "段ボールの 袋"
               ],
-              "correct": 3,
-              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
-              "explanation": "Based on task instructions, Option 4 is correct."
+              "correct": 0,
+              "transcript": "業者「割れやすい 食器は 赤い テープが 貼ってある 小さい 箱に お入れください。本は 青い 箱です。」客「わかりました。」\n質問：食器は どの 箱に 入れますか。",
+              "explanation": "Packs dishes in small box with red tape (赤いテープの小さい箱)."
             },
             {
               "id": "n4-e5-l-4",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
               "image": "/images/japanese/listening/n4/m1_q4.png",
-              "question": "4. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "question": "4. 大学の 事務室で 学生と 職員が 話しています。学生は いつまでに 奨学金の 書類を 出しますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "来週の 金曜日 17時",
+                "来週の 水曜日",
+                "今週の 金曜日",
+                "月末"
               ],
               "correct": 0,
-              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
-              "explanation": "Based on task instructions, Option 1 is correct."
+              "transcript": "職員「締め切りは 来週の 金曜日 17時です。ただし、推薦書は 水曜日までに 教授に もらって ください。」学生「わかりました。」\n質問：書類の 最終締め切りは いつですか。",
+              "explanation": "Final deadline is next Friday at 17:00 (来週の金曜日17時)."
             },
             {
               "id": "n4-e5-l-5",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
               "image": "/images/japanese/listening/n4/m1_q5.png",
-              "question": "5. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "question": "5. レストランの 厨房で 店長と アルバイトが 話しています。アルバイトは どの テーブルを 片付けますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "3番テーブル",
+                "7番テーブル",
+                "1番テーブル",
+                "カウンター席"
               ],
-              "correct": 1,
-              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
-              "explanation": "Based on task instructions, Option 2 is correct."
+              "correct": 0,
+              "transcript": "店長「3番テーブルと 7番テーブル、どっちが 空いた？」バイト「3番テーブルの お客様が お帰りになりました。」店長「じゃあ、急いで 3番テーブルを 拭いて 次の お客様を 案内して。」\n質問：アルバイトは どの テーブルを 片付けますか。",
+              "explanation": "Cleans table 3 (3番テーブル)."
             },
             {
               "id": "n4-e5-l-6",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
               "image": "/images/japanese/listening/n4/m1_q6.png",
-              "question": "6. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "question": "6. 旅行会社で 客と 案内係が 話しています。客は どの プランを 選びましたか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "温泉旅館の Aプラン",
+                "ホテルの Bプラン",
+                "日帰り Cプラン",
+                "キャンプ Dプラン"
               ],
-              "correct": 2,
-              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
-              "explanation": "Based on task instructions, Option 3 is correct."
+              "correct": 0,
+              "transcript": "案内係「温泉旅館に 泊まる Aプランと、ホテルの Bプランが ございます。」客「露天風呂に 入りたくて 来たので、Aプランに します。」\n質問：客は どの プランを 選びましたか。",
+              "explanation": "Selects onsen ryokan Plan A (温泉旅館のAプラン)."
             },
             {
               "id": "n4-e5-l-7",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
               "image": "/images/japanese/listening/n4/m1_q7.png",
-              "question": "7. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "question": "7. 図書館で 係員と 利用者が 話しています。利用者は DVDを 何枚 借りられますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "1枚",
+                "2枚",
+                "3枚",
+                "0枚"
               ],
-              "correct": 3,
-              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
-              "explanation": "Based on task instructions, Option 4 is correct."
+              "correct": 0,
+              "transcript": "利用者「本 3冊と DVD 2枚を 借りたいです。」係員「DVDは お一人様 1枚までとなって おります。」利用者「では、この 1枚だけに します。」\n質問：利用者は DVDを 何枚 借りますか。",
+              "explanation": "Borrows 1 DVD (1枚)."
             },
             {
               "id": "n4-e5-l-8",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
               "image": "/images/japanese/listening/n4/m1_q8.png",
-              "question": "8. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "question": "8. 男の人と 女の人が 買い物の 相談を しています。二人は 何を 買いますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "テントだけ",
+                "寝袋だけ",
+                "テントと 寝袋の両方",
+                "ランタン"
               ],
               "correct": 0,
-              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
-              "explanation": "Based on task instructions, Option 1 is correct."
+              "transcript": "男「キャンプ用の テントと 寝袋、両方 買う？」女「寝袋は 兄に 借りられるから、テントだけ 買いましょう。」男「オッケー。」\n質問：二人は 何を 買いますか。",
+              "explanation": "Buys tent only (テントだけ)."
             },
             {
               "id": "n4-e5-l-9",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
-              "question": "9. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "question": "9. 男の人と 女の人が 話しています。男の人が 遅刻した 理由は何ですか。",
               "options": [
-                "電車が遅れたから",
+                "電車が 事故で 止まったから",
                 "寝坊したから",
-                "道を間違えたから",
-                "雨が降ったから"
+                "バスを 乗り間違えたから",
+                "鍵を 探していたから"
               ],
-              "correct": 1,
-              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
-              "explanation": "Point comprehension detail: reason for arriving late."
+              "correct": 0,
+              "transcript": "男「遅れて すみません。途中で 人身事故が あって 電車が 30分 止まって しまいました。」女「大変だったわね。」\n質問：男の人が 遅刻した 理由は 何ですか。",
+              "explanation": "Train halted due to accident (電車が事故で止まったから)."
             },
             {
               "id": "n4-e5-l-10",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
-              "question": "10. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "question": "10. 女の人と 男の人が 新しい パソコンについて 話しています。女の人が この パソコンを 選んだ 理由は何ですか。",
               "options": [
-                "電車が遅れたから",
-                "寝坊したから",
-                "道を間違えたから",
-                "雨が降ったから"
+                "軽くて 持ち歩きやすいから",
+                "画面が 一番 大きいから",
+                "値段が 最も 安かったから",
+                "色が 好きだったから"
               ],
-              "correct": 2,
-              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
-              "explanation": "Point comprehension detail: reason for arriving late."
+              "correct": 0,
+              "transcript": "男「軽くて 薄い パソコンだね。」女「ええ、毎日 持ち歩くから、重さが 1キロ未満の 物を 探していたの。」\n質問：選んだ 理由は 何ですか。",
+              "explanation": "Lightweight for commuting (軽くて持ち歩きやすいから)."
             },
             {
               "id": "n4-e5-l-11",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
-              "question": "11. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "question": "11. 男の人と 女の人が 話しています。二人は どうして 旅行の 日程を 変更しましたか。",
               "options": [
-                "電車が遅れたから",
-                "寝坊したから",
-                "道を間違えたから",
-                "雨が降ったから"
+                "台風が 来る 予報だから",
+                "仕事が 入ったから",
+                "ホテルが 満室だったから",
+                "体調を 崩したから"
               ],
-              "correct": 3,
-              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
-              "explanation": "Point comprehension detail: reason for arriving late."
+              "correct": 0,
+              "transcript": "男「来週の 週末、台風が 直撃する 予報に なったね。」女「危ないから、再来週の 連休に 延期しましょう。」\n質問：変更した 理由は 何ですか。",
+              "explanation": "Typhoon forecast (台風が来る予報だから)."
             },
             {
               "id": "n4-e5-l-12",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
-              "question": "12. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "question": "12. 店で 店員と 客が 話しています。この シャツの セールは いつまでですか。",
               "options": [
-                "電車が遅れたから",
-                "寝坊したから",
-                "道を間違えたから",
-                "雨が降ったから"
+                "今週の 日曜日まで",
+                "来週の 月曜日まで",
+                "今日中",
+                "月末まで"
               ],
               "correct": 0,
-              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
-              "explanation": "Point comprehension detail: reason for arriving late."
+              "transcript": "客「この 20%割引は いつまで やっていますか。」店員「今週の 日曜日の 閉店時間までで ございます。」\n質問：セールは いつまでですか。",
+              "explanation": "Until this Sunday (今週の日曜日まで)."
             },
             {
               "id": "n4-e5-l-13",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
-              "question": "13. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "question": "13. 男の人と 女の人が 話しています。女の人は どうして アルバイトを 辞めましたか。",
               "options": [
-                "電車が遅れたから",
-                "寝坊したから",
-                "道を間違えたから",
-                "雨が降ったから"
+                "卒業論文で 忙しくなったから",
+                "時給が 安かったから",
+                "人間関係が 悪かったから",
+                "遠かったから"
               ],
-              "correct": 1,
-              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
-              "explanation": "Point comprehension detail: reason for arriving late."
+              "correct": 0,
+              "transcript": "男「カフェの バイト、辞めたの？」女「ええ、大学の 卒業論文の 執筆が 忙しくなってきたから。」\n質問：辞めた 理由は 何ですか。",
+              "explanation": "Busy writing graduation thesis (卒業論文で忙しくなったから)."
             },
             {
               "id": "n4-e5-l-14",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
-              "question": "14. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "question": "14. 留学生と 日本人の 友達が 話しています。留学生が 日本の 居酒屋で 驚いたことは 何ですか。",
               "options": [
-                "電車が遅れたから",
-                "寝坊したから",
-                "道を間違えたから",
-                "雨が降ったから"
+                "お通し（最初の小鉢）の 仕組み",
+                "メニューの 多さ",
+                "席の 狭さ",
+                "お酒の 種類"
               ],
-              "correct": 2,
-              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
-              "explanation": "Point comprehension detail: reason for arriving late."
+              "correct": 0,
+              "transcript": "留学生「注文していないのに 最初に出てくる 小鉢（お通し）の 仕組みに びっくりしたよ。」\n質問：何に 驚きましたか。",
+              "explanation": "Otoshi appetizer system (お通しの仕組み)."
             },
             {
               "id": "n4-e5-l-15",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
-              "question": "15. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "question": "15. 会社で 部長と 社員が 話しています。プレゼンが 成功した 要因は何ですか。",
               "options": [
-                "電車が遅れたから",
-                "寝坊したから",
-                "道を間違えたから",
-                "雨が降ったから"
+                "グラフや データが 具体的で わかりやすかったこと",
+                "声が 大きかったこと",
+                "時間が 短かったこと",
+                "英語で 発表したこと"
               ],
-              "correct": 3,
-              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
-              "explanation": "Point comprehension detail: reason for arriving late."
+              "correct": 0,
+              "transcript": "部長「今日の プレゼン、グラフや データが 具体的で 大変わかりやすかったよ。」\n質問：成功の 要因は何ですか。",
+              "explanation": "Clear data and graphics (グラフやデータが具体的でわかりやすかったこと)."
             },
             {
               "id": "n4-e5-l-16",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
               "image": "/images/japanese/listening/n4/m3_q1.png",
-              "question": "16. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "question": "16. 先輩に 仕事を 教えてもらいたいです。何と言いますか。（矢印の人）",
               "options": [
-                "手伝っていただけませんか。",
-                "手伝ってください。",
-                "手伝いましょうか。"
+                "この やり方を 教えて いただけませんか。",
+                "この やり方を 教えますよ。",
+                "この やり方を 勉強しなさい。"
               ],
               "correct": 0,
-              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
-              "explanation": "Polite request in N4:「〜ていただけませんか」."
+              "transcript": "状況：先輩に 仕事の やり方を 尋ねます。\n質問：何と言いますか。\n1. この やり方を 教えて いただけませんか。\n2. この やり方を 教えますよ。\n3. この やり方を 勉強しなさい。",
+              "explanation": "Polite request:「〜ていただけませんか」."
             },
             {
               "id": "n4-e5-l-17",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
               "image": "/images/japanese/listening/n4/m3_q2.png",
-              "question": "17. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "question": "17. 上司の 荷物が 重そうです。手伝いたいです。何と言いますか。（矢印の人）",
               "options": [
-                "手伝っていただけませんか。",
-                "手伝ってください。",
-                "手伝いましょうか。"
+                "お荷物を お持ち しましょうか。",
+                "荷物を 持って ください。",
+                "荷物を 持ちました。"
               ],
               "correct": 0,
-              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
-              "explanation": "Polite request in N4:「〜ていただけませんか」."
+              "transcript": "状況：上司の 荷物を 持ちます。\n質問：何と言いますか。\n1. お荷物を お持ち しましょうか。\n2. 荷物を 持って ください。\n3. 荷物を 持ちました。",
+              "explanation": "Humble offer:「お持ちしましょうか」."
             },
             {
               "id": "n4-e5-l-18",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
               "image": "/images/japanese/listening/n4/m3_q3.png",
-              "question": "18. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "question": "18. 取引先の 会社を 訪問しました。受付で 何と言いますか。（矢印の人）",
               "options": [
-                "手伝っていただけませんか。",
-                "手伝ってください。",
-                "手伝いましょうか。"
+                "○○社の 田中と 申します。山田部長に お約束を いただいております。",
+                "いらっしゃいませ、ご用件は 何でしょうか。",
+                "お邪魔しました、さようなら。"
               ],
               "correct": 0,
-              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
-              "explanation": "Polite request in N4:「〜ていただけませんか」."
+              "transcript": "状況：訪問先の 受付で 挨拶します。\n質問：何と言いますか。\n1. ○○社の 田中と 申します。山田部長に お約束を いただいております。\n2. いらっしゃいませ、ご用件は 何でしょうか。\n3. お邪魔しました、さようなら。",
+              "explanation": "Business visitor greeting."
             },
             {
               "id": "n4-e5-l-19",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
               "image": "/images/japanese/listening/n4/m3_q4.png",
-              "question": "19. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "question": "19. 会議中、電話が 鳴ってしまいました。何と言いますか。（矢印の人）",
               "options": [
-                "手伝っていただけませんか。",
-                "手伝ってください。",
-                "手伝いましょうか。"
+                "大変 失礼いたしました。",
+                "どういたしまして。",
+                "お疲れ様でした。"
               ],
               "correct": 0,
-              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
-              "explanation": "Polite request in N4:「〜ていただけませんか」."
+              "transcript": "状況：会議室で 謝ります。\n質問：何と言いますか。\n1. 大変 失礼いたしました。\n2. どういたしまして。\n3. お疲れ様でした。",
+              "explanation": "Apology:「大変失礼いたしました。」"
             },
             {
               "id": "n4-e5-l-20",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
               "image": "/images/japanese/listening/n4/m3_q5.png",
-              "question": "20. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "question": "20. 先生の お宅から 帰ります。何と言いますか。（矢印の人）",
               "options": [
-                "手伝っていただけませんか。",
-                "手伝ってください。",
-                "手伝いましょうか。"
+                "今日は ごちそうになり、本当に ありがとうございました。",
+                "いってらっしゃい。",
+                "お大事に。"
               ],
               "correct": 0,
-              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
-              "explanation": "Polite request in N4:「〜ていただけませんか」."
+              "transcript": "状況：お礼を 言って 帰ります。\n質問：何と言いますか。\n1. 今日は ごちそうになり、本当に ありがとうございました。\n2. いってらっしゃい。\n3. お大事に。",
+              "explanation": "Expressing hospitality gratitude."
             },
             {
               "id": "n4-e5-l-21",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
-              "question": "21. 「お先に失礼します。」",
+              "question": "21. 「こちらの 書類を ご確認 いただけますでしょうか。」",
               "options": [
-                "お疲れ様でした。",
-                "いってらっしゃい。",
-                "どういたしまして。"
+                "はい、拝見いたします。",
+                "はい、確認させました。",
+                "いいえ、見ました。"
               ],
               "correct": 0,
-              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
-              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+              "transcript": "発話：「こちらの 書類を ご確認 いただけますでしょうか。」\n1. はい、拝見いたします。\n2. はい、確認させました。\n3. いいえ、見ました。",
+              "explanation": "Humble check response:「拝見いたします。」"
             },
             {
               "id": "n4-e5-l-22",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
-              "question": "22. 「お先に失礼します。」",
+              "question": "22. 「お先に 失礼しても よろしいでしょうか。」",
               "options": [
-                "お疲れ様でした。",
-                "いってらっしゃい。",
-                "どういたしまして。"
+                "ええ、お疲れ様でした。",
+                "はい、いってきます。",
+                "いいえ、失礼しました。"
               ],
               "correct": 0,
-              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
-              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+              "transcript": "発話：「お先に 失礼しても よろしいでしょうか。」\n1. ええ、お疲れ様でした。\n2. はい、いってきます。\n3. いいえ、失礼しました。",
+              "explanation": "Responding to early departure:「お疲れ様でした。」"
             },
             {
               "id": "n4-e5-l-23",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
-              "question": "23. 「お先に失礼します。」",
+              "question": "23. 「この プロジェクト、手伝ってもらえないかな。」",
               "options": [
-                "お疲れ様でした。",
-                "いってらっしゃい。",
+                "はい、喜んで お手伝いします。",
+                "いいえ、手伝いました。",
                 "どういたしまして。"
               ],
               "correct": 0,
-              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
-              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+              "transcript": "発話：「この プロジェクト、手伝ってもらえないかな。」\n1. はい、喜んで お手伝いします。\n2. いいえ、手伝いました。\n3. どういたしまして。",
+              "explanation": "Willing assistance:「喜んでお手伝いします。」"
             },
             {
               "id": "n4-e5-l-24",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
-              "question": "24. 「お先に失礼します。」",
+              "question": "24. 「部長、明日の 会議の 時間を 変更されたと 伺いました。」",
               "options": [
-                "お疲れ様でした。",
-                "いってらっしゃい。",
-                "どういたしまして。"
+                "ええ、14時からに 変更したよ。",
+                "はい、伺いました。",
+                "いいえ、変わりません。"
               ],
               "correct": 0,
-              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
-              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+              "transcript": "発話：「部長、明日の 会議の 時間を 変更されたと 伺いました。」\n1. ええ、14時からに 変更したよ。\n2. はい、伺いました。\n3. いいえ、変わりません。",
+              "explanation": "Confirming meeting adjustment."
             },
             {
               "id": "n4-e5-l-25",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
-              "question": "25. 「お先に失礼します。」",
+              "question": "25. 「コーヒーでも いかがですか。」",
               "options": [
-                "お疲れ様でした。",
-                "いってらっしゃい。",
-                "どういたしまして。"
+                "ありがとうございます、いただきます。",
+                "いいえ、コーヒーです。",
+                "ごちそうさまでした。"
               ],
               "correct": 0,
-              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
-              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+              "transcript": "発話：「コーヒーでも いかがですか。」\n1. ありがとうございます、いただきます。\n2. いいえ、コーヒーです。\n3. ごちそうさまでした。",
+              "explanation": "Polite acceptance:「いただきます。」"
             },
             {
               "id": "n4-e5-l-26",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
-              "question": "26. 「お先に失礼します。」",
+              "question": "26. 「少し 寒くありませんか。エアコンを 弱めましょうか。」",
               "options": [
-                "お疲れ様でした。",
-                "いってらっしゃい。",
-                "どういたしまして。"
+                "助かります、お願いします。",
+                "はい、寒いです。",
+                "いいえ、つけました。"
               ],
               "correct": 0,
-              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
-              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+              "transcript": "発話：「少し 寒くありませんか。エアコンを 弱めましょうか。」\n1. 助かります、お願いします。\n2. はい、寒いです。\n3. いいえ、つけました。",
+              "explanation": "Gratitude for consideration:「助かります、お願いします。」"
             },
             {
               "id": "n4-e5-l-27",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
-              "question": "27. 「お先に失礼します。」",
+              "question": "27. 「新幹線の 切符は もう 手配しましたか。」",
               "options": [
-                "お疲れ様でした。",
-                "いってらっしゃい。",
-                "どういたしまして。"
+                "はい、先ほど 予約を 済ませました。",
+                "いいえ、新幹線です。",
+                "駅に あります。"
               ],
               "correct": 0,
-              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
-              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+              "transcript": "発話：「新幹線の 切符は もう 手配しましたか。」\n1. はい、先ほど 予約を 済ませました。\n2. いいえ、新幹線です。\n3. 駅に あります。",
+              "explanation": "Booking confirmed:「予約を済ませました。」"
             },
             {
               "id": "n4-e5-l-28",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
-              "question": "28. 「お先に失礼します。」",
+              "question": "28. 「明日の 懇親会、参加されますか。」",
               "options": [
-                "お疲れ様でした。",
-                "いってらっしゃい。",
-                "どういたしまして。"
+                "はい、ぜひ 参加させていただきます。",
+                "いいえ、参加です。",
+                "お疲れ様でした。"
               ],
               "correct": 0,
-              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
-              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+              "transcript": "発話：「明日の 懇親会、参加されますか。」\n1. はい、ぜひ 参加させていただきます。\n2. いいえ、参加です。\n3. お疲れ様でした。",
+              "explanation": "Accepting invitation humbly:「参加させていただきます。」"
             }
           ]
         }
@@ -19207,7 +19207,7 @@ export const EXAM_PAPERS_CATALOG = {
       "badge": "Speed & Accuracy",
       "year": "2023 Series",
       "description": "Fast-paced mock test engineered to improve reading comprehension speed and rapid conversational listening reflexes.",
-      "totalQuestions": 97,
+      "totalQuestions": 98,
       "sections": [
         {
           "id": "n4-e6-sec-vocab",
@@ -20145,421 +20145,421 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e6-l-1",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
-              "image": "/images/japanese/listening/n4/m1_q1.png",
-              "question": "1. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "image": "/images/japanese/listening/n4_2018/m1_q1.png",
+              "question": "1. 会社で 男の人と 女の人が 話しています。女の人は この後 まず 何を しますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "プロジェクターの 接続を 確認する",
+                "資料を コピーする",
+                "参加者に 連絡する",
+                "お茶を 用意する"
               ],
-              "correct": 2,
-              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
-              "explanation": "Based on task instructions, Option 3 is correct."
+              "correct": 0,
+              "transcript": "男「会議室の プロジェクターの 準備を お願いできる？」女「はい。資料の コピーも しておきましょうか。」男「資料は 僕が やるから、先に プロジェクターの 接続を 確認して。」女「わかりました。」\n質問：女の人は この後 まず 何を しますか。",
+              "explanation": "First checks the projector connection (プロジェクターの接続を確認する)."
             },
             {
               "id": "n4-e6-l-2",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
-              "image": "/images/japanese/listening/n4/m1_q2.png",
-              "question": "2. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "image": "/images/japanese/listening/n4_2018/m1_q2.png",
+              "question": "2. 病院で 看護師と 患者が 話しています。患者は どこで 待ちますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "2階の 放射線科の前",
+                "1階の 会計窓口",
+                "3階の 手術室",
+                "薬局"
               ],
-              "correct": 3,
-              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
-              "explanation": "Based on task instructions, Option 4 is correct."
+              "correct": 0,
+              "transcript": "看護師「診察の 前に レントゲンを 撮りますので、2階の 放射線科の 前で お待ちください。」患者「会計は どこですか。」看護師「会計は 診察が すべて 終わった後、1階です。」\n質問：患者は これから どこへ 行きますか。",
+              "explanation": "Goes to 2nd floor radiology (2階の放射線科の前)."
             },
             {
               "id": "n4-e6-l-3",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
-              "image": "/images/japanese/listening/n4/m1_q3.png",
-              "question": "3. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "image": "/images/japanese/listening/n4_2018/m1_q3.png",
+              "question": "3. 引越し業者と 客が 話しています。客は どの 箱に 食器を 入れますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "赤い テープの 小さい箱",
+                "青い テープの 箱",
+                "黄色い 大きい箱",
+                "段ボールの 袋"
               ],
               "correct": 0,
-              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
-              "explanation": "Based on task instructions, Option 1 is correct."
+              "transcript": "業者「割れやすい 食器は 赤い テープが 貼ってある 小さい 箱に お入れください。本は 青い 箱です。」客「わかりました。」\n質問：食器は どの 箱に 入れますか。",
+              "explanation": "Packs dishes in small box with red tape (赤いテープの小さい箱)."
             },
             {
               "id": "n4-e6-l-4",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
-              "image": "/images/japanese/listening/n4/m1_q4.png",
-              "question": "4. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "image": "/images/japanese/listening/n4_2018/m1_q4.png",
+              "question": "4. 大学の 事務室で 学生と 職員が 話しています。学生は いつまでに 奨学金の 書類を 出しますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "来週の 金曜日 17時",
+                "来週の 水曜日",
+                "今週の 金曜日",
+                "月末"
               ],
-              "correct": 1,
-              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
-              "explanation": "Based on task instructions, Option 2 is correct."
+              "correct": 0,
+              "transcript": "職員「締め切りは 来週の 金曜日 17時です。ただし、推薦書は 水曜日までに 教授に もらって ください。」学生「わかりました。」\n質問：書類の 最終締め切りは いつですか。",
+              "explanation": "Final deadline is next Friday at 17:00 (来週の金曜日17時)."
             },
             {
               "id": "n4-e6-l-5",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
-              "image": "/images/japanese/listening/n4/m1_q5.png",
-              "question": "5. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "image": "/images/japanese/listening/n4_2018/m1_q5.png",
+              "question": "5. レストランの 厨房で 店長と アルバイトが 話しています。アルバイトは どの テーブルを 片付けますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "3番テーブル",
+                "7番テーブル",
+                "1番テーブル",
+                "カウンター席"
               ],
-              "correct": 2,
-              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
-              "explanation": "Based on task instructions, Option 3 is correct."
+              "correct": 0,
+              "transcript": "店長「3番テーブルと 7番テーブル、どっちが 空いた？」バイト「3番テーブルの お客様が お帰りになりました。」店長「じゃあ、急いで 3番テーブルを 拭いて 次の お客様を 案内して。」\n質問：アルバイトは どの テーブルを 片付けますか。",
+              "explanation": "Cleans table 3 (3番テーブル)."
             },
             {
               "id": "n4-e6-l-6",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
-              "image": "/images/japanese/listening/n4/m1_q6.png",
-              "question": "6. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "image": "/images/japanese/listening/n4_2018/m1_q6.png",
+              "question": "6. 旅行会社で 客と 案内係が 話しています。客は どの プランを 選びましたか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "温泉旅館の Aプラン",
+                "ホテルの Bプラン",
+                "日帰り Cプラン",
+                "キャンプ Dプラン"
               ],
-              "correct": 3,
-              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
-              "explanation": "Based on task instructions, Option 4 is correct."
+              "correct": 0,
+              "transcript": "案内係「温泉旅館に 泊まる Aプランと、ホテルの Bプランが ございます。」客「露天風呂に 入りたくて 来たので、Aプランに します。」\n質問：客は どの プランを 選びましたか。",
+              "explanation": "Selects onsen ryokan Plan A (温泉旅館のAプラン)."
             },
             {
               "id": "n4-e6-l-7",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
-              "image": "/images/japanese/listening/n4/m1_q7.png",
-              "question": "7. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "image": "/images/japanese/listening/n4_2018/m1_q7.png",
+              "question": "7. 図書館で 係員と 利用者が 話しています。利用者は DVDを 何枚 借りられますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "1枚",
+                "2枚",
+                "3枚",
+                "0枚"
               ],
               "correct": 0,
-              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
-              "explanation": "Based on task instructions, Option 1 is correct."
+              "transcript": "利用者「本 3冊と DVD 2枚を 借りたいです。」係員「DVDは お一人様 1枚までとなって おります。」利用者「では、この 1枚だけに します。」\n質問：利用者は DVDを 何枚 借りますか。",
+              "explanation": "Borrows 1 DVD (1枚)."
             },
             {
               "id": "n4-e6-l-8",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
-              "image": "/images/japanese/listening/n4/m1_q8.png",
-              "question": "8. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "image": "/images/japanese/listening/n4_2018/m1_q8.png",
+              "question": "8. 男の人と 女の人が 買い物の 相談を しています。二人は 何を 買いますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "テントだけ",
+                "寝袋だけ",
+                "テントと 寝袋の両方",
+                "ランタン"
               ],
-              "correct": 1,
-              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
-              "explanation": "Based on task instructions, Option 2 is correct."
+              "correct": 0,
+              "transcript": "男「キャンプ用の テントと 寝袋、両方 買う？」女「寝袋は 兄に 借りられるから、テントだけ 買いましょう。」男「オッケー。」\n質問：二人は 何を 買いますか。",
+              "explanation": "Buys tent only (テントだけ)."
             },
             {
               "id": "n4-e6-l-9",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
-              "question": "9. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "question": "9. 男の人と 女の人が 話しています。男の人が 遅刻した 理由は何ですか。",
               "options": [
-                "電車が遅れたから",
+                "電車が 事故で 止まったから",
                 "寝坊したから",
-                "道を間違えたから",
-                "雨が降ったから"
+                "バスを 乗り間違えたから",
+                "鍵を 探していたから"
               ],
-              "correct": 2,
-              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
-              "explanation": "Point comprehension detail: reason for arriving late."
+              "correct": 0,
+              "transcript": "男「遅れて すみません。途中で 人身事故が あって 電車が 30分 止まって しまいました。」女「大変だったわね。」\n質問：男の人が 遅刻した 理由は 何ですか。",
+              "explanation": "Train halted due to accident (電車が事故で止まったから)."
             },
             {
               "id": "n4-e6-l-10",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
-              "question": "10. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "question": "10. 女の人と 男の人が 新しい パソコンについて 話しています。女の人が この パソコンを 選んだ 理由は何ですか。",
               "options": [
-                "電車が遅れたから",
-                "寝坊したから",
-                "道を間違えたから",
-                "雨が降ったから"
+                "軽くて 持ち歩きやすいから",
+                "画面が 一番 大きいから",
+                "値段が 最も 安かったから",
+                "色が 好きだったから"
               ],
-              "correct": 3,
-              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
-              "explanation": "Point comprehension detail: reason for arriving late."
+              "correct": 0,
+              "transcript": "男「軽くて 薄い パソコンだね。」女「ええ、毎日 持ち歩くから、重さが 1キロ未満の 物を 探していたの。」\n質問：選んだ 理由は 何ですか。",
+              "explanation": "Lightweight for commuting (軽くて持ち歩きやすいから)."
             },
             {
               "id": "n4-e6-l-11",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
-              "question": "11. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "question": "11. 男の人と 女の人が 話しています。二人は どうして 旅行の 日程を 変更しましたか。",
               "options": [
-                "電車が遅れたから",
-                "寝坊したから",
-                "道を間違えたから",
-                "雨が降ったから"
+                "台風が 来る 予報だから",
+                "仕事が 入ったから",
+                "ホテルが 満室だったから",
+                "体調を 崩したから"
               ],
               "correct": 0,
-              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
-              "explanation": "Point comprehension detail: reason for arriving late."
+              "transcript": "男「来週の 週末、台風が 直撃する 予報に なったね。」女「危ないから、再来週の 連休に 延期しましょう。」\n質問：変更した 理由は 何ですか。",
+              "explanation": "Typhoon forecast (台風が来る予報だから)."
             },
             {
               "id": "n4-e6-l-12",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
-              "question": "12. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "question": "12. 店で 店員と 客が 話しています。この シャツの セールは いつまでですか。",
               "options": [
-                "電車が遅れたから",
-                "寝坊したから",
-                "道を間違えたから",
-                "雨が降ったから"
+                "今週の 日曜日まで",
+                "来週の 月曜日まで",
+                "今日中",
+                "月末まで"
               ],
-              "correct": 1,
-              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
-              "explanation": "Point comprehension detail: reason for arriving late."
+              "correct": 0,
+              "transcript": "客「この 20%割引は いつまで やっていますか。」店員「今週の 日曜日の 閉店時間までで ございます。」\n質問：セールは いつまでですか。",
+              "explanation": "Until this Sunday (今週の日曜日まで)."
             },
             {
               "id": "n4-e6-l-13",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
-              "question": "13. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "question": "13. 男の人と 女の人が 話しています。女の人は どうして アルバイトを 辞めましたか。",
               "options": [
-                "電車が遅れたから",
-                "寝坊したから",
-                "道を間違えたから",
-                "雨が降ったから"
+                "卒業論文で 忙しくなったから",
+                "時給が 安かったから",
+                "人間関係が 悪かったから",
+                "遠かったから"
               ],
-              "correct": 2,
-              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
-              "explanation": "Point comprehension detail: reason for arriving late."
+              "correct": 0,
+              "transcript": "男「カフェの バイト、辞めたの？」女「ええ、大学の 卒業論文の 執筆が 忙しくなってきたから。」\n質問：辞めた 理由は 何ですか。",
+              "explanation": "Busy writing graduation thesis (卒業論文で忙しくなったから)."
             },
             {
               "id": "n4-e6-l-14",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
-              "question": "14. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "question": "14. 留学生と 日本人の 友達が 話しています。留学生が 日本の 居酒屋で 驚いたことは 何ですか。",
               "options": [
-                "電車が遅れたから",
-                "寝坊したから",
-                "道を間違えたから",
-                "雨が降ったから"
+                "お通し（最初の小鉢）の 仕組み",
+                "メニューの 多さ",
+                "席の 狭さ",
+                "お酒の 種類"
               ],
-              "correct": 3,
-              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
-              "explanation": "Point comprehension detail: reason for arriving late."
+              "correct": 0,
+              "transcript": "留学生「注文していないのに 最初に出てくる 小鉢（お通し）の 仕組みに びっくりしたよ。」\n質問：何に 驚きましたか。",
+              "explanation": "Otoshi appetizer system (お通しの仕組み)."
             },
             {
               "id": "n4-e6-l-15",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
-              "question": "15. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "question": "15. 会社で 部長と 社員が 話しています。プレゼンが 成功した 要因は何ですか。",
               "options": [
-                "電車が遅れたから",
-                "寝坊したから",
-                "道を間違えたから",
-                "雨が降ったから"
+                "グラフや データが 具体的で わかりやすかったこと",
+                "声が 大きかったこと",
+                "時間が 短かったこと",
+                "英語で 発表したこと"
               ],
               "correct": 0,
-              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
-              "explanation": "Point comprehension detail: reason for arriving late."
+              "transcript": "部長「今日の プレゼン、グラフや データが 具体的で 大変わかりやすかったよ。」\n質問：成功の 要因は何ですか。",
+              "explanation": "Clear data and graphics (グラフやデータが具体的でわかりやすかったこと)."
             },
             {
               "id": "n4-e6-l-16",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
-              "image": "/images/japanese/listening/n4/m3_q1.png",
-              "question": "16. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "image": "/images/japanese/listening/n4_2018/m3_q1.png",
+              "question": "16. 先輩に 仕事を 教えてもらいたいです。何と言いますか。（矢印の人）",
               "options": [
-                "手伝っていただけませんか。",
-                "手伝ってください。",
-                "手伝いましょうか。"
+                "この やり方を 教えて いただけませんか。",
+                "この やり方を 教えますよ。",
+                "この やり方を 勉強しなさい。"
               ],
               "correct": 0,
-              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
-              "explanation": "Polite request in N4:「〜ていただけませんか」."
+              "transcript": "状況：先輩に 仕事の やり方を 尋ねます。\n質問：何と言いますか。\n1. この やり方を 教えて いただけませんか。\n2. この やり方を 教えますよ。\n3. この やり方を 勉強しなさい。",
+              "explanation": "Polite request:「〜ていただけませんか」."
             },
             {
               "id": "n4-e6-l-17",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
-              "image": "/images/japanese/listening/n4/m3_q2.png",
-              "question": "17. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "image": "/images/japanese/listening/n4_2018/m3_q2.png",
+              "question": "17. 上司の 荷物が 重そうです。手伝いたいです。何と言いますか。（矢印の人）",
               "options": [
-                "手伝っていただけませんか。",
-                "手伝ってください。",
-                "手伝いましょうか。"
+                "お荷物を お持ち しましょうか。",
+                "荷物を 持って ください。",
+                "荷物を 持ちました。"
               ],
               "correct": 0,
-              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
-              "explanation": "Polite request in N4:「〜ていただけませんか」."
+              "transcript": "状況：上司の 荷物を 持ちます。\n質問：何と言いますか。\n1. お荷物を お持ち しましょうか。\n2. 荷物を 持って ください。\n3. 荷物を 持ちました。",
+              "explanation": "Humble offer:「お持ちしましょうか」."
             },
             {
               "id": "n4-e6-l-18",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
-              "image": "/images/japanese/listening/n4/m3_q3.png",
-              "question": "18. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "image": "/images/japanese/listening/n4_2018/m3_q3.png",
+              "question": "18. 取引先の 会社を 訪問しました。受付で 何と言いますか。（矢印の人）",
               "options": [
-                "手伝っていただけませんか。",
-                "手伝ってください。",
-                "手伝いましょうか。"
+                "○○社の 田中と 申します。山田部長に お約束を いただいております。",
+                "いらっしゃいませ、ご用件は 何でしょうか。",
+                "お邪魔しました、さようなら。"
               ],
               "correct": 0,
-              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
-              "explanation": "Polite request in N4:「〜ていただけませんか」."
+              "transcript": "状況：訪問先の 受付で 挨拶します。\n質問：何と言いますか。\n1. ○○社の 田中と 申します。山田部長に お約束を いただいております。\n2. いらっしゃいませ、ご用件は 何でしょうか。\n3. お邪魔しました、さようなら。",
+              "explanation": "Business visitor greeting."
             },
             {
               "id": "n4-e6-l-19",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
-              "image": "/images/japanese/listening/n4/m3_q4.png",
-              "question": "19. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "image": "/images/japanese/listening/n4_2018/m3_q4.png",
+              "question": "19. 会議中、電話が 鳴ってしまいました。何と言いますか。（矢印の人）",
               "options": [
-                "手伝っていただけませんか。",
-                "手伝ってください。",
-                "手伝いましょうか。"
+                "大変 失礼いたしました。",
+                "どういたしまして。",
+                "お疲れ様でした。"
               ],
               "correct": 0,
-              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
-              "explanation": "Polite request in N4:「〜ていただけませんか」."
+              "transcript": "状況：会議室で 謝ります。\n質問：何と言いますか。\n1. 大変 失礼いたしました。\n2. どういたしまして。\n3. お疲れ様でした。",
+              "explanation": "Apology:「大変失礼いたしました。」"
             },
             {
               "id": "n4-e6-l-20",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
-              "image": "/images/japanese/listening/n4/m3_q5.png",
-              "question": "20. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "image": "/images/japanese/listening/n4_2018/m3_q5.png",
+              "question": "20. 先生の お宅から 帰ります。何と言いますか。（矢印の人）",
               "options": [
-                "手伝っていただけませんか。",
-                "手伝ってください。",
-                "手伝いましょうか。"
+                "今日は ごちそうになり、本当に ありがとうございました。",
+                "いってらっしゃい。",
+                "お大事に。"
               ],
               "correct": 0,
-              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
-              "explanation": "Polite request in N4:「〜ていただけませんか」."
+              "transcript": "状況：お礼を 言って 帰ります。\n質問：何と言いますか。\n1. 今日は ごちそうになり、本当に ありがとうございました。\n2. いってらっしゃい。\n3. お大事に。",
+              "explanation": "Expressing hospitality gratitude."
             },
             {
               "id": "n4-e6-l-21",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
-              "question": "21. 「お先に失礼します。」",
+              "question": "21. 「こちらの 書類を ご確認 いただけますでしょうか。」",
               "options": [
-                "お疲れ様でした。",
-                "いってらっしゃい。",
-                "どういたしまして。"
+                "はい、拝見いたします。",
+                "はい、確認させました。",
+                "いいえ、見ました。"
               ],
               "correct": 0,
-              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
-              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+              "transcript": "発話：「こちらの 書類を ご確認 いただけますでしょうか。」\n1. はい、拝見いたします。\n2. はい、確認させました。\n3. いいえ、見ました。",
+              "explanation": "Humble check response:「拝見いたします。」"
             },
             {
               "id": "n4-e6-l-22",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
-              "question": "22. 「お先に失礼します。」",
+              "question": "22. 「お先に 失礼しても よろしいでしょうか。」",
               "options": [
-                "お疲れ様でした。",
-                "いってらっしゃい。",
-                "どういたしまして。"
+                "ええ、お疲れ様でした。",
+                "はい、いってきます。",
+                "いいえ、失礼しました。"
               ],
               "correct": 0,
-              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
-              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+              "transcript": "発話：「お先に 失礼しても よろしいでしょうか。」\n1. ええ、お疲れ様でした。\n2. はい、いってきます。\n3. いいえ、失礼しました。",
+              "explanation": "Responding to early departure:「お疲れ様でした。」"
             },
             {
               "id": "n4-e6-l-23",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
-              "question": "23. 「お先に失礼します。」",
+              "question": "23. 「この プロジェクト、手伝ってもらえないかな。」",
               "options": [
-                "お疲れ様でした。",
-                "いってらっしゃい。",
+                "はい、喜んで お手伝いします。",
+                "いいえ、手伝いました。",
                 "どういたしまして。"
               ],
               "correct": 0,
-              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
-              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+              "transcript": "発話：「この プロジェクト、手伝ってもらえないかな。」\n1. はい、喜んで お手伝いします。\n2. いいえ、手伝いました。\n3. どういたしまして。",
+              "explanation": "Willing assistance:「喜んでお手伝いします。」"
             },
             {
               "id": "n4-e6-l-24",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
-              "question": "24. 「お先に失礼します。」",
+              "question": "24. 「部長、明日の 会議の 時間を 変更されたと 伺いました。」",
               "options": [
-                "お疲れ様でした。",
-                "いってらっしゃい。",
-                "どういたしまして。"
+                "ええ、14時からに 変更したよ。",
+                "はい、伺いました。",
+                "いいえ、変わりません。"
               ],
               "correct": 0,
-              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
-              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+              "transcript": "発話：「部長、明日の 会議の 時間を 変更されたと 伺いました。」\n1. ええ、14時からに 変更したよ。\n2. はい、伺いました。\n3. いいえ、変わりません。",
+              "explanation": "Confirming meeting adjustment."
             },
             {
               "id": "n4-e6-l-25",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
-              "question": "25. 「お先に失礼します。」",
+              "question": "25. 「コーヒーでも いかがですか。」",
               "options": [
-                "お疲れ様でした。",
-                "いってらっしゃい。",
-                "どういたしまして。"
+                "ありがとうございます、いただきます。",
+                "いいえ、コーヒーです。",
+                "ごちそうさまでした。"
               ],
               "correct": 0,
-              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
-              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+              "transcript": "発話：「コーヒーでも いかがですか。」\n1. ありがとうございます、いただきます。\n2. いいえ、コーヒーです。\n3. ごちそうさまでした。",
+              "explanation": "Polite acceptance:「いただきます。」"
             },
             {
               "id": "n4-e6-l-26",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
-              "question": "26. 「お先に失礼します。」",
+              "question": "26. 「少し 寒くありませんか。エアコンを 弱めましょうか。」",
               "options": [
-                "お疲れ様でした。",
-                "いってらっしゃい。",
-                "どういたしまして。"
+                "助かります、お願いします。",
+                "はい、寒いです。",
+                "いいえ、つけました。"
               ],
               "correct": 0,
-              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
-              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+              "transcript": "発話：「少し 寒くありませんか。エアコンを 弱めましょうか。」\n1. 助かります、お願いします。\n2. はい、寒いです。\n3. いいえ、つけました。",
+              "explanation": "Gratitude for consideration:「助かります、お願いします。」"
             },
             {
               "id": "n4-e6-l-27",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
-              "question": "27. 「お先に失礼します。」",
+              "question": "27. 「新幹線の 切符は もう 手配しましたか。」",
               "options": [
-                "お疲れ様でした。",
-                "いってらっしゃい。",
-                "どういたしまして。"
+                "はい、先ほど 予約を 済ませました。",
+                "いいえ、新幹線です。",
+                "駅に あります。"
               ],
               "correct": 0,
-              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
-              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+              "transcript": "発話：「新幹線の 切符は もう 手配しましたか。」\n1. はい、先ほど 予約を 済ませました。\n2. いいえ、新幹線です。\n3. 駅に あります。",
+              "explanation": "Booking confirmed:「予約を済ませました。」"
             },
             {
               "id": "n4-e6-l-28",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
-              "question": "28. 「お先に失礼します。」",
+              "question": "28. 「明日の 懇親会、参加されますか。」",
               "options": [
-                "お疲れ様でした。",
-                "いってらっしゃい。",
-                "どういたしまして。"
+                "はい、ぜひ 参加させていただきます。",
+                "いいえ、参加です。",
+                "お疲れ様でした。"
               ],
               "correct": 0,
-              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
-              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+              "transcript": "発話：「明日の 懇親会、参加されますか。」\n1. はい、ぜひ 参加させていただきます。\n2. いいえ、参加です。\n3. お疲れ様でした。",
+              "explanation": "Accepting invitation humbly:「参加させていただきます。」"
             }
           ]
         }
@@ -20572,7 +20572,7 @@ export const EXAM_PAPERS_CATALOG = {
       "badge": "Grammar Mastery",
       "year": "2024 Series",
       "description": "Rigorous test with deep coverage of complex sentence structures: 〜ようにする, 〜ことにする, 〜てある vs 〜ている, and 〜はず.",
-      "totalQuestions": 97,
+      "totalQuestions": 98,
       "sections": [
         {
           "id": "n4-e7-sec-vocab",
@@ -21511,420 +21511,420 @@ export const EXAM_PAPERS_CATALOG = {
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
               "image": "/images/japanese/listening/n4/m1_q1.png",
-              "question": "1. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "question": "1. 会社で 男の人と 女の人が 話しています。女の人は この後 まず 何を しますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "プロジェクターの 接続を 確認する",
+                "資料を コピーする",
+                "参加者に 連絡する",
+                "お茶を 用意する"
               ],
-              "correct": 3,
-              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
-              "explanation": "Based on task instructions, Option 4 is correct."
+              "correct": 0,
+              "transcript": "男「会議室の プロジェクターの 準備を お願いできる？」女「はい。資料の コピーも しておきましょうか。」男「資料は 僕が やるから、先に プロジェクターの 接続を 確認して。」女「わかりました。」\n質問：女の人は この後 まず 何を しますか。",
+              "explanation": "First checks the projector connection (プロジェクターの接続を確認する)."
             },
             {
               "id": "n4-e7-l-2",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
               "image": "/images/japanese/listening/n4/m1_q2.png",
-              "question": "2. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "question": "2. 病院で 看護師と 患者が 話しています。患者は どこで 待ちますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "2階の 放射線科の前",
+                "1階の 会計窓口",
+                "3階の 手術室",
+                "薬局"
               ],
               "correct": 0,
-              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
-              "explanation": "Based on task instructions, Option 1 is correct."
+              "transcript": "看護師「診察の 前に レントゲンを 撮りますので、2階の 放射線科の 前で お待ちください。」患者「会計は どこですか。」看護師「会計は 診察が すべて 終わった後、1階です。」\n質問：患者は これから どこへ 行きますか。",
+              "explanation": "Goes to 2nd floor radiology (2階の放射線科の前)."
             },
             {
               "id": "n4-e7-l-3",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
               "image": "/images/japanese/listening/n4/m1_q3.png",
-              "question": "3. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "question": "3. 引越し業者と 客が 話しています。客は どの 箱に 食器を 入れますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "赤い テープの 小さい箱",
+                "青い テープの 箱",
+                "黄色い 大きい箱",
+                "段ボールの 袋"
               ],
-              "correct": 1,
-              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
-              "explanation": "Based on task instructions, Option 2 is correct."
+              "correct": 0,
+              "transcript": "業者「割れやすい 食器は 赤い テープが 貼ってある 小さい 箱に お入れください。本は 青い 箱です。」客「わかりました。」\n質問：食器は どの 箱に 入れますか。",
+              "explanation": "Packs dishes in small box with red tape (赤いテープの小さい箱)."
             },
             {
               "id": "n4-e7-l-4",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
               "image": "/images/japanese/listening/n4/m1_q4.png",
-              "question": "4. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "question": "4. 大学の 事務室で 学生と 職員が 話しています。学生は いつまでに 奨学金の 書類を 出しますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "来週の 金曜日 17時",
+                "来週の 水曜日",
+                "今週の 金曜日",
+                "月末"
               ],
-              "correct": 2,
-              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
-              "explanation": "Based on task instructions, Option 3 is correct."
+              "correct": 0,
+              "transcript": "職員「締め切りは 来週の 金曜日 17時です。ただし、推薦書は 水曜日までに 教授に もらって ください。」学生「わかりました。」\n質問：書類の 最終締め切りは いつですか。",
+              "explanation": "Final deadline is next Friday at 17:00 (来週の金曜日17時)."
             },
             {
               "id": "n4-e7-l-5",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
               "image": "/images/japanese/listening/n4/m1_q5.png",
-              "question": "5. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "question": "5. レストランの 厨房で 店長と アルバイトが 話しています。アルバイトは どの テーブルを 片付けますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "3番テーブル",
+                "7番テーブル",
+                "1番テーブル",
+                "カウンター席"
               ],
-              "correct": 3,
-              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
-              "explanation": "Based on task instructions, Option 4 is correct."
+              "correct": 0,
+              "transcript": "店長「3番テーブルと 7番テーブル、どっちが 空いた？」バイト「3番テーブルの お客様が お帰りになりました。」店長「じゃあ、急いで 3番テーブルを 拭いて 次の お客様を 案内して。」\n質問：アルバイトは どの テーブルを 片付けますか。",
+              "explanation": "Cleans table 3 (3番テーブル)."
             },
             {
               "id": "n4-e7-l-6",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
               "image": "/images/japanese/listening/n4/m1_q6.png",
-              "question": "6. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "question": "6. 旅行会社で 客と 案内係が 話しています。客は どの プランを 選びましたか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "温泉旅館の Aプラン",
+                "ホテルの Bプラン",
+                "日帰り Cプラン",
+                "キャンプ Dプラン"
               ],
               "correct": 0,
-              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
-              "explanation": "Based on task instructions, Option 1 is correct."
+              "transcript": "案内係「温泉旅館に 泊まる Aプランと、ホテルの Bプランが ございます。」客「露天風呂に 入りたくて 来たので、Aプランに します。」\n質問：客は どの プランを 選びましたか。",
+              "explanation": "Selects onsen ryokan Plan A (温泉旅館のAプラン)."
             },
             {
               "id": "n4-e7-l-7",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
               "image": "/images/japanese/listening/n4/m1_q7.png",
-              "question": "7. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "question": "7. 図書館で 係員と 利用者が 話しています。利用者は DVDを 何枚 借りられますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "1枚",
+                "2枚",
+                "3枚",
+                "0枚"
               ],
-              "correct": 1,
-              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
-              "explanation": "Based on task instructions, Option 2 is correct."
+              "correct": 0,
+              "transcript": "利用者「本 3冊と DVD 2枚を 借りたいです。」係員「DVDは お一人様 1枚までとなって おります。」利用者「では、この 1枚だけに します。」\n質問：利用者は DVDを 何枚 借りますか。",
+              "explanation": "Borrows 1 DVD (1枚)."
             },
             {
               "id": "n4-e7-l-8",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
               "image": "/images/japanese/listening/n4/m1_q8.png",
-              "question": "8. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "question": "8. 男の人と 女の人が 買い物の 相談を しています。二人は 何を 買いますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "テントだけ",
+                "寝袋だけ",
+                "テントと 寝袋の両方",
+                "ランタン"
               ],
-              "correct": 2,
-              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
-              "explanation": "Based on task instructions, Option 3 is correct."
+              "correct": 0,
+              "transcript": "男「キャンプ用の テントと 寝袋、両方 買う？」女「寝袋は 兄に 借りられるから、テントだけ 買いましょう。」男「オッケー。」\n質問：二人は 何を 買いますか。",
+              "explanation": "Buys tent only (テントだけ)."
             },
             {
               "id": "n4-e7-l-9",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
-              "question": "9. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "question": "9. 男の人と 女の人が 話しています。男の人が 遅刻した 理由は何ですか。",
               "options": [
-                "電車が遅れたから",
+                "電車が 事故で 止まったから",
                 "寝坊したから",
-                "道を間違えたから",
-                "雨が降ったから"
+                "バスを 乗り間違えたから",
+                "鍵を 探していたから"
               ],
-              "correct": 3,
-              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
-              "explanation": "Point comprehension detail: reason for arriving late."
+              "correct": 0,
+              "transcript": "男「遅れて すみません。途中で 人身事故が あって 電車が 30分 止まって しまいました。」女「大変だったわね。」\n質問：男の人が 遅刻した 理由は 何ですか。",
+              "explanation": "Train halted due to accident (電車が事故で止まったから)."
             },
             {
               "id": "n4-e7-l-10",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
-              "question": "10. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "question": "10. 女の人と 男の人が 新しい パソコンについて 話しています。女の人が この パソコンを 選んだ 理由は何ですか。",
               "options": [
-                "電車が遅れたから",
-                "寝坊したから",
-                "道を間違えたから",
-                "雨が降ったから"
+                "軽くて 持ち歩きやすいから",
+                "画面が 一番 大きいから",
+                "値段が 最も 安かったから",
+                "色が 好きだったから"
               ],
               "correct": 0,
-              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
-              "explanation": "Point comprehension detail: reason for arriving late."
+              "transcript": "男「軽くて 薄い パソコンだね。」女「ええ、毎日 持ち歩くから、重さが 1キロ未満の 物を 探していたの。」\n質問：選んだ 理由は 何ですか。",
+              "explanation": "Lightweight for commuting (軽くて持ち歩きやすいから)."
             },
             {
               "id": "n4-e7-l-11",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
-              "question": "11. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "question": "11. 男の人と 女の人が 話しています。二人は どうして 旅行の 日程を 変更しましたか。",
               "options": [
-                "電車が遅れたから",
-                "寝坊したから",
-                "道を間違えたから",
-                "雨が降ったから"
+                "台風が 来る 予報だから",
+                "仕事が 入ったから",
+                "ホテルが 満室だったから",
+                "体調を 崩したから"
               ],
-              "correct": 1,
-              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
-              "explanation": "Point comprehension detail: reason for arriving late."
+              "correct": 0,
+              "transcript": "男「来週の 週末、台風が 直撃する 予報に なったね。」女「危ないから、再来週の 連休に 延期しましょう。」\n質問：変更した 理由は 何ですか。",
+              "explanation": "Typhoon forecast (台風が来る予報だから)."
             },
             {
               "id": "n4-e7-l-12",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
-              "question": "12. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "question": "12. 店で 店員と 客が 話しています。この シャツの セールは いつまでですか。",
               "options": [
-                "電車が遅れたから",
-                "寝坊したから",
-                "道を間違えたから",
-                "雨が降ったから"
+                "今週の 日曜日まで",
+                "来週の 月曜日まで",
+                "今日中",
+                "月末まで"
               ],
-              "correct": 2,
-              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
-              "explanation": "Point comprehension detail: reason for arriving late."
+              "correct": 0,
+              "transcript": "客「この 20%割引は いつまで やっていますか。」店員「今週の 日曜日の 閉店時間までで ございます。」\n質問：セールは いつまでですか。",
+              "explanation": "Until this Sunday (今週の日曜日まで)."
             },
             {
               "id": "n4-e7-l-13",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
-              "question": "13. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "question": "13. 男の人と 女の人が 話しています。女の人は どうして アルバイトを 辞めましたか。",
               "options": [
-                "電車が遅れたから",
-                "寝坊したから",
-                "道を間違えたから",
-                "雨が降ったから"
+                "卒業論文で 忙しくなったから",
+                "時給が 安かったから",
+                "人間関係が 悪かったから",
+                "遠かったから"
               ],
-              "correct": 3,
-              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
-              "explanation": "Point comprehension detail: reason for arriving late."
+              "correct": 0,
+              "transcript": "男「カフェの バイト、辞めたの？」女「ええ、大学の 卒業論文の 執筆が 忙しくなってきたから。」\n質問：辞めた 理由は 何ですか。",
+              "explanation": "Busy writing graduation thesis (卒業論文で忙しくなったから)."
             },
             {
               "id": "n4-e7-l-14",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
-              "question": "14. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "question": "14. 留学生と 日本人の 友達が 話しています。留学生が 日本の 居酒屋で 驚いたことは 何ですか。",
               "options": [
-                "電車が遅れたから",
-                "寝坊したから",
-                "道を間違えたから",
-                "雨が降ったから"
+                "お通し（最初の小鉢）の 仕組み",
+                "メニューの 多さ",
+                "席の 狭さ",
+                "お酒の 種類"
               ],
               "correct": 0,
-              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
-              "explanation": "Point comprehension detail: reason for arriving late."
+              "transcript": "留学生「注文していないのに 最初に出てくる 小鉢（お通し）の 仕組みに びっくりしたよ。」\n質問：何に 驚きましたか。",
+              "explanation": "Otoshi appetizer system (お通しの仕組み)."
             },
             {
               "id": "n4-e7-l-15",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
-              "question": "15. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "question": "15. 会社で 部長と 社員が 話しています。プレゼンが 成功した 要因は何ですか。",
               "options": [
-                "電車が遅れたから",
-                "寝坊したから",
-                "道を間違えたから",
-                "雨が降ったから"
+                "グラフや データが 具体的で わかりやすかったこと",
+                "声が 大きかったこと",
+                "時間が 短かったこと",
+                "英語で 発表したこと"
               ],
-              "correct": 1,
-              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
-              "explanation": "Point comprehension detail: reason for arriving late."
+              "correct": 0,
+              "transcript": "部長「今日の プレゼン、グラフや データが 具体的で 大変わかりやすかったよ。」\n質問：成功の 要因は何ですか。",
+              "explanation": "Clear data and graphics (グラフやデータが具体的でわかりやすかったこと)."
             },
             {
               "id": "n4-e7-l-16",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
               "image": "/images/japanese/listening/n4/m3_q1.png",
-              "question": "16. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "question": "16. 先輩に 仕事を 教えてもらいたいです。何と言いますか。（矢印の人）",
               "options": [
-                "手伝っていただけませんか。",
-                "手伝ってください。",
-                "手伝いましょうか。"
+                "この やり方を 教えて いただけませんか。",
+                "この やり方を 教えますよ。",
+                "この やり方を 勉強しなさい。"
               ],
               "correct": 0,
-              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
-              "explanation": "Polite request in N4:「〜ていただけませんか」."
+              "transcript": "状況：先輩に 仕事の やり方を 尋ねます。\n質問：何と言いますか。\n1. この やり方を 教えて いただけませんか。\n2. この やり方を 教えますよ。\n3. この やり方を 勉強しなさい。",
+              "explanation": "Polite request:「〜ていただけませんか」."
             },
             {
               "id": "n4-e7-l-17",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
               "image": "/images/japanese/listening/n4/m3_q2.png",
-              "question": "17. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "question": "17. 上司の 荷物が 重そうです。手伝いたいです。何と言いますか。（矢印の人）",
               "options": [
-                "手伝っていただけませんか。",
-                "手伝ってください。",
-                "手伝いましょうか。"
+                "お荷物を お持ち しましょうか。",
+                "荷物を 持って ください。",
+                "荷物を 持ちました。"
               ],
               "correct": 0,
-              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
-              "explanation": "Polite request in N4:「〜ていただけませんか」."
+              "transcript": "状況：上司の 荷物を 持ちます。\n質問：何と言いますか。\n1. お荷物を お持ち しましょうか。\n2. 荷物を 持って ください。\n3. 荷物を 持ちました。",
+              "explanation": "Humble offer:「お持ちしましょうか」."
             },
             {
               "id": "n4-e7-l-18",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
               "image": "/images/japanese/listening/n4/m3_q3.png",
-              "question": "18. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "question": "18. 取引先の 会社を 訪問しました。受付で 何と言いますか。（矢印の人）",
               "options": [
-                "手伝っていただけませんか。",
-                "手伝ってください。",
-                "手伝いましょうか。"
+                "○○社の 田中と 申します。山田部長に お約束を いただいております。",
+                "いらっしゃいませ、ご用件は 何でしょうか。",
+                "お邪魔しました、さようなら。"
               ],
               "correct": 0,
-              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
-              "explanation": "Polite request in N4:「〜ていただけませんか」."
+              "transcript": "状況：訪問先の 受付で 挨拶します。\n質問：何と言いますか。\n1. ○○社の 田中と 申します。山田部長に お約束を いただいております。\n2. いらっしゃいませ、ご用件は 何でしょうか。\n3. お邪魔しました、さようなら。",
+              "explanation": "Business visitor greeting."
             },
             {
               "id": "n4-e7-l-19",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
               "image": "/images/japanese/listening/n4/m3_q4.png",
-              "question": "19. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "question": "19. 会議中、電話が 鳴ってしまいました。何と言いますか。（矢印の人）",
               "options": [
-                "手伝っていただけませんか。",
-                "手伝ってください。",
-                "手伝いましょうか。"
+                "大変 失礼いたしました。",
+                "どういたしまして。",
+                "お疲れ様でした。"
               ],
               "correct": 0,
-              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
-              "explanation": "Polite request in N4:「〜ていただけませんか」."
+              "transcript": "状況：会議室で 謝ります。\n質問：何と言いますか。\n1. 大変 失礼いたしました。\n2. どういたしまして。\n3. お疲れ様でした。",
+              "explanation": "Apology:「大変失礼いたしました。」"
             },
             {
               "id": "n4-e7-l-20",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
               "image": "/images/japanese/listening/n4/m3_q5.png",
-              "question": "20. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "question": "20. 先生の お宅から 帰ります。何と言いますか。（矢印の人）",
               "options": [
-                "手伝っていただけませんか。",
-                "手伝ってください。",
-                "手伝いましょうか。"
+                "今日は ごちそうになり、本当に ありがとうございました。",
+                "いってらっしゃい。",
+                "お大事に。"
               ],
               "correct": 0,
-              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
-              "explanation": "Polite request in N4:「〜ていただけませんか」."
+              "transcript": "状況：お礼を 言って 帰ります。\n質問：何と言いますか。\n1. 今日は ごちそうになり、本当に ありがとうございました。\n2. いってらっしゃい。\n3. お大事に。",
+              "explanation": "Expressing hospitality gratitude."
             },
             {
               "id": "n4-e7-l-21",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
-              "question": "21. 「お先に失礼します。」",
+              "question": "21. 「こちらの 書類を ご確認 いただけますでしょうか。」",
               "options": [
-                "お疲れ様でした。",
-                "いってらっしゃい。",
-                "どういたしまして。"
+                "はい、拝見いたします。",
+                "はい、確認させました。",
+                "いいえ、見ました。"
               ],
               "correct": 0,
-              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
-              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+              "transcript": "発話：「こちらの 書類を ご確認 いただけますでしょうか。」\n1. はい、拝見いたします。\n2. はい、確認させました。\n3. いいえ、見ました。",
+              "explanation": "Humble check response:「拝見いたします。」"
             },
             {
               "id": "n4-e7-l-22",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
-              "question": "22. 「お先に失礼します。」",
+              "question": "22. 「お先に 失礼しても よろしいでしょうか。」",
               "options": [
-                "お疲れ様でした。",
-                "いってらっしゃい。",
-                "どういたしまして。"
+                "ええ、お疲れ様でした。",
+                "はい、いってきます。",
+                "いいえ、失礼しました。"
               ],
               "correct": 0,
-              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
-              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+              "transcript": "発話：「お先に 失礼しても よろしいでしょうか。」\n1. ええ、お疲れ様でした。\n2. はい、いってきます。\n3. いいえ、失礼しました。",
+              "explanation": "Responding to early departure:「お疲れ様でした。」"
             },
             {
               "id": "n4-e7-l-23",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
-              "question": "23. 「お先に失礼します。」",
+              "question": "23. 「この プロジェクト、手伝ってもらえないかな。」",
               "options": [
-                "お疲れ様でした。",
-                "いってらっしゃい。",
+                "はい、喜んで お手伝いします。",
+                "いいえ、手伝いました。",
                 "どういたしまして。"
               ],
               "correct": 0,
-              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
-              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+              "transcript": "発話：「この プロジェクト、手伝ってもらえないかな。」\n1. はい、喜んで お手伝いします。\n2. いいえ、手伝いました。\n3. どういたしまして。",
+              "explanation": "Willing assistance:「喜んでお手伝いします。」"
             },
             {
               "id": "n4-e7-l-24",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
-              "question": "24. 「お先に失礼します。」",
+              "question": "24. 「部長、明日の 会議の 時間を 変更されたと 伺いました。」",
               "options": [
-                "お疲れ様でした。",
-                "いってらっしゃい。",
-                "どういたしまして。"
+                "ええ、14時からに 変更したよ。",
+                "はい、伺いました。",
+                "いいえ、変わりません。"
               ],
               "correct": 0,
-              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
-              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+              "transcript": "発話：「部長、明日の 会議の 時間を 変更されたと 伺いました。」\n1. ええ、14時からに 変更したよ。\n2. はい、伺いました。\n3. いいえ、変わりません。",
+              "explanation": "Confirming meeting adjustment."
             },
             {
               "id": "n4-e7-l-25",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
-              "question": "25. 「お先に失礼します。」",
+              "question": "25. 「コーヒーでも いかがですか。」",
               "options": [
-                "お疲れ様でした。",
-                "いってらっしゃい。",
-                "どういたしまして。"
+                "ありがとうございます、いただきます。",
+                "いいえ、コーヒーです。",
+                "ごちそうさまでした。"
               ],
               "correct": 0,
-              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
-              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+              "transcript": "発話：「コーヒーでも いかがですか。」\n1. ありがとうございます、いただきます。\n2. いいえ、コーヒーです。\n3. ごちそうさまでした。",
+              "explanation": "Polite acceptance:「いただきます。」"
             },
             {
               "id": "n4-e7-l-26",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
-              "question": "26. 「お先に失礼します。」",
+              "question": "26. 「少し 寒くありませんか。エアコンを 弱めましょうか。」",
               "options": [
-                "お疲れ様でした。",
-                "いってらっしゃい。",
-                "どういたしまして。"
+                "助かります、お願いします。",
+                "はい、寒いです。",
+                "いいえ、つけました。"
               ],
               "correct": 0,
-              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
-              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+              "transcript": "発話：「少し 寒くありませんか。エアコンを 弱めましょうか。」\n1. 助かります、お願いします。\n2. はい、寒いです。\n3. いいえ、つけました。",
+              "explanation": "Gratitude for consideration:「助かります、お願いします。」"
             },
             {
               "id": "n4-e7-l-27",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
-              "question": "27. 「お先に失礼します。」",
+              "question": "27. 「新幹線の 切符は もう 手配しましたか。」",
               "options": [
-                "お疲れ様でした。",
-                "いってらっしゃい。",
-                "どういたしまして。"
+                "はい、先ほど 予約を 済ませました。",
+                "いいえ、新幹線です。",
+                "駅に あります。"
               ],
               "correct": 0,
-              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
-              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+              "transcript": "発話：「新幹線の 切符は もう 手配しましたか。」\n1. はい、先ほど 予約を 済ませました。\n2. いいえ、新幹線です。\n3. 駅に あります。",
+              "explanation": "Booking confirmed:「予約を済ませました。」"
             },
             {
               "id": "n4-e7-l-28",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
-              "question": "28. 「お先に失礼します。」",
+              "question": "28. 「明日の 懇親会、参加されますか。」",
               "options": [
-                "お疲れ様でした。",
-                "いってらっしゃい。",
-                "どういたしまして。"
+                "はい、ぜひ 参加させていただきます。",
+                "いいえ、参加です。",
+                "お疲れ様でした。"
               ],
               "correct": 0,
-              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
-              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+              "transcript": "発話：「明日の 懇親会、参加されますか。」\n1. はい、ぜひ 参加させていただきます。\n2. いいえ、参加です。\n3. お疲れ様でした。",
+              "explanation": "Accepting invitation humbly:「参加させていただきます。」"
             }
           ]
         }
@@ -21937,7 +21937,7 @@ export const EXAM_PAPERS_CATALOG = {
       "badge": "Audio Intensive",
       "year": "2025 Series",
       "description": "Workplace scenarios, phone etiquette, train station announcements, instructions from supervisors, and rapid response dialogues.",
-      "totalQuestions": 97,
+      "totalQuestions": 98,
       "sections": [
         {
           "id": "n4-e8-sec-vocab",
@@ -22875,421 +22875,421 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e8-l-1",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
-              "image": "/images/japanese/listening/n4/m1_q1.png",
-              "question": "1. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "image": "/images/japanese/listening/n4_2018/m1_q1.png",
+              "question": "1. 会社で 男の人と 女の人が 話しています。女の人は この後 まず 何を しますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "プロジェクターの 接続を 確認する",
+                "資料を コピーする",
+                "参加者に 連絡する",
+                "お茶を 用意する"
               ],
               "correct": 0,
-              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
-              "explanation": "Based on task instructions, Option 1 is correct."
+              "transcript": "男「会議室の プロジェクターの 準備を お願いできる？」女「はい。資料の コピーも しておきましょうか。」男「資料は 僕が やるから、先に プロジェクターの 接続を 確認して。」女「わかりました。」\n質問：女の人は この後 まず 何を しますか。",
+              "explanation": "First checks the projector connection (プロジェクターの接続を確認する)."
             },
             {
               "id": "n4-e8-l-2",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
-              "image": "/images/japanese/listening/n4/m1_q2.png",
-              "question": "2. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "image": "/images/japanese/listening/n4_2018/m1_q2.png",
+              "question": "2. 病院で 看護師と 患者が 話しています。患者は どこで 待ちますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "2階の 放射線科の前",
+                "1階の 会計窓口",
+                "3階の 手術室",
+                "薬局"
               ],
-              "correct": 1,
-              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
-              "explanation": "Based on task instructions, Option 2 is correct."
+              "correct": 0,
+              "transcript": "看護師「診察の 前に レントゲンを 撮りますので、2階の 放射線科の 前で お待ちください。」患者「会計は どこですか。」看護師「会計は 診察が すべて 終わった後、1階です。」\n質問：患者は これから どこへ 行きますか。",
+              "explanation": "Goes to 2nd floor radiology (2階の放射線科の前)."
             },
             {
               "id": "n4-e8-l-3",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
-              "image": "/images/japanese/listening/n4/m1_q3.png",
-              "question": "3. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "image": "/images/japanese/listening/n4_2018/m1_q3.png",
+              "question": "3. 引越し業者と 客が 話しています。客は どの 箱に 食器を 入れますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "赤い テープの 小さい箱",
+                "青い テープの 箱",
+                "黄色い 大きい箱",
+                "段ボールの 袋"
               ],
-              "correct": 2,
-              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
-              "explanation": "Based on task instructions, Option 3 is correct."
+              "correct": 0,
+              "transcript": "業者「割れやすい 食器は 赤い テープが 貼ってある 小さい 箱に お入れください。本は 青い 箱です。」客「わかりました。」\n質問：食器は どの 箱に 入れますか。",
+              "explanation": "Packs dishes in small box with red tape (赤いテープの小さい箱)."
             },
             {
               "id": "n4-e8-l-4",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
-              "image": "/images/japanese/listening/n4/m1_q4.png",
-              "question": "4. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "image": "/images/japanese/listening/n4_2018/m1_q4.png",
+              "question": "4. 大学の 事務室で 学生と 職員が 話しています。学生は いつまでに 奨学金の 書類を 出しますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "来週の 金曜日 17時",
+                "来週の 水曜日",
+                "今週の 金曜日",
+                "月末"
               ],
-              "correct": 3,
-              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
-              "explanation": "Based on task instructions, Option 4 is correct."
+              "correct": 0,
+              "transcript": "職員「締め切りは 来週の 金曜日 17時です。ただし、推薦書は 水曜日までに 教授に もらって ください。」学生「わかりました。」\n質問：書類の 最終締め切りは いつですか。",
+              "explanation": "Final deadline is next Friday at 17:00 (来週の金曜日17時)."
             },
             {
               "id": "n4-e8-l-5",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
-              "image": "/images/japanese/listening/n4/m1_q5.png",
-              "question": "5. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "image": "/images/japanese/listening/n4_2018/m1_q5.png",
+              "question": "5. レストランの 厨房で 店長と アルバイトが 話しています。アルバイトは どの テーブルを 片付けますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "3番テーブル",
+                "7番テーブル",
+                "1番テーブル",
+                "カウンター席"
               ],
               "correct": 0,
-              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
-              "explanation": "Based on task instructions, Option 1 is correct."
+              "transcript": "店長「3番テーブルと 7番テーブル、どっちが 空いた？」バイト「3番テーブルの お客様が お帰りになりました。」店長「じゃあ、急いで 3番テーブルを 拭いて 次の お客様を 案内して。」\n質問：アルバイトは どの テーブルを 片付けますか。",
+              "explanation": "Cleans table 3 (3番テーブル)."
             },
             {
               "id": "n4-e8-l-6",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
-              "image": "/images/japanese/listening/n4/m1_q6.png",
-              "question": "6. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "image": "/images/japanese/listening/n4_2018/m1_q6.png",
+              "question": "6. 旅行会社で 客と 案内係が 話しています。客は どの プランを 選びましたか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "温泉旅館の Aプラン",
+                "ホテルの Bプラン",
+                "日帰り Cプラン",
+                "キャンプ Dプラン"
               ],
-              "correct": 1,
-              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
-              "explanation": "Based on task instructions, Option 2 is correct."
+              "correct": 0,
+              "transcript": "案内係「温泉旅館に 泊まる Aプランと、ホテルの Bプランが ございます。」客「露天風呂に 入りたくて 来たので、Aプランに します。」\n質問：客は どの プランを 選びましたか。",
+              "explanation": "Selects onsen ryokan Plan A (温泉旅館のAプラン)."
             },
             {
               "id": "n4-e8-l-7",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
-              "image": "/images/japanese/listening/n4/m1_q7.png",
-              "question": "7. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "image": "/images/japanese/listening/n4_2018/m1_q7.png",
+              "question": "7. 図書館で 係員と 利用者が 話しています。利用者は DVDを 何枚 借りられますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "1枚",
+                "2枚",
+                "3枚",
+                "0枚"
               ],
-              "correct": 2,
-              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
-              "explanation": "Based on task instructions, Option 3 is correct."
+              "correct": 0,
+              "transcript": "利用者「本 3冊と DVD 2枚を 借りたいです。」係員「DVDは お一人様 1枚までとなって おります。」利用者「では、この 1枚だけに します。」\n質問：利用者は DVDを 何枚 借りますか。",
+              "explanation": "Borrows 1 DVD (1枚)."
             },
             {
               "id": "n4-e8-l-8",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
-              "image": "/images/japanese/listening/n4/m1_q8.png",
-              "question": "8. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "image": "/images/japanese/listening/n4_2018/m1_q8.png",
+              "question": "8. 男の人と 女の人が 買い物の 相談を しています。二人は 何を 買いますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "テントだけ",
+                "寝袋だけ",
+                "テントと 寝袋の両方",
+                "ランタン"
               ],
-              "correct": 3,
-              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
-              "explanation": "Based on task instructions, Option 4 is correct."
+              "correct": 0,
+              "transcript": "男「キャンプ用の テントと 寝袋、両方 買う？」女「寝袋は 兄に 借りられるから、テントだけ 買いましょう。」男「オッケー。」\n質問：二人は 何を 買いますか。",
+              "explanation": "Buys tent only (テントだけ)."
             },
             {
               "id": "n4-e8-l-9",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
-              "question": "9. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "question": "9. 男の人と 女の人が 話しています。男の人が 遅刻した 理由は何ですか。",
               "options": [
-                "電車が遅れたから",
+                "電車が 事故で 止まったから",
                 "寝坊したから",
-                "道を間違えたから",
-                "雨が降ったから"
+                "バスを 乗り間違えたから",
+                "鍵を 探していたから"
               ],
               "correct": 0,
-              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
-              "explanation": "Point comprehension detail: reason for arriving late."
+              "transcript": "男「遅れて すみません。途中で 人身事故が あって 電車が 30分 止まって しまいました。」女「大変だったわね。」\n質問：男の人が 遅刻した 理由は 何ですか。",
+              "explanation": "Train halted due to accident (電車が事故で止まったから)."
             },
             {
               "id": "n4-e8-l-10",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
-              "question": "10. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "question": "10. 女の人と 男の人が 新しい パソコンについて 話しています。女の人が この パソコンを 選んだ 理由は何ですか。",
               "options": [
-                "電車が遅れたから",
-                "寝坊したから",
-                "道を間違えたから",
-                "雨が降ったから"
+                "軽くて 持ち歩きやすいから",
+                "画面が 一番 大きいから",
+                "値段が 最も 安かったから",
+                "色が 好きだったから"
               ],
-              "correct": 1,
-              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
-              "explanation": "Point comprehension detail: reason for arriving late."
+              "correct": 0,
+              "transcript": "男「軽くて 薄い パソコンだね。」女「ええ、毎日 持ち歩くから、重さが 1キロ未満の 物を 探していたの。」\n質問：選んだ 理由は 何ですか。",
+              "explanation": "Lightweight for commuting (軽くて持ち歩きやすいから)."
             },
             {
               "id": "n4-e8-l-11",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
-              "question": "11. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "question": "11. 男の人と 女の人が 話しています。二人は どうして 旅行の 日程を 変更しましたか。",
               "options": [
-                "電車が遅れたから",
-                "寝坊したから",
-                "道を間違えたから",
-                "雨が降ったから"
+                "台風が 来る 予報だから",
+                "仕事が 入ったから",
+                "ホテルが 満室だったから",
+                "体調を 崩したから"
               ],
-              "correct": 2,
-              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
-              "explanation": "Point comprehension detail: reason for arriving late."
+              "correct": 0,
+              "transcript": "男「来週の 週末、台風が 直撃する 予報に なったね。」女「危ないから、再来週の 連休に 延期しましょう。」\n質問：変更した 理由は 何ですか。",
+              "explanation": "Typhoon forecast (台風が来る予報だから)."
             },
             {
               "id": "n4-e8-l-12",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
-              "question": "12. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "question": "12. 店で 店員と 客が 話しています。この シャツの セールは いつまでですか。",
               "options": [
-                "電車が遅れたから",
-                "寝坊したから",
-                "道を間違えたから",
-                "雨が降ったから"
+                "今週の 日曜日まで",
+                "来週の 月曜日まで",
+                "今日中",
+                "月末まで"
               ],
-              "correct": 3,
-              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
-              "explanation": "Point comprehension detail: reason for arriving late."
+              "correct": 0,
+              "transcript": "客「この 20%割引は いつまで やっていますか。」店員「今週の 日曜日の 閉店時間までで ございます。」\n質問：セールは いつまでですか。",
+              "explanation": "Until this Sunday (今週の日曜日まで)."
             },
             {
               "id": "n4-e8-l-13",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
-              "question": "13. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "question": "13. 男の人と 女の人が 話しています。女の人は どうして アルバイトを 辞めましたか。",
               "options": [
-                "電車が遅れたから",
-                "寝坊したから",
-                "道を間違えたから",
-                "雨が降ったから"
+                "卒業論文で 忙しくなったから",
+                "時給が 安かったから",
+                "人間関係が 悪かったから",
+                "遠かったから"
               ],
               "correct": 0,
-              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
-              "explanation": "Point comprehension detail: reason for arriving late."
+              "transcript": "男「カフェの バイト、辞めたの？」女「ええ、大学の 卒業論文の 執筆が 忙しくなってきたから。」\n質問：辞めた 理由は 何ですか。",
+              "explanation": "Busy writing graduation thesis (卒業論文で忙しくなったから)."
             },
             {
               "id": "n4-e8-l-14",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
-              "question": "14. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "question": "14. 留学生と 日本人の 友達が 話しています。留学生が 日本の 居酒屋で 驚いたことは 何ですか。",
               "options": [
-                "電車が遅れたから",
-                "寝坊したから",
-                "道を間違えたから",
-                "雨が降ったから"
+                "お通し（最初の小鉢）の 仕組み",
+                "メニューの 多さ",
+                "席の 狭さ",
+                "お酒の 種類"
               ],
-              "correct": 1,
-              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
-              "explanation": "Point comprehension detail: reason for arriving late."
+              "correct": 0,
+              "transcript": "留学生「注文していないのに 最初に出てくる 小鉢（お通し）の 仕組みに びっくりしたよ。」\n質問：何に 驚きましたか。",
+              "explanation": "Otoshi appetizer system (お通しの仕組み)."
             },
             {
               "id": "n4-e8-l-15",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
-              "question": "15. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "question": "15. 会社で 部長と 社員が 話しています。プレゼンが 成功した 要因は何ですか。",
               "options": [
-                "電車が遅れたから",
-                "寝坊したから",
-                "道を間違えたから",
-                "雨が降ったから"
+                "グラフや データが 具体的で わかりやすかったこと",
+                "声が 大きかったこと",
+                "時間が 短かったこと",
+                "英語で 発表したこと"
               ],
-              "correct": 2,
-              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
-              "explanation": "Point comprehension detail: reason for arriving late."
+              "correct": 0,
+              "transcript": "部長「今日の プレゼン、グラフや データが 具体的で 大変わかりやすかったよ。」\n質問：成功の 要因は何ですか。",
+              "explanation": "Clear data and graphics (グラフやデータが具体的でわかりやすかったこと)."
             },
             {
               "id": "n4-e8-l-16",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
-              "image": "/images/japanese/listening/n4/m3_q1.png",
-              "question": "16. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "image": "/images/japanese/listening/n4_2018/m3_q1.png",
+              "question": "16. 先輩に 仕事を 教えてもらいたいです。何と言いますか。（矢印の人）",
               "options": [
-                "手伝っていただけませんか。",
-                "手伝ってください。",
-                "手伝いましょうか。"
+                "この やり方を 教えて いただけませんか。",
+                "この やり方を 教えますよ。",
+                "この やり方を 勉強しなさい。"
               ],
               "correct": 0,
-              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
-              "explanation": "Polite request in N4:「〜ていただけませんか」."
+              "transcript": "状況：先輩に 仕事の やり方を 尋ねます。\n質問：何と言いますか。\n1. この やり方を 教えて いただけませんか。\n2. この やり方を 教えますよ。\n3. この やり方を 勉強しなさい。",
+              "explanation": "Polite request:「〜ていただけませんか」."
             },
             {
               "id": "n4-e8-l-17",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
-              "image": "/images/japanese/listening/n4/m3_q2.png",
-              "question": "17. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "image": "/images/japanese/listening/n4_2018/m3_q2.png",
+              "question": "17. 上司の 荷物が 重そうです。手伝いたいです。何と言いますか。（矢印の人）",
               "options": [
-                "手伝っていただけませんか。",
-                "手伝ってください。",
-                "手伝いましょうか。"
+                "お荷物を お持ち しましょうか。",
+                "荷物を 持って ください。",
+                "荷物を 持ちました。"
               ],
               "correct": 0,
-              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
-              "explanation": "Polite request in N4:「〜ていただけませんか」."
+              "transcript": "状況：上司の 荷物を 持ちます。\n質問：何と言いますか。\n1. お荷物を お持ち しましょうか。\n2. 荷物を 持って ください。\n3. 荷物を 持ちました。",
+              "explanation": "Humble offer:「お持ちしましょうか」."
             },
             {
               "id": "n4-e8-l-18",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
-              "image": "/images/japanese/listening/n4/m3_q3.png",
-              "question": "18. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "image": "/images/japanese/listening/n4_2018/m3_q3.png",
+              "question": "18. 取引先の 会社を 訪問しました。受付で 何と言いますか。（矢印の人）",
               "options": [
-                "手伝っていただけませんか。",
-                "手伝ってください。",
-                "手伝いましょうか。"
+                "○○社の 田中と 申します。山田部長に お約束を いただいております。",
+                "いらっしゃいませ、ご用件は 何でしょうか。",
+                "お邪魔しました、さようなら。"
               ],
               "correct": 0,
-              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
-              "explanation": "Polite request in N4:「〜ていただけませんか」."
+              "transcript": "状況：訪問先の 受付で 挨拶します。\n質問：何と言いますか。\n1. ○○社の 田中と 申します。山田部長に お約束を いただいております。\n2. いらっしゃいませ、ご用件は 何でしょうか。\n3. お邪魔しました、さようなら。",
+              "explanation": "Business visitor greeting."
             },
             {
               "id": "n4-e8-l-19",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
-              "image": "/images/japanese/listening/n4/m3_q4.png",
-              "question": "19. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "image": "/images/japanese/listening/n4_2018/m3_q4.png",
+              "question": "19. 会議中、電話が 鳴ってしまいました。何と言いますか。（矢印の人）",
               "options": [
-                "手伝っていただけませんか。",
-                "手伝ってください。",
-                "手伝いましょうか。"
+                "大変 失礼いたしました。",
+                "どういたしまして。",
+                "お疲れ様でした。"
               ],
               "correct": 0,
-              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
-              "explanation": "Polite request in N4:「〜ていただけませんか」."
+              "transcript": "状況：会議室で 謝ります。\n質問：何と言いますか。\n1. 大変 失礼いたしました。\n2. どういたしまして。\n3. お疲れ様でした。",
+              "explanation": "Apology:「大変失礼いたしました。」"
             },
             {
               "id": "n4-e8-l-20",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
-              "image": "/images/japanese/listening/n4/m3_q5.png",
-              "question": "20. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "image": "/images/japanese/listening/n4_2018/m3_q5.png",
+              "question": "20. 先生の お宅から 帰ります。何と言いますか。（矢印の人）",
               "options": [
-                "手伝っていただけませんか。",
-                "手伝ってください。",
-                "手伝いましょうか。"
+                "今日は ごちそうになり、本当に ありがとうございました。",
+                "いってらっしゃい。",
+                "お大事に。"
               ],
               "correct": 0,
-              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
-              "explanation": "Polite request in N4:「〜ていただけませんか」."
+              "transcript": "状況：お礼を 言って 帰ります。\n質問：何と言いますか。\n1. 今日は ごちそうになり、本当に ありがとうございました。\n2. いってらっしゃい。\n3. お大事に。",
+              "explanation": "Expressing hospitality gratitude."
             },
             {
               "id": "n4-e8-l-21",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
-              "question": "21. 「お先に失礼します。」",
+              "question": "21. 「こちらの 書類を ご確認 いただけますでしょうか。」",
               "options": [
-                "お疲れ様でした。",
-                "いってらっしゃい。",
-                "どういたしまして。"
+                "はい、拝見いたします。",
+                "はい、確認させました。",
+                "いいえ、見ました。"
               ],
               "correct": 0,
-              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
-              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+              "transcript": "発話：「こちらの 書類を ご確認 いただけますでしょうか。」\n1. はい、拝見いたします。\n2. はい、確認させました。\n3. いいえ、見ました。",
+              "explanation": "Humble check response:「拝見いたします。」"
             },
             {
               "id": "n4-e8-l-22",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
-              "question": "22. 「お先に失礼します。」",
+              "question": "22. 「お先に 失礼しても よろしいでしょうか。」",
               "options": [
-                "お疲れ様でした。",
-                "いってらっしゃい。",
-                "どういたしまして。"
+                "ええ、お疲れ様でした。",
+                "はい、いってきます。",
+                "いいえ、失礼しました。"
               ],
               "correct": 0,
-              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
-              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+              "transcript": "発話：「お先に 失礼しても よろしいでしょうか。」\n1. ええ、お疲れ様でした。\n2. はい、いってきます。\n3. いいえ、失礼しました。",
+              "explanation": "Responding to early departure:「お疲れ様でした。」"
             },
             {
               "id": "n4-e8-l-23",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
-              "question": "23. 「お先に失礼します。」",
+              "question": "23. 「この プロジェクト、手伝ってもらえないかな。」",
               "options": [
-                "お疲れ様でした。",
-                "いってらっしゃい。",
+                "はい、喜んで お手伝いします。",
+                "いいえ、手伝いました。",
                 "どういたしまして。"
               ],
               "correct": 0,
-              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
-              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+              "transcript": "発話：「この プロジェクト、手伝ってもらえないかな。」\n1. はい、喜んで お手伝いします。\n2. いいえ、手伝いました。\n3. どういたしまして。",
+              "explanation": "Willing assistance:「喜んでお手伝いします。」"
             },
             {
               "id": "n4-e8-l-24",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
-              "question": "24. 「お先に失礼します。」",
+              "question": "24. 「部長、明日の 会議の 時間を 変更されたと 伺いました。」",
               "options": [
-                "お疲れ様でした。",
-                "いってらっしゃい。",
-                "どういたしまして。"
+                "ええ、14時からに 変更したよ。",
+                "はい、伺いました。",
+                "いいえ、変わりません。"
               ],
               "correct": 0,
-              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
-              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+              "transcript": "発話：「部長、明日の 会議の 時間を 変更されたと 伺いました。」\n1. ええ、14時からに 変更したよ。\n2. はい、伺いました。\n3. いいえ、変わりません。",
+              "explanation": "Confirming meeting adjustment."
             },
             {
               "id": "n4-e8-l-25",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
-              "question": "25. 「お先に失礼します。」",
+              "question": "25. 「コーヒーでも いかがですか。」",
               "options": [
-                "お疲れ様でした。",
-                "いってらっしゃい。",
-                "どういたしまして。"
+                "ありがとうございます、いただきます。",
+                "いいえ、コーヒーです。",
+                "ごちそうさまでした。"
               ],
               "correct": 0,
-              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
-              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+              "transcript": "発話：「コーヒーでも いかがですか。」\n1. ありがとうございます、いただきます。\n2. いいえ、コーヒーです。\n3. ごちそうさまでした。",
+              "explanation": "Polite acceptance:「いただきます。」"
             },
             {
               "id": "n4-e8-l-26",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
-              "question": "26. 「お先に失礼します。」",
+              "question": "26. 「少し 寒くありませんか。エアコンを 弱めましょうか。」",
               "options": [
-                "お疲れ様でした。",
-                "いってらっしゃい。",
-                "どういたしまして。"
+                "助かります、お願いします。",
+                "はい、寒いです。",
+                "いいえ、つけました。"
               ],
               "correct": 0,
-              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
-              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+              "transcript": "発話：「少し 寒くありませんか。エアコンを 弱めましょうか。」\n1. 助かります、お願いします。\n2. はい、寒いです。\n3. いいえ、つけました。",
+              "explanation": "Gratitude for consideration:「助かります、お願いします。」"
             },
             {
               "id": "n4-e8-l-27",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
-              "question": "27. 「お先に失礼します。」",
+              "question": "27. 「新幹線の 切符は もう 手配しましたか。」",
               "options": [
-                "お疲れ様でした。",
-                "いってらっしゃい。",
-                "どういたしまして。"
+                "はい、先ほど 予約を 済ませました。",
+                "いいえ、新幹線です。",
+                "駅に あります。"
               ],
               "correct": 0,
-              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
-              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+              "transcript": "発話：「新幹線の 切符は もう 手配しましたか。」\n1. はい、先ほど 予約を 済ませました。\n2. いいえ、新幹線です。\n3. 駅に あります。",
+              "explanation": "Booking confirmed:「予約を済ませました。」"
             },
             {
               "id": "n4-e8-l-28",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
-              "question": "28. 「お先に失礼します。」",
+              "question": "28. 「明日の 懇親会、参加されますか。」",
               "options": [
-                "お疲れ様でした。",
-                "いってらっしゃい。",
-                "どういたしまして。"
+                "はい、ぜひ 参加させていただきます。",
+                "いいえ、参加です。",
+                "お疲れ様でした。"
               ],
               "correct": 0,
-              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
-              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+              "transcript": "発話：「明日の 懇親会、参加されますか。」\n1. はい、ぜひ 参加させていただきます。\n2. いいえ、参加です。\n3. お疲れ様でした。",
+              "explanation": "Accepting invitation humbly:「参加させていただきます。」"
             }
           ]
         }
@@ -23302,7 +23302,7 @@ export const EXAM_PAPERS_CATALOG = {
       "badge": "Reading Focus",
       "year": "2025 Series",
       "description": "Emphasis on medium-length essays (500+ words), informative pamphlets, email inquiries, and schedule analysis.",
-      "totalQuestions": 97,
+      "totalQuestions": 98,
       "sections": [
         {
           "id": "n4-e9-sec-vocab",
@@ -24241,420 +24241,420 @@ export const EXAM_PAPERS_CATALOG = {
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
               "image": "/images/japanese/listening/n4/m1_q1.png",
-              "question": "1. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "question": "1. 会社で 男の人と 女の人が 話しています。女の人は この後 まず 何を しますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "プロジェクターの 接続を 確認する",
+                "資料を コピーする",
+                "参加者に 連絡する",
+                "お茶を 用意する"
               ],
-              "correct": 1,
-              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
-              "explanation": "Based on task instructions, Option 2 is correct."
+              "correct": 0,
+              "transcript": "男「会議室の プロジェクターの 準備を お願いできる？」女「はい。資料の コピーも しておきましょうか。」男「資料は 僕が やるから、先に プロジェクターの 接続を 確認して。」女「わかりました。」\n質問：女の人は この後 まず 何を しますか。",
+              "explanation": "First checks the projector connection (プロジェクターの接続を確認する)."
             },
             {
               "id": "n4-e9-l-2",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
               "image": "/images/japanese/listening/n4/m1_q2.png",
-              "question": "2. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "question": "2. 病院で 看護師と 患者が 話しています。患者は どこで 待ちますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "2階の 放射線科の前",
+                "1階の 会計窓口",
+                "3階の 手術室",
+                "薬局"
               ],
-              "correct": 2,
-              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
-              "explanation": "Based on task instructions, Option 3 is correct."
+              "correct": 0,
+              "transcript": "看護師「診察の 前に レントゲンを 撮りますので、2階の 放射線科の 前で お待ちください。」患者「会計は どこですか。」看護師「会計は 診察が すべて 終わった後、1階です。」\n質問：患者は これから どこへ 行きますか。",
+              "explanation": "Goes to 2nd floor radiology (2階の放射線科の前)."
             },
             {
               "id": "n4-e9-l-3",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
               "image": "/images/japanese/listening/n4/m1_q3.png",
-              "question": "3. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "question": "3. 引越し業者と 客が 話しています。客は どの 箱に 食器を 入れますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "赤い テープの 小さい箱",
+                "青い テープの 箱",
+                "黄色い 大きい箱",
+                "段ボールの 袋"
               ],
-              "correct": 3,
-              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
-              "explanation": "Based on task instructions, Option 4 is correct."
+              "correct": 0,
+              "transcript": "業者「割れやすい 食器は 赤い テープが 貼ってある 小さい 箱に お入れください。本は 青い 箱です。」客「わかりました。」\n質問：食器は どの 箱に 入れますか。",
+              "explanation": "Packs dishes in small box with red tape (赤いテープの小さい箱)."
             },
             {
               "id": "n4-e9-l-4",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
               "image": "/images/japanese/listening/n4/m1_q4.png",
-              "question": "4. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "question": "4. 大学の 事務室で 学生と 職員が 話しています。学生は いつまでに 奨学金の 書類を 出しますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "来週の 金曜日 17時",
+                "来週の 水曜日",
+                "今週の 金曜日",
+                "月末"
               ],
               "correct": 0,
-              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
-              "explanation": "Based on task instructions, Option 1 is correct."
+              "transcript": "職員「締め切りは 来週の 金曜日 17時です。ただし、推薦書は 水曜日までに 教授に もらって ください。」学生「わかりました。」\n質問：書類の 最終締め切りは いつですか。",
+              "explanation": "Final deadline is next Friday at 17:00 (来週の金曜日17時)."
             },
             {
               "id": "n4-e9-l-5",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
               "image": "/images/japanese/listening/n4/m1_q5.png",
-              "question": "5. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "question": "5. レストランの 厨房で 店長と アルバイトが 話しています。アルバイトは どの テーブルを 片付けますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "3番テーブル",
+                "7番テーブル",
+                "1番テーブル",
+                "カウンター席"
               ],
-              "correct": 1,
-              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
-              "explanation": "Based on task instructions, Option 2 is correct."
+              "correct": 0,
+              "transcript": "店長「3番テーブルと 7番テーブル、どっちが 空いた？」バイト「3番テーブルの お客様が お帰りになりました。」店長「じゃあ、急いで 3番テーブルを 拭いて 次の お客様を 案内して。」\n質問：アルバイトは どの テーブルを 片付けますか。",
+              "explanation": "Cleans table 3 (3番テーブル)."
             },
             {
               "id": "n4-e9-l-6",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
               "image": "/images/japanese/listening/n4/m1_q6.png",
-              "question": "6. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "question": "6. 旅行会社で 客と 案内係が 話しています。客は どの プランを 選びましたか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "温泉旅館の Aプラン",
+                "ホテルの Bプラン",
+                "日帰り Cプラン",
+                "キャンプ Dプラン"
               ],
-              "correct": 2,
-              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
-              "explanation": "Based on task instructions, Option 3 is correct."
+              "correct": 0,
+              "transcript": "案内係「温泉旅館に 泊まる Aプランと、ホテルの Bプランが ございます。」客「露天風呂に 入りたくて 来たので、Aプランに します。」\n質問：客は どの プランを 選びましたか。",
+              "explanation": "Selects onsen ryokan Plan A (温泉旅館のAプラン)."
             },
             {
               "id": "n4-e9-l-7",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
               "image": "/images/japanese/listening/n4/m1_q7.png",
-              "question": "7. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "question": "7. 図書館で 係員と 利用者が 話しています。利用者は DVDを 何枚 借りられますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "1枚",
+                "2枚",
+                "3枚",
+                "0枚"
               ],
-              "correct": 3,
-              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
-              "explanation": "Based on task instructions, Option 4 is correct."
+              "correct": 0,
+              "transcript": "利用者「本 3冊と DVD 2枚を 借りたいです。」係員「DVDは お一人様 1枚までとなって おります。」利用者「では、この 1枚だけに します。」\n質問：利用者は DVDを 何枚 借りますか。",
+              "explanation": "Borrows 1 DVD (1枚)."
             },
             {
               "id": "n4-e9-l-8",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
               "image": "/images/japanese/listening/n4/m1_q8.png",
-              "question": "8. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "question": "8. 男の人と 女の人が 買い物の 相談を しています。二人は 何を 買いますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "テントだけ",
+                "寝袋だけ",
+                "テントと 寝袋の両方",
+                "ランタン"
               ],
               "correct": 0,
-              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
-              "explanation": "Based on task instructions, Option 1 is correct."
+              "transcript": "男「キャンプ用の テントと 寝袋、両方 買う？」女「寝袋は 兄に 借りられるから、テントだけ 買いましょう。」男「オッケー。」\n質問：二人は 何を 買いますか。",
+              "explanation": "Buys tent only (テントだけ)."
             },
             {
               "id": "n4-e9-l-9",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
-              "question": "9. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "question": "9. 男の人と 女の人が 話しています。男の人が 遅刻した 理由は何ですか。",
               "options": [
-                "電車が遅れたから",
+                "電車が 事故で 止まったから",
                 "寝坊したから",
-                "道を間違えたから",
-                "雨が降ったから"
+                "バスを 乗り間違えたから",
+                "鍵を 探していたから"
               ],
-              "correct": 1,
-              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
-              "explanation": "Point comprehension detail: reason for arriving late."
+              "correct": 0,
+              "transcript": "男「遅れて すみません。途中で 人身事故が あって 電車が 30分 止まって しまいました。」女「大変だったわね。」\n質問：男の人が 遅刻した 理由は 何ですか。",
+              "explanation": "Train halted due to accident (電車が事故で止まったから)."
             },
             {
               "id": "n4-e9-l-10",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
-              "question": "10. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "question": "10. 女の人と 男の人が 新しい パソコンについて 話しています。女の人が この パソコンを 選んだ 理由は何ですか。",
               "options": [
-                "電車が遅れたから",
-                "寝坊したから",
-                "道を間違えたから",
-                "雨が降ったから"
+                "軽くて 持ち歩きやすいから",
+                "画面が 一番 大きいから",
+                "値段が 最も 安かったから",
+                "色が 好きだったから"
               ],
-              "correct": 2,
-              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
-              "explanation": "Point comprehension detail: reason for arriving late."
+              "correct": 0,
+              "transcript": "男「軽くて 薄い パソコンだね。」女「ええ、毎日 持ち歩くから、重さが 1キロ未満の 物を 探していたの。」\n質問：選んだ 理由は 何ですか。",
+              "explanation": "Lightweight for commuting (軽くて持ち歩きやすいから)."
             },
             {
               "id": "n4-e9-l-11",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
-              "question": "11. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "question": "11. 男の人と 女の人が 話しています。二人は どうして 旅行の 日程を 変更しましたか。",
               "options": [
-                "電車が遅れたから",
-                "寝坊したから",
-                "道を間違えたから",
-                "雨が降ったから"
+                "台風が 来る 予報だから",
+                "仕事が 入ったから",
+                "ホテルが 満室だったから",
+                "体調を 崩したから"
               ],
-              "correct": 3,
-              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
-              "explanation": "Point comprehension detail: reason for arriving late."
+              "correct": 0,
+              "transcript": "男「来週の 週末、台風が 直撃する 予報に なったね。」女「危ないから、再来週の 連休に 延期しましょう。」\n質問：変更した 理由は 何ですか。",
+              "explanation": "Typhoon forecast (台風が来る予報だから)."
             },
             {
               "id": "n4-e9-l-12",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
-              "question": "12. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "question": "12. 店で 店員と 客が 話しています。この シャツの セールは いつまでですか。",
               "options": [
-                "電車が遅れたから",
-                "寝坊したから",
-                "道を間違えたから",
-                "雨が降ったから"
+                "今週の 日曜日まで",
+                "来週の 月曜日まで",
+                "今日中",
+                "月末まで"
               ],
               "correct": 0,
-              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
-              "explanation": "Point comprehension detail: reason for arriving late."
+              "transcript": "客「この 20%割引は いつまで やっていますか。」店員「今週の 日曜日の 閉店時間までで ございます。」\n質問：セールは いつまでですか。",
+              "explanation": "Until this Sunday (今週の日曜日まで)."
             },
             {
               "id": "n4-e9-l-13",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
-              "question": "13. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "question": "13. 男の人と 女の人が 話しています。女の人は どうして アルバイトを 辞めましたか。",
               "options": [
-                "電車が遅れたから",
-                "寝坊したから",
-                "道を間違えたから",
-                "雨が降ったから"
+                "卒業論文で 忙しくなったから",
+                "時給が 安かったから",
+                "人間関係が 悪かったから",
+                "遠かったから"
               ],
-              "correct": 1,
-              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
-              "explanation": "Point comprehension detail: reason for arriving late."
+              "correct": 0,
+              "transcript": "男「カフェの バイト、辞めたの？」女「ええ、大学の 卒業論文の 執筆が 忙しくなってきたから。」\n質問：辞めた 理由は 何ですか。",
+              "explanation": "Busy writing graduation thesis (卒業論文で忙しくなったから)."
             },
             {
               "id": "n4-e9-l-14",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
-              "question": "14. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "question": "14. 留学生と 日本人の 友達が 話しています。留学生が 日本の 居酒屋で 驚いたことは 何ですか。",
               "options": [
-                "電車が遅れたから",
-                "寝坊したから",
-                "道を間違えたから",
-                "雨が降ったから"
+                "お通し（最初の小鉢）の 仕組み",
+                "メニューの 多さ",
+                "席の 狭さ",
+                "お酒の 種類"
               ],
-              "correct": 2,
-              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
-              "explanation": "Point comprehension detail: reason for arriving late."
+              "correct": 0,
+              "transcript": "留学生「注文していないのに 最初に出てくる 小鉢（お通し）の 仕組みに びっくりしたよ。」\n質問：何に 驚きましたか。",
+              "explanation": "Otoshi appetizer system (お通しの仕組み)."
             },
             {
               "id": "n4-e9-l-15",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-1-mp3.mp3",
-              "question": "15. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "question": "15. 会社で 部長と 社員が 話しています。プレゼンが 成功した 要因は何ですか。",
               "options": [
-                "電車が遅れたから",
-                "寝坊したから",
-                "道を間違えたから",
-                "雨が降ったから"
+                "グラフや データが 具体的で わかりやすかったこと",
+                "声が 大きかったこと",
+                "時間が 短かったこと",
+                "英語で 発表したこと"
               ],
-              "correct": 3,
-              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
-              "explanation": "Point comprehension detail: reason for arriving late."
+              "correct": 0,
+              "transcript": "部長「今日の プレゼン、グラフや データが 具体的で 大変わかりやすかったよ。」\n質問：成功の 要因は何ですか。",
+              "explanation": "Clear data and graphics (グラフやデータが具体的でわかりやすかったこと)."
             },
             {
               "id": "n4-e9-l-16",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
               "image": "/images/japanese/listening/n4/m3_q1.png",
-              "question": "16. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "question": "16. 先輩に 仕事を 教えてもらいたいです。何と言いますか。（矢印の人）",
               "options": [
-                "手伝っていただけませんか。",
-                "手伝ってください。",
-                "手伝いましょうか。"
+                "この やり方を 教えて いただけませんか。",
+                "この やり方を 教えますよ。",
+                "この やり方を 勉強しなさい。"
               ],
               "correct": 0,
-              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
-              "explanation": "Polite request in N4:「〜ていただけませんか」."
+              "transcript": "状況：先輩に 仕事の やり方を 尋ねます。\n質問：何と言いますか。\n1. この やり方を 教えて いただけませんか。\n2. この やり方を 教えますよ。\n3. この やり方を 勉強しなさい。",
+              "explanation": "Polite request:「〜ていただけませんか」."
             },
             {
               "id": "n4-e9-l-17",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
               "image": "/images/japanese/listening/n4/m3_q2.png",
-              "question": "17. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "question": "17. 上司の 荷物が 重そうです。手伝いたいです。何と言いますか。（矢印の人）",
               "options": [
-                "手伝っていただけませんか。",
-                "手伝ってください。",
-                "手伝いましょうか。"
+                "お荷物を お持ち しましょうか。",
+                "荷物を 持って ください。",
+                "荷物を 持ちました。"
               ],
               "correct": 0,
-              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
-              "explanation": "Polite request in N4:「〜ていただけませんか」."
+              "transcript": "状況：上司の 荷物を 持ちます。\n質問：何と言いますか。\n1. お荷物を お持ち しましょうか。\n2. 荷物を 持って ください。\n3. 荷物を 持ちました。",
+              "explanation": "Humble offer:「お持ちしましょうか」."
             },
             {
               "id": "n4-e9-l-18",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
               "image": "/images/japanese/listening/n4/m3_q3.png",
-              "question": "18. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "question": "18. 取引先の 会社を 訪問しました。受付で 何と言いますか。（矢印の人）",
               "options": [
-                "手伝っていただけませんか。",
-                "手伝ってください。",
-                "手伝いましょうか。"
+                "○○社の 田中と 申します。山田部長に お約束を いただいております。",
+                "いらっしゃいませ、ご用件は 何でしょうか。",
+                "お邪魔しました、さようなら。"
               ],
               "correct": 0,
-              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
-              "explanation": "Polite request in N4:「〜ていただけませんか」."
+              "transcript": "状況：訪問先の 受付で 挨拶します。\n質問：何と言いますか。\n1. ○○社の 田中と 申します。山田部長に お約束を いただいております。\n2. いらっしゃいませ、ご用件は 何でしょうか。\n3. お邪魔しました、さようなら。",
+              "explanation": "Business visitor greeting."
             },
             {
               "id": "n4-e9-l-19",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
               "image": "/images/japanese/listening/n4/m3_q4.png",
-              "question": "19. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "question": "19. 会議中、電話が 鳴ってしまいました。何と言いますか。（矢印の人）",
               "options": [
-                "手伝っていただけませんか。",
-                "手伝ってください。",
-                "手伝いましょうか。"
+                "大変 失礼いたしました。",
+                "どういたしまして。",
+                "お疲れ様でした。"
               ],
               "correct": 0,
-              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
-              "explanation": "Polite request in N4:「〜ていただけませんか」."
+              "transcript": "状況：会議室で 謝ります。\n質問：何と言いますか。\n1. 大変 失礼いたしました。\n2. どういたしまして。\n3. お疲れ様でした。",
+              "explanation": "Apology:「大変失礼いたしました。」"
             },
             {
               "id": "n4-e9-l-20",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
               "image": "/images/japanese/listening/n4/m3_q5.png",
-              "question": "20. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "question": "20. 先生の お宅から 帰ります。何と言いますか。（矢印の人）",
               "options": [
-                "手伝っていただけませんか。",
-                "手伝ってください。",
-                "手伝いましょうか。"
+                "今日は ごちそうになり、本当に ありがとうございました。",
+                "いってらっしゃい。",
+                "お大事に。"
               ],
               "correct": 0,
-              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
-              "explanation": "Polite request in N4:「〜ていただけませんか」."
+              "transcript": "状況：お礼を 言って 帰ります。\n質問：何と言いますか。\n1. 今日は ごちそうになり、本当に ありがとうございました。\n2. いってらっしゃい。\n3. お大事に。",
+              "explanation": "Expressing hospitality gratitude."
             },
             {
               "id": "n4-e9-l-21",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
-              "question": "21. 「お先に失礼します。」",
+              "question": "21. 「こちらの 書類を ご確認 いただけますでしょうか。」",
               "options": [
-                "お疲れ様でした。",
-                "いってらっしゃい。",
-                "どういたしまして。"
+                "はい、拝見いたします。",
+                "はい、確認させました。",
+                "いいえ、見ました。"
               ],
               "correct": 0,
-              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
-              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+              "transcript": "発話：「こちらの 書類を ご確認 いただけますでしょうか。」\n1. はい、拝見いたします。\n2. はい、確認させました。\n3. いいえ、見ました。",
+              "explanation": "Humble check response:「拝見いたします。」"
             },
             {
               "id": "n4-e9-l-22",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
-              "question": "22. 「お先に失礼します。」",
+              "question": "22. 「お先に 失礼しても よろしいでしょうか。」",
               "options": [
-                "お疲れ様でした。",
-                "いってらっしゃい。",
-                "どういたしまして。"
+                "ええ、お疲れ様でした。",
+                "はい、いってきます。",
+                "いいえ、失礼しました。"
               ],
               "correct": 0,
-              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
-              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+              "transcript": "発話：「お先に 失礼しても よろしいでしょうか。」\n1. ええ、お疲れ様でした。\n2. はい、いってきます。\n3. いいえ、失礼しました。",
+              "explanation": "Responding to early departure:「お疲れ様でした。」"
             },
             {
               "id": "n4-e9-l-23",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
-              "question": "23. 「お先に失礼します。」",
+              "question": "23. 「この プロジェクト、手伝ってもらえないかな。」",
               "options": [
-                "お疲れ様でした。",
-                "いってらっしゃい。",
+                "はい、喜んで お手伝いします。",
+                "いいえ、手伝いました。",
                 "どういたしまして。"
               ],
               "correct": 0,
-              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
-              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+              "transcript": "発話：「この プロジェクト、手伝ってもらえないかな。」\n1. はい、喜んで お手伝いします。\n2. いいえ、手伝いました。\n3. どういたしまして。",
+              "explanation": "Willing assistance:「喜んでお手伝いします。」"
             },
             {
               "id": "n4-e9-l-24",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
-              "question": "24. 「お先に失礼します。」",
+              "question": "24. 「部長、明日の 会議の 時間を 変更されたと 伺いました。」",
               "options": [
-                "お疲れ様でした。",
-                "いってらっしゃい。",
-                "どういたしまして。"
+                "ええ、14時からに 変更したよ。",
+                "はい、伺いました。",
+                "いいえ、変わりません。"
               ],
               "correct": 0,
-              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
-              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+              "transcript": "発話：「部長、明日の 会議の 時間を 変更されたと 伺いました。」\n1. ええ、14時からに 変更したよ。\n2. はい、伺いました。\n3. いいえ、変わりません。",
+              "explanation": "Confirming meeting adjustment."
             },
             {
               "id": "n4-e9-l-25",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
-              "question": "25. 「お先に失礼します。」",
+              "question": "25. 「コーヒーでも いかがですか。」",
               "options": [
-                "お疲れ様でした。",
-                "いってらっしゃい。",
-                "どういたしまして。"
+                "ありがとうございます、いただきます。",
+                "いいえ、コーヒーです。",
+                "ごちそうさまでした。"
               ],
               "correct": 0,
-              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
-              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+              "transcript": "発話：「コーヒーでも いかがですか。」\n1. ありがとうございます、いただきます。\n2. いいえ、コーヒーです。\n3. ごちそうさまでした。",
+              "explanation": "Polite acceptance:「いただきます。」"
             },
             {
               "id": "n4-e9-l-26",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
-              "question": "26. 「お先に失礼します。」",
+              "question": "26. 「少し 寒くありませんか。エアコンを 弱めましょうか。」",
               "options": [
-                "お疲れ様でした。",
-                "いってらっしゃい。",
-                "どういたしまして。"
+                "助かります、お願いします。",
+                "はい、寒いです。",
+                "いいえ、つけました。"
               ],
               "correct": 0,
-              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
-              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+              "transcript": "発話：「少し 寒くありませんか。エアコンを 弱めましょうか。」\n1. 助かります、お願いします。\n2. はい、寒いです。\n3. いいえ、つけました。",
+              "explanation": "Gratitude for consideration:「助かります、お願いします。」"
             },
             {
               "id": "n4-e9-l-27",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
-              "question": "27. 「お先に失礼します。」",
+              "question": "27. 「新幹線の 切符は もう 手配しましたか。」",
               "options": [
-                "お疲れ様でした。",
-                "いってらっしゃい。",
-                "どういたしまして。"
+                "はい、先ほど 予約を 済ませました。",
+                "いいえ、新幹線です。",
+                "駅に あります。"
               ],
               "correct": 0,
-              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
-              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+              "transcript": "発話：「新幹線の 切符は もう 手配しましたか。」\n1. はい、先ほど 予約を 済ませました。\n2. いいえ、新幹線です。\n3. 駅に あります。",
+              "explanation": "Booking confirmed:「予約を済ませました。」"
             },
             {
               "id": "n4-e9-l-28",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n4/captured-media-3-mp3.mp3",
-              "question": "28. 「お先に失礼します。」",
+              "question": "28. 「明日の 懇親会、参加されますか。」",
               "options": [
-                "お疲れ様でした。",
-                "いってらっしゃい。",
-                "どういたしまして。"
+                "はい、ぜひ 参加させていただきます。",
+                "いいえ、参加です。",
+                "お疲れ様でした。"
               ],
               "correct": 0,
-              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
-              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+              "transcript": "発話：「明日の 懇親会、参加されますか。」\n1. はい、ぜひ 参加させていただきます。\n2. いいえ、参加です。\n3. お疲れ様でした。",
+              "explanation": "Accepting invitation humbly:「参加させていただきます。」"
             }
           ]
         }
@@ -24667,7 +24667,7 @@ export const EXAM_PAPERS_CATALOG = {
       "badge": "Ultimate Sprint",
       "year": "2026 Edition",
       "description": "The ultimate pre-exam dress rehearsal combining the highest-yield test patterns across all 3 official sections.",
-      "totalQuestions": 97,
+      "totalQuestions": 98,
       "sections": [
         {
           "id": "n4-e10-sec-vocab",
@@ -25605,421 +25605,421 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e10-l-1",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
-              "image": "/images/japanese/listening/n4/m1_q1.png",
-              "question": "1. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "image": "/images/japanese/listening/n4_2018/m1_q1.png",
+              "question": "1. 会社で 男の人と 女の人が 話しています。女の人は この後 まず 何を しますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "プロジェクターの 接続を 確認する",
+                "資料を コピーする",
+                "参加者に 連絡する",
+                "お茶を 用意する"
               ],
-              "correct": 2,
-              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
-              "explanation": "Based on task instructions, Option 3 is correct."
+              "correct": 0,
+              "transcript": "男「会議室の プロジェクターの 準備を お願いできる？」女「はい。資料の コピーも しておきましょうか。」男「資料は 僕が やるから、先に プロジェクターの 接続を 確認して。」女「わかりました。」\n質問：女の人は この後 まず 何を しますか。",
+              "explanation": "First checks the projector connection (プロジェクターの接続を確認する)."
             },
             {
               "id": "n4-e10-l-2",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
-              "image": "/images/japanese/listening/n4/m1_q2.png",
-              "question": "2. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "image": "/images/japanese/listening/n4_2018/m1_q2.png",
+              "question": "2. 病院で 看護師と 患者が 話しています。患者は どこで 待ちますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "2階の 放射線科の前",
+                "1階の 会計窓口",
+                "3階の 手術室",
+                "薬局"
               ],
-              "correct": 3,
-              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
-              "explanation": "Based on task instructions, Option 4 is correct."
+              "correct": 0,
+              "transcript": "看護師「診察の 前に レントゲンを 撮りますので、2階の 放射線科の 前で お待ちください。」患者「会計は どこですか。」看護師「会計は 診察が すべて 終わった後、1階です。」\n質問：患者は これから どこへ 行きますか。",
+              "explanation": "Goes to 2nd floor radiology (2階の放射線科の前)."
             },
             {
               "id": "n4-e10-l-3",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
-              "image": "/images/japanese/listening/n4/m1_q3.png",
-              "question": "3. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "image": "/images/japanese/listening/n4_2018/m1_q3.png",
+              "question": "3. 引越し業者と 客が 話しています。客は どの 箱に 食器を 入れますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "赤い テープの 小さい箱",
+                "青い テープの 箱",
+                "黄色い 大きい箱",
+                "段ボールの 袋"
               ],
               "correct": 0,
-              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
-              "explanation": "Based on task instructions, Option 1 is correct."
+              "transcript": "業者「割れやすい 食器は 赤い テープが 貼ってある 小さい 箱に お入れください。本は 青い 箱です。」客「わかりました。」\n質問：食器は どの 箱に 入れますか。",
+              "explanation": "Packs dishes in small box with red tape (赤いテープの小さい箱)."
             },
             {
               "id": "n4-e10-l-4",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
-              "image": "/images/japanese/listening/n4/m1_q4.png",
-              "question": "4. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "image": "/images/japanese/listening/n4_2018/m1_q4.png",
+              "question": "4. 大学の 事務室で 学生と 職員が 話しています。学生は いつまでに 奨学金の 書類を 出しますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "来週の 金曜日 17時",
+                "来週の 水曜日",
+                "今週の 金曜日",
+                "月末"
               ],
-              "correct": 1,
-              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
-              "explanation": "Based on task instructions, Option 2 is correct."
+              "correct": 0,
+              "transcript": "職員「締め切りは 来週の 金曜日 17時です。ただし、推薦書は 水曜日までに 教授に もらって ください。」学生「わかりました。」\n質問：書類の 最終締め切りは いつですか。",
+              "explanation": "Final deadline is next Friday at 17:00 (来週の金曜日17時)."
             },
             {
               "id": "n4-e10-l-5",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
-              "image": "/images/japanese/listening/n4/m1_q5.png",
-              "question": "5. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "image": "/images/japanese/listening/n4_2018/m1_q5.png",
+              "question": "5. レストランの 厨房で 店長と アルバイトが 話しています。アルバイトは どの テーブルを 片付けますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "3番テーブル",
+                "7番テーブル",
+                "1番テーブル",
+                "カウンター席"
               ],
-              "correct": 2,
-              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
-              "explanation": "Based on task instructions, Option 3 is correct."
+              "correct": 0,
+              "transcript": "店長「3番テーブルと 7番テーブル、どっちが 空いた？」バイト「3番テーブルの お客様が お帰りになりました。」店長「じゃあ、急いで 3番テーブルを 拭いて 次の お客様を 案内して。」\n質問：アルバイトは どの テーブルを 片付けますか。",
+              "explanation": "Cleans table 3 (3番テーブル)."
             },
             {
               "id": "n4-e10-l-6",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
-              "image": "/images/japanese/listening/n4/m1_q6.png",
-              "question": "6. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "image": "/images/japanese/listening/n4_2018/m1_q6.png",
+              "question": "6. 旅行会社で 客と 案内係が 話しています。客は どの プランを 選びましたか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "温泉旅館の Aプラン",
+                "ホテルの Bプラン",
+                "日帰り Cプラン",
+                "キャンプ Dプラン"
               ],
-              "correct": 3,
-              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
-              "explanation": "Based on task instructions, Option 4 is correct."
+              "correct": 0,
+              "transcript": "案内係「温泉旅館に 泊まる Aプランと、ホテルの Bプランが ございます。」客「露天風呂に 入りたくて 来たので、Aプランに します。」\n質問：客は どの プランを 選びましたか。",
+              "explanation": "Selects onsen ryokan Plan A (温泉旅館のAプラン)."
             },
             {
               "id": "n4-e10-l-7",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
-              "image": "/images/japanese/listening/n4/m1_q7.png",
-              "question": "7. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "image": "/images/japanese/listening/n4_2018/m1_q7.png",
+              "question": "7. 図書館で 係員と 利用者が 話しています。利用者は DVDを 何枚 借りられますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "1枚",
+                "2枚",
+                "3枚",
+                "0枚"
               ],
               "correct": 0,
-              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
-              "explanation": "Based on task instructions, Option 1 is correct."
+              "transcript": "利用者「本 3冊と DVD 2枚を 借りたいです。」係員「DVDは お一人様 1枚までとなって おります。」利用者「では、この 1枚だけに します。」\n質問：利用者は DVDを 何枚 借りますか。",
+              "explanation": "Borrows 1 DVD (1枚)."
             },
             {
               "id": "n4-e10-l-8",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
-              "image": "/images/japanese/listening/n4/m1_q8.png",
-              "question": "8. 男の人と女の人が話しています。女の人はこれから何をしますか。",
+              "image": "/images/japanese/listening/n4_2018/m1_q8.png",
+              "question": "8. 男の人と 女の人が 買い物の 相談を しています。二人は 何を 買いますか。",
               "options": [
-                "選択肢 1",
-                "選択肢 2",
-                "選択肢 3",
-                "選択肢 4"
+                "テントだけ",
+                "寝袋だけ",
+                "テントと 寝袋の両方",
+                "ランタン"
               ],
-              "correct": 1,
-              "transcript": "男「これをお願いします。」女「はい、かしこまりました。」\n質問：女の人はこれから何をしますか。",
-              "explanation": "Based on task instructions, Option 2 is correct."
+              "correct": 0,
+              "transcript": "男「キャンプ用の テントと 寝袋、両方 買う？」女「寝袋は 兄に 借りられるから、テントだけ 買いましょう。」男「オッケー。」\n質問：二人は 何を 買いますか。",
+              "explanation": "Buys tent only (テントだけ)."
             },
             {
               "id": "n4-e10-l-9",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
-              "question": "9. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "question": "9. 男の人と 女の人が 話しています。男の人が 遅刻した 理由は何ですか。",
               "options": [
-                "電車が遅れたから",
+                "電車が 事故で 止まったから",
                 "寝坊したから",
-                "道を間違えたから",
-                "雨が降ったから"
+                "バスを 乗り間違えたから",
+                "鍵を 探していたから"
               ],
-              "correct": 2,
-              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
-              "explanation": "Point comprehension detail: reason for arriving late."
+              "correct": 0,
+              "transcript": "男「遅れて すみません。途中で 人身事故が あって 電車が 30分 止まって しまいました。」女「大変だったわね。」\n質問：男の人が 遅刻した 理由は 何ですか。",
+              "explanation": "Train halted due to accident (電車が事故で止まったから)."
             },
             {
               "id": "n4-e10-l-10",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
-              "question": "10. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "question": "10. 女の人と 男の人が 新しい パソコンについて 話しています。女の人が この パソコンを 選んだ 理由は何ですか。",
               "options": [
-                "電車が遅れたから",
-                "寝坊したから",
-                "道を間違えたから",
-                "雨が降ったから"
+                "軽くて 持ち歩きやすいから",
+                "画面が 一番 大きいから",
+                "値段が 最も 安かったから",
+                "色が 好きだったから"
               ],
-              "correct": 3,
-              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
-              "explanation": "Point comprehension detail: reason for arriving late."
+              "correct": 0,
+              "transcript": "男「軽くて 薄い パソコンだね。」女「ええ、毎日 持ち歩くから、重さが 1キロ未満の 物を 探していたの。」\n質問：選んだ 理由は 何ですか。",
+              "explanation": "Lightweight for commuting (軽くて持ち歩きやすいから)."
             },
             {
               "id": "n4-e10-l-11",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
-              "question": "11. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "question": "11. 男の人と 女の人が 話しています。二人は どうして 旅行の 日程を 変更しましたか。",
               "options": [
-                "電車が遅れたから",
-                "寝坊したから",
-                "道を間違えたから",
-                "雨が降ったから"
+                "台風が 来る 予報だから",
+                "仕事が 入ったから",
+                "ホテルが 満室だったから",
+                "体調を 崩したから"
               ],
               "correct": 0,
-              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
-              "explanation": "Point comprehension detail: reason for arriving late."
+              "transcript": "男「来週の 週末、台風が 直撃する 予報に なったね。」女「危ないから、再来週の 連休に 延期しましょう。」\n質問：変更した 理由は 何ですか。",
+              "explanation": "Typhoon forecast (台風が来る予報だから)."
             },
             {
               "id": "n4-e10-l-12",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
-              "question": "12. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "question": "12. 店で 店員と 客が 話しています。この シャツの セールは いつまでですか。",
               "options": [
-                "電車が遅れたから",
-                "寝坊したから",
-                "道を間違えたから",
-                "雨が降ったから"
+                "今週の 日曜日まで",
+                "来週の 月曜日まで",
+                "今日中",
+                "月末まで"
               ],
-              "correct": 1,
-              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
-              "explanation": "Point comprehension detail: reason for arriving late."
+              "correct": 0,
+              "transcript": "客「この 20%割引は いつまで やっていますか。」店員「今週の 日曜日の 閉店時間までで ございます。」\n質問：セールは いつまでですか。",
+              "explanation": "Until this Sunday (今週の日曜日まで)."
             },
             {
               "id": "n4-e10-l-13",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
-              "question": "13. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "question": "13. 男の人と 女の人が 話しています。女の人は どうして アルバイトを 辞めましたか。",
               "options": [
-                "電車が遅れたから",
-                "寝坊したから",
-                "道を間違えたから",
-                "雨が降ったから"
+                "卒業論文で 忙しくなったから",
+                "時給が 安かったから",
+                "人間関係が 悪かったから",
+                "遠かったから"
               ],
-              "correct": 2,
-              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
-              "explanation": "Point comprehension detail: reason for arriving late."
+              "correct": 0,
+              "transcript": "男「カフェの バイト、辞めたの？」女「ええ、大学の 卒業論文の 執筆が 忙しくなってきたから。」\n質問：辞めた 理由は 何ですか。",
+              "explanation": "Busy writing graduation thesis (卒業論文で忙しくなったから)."
             },
             {
               "id": "n4-e10-l-14",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
-              "question": "14. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "question": "14. 留学生と 日本人の 友達が 話しています。留学生が 日本の 居酒屋で 驚いたことは 何ですか。",
               "options": [
-                "電車が遅れたから",
-                "寝坊したから",
-                "道を間違えたから",
-                "雨が降ったから"
+                "お通し（最初の小鉢）の 仕組み",
+                "メニューの 多さ",
+                "席の 狭さ",
+                "お酒の 種類"
               ],
-              "correct": 3,
-              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
-              "explanation": "Point comprehension detail: reason for arriving late."
+              "correct": 0,
+              "transcript": "留学生「注文していないのに 最初に出てくる 小鉢（お通し）の 仕組みに びっくりしたよ。」\n質問：何に 驚きましたか。",
+              "explanation": "Otoshi appetizer system (お通しの仕組み)."
             },
             {
               "id": "n4-e10-l-15",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q2.mp3",
-              "question": "15. 男の人と女の人が話しています。男の人はどうして遅刻しましたか。",
+              "question": "15. 会社で 部長と 社員が 話しています。プレゼンが 成功した 要因は何ですか。",
               "options": [
-                "電車が遅れたから",
-                "寝坊したから",
-                "道を間違えたから",
-                "雨が降ったから"
+                "グラフや データが 具体的で わかりやすかったこと",
+                "声が 大きかったこと",
+                "時間が 短かったこと",
+                "英語で 発表したこと"
               ],
               "correct": 0,
-              "transcript": "男「すみません、電車が遅れてしまいました。」女「わかりました。」\n質問：男の人はどうして遅刻しましたか。",
-              "explanation": "Point comprehension detail: reason for arriving late."
+              "transcript": "部長「今日の プレゼン、グラフや データが 具体的で 大変わかりやすかったよ。」\n質問：成功の 要因は何ですか。",
+              "explanation": "Clear data and graphics (グラフやデータが具体的でわかりやすかったこと)."
             },
             {
               "id": "n4-e10-l-16",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
-              "image": "/images/japanese/listening/n4/m3_q1.png",
-              "question": "16. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "image": "/images/japanese/listening/n4_2018/m3_q1.png",
+              "question": "16. 先輩に 仕事を 教えてもらいたいです。何と言いますか。（矢印の人）",
               "options": [
-                "手伝っていただけませんか。",
-                "手伝ってください。",
-                "手伝いましょうか。"
+                "この やり方を 教えて いただけませんか。",
+                "この やり方を 教えますよ。",
+                "この やり方を 勉強しなさい。"
               ],
               "correct": 0,
-              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
-              "explanation": "Polite request in N4:「〜ていただけませんか」."
+              "transcript": "状況：先輩に 仕事の やり方を 尋ねます。\n質問：何と言いますか。\n1. この やり方を 教えて いただけませんか。\n2. この やり方を 教えますよ。\n3. この やり方を 勉強しなさい。",
+              "explanation": "Polite request:「〜ていただけませんか」."
             },
             {
               "id": "n4-e10-l-17",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
-              "image": "/images/japanese/listening/n4/m3_q2.png",
-              "question": "17. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "image": "/images/japanese/listening/n4_2018/m3_q2.png",
+              "question": "17. 上司の 荷物が 重そうです。手伝いたいです。何と言いますか。（矢印の人）",
               "options": [
-                "手伝っていただけませんか。",
-                "手伝ってください。",
-                "手伝いましょうか。"
+                "お荷物を お持ち しましょうか。",
+                "荷物を 持って ください。",
+                "荷物を 持ちました。"
               ],
               "correct": 0,
-              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
-              "explanation": "Polite request in N4:「〜ていただけませんか」."
+              "transcript": "状況：上司の 荷物を 持ちます。\n質問：何と言いますか。\n1. お荷物を お持ち しましょうか。\n2. 荷物を 持って ください。\n3. 荷物を 持ちました。",
+              "explanation": "Humble offer:「お持ちしましょうか」."
             },
             {
               "id": "n4-e10-l-18",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
-              "image": "/images/japanese/listening/n4/m3_q3.png",
-              "question": "18. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "image": "/images/japanese/listening/n4_2018/m3_q3.png",
+              "question": "18. 取引先の 会社を 訪問しました。受付で 何と言いますか。（矢印の人）",
               "options": [
-                "手伝っていただけませんか。",
-                "手伝ってください。",
-                "手伝いましょうか。"
+                "○○社の 田中と 申します。山田部長に お約束を いただいております。",
+                "いらっしゃいませ、ご用件は 何でしょうか。",
+                "お邪魔しました、さようなら。"
               ],
               "correct": 0,
-              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
-              "explanation": "Polite request in N4:「〜ていただけませんか」."
+              "transcript": "状況：訪問先の 受付で 挨拶します。\n質問：何と言いますか。\n1. ○○社の 田中と 申します。山田部長に お約束を いただいております。\n2. いらっしゃいませ、ご用件は 何でしょうか。\n3. お邪魔しました、さようなら。",
+              "explanation": "Business visitor greeting."
             },
             {
               "id": "n4-e10-l-19",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
-              "image": "/images/japanese/listening/n4/m3_q4.png",
-              "question": "19. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "image": "/images/japanese/listening/n4_2018/m3_q4.png",
+              "question": "19. 会議中、電話が 鳴ってしまいました。何と言いますか。（矢印の人）",
               "options": [
-                "手伝っていただけませんか。",
-                "手伝ってください。",
-                "手伝いましょうか。"
+                "大変 失礼いたしました。",
+                "どういたしまして。",
+                "お疲れ様でした。"
               ],
               "correct": 0,
-              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
-              "explanation": "Polite request in N4:「〜ていただけませんか」."
+              "transcript": "状況：会議室で 謝ります。\n質問：何と言いますか。\n1. 大変 失礼いたしました。\n2. どういたしまして。\n3. お疲れ様でした。",
+              "explanation": "Apology:「大変失礼いたしました。」"
             },
             {
               "id": "n4-e10-l-20",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
-              "image": "/images/japanese/listening/n4/m3_q5.png",
-              "question": "20. 相手に丁寧に依頼します。何と言いますか。（矢印の人）",
+              "image": "/images/japanese/listening/n4_2018/m3_q5.png",
+              "question": "20. 先生の お宅から 帰ります。何と言いますか。（矢印の人）",
               "options": [
-                "手伝っていただけませんか。",
-                "手伝ってください。",
-                "手伝いましょうか。"
+                "今日は ごちそうになり、本当に ありがとうございました。",
+                "いってらっしゃい。",
+                "お大事に。"
               ],
               "correct": 0,
-              "transcript": "状況：手伝いを依頼します。\n質問：何と言いますか。\n1. 手伝っていただけませんか。\n2. 手伝ってください。\n3. 手伝いましょうか。",
-              "explanation": "Polite request in N4:「〜ていただけませんか」."
+              "transcript": "状況：お礼を 言って 帰ります。\n質問：何と言いますか。\n1. 今日は ごちそうになり、本当に ありがとうございました。\n2. いってらっしゃい。\n3. お大事に。",
+              "explanation": "Expressing hospitality gratitude."
             },
             {
               "id": "n4-e10-l-21",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
-              "question": "21. 「お先に失礼します。」",
+              "question": "21. 「こちらの 書類を ご確認 いただけますでしょうか。」",
               "options": [
-                "お疲れ様でした。",
-                "いってらっしゃい。",
-                "どういたしまして。"
+                "はい、拝見いたします。",
+                "はい、確認させました。",
+                "いいえ、見ました。"
               ],
               "correct": 0,
-              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
-              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+              "transcript": "発話：「こちらの 書類を ご確認 いただけますでしょうか。」\n1. はい、拝見いたします。\n2. はい、確認させました。\n3. いいえ、見ました。",
+              "explanation": "Humble check response:「拝見いたします。」"
             },
             {
               "id": "n4-e10-l-22",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
-              "question": "22. 「お先に失礼します。」",
+              "question": "22. 「お先に 失礼しても よろしいでしょうか。」",
               "options": [
-                "お疲れ様でした。",
-                "いってらっしゃい。",
-                "どういたしまして。"
+                "ええ、お疲れ様でした。",
+                "はい、いってきます。",
+                "いいえ、失礼しました。"
               ],
               "correct": 0,
-              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
-              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+              "transcript": "発話：「お先に 失礼しても よろしいでしょうか。」\n1. ええ、お疲れ様でした。\n2. はい、いってきます。\n3. いいえ、失礼しました。",
+              "explanation": "Responding to early departure:「お疲れ様でした。」"
             },
             {
               "id": "n4-e10-l-23",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
-              "question": "23. 「お先に失礼します。」",
+              "question": "23. 「この プロジェクト、手伝ってもらえないかな。」",
               "options": [
-                "お疲れ様でした。",
-                "いってらっしゃい。",
+                "はい、喜んで お手伝いします。",
+                "いいえ、手伝いました。",
                 "どういたしまして。"
               ],
               "correct": 0,
-              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
-              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+              "transcript": "発話：「この プロジェクト、手伝ってもらえないかな。」\n1. はい、喜んで お手伝いします。\n2. いいえ、手伝いました。\n3. どういたしまして。",
+              "explanation": "Willing assistance:「喜んでお手伝いします。」"
             },
             {
               "id": "n4-e10-l-24",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
-              "question": "24. 「お先に失礼します。」",
+              "question": "24. 「部長、明日の 会議の 時間を 変更されたと 伺いました。」",
               "options": [
-                "お疲れ様でした。",
-                "いってらっしゃい。",
-                "どういたしまして。"
+                "ええ、14時からに 変更したよ。",
+                "はい、伺いました。",
+                "いいえ、変わりません。"
               ],
               "correct": 0,
-              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
-              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+              "transcript": "発話：「部長、明日の 会議の 時間を 変更されたと 伺いました。」\n1. ええ、14時からに 変更したよ。\n2. はい、伺いました。\n3. いいえ、変わりません。",
+              "explanation": "Confirming meeting adjustment."
             },
             {
               "id": "n4-e10-l-25",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
-              "question": "25. 「お先に失礼します。」",
+              "question": "25. 「コーヒーでも いかがですか。」",
               "options": [
-                "お疲れ様でした。",
-                "いってらっしゃい。",
-                "どういたしまして。"
+                "ありがとうございます、いただきます。",
+                "いいえ、コーヒーです。",
+                "ごちそうさまでした。"
               ],
               "correct": 0,
-              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
-              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+              "transcript": "発話：「コーヒーでも いかがですか。」\n1. ありがとうございます、いただきます。\n2. いいえ、コーヒーです。\n3. ごちそうさまでした。",
+              "explanation": "Polite acceptance:「いただきます。」"
             },
             {
               "id": "n4-e10-l-26",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
-              "question": "26. 「お先に失礼します。」",
+              "question": "26. 「少し 寒くありませんか。エアコンを 弱めましょうか。」",
               "options": [
-                "お疲れ様でした。",
-                "いってらっしゃい。",
-                "どういたしまして。"
+                "助かります、お願いします。",
+                "はい、寒いです。",
+                "いいえ、つけました。"
               ],
               "correct": 0,
-              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
-              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+              "transcript": "発話：「少し 寒くありませんか。エアコンを 弱めましょうか。」\n1. 助かります、お願いします。\n2. はい、寒いです。\n3. いいえ、つけました。",
+              "explanation": "Gratitude for consideration:「助かります、お願いします。」"
             },
             {
               "id": "n4-e10-l-27",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
-              "question": "27. 「お先に失礼します。」",
+              "question": "27. 「新幹線の 切符は もう 手配しましたか。」",
               "options": [
-                "お疲れ様でした。",
-                "いってらっしゃい。",
-                "どういたしまして。"
+                "はい、先ほど 予約を 済ませました。",
+                "いいえ、新幹線です。",
+                "駅に あります。"
               ],
               "correct": 0,
-              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
-              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+              "transcript": "発話：「新幹線の 切符は もう 手配しましたか。」\n1. はい、先ほど 予約を 済ませました。\n2. いいえ、新幹線です。\n3. 駅に あります。",
+              "explanation": "Booking confirmed:「予約を済ませました。」"
             },
             {
               "id": "n4-e10-l-28",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q4.mp3",
-              "question": "28. 「お先に失礼します。」",
+              "question": "28. 「明日の 懇親会、参加されますか。」",
               "options": [
-                "お疲れ様でした。",
-                "いってらっしゃい。",
-                "どういたしまして。"
+                "はい、ぜひ 参加させていただきます。",
+                "いいえ、参加です。",
+                "お疲れ様でした。"
               ],
               "correct": 0,
-              "transcript": "発話：「お先に失礼します。」\n1. お疲れ様でした。\n2. いってらっしゃい。\n3. どういたしまして。",
-              "explanation": "Standard workplace response when a colleague departs:「お疲れ様でした。」"
+              "transcript": "発話：「明日の 懇親会、参加されますか。」\n1. はい、ぜひ 参加させていただきます。\n2. いいえ、参加です。\n3. お疲れ様でした。",
+              "explanation": "Accepting invitation humbly:「参加させていただきます。」"
             }
           ]
         }

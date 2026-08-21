@@ -513,9 +513,31 @@ export default function JLPTExamSimulator({ level = 'N5', onToast }) {
                       <span className="flex h-2.5 w-2.5 rounded-full bg-red-500 animate-pulse" />
                       <span className="font-bold text-white tracking-wide">🎧 Official JLPT Listening Broadcast</span>
                     </div>
-                    <span className="font-mono text-[11px] px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">
-                      {currentSection?.shortTitle || '聴解'}
-                    </span>
+                    <div className="flex items-center gap-2">
+                      {currentQuestion.transcript && (
+                        <button
+                          type="button"
+                          className="text-[11px] font-bold px-2.5 py-1 rounded-lg bg-blue-600 hover:bg-blue-500 text-white transition-all cursor-pointer flex items-center gap-1 shadow-xs"
+                          onClick={() => {
+                            if (typeof window !== 'undefined' && window.speechSynthesis) {
+                              window.speechSynthesis.cancel();
+                              const text = currentQuestion.transcript.replace(/<[^>]*>?/gm, '');
+                              const u = new SpeechSynthesisUtterance(text);
+                              u.lang = 'ja-JP';
+                              u.rate = 0.92;
+                              window.speechSynthesis.speak(u);
+                              if (onToast) onToast({ type: 'info', message: 'Playing Japanese dialogue audio...' });
+                            }
+                          }}
+                        >
+                          <span>🔊</span>
+                          <span>Play Dialogue (音声)</span>
+                        </button>
+                      )}
+                      <span className="font-mono text-[11px] px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">
+                        {currentSection?.shortTitle || '聴解'}
+                      </span>
+                    </div>
                   </div>
                   <audio
                     ref={audioRef}
@@ -525,7 +547,7 @@ export default function JLPTExamSimulator({ level = 'N5', onToast }) {
                     autoPlay={false}
                   />
                   <p className="text-[11px] text-slate-400">
-                    💡 Listen to the audio broadcast instructions, then select the best matching answer below.
+                    💡 Listen to the broadcast instructions or click <strong>Play Dialogue</strong>, then select the best matching answer below.
                   </p>
                 </div>
               )}
