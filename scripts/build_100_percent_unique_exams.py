@@ -8,6 +8,10 @@ from build_all_multi_exam_papers import (
     N5_VOL1_SECTIONS, N5_VOL2_SECTIONS,
     N4_VOL1_SECTIONS, N4_VOL2_SECTIONS
 )
+from official_verbatim_exams_db import (
+    OFFICIAL_N5_VOL1_LISTENING, OFFICIAL_N5_VOL2_LISTENING,
+    OFFICIAL_N4_VOL1_LISTENING, OFFICIAL_N4_VOL2_LISTENING
+)
 import generate_10_full_exams
 
 # =========================================================================
@@ -500,6 +504,7 @@ def balance_options(options, correct_idx, seed):
 def build_all_10_n5():
     exams = []
     # Vol 1
+    N5_VOL1_SECTIONS[2]['questions'] = OFFICIAL_N5_VOL1_LISTENING
     exams.append({
         'id': 'n5-exam-1',
         'title': 'JLPT N5 Official Practice Test (Vol. 1 - Standard)',
@@ -511,6 +516,7 @@ def build_all_10_n5():
         'sections': N5_VOL1_SECTIONS
     })
     # Vol 2
+    N5_VOL2_SECTIONS[2]['questions'] = OFFICIAL_N5_VOL2_LISTENING
     exams.append({
         'id': 'n5-exam-2',
         'title': 'JLPT N5 Official Practice Test (Vol. 2 - 2018 Edition)',
@@ -617,6 +623,7 @@ def build_all_10_n5():
 def build_all_10_n4():
     exams = []
     # Vol 1
+    N4_VOL1_SECTIONS[2]['questions'] = OFFICIAL_N4_VOL1_LISTENING
     exams.append({
         'id': 'n4-exam-1',
         'title': 'JLPT N4 Official Practice Test (Vol. 1 - Standard)',
@@ -628,6 +635,7 @@ def build_all_10_n4():
         'sections': N4_VOL1_SECTIONS
     })
     # Vol 2
+    N4_VOL2_SECTIONS[2]['questions'] = OFFICIAL_N4_VOL2_LISTENING
     exams.append({
         'id': 'n4-exam-2',
         'title': 'JLPT N4 Official Practice Test (Vol. 2 - 2018 Edition)',
