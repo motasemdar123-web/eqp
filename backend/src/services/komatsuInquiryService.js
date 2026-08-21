@@ -27,27 +27,49 @@ function parseCookieInput(rawInput = '') {
   return trimmed;
 }
 
-function saveCookie(rawInput) {
-  const cookieStr = parseCookieInput(rawInput);
-  if (cookieStr) {
-    const dir = path.dirname(COOKIE_FILE_PATH);
-    if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir, { recursive: true });
-    }
-    fs.writeFileSync(COOKIE_FILE_PATH, cookieStr, 'utf-8');
-  }
-  return cookieStr;
-}
+const DEFAULT_INITIAL_COOKIES =
+  'SelectedLanguage=; ' +
+  '.AspNet.Cookies=cqIYX_3LSAVsSB0yvBHA1Esz6Z7Nd5IRgDulEoi-WW19R66jyOkA_pcuA3J3tWkvl7DrkPwpWsMhRc8AcOnxGQ4JT-V3Qlge2OOEVBjO1g9XF7_rMu8l5qGOS6JpZFVxwr0nRaQEZEBUCHV9NKL7IkZaUEICoE35IMwNr8mlqpMRt8AOVrjzLJDFmR0R8oTzfJuxAVzqDH2g3huhvkVQVi0wcnS2gE-XYIVxksxnXb0-I6fHjSelGmMlFvTCm5Z1BMZ7YD6uaiKgIKvCYLFV81fUP0zGWLuLzpARxfbSQC_YUzdcBPTwEculK4B7Caz3oJ27h-Tc6Y_KVJsKqwg6-EIO8yVtbFt_1R20rMga5IDZiGp8hHPWBQax2Q20m7pC4ymPDZDTWpP0rNpFpbd12vjIpXkfqKYg15RiJZEQkYivi6TYu2YepVOu1pJ0M8HNcH7UzPf3zgHDEb-cHR8LZFvWJjeOL17o53kPNEIvQnMDiFf3OPFv9xVh5THfR9QgA4eaB0pDnyD8i4S6lPx4xH6yFi5-yjy98tTw4eR48wP_sW1ppU4gPzGt3F4G_klXy5XbLpvOmzUFtLbx0fVWflkBJK4zxZFmhly14D9-m9R1hddKJv3YQM-XzI-1Y1YXpvYMd9vVf6d-WvohFYcfrOOgHZozc8EnQdaGwIQe6hYHCaRftJ9b_t_YzygnrX-zJ7BCMAEDErE1JLwzBcfkqG22qEI8_GnEpoWHqx_jXRBlXUC3_gmLNIhXf8yrXRDSFMjdOIs_zhYXBg6pltzHmV1MVA9NgvPKgc4DPqdCbLSxyk9uPum2wOqWPvJ7sVjUtmVjKGrJY2P09zwOZmaF18vrjZT3DapMMNg9nzAdCTUVsCK-haC-Fq9lbXgNKb7xMKIFSX3euEx-1PCDfRWsFEnufRWyf1n8MyHvVTSJDpQkCDOdVHjEJMGuO5DDXm8cALpgOLLrbEP5e84gE2mTiKdhrVWFYFZ5kdwyAxftZz-sVCycQQAfrd4zvExB9SGzyY6qVBWSqBmqRYPnQzPG_MhO7CZ3kTcCeuCFINV6hKCITdyArNNIEwdQ7zlxglhNhZqQjH3TgRZlXah22ipdL6LT-2Pz_3A-N-OqsaXKA59_YXyoNsK93oj0jEzS_p5CQwkVGtv4Wo15iboqWLoa_XCynmtueqXJnxBwYVN1PWBfkMDphjRIb_BkbZv2Wa3PiO-5xhN59xK3Itzz72DmaqQnn72ELsjxSpp2Uk4iWOn-DUoDOT8ghcF-6CvSU3cpr1Qp9MjTseUIYvYvOj8XXbTt4-hsS8AqJetfsD5HpQQNk9hraZBJeNCHy_ClQrP9nIQPs3d5IUh_AgPvy42Mv1aI8mMJdhSW0eFlLkYc7IPbjNd5PeF7eJn4pXKltjbq23HZEbG3xQ4wP50QHx4ogQS81hftxiInh03xl-2ETm-l-r11zKapI_vZESarEeoQ_koccqaJV4-6qtCwFSkA1ApNYx9V76Vgj-fl0HaLobakaxG_IzjcqGmH6LkWR8sbtQRHqZAoA-O4jPaLHCOqFFD66tqlDQPfK6vfifDbS-yVbg_YE4XaExoeuIWafn8hnGPF2BETEz9dM3cLhLtf6O5WxbrayIYrR2OFOhW0OE7Sxqsykl63wYXIbFsWzpVB_; ' +
+  'ASP.NET_SessionId=f33mpgny11b3ikxgvclruxcl';
+
+let inMemoryCookie = '';
 
 function loadCookie() {
+  if (inMemoryCookie) {
+    return inMemoryCookie;
+  }
+  if (process.env.PDX_COOKIES) {
+    return parseCookieInput(process.env.PDX_COOKIES);
+  }
+  if (process.env.KOMATSU_COOKIES) {
+    return parseCookieInput(process.env.KOMATSU_COOKIES);
+  }
   try {
     if (fs.existsSync(COOKIE_FILE_PATH)) {
-      return fs.readFileSync(COOKIE_FILE_PATH, 'utf-8').trim();
+      const saved = fs.readFileSync(COOKIE_FILE_PATH, 'utf-8').trim();
+      if (saved) return saved;
     }
   } catch {
     // Ignore read error
   }
-  return '';
+  return DEFAULT_INITIAL_COOKIES;
+}
+
+function saveCookie(rawInput) {
+  const cookieStr = parseCookieInput(rawInput);
+  if (cookieStr) {
+    inMemoryCookie = cookieStr;
+    try {
+      const dir = path.dirname(COOKIE_FILE_PATH);
+      if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, { recursive: true });
+      }
+      fs.writeFileSync(COOKIE_FILE_PATH, cookieStr, 'utf-8');
+    } catch {
+      // Non-fatal if filesystem is read-only
+    }
+  }
+  return cookieStr;
 }
 
 async function testPdxConnection(customCookie = null) {
