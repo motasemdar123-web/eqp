@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
+import { useEffect, useMemo, useState } from 'react';
 import SystemShell from '../../components/SystemShell';
 import Card from '../../components/ui/Card';
 import Badge from '../../components/ui/Badge';
@@ -88,6 +88,7 @@ export default function ManagementDashboardPage() {
   const [dashboard, setDashboard] = useState(null);
   const [loading, setLoading] = useState(true);
   const [toast, setToast] = useState(null);
+  const [chartTimeframe, setChartTimeframe] = useState('7D'); // '7D' | '30D'
 
   useEffect(() => {
     let ignore = false;
@@ -164,9 +165,15 @@ export default function ManagementDashboardPage() {
   }, [dashboard]);
 
   const governanceItems = dashboard?.governance || [];
-  const chartBars = dashboard?.timeline || [];
+  const rawChartBars = dashboard?.timeline || [];
   const activity = dashboard?.activity || [];
   const upcomingMaintenance = dashboard?.upcomingMaintenance || [];
+
+  const chartBars = useMemo(() => {
+    if (chartTimeframe === '7D') return rawChartBars.slice(-7);
+    return rawChartBars;
+  }, [rawChartBars, chartTimeframe]);
+
   const maxChartValue = Math.max(1, ...chartBars.map((item) => Math.max(item.scheduled || 0, item.completed || 0, item.reports || 0)));
   const totalOperations = chartBars.reduce((total, item) => total + (item.scheduled || 0) + (item.reports || 0), 0);
 
@@ -174,15 +181,17 @@ export default function ManagementDashboardPage() {
     <SystemShell
       activePath="/management"
       eyebrow="Dar Al Hai Operations"
-      title="Management Dashboard"
-      description="Unified operations command for field technicians, maintenance schedules, machine assets, and EQP reporting."
+      title="Management Command Dashboard"
+      description="Unified operations overview for field technicians, maintenance schedules, machine assets, parts inquiry, and EQP reporting."
       actions={
-        <Link href="/management/scheduling" className="ds-button ds-button-primary shadow-sm">
-          <svg className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
-          </svg>
-          Add Schedule
-        </Link>
+        <div className="flex items-center gap-2">
+          <Link href="/management/scheduling" className="ds-button ds-button-primary shadow-xs">
+            <svg className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+            </svg>
+            Add Schedule
+          </Link>
+        </div>
       }
     >
       <div className="space-y-6">
@@ -215,16 +224,28 @@ export default function ManagementDashboardPage() {
           <Card className="p-6">
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between pb-4 border-b border-slate-100">
               <div>
-                <h2 className="ds-panel-title">Maintenance Operations</h2>
-                <p className="mt-1 text-xs text-slate-500">{totalOperations} operations tracked in the current cycle</p>
+                <h2 className="ds-panel-title">Maintenance & Inspection Velocity</h2>
+                <p className="mt-1 text-xs text-slate-500">{totalOperations} operations tracked in this period</p>
               </div>
               <div className="ds-segment-control">
-                <span className="ds-segment-active">Weekly</span>
-                <span>Monthly</span>
+                <button
+                  type="button"
+                  className={chartTimeframe === '7D' ? 'ds-segment-active' : ''}
+                  onClick={() => setChartTimeframe('7D')}
+                >
+                  7 Days
+                </button>
+                <button
+                  type="button"
+                  className={chartTimeframe === '30D' ? 'ds-segment-active' : ''}
+                  onClick={() => setChartTimeframe('30D')}
+                >
+                  30 Days
+                </button>
               </div>
             </div>
 
-            <div className="ds-chart-legend">
+            <div className="ds-chart-legend mt-3">
               <span><i className="bg-slate-900" /> Completed Tasks</span>
               <span><i className="bg-amber-500" /> Planned Services</span>
             </div>
@@ -257,12 +278,12 @@ export default function ManagementDashboardPage() {
                 <h2 className="ds-panel-title">Readiness Governance</h2>
                 <Badge tone="info">Monitored</Badge>
               </div>
-              <div className="mt-4 grid gap-3">
+              <div className="mt-4 grid gap-3.5">
                 {governanceItems.map((item) => (
                   <div key={item.title} className="space-y-1.5">
                     <div className="flex justify-between text-xs font-semibold text-slate-700">
                       <span>{item.title}</span>
-                      <span>{item.value}%</span>
+                      <span className="font-mono">{item.value}%</span>
                     </div>
                     <div className="h-2 w-full overflow-hidden rounded-full bg-slate-100">
                       <div
@@ -273,7 +294,7 @@ export default function ManagementDashboardPage() {
                   </div>
                 ))}
                 {!loading && governanceItems.length === 0 && (
-                  <span className="text-xs text-slate-500 py-2">No readiness metrics currently recorded.</span>
+                  <span className="text-xs text-slate-500 py-2">No readiness metrics recorded.</span>
                 )}
               </div>
             </Card>
@@ -283,7 +304,7 @@ export default function ManagementDashboardPage() {
                 <h2 className="ds-panel-title">Operational Feed</h2>
                 <Badge tone="neutral">Live</Badge>
               </div>
-              <div className="mt-3 grid gap-1.5">
+              <div className="mt-3 grid gap-2">
                 {activity.slice(0, 4).map((item, idx) => (
                   <Link key={`${item.action}-${idx}`} href={item.href || '/management'} className="ds-feed-row">
                     <span className="ds-feed-icon">
@@ -293,7 +314,7 @@ export default function ManagementDashboardPage() {
                     </span>
                     <span className="min-w-0 flex-1">
                       <span className="block truncate text-xs font-semibold text-slate-900">{item.action}</span>
-                      <span className="block text-[0.6875rem] text-slate-400">{formatTime(item.time)}</span>
+                      <span className="block text-[0.6875rem] text-slate-400 font-mono">{formatTime(item.time)}</span>
                     </span>
                     <Badge tone={statusTone(item.status)}>{item.status}</Badge>
                   </Link>
@@ -379,7 +400,7 @@ export default function ManagementDashboardPage() {
                   <tr key={item.id || `${item.machine}-${item.dueDate}`}>
                     <td className="font-semibold text-slate-900">{item.machine}</td>
                     <td className="text-slate-600">{item.technician || 'Unassigned'}</td>
-                    <td className="text-slate-600">{formatDate(item.dueDate)}</td>
+                    <td className="text-slate-600 font-mono">{formatDate(item.dueDate)}</td>
                     <td><Badge tone={statusTone(item.status)}>{item.status}</Badge></td>
                   </tr>
                 ))}

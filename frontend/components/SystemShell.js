@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { clearStoredUser, getStoredPlatformSession, getStoredUser } from '../lib/auth';
 import { getNotifications, markAllNotificationsRead, markNotificationRead } from '../lib/api';
 
@@ -112,6 +112,27 @@ function formatRoleLabel(role) {
   return labels[role] || String(role || '').replace(/_/g, ' ').toLowerCase().replace(/\b\w/g, (letter) => letter.toUpperCase());
 }
 
+const COMMAND_ITEMS = [
+  // Navigation
+  { id: 'nav-dashboard', title: 'Management Dashboard', subtitle: 'Operations overview, KPIs, and live roster', href: '/management', category: 'Navigation', badge: 'Overview' },
+  { id: 'nav-technicians', title: 'Technicians Management', subtitle: 'Staff records, shifts, regions, skills & dispatch', href: '/management/technicians', category: 'Navigation', badge: 'Staff' },
+  { id: 'nav-scheduling', title: 'Scheduling & Work Windows', subtitle: 'Gantt timeline, work windows, shop manuals AI', href: '/management/scheduling', category: 'Navigation', badge: 'Schedule' },
+  { id: 'nav-daily-planner', title: 'Daily Schedule Planner', subtitle: 'Shift task sequencing and supervisor dispatch', href: '/management/daily-planner', category: 'Navigation', badge: 'Planner' },
+  { id: 'nav-parts-inquiry', title: 'Komatsu PDX Parts Inquiry', subtitle: 'Bulk stock inquiry, interchangeable parts, DNet price', href: '/management/parts-inquiry', category: 'Navigation', badge: 'Parts Hub' },
+  { id: 'nav-workspace', title: 'Engineering Whiteboard', subtitle: 'Miro-grade canvas, 5-whys, maintenance templates', href: '/workspace', category: 'Navigation', badge: 'Canvas' },
+  { id: 'nav-eqp', title: 'EQP Module Hub', subtitle: 'Certified reports, machines register & lifecycle', href: '/eqp', category: 'Navigation', badge: 'EQP' },
+  { id: 'nav-eqp-reports', title: 'EQP PDF Archive', subtitle: 'Search, batch download & manage certified PDFs', href: '/eqp/reports', category: 'Navigation', badge: 'Archive' },
+  { id: 'nav-eqp-gen', title: 'Report Builder', subtitle: 'Generate certified preventive maintenance reports', href: '/eqp/generate-reports', category: 'Navigation', badge: 'Builder' },
+  { id: 'nav-eqp-machines', title: 'Machines Register', subtitle: 'Fleet counter progression, SMR & report readiness', href: '/eqp/machines', category: 'Navigation', badge: 'Fleet' },
+  { id: 'nav-technician-app', title: 'Field Technician Mobile App', subtitle: 'Voice transcription, audio tasks, weather advice', href: '/technician', category: 'Navigation', badge: 'Mobile' },
+  
+  // Quick Actions
+  { id: 'act-new-task', title: 'Add Daily Schedule Task', subtitle: 'Create timed task block for today', href: '/management/daily-planner', category: 'Quick Action', badge: 'Action' },
+  { id: 'act-search-parts', title: 'Run Komatsu PDX Inquiry', subtitle: 'Batch inquiry for parts stock & pricing', href: '/management/parts-inquiry', category: 'Quick Action', badge: 'Action' },
+  { id: 'act-new-report', title: 'Draft EQP Inspection Report', subtitle: 'Launch report builder wizard', href: '/eqp/generate-reports', category: 'Quick Action', badge: 'Action' },
+  { id: 'act-add-tech', title: 'Register New Technician', subtitle: 'Add technician to company fleet roster', href: '/management/technicians', category: 'Quick Action', badge: 'Action' },
+];
+
 export default function SystemShell({
   title,
   eyebrow = 'Dar Al Hai',
@@ -133,6 +154,13 @@ export default function SystemShell({
   const [unreadCount, setUnreadCount] = useState(0);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Command Palette & Quick Menu
+  const [cmdOpen, setCmdOpen] = useState(false);
+  const [cmdQuery, setCmdQuery] = useState('');
+  const [cmdIndex, setCmdIndex] = useState(0);
+  const [quickMenuOpen, setQuickMenuOpen] = useState(false);
+  const cmdInputRef = useRef(null);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -177,9 +205,35 @@ export default function SystemShell({
     };
   }, [hasHydrated, user]);
 
+  // Global Keyboard Shortcuts (Ctrl+K / Cmd+K)
+  useEffect(() => {
+    function handleKeyDown(e) {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        setCmdOpen((prev) => !prev);
+      }
+      if (e.key === 'Escape') {
+        setCmdOpen(false);
+        setQuickMenuOpen(false);
+        setNotificationsOpen(false);
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  useEffect(() => {
+    if (cmdOpen) {
+      setTimeout(() => cmdInputRef.current?.focus(), 50);
+      setCmdQuery('');
+      setCmdIndex(0);
+    }
+  }, [cmdOpen]);
+
   // Close mobile drawer on route changes
   useEffect(() => {
     setMobileMenuOpen(false);
+    setQuickMenuOpen(false);
   }, [pathname]);
 
   const roleLabel = useMemo(() => {
@@ -189,6 +243,36 @@ export default function SystemShell({
     return hasHydrated ? 'Signed in' : 'Loading session';
   }, [hasHydrated, user, userLabel]);
 
+  // Filtered Command Items
+  const filteredCmdItems = useMemo(() => {
+    const q = cmdQuery.trim().toLowerCase();
+    if (!q) return COMMAND_ITEMS;
+    return COMMAND_ITEMS.filter(
+      (item) =>
+        item.title.toLowerCase().includes(q) ||
+        item.subtitle.toLowerCase().includes(q) ||
+        item.category.toLowerCase().includes(q) ||
+        item.badge.toLowerCase().includes(q)
+    );
+  }, [cmdQuery]);
+
+  function handleCmdKeyDown(e) {
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      setCmdIndex((prev) => (prev + 1) % Math.max(1, filteredCmdItems.length));
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      setCmdIndex((prev) => (prev - 1 + filteredCmdItems.length) % Math.max(1, filteredCmdItems.length));
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      const selected = filteredCmdItems[cmdIndex];
+      if (selected) {
+        setCmdOpen(false);
+        router.push(selected.href);
+      }
+    }
+  }
+
   function logout() {
     if (onLogout) {
       onLogout();
@@ -197,14 +281,6 @@ export default function SystemShell({
 
     clearStoredUser();
     window.location.href = '/';
-  }
-
-  function toggleSidebar() {
-    setSidebarCollapsed((current) => {
-      const next = !current;
-      localStorage.setItem('darAlHaiSidebarCollapsed', String(next));
-      return next;
-    });
   }
 
   async function handleNotificationClick(notification) {
@@ -247,6 +323,10 @@ export default function SystemShell({
     );
   }
 
+  // Breadcrumbs computation
+  const pathSegments = (pathname || '').split('/').filter(Boolean);
+  const breadcrumbSection = pathSegments[0] === 'management' ? 'Operations' : pathSegments[0] === 'eqp' ? 'EQP Module' : 'Workspace';
+
   return (
     <div className={`ds-shell ds-reference-shell ${sidebarCollapsed ? 'ds-sidebar-collapsed' : ''}`}>
       {/* Mobile Backdrop */}
@@ -258,20 +338,12 @@ export default function SystemShell({
       )}
 
       {/* Sidebar */}
-      <aside className={`ds-app-sidebar ${mobileMenuOpen ? '!flex !fixed !left-0 !top-0 !bottom-0 !w-64 z-50 shadow-2xl' : ''}`}>
-        <button
-          type="button"
-          className="ds-sidebar-toggle hidden lg:grid"
-          onClick={toggleSidebar}
-          aria-label={sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-          title={sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-        >
-          <span className="ds-sidebar-chevron" aria-hidden="true" />
-        </button>
-
-        <div className="ds-sidebar-top">
-          <Link href="/management" className="ds-sidebar-brand" aria-label="Dar Al Hai dashboard">
-            <span className="ds-sidebar-mark">DH</span>
+      <aside className="ds-app-sidebar">
+        <div className="ds-sidebar-header">
+          <Link href="/management" className="ds-sidebar-brand" aria-label="Dar Al Hai Home">
+            <span className="ds-sidebar-brand-mark">
+              <span className="h-2.5 w-2.5 rounded-full bg-amber-400" />
+            </span>
             <span className="ds-sidebar-brand-text">
               <span className="block text-sm font-bold leading-none text-white">Dar Al Hai</span>
               <span className="mt-1 block text-[0.6875rem] font-medium uppercase tracking-wider text-slate-400">Maintenance</span>
@@ -358,19 +430,90 @@ export default function SystemShell({
                 <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
               </svg>
             </button>
-            <div className="ds-topbar-brand">
-              <span className="ds-topbar-brand-rule" aria-hidden="true" />
-              <span>
-                <strong>Dar Al Hai Machinery</strong>
-                <small>Service Operations</small>
-              </span>
+
+            {/* Breadcrumbs */}
+            <div className="ds-breadcrumbs hidden md:flex items-center">
+              <Link href="/management" className="ds-breadcrumb-item">Dar Al Hai</Link>
+              <span className="ds-breadcrumb-sep">/</span>
+              <span className="ds-breadcrumb-item">{breadcrumbSection}</span>
+              <span className="ds-breadcrumb-sep">/</span>
+              <span className="ds-breadcrumb-active truncate max-w-[200px]">{title}</span>
             </div>
           </div>
 
-          <div className="ds-topbar-actions">
-            <div className="ds-plan-chip hidden sm:inline-flex items-center gap-1.5">
-              <span className="h-2 w-2 rounded-full bg-emerald-500" />
-              System Healthy
+          <div className="ds-topbar-actions flex items-center gap-2.5">
+            {/* Command Palette Trigger */}
+            <button
+              type="button"
+              className="ds-cmd-trigger-btn"
+              onClick={() => setCmdOpen(true)}
+              title="Search and jump anywhere (Ctrl+K)"
+            >
+              <svg className="w-3.5 h-3.5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              <span className="hidden sm:inline">Quick Search</span>
+              <kbd className="ds-cmd-trigger-kbd">⌘K</kbd>
+            </button>
+
+            {/* + New Quick Action Dropdown */}
+            <div className="ds-quick-menu-anchor">
+              <button
+                type="button"
+                className="ds-button ds-button-primary ds-button-small shadow-xs flex items-center gap-1"
+                onClick={() => setQuickMenuOpen((prev) => !prev)}
+              >
+                <span>+ New</span>
+                <svg className="w-3 h-3 ml-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+
+              {quickMenuOpen && (
+                <div className="ds-quick-menu">
+                  <Link
+                    href="/eqp/generate-reports"
+                    className="ds-quick-menu-item"
+                    onClick={() => setQuickMenuOpen(false)}
+                  >
+                    <span>📄</span> Draft EQP Report
+                  </Link>
+                  <Link
+                    href="/management/daily-planner"
+                    className="ds-quick-menu-item"
+                    onClick={() => setQuickMenuOpen(false)}
+                  >
+                    <span>⏱</span> Schedule Shift Task
+                  </Link>
+                  <Link
+                    href="/management/parts-inquiry"
+                    className="ds-quick-menu-item"
+                    onClick={() => setQuickMenuOpen(false)}
+                  >
+                    <span>🔍</span> Komatsu Parts Inquiry
+                  </Link>
+                  <Link
+                    href="/management/technicians"
+                    className="ds-quick-menu-item"
+                    onClick={() => setQuickMenuOpen(false)}
+                  >
+                    <span>👤</span> Register Technician
+                  </Link>
+                  <Link
+                    href="/workspace"
+                    className="ds-quick-menu-item"
+                    onClick={() => setQuickMenuOpen(false)}
+                  >
+                    <span>🎨</span> Open Whiteboard
+                  </Link>
+                </div>
+              )}
+            </div>
+
+            {/* System Status Pill */}
+            <div className="ds-plan-chip hidden xl:inline-flex items-center gap-1.5">
+              <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+              Operational
             </div>
 
             {/* Notifications Menu */}
@@ -424,7 +567,7 @@ export default function SystemShell({
             </div>
 
             {/* Avatar & User Info */}
-            <div className="flex items-center gap-2.5 pl-1">
+            <div className="flex items-center gap-2.5 pl-1 border-l border-slate-200 ml-1">
               <div className="ds-avatar" aria-hidden="true">
                 {(hasHydrated ? (user?.fullName || user?.email || 'D') : 'D').slice(0, 1).toUpperCase()}
               </div>
@@ -453,6 +596,76 @@ export default function SystemShell({
           {children}
         </main>
       </div>
+
+      {/* Global Command Palette Modal */}
+      {cmdOpen && (
+        <div className="cmd-palette-backdrop" onClick={() => setCmdOpen(false)}>
+          <div className="cmd-palette-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="cmd-palette-search-wrap">
+              <svg className="cmd-palette-search-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              <input
+                ref={cmdInputRef}
+                type="text"
+                className="cmd-palette-input"
+                placeholder="Type a command, module, or task name..."
+                value={cmdQuery}
+                onChange={(e) => {
+                  setCmdQuery(e.target.value);
+                  setCmdIndex(0);
+                }}
+                onKeyDown={handleCmdKeyDown}
+              />
+              <kbd className="ds-cmd-trigger-kbd">ESC</kbd>
+            </div>
+
+            <div className="cmd-palette-list">
+              {filteredCmdItems.length === 0 ? (
+                <div className="p-6 text-center text-xs text-slate-500">
+                  No matching modules or actions found for &ldquo;{cmdQuery}&rdquo;
+                </div>
+              ) : (
+                filteredCmdItems.map((item, idx) => {
+                  const isSelected = idx === cmdIndex;
+                  return (
+                    <button
+                      key={item.id}
+                      type="button"
+                      className={`cmd-palette-item ${isSelected ? 'cmd-palette-item-active' : ''}`}
+                      onClick={() => {
+                        setCmdOpen(false);
+                        router.push(item.href);
+                      }}
+                      onMouseEnter={() => setCmdIndex(idx)}
+                    >
+                      <div className="cmd-palette-item-left">
+                        <span className="text-sm">
+                          {item.category === 'Navigation' ? '📌' : '⚡'}
+                        </span>
+                        <div>
+                          <p className="cmd-palette-item-title">{item.title}</p>
+                          <p className="cmd-palette-item-subtitle">{item.subtitle}</p>
+                        </div>
+                      </div>
+                      <span className="cmd-palette-badge">{item.badge}</span>
+                    </button>
+                  );
+                })
+              )}
+            </div>
+
+            <div className="cmd-palette-footer">
+              <span>Dar Al Hai Machinery Operations</span>
+              <div className="cmd-palette-footer-keys">
+                <span><kbd className="ds-cmd-trigger-kbd">↑</kbd> <kbd className="ds-cmd-trigger-kbd">↓</kbd> to navigate</span>
+                <span><kbd className="ds-cmd-trigger-kbd">↵</kbd> to select</span>
+                <span><kbd className="ds-cmd-trigger-kbd">ESC</kbd> to close</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
