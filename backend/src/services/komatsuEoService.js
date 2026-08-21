@@ -704,7 +704,10 @@ async function confirmQuotation(quotationNo, seqNo = '00', customCookie = null) 
   });
 
   const saveJson = await saveResp.json();
-  if (saveJson.ErrorOccured && saveJson.ErrorOccured !== 0) {
+  const hasError = saveJson.ErrorOccured && Number(saveJson.ErrorOccured) !== 0;
+  const isUpdated = Number(saveJson.RecordUpdated) === 1 || Number(saveJson.OperationSuccessful) === 1;
+
+  if (hasError && !isUpdated) {
     throw new Error(saveJson.ErrorMessage || 'Failed to update quotation status to Confirmed');
   }
 
@@ -744,7 +747,8 @@ async function copyQuotationToSo(quotationNo, seqNo = '00', options = {}, custom
   });
 
   const copyJson = await copyResp.json();
-  if (copyJson.ErrorOccured && copyJson.ErrorOccured !== 0) {
+  const hasCopyError = copyJson.ErrorOccured && Number(copyJson.ErrorOccured) !== 0;
+  if (hasCopyError) {
     throw new Error(copyJson.ErrorMessage || 'CopyToSO pre-check failed');
   }
 
