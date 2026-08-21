@@ -3366,7 +3366,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e3-l-1",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
-              "image": "/images/japanese/listening/n5/m1_q1.png",
               "question": "1. 教室で 先生が 話しています。学生は 明日、何を 持って来ますか。",
               "options": [
                 "鉛筆と消しゴム",
@@ -3382,7 +3381,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e3-l-2",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
-              "image": "/images/japanese/listening/n5/m1_q2.png",
               "question": "2. 駅で 男の人と 女の人が 話しています。二人は どの 電車に 乗りますか。",
               "options": [
                 "10時15分の 急行",
@@ -3398,7 +3396,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e3-l-3",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
-              "image": "/images/japanese/listening/n5/m1_q3.png",
               "question": "3. カフェで 男の人と 店員が 話しています。男の人は 何を 注文しますか。",
               "options": [
                 "ホットコーヒー",
@@ -3414,7 +3411,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e3-l-4",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
-              "image": "/images/japanese/listening/n5/m1_q4.png",
               "question": "4. 家で 母と 息子が 話しています。男の子は 先に 何を しますか。",
               "options": [
                 "手を 洗う",
@@ -3430,7 +3426,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e3-l-5",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
-              "image": "/images/japanese/listening/n5/m1_q5.png",
               "question": "5. 図書館で 女の人と 係員が 話しています。女の人は 本を 何冊 借りますか。",
               "options": [
                 "3冊",
@@ -3446,7 +3441,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e3-l-6",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
-              "image": "/images/japanese/listening/n5/m1_q6.png",
               "question": "6. 店で 男の人と 女の人が 靴を 見ています。女の人は どの 靴を 買いますか。",
               "options": [
                 "茶色い靴",
@@ -3462,7 +3456,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e3-l-7",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
-              "image": "/images/japanese/listening/n5/m1_q7.png",
               "question": "7. 留学生と 友達が 話しています。男の人は これから どこへ 行きますか。",
               "options": [
                 "郵便局",
@@ -3568,7 +3561,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e3-l-14",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
-              "image": "/images/japanese/listening/n5/m3_q1.png",
               "question": "14. 朝、近所の人に 会いました。何と言いますか。（矢印の人）",
               "options": [
                 "おはようございます",
@@ -3583,7 +3575,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e3-l-15",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
-              "image": "/images/japanese/listening/n5/m3_q2.png",
               "question": "15. 友達の ペンを 借りたいです。何と言いますか。（矢印の人）",
               "options": [
                 "ペンを 貸して ください",
@@ -3598,7 +3589,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e3-l-16",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
-              "image": "/images/japanese/listening/n5/m3_q3.png",
               "question": "16. 先生の 部屋に 入ります。何と言いますか。（矢印の人）",
               "options": [
                 "失礼します",
@@ -3613,7 +3603,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e3-l-17",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
-              "image": "/images/japanese/listening/n5/m3_q4.png",
               "question": "17. 食事を 始める 前です。何と言いますか。（矢印の人）",
               "options": [
                 "いただきます",
@@ -3628,7 +3617,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e3-l-18",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
-              "image": "/images/japanese/listening/n5/m3_q5.png",
               "question": "18. 会社から 先に 帰ります。何と言いますか。（矢印の人）",
               "options": [
                 "お先に 失礼します",
@@ -4607,7 +4595,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e4-l-1",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
-              "image": "/images/japanese/listening/n5_2018/m1_q1.png",
               "question": "1. 会社で 男の人と 女の人が 話しています。男の人は コピーを 何枚 しますか。",
               "options": [
                 "15枚",
@@ -4623,7 +4610,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e4-l-2",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
-              "image": "/images/japanese/listening/n5_2018/m1_q2.png",
               "question": "2. 八百屋で 女の人と 店員が 話しています。女の人は どの リンゴを 買いますか。",
               "options": [
                 "1個150円の リンゴを 2個",
@@ -4639,7 +4625,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e4-l-3",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
-              "image": "/images/japanese/listening/n5_2018/m1_q3.png",
               "question": "3. 病院で 医者と 患者が 話しています。患者は 薬を いつ 飲みますか。",
               "options": [
                 "朝と晩の 食後",
@@ -4655,7 +4640,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e4-l-4",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
-              "image": "/images/japanese/listening/n5_2018/m1_q4.png",
               "question": "4. 男の人と 女の人が 話しています。二人は どこで 待ち合わせますか。",
               "options": [
                 "東口の 本屋の前",
@@ -4671,7 +4655,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e4-l-5",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
-              "image": "/images/japanese/listening/n5_2018/m1_q5.png",
               "question": "5. 学校で 先生が 話しています。学生は 月曜日に 何を 出しますか。",
               "options": [
                 "作文",
@@ -4687,7 +4670,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e4-l-6",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
-              "image": "/images/japanese/listening/n5_2018/m1_q6.png",
               "question": "6. ホテルで 客と フロントが 話しています。朝食は どこで 食べますか。",
               "options": [
                 "2階の レストラン",
@@ -4703,7 +4685,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e4-l-7",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
-              "image": "/images/japanese/listening/n5_2018/m1_q7.png",
               "question": "7. 男の人と 女の人が 話しています。男の人は 何時に 家を 出ますか。",
               "options": [
                 "2時15分",
@@ -4809,7 +4790,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e4-l-14",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
-              "image": "/images/japanese/listening/n5_2018/m3_q1.png",
               "question": "14. 道を 尋ねたいです。何と言いますか。（矢印の人）",
               "options": [
                 "すみません、駅は どこですか",
@@ -4824,7 +4804,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e4-l-15",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
-              "image": "/images/japanese/listening/n5_2018/m3_q2.png",
               "question": "15. プレゼントを 渡します。何と言いますか。（矢印の人）",
               "options": [
                 "どうぞ",
@@ -4839,7 +4818,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e4-l-16",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
-              "image": "/images/japanese/listening/n5_2018/m3_q3.png",
               "question": "16. 足を踏んでしまいました。何と言いますか。（矢印の人）",
               "options": [
                 "すみません！",
@@ -4854,7 +4832,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e4-l-17",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
-              "image": "/images/japanese/listening/n5_2018/m3_q4.png",
               "question": "17. 食事を 終えました。何と言いますか。（矢印の人）",
               "options": [
                 "ごちそうさまでした",
@@ -4869,7 +4846,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e4-l-18",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
-              "image": "/images/japanese/listening/n5_2018/m3_q5.png",
               "question": "18. 駅で 友達と 別れます。何と言いますか。（矢印の人）",
               "options": [
                 "じゃ、また 明日！",
@@ -5848,7 +5824,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e5-l-1",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
-              "image": "/images/japanese/listening/n5/m1_q1.png",
               "question": "1. 夫婦が 話しています。夫は これから どこへ 行きますか。",
               "options": [
                 "銀行",
@@ -5864,7 +5839,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e5-l-2",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
-              "image": "/images/japanese/listening/n5/m1_q2.png",
               "question": "2. カフェで 二人が 席を 選んでいます。二人は どの 席に 座りますか。",
               "options": [
                 "奥の テーブル席",
@@ -5880,7 +5854,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e5-l-3",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
-              "image": "/images/japanese/listening/n5/m1_q3.png",
               "question": "3. 教室で 先生が 話しています。学生は 宿題を 何ページまで しますか。",
               "options": [
                 "22ページまで",
@@ -5896,7 +5869,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e5-l-4",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
-              "image": "/images/japanese/listening/n5/m1_q4.png",
               "question": "4. パン屋で 女の人が 注文しています。女の人は 何を 買いますか。",
               "options": [
                 "メロンパン 2個",
@@ -5912,7 +5884,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e5-l-5",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
-              "image": "/images/japanese/listening/n5/m1_q5.png",
               "question": "5. 男の人と 女の人が 話しています。男の人は 今日、何で 通勤しましたか。",
               "options": [
                 "バス",
@@ -5928,7 +5899,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e5-l-6",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
-              "image": "/images/japanese/listening/n5/m1_q6.png",
               "question": "6. 友達が 話しています。二人は 日曜日に 何を しますか。",
               "options": [
                 "カラオケに 行く",
@@ -5944,7 +5914,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e5-l-7",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
-              "image": "/images/japanese/listening/n5/m1_q7.png",
               "question": "7. 男の人が 鍵を 探しています。鍵は どこに ありましたか。",
               "options": [
                 "机の上の 本の下",
@@ -6050,7 +6019,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e5-l-14",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
-              "image": "/images/japanese/listening/n5/m3_q1.png",
               "question": "14. 客を 家に 迎えます。何と言いますか。（矢印の人）",
               "options": [
                 "いらっしゃい、どうぞお入りください",
@@ -6065,7 +6033,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e5-l-15",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
-              "image": "/images/japanese/listening/n5/m3_q2.png",
               "question": "15. レストランで 支払いを します。何と言いますか。（矢印の人）",
               "options": [
                 "お会計を お願いします",
@@ -6080,7 +6047,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e5-l-16",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
-              "image": "/images/japanese/listening/n5/m3_q3.png",
               "question": "16. 病気の 友達を お見舞いします。何と言いますか。（矢印の人）",
               "options": [
                 "お大事に",
@@ -6095,7 +6061,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e5-l-17",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
-              "image": "/images/japanese/listening/n5/m3_q4.png",
               "question": "17. 試合に 出る 友達を 応援します。何と言いますか。（矢印の人）",
               "options": [
                 "頑張って ください！",
@@ -6110,7 +6075,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e5-l-18",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
-              "image": "/images/japanese/listening/n5/m3_q5.png",
               "question": "18. お店で 買い物を 終えました。店員に 何と言いますか。（矢印の人）",
               "options": [
                 "ありがとう",
@@ -7089,7 +7053,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e6-l-1",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
-              "image": "/images/japanese/listening/n5_2018/m1_q1.png",
               "question": "1. 留学生と 教授が 話しています。留学生は 何時に 教授の 部屋へ 行きますか。",
               "options": [
                 "4時半",
@@ -7105,7 +7068,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e6-l-2",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
-              "image": "/images/japanese/listening/n5_2018/m1_q2.png",
               "question": "2. 飲み物を 選びます。車を 運転する 男の人は 何を 飲みますか。",
               "options": [
                 "お茶",
@@ -7121,7 +7083,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e6-l-3",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
-              "image": "/images/japanese/listening/n5_2018/m1_q3.png",
               "question": "3. 服屋で 男の人が シャツを 買います。何色の シャツを 買いますか。",
               "options": [
                 "青い シャツ",
@@ -7137,7 +7098,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e6-l-4",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
-              "image": "/images/japanese/listening/n5_2018/m1_q4.png",
               "question": "4. 二人が 話しています。明日は どこへ 行きますか。",
               "options": [
                 "美術館",
@@ -7153,7 +7113,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e6-l-5",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
-              "image": "/images/japanese/listening/n5_2018/m1_q5.png",
               "question": "5. 料理の 準備です。冷蔵庫から 何を 出しますか。",
               "options": [
                 "卵と バター",
@@ -7169,7 +7128,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e6-l-6",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
-              "image": "/images/japanese/listening/n5_2018/m1_q6.png",
               "question": "6. パーティーの 日程を 決めます。何曜日に 変更しましたか。",
               "options": [
                 "土曜日",
@@ -7185,7 +7143,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e6-l-7",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
-              "image": "/images/japanese/listening/n5_2018/m1_q7.png",
               "question": "7. 図書館で 荷物を 置きます。大きな カバンは どこに 入れますか。",
               "options": [
                 "ロッカー",
@@ -7291,7 +7248,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e6-l-14",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
-              "image": "/images/japanese/listening/n5_2018/m3_q1.png",
               "question": "14. 借りていた 本を 返します。何と言いますか。（矢印の人）",
               "options": [
                 "ありがとうございました、とても 面白かったです",
@@ -7306,7 +7262,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e6-l-15",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
-              "image": "/images/japanese/listening/n5_2018/m3_q2.png",
               "question": "15. 電話に 出ました。何と言いますか。（矢印の人）",
               "options": [
                 "もしもし、田中です",
@@ -7321,7 +7276,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e6-l-16",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
-              "image": "/images/japanese/listening/n5_2018/m3_q3.png",
               "question": "16. 相手の 話す スピードが 速いです。何と言いますか。（矢印の人）",
               "options": [
                 "もう少し ゆっくり 話して ください",
@@ -7336,7 +7290,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e6-l-17",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
-              "image": "/images/japanese/listening/n5_2018/m3_q4.png",
               "question": "17. 窓を 開けたいです。許可を もらいます。何と言いますか。（矢印の人）",
               "options": [
                 "窓を 開けても いいですか",
@@ -7351,7 +7304,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e6-l-18",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
-              "image": "/images/japanese/listening/n5_2018/m3_q5.png",
               "question": "18. 空港で 帰国する 友達を 見送ります。何と言いますか。（矢印の人）",
               "options": [
                 "気をつけて 帰ってね！",
@@ -8330,7 +8282,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e7-l-1",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
-              "image": "/images/japanese/listening/n5/m1_q1.png",
               "question": "1. 書道教室で 先生が 話しています。生徒は 最初に 何を 準備しますか。",
               "options": [
                 "筆と墨汁",
@@ -8346,7 +8297,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e7-l-2",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
-              "image": "/images/japanese/listening/n5/m1_q2.png",
               "question": "2. 劇場で チケットを 予約します。何曜日の チケットを 取りますか。",
               "options": [
                 "日曜日",
@@ -8362,7 +8312,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e7-l-3",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
-              "image": "/images/japanese/listening/n5/m1_q3.png",
               "question": "3. 駅前で 待ち合わせます。二人は どの 広場で 会いますか。",
               "options": [
                 "南口の 噴水広場",
@@ -8378,7 +8327,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e7-l-4",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
-              "image": "/images/japanese/listening/n5/m1_q4.png",
               "question": "4. バスに 乗ります。どの バス停から 乗りますか。",
               "options": [
                 "2番乗り場",
@@ -8394,7 +8342,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e7-l-5",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
-              "image": "/images/japanese/listening/n5/m1_q5.png",
               "question": "5. ラーメンを 作ります。最初に 何を しますか。",
               "options": [
                 "お湯を 沸かす",
@@ -8410,7 +8357,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e7-l-6",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
-              "image": "/images/japanese/listening/n5/m1_q6.png",
               "question": "6. 手続きを します。窓口に 何を 持参しますか。",
               "options": [
                 "パスポートと写真2枚",
@@ -8426,7 +8372,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e7-l-7",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
-              "image": "/images/japanese/listening/n5/m1_q7.png",
               "question": "7. レストランで ランチを 注文します。どの セットを 選びましたか。",
               "options": [
                 "Bセット",
@@ -8532,7 +8477,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e7-l-14",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
-              "image": "/images/japanese/listening/n5/m3_q1.png",
               "question": "14. 友達の 誕生日に お祝いを 言います。何と言いますか。（矢印の人）",
               "options": [
                 "お誕生日 おめでとうございます！",
@@ -8547,7 +8491,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e7-l-15",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
-              "image": "/images/japanese/listening/n5/m3_q2.png",
               "question": "15. 電車で お年寄りに 席を 譲ります。何と言いますか。（矢印の人）",
               "options": [
                 "どうぞ、こちらへ お座りください",
@@ -8562,7 +8505,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e7-l-16",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
-              "image": "/images/japanese/listening/n5/m3_q3.png",
               "question": "16. 仕事を 終えて 先に 帰ります。何と言いますか。（矢印の人）",
               "options": [
                 "お先に 失礼します",
@@ -8577,7 +8519,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e7-l-17",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
-              "image": "/images/japanese/listening/n5/m3_q4.png",
               "question": "17. 約束の 時間に 遅れてしまいました。何と言いますか。（矢印の人）",
               "options": [
                 "遅れて 大変 申し訳ありません",
@@ -8592,7 +8533,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e7-l-18",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
-              "image": "/images/japanese/listening/n5/m3_q5.png",
               "question": "18. 手作りの 料理を 褒めます。何と言いますか。（矢印の人）",
               "options": [
                 "とても 美味しいです！",
@@ -9571,7 +9511,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e8-l-1",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
-              "image": "/images/japanese/listening/n5_2018/m1_q1.png",
               "question": "1. 空港で アナウンスが 流れています。搭乗ゲートは何番に 変更されましたか。",
               "options": [
                 "14番ゲート",
@@ -9587,7 +9526,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e8-l-2",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
-              "image": "/images/japanese/listening/n5_2018/m1_q2.png",
               "question": "2. ラーメン屋で 注文します。トッピングは何を 追加しましたか。",
               "options": [
                 "味付け玉子",
@@ -9603,7 +9541,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e8-l-3",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
-              "image": "/images/japanese/listening/n5_2018/m1_q3.png",
               "question": "3. 待ち合わせ場所を 決めます。二人は どこで 会いますか。",
               "options": [
                 "角の パン屋の前",
@@ -9619,7 +9556,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e8-l-4",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
-              "image": "/images/japanese/listening/n5_2018/m1_q4.png",
               "question": "4. 新宿へ 行きます。どの ホームの 電車に 乗りますか。",
               "options": [
                 "3番ホーム",
@@ -9635,7 +9571,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e8-l-5",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
-              "image": "/images/japanese/listening/n5_2018/m1_q5.png",
               "question": "5. セミナーの 準備です。資料を 何部 用意しますか。",
               "options": [
                 "20部",
@@ -9651,7 +9586,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e8-l-6",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
-              "image": "/images/japanese/listening/n5_2018/m1_q6.png",
               "question": "6. 朝の 掃除と 水やりです。花の水やりは 何時までに しますか。",
               "options": [
                 "8時まで",
@@ -9667,7 +9601,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e8-l-7",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
-              "image": "/images/japanese/listening/n5_2018/m1_q7.png",
               "question": "7. 冬の 旅行の 準備です。スーツケースに 何を 入れましたか。",
               "options": [
                 "厚手の コート",
@@ -9773,7 +9706,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e8-l-14",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
-              "image": "/images/japanese/listening/n5_2018/m3_q1.png",
               "question": "14. 日本人の 知人の 家を 訪ねました。玄関で 何と言いますか。（矢印の人）",
               "options": [
                 "お邪魔します",
@@ -9788,7 +9720,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e8-l-15",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
-              "image": "/images/japanese/listening/n5_2018/m3_q2.png",
               "question": "15. 来客に 温かい お茶を 勧めます。何と言いますか。（矢印の人）",
               "options": [
                 "温かい お茶を どうぞ",
@@ -9803,7 +9734,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e8-l-16",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
-              "image": "/images/japanese/listening/n5_2018/m3_q3.png",
               "question": "16. カフェで WiFiの パスワードを 聞きます。何と言いますか。（矢印の人）",
               "options": [
                 "WiFiの パスワードを 教えて いただけますか",
@@ -9818,7 +9748,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e8-l-17",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
-              "image": "/images/japanese/listening/n5_2018/m3_q4.png",
               "question": "17. 食卓で 塩を 取ってほしいです。何と言いますか。（矢印の人）",
               "options": [
                 "すみません、お塩を 取って ください",
@@ -9833,7 +9762,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e8-l-18",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
-              "image": "/images/japanese/listening/n5_2018/m3_q5.png",
               "question": "18. 会社の 電話を 取ります。最初に 何と言いますか。（矢印の人）",
               "options": [
                 "お電話 ありがとうございます、○○商事で ございます",
@@ -10812,7 +10740,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e9-l-1",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
-              "image": "/images/japanese/listening/n5/m1_q1.png",
               "question": "1. ごみ収集の 日程です。火曜日は 何の ごみを 出しますか。",
               "options": [
                 "燃えるごみ",
@@ -10828,7 +10755,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e9-l-2",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
-              "image": "/images/japanese/listening/n5/m1_q2.png",
               "question": "2. スピーチコンテストの 原稿は いつまでに 出しますか。",
               "options": [
                 "金曜日の 17時まで",
@@ -10844,7 +10770,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e9-l-3",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
-              "image": "/images/japanese/listening/n5/m1_q3.png",
               "question": "3. 電車を 乗り換えます。どこで 乗り換えますか。",
               "options": [
                 "東京駅",
@@ -10860,7 +10785,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e9-l-4",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
-              "image": "/images/japanese/listening/n5/m1_q4.png",
               "question": "4. 高速バスに 乗ります。何番 乗り場ですか。",
               "options": [
                 "4番乗り場",
@@ -10876,7 +10800,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e9-l-5",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
-              "image": "/images/japanese/listening/n5/m1_q5.png",
               "question": "5. 売店で 買い物を します。何を 買いますか。",
               "options": [
                 "お茶2本と サンドイッチ1つ",
@@ -10892,7 +10815,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e9-l-6",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
-              "image": "/images/japanese/listening/n5/m1_q6.png",
               "question": "6. レンタルDVDを 返却します。何時までに 返しますか。",
               "options": [
                 "夜10時まで",
@@ -10908,7 +10830,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e9-l-7",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5/captured-media-0-mp3.mp3",
-              "image": "/images/japanese/listening/n5/m1_q7.png",
               "question": "7. ハイキングに 行きます。どの 靴を 履いて行きますか。",
               "options": [
                 "スニーカー",
@@ -11014,7 +10935,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e9-l-14",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
-              "image": "/images/japanese/listening/n5/m3_q1.png",
               "question": "14. 朝、家を 出ます。家族に 何と言いますか。（矢印の人）",
               "options": [
                 "行ってきます！",
@@ -11029,7 +10949,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e9-l-15",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
-              "image": "/images/japanese/listening/n5/m3_q2.png",
               "question": "15. 出かける 家族を 見送ります。何と言いますか。（矢印の人）",
               "options": [
                 "行ってらっしゃい！",
@@ -11044,7 +10963,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e9-l-16",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
-              "image": "/images/japanese/listening/n5/m3_q3.png",
               "question": "16. 夕方、家に 帰ってきました。何と言いますか。（矢印の人）",
               "options": [
                 "ただいま！",
@@ -11059,7 +10977,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e9-l-17",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
-              "image": "/images/japanese/listening/n5/m3_q4.png",
               "question": "17. 帰ってきた 家族を 迎えます。何と言いますか。（矢印の人）",
               "options": [
                 "おかえりなさい！",
@@ -11074,7 +10991,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e9-l-18",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5/captured-media-2-mp3.mp3",
-              "image": "/images/japanese/listening/n5/m3_q5.png",
               "question": "18. 相手の 言ったことが 聞き取れませんでした。何と言いますか。（矢印の人）",
               "options": [
                 "すみません、もう一度 お願いします",
@@ -12053,7 +11969,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e10-l-1",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
-              "image": "/images/japanese/listening/n5_2018/m1_q1.png",
               "question": "1. 試験会場で 案内が あります。受験生は どの 教室へ 行きますか。",
               "options": [
                 "3階の 302号室",
@@ -12069,7 +11984,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e10-l-2",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
-              "image": "/images/japanese/listening/n5_2018/m1_q2.png",
               "question": "2. 机の 上に 置くものを 確認します。机の上に 置いてよいものは 何ですか。",
               "options": [
                 "受験票、鉛筆、消しゴム",
@@ -12085,7 +11999,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e10-l-3",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
-              "image": "/images/japanese/listening/n5_2018/m1_q3.png",
               "question": "3. 試験開始 前の 集合時間は 何時ですか。",
               "options": [
                 "8時45分",
@@ -12101,7 +12014,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e10-l-4",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
-              "image": "/images/japanese/listening/n5_2018/m1_q4.png",
               "question": "4. スマートフォンの 扱いです。受験生は スマホを どうしますか。",
               "options": [
                 "電源を 切って カバンに しまう",
@@ -12117,7 +12029,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e10-l-5",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
-              "image": "/images/japanese/listening/n5_2018/m1_q5.png",
               "question": "5. セクション間の 休憩時間は 何分間ですか。",
               "options": [
                 "15分間",
@@ -12133,7 +12044,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e10-l-6",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
-              "image": "/images/japanese/listening/n5_2018/m1_q6.png",
               "question": "6. 解答用紙の マークです。どこを 最初に 確認しますか。",
               "options": [
                 "受験番号と お名前",
@@ -12149,7 +12059,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e10-l-7",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q1.mp3",
-              "image": "/images/japanese/listening/n5_2018/m1_q7.png",
               "question": "7. 試験終了時の 指示です。終了の 合図が 鳴ったら どうしますか。",
               "options": [
                 "すぐに 鉛筆を 置く",
@@ -12255,7 +12164,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e10-l-14",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
-              "image": "/images/japanese/listening/n5_2018/m3_q1.png",
               "question": "14. 試験直前、仲間に 励ましの 言葉を かけます。何と言いますか。（矢印の人）",
               "options": [
                 "全力を 尽くして 頑張りましょう！",
@@ -12270,7 +12178,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e10-l-15",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
-              "image": "/images/japanese/listening/n5_2018/m3_q2.png",
               "question": "15. 監督員が 受験票を 確認しに来ました。何と言いますか。（矢印の人）",
               "options": [
                 "よろしく お願いいたします",
@@ -12285,7 +12192,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e10-l-16",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
-              "image": "/images/japanese/listening/n5_2018/m3_q3.png",
               "question": "16. 試験が 終了し、用紙を 提出します。何と言いますか。（矢印の人）",
               "options": [
                 "書き終えました、お願いします",
@@ -12300,7 +12206,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e10-l-17",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
-              "image": "/images/japanese/listening/n5_2018/m3_q4.png",
               "question": "17. 休憩時間に トイレへ 行きたいです。監督員に 何と言いますか。（矢印の人）",
               "options": [
                 "お手洗いに 行っても よろしいでしょうか",
@@ -12315,7 +12220,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e10-l-18",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_2018/N5Q3.mp3",
-              "image": "/images/japanese/listening/n5_2018/m3_q5.png",
               "question": "18. 試験が すべて 終了しました。監督員に 挨拶します。何と言いますか。（矢印の人）",
               "options": [
                 "ありがとうございました、失礼いたします",
@@ -16050,7 +15954,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e3-l-1",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
-              "image": "/images/japanese/listening/n4/m1_q1.png",
               "question": "1. 会社で 男の人と 女の人が 話しています。女の人は この後 まず 何を しますか。",
               "options": [
                 "プロジェクターの 接続を 確認する",
@@ -16066,7 +15969,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e3-l-2",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
-              "image": "/images/japanese/listening/n4/m1_q2.png",
               "question": "2. 病院で 看護師と 患者が 話しています。患者は どこで 待ちますか。",
               "options": [
                 "2階の 放射線科の前",
@@ -16082,7 +15984,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e3-l-3",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
-              "image": "/images/japanese/listening/n4/m1_q3.png",
               "question": "3. 引越し業者と 客が 話しています。客は どの 箱に 食器を 入れますか。",
               "options": [
                 "赤い テープの 小さい箱",
@@ -16098,7 +15999,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e3-l-4",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
-              "image": "/images/japanese/listening/n4/m1_q4.png",
               "question": "4. 大学の 事務室で 学生と 職員が 話しています。学生は いつまでに 奨学金の 書類を 出しますか。",
               "options": [
                 "来週の 金曜日 17時",
@@ -16114,7 +16014,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e3-l-5",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
-              "image": "/images/japanese/listening/n4/m1_q5.png",
               "question": "5. レストランの 厨房で 店長と アルバイトが 話しています。アルバイトは どの テーブルを 片付けますか。",
               "options": [
                 "3番テーブル",
@@ -16130,7 +16029,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e3-l-6",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
-              "image": "/images/japanese/listening/n4/m1_q6.png",
               "question": "6. 旅行会社で 客と 案内係が 話しています。客は どの プランを 選びましたか。",
               "options": [
                 "温泉旅館の Aプラン",
@@ -16146,7 +16044,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e3-l-7",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
-              "image": "/images/japanese/listening/n4/m1_q7.png",
               "question": "7. 図書館で 係員と 利用者が 話しています。利用者は DVDを 何枚 借りられますか。",
               "options": [
                 "1枚",
@@ -16162,7 +16059,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e3-l-8",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
-              "image": "/images/japanese/listening/n4/m1_q8.png",
               "question": "8. 男の人と 女の人が 買い物の 相談を しています。二人は 何を 買いますか。",
               "options": [
                 "テントだけ",
@@ -16283,7 +16179,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e3-l-16",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
-              "image": "/images/japanese/listening/n4/m3_q1.png",
               "question": "16. 先輩に 仕事を 教えてもらいたいです。何と言いますか。（矢印の人）",
               "options": [
                 "この やり方を 教えて いただけませんか。",
@@ -16298,7 +16193,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e3-l-17",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
-              "image": "/images/japanese/listening/n4/m3_q2.png",
               "question": "17. 上司の 荷物が 重そうです。手伝いたいです。何と言いますか。（矢印の人）",
               "options": [
                 "お荷物を お持ち しましょうか。",
@@ -16313,7 +16207,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e3-l-18",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
-              "image": "/images/japanese/listening/n4/m3_q3.png",
               "question": "18. 取引先の 会社を 訪問しました。受付で 何と言いますか。（矢印の人）",
               "options": [
                 "○○社の 田中と 申します。山田部長に お約束を いただいております。",
@@ -16328,7 +16221,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e3-l-19",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
-              "image": "/images/japanese/listening/n4/m3_q4.png",
               "question": "19. 会議中、電話が 鳴ってしまいました。何と言いますか。（矢印の人）",
               "options": [
                 "大変 失礼いたしました。",
@@ -16343,7 +16235,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e3-l-20",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
-              "image": "/images/japanese/listening/n4/m3_q5.png",
               "question": "20. 先生の お宅から 帰ります。何と言いますか。（矢印の人）",
               "options": [
                 "今日は ごちそうになり、本当に ありがとうございました。",
@@ -17415,7 +17306,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e4-l-1",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
-              "image": "/images/japanese/listening/n4_2018/m1_q1.png",
               "question": "1. 【NAT-TEST Benchmark】職場や日常の場面です。1番目に何の手続きや作業を行いますか。",
               "options": [
                 "大阪支社へのFAX送信 (タスク 1)",
@@ -17431,7 +17321,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e4-l-2",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
-              "image": "/images/japanese/listening/n4_2018/m1_q2.png",
               "question": "2. 【NAT-TEST Benchmark】職場や日常の場面です。2番目に何の手続きや作業を行いますか。",
               "options": [
                 "大阪支社へのFAX送信 (タスク 2)",
@@ -17447,7 +17336,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e4-l-3",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
-              "image": "/images/japanese/listening/n4_2018/m1_q3.png",
               "question": "3. 【NAT-TEST Benchmark】職場や日常の場面です。3番目に何の手続きや作業を行いますか。",
               "options": [
                 "大阪支社へのFAX送信 (タスク 3)",
@@ -17463,7 +17351,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e4-l-4",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
-              "image": "/images/japanese/listening/n4_2018/m1_q4.png",
               "question": "4. 【NAT-TEST Benchmark】職場や日常の場面です。4番目に何の手続きや作業を行いますか。",
               "options": [
                 "大阪支社へのFAX送信 (タスク 4)",
@@ -17479,7 +17366,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e4-l-5",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
-              "image": "/images/japanese/listening/n4_2018/m1_q5.png",
               "question": "5. 【NAT-TEST Benchmark】職場や日常の場面です。5番目に何の手続きや作業を行いますか。",
               "options": [
                 "大阪支社へのFAX送信 (タスク 5)",
@@ -17495,7 +17381,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e4-l-6",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
-              "image": "/images/japanese/listening/n4_2018/m1_q6.png",
               "question": "6. 【NAT-TEST Benchmark】職場や日常の場面です。6番目に何の手続きや作業を行いますか。",
               "options": [
                 "大阪支社へのFAX送信 (タスク 6)",
@@ -17511,7 +17396,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e4-l-7",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
-              "image": "/images/japanese/listening/n4_2018/m1_q7.png",
               "question": "7. 【NAT-TEST Benchmark】職場や日常の場面です。7番目に何の手続きや作業を行いますか。",
               "options": [
                 "大阪支社へのFAX送信 (タスク 7)",
@@ -17527,7 +17411,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e4-l-8",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
-              "image": "/images/japanese/listening/n4_2018/m1_q8.png",
               "question": "8. 【NAT-TEST Benchmark】職場や日常の場面です。8番目に何の手続きや作業を行いますか。",
               "options": [
                 "大阪支社へのFAX送信 (タスク 8)",
@@ -17648,7 +17531,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e4-l-16",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
-              "image": "/images/japanese/listening/n4_2018/m3_q1.png",
               "question": "16. 場面：ホッチキスの借用の敬語表現です。相手に丁寧に何と言いますか。（矢印の人）",
               "options": [
                 "ホッチキスの借用に関する適切な敬語表現",
@@ -17663,7 +17545,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e4-l-17",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
-              "image": "/images/japanese/listening/n4_2018/m3_q2.png",
               "question": "17. 場面：ホッチキスの借用の敬語表現です。相手に丁寧に何と言いますか。（矢印の人）",
               "options": [
                 "ホッチキスの借用に関する適切な敬語表現",
@@ -17678,7 +17559,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e4-l-18",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
-              "image": "/images/japanese/listening/n4_2018/m3_q3.png",
               "question": "18. 場面：ホッチキスの借用の敬語表現です。相手に丁寧に何と言いますか。（矢印の人）",
               "options": [
                 "ホッチキスの借用に関する適切な敬語表現",
@@ -17693,7 +17573,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e4-l-19",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
-              "image": "/images/japanese/listening/n4_2018/m3_q4.png",
               "question": "19. 場面：ホッチキスの借用の敬語表現です。相手に丁寧に何と言いますか。（矢印の人）",
               "options": [
                 "ホッチキスの借用に関する適切な敬語表現",
@@ -17708,7 +17587,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e4-l-20",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
-              "image": "/images/japanese/listening/n4_2018/m3_q5.png",
               "question": "20. 場面：ホッチキスの借用の敬語表現です。相手に丁寧に何と言いますか。（矢印の人）",
               "options": [
                 "ホッチキスの借用に関する適切な敬語表現",
@@ -18780,7 +18658,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e5-l-1",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
-              "image": "/images/japanese/listening/n4/m1_q1.png",
               "question": "1. 【Keigo & Passive】職場や日常の場面です。1番目に何の手続きや作業を行いますか。",
               "options": [
                 "会議フォルダー30部印刷 (タスク 1)",
@@ -18796,7 +18673,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e5-l-2",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
-              "image": "/images/japanese/listening/n4/m1_q2.png",
               "question": "2. 【Keigo & Passive】職場や日常の場面です。2番目に何の手続きや作業を行いますか。",
               "options": [
                 "会議フォルダー30部印刷 (タスク 2)",
@@ -18812,7 +18688,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e5-l-3",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
-              "image": "/images/japanese/listening/n4/m1_q3.png",
               "question": "3. 【Keigo & Passive】職場や日常の場面です。3番目に何の手続きや作業を行いますか。",
               "options": [
                 "会議フォルダー30部印刷 (タスク 3)",
@@ -18828,7 +18703,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e5-l-4",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
-              "image": "/images/japanese/listening/n4/m1_q4.png",
               "question": "4. 【Keigo & Passive】職場や日常の場面です。4番目に何の手続きや作業を行いますか。",
               "options": [
                 "会議フォルダー30部印刷 (タスク 4)",
@@ -18844,7 +18718,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e5-l-5",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
-              "image": "/images/japanese/listening/n4/m1_q5.png",
               "question": "5. 【Keigo & Passive】職場や日常の場面です。5番目に何の手続きや作業を行いますか。",
               "options": [
                 "会議フォルダー30部印刷 (タスク 5)",
@@ -18860,7 +18733,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e5-l-6",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
-              "image": "/images/japanese/listening/n4/m1_q6.png",
               "question": "6. 【Keigo & Passive】職場や日常の場面です。6番目に何の手続きや作業を行いますか。",
               "options": [
                 "会議フォルダー30部印刷 (タスク 6)",
@@ -18876,7 +18748,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e5-l-7",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
-              "image": "/images/japanese/listening/n4/m1_q7.png",
               "question": "7. 【Keigo & Passive】職場や日常の場面です。7番目に何の手続きや作業を行いますか。",
               "options": [
                 "会議フォルダー30部印刷 (タスク 7)",
@@ -18892,7 +18763,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e5-l-8",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
-              "image": "/images/japanese/listening/n4/m1_q8.png",
               "question": "8. 【Keigo & Passive】職場や日常の場面です。8番目に何の手続きや作業を行いますか。",
               "options": [
                 "会議フォルダー30部印刷 (タスク 8)",
@@ -19013,7 +18883,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e5-l-16",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
-              "image": "/images/japanese/listening/n4/m3_q1.png",
               "question": "16. 場面：休暇申請の署名依頼の敬語表現です。相手に丁寧に何と言いますか。（矢印の人）",
               "options": [
                 "休暇申請の署名依頼に関する適切な敬語表現",
@@ -19028,7 +18897,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e5-l-17",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
-              "image": "/images/japanese/listening/n4/m3_q2.png",
               "question": "17. 場面：休暇申請の署名依頼の敬語表現です。相手に丁寧に何と言いますか。（矢印の人）",
               "options": [
                 "休暇申請の署名依頼に関する適切な敬語表現",
@@ -19043,7 +18911,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e5-l-18",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
-              "image": "/images/japanese/listening/n4/m3_q3.png",
               "question": "18. 場面：休暇申請の署名依頼の敬語表現です。相手に丁寧に何と言いますか。（矢印の人）",
               "options": [
                 "休暇申請の署名依頼に関する適切な敬語表現",
@@ -19058,7 +18925,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e5-l-19",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
-              "image": "/images/japanese/listening/n4/m3_q4.png",
               "question": "19. 場面：休暇申請の署名依頼の敬語表現です。相手に丁寧に何と言いますか。（矢印の人）",
               "options": [
                 "休暇申請の署名依頼に関する適切な敬語表現",
@@ -19073,7 +18939,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e5-l-20",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
-              "image": "/images/japanese/listening/n4/m3_q5.png",
               "question": "20. 場面：休暇申請の署名依頼の敬語表現です。相手に丁寧に何と言いますか。（矢印の人）",
               "options": [
                 "休暇申請の署名依頼に関する適切な敬語表現",
@@ -20145,7 +20010,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e6-l-1",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
-              "image": "/images/japanese/listening/n4_2018/m1_q1.png",
               "question": "1. 【Speed Drill】職場や日常の場面です。1番目に何の手続きや作業を行いますか。",
               "options": [
                 "会議室4のネット予約 (タスク 1)",
@@ -20161,7 +20025,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e6-l-2",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
-              "image": "/images/japanese/listening/n4_2018/m1_q2.png",
               "question": "2. 【Speed Drill】職場や日常の場面です。2番目に何の手続きや作業を行いますか。",
               "options": [
                 "会議室4のネット予約 (タスク 2)",
@@ -20177,7 +20040,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e6-l-3",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
-              "image": "/images/japanese/listening/n4_2018/m1_q3.png",
               "question": "3. 【Speed Drill】職場や日常の場面です。3番目に何の手続きや作業を行いますか。",
               "options": [
                 "会議室4のネット予約 (タスク 3)",
@@ -20193,7 +20055,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e6-l-4",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
-              "image": "/images/japanese/listening/n4_2018/m1_q4.png",
               "question": "4. 【Speed Drill】職場や日常の場面です。4番目に何の手続きや作業を行いますか。",
               "options": [
                 "会議室4のネット予約 (タスク 4)",
@@ -20209,7 +20070,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e6-l-5",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
-              "image": "/images/japanese/listening/n4_2018/m1_q5.png",
               "question": "5. 【Speed Drill】職場や日常の場面です。5番目に何の手続きや作業を行いますか。",
               "options": [
                 "会議室4のネット予約 (タスク 5)",
@@ -20225,7 +20085,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e6-l-6",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
-              "image": "/images/japanese/listening/n4_2018/m1_q6.png",
               "question": "6. 【Speed Drill】職場や日常の場面です。6番目に何の手続きや作業を行いますか。",
               "options": [
                 "会議室4のネット予約 (タスク 6)",
@@ -20241,7 +20100,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e6-l-7",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
-              "image": "/images/japanese/listening/n4_2018/m1_q7.png",
               "question": "7. 【Speed Drill】職場や日常の場面です。7番目に何の手続きや作業を行いますか。",
               "options": [
                 "会議室4のネット予約 (タスク 7)",
@@ -20257,7 +20115,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e6-l-8",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
-              "image": "/images/japanese/listening/n4_2018/m1_q8.png",
               "question": "8. 【Speed Drill】職場や日常の場面です。8番目に何の手続きや作業を行いますか。",
               "options": [
                 "会議室4のネット予約 (タスク 8)",
@@ -20378,7 +20235,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e6-l-16",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
-              "image": "/images/japanese/listening/n4_2018/m3_q1.png",
               "question": "16. 場面：ITサポートへの連絡の敬語表現です。相手に丁寧に何と言いますか。（矢印の人）",
               "options": [
                 "ITサポートへの連絡に関する適切な敬語表現",
@@ -20393,7 +20249,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e6-l-17",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
-              "image": "/images/japanese/listening/n4_2018/m3_q2.png",
               "question": "17. 場面：ITサポートへの連絡の敬語表現です。相手に丁寧に何と言いますか。（矢印の人）",
               "options": [
                 "ITサポートへの連絡に関する適切な敬語表現",
@@ -20408,7 +20263,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e6-l-18",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
-              "image": "/images/japanese/listening/n4_2018/m3_q3.png",
               "question": "18. 場面：ITサポートへの連絡の敬語表現です。相手に丁寧に何と言いますか。（矢印の人）",
               "options": [
                 "ITサポートへの連絡に関する適切な敬語表現",
@@ -20423,7 +20277,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e6-l-19",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
-              "image": "/images/japanese/listening/n4_2018/m3_q4.png",
               "question": "19. 場面：ITサポートへの連絡の敬語表現です。相手に丁寧に何と言いますか。（矢印の人）",
               "options": [
                 "ITサポートへの連絡に関する適切な敬語表現",
@@ -20438,7 +20291,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e6-l-20",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
-              "image": "/images/japanese/listening/n4_2018/m3_q5.png",
               "question": "20. 場面：ITサポートへの連絡の敬語表現です。相手に丁寧に何と言いますか。（矢印の人）",
               "options": [
                 "ITサポートへの連絡に関する適切な敬語表現",
@@ -21510,7 +21362,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e7-l-1",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
-              "image": "/images/japanese/listening/n4/m1_q1.png",
               "question": "1. 【Grammar Challenge】職場や日常の場面です。1番目に何の手続きや作業を行いますか。",
               "options": [
                 "問い合わせメールの仕分け (タスク 1)",
@@ -21526,7 +21377,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e7-l-2",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
-              "image": "/images/japanese/listening/n4/m1_q2.png",
               "question": "2. 【Grammar Challenge】職場や日常の場面です。2番目に何の手続きや作業を行いますか。",
               "options": [
                 "問い合わせメールの仕分け (タスク 2)",
@@ -21542,7 +21392,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e7-l-3",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
-              "image": "/images/japanese/listening/n4/m1_q3.png",
               "question": "3. 【Grammar Challenge】職場や日常の場面です。3番目に何の手続きや作業を行いますか。",
               "options": [
                 "問い合わせメールの仕分け (タスク 3)",
@@ -21558,7 +21407,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e7-l-4",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
-              "image": "/images/japanese/listening/n4/m1_q4.png",
               "question": "4. 【Grammar Challenge】職場や日常の場面です。4番目に何の手続きや作業を行いますか。",
               "options": [
                 "問い合わせメールの仕分け (タスク 4)",
@@ -21574,7 +21422,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e7-l-5",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
-              "image": "/images/japanese/listening/n4/m1_q5.png",
               "question": "5. 【Grammar Challenge】職場や日常の場面です。5番目に何の手続きや作業を行いますか。",
               "options": [
                 "問い合わせメールの仕分け (タスク 5)",
@@ -21590,7 +21437,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e7-l-6",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
-              "image": "/images/japanese/listening/n4/m1_q6.png",
               "question": "6. 【Grammar Challenge】職場や日常の場面です。6番目に何の手続きや作業を行いますか。",
               "options": [
                 "問い合わせメールの仕分け (タスク 6)",
@@ -21606,7 +21452,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e7-l-7",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
-              "image": "/images/japanese/listening/n4/m1_q7.png",
               "question": "7. 【Grammar Challenge】職場や日常の場面です。7番目に何の手続きや作業を行いますか。",
               "options": [
                 "問い合わせメールの仕分け (タスク 7)",
@@ -21622,7 +21467,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e7-l-8",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
-              "image": "/images/japanese/listening/n4/m1_q8.png",
               "question": "8. 【Grammar Challenge】職場や日常の場面です。8番目に何の手続きや作業を行いますか。",
               "options": [
                 "問い合わせメールの仕分け (タスク 8)",
@@ -21743,7 +21587,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e7-l-16",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
-              "image": "/images/japanese/listening/n4/m3_q1.png",
               "question": "16. 場面：報告書の添削依頼の敬語表現です。相手に丁寧に何と言いますか。（矢印の人）",
               "options": [
                 "報告書の添削依頼に関する適切な敬語表現",
@@ -21758,7 +21601,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e7-l-17",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
-              "image": "/images/japanese/listening/n4/m3_q2.png",
               "question": "17. 場面：報告書の添削依頼の敬語表現です。相手に丁寧に何と言いますか。（矢印の人）",
               "options": [
                 "報告書の添削依頼に関する適切な敬語表現",
@@ -21773,7 +21615,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e7-l-18",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
-              "image": "/images/japanese/listening/n4/m3_q3.png",
               "question": "18. 場面：報告書の添削依頼の敬語表現です。相手に丁寧に何と言いますか。（矢印の人）",
               "options": [
                 "報告書の添削依頼に関する適切な敬語表現",
@@ -21788,7 +21629,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e7-l-19",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
-              "image": "/images/japanese/listening/n4/m3_q4.png",
               "question": "19. 場面：報告書の添削依頼の敬語表現です。相手に丁寧に何と言いますか。（矢印の人）",
               "options": [
                 "報告書の添削依頼に関する適切な敬語表現",
@@ -21803,7 +21643,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e7-l-20",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
-              "image": "/images/japanese/listening/n4/m3_q5.png",
               "question": "20. 場面：報告書の添削依頼の敬語表現です。相手に丁寧に何と言いますか。（矢印の人）",
               "options": [
                 "報告書の添削依頼に関する適切な敬語表現",
@@ -22875,7 +22714,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e8-l-1",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
-              "image": "/images/japanese/listening/n4_2018/m1_q1.png",
               "question": "1. 【Workplace Etiquette】職場や日常の場面です。1番目に何の手続きや作業を行いますか。",
               "options": [
                 "上座・下座の席次案内 (タスク 1)",
@@ -22891,7 +22729,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e8-l-2",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
-              "image": "/images/japanese/listening/n4_2018/m1_q2.png",
               "question": "2. 【Workplace Etiquette】職場や日常の場面です。2番目に何の手続きや作業を行いますか。",
               "options": [
                 "上座・下座の席次案内 (タスク 2)",
@@ -22907,7 +22744,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e8-l-3",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
-              "image": "/images/japanese/listening/n4_2018/m1_q3.png",
               "question": "3. 【Workplace Etiquette】職場や日常の場面です。3番目に何の手続きや作業を行いますか。",
               "options": [
                 "上座・下座の席次案内 (タスク 3)",
@@ -22923,7 +22759,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e8-l-4",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
-              "image": "/images/japanese/listening/n4_2018/m1_q4.png",
               "question": "4. 【Workplace Etiquette】職場や日常の場面です。4番目に何の手続きや作業を行いますか。",
               "options": [
                 "上座・下座の席次案内 (タスク 4)",
@@ -22939,7 +22774,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e8-l-5",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
-              "image": "/images/japanese/listening/n4_2018/m1_q5.png",
               "question": "5. 【Workplace Etiquette】職場や日常の場面です。5番目に何の手続きや作業を行いますか。",
               "options": [
                 "上座・下座の席次案内 (タスク 5)",
@@ -22955,7 +22789,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e8-l-6",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
-              "image": "/images/japanese/listening/n4_2018/m1_q6.png",
               "question": "6. 【Workplace Etiquette】職場や日常の場面です。6番目に何の手続きや作業を行いますか。",
               "options": [
                 "上座・下座の席次案内 (タスク 6)",
@@ -22971,7 +22804,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e8-l-7",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
-              "image": "/images/japanese/listening/n4_2018/m1_q7.png",
               "question": "7. 【Workplace Etiquette】職場や日常の場面です。7番目に何の手続きや作業を行いますか。",
               "options": [
                 "上座・下座の席次案内 (タスク 7)",
@@ -22987,7 +22819,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e8-l-8",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
-              "image": "/images/japanese/listening/n4_2018/m1_q8.png",
               "question": "8. 【Workplace Etiquette】職場や日常の場面です。8番目に何の手続きや作業を行いますか。",
               "options": [
                 "上座・下座の席次案内 (タスク 8)",
@@ -23108,7 +22939,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e8-l-16",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
-              "image": "/images/japanese/listening/n4_2018/m3_q1.png",
               "question": "16. 場面：両手での名刺交換の敬語表現です。相手に丁寧に何と言いますか。（矢印の人）",
               "options": [
                 "両手での名刺交換に関する適切な敬語表現",
@@ -23123,7 +22953,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e8-l-17",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
-              "image": "/images/japanese/listening/n4_2018/m3_q2.png",
               "question": "17. 場面：両手での名刺交換の敬語表現です。相手に丁寧に何と言いますか。（矢印の人）",
               "options": [
                 "両手での名刺交換に関する適切な敬語表現",
@@ -23138,7 +22967,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e8-l-18",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
-              "image": "/images/japanese/listening/n4_2018/m3_q3.png",
               "question": "18. 場面：両手での名刺交換の敬語表現です。相手に丁寧に何と言いますか。（矢印の人）",
               "options": [
                 "両手での名刺交換に関する適切な敬語表現",
@@ -23153,7 +22981,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e8-l-19",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
-              "image": "/images/japanese/listening/n4_2018/m3_q4.png",
               "question": "19. 場面：両手での名刺交換の敬語表現です。相手に丁寧に何と言いますか。（矢印の人）",
               "options": [
                 "両手での名刺交換に関する適切な敬語表現",
@@ -23168,7 +22995,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e8-l-20",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
-              "image": "/images/japanese/listening/n4_2018/m3_q5.png",
               "question": "20. 場面：両手での名刺交換の敬語表現です。相手に丁寧に何と言いますか。（矢印の人）",
               "options": [
                 "両手での名刺交換に関する適切な敬語表現",
@@ -24240,7 +24066,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e9-l-1",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
-              "image": "/images/japanese/listening/n4/m1_q1.png",
               "question": "1. 【Reading Sprint】職場や日常の場面です。1番目に何の手続きや作業を行いますか。",
               "options": [
                 "非常口の安全点検 (タスク 1)",
@@ -24256,7 +24081,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e9-l-2",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
-              "image": "/images/japanese/listening/n4/m1_q2.png",
               "question": "2. 【Reading Sprint】職場や日常の場面です。2番目に何の手続きや作業を行いますか。",
               "options": [
                 "非常口の安全点検 (タスク 2)",
@@ -24272,7 +24096,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e9-l-3",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
-              "image": "/images/japanese/listening/n4/m1_q3.png",
               "question": "3. 【Reading Sprint】職場や日常の場面です。3番目に何の手続きや作業を行いますか。",
               "options": [
                 "非常口の安全点検 (タスク 3)",
@@ -24288,7 +24111,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e9-l-4",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
-              "image": "/images/japanese/listening/n4/m1_q4.png",
               "question": "4. 【Reading Sprint】職場や日常の場面です。4番目に何の手続きや作業を行いますか。",
               "options": [
                 "非常口の安全点検 (タスク 4)",
@@ -24304,7 +24126,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e9-l-5",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
-              "image": "/images/japanese/listening/n4/m1_q5.png",
               "question": "5. 【Reading Sprint】職場や日常の場面です。5番目に何の手続きや作業を行いますか。",
               "options": [
                 "非常口の安全点検 (タスク 5)",
@@ -24320,7 +24141,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e9-l-6",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
-              "image": "/images/japanese/listening/n4/m1_q6.png",
               "question": "6. 【Reading Sprint】職場や日常の場面です。6番目に何の手続きや作業を行いますか。",
               "options": [
                 "非常口の安全点検 (タスク 6)",
@@ -24336,7 +24156,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e9-l-7",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
-              "image": "/images/japanese/listening/n4/m1_q7.png",
               "question": "7. 【Reading Sprint】職場や日常の場面です。7番目に何の手続きや作業を行いますか。",
               "options": [
                 "非常口の安全点検 (タスク 7)",
@@ -24352,7 +24171,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e9-l-8",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4/captured-media-0-mp3.mp3",
-              "image": "/images/japanese/listening/n4/m1_q8.png",
               "question": "8. 【Reading Sprint】職場や日常の場面です。8番目に何の手続きや作業を行いますか。",
               "options": [
                 "非常口の安全点検 (タスク 8)",
@@ -24473,7 +24291,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e9-l-16",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
-              "image": "/images/japanese/listening/n4/m3_q1.png",
               "question": "16. 場面：同僚への校正依頼の敬語表現です。相手に丁寧に何と言いますか。（矢印の人）",
               "options": [
                 "同僚への校正依頼に関する適切な敬語表現",
@@ -24488,7 +24305,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e9-l-17",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
-              "image": "/images/japanese/listening/n4/m3_q2.png",
               "question": "17. 場面：同僚への校正依頼の敬語表現です。相手に丁寧に何と言いますか。（矢印の人）",
               "options": [
                 "同僚への校正依頼に関する適切な敬語表現",
@@ -24503,7 +24319,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e9-l-18",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
-              "image": "/images/japanese/listening/n4/m3_q3.png",
               "question": "18. 場面：同僚への校正依頼の敬語表現です。相手に丁寧に何と言いますか。（矢印の人）",
               "options": [
                 "同僚への校正依頼に関する適切な敬語表現",
@@ -24518,7 +24333,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e9-l-19",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
-              "image": "/images/japanese/listening/n4/m3_q4.png",
               "question": "19. 場面：同僚への校正依頼の敬語表現です。相手に丁寧に何と言いますか。（矢印の人）",
               "options": [
                 "同僚への校正依頼に関する適切な敬語表現",
@@ -24533,7 +24347,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e9-l-20",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4/captured-media-2-mp3.mp3",
-              "image": "/images/japanese/listening/n4/m3_q5.png",
               "question": "20. 場面：同僚への校正依頼の敬語表現です。相手に丁寧に何と言いますか。（矢印の人）",
               "options": [
                 "同僚への校正依頼に関する適切な敬語表現",
@@ -25605,7 +25418,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e10-l-1",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
-              "image": "/images/japanese/listening/n4_2018/m1_q1.png",
               "question": "1. 【Final Sprint 2026】職場や日常の場面です。1番目に何の手続きや作業を行いますか。",
               "options": [
                 "受験票・HB鉛筆の確認 (タスク 1)",
@@ -25621,7 +25433,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e10-l-2",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
-              "image": "/images/japanese/listening/n4_2018/m1_q2.png",
               "question": "2. 【Final Sprint 2026】職場や日常の場面です。2番目に何の手続きや作業を行いますか。",
               "options": [
                 "受験票・HB鉛筆の確認 (タスク 2)",
@@ -25637,7 +25448,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e10-l-3",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
-              "image": "/images/japanese/listening/n4_2018/m1_q3.png",
               "question": "3. 【Final Sprint 2026】職場や日常の場面です。3番目に何の手続きや作業を行いますか。",
               "options": [
                 "受験票・HB鉛筆の確認 (タスク 3)",
@@ -25653,7 +25463,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e10-l-4",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
-              "image": "/images/japanese/listening/n4_2018/m1_q4.png",
               "question": "4. 【Final Sprint 2026】職場や日常の場面です。4番目に何の手続きや作業を行いますか。",
               "options": [
                 "受験票・HB鉛筆の確認 (タスク 4)",
@@ -25669,7 +25478,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e10-l-5",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
-              "image": "/images/japanese/listening/n4_2018/m1_q5.png",
               "question": "5. 【Final Sprint 2026】職場や日常の場面です。5番目に何の手続きや作業を行いますか。",
               "options": [
                 "受験票・HB鉛筆の確認 (タスク 5)",
@@ -25685,7 +25493,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e10-l-6",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
-              "image": "/images/japanese/listening/n4_2018/m1_q6.png",
               "question": "6. 【Final Sprint 2026】職場や日常の場面です。6番目に何の手続きや作業を行いますか。",
               "options": [
                 "受験票・HB鉛筆の確認 (タスク 6)",
@@ -25701,7 +25508,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e10-l-7",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
-              "image": "/images/japanese/listening/n4_2018/m1_q7.png",
               "question": "7. 【Final Sprint 2026】職場や日常の場面です。7番目に何の手続きや作業を行いますか。",
               "options": [
                 "受験票・HB鉛筆の確認 (タスク 7)",
@@ -25717,7 +25523,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e10-l-8",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q1.mp3",
-              "image": "/images/japanese/listening/n4_2018/m1_q8.png",
               "question": "8. 【Final Sprint 2026】職場や日常の場面です。8番目に何の手続きや作業を行いますか。",
               "options": [
                 "受験票・HB鉛筆の確認 (タスク 8)",
@@ -25838,7 +25643,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e10-l-16",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
-              "image": "/images/japanese/listening/n4_2018/m3_q1.png",
               "question": "16. 場面：試験直前の激励挨拶の敬語表現です。相手に丁寧に何と言いますか。（矢印の人）",
               "options": [
                 "試験直前の激励挨拶に関する適切な敬語表現",
@@ -25853,7 +25657,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e10-l-17",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
-              "image": "/images/japanese/listening/n4_2018/m3_q2.png",
               "question": "17. 場面：試験直前の激励挨拶の敬語表現です。相手に丁寧に何と言いますか。（矢印の人）",
               "options": [
                 "試験直前の激励挨拶に関する適切な敬語表現",
@@ -25868,7 +25671,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e10-l-18",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
-              "image": "/images/japanese/listening/n4_2018/m3_q3.png",
               "question": "18. 場面：試験直前の激励挨拶の敬語表現です。相手に丁寧に何と言いますか。（矢印の人）",
               "options": [
                 "試験直前の激励挨拶に関する適切な敬語表現",
@@ -25883,7 +25685,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e10-l-19",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
-              "image": "/images/japanese/listening/n4_2018/m3_q4.png",
               "question": "19. 場面：試験直前の激励挨拶の敬語表現です。相手に丁寧に何と言いますか。（矢印の人）",
               "options": [
                 "試験直前の激励挨拶に関する適切な敬語表現",
@@ -25898,7 +25699,6 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n4-e10-l-20",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n4_2018/N4Q3.mp3",
-              "image": "/images/japanese/listening/n4_2018/m3_q5.png",
               "question": "20. 場面：試験直前の激励挨拶の敬語表現です。相手に丁寧に何と言いますか。（矢印の人）",
               "options": [
                 "試験直前の激励挨拶に関する適切な敬語表現",

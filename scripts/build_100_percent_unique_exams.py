@@ -589,12 +589,10 @@ def build_all_10_n5():
 
         distinct_listening = []
         for i, q in enumerate(sc["m1"]):
-            img_src = f"/images/japanese/listening/n5/m1_q{i+1}.png" if ex_num % 2 == 1 else f"/images/japanese/listening/n5_2018/m1_q{i+1}.png"
             distinct_listening.append({
                 "id": f"n5-e{ex_num}-l-{i+1}",
                 "type": "Mondai 1 (課題理解)",
                 "audioSrc": audio_m1,
-                "image": img_src,
                 "question": q[0],
                 "options": q[2],
                 "correct": q[3],
@@ -615,12 +613,10 @@ def build_all_10_n5():
             })
 
         for i, q in enumerate(sc["m3"]):
-            img_src = f"/images/japanese/listening/n5/m3_q{i+1}.png" if ex_num % 2 == 1 else f"/images/japanese/listening/n5_2018/m3_q{i+1}.png"
             distinct_listening.append({
                 "id": f"n5-e{ex_num}-l-{i+14}",
                 "type": "Mondai 3 (発話表現)",
                 "audioSrc": audio_m3,
-                "image": img_src,
                 "question": q[0],
                 "options": q[2],
                 "correct": q[3],
@@ -712,12 +708,10 @@ def build_all_10_n4():
 
         distinct_listening = []
         for i, q in enumerate(sc["m1"]):
-            img_src = f"/images/japanese/listening/n4/m1_q{i+1}.png" if ex_num % 2 == 1 else f"/images/japanese/listening/n4_2018/m1_q{i+1}.png"
             distinct_listening.append({
                 "id": f"n4-e{ex_num}-l-{i+1}",
                 "type": "Mondai 1 (課題理解)",
                 "audioSrc": audio_m1,
-                "image": img_src,
                 "question": q[0],
                 "options": q[2],
                 "correct": q[3],
@@ -738,12 +732,10 @@ def build_all_10_n4():
             })
 
         for i, q in enumerate(sc["m3"]):
-            img_src = f"/images/japanese/listening/n4/m3_q{i+1}.png" if ex_num % 2 == 1 else f"/images/japanese/listening/n4_2018/m3_q{i+1}.png"
             distinct_listening.append({
                 "id": f"n4-e{ex_num}-l-{i+16}",
                 "type": "Mondai 3 (発話表現)",
                 "audioSrc": audio_m3,
-                "image": img_src,
                 "question": q[0],
                 "options": q[2],
                 "correct": q[3],
