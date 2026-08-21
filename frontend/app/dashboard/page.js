@@ -22,7 +22,7 @@ export default function DashboardPage() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [reportCount, setReportCount] = useState('');
+  const [reportCount, setReportCount] = useState('1');
   const [showDatesModal, setShowDatesModal] = useState(false);
   const [reportDates, setReportDates] = useState([]);
   const [machineHistory, setMachineHistory] = useState([]);
@@ -206,7 +206,7 @@ export default function DashboardPage() {
 
     if (!reportProfile?.signatureAvailable) {
       const makerName = reportProfile?.reportMaker?.fullName || 'this user';
-      const message = `No report signature is configured for ${makerName}.`;
+      const message = `No certified digital signature is registered for ${makerName}.`;
       setError(message);
       setToast({ type: 'error', message });
       return;
@@ -272,11 +272,11 @@ export default function DashboardPage() {
 
   return (
     <AppShell activePage={activePage} onNavigate={handleNavigate} onLogout={logout} userCode={userCode}>
-      <div className="grid gap-6">
+      <div className="space-y-6">
         {error && (
-          <p className="ds-alert ds-alert-error mb-5">
-            {error}
-          </p>
+          <div className="ds-alert ds-alert-error">
+            <span>{error}</span>
+          </div>
         )}
 
         {activePage === 'dashboard' ? (
@@ -331,7 +331,7 @@ export default function DashboardPage() {
       )}
 
       {isGenerating && (
-        <LoadingOverlay title="Generating PDF Reports..." description="Preparing workbooks, exporting PDFs, and updating machine counters" />
+        <LoadingOverlay title="Generating PDF Reports..." description="Processing EQP workbooks, compiling PDFs, and updating machine counters." />
       )}
 
       <Toast
@@ -349,48 +349,83 @@ function DashboardContent(props) {
     : REPORT_TYPES.filter((type) => type !== 'W41X');
 
   return (
-    <div className="grid gap-6">
+    <div className="space-y-6">
+      {/* KPI Metrics */}
       <div className="ds-kpi-grid">
-        <Metric label="Machines" value={props.machines.length} unit="Fleet records" detail="Available for reports" code="FM" status="Active" tone="active" />
-        <Metric label="Average SMR" value={props.fleetInsights.averageSmr} unit="Counter average" detail="Across loaded fleet" code="SM" status="Live" tone="live" accent />
-        <Metric label="Types" value={props.fleetInsights.activeTypes} unit="Machine types" detail="Report filters" code="TY" status="Ready" tone="ready" />
+        <article className="ds-kpi-card">
+          <div className="ds-icon-tile">
+            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+            </svg>
+          </div>
+          <div className="ds-kpi-content">
+            <div className="ds-kpi-head">
+              <p className="ds-kpi-label">Fleet Size</p>
+              <Badge tone="active">Active</Badge>
+            </div>
+            <p className="ds-kpi-main">{props.machines.length}</p>
+            <p className="ds-kpi-descriptor">Available Assets</p>
+          </div>
+        </article>
+
+        <article className="ds-kpi-card">
+          <div className="ds-icon-tile ds-icon-tile-accent">
+            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+          </div>
+          <div className="ds-kpi-content">
+            <div className="ds-kpi-head">
+              <p className="ds-kpi-label">Average SMR</p>
+              <Badge tone="live">Live</Badge>
+            </div>
+            <p className="ds-kpi-main">{props.fleetInsights.averageSmr}</p>
+            <p className="ds-kpi-descriptor">Fleet Hours</p>
+          </div>
+        </article>
+
+        <article className="ds-kpi-card">
+          <div className="ds-icon-tile">
+            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+            </svg>
+          </div>
+          <div className="ds-kpi-content">
+            <div className="ds-kpi-head">
+              <p className="ds-kpi-label">Machine Types</p>
+              <Badge tone="ready">Ready</Badge>
+            </div>
+            <p className="ds-kpi-main">{props.fleetInsights.activeTypes}</p>
+            <p className="ds-kpi-descriptor">Supported Models</p>
+          </div>
+        </article>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-[360px_1fr]">
-      <Card className="p-6">
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <p className="text-xs font-black uppercase tracking-[0.18em] text-[var(--color-accent-hover)]">Report Builder</p>
-            <h2 className="mt-2 text-2xl font-black text-[var(--color-ink)]">Generate PDF Reports</h2>
-            <p className="mt-2 text-sm font-semibold text-[var(--color-muted)]">Create finalized PDF reports from EQP templates.</p>
+      {/* Main Grid: Form Left, Table Right */}
+      <div className="grid gap-6 lg:grid-cols-[380px_1fr]">
+        <Card className="p-6 h-fit space-y-5">
+          <div className="pb-3 border-b border-slate-100">
+            <p className="text-xs font-bold uppercase tracking-wider text-amber-600">EQP Configuration</p>
+            <h2 className="mt-1 text-xl font-bold text-slate-900">Generate PDF Reports</h2>
+            <p className="mt-1 text-xs text-slate-500">Create finalized preventive maintenance PDFs from EQP master workbooks.</p>
           </div>
-        </div>
 
-        <div className="mt-6 grid gap-5">
+          {/* Signature Alert */}
           <div className={`ds-alert ${props.reportProfile?.signatureAvailable ? 'ds-alert-success' : 'ds-alert-error'}`}>
-            <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center justify-between gap-3 w-full">
               <div className="min-w-0">
-                <p className="text-xs font-black uppercase tracking-[0.14em]">Report Maker</p>
-                <p className="mt-1 truncate text-sm font-black">
-                  {props.reportProfile?.reportMaker?.fullName || 'Checking signed-in user...'}
+                <p className="text-xs font-bold uppercase text-slate-500">Certified Maker</p>
+                <p className="font-bold text-sm text-slate-900 truncate">
+                  {props.reportProfile?.reportMaker?.fullName || 'Checking signature...'}
                 </p>
               </div>
-              <Badge tone={!props.reportProfile ? 'neutral' : props.reportProfile.signatureAvailable ? 'green' : 'red'}>
-                {!props.reportProfile
-                  ? 'Checking'
-                  : props.reportProfile.signatureAvailable
-                    ? 'Signature Ready'
-                    : 'Signature Missing'}
+              <Badge tone={props.reportProfile?.signatureAvailable ? 'active' : 'critical'}>
+                {props.reportProfile?.signatureAvailable ? 'Signed' : 'No Signature'}
               </Badge>
             </div>
-            {props.reportProfile && !props.reportProfile.signatureAvailable && (
-              <p className="mt-2 text-xs font-semibold">
-                A user signature must be added before this account can generate reports.
-              </p>
-            )}
           </div>
 
-          <Field label="Machine Model">
+          <Field label="Machine Model Format">
             <select
               value={props.machineModel}
               onChange={(event) => props.setMachineModel(event.target.value)}
@@ -402,7 +437,19 @@ function DashboardContent(props) {
             </select>
           </Field>
 
-          <Field label="Report Type">
+          <Field label="Service Interval Type">
+            <select
+              value={props.serviceType}
+              onChange={(event) => props.setServiceType(event.target.value)}
+              className="ds-input"
+            >
+              {SERVICE_TYPES.map((type) => (
+                <option key={type}>{type}</option>
+              ))}
+            </select>
+          </Field>
+
+          <Field label="Report Code Variant">
             <select
               value={props.reportType}
               onChange={(event) => props.setReportType(event.target.value)}
@@ -415,19 +462,7 @@ function DashboardContent(props) {
             </select>
           </Field>
 
-          <Field label="Service Type">
-            <select
-              value={props.serviceType}
-              onChange={(event) => props.setServiceType(event.target.value)}
-              className="ds-input"
-            >
-              {SERVICE_TYPES.map((type) => (
-                <option key={type}>{type}</option>
-              ))}
-            </select>
-          </Field>
-
-          <Field label="Reports Count">
+          <Field label="Number of Service Runs (1–12)">
             <input
               type="number"
               min="1"
@@ -442,141 +477,112 @@ function DashboardContent(props) {
           <Button
             onClick={props.openDatesModal}
             disabled={props.loading || !props.reportProfile?.signatureAvailable}
-            className="w-full"
+            fullWidth
+            className="mt-2"
           >
-            Generate PDF Reports
+            Configure Report Dates & Run
           </Button>
-        </div>
 
-        <div className="mt-5 grid gap-3">
-          <p className="rounded-xl bg-[var(--color-surface-muted)] px-4 py-3 text-sm font-semibold text-[var(--color-muted)]">
-            Up to 12 report dates can be generated in one run.
-          </p>
-          <div className="rounded-xl border border-[var(--color-border)] p-4">
-            <p className="text-xs font-black uppercase tracking-[0.14em] text-[var(--color-muted)]">Latest Activity</p>
-            <p className="mt-2 text-sm font-semibold text-[var(--color-ink)]">{props.fleetInsights.latestOperation}</p>
-          </div>
-        </div>
-
-        {props.generationSummary && (
-          <div className="mt-5 rounded-xl border border-emerald-200 bg-emerald-50 p-4">
-            <p className="text-sm font-bold text-emerald-800">
-              {props.generationSummary.generatedFiles.length} PDF reports generated
-            </p>
-            <p className="mt-1 text-xs text-emerald-700">
-              {props.generationSummary.totalMachines} machines were processed by {props.generationSummary.reportMaker?.fullName}.
-            </p>
-          </div>
-        )}
-      </Card>
-
-      <Card className="overflow-hidden">
-        <div className="border-b border-[var(--color-border)] p-6">
-          <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-              <h2 className="text-2xl font-black text-[var(--color-ink)]">Fleet Machines</h2>
-              <p className="mt-2 text-sm font-semibold text-[var(--color-muted)]">Live machines loaded from database</p>
+          {props.generationSummary && (
+            <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-4 text-xs">
+              <p className="font-bold text-emerald-800">
+                ✓ {props.generationSummary.generatedFiles.length} Reports Generated
+              </p>
+              <p className="mt-0.5 text-emerald-700">
+                Processed for {props.generationSummary.totalMachines} machines by {props.generationSummary.reportMaker?.fullName}.
+              </p>
             </div>
-            <div className="rounded-xl bg-[var(--color-surface-muted)] px-3 py-2 text-sm font-black text-[var(--color-ink-soft)]">
-              {props.selectedMachines.length} selected
+          )}
+        </Card>
+
+        {/* Fleet Machines Table Card */}
+        <Card className="overflow-hidden">
+          <div className="border-b border-slate-200 p-5 bg-slate-50/60">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <h2 className="text-lg font-bold text-slate-900">Fleet Equipment Selection</h2>
+                <p className="text-xs text-slate-500">Select machines to include in this report generation run</p>
+              </div>
+              <Badge tone={props.selectedMachines.length > 0 ? 'yellow' : 'neutral'}>
+                {props.selectedMachines.length} Selected
+              </Badge>
             </div>
-          </div>
 
-          <div className="mt-5 grid gap-3 md:grid-cols-[1.4fr_1fr_1fr_auto]">
-            <input
-              type="text"
-              placeholder="Search by machine, type, or engine"
-              value={props.searchTerm}
-              onChange={(event) => props.setSearchTerm(event.target.value)}
-              className="ds-input"
-            />
-
-            <select
-              value={props.filterType}
-              onChange={(event) => props.setFilterType(event.target.value)}
-              className="ds-input"
-            >
-              <option value="ALL">All Types</option>
-              {props.machineTypes.map((type) => (
-                <option key={type}>{type}</option>
-              ))}
-            </select>
-
-            <select
-              value={props.filterEngineer}
-              onChange={(event) => props.setFilterEngineer(event.target.value)}
-              className="ds-input"
-            >
-              <option value="ALL">All Engineers</option>
-              {props.engineers.map((engineer) => (
-                <option key={engineer}>{engineer}</option>
-              ))}
-            </select>
-
-            <label className="flex items-center gap-3 rounded-xl border border-[var(--color-border)] bg-white px-4 py-2.5 text-sm font-bold text-[var(--color-ink-soft)]">
+            <div className="mt-4 grid gap-2.5 sm:grid-cols-[1.4fr_1fr_1fr_auto]">
               <input
-                type="checkbox"
-                checked={props.showOnlySelected}
-                onChange={() => props.setShowOnlySelected(!props.showOnlySelected)}
+                type="text"
+                placeholder="Search machine, type, or engine..."
+                value={props.searchTerm}
+                onChange={(event) => props.setSearchTerm(event.target.value)}
+                className="ds-input"
               />
-              Show Selected Only
-            </label>
+
+              <select
+                value={props.filterType}
+                onChange={(event) => props.setFilterType(event.target.value)}
+                className="ds-input"
+              >
+                <option value="ALL">All Types</option>
+                {props.machineTypes.map((type) => (
+                  <option key={type}>{type}</option>
+                ))}
+              </select>
+
+              <select
+                value={props.filterEngineer}
+                onChange={(event) => props.setFilterEngineer(event.target.value)}
+                className="ds-input"
+              >
+                <option value="ALL">All Engineers</option>
+                {props.engineers.map((engineer) => (
+                  <option key={engineer}>{engineer}</option>
+                ))}
+              </select>
+
+              <label className="ds-check-row border border-slate-200 bg-white px-3 py-1.5 rounded-[6px]">
+                <input
+                  type="checkbox"
+                  checked={props.showOnlySelected}
+                  onChange={() => props.setShowOnlySelected(!props.showOnlySelected)}
+                />
+                <span className="text-xs font-semibold text-slate-700">Selected Only</span>
+              </label>
+            </div>
+
+            <div className="mt-3 flex items-center justify-between text-xs text-slate-500 pt-2 border-t border-slate-200/60">
+              <span>Showing {props.filteredMachines.length} of {props.machines.length} fleet machines</span>
+              <div className="flex items-center gap-2">
+                <Button variant="ghost" size="sm" onClick={props.resetFilters}>Reset</Button>
+                {props.selectedMachines.length > 0 && (
+                  <Button variant="secondary" size="sm" onClick={props.clearSelection}>Clear Selection</Button>
+                )}
+              </div>
+            </div>
           </div>
 
-          <div className="mt-4 flex flex-wrap items-center gap-2">
-            <Badge tone="neutral">{props.filteredMachines.length} visible</Badge>
-            <Badge tone={props.selectedMachines.length > 0 ? 'yellow' : 'neutral'}>
-              {props.selectedMachines.length} selected
-            </Badge>
-            <Button variant="ghost" onClick={props.resetFilters}>Reset Filters</Button>
-            {props.selectedMachines.length > 0 && (
-              <Button variant="secondary" onClick={props.clearSelection}>Clear Selection</Button>
-            )}
-          </div>
-        </div>
-
-        {props.loading ? (
-          <div className="grid gap-3 p-6">
-            <Skeleton className="h-12" />
-            <Skeleton className="h-12" />
-            <Skeleton className="h-12" />
-          </div>
-        ) : props.filteredMachines.length === 0 ? (
-          <div className="p-6">
-            <EmptyState title="No machines found" description="Try changing the filters or search term." />
-          </div>
-        ) : (
-          <MachinesTable
-            machines={props.filteredMachines}
-            selectedMachines={props.selectedMachines}
-            toggleMachine={props.toggleMachine}
-            toggleSelectAll={props.toggleSelectAll}
-            sortConfig={props.sortConfig}
-            changeSort={props.changeSort}
-          />
-        )}
-      </Card>
+          {props.loading ? (
+            <div className="grid gap-3 p-6">
+              <Skeleton className="h-12 rounded-lg" />
+              <Skeleton className="h-12 rounded-lg" />
+              <Skeleton className="h-12 rounded-lg" />
+            </div>
+          ) : props.filteredMachines.length === 0 ? (
+            <div className="p-8">
+              <EmptyState title="No fleet machines match filters" description="Try clearing filters or search query." />
+            </div>
+          ) : (
+            <MachinesTable
+              machines={props.filteredMachines}
+              selectedMachines={props.selectedMachines}
+              toggleMachine={props.toggleMachine}
+              toggleSelectAll={props.toggleSelectAll}
+              sortConfig={props.sortConfig}
+              changeSort={props.changeSort}
+            />
+          )}
+        </Card>
       </div>
     </div>
-  );
-}
-
-function Metric({ label, value, unit, detail, code, status, tone = 'neutral', accent = false }) {
-  return (
-    <article className="ds-kpi-card">
-      <div className={`ds-icon-tile ${accent ? 'ds-icon-tile-accent' : ''}`}>{code}</div>
-      <div className="ds-kpi-content">
-        <div className="ds-kpi-head">
-          <p className="ds-kpi-label">{label}</p>
-          <Badge tone={tone}>{status}</Badge>
-        </div>
-        <div>
-          <p className="ds-kpi-main">{value}</p>
-          <p className="ds-kpi-descriptor">{unit}</p>
-          <p className="ds-kpi-secondary">{detail}</p>
-        </div>
-      </div>
-    </article>
   );
 }
 
@@ -585,41 +591,54 @@ function MachinesTable({ machines, selectedMachines, toggleMachine, toggleSelect
   const allVisibleSelected = visibleIds.length > 0 && visibleIds.every((id) => selectedMachines.includes(id));
 
   return (
-    <div className="overflow-x-auto">
-      <table className="ds-table min-w-[1180px]">
+    <div className="ds-table-wrap">
+      <table className="ds-table">
         <thead>
           <tr>
-            <th className="px-5 py-4 text-left">
-              <input type="checkbox" checked={allVisibleSelected} onChange={toggleSelectAll} />
+            <th className="w-10">
+              <input
+                type="checkbox"
+                checked={allVisibleSelected}
+                onChange={toggleSelectAll}
+                className="rounded accent-amber-500"
+              />
             </th>
             <SortableHeader label="Machine" column="machine_number" sortConfig={sortConfig} onSort={changeSort} />
             <SortableHeader label="Type" column="machine_type" sortConfig={sortConfig} onSort={changeSort} />
             <SortableHeader label="Customer" column="customer_name" sortConfig={sortConfig} onSort={changeSort} />
             <SortableHeader label="Location" column="location" sortConfig={sortConfig} onSort={changeSort} />
-            <SortableHeader label="Engine" column="engine_number" sortConfig={sortConfig} onSort={changeSort} />
-            <SortableHeader label="SMR" column="last_smr" sortConfig={sortConfig} onSort={changeSort} />
+            <SortableHeader label="Engine No." column="engine_number" sortConfig={sortConfig} onSort={changeSort} />
+            <SortableHeader label="SMR Hours" column="last_smr" sortConfig={sortConfig} onSort={changeSort} />
             <SortableHeader label="Step" column="smr_step" sortConfig={sortConfig} onSort={changeSort} />
           </tr>
         </thead>
         <tbody>
-          {machines.map((machine) => (
-            <tr key={machine.id} className="border-t border-[var(--color-border)] transition hover:bg-[var(--color-brand-soft)]">
-              <td className="px-5 py-4">
-                <input
-                  type="checkbox"
-                  checked={selectedMachines.includes(machine.id)}
-                  onChange={() => toggleMachine(machine.id)}
-                />
-              </td>
-              <td className="px-5 py-4 font-semibold text-[var(--color-ink)]">{machine.machine_number}</td>
-              <td className="px-5 py-4 text-[var(--color-ink-soft)]">{machine.machine_type}</td>
-              <td className="max-w-[260px] px-5 py-4 text-[var(--color-ink-soft)]">{machine.customer_name || '-'}</td>
-              <td className="px-5 py-4 text-[var(--color-ink-soft)]">{machine.location || '-'}</td>
-              <td className="px-5 py-4 font-mono text-sm text-[var(--color-muted)]">{machine.engine_number}</td>
-              <td className="px-5 py-4 text-[var(--color-ink-soft)]">{machine.last_smr}</td>
-              <td className="px-5 py-4 text-[var(--color-ink-soft)]">{machine.smr_step}</td>
-            </tr>
-          ))}
+          {machines.map((machine) => {
+            const isSelected = selectedMachines.includes(machine.id);
+            return (
+              <tr
+                key={machine.id}
+                onClick={() => toggleMachine(machine.id)}
+                className={`cursor-pointer ${isSelected ? '!bg-amber-50/60' : ''}`}
+              >
+                <td onClick={(e) => e.stopPropagation()}>
+                  <input
+                    type="checkbox"
+                    checked={isSelected}
+                    onChange={() => toggleMachine(machine.id)}
+                    className="rounded accent-amber-500"
+                  />
+                </td>
+                <td className="font-bold text-slate-900">{machine.machine_number}</td>
+                <td className="text-slate-700 font-medium">{machine.machine_type}</td>
+                <td className="text-slate-600 max-w-[200px] truncate">{machine.customer_name || '-'}</td>
+                <td className="text-slate-600">{machine.location || '-'}</td>
+                <td className="font-mono text-xs text-slate-500">{machine.engine_number}</td>
+                <td className="font-semibold text-slate-900">{machine.last_smr}</td>
+                <td className="text-slate-600">{machine.smr_step}</td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     </div>
@@ -628,16 +647,21 @@ function MachinesTable({ machines, selectedMachines, toggleMachine, toggleSelect
 
 function SortableHeader({ label, column, sortConfig, onSort }) {
   const active = sortConfig.key === column;
-  const indicator = active ? (sortConfig.direction === 'asc' ? 'ASC' : 'DESC') : '';
+  const isAsc = sortConfig.direction === 'asc';
 
   return (
-    <th className="px-5 py-4 text-left">
+    <th>
       <button
         type="button"
         onClick={() => onSort(column)}
         className="ds-sort-button"
       >
-        {label} {indicator}
+        <span>{label}</span>
+        {active ? (
+          <span className="text-amber-600 font-bold">{isAsc ? '↑' : '↓'}</span>
+        ) : (
+          <span className="text-slate-300">↕</span>
+        )}
       </button>
     </th>
   );
@@ -646,41 +670,41 @@ function SortableHeader({ label, column, sortConfig, onSort }) {
 function MachineHistory({ history }) {
   return (
     <Card className="overflow-hidden">
-      <div className="border-b border-[var(--color-border)] p-6">
-        <h2 className="text-2xl font-black text-[var(--color-ink)]">Machine History</h2>
-        <p className="mt-2 text-sm font-semibold text-[var(--color-muted)]">Fleet operations and service timeline</p>
+      <div className="border-b border-slate-200 p-5 bg-slate-50/60">
+        <h2 className="text-lg font-bold text-slate-900">Fleet Operations Timeline</h2>
+        <p className="mt-0.5 text-xs text-slate-500">Historical record of all generated preventive maintenance runs</p>
       </div>
 
       {history.length === 0 ? (
-        <div className="p-6">
-          <EmptyState title="No history yet" description="Machine activity will appear after report generation." />
+        <div className="p-8">
+          <EmptyState title="No machine operations recorded yet" description="History will populate after generating EQP reports." />
         </div>
       ) : (
-        <div className="overflow-x-auto">
-          <table className="ds-table min-w-[900px]">
+        <div className="ds-table-wrap">
+          <table className="ds-table">
             <thead>
               <tr>
-                <th className="px-5 py-4 text-left">Machine</th>
-                <th className="px-5 py-4 text-left">Operation</th>
-                <th className="px-5 py-4 text-left">Report</th>
-                <th className="px-5 py-4 text-left">Service</th>
-                <th className="px-5 py-4 text-left">SMR</th>
-                <th className="px-5 py-4 text-left">Engineer</th>
-                <th className="px-5 py-4 text-left">Date</th>
+                <th>Machine</th>
+                <th>Operation</th>
+                <th>Report Code</th>
+                <th>Service Interval</th>
+                <th>SMR Counter</th>
+                <th>Engineer</th>
+                <th>Date</th>
               </tr>
             </thead>
             <tbody>
               {history.map((item, index) => (
-                <tr key={`${item.machine_id}-${item.created_at}-${index}`} className="border-t border-[var(--color-border)] transition hover:bg-[var(--color-brand-soft)]">
-                  <td className="px-5 py-4 font-semibold text-[var(--color-ink)]">
+                <tr key={`${item.machine_id}-${item.created_at}-${index}`}>
+                  <td className="font-bold text-slate-900">
                     {item.machine_type} {item.machine_number}
                   </td>
-                  <td className="px-5 py-4 text-[var(--color-ink-soft)]">{item.operation_type}</td>
-                  <td className="px-5 py-4 text-[var(--color-ink-soft)]">{item.report_type}</td>
-                  <td className="px-5 py-4 text-[var(--color-ink-soft)]">{item.service_type}</td>
-                  <td className="px-5 py-4 text-[var(--color-ink-soft)]">{item.smr}</td>
-                  <td className="px-5 py-4 text-[var(--color-ink-soft)]">{item.performed_by}</td>
-                  <td className="px-5 py-4 text-[var(--color-ink-soft)]">
+                  <td className="text-slate-700">{item.operation_type}</td>
+                  <td><Badge tone="neutral">{item.report_type}</Badge></td>
+                  <td className="text-slate-700">{item.service_type}</td>
+                  <td className="font-semibold text-slate-900">{item.smr}</td>
+                  <td className="text-slate-600">{item.performed_by}</td>
+                  <td className="text-slate-500 text-xs">
                     {new Date(item.operation_date).toLocaleDateString()}
                   </td>
                 </tr>

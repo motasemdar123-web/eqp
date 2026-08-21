@@ -45,8 +45,8 @@ export default function EqpLifecyclePage() {
         dismissedMonthlyGaps,
         hasMonthlyGap,
         hasLifecycleGap: machine.missingReports.length > 0 || hasMonthlyGap,
-        status: hasMonthlyGap ? 'Monthly follow-up missing' : 'Monthly follow-up current',
-        statusTone: hasMonthlyGap ? 'archived' : 'ready',
+        status: hasMonthlyGap ? 'Follow-up Required' : 'Lifecycle Current',
+        statusTone: hasMonthlyGap ? 'warning' : 'ready',
         nextAction: buildNextAction(machine.missingReports, activeMonthlyGaps),
       };
     });
@@ -113,148 +113,209 @@ export default function EqpLifecyclePage() {
     <SystemShell
       activePath="/eqp/lifecycle"
       eyebrow="EQP Module"
-      title="Machine Lifecycle"
-      description="Factory-to-delivery and service-cycle visibility for each EQP machine."
+      title="Machine Lifecycle Tracker"
+      description="Factory delivery milestones, service interval progression, and monthly gap verification for each EQP asset."
     >
-      <div className="grid gap-6">
+      <div className="space-y-6">
+        {/* KPI Metrics */}
         <section className="ds-kpi-grid">
-          <Metric label="Machines" value={stats.total} unit="Tracked assets" detail="Imported lifecycle rows" code="LC" status="Live" tone="live" />
-          <Metric label="Not Working" value={stats.addCycle} unit="Monthly cycle" detail="Storage or add-service follow-up" code="NW" status="Watch" tone="yellow" accent />
-          <Metric label="2nd Done" value={stats.secondDone} unit="HM400 group" detail="Waiting for 3rd service plan" code="S2" status="Planned" tone="ready" />
-          <Metric label="Monthly Gaps" value={stats.monthlyGaps} unit="Active months" detail={`${stats.dismissedMonthlyGaps} dismissed as overlap/skip`} code="MG" status="Review" tone="archived" />
+          <article className="ds-kpi-card">
+            <div className="ds-icon-tile">
+              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+              </svg>
+            </div>
+            <div className="ds-kpi-content">
+              <div className="ds-kpi-head">
+                <p className="ds-kpi-label">Tracked Fleet</p>
+                <Badge tone="live">Live</Badge>
+              </div>
+              <p className="ds-kpi-main">{stats.total}</p>
+              <p className="ds-kpi-descriptor">Lifecycle Units</p>
+            </div>
+          </article>
+
+          <article className="ds-kpi-card">
+            <div className="ds-icon-tile ds-icon-tile-accent">
+              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+            </div>
+            <div className="ds-kpi-content">
+              <div className="ds-kpi-head">
+                <p className="ds-kpi-label">Not Working</p>
+                <Badge tone="warning">Storage</Badge>
+              </div>
+              <p className="ds-kpi-main">{stats.addCycle}</p>
+              <p className="ds-kpi-descriptor">Cycle Follow-up</p>
+            </div>
+          </article>
+
+          <article className="ds-kpi-card">
+            <div className="ds-icon-tile">
+              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div className="ds-kpi-content">
+              <div className="ds-kpi-head">
+                <p className="ds-kpi-label">2nd Service Done</p>
+                <Badge tone="ready">Ready</Badge>
+              </div>
+              <p className="ds-kpi-main">{stats.secondDone}</p>
+              <p className="ds-kpi-descriptor">Awaiting 3rd Run</p>
+            </div>
+          </article>
+
+          <article className="ds-kpi-card">
+            <div className="ds-icon-tile ds-icon-tile-accent">
+              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div className="ds-kpi-content">
+              <div className="ds-kpi-head">
+                <p className="ds-kpi-label">Monthly Gaps</p>
+                <Badge tone={stats.monthlyGaps > 0 ? 'warning' : 'ready'}>
+                  {stats.monthlyGaps > 0 ? 'Review' : 'Clear'}
+                </Badge>
+              </div>
+              <p className="ds-kpi-main">{stats.monthlyGaps}</p>
+              <p className="ds-kpi-descriptor">{stats.dismissedMonthlyGaps} Dismissed</p>
+            </div>
+          </article>
         </section>
 
-        <section className="grid gap-6 xl:grid-cols-[minmax(0,1.15fr)_minmax(360px,0.85fr)]">
+        {/* Main Grid: Machine List & Detail Timeline Card */}
+        <section className="grid gap-6 xl:grid-cols-[minmax(0,1.2fr)_minmax(380px,0.8fr)]">
+          {/* Table Card */}
           <Card className="overflow-hidden">
-            <div className="border-b border-[var(--color-border)] p-5">
-              <div className="grid gap-3 lg:grid-cols-[1.2fr_0.6fr_0.8fr]">
+            <div className="border-b border-slate-200 p-5 bg-slate-50/60">
+              <div className="grid gap-3 sm:grid-cols-[1.4fr_1fr_1fr]">
                 <input
                   type="text"
-                  placeholder="Search machine or model"
+                  placeholder="Search machine ID or model..."
                   value={searchTerm}
                   onChange={(event) => setSearchTerm(event.target.value)}
                   className="ds-input"
                 />
                 <select value={modelFilter} onChange={(event) => setModelFilter(event.target.value)} className="ds-input">
-                  <option value="ALL">All models</option>
+                  <option value="ALL">All Models</option>
                   {modelOptions.map((model) => (
                     <option key={model} value={model}>{model}</option>
                   ))}
                 </select>
                 <select value={statusFilter} onChange={(event) => setStatusFilter(event.target.value)} className="ds-input">
-                  <option value="ALL">All statuses</option>
-                  <option value="Monthly follow-up missing">Monthly follow-up missing</option>
-                  <option value="Monthly follow-up current">Monthly follow-up current</option>
+                  <option value="ALL">All Statuses</option>
+                  <option value="Follow-up Required">Follow-up Required</option>
+                  <option value="Lifecycle Current">Lifecycle Current</option>
                 </select>
               </div>
             </div>
 
             {filteredMachines.length === 0 ? (
-              <div className="p-6">
-                <EmptyState title="No lifecycle records found" description="Change filters and try again." />
+              <div className="p-8">
+                <EmptyState title="No lifecycle records found" description="Adjust your filters to see machine assets." />
               </div>
             ) : (
-              <div className="overflow-x-auto">
-                <table className="ds-table min-w-[980px]">
+              <div className="ds-table-wrap">
+                <table className="ds-table">
                   <thead>
                     <tr>
-                      <th className="px-5 py-4 text-left">Machine</th>
-                      <th className="px-5 py-4 text-left">Model</th>
-                      <th className="px-5 py-4 text-left">Latest</th>
-                      <th className="px-5 py-4 text-left">Delivery</th>
-                      <th className="px-5 py-4 text-left">3rd Service</th>
-                      <th className="px-5 py-4 text-left">Lifecycle</th>
-                      <th className="px-5 py-4 text-left">Monthly</th>
-                      <th className="px-5 py-4 text-left">Status</th>
+                      <th>Machine</th>
+                      <th>Model</th>
+                      <th>Latest Run</th>
+                      <th>Delivery</th>
+                      <th>3rd Service</th>
+                      <th>Status</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredMachines.map((machine) => (
-                      <tr
-                        key={machine.machineNumber}
-                        className="cursor-pointer border-t border-[var(--color-border)] transition hover:bg-[var(--color-brand-soft)]"
-                        onClick={() => setSelectedMachineNumber(machine.machineNumber)}
-                      >
-                        <td className="px-5 py-4 font-black text-[var(--color-ink)]">{machine.machineNumber}</td>
-                        <td className="px-5 py-4 text-[var(--color-ink-soft)]">{machine.model}</td>
-                        <td className="px-5 py-4">
-                          <div className="font-semibold text-[var(--color-ink-soft)]">{machine.latestReportType}</div>
-                          <div className="mt-1 font-mono text-xs text-[var(--color-muted)]">{formatLifecycleDate(machine.latestReportDate)}</div>
-                        </td>
-                        <td className="px-5 py-4 text-[var(--color-ink-soft)]">{formatLifecycleDate(machine.deliveryDate)}</td>
-                        <td className="px-5 py-4 text-[var(--color-ink-soft)]">{formatLifecycleDate(machine.thirdServiceDate)}</td>
-                        <td className="px-5 py-4">
-                          {machine.missingReports.length > 0 ? (
-                            <Badge tone="archived">{machine.missingReports.length} missing</Badge>
-                          ) : (
-                            <Badge tone="ready">Complete</Badge>
-                          )}
-                        </td>
-                        <td className="px-5 py-4">
-                          {machine.hasMonthlyGap ? (
-                            <Badge tone="yellow">{machine.activeMonthlyGaps.length} months</Badge>
-                          ) : (
-                            <Badge tone="ready">Current</Badge>
-                          )}
-                        </td>
-                        <td className="px-5 py-4"><Badge tone={machine.statusTone}>{machine.status}</Badge></td>
-                      </tr>
-                    ))}
+                    {filteredMachines.map((machine) => {
+                      const isSelected = selectedMachine?.machineNumber === machine.machineNumber;
+                      return (
+                        <tr
+                          key={machine.machineNumber}
+                          className={`cursor-pointer ${isSelected ? '!bg-amber-50/60 font-semibold' : ''}`}
+                          onClick={() => setSelectedMachineNumber(machine.machineNumber)}
+                        >
+                          <td className="font-bold text-slate-900">{machine.machineNumber}</td>
+                          <td className="text-slate-700">{machine.model}</td>
+                          <td>
+                            <span className="font-semibold text-slate-800">{machine.latestReportType}</span>
+                            <span className="block text-[0.6875rem] font-mono text-slate-400">{formatLifecycleDate(machine.latestReportDate)}</span>
+                          </td>
+                          <td className="text-xs text-slate-600">{formatLifecycleDate(machine.deliveryDate)}</td>
+                          <td className="text-xs text-slate-600">{formatLifecycleDate(machine.thirdServiceDate)}</td>
+                          <td>
+                            <Badge tone={machine.statusTone}>{machine.status}</Badge>
+                          </td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>
             )}
           </Card>
 
+          {/* Selected Machine Detail Card */}
           {selectedMachine && (
-            <Card className="p-6">
-              <div className="flex items-start justify-between gap-4">
+            <Card className="p-6 h-fit space-y-5">
+              <div className="flex items-start justify-between gap-4 pb-4 border-b border-slate-100">
                 <div>
-                  <p className="text-xs font-black uppercase tracking-[0.14em] text-[var(--color-muted)]">Selected Machine</p>
-                  <h2 className="mt-2 text-3xl font-black text-[var(--color-ink)]">{selectedMachine.machineNumber}</h2>
-                  <p className="mt-1 text-sm font-bold text-[var(--color-ink-soft)]">{selectedMachine.model}</p>
+                  <p className="text-xs font-bold uppercase tracking-wider text-amber-600">Selected Machine</p>
+                  <h2 className="mt-1 text-2xl font-bold text-slate-900">{selectedMachine.machineNumber}</h2>
+                  <p className="text-xs font-semibold text-slate-500">{selectedMachine.model}</p>
                 </div>
                 <Badge tone={selectedMachine.statusTone}>{selectedMachine.latestReportCode}</Badge>
               </div>
 
-              <div className="mt-6 rounded-md border border-[var(--color-border)] bg-[var(--color-surface-muted)] p-4">
-                <p className="text-xs font-black uppercase tracking-[0.14em] text-[var(--color-muted)]">Next Action</p>
-                <p className="mt-2 text-sm font-bold leading-6 text-[var(--color-ink)]">{selectedMachine.nextAction}</p>
+              {/* Next Action Box */}
+              <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
+                <p className="text-xs font-bold uppercase tracking-wider text-slate-500">Recommended Action</p>
+                <p className="mt-1.5 text-xs text-slate-800 font-medium leading-relaxed">{selectedMachine.nextAction}</p>
               </div>
 
+              {/* Missing Reports Alerts */}
               {selectedMachine.missingReports.length > 0 && (
-                <div className="mt-4 rounded-md border border-amber-200 bg-amber-50 p-4">
-                  <p className="text-xs font-black uppercase tracking-[0.14em] text-amber-700">Missing From Lifecycle</p>
-                  <div className="mt-3 flex flex-wrap gap-2">
+                <div className="rounded-lg border border-amber-200 bg-amber-50 p-4">
+                  <p className="text-xs font-bold uppercase text-amber-800">Missing Lifecycle Reports</p>
+                  <div className="mt-2 flex flex-wrap gap-1.5">
                     {selectedMachine.missingReports.map((report) => (
-                      <Badge key={report} tone="yellow">{report}</Badge>
+                      <Badge key={report} tone="warning">{report}</Badge>
                     ))}
                   </div>
                 </div>
               )}
 
+              {/* Monthly Gaps Drawer */}
               {selectedMachine.hasMonthlyGap && (
-                <div className="mt-4 rounded-md border border-amber-200 bg-amber-50 p-4">
+                <div className="rounded-lg border border-amber-200 bg-amber-50/80 p-4">
                   <button
                     type="button"
                     onClick={() => setMonthlyListOpen((isOpen) => !isOpen)}
-                    className="grid w-full grid-cols-[1fr_auto] items-center gap-3 text-left"
+                    className="flex w-full items-center justify-between text-left"
                   >
-                    <span className="text-xs font-black uppercase tracking-[0.14em] text-amber-700">Missing Monthly Reports</span>
-                    <span className="rounded-md border border-amber-300 bg-white px-2 py-1 text-xs font-black text-amber-800">
-                      {selectedMachine.activeMonthlyGaps.length} {monthlyListOpen ? 'Hide' : 'Show'}
+                    <span className="text-xs font-bold uppercase text-amber-800">
+                      Missing Monthly Reports ({selectedMachine.activeMonthlyGaps.length})
+                    </span>
+                    <span className="text-xs font-bold text-amber-700 hover:underline">
+                      {monthlyListOpen ? 'Hide' : 'Show'}
                     </span>
                   </button>
                   {monthlyListOpen && (
-                    <div className="mt-3 grid gap-2">
+                    <div className="mt-3 space-y-2">
                       {selectedMachine.activeMonthlyGaps.map((gap) => (
-                        <div key={`${gap.code}-${gap.month}`} className="grid grid-cols-[1fr_auto_auto] items-center gap-3 rounded-md bg-white px-3 py-2 text-sm">
-                          <span className="font-bold text-[var(--color-ink)]">{gap.type}</span>
-                          <span className="font-mono text-xs font-black text-amber-700">{gap.code} - {formatLifecycleMonth(gap.month)}</span>
+                        <div key={`${gap.code}-${gap.month}`} className="flex items-center justify-between rounded bg-white p-2.5 text-xs border border-amber-200">
+                          <div>
+                            <span className="font-bold text-slate-900">{gap.type}</span>
+                            <span className="ml-2 font-mono text-slate-500">{gap.code} ({formatLifecycleMonth(gap.month)})</span>
+                          </div>
                           <button
                             type="button"
                             onClick={() => handleDismissMonthlyGap(selectedMachine.machineNumber, gap)}
-                            className="rounded-md border border-amber-300 px-2 py-1 text-xs font-black text-amber-800 transition hover:bg-amber-100"
+                            className="rounded bg-amber-100 px-2 py-1 text-[0.6875rem] font-bold text-amber-900 hover:bg-amber-200 transition"
                           >
                             Dismiss
                           </button>
@@ -265,28 +326,33 @@ export default function EqpLifecyclePage() {
                 </div>
               )}
 
+              {/* Dismissed Monthly Reports */}
               {selectedMachine.dismissedMonthlyGaps.length > 0 && (
-                <div className="mt-4 rounded-md border border-[var(--color-border)] bg-[var(--color-surface-muted)] p-4">
+                <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
                   <button
                     type="button"
                     onClick={() => setDismissedListOpen((isOpen) => !isOpen)}
-                    className="grid w-full grid-cols-[1fr_auto] items-center gap-3 text-left"
+                    className="flex w-full items-center justify-between text-left"
                   >
-                    <span className="text-xs font-black uppercase tracking-[0.14em] text-[var(--color-muted)]">Dismissed Monthly Reports</span>
-                    <span className="rounded-md border border-[var(--color-border)] bg-white px-2 py-1 text-xs font-black text-[var(--color-ink-soft)]">
-                      {selectedMachine.dismissedMonthlyGaps.length} {dismissedListOpen ? 'Hide' : 'Show'}
+                    <span className="text-xs font-bold uppercase text-slate-500">
+                      Dismissed Gaps ({selectedMachine.dismissedMonthlyGaps.length})
+                    </span>
+                    <span className="text-xs font-bold text-slate-600 hover:underline">
+                      {dismissedListOpen ? 'Hide' : 'Show'}
                     </span>
                   </button>
                   {dismissedListOpen && (
-                    <div className="mt-3 grid gap-2">
+                    <div className="mt-3 space-y-2">
                       {selectedMachine.dismissedMonthlyGaps.map((gap) => (
-                        <div key={`${gap.code}-${gap.month}`} className="grid grid-cols-[1fr_auto_auto] items-center gap-3 rounded-md bg-white px-3 py-2 text-sm">
-                          <span className="font-bold text-[var(--color-ink-soft)]">{gap.type}</span>
-                          <span className="font-mono text-xs font-black text-[var(--color-muted)]">{gap.code} - {formatLifecycleMonth(gap.month)}</span>
+                        <div key={`${gap.code}-${gap.month}`} className="flex items-center justify-between rounded bg-white p-2.5 text-xs border border-slate-200">
+                          <div>
+                            <span className="font-semibold text-slate-800">{gap.type}</span>
+                            <span className="ml-2 font-mono text-slate-400">{gap.code} ({formatLifecycleMonth(gap.month)})</span>
+                          </div>
                           <button
                             type="button"
                             onClick={() => handleRestoreMonthlyGap(selectedMachine.machineNumber, gap)}
-                            className="rounded-md border border-[var(--color-border)] px-2 py-1 text-xs font-black text-[var(--color-ink-soft)] transition hover:bg-[var(--color-brand-soft)]"
+                            className="rounded bg-slate-100 px-2 py-1 text-[0.6875rem] font-bold text-slate-700 hover:bg-slate-200 transition"
                           >
                             Restore
                           </button>
@@ -297,23 +363,32 @@ export default function EqpLifecyclePage() {
                 </div>
               )}
 
-              <div className="mt-6 grid gap-3 sm:grid-cols-2">
-                {selectedTimelineItems.map((milestone) => (
-                  <div key={milestone.id} className="grid grid-cols-[1fr_auto] items-center gap-4 rounded-md border border-[var(--color-border)] px-4 py-3">
-                    <div>
-                      <p className="text-sm font-black text-[var(--color-ink)]">{milestone.label}</p>
-                      <p className="mt-1 font-mono text-xs text-[var(--color-muted)]">{milestone.code}</p>
+              {/* Timeline Items */}
+              <div>
+                <p className="text-xs font-bold uppercase text-slate-500 mb-3">Service Timeline Milestones</p>
+                <div className="space-y-2">
+                  {selectedTimelineItems.map((milestone) => (
+                    <div key={milestone.id} className="flex items-center justify-between rounded-lg border border-slate-200 p-3 bg-white text-xs">
+                      <div>
+                        <p className="font-bold text-slate-900">{milestone.label}</p>
+                        <p className="font-mono text-slate-400 text-[0.6875rem]">{milestone.code}</p>
+                      </div>
+                      <span className="font-semibold text-slate-700">{formatLifecycleDate(milestone.date)}</span>
                     </div>
-                    <p className="text-sm font-bold text-[var(--color-ink-soft)]">{formatLifecycleDate(milestone.date)}</p>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
 
-              <div className="mt-6 grid grid-cols-2 gap-3">
-                <MiniMetric label="Add Services" value={selectedMachine.addServiceCount} />
-                <MiniMetric label="Latest SMR" value={selectedMachine.latestSmr ?? '-'} />
-                <MiniMetric label="Storage Gaps" value={selectedMachine.activeMonthlyGaps.filter((gap) => gap.code === 'W30').length} />
-                <MiniMetric label="Add. Gaps" value={selectedMachine.activeMonthlyGaps.filter((gap) => gap.code === 'W41X').length} />
+              {/* Summary Stats */}
+              <div className="grid grid-cols-2 gap-3 pt-2 border-t border-slate-100 text-center">
+                <div className="p-3 bg-slate-50 rounded-lg border border-slate-100">
+                  <p className="text-[0.6875rem] font-bold uppercase text-slate-400">Total Services</p>
+                  <p className="text-lg font-bold text-slate-900 mt-0.5">{selectedMachine.addServiceCount}</p>
+                </div>
+                <div className="p-3 bg-slate-50 rounded-lg border border-slate-100">
+                  <p className="text-[0.6875rem] font-bold uppercase text-slate-400">Latest SMR</p>
+                  <p className="text-lg font-bold text-slate-900 mt-0.5">{selectedMachine.latestSmr ?? '-'}</p>
+                </div>
               </div>
             </Card>
           )}
@@ -329,19 +404,19 @@ function getMonthlyGapKey(machineNumber, gap) {
 
 function buildNextAction(missingReports, monthlyGaps) {
   if (missingReports.length && monthlyGaps.length) {
-    return `Create the missing lifecycle report(s), then close ${monthlyGaps.length} monthly storage/add-service gap(s).`;
+    return `Create missing lifecycle report(s), then close ${monthlyGaps.length} monthly storage gap(s).`;
   }
 
   if (monthlyGaps.length) {
     const nextGap = monthlyGaps[0];
-    return `Create ${nextGap.code} for ${formatLifecycleMonth(nextGap.month)} or dismiss it if it was intentionally skipped/covered by overlap.`;
+    return `Generate ${nextGap.code} for ${formatLifecycleMonth(nextGap.month)} or dismiss if intentionally skipped.`;
   }
 
   if (missingReports.length) {
-    return `Create the missing lifecycle report(s): ${missingReports.join(', ')}.`;
+    return `Generate certified report(s): ${missingReports.join(', ')}.`;
   }
 
-  return 'Monthly tracking is current after active and dismissed storage/add-service months.';
+  return 'Lifecycle tracking is current and all service cycles are validated.';
 }
 
 function buildTimelineItems(machine) {
@@ -361,32 +436,4 @@ function buildTimelineItems(machine) {
     }));
 
   return [...mainItems, ...monthlyItems].sort((left, right) => left.sortDate.localeCompare(right.sortDate));
-}
-
-function Metric({ label, value, unit, detail, code, status, tone = 'neutral', accent = false }) {
-  return (
-    <article className="ds-kpi-card">
-      <div className={`ds-icon-tile ${accent ? 'ds-icon-tile-accent' : ''}`}>{code}</div>
-      <div className="ds-kpi-content">
-        <div className="ds-kpi-head">
-          <p className="ds-kpi-label">{label}</p>
-          <Badge tone={tone}>{status}</Badge>
-        </div>
-        <div>
-          <p className="ds-kpi-main">{value}</p>
-          <p className="ds-kpi-descriptor">{unit}</p>
-          <p className="ds-kpi-secondary">{detail}</p>
-        </div>
-      </div>
-    </article>
-  );
-}
-
-function MiniMetric({ label, value }) {
-  return (
-    <div className="rounded-md border border-[var(--color-border)] p-4">
-      <p className="text-xs font-black uppercase tracking-[0.14em] text-[var(--color-muted)]">{label}</p>
-      <p className="mt-2 text-2xl font-black text-[var(--color-ink)]">{value}</p>
-    </div>
-  );
 }

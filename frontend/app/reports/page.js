@@ -41,9 +41,8 @@ export default function ReportsPage() {
     try {
       setError('');
       const data = await getReports();
-      setReports(data);
+      setReports(data || []);
       setSelectedReportIds([]);
-      setToast({ type: 'info', message: 'Reports archive refreshed.' });
     } catch (loadError) {
       setError(loadError.message || 'Failed to load reports');
       setToast({ type: 'error', message: loadError.message || 'Failed to load reports.' });
@@ -149,52 +148,39 @@ export default function ReportsPage() {
       document.body.appendChild(link);
       link.click();
       link.remove();
-      setTimeout(() => URL.revokeObjectURL(url), 30000);
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
     } catch (downloadError) {
-      setToast({ type: 'error', message: downloadError.message || 'Failed to download report.' });
+      setToast({ type: 'error', message: downloadError.message || 'Download failed.' });
     }
   }
 
   async function downloadReports(targetReports) {
-    if (!targetReports.length || downloadBusy) return;
-
+    if (!targetReports.length) return;
     setDownloadBusy(true);
-    setToast({ type: 'info', message: `Preparing ${targetReports.length} reports as one ZIP.` });
-
     try {
       const zip = new JSZip();
-      const usedNames = new Map();
+      const folder = zip.folder('Dar_Al_Hai_EQP_Reports');
 
       for (const report of targetReports) {
         const response = await fetch(report.file_url);
-        if (!response.ok) {
-          throw new Error(`Could not download ${report.file_name || `report-${report.id}.pdf`}.`);
+        if (response.ok) {
+          const blob = await response.blob();
+          folder.file(safeZipFileName(report.file_name, `report-${report.id}.pdf`), blob);
         }
-
-        const blob = await response.blob();
-        const baseName = safeZipFileName(report.file_name, `report-${report.id}.pdf`);
-        const count = usedNames.get(baseName) || 0;
-        usedNames.set(baseName, count + 1);
-        const fileName = count === 0
-          ? baseName
-          : baseName.replace(/(\.pdf)?$/i, `-${count + 1}.pdf`);
-
-        zip.file(fileName, blob);
       }
 
-      const zipBlob = await zip.generateAsync({ type: 'blob', compression: 'DEFLATE' });
-      const url = URL.createObjectURL(zipBlob);
+      const content = await zip.generateAsync({ type: 'blob' });
+      const url = URL.createObjectURL(content);
       const link = document.createElement('a');
-      const stamp = new Date().toISOString().slice(0, 10);
       link.href = url;
-      link.download = `eqp-reports-${stamp}-${targetReports.length}-files.zip`;
+      link.download = `Dar_Al_Hai_Reports_${new Date().toISOString().slice(0, 10)}.zip`;
       document.body.appendChild(link);
       link.click();
       link.remove();
-      setTimeout(() => URL.revokeObjectURL(url), 30000);
-      setToast({ type: 'success', message: `Downloaded ${targetReports.length} reports in one ZIP.` });
-    } catch (downloadError) {
-      setToast({ type: 'error', message: downloadError.message || 'Failed to create ZIP download.' });
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+      setToast({ type: 'success', message: `Downloaded ${targetReports.length} reports in ZIP archive.` });
+    } catch (zipError) {
+      setToast({ type: 'error', message: zipError.message || 'Failed to create ZIP.' });
     } finally {
       setDownloadBusy(false);
     }
@@ -210,42 +196,29 @@ export default function ReportsPage() {
     const reportsToDelete = [...deleteRequest.reports].sort((a, b) => {
       const aDate = new Date(a.created_at).getTime();
       const bDate = new Date(b.created_at).getTime();
-
       if (aDate !== bDate) return bDate - aDate;
       return Number(b.id) - Number(a.id);
     });
 
     try {
       let rolledBackCount = 0;
-
       for (const report of reportsToDelete) {
         const result = await deleteReport(report.id, { rollbackCounters });
         if (result.countersRolledBack) rolledBackCount += 1;
       }
 
       const deletedCount = reportsToDelete.length;
-      const rollbackNote = rollbackCounters
-        ? ` ${rolledBackCount} machine counter${rolledBackCount === 1 ? '' : 's'} rolled back.`
-        : '';
-      const skippedNote = rollbackCounters && rolledBackCount < deletedCount
-        ? ' Some reports were not eligible for rollback because newer runs remain.'
-        : '';
-
-      setToast({
-        type: 'success',
-        message: `${deletedCount} report${deletedCount === 1 ? '' : 's'} deleted.${rollbackNote}${skippedNote}`,
-      });
+      const rollbackNote = rollbackCounters ? ` (${rolledBackCount} counters rolled back)` : '';
+      setToast({ type: 'success', message: `${deletedCount} reports deleted${rollbackNote}.` });
       setDeleteRequest(null);
       await loadReports();
     } catch (deleteError) {
-      setError(deleteError.message || 'Failed to delete report');
       setToast({ type: 'error', message: deleteError.message || 'Failed to delete report.' });
     }
   }
 
   async function handleRenameReport(event) {
     event.preventDefault();
-
     if (!renamingReport || !renameValue.trim()) return;
 
     try {
@@ -255,7 +228,6 @@ export default function ReportsPage() {
       setRenameValue('');
       await loadReports();
     } catch (renameError) {
-      setError(renameError.message || 'Failed to rename report');
       setToast({ type: 'error', message: renameError.message || 'Failed to rename report.' });
     }
   }
@@ -265,108 +237,215 @@ export default function ReportsPage() {
       activePath="/eqp/reports"
       eyebrow="EQP Module"
       title="PDF Reports Archive"
-      description="Generated maintenance PDFs, report numbers, machine coverage, and archive actions."
-      actions={<Button type="button" variant="secondary" onClick={loadReports}>Refresh</Button>}
+      description="Permanent archive of certified preventive maintenance PDF reports with sequential indexing and batch export."
+      actions={
+        <Button type="button" variant="secondary" onClick={loadReports}>
+          <svg className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+          </svg>
+          Refresh Archive
+        </Button>
+      }
     >
-      <div className="grid gap-6">
+      <div className="space-y-6">
+        {/* KPI Metrics */}
+        <section className="ds-kpi-grid">
+          <article className="ds-kpi-card">
+            <div className="ds-icon-tile">
+              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+            </div>
+            <div className="ds-kpi-content">
+              <div className="ds-kpi-head">
+                <p className="ds-kpi-label">Archived Reports</p>
+                <Badge tone="preserved">Preserved</Badge>
+              </div>
+              <p className="ds-kpi-main">{archiveStats.total}</p>
+              <p className="ds-kpi-descriptor">PDF Documents</p>
+            </div>
+          </article>
 
-        <div className="ds-kpi-grid">
-          <ArchiveMetric label="Reports" value={archiveStats.total} unit="Archived PDFs" detail="Generated files" code="TR" status="Archived" tone="archived" />
-          <ArchiveMetric label="Machines" value={archiveStats.machines} unit="Covered assets" detail="Unique machine scope" code="MC" status="Active" tone="active" accent />
-          <ArchiveMetric label="Latest" value={archiveStats.lastReport} unit="Most recent" detail="Archive activity" code="LR" status="Live" tone="live" compact />
-        </div>
+          <article className="ds-kpi-card">
+            <div className="ds-icon-tile ds-icon-tile-accent">
+              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+              </svg>
+            </div>
+            <div className="ds-kpi-content">
+              <div className="ds-kpi-head">
+                <p className="ds-kpi-label">Covered Machines</p>
+                <Badge tone="active">Active</Badge>
+              </div>
+              <p className="ds-kpi-main">{archiveStats.machines}</p>
+              <p className="ds-kpi-descriptor">Fleet Units</p>
+            </div>
+          </article>
+
+          <article className="ds-kpi-card">
+            <div className="ds-icon-tile">
+              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+            </div>
+            <div className="ds-kpi-content">
+              <div className="ds-kpi-head">
+                <p className="ds-kpi-label">Latest Run</p>
+                <Badge tone="live">Live</Badge>
+              </div>
+              <p className="ds-kpi-main ds-kpi-main-compact">{archiveStats.lastReport}</p>
+              <p className="ds-kpi-descriptor">Recent Activity</p>
+            </div>
+          </article>
+        </section>
 
         {error && (
-          <p className="ds-alert ds-alert-error">
-            {error}
-          </p>
+          <div className="ds-alert ds-alert-error">
+            <span>{error}</span>
+          </div>
         )}
 
+        {/* Reports Archive Card */}
         {loading ? (
-          <Card className="p-6">
-            <p className="text-sm font-black text-[var(--color-muted)]">Loading archive...</p>
+          <Card className="p-8">
+            <div className="space-y-3">
+              <div className="h-6 w-48 animate-pulse rounded bg-slate-200" />
+              <div className="h-12 w-full animate-pulse rounded bg-slate-100" />
+              <div className="h-12 w-full animate-pulse rounded bg-slate-100" />
+            </div>
           </Card>
         ) : reports.length === 0 ? (
-          <EmptyState title="No reports yet" description="Generated reports will appear here." />
+          <Card className="p-8">
+            <EmptyState title="No PDF reports in archive" description="Generate reports from the Report Builder to see them here." />
+          </Card>
         ) : (
           <Card className="overflow-hidden">
-            <div className="border-b border-[var(--color-border)] p-5">
+            <div className="border-b border-slate-200 p-5 bg-slate-50/60">
               <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-                <input
-                  type="text"
-                  placeholder="Search reports, machines, or report numbers"
-                  value={searchTerm}
-                  onChange={(event) => setSearchTerm(event.target.value)}
-                  className="ds-input w-full lg:max-w-md"
-                />
+                <div className="relative flex-1 max-w-md">
+                  <span className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-400">
+                    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                  </span>
+                  <input
+                    type="text"
+                    placeholder="Search by file name, machine, or report no..."
+                    value={searchTerm}
+                    onChange={(event) => setSearchTerm(event.target.value)}
+                    className="ds-input pl-9"
+                  />
+                </div>
+
                 <div className="flex flex-wrap items-center gap-2">
-                  <Badge tone="neutral">{filteredReports.length} visible</Badge>
-                  {selectedReportIds.length > 0 && <Badge tone="yellow">{selectedReportIds.length} selected</Badge>}
-                  <Button variant="ghost" onClick={() => setSearchTerm('')}>Clear Search</Button>
-                  <Button variant="secondary" onClick={() => downloadReports(selectedReports.length ? selectedReports : filteredReports)} disabled={filteredReports.length === 0 || downloadBusy}>
-                    {downloadBusy ? 'Preparing ZIP...' : `Download ${selectedReports.length ? 'Selected' : 'All Visible'}`}
+                  <Badge tone="neutral">{filteredReports.length} Visible</Badge>
+                  {selectedReportIds.length > 0 && (
+                    <Badge tone="yellow">{selectedReportIds.length} Selected</Badge>
+                  )}
+
+                  <Button
+                    variant="secondary"
+                    onClick={() => downloadReports(selectedReports.length ? selectedReports : filteredReports)}
+                    disabled={filteredReports.length === 0 || downloadBusy}
+                  >
+                    <svg className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                    </svg>
+                    {downloadBusy ? 'Preparing ZIP...' : `Download ZIP (${selectedReports.length || filteredReports.length})`}
                   </Button>
-                  <Button variant="danger" onClick={() => openDeleteRequest(selectedReports)} disabled={selectedReports.length === 0}>
-                    Delete Selected
-                  </Button>
+
+                  {selectedReports.length > 0 && (
+                    <Button variant="danger" onClick={() => openDeleteRequest(selectedReports)}>
+                      Delete Selected
+                    </Button>
+                  )}
                 </div>
               </div>
             </div>
-            <div className="overflow-x-auto">
-              <table className="ds-table min-w-[960px]">
+
+            <div className="ds-table-wrap">
+              <table className="ds-table">
                 <thead>
                   <tr>
-                    <th className="px-5 py-4 text-left">
-                      <input type="checkbox" checked={allVisibleSelected} onChange={toggleVisibleSelection} aria-label="Select all visible reports" />
+                    <th className="w-10">
+                      <input
+                        type="checkbox"
+                        checked={allVisibleSelected}
+                        onChange={toggleVisibleSelection}
+                        className="rounded accent-amber-500"
+                        aria-label="Select all visible reports"
+                      />
                     </th>
-                    <SortableHeader label="Report" column="file_name" sortConfig={sortConfig} onSort={changeSort} />
-                    <SortableHeader label="Machine" column="machine_number" sortConfig={sortConfig} onSort={changeSort} />
-                    <SortableHeader label="Service" column="service_type" sortConfig={sortConfig} onSort={changeSort} />
-                    <SortableHeader label="Created" column="created_at" sortConfig={sortConfig} onSort={changeSort} />
-                    <th className="px-5 py-4 text-left">Actions</th>
+                    <SortableHeader label="Report Document" column="file_name" sortConfig={sortConfig} onSort={changeSort} />
+                    <SortableHeader label="Machine Asset" column="machine_number" sortConfig={sortConfig} onSort={changeSort} />
+                    <SortableHeader label="Service Code" column="service_type" sortConfig={sortConfig} onSort={changeSort} />
+                    <SortableHeader label="Date Generated" column="created_at" sortConfig={sortConfig} onSort={changeSort} />
+                    <th className="text-right">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredReports.map((report) => (
-                    <tr key={report.id} className="border-t border-[var(--color-border)] transition hover:bg-[var(--color-brand-soft)]">
-                      <td className="px-5 py-4">
-                        <input
-                          type="checkbox"
-                          checked={selectedReportIds.includes(String(report.id))}
-                          onChange={() => toggleReportSelection(report.id)}
-                          aria-label={`Select ${report.file_name}`}
-                        />
-                      </td>
-                      <td className="px-5 py-4">
-                        <div className="font-semibold text-[var(--color-ink)]">{report.file_name}</div>
-                        {report.report_no && <div className="mt-1 font-mono text-xs text-[var(--color-muted)]">{report.report_no}</div>}
-                      </td>
-                      <td className="px-5 py-4 text-[var(--color-ink-soft)]">
-                        {report.machine_type} {report.machine_number}
-                      </td>
-                      <td className="px-5 py-4">
-                        <Badge tone="yellow">{report.service_type || 'Report'}</Badge>
-                      </td>
-                      <td className="px-5 py-4 text-[var(--color-ink-soft)]">
-                        {new Date(report.created_at).toLocaleString()}
-                      </td>
-                      <td className="flex gap-2 px-5 py-4">
-                        <button
-                          type="button"
-                          onClick={() => downloadSingleReport(report)}
-                          className="ds-button ds-button-primary"
-                        >
-                          Download
-                        </button>
-                        <Button variant="secondary" onClick={() => openRename(report)}>
-                          Rename
-                        </Button>
-                        <Button variant="danger" onClick={() => openDeleteRequest([report])}>
-                          Delete
-                        </Button>
-                      </td>
-                    </tr>
-                  ))}
+                  {filteredReports.map((report) => {
+                    const isSelected = selectedReportIds.includes(String(report.id));
+                    return (
+                      <tr key={report.id} className={isSelected ? '!bg-amber-50/60' : ''}>
+                        <td>
+                          <input
+                            type="checkbox"
+                            checked={isSelected}
+                            onChange={() => toggleReportSelection(report.id)}
+                            className="rounded accent-amber-500"
+                            aria-label={`Select ${report.file_name}`}
+                          />
+                        </td>
+                        <td>
+                          <p className="font-bold text-slate-900 leading-snug">{report.file_name}</p>
+                          {report.report_no && (
+                            <span className="font-mono text-xs text-amber-700 bg-amber-50 px-1.5 py-0.2 rounded border border-amber-200/60 inline-block mt-0.5">
+                              {report.report_no}
+                            </span>
+                          )}
+                        </td>
+                        <td>
+                          <span className="font-semibold text-slate-800">{report.machine_type}</span>{' '}
+                          <span className="text-slate-600 font-medium">#{report.machine_number}</span>
+                        </td>
+                        <td>
+                          <Badge tone="yellow">{report.service_type || 'EQP'}</Badge>
+                        </td>
+                        <td className="text-xs text-slate-500">
+                          {new Date(report.created_at).toLocaleString()}
+                        </td>
+                        <td className="text-right">
+                          <div className="inline-flex items-center gap-1.5">
+                            <Button
+                              type="button"
+                              variant="secondary"
+                              size="sm"
+                              onClick={() => downloadSingleReport(report)}
+                            >
+                              PDF
+                            </Button>
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => openRename(report)}
+                            >
+                              Rename
+                            </Button>
+                            <Button
+                              type="button"
+                              variant="danger"
+                              size="sm"
+                              onClick={() => openDeleteRequest([report])}
+                            >
+                              Delete
+                            </Button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
@@ -374,38 +453,57 @@ export default function ReportsPage() {
         )}
       </div>
 
+      {/* Delete Confirmation Modal */}
       {deleteRequest && (
-        <div className="fixed inset-0 z-50 grid place-items-center bg-[rgba(7,27,51,0.62)] p-4 backdrop-blur-sm">
-          <section className="ds-card w-full max-w-md p-6 text-[var(--color-ink)] shadow-[var(--shadow-overlay)]">
-            <h2 className="text-xl font-black">Delete report{deleteRequest.reports.length === 1 ? '' : 's'}?</h2>
-            <p className="mt-2 text-sm font-semibold leading-6 text-[var(--color-muted)]">
-              This will remove {deleteRequest.reports.length === 1 ? `"${deleteRequest.reports[0].file_name}"` : `${deleteRequest.reports.length} selected reports`} from the archive and storage bucket.
-            </p>
-            <div className="mt-6 flex flex-wrap justify-end gap-3">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4 backdrop-blur-sm">
+          <section className="ds-card w-full max-w-md overflow-hidden bg-white shadow-2xl animate-[ds-toast-in_180ms_ease]">
+            <div className="p-6">
+              <div className="flex items-start gap-3.5">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-red-100 text-red-600">
+                  <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
+                </div>
+                <div>
+                  <h2 className="text-base font-bold text-slate-900">
+                    Delete {deleteRequest.reports.length === 1 ? 'Report' : `${deleteRequest.reports.length} Reports`}?
+                  </h2>
+                  <p className="mt-1 text-xs text-slate-500 leading-relaxed">
+                    This will permanently remove the PDF document from the Supabase bucket and database records.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex flex-wrap items-center justify-end gap-2 border-t border-slate-200 bg-slate-50 px-6 py-3.5">
               <Button variant="secondary" onClick={() => setDeleteRequest(null)}>Cancel</Button>
               <Button variant="danger" onClick={() => handleDeleteReports({ rollbackCounters: false })}>
-                Delete Only
+                Delete Report Only
               </Button>
               <Button variant="danger" onClick={() => handleDeleteReports({ rollbackCounters: true })}>
-                Delete and Roll Back
+                Delete & Rollback SMR
               </Button>
             </div>
           </section>
         </div>
       )}
 
+      {/* Rename Modal */}
       {renamingReport && (
-        <div className="fixed inset-0 z-50 grid place-items-center bg-[rgba(7,27,51,0.62)] p-4 backdrop-blur-sm">
-          <form onSubmit={handleRenameReport} className="ds-card w-full max-w-md p-6 shadow-[var(--shadow-overlay)]">
-            <h2 className="text-xl font-black text-[var(--color-ink)]">Rename Report</h2>
-            <p className="mt-2 text-sm font-semibold text-[var(--color-muted)]">Use a clear operational file name for this report.</p>
-            <input
-              value={renameValue}
-              onChange={(event) => setRenameValue(event.target.value)}
-              className="ds-input mt-5 w-full"
-              autoFocus
-            />
-            <div className="mt-6 flex justify-end gap-3">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4 backdrop-blur-sm">
+          <form onSubmit={handleRenameReport} className="ds-card w-full max-w-md overflow-hidden bg-white shadow-2xl animate-[ds-toast-in_180ms_ease]">
+            <div className="p-6">
+              <h2 className="text-base font-bold text-slate-900">Rename Report Document</h2>
+              <p className="mt-1 text-xs text-slate-500">Provide an updated file name for this maintenance report.</p>
+              <input
+                value={renameValue}
+                onChange={(event) => setRenameValue(event.target.value)}
+                className="ds-input mt-4"
+                autoFocus
+                required
+              />
+            </div>
+            <div className="flex items-center justify-end gap-3 border-t border-slate-200 bg-slate-50 px-6 py-3.5">
               <Button type="button" variant="secondary" onClick={() => setRenamingReport(null)}>Cancel</Button>
               <Button type="submit">Save Name</Button>
             </div>
@@ -418,37 +516,23 @@ export default function ReportsPage() {
   );
 }
 
-function ArchiveMetric({ label, value, unit, detail, code, status, tone = 'neutral', compact = false, accent = false }) {
-  return (
-    <article className="ds-kpi-card">
-      <div className={`ds-icon-tile ${accent ? 'ds-icon-tile-accent' : ''}`}>{code}</div>
-      <div className="ds-kpi-content">
-        <div className="ds-kpi-head">
-          <p className="ds-kpi-label">{label}</p>
-          <Badge tone={tone}>{status}</Badge>
-        </div>
-        <div>
-          <p className={`ds-kpi-main ${compact ? 'ds-kpi-main-compact' : ''}`}>{value}</p>
-          <p className="ds-kpi-descriptor">{unit}</p>
-          <p className="ds-kpi-secondary">{detail}</p>
-        </div>
-      </div>
-    </article>
-  );
-}
-
 function SortableHeader({ label, column, sortConfig, onSort }) {
   const active = sortConfig.key === column;
-  const indicator = active ? (sortConfig.direction === 'asc' ? 'ASC' : 'DESC') : '';
+  const isAsc = sortConfig.direction === 'asc';
 
   return (
-    <th className="px-5 py-4 text-left">
+    <th>
       <button
         type="button"
         onClick={() => onSort(column)}
         className="ds-sort-button"
       >
-        {label} {indicator}
+        <span>{label}</span>
+        {active ? (
+          <span className="text-amber-600 font-bold">{isAsc ? '↑' : '↓'}</span>
+        ) : (
+          <span className="text-slate-300">↕</span>
+        )}
       </button>
     </th>
   );

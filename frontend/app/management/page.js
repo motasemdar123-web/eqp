@@ -10,11 +10,40 @@ import Toast from '../../components/ui/Toast';
 import { getManagementDashboard } from '../../lib/api';
 
 const modules = [
-  { title: 'Technicians Management', href: '/management/technicians', status: 'Live', tone: 'live', code: 'TM', description: 'Technician records, shifts, regions, skills, and dispatch availability.' },
-  { title: 'Scheduling', href: '/management/scheduling', status: 'Live', tone: 'live', code: 'SC', description: 'Daily roster control, work windows, task groups, and technician assignment.' },
-  { title: 'Engineering Workspace', href: '/workspace', status: 'Live', tone: 'live', code: 'WS', description: 'Creative canvas and day planner for engineering productivity.' },
-  { title: 'EQP Module', href: '/eqp', status: 'Preserved / Live', tone: 'preserved', code: 'EQ', description: 'Reports, machines, PDF archive, and report builder under one EQP workspace.' },
+  { title: 'Technicians Management', href: '/management/technicians', status: 'Live', tone: 'live', icon: 'technicians', description: 'Technician records, shifts, regions, skills, and dispatch availability.' },
+  { title: 'Scheduling', href: '/management/scheduling', status: 'Live', tone: 'live', icon: 'scheduling', description: 'Daily roster control, work windows, task groups, and technician assignment.' },
+  { title: 'Engineering Workspace', href: '/workspace', status: 'Live', tone: 'live', icon: 'workspace', description: 'Creative canvas and day planner for engineering productivity.' },
+  { title: 'EQP Module', href: '/eqp', status: 'Preserved / Live', tone: 'preserved', icon: 'eqp', description: 'Reports, machines, PDF archive, and report builder under one EQP workspace.' },
 ];
+
+function ModuleIcon({ type }) {
+  if (type === 'technicians') {
+    return (
+      <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+      </svg>
+    );
+  }
+  if (type === 'scheduling') {
+    return (
+      <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+      </svg>
+    );
+  }
+  if (type === 'workspace') {
+    return (
+      <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+      </svg>
+    );
+  }
+  return (
+    <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+    </svg>
+  );
+}
 
 function formatDate(value, fallback = 'No data') {
   if (!value) return fallback;
@@ -35,7 +64,7 @@ function statusTone(status) {
   if (normalized.includes('complete')) return 'completed';
   if (normalized.includes('cancel') || normalized.includes('critical')) return 'critical';
   if (normalized.includes('planned') || normalized.includes('pending')) return 'pending';
-  if (normalized.includes('confirm') || normalized.includes('active')) return 'active';
+  if (normalized.includes('confirm') || normalized.includes('active') || normalized.includes('live')) return 'active';
   return 'neutral';
 }
 
@@ -69,51 +98,51 @@ export default function ManagementDashboardPage() {
     const data = dashboard?.kpis || {};
     return [
       {
-        label: 'Modules',
+        label: 'Workspaces',
         metric: dashboard?.modules?.length || modules.length,
-        unit: 'Available modules',
-        secondary: `${modules.length} navigation workspaces`,
+        unit: 'Active Modules',
+        secondary: `${modules.length} operational zones`,
         status: 'Ready',
         tone: 'ready',
-        code: 'AM',
+        icon: 'modules',
       },
       {
         label: 'Technicians',
         metric: data.technicians || 0,
-        unit: 'Registered',
+        unit: 'Registered Staff',
         secondary: `${data.availableTechnicians || 0} available today`,
         status: 'Live',
         tone: 'live',
-        code: 'TM',
+        icon: 'technicians',
         accent: true,
       },
       {
         label: 'Scheduling',
         metric: data.dailyTasks || 0,
-        unit: 'Tasks today',
-        secondary: `${data.scheduledTechnicians || 0} technicians assigned`,
+        unit: 'Tasks Scheduled',
+        secondary: `${data.scheduledTechnicians || 0} assigned personnel`,
         status: 'Active',
         tone: 'active',
-        code: 'SC',
+        icon: 'scheduling',
       },
       {
         label: 'EQP Reports',
         metric: data.reports || 0,
-        unit: 'Archived reports',
-        secondary: `${data.reportsThisWeek || 0} generated this week`,
-        status: 'Preserved / Live',
+        unit: 'Archived Reports',
+        secondary: `${data.reportsThisWeek || 0} created this week`,
+        status: 'Preserved',
         tone: 'preserved',
-        code: 'EQ',
+        icon: 'reports',
         accent: true,
       },
       {
         label: 'Machines',
         metric: data.machines || 0,
-        unit: 'Registered assets',
-        secondary: `${data.machineTypes || 0} machine types`,
+        unit: 'Registered Assets',
+        secondary: `${data.machineTypes || 0} fleet models`,
         status: 'Active',
         tone: 'active',
-        code: 'MA',
+        icon: 'machines',
       },
     ];
   }, [dashboard]);
@@ -128,55 +157,76 @@ export default function ManagementDashboardPage() {
   return (
     <SystemShell
       activePath="/management"
-      eyebrow="DAR AL HAI"
-      title="Dashboard"
-      description="A unified maintenance operations view for technician administration, scheduling, and EQP reporting."
-      actions={<Link href="/management/scheduling" className="ds-button ds-button-primary">+ Add schedule</Link>}
+      eyebrow="Dar Al Hai Operations"
+      title="Management Dashboard"
+      description="Unified operations command for field technicians, maintenance schedules, machine assets, and EQP reporting."
+      actions={
+        <Link href="/management/scheduling" className="ds-button ds-button-primary shadow-sm">
+          <svg className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+          </svg>
+          Add Schedule
+        </Link>
+      }
     >
-      <section className="ds-reference-dashboard">
-        <div className="ds-kpi-grid">
-          {loading ? Array.from({ length: 5 }, (_, index) => <Skeleton key={index} className="h-36" />) : kpis.map((kpi) => (
-            <article key={kpi.label} className="ds-kpi-card">
-              <div className={`ds-icon-tile ${kpi.accent ? 'ds-icon-tile-accent' : ''}`}>{kpi.code}</div>
-              <div className="ds-kpi-content">
-                <div className="ds-kpi-head">
-                  <p className="ds-kpi-label">{kpi.label}</p>
-                  <Badge tone={kpi.tone}>{kpi.status}</Badge>
-                </div>
-                <div>
-                  <p className="ds-kpi-main">{kpi.metric}</p>
-                  <p className="ds-kpi-descriptor">{kpi.unit}</p>
-                  <p className="ds-kpi-secondary">{kpi.secondary}</p>
-                </div>
-              </div>
-            </article>
-          ))}
-        </div>
+      <div className="space-y-6">
+        {/* KPI Metrics Grid */}
+        <section className="ds-kpi-grid">
+          {loading
+            ? Array.from({ length: 5 }, (_, index) => <Skeleton key={index} className="h-32 rounded-xl" />)
+            : kpis.map((kpi) => (
+                <article key={kpi.label} className="ds-kpi-card group">
+                  <div className={`ds-icon-tile ${kpi.accent ? 'ds-icon-tile-accent' : ''}`}>
+                    <ModuleIcon type={kpi.icon} />
+                  </div>
+                  <div className="ds-kpi-content">
+                    <div className="ds-kpi-head">
+                      <p className="ds-kpi-label">{kpi.label}</p>
+                      <Badge tone={kpi.tone}>{kpi.status}</Badge>
+                    </div>
+                    <div>
+                      <p className="ds-kpi-main">{kpi.metric}</p>
+                      <p className="ds-kpi-descriptor">{kpi.unit}</p>
+                      <p className="ds-kpi-secondary mt-0.5">{kpi.secondary}</p>
+                    </div>
+                  </div>
+                </article>
+              ))}
+        </section>
 
-        <div className="ds-reference-grid">
-          <Card className="ds-reference-chart-card">
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        {/* Analytics Chart & Governance Section */}
+        <section className="ds-reference-grid">
+          <Card className="p-6">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between pb-4 border-b border-slate-100">
               <div>
                 <h2 className="ds-panel-title">Maintenance Operations</h2>
-                <p className="mt-1 text-sm font-bold text-[var(--color-muted)]">{totalOperations} real operations tracked this week</p>
+                <p className="mt-1 text-xs text-slate-500">{totalOperations} operations tracked in the current cycle</p>
               </div>
               <div className="ds-segment-control">
-                <span className="ds-segment-active">Day</span>
-                <span>Month</span>
+                <span className="ds-segment-active">Weekly</span>
+                <span>Monthly</span>
               </div>
             </div>
 
             <div className="ds-chart-legend">
-              <span><i className="bg-[var(--color-brand)]" /> Completed</span>
-              <span><i className="bg-[var(--color-canvas-strong)]" /> Planned</span>
+              <span><i className="bg-slate-900" /> Completed Tasks</span>
+              <span><i className="bg-amber-500" /> Planned Services</span>
             </div>
 
             <div className="ds-bar-chart" aria-label="Maintenance operations chart">
               {chartBars.map((item) => (
                 <div key={item.label} className="ds-bar-column">
                   <div className="ds-bar-stack">
-                    <span className="ds-bar ds-bar-secondary" style={{ height: `${Math.max(4, ((item.reports || 0) / maxChartValue) * 100)}%` }} />
-                    <span className="ds-bar ds-bar-primary" style={{ height: `${Math.max(4, ((item.scheduled || 0) / maxChartValue) * 100)}%` }} />
+                    <span
+                      className="ds-bar ds-bar-secondary"
+                      style={{ height: `${Math.max(6, ((item.reports || 0) / maxChartValue) * 100)}%` }}
+                      title={`Reports: ${item.reports || 0}`}
+                    />
+                    <span
+                      className="ds-bar ds-bar-primary"
+                      style={{ height: `${Math.max(6, ((item.scheduled || 0) / maxChartValue) * 100)}%` }}
+                      title={`Scheduled: ${item.scheduled || 0}`}
+                    />
                   </div>
                   <span className="ds-bar-label">{item.label}</span>
                 </div>
@@ -184,85 +234,102 @@ export default function ManagementDashboardPage() {
             </div>
           </Card>
 
+          {/* Side Widgets */}
           <div className="ds-widget-stack">
             <Card className="ds-side-widget">
-              <div className="flex items-center justify-between">
-                <h2 className="ds-panel-title">Governance</h2>
-                <Badge tone="info">Live</Badge>
+              <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+                <h2 className="ds-panel-title">Readiness Governance</h2>
+                <Badge tone="info">Monitored</Badge>
               </div>
-              <div className="mt-4 grid gap-2">
+              <div className="mt-4 grid gap-3">
                 {governanceItems.map((item) => (
-                  <div key={item.title} className="ds-compact-row">
-                    <span>{item.title}</span>
-                    <strong>{item.value}%</strong>
+                  <div key={item.title} className="space-y-1.5">
+                    <div className="flex justify-between text-xs font-semibold text-slate-700">
+                      <span>{item.title}</span>
+                      <span>{item.value}%</span>
+                    </div>
+                    <div className="h-2 w-full overflow-hidden rounded-full bg-slate-100">
+                      <div
+                        className="h-full rounded-full bg-amber-500 transition-all duration-500"
+                        style={{ width: `${Math.min(100, Math.max(0, item.value || 0))}%` }}
+                      />
+                    </div>
                   </div>
                 ))}
-                {!loading && governanceItems.length === 0 && <span className="text-sm font-bold text-[var(--color-muted)]">No readiness metrics yet.</span>}
+                {!loading && governanceItems.length === 0 && (
+                  <span className="text-xs text-slate-500 py-2">No readiness metrics currently recorded.</span>
+                )}
               </div>
             </Card>
 
             <Card className="ds-side-widget">
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between pb-3 border-b border-slate-100">
                 <h2 className="ds-panel-title">Operational Feed</h2>
-                <span className="ds-widget-menu">...</span>
+                <Badge tone="neutral">Live</Badge>
               </div>
-              <div className="mt-4 grid gap-2">
-                {activity.map((item) => (
-                  <Link key={`${item.action}-${item.time}`} href={item.href || '/management'} className="ds-feed-row">
-                    <span className="ds-feed-icon">{String(item.status || 'A').slice(0, 1)}</span>
-                    <span className="min-w-0">
-                      <span className="block truncate text-sm font-black text-[var(--color-ink)]">{item.action}</span>
-                      <span className="block text-xs font-bold text-[var(--color-muted)]">{formatTime(item.time)}</span>
+              <div className="mt-3 grid gap-1.5">
+                {activity.slice(0, 4).map((item, idx) => (
+                  <Link key={`${item.action}-${idx}`} href={item.href || '/management'} className="ds-feed-row">
+                    <span className="ds-feed-icon">
+                      <svg className="h-3.5 w-3.5 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                      </svg>
+                    </span>
+                    <span className="min-w-0 flex-1">
+                      <span className="block truncate text-xs font-semibold text-slate-900">{item.action}</span>
+                      <span className="block text-[0.6875rem] text-slate-400">{formatTime(item.time)}</span>
                     </span>
                     <Badge tone={statusTone(item.status)}>{item.status}</Badge>
                   </Link>
                 ))}
-                {!loading && activity.length === 0 && <span className="text-sm font-bold text-[var(--color-muted)]">No recent platform activity.</span>}
+                {!loading && activity.length === 0 && (
+                  <span className="text-xs text-slate-500 py-2">No recent platform activity.</span>
+                )}
               </div>
             </Card>
           </div>
-        </div>
+        </section>
 
+        {/* Modules Overview */}
         <Card className="ds-project-table-card">
-          <div className="flex flex-col gap-3 border-b border-[var(--color-border)] p-5 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-col gap-2 border-b border-slate-200 p-5 sm:flex-row sm:items-center sm:justify-between bg-slate-50/60">
             <div>
-              <h2 className="ds-panel-title">Modules</h2>
-              <p className="mt-1 text-sm font-bold text-[var(--color-muted)]">Dar Al Hai workspaces and current readiness</p>
+              <h2 className="ds-panel-title">Operational Workspaces</h2>
+              <p className="mt-0.5 text-xs text-slate-500">Core Dar Al Hai modules and live subsystem states</p>
             </div>
-            <div className="ds-segment-control">
-              <span className="ds-segment-active">Day</span>
-              <span>Month</span>
-            </div>
+            <Badge tone="ready">{modules.length} Modules Online</Badge>
           </div>
           <div className="ds-table-wrap">
-            <table className="ds-table min-w-[860px]">
+            <table className="ds-table">
               <thead>
                 <tr>
-                  <th className="px-5 py-4 text-left">Module</th>
-                  <th className="px-5 py-4 text-left">Scope</th>
-                  <th className="px-5 py-4 text-left">Status</th>
-                  <th className="px-5 py-4 text-left">Owner</th>
-                  <th className="px-5 py-4 text-right">Action</th>
+                  <th>Workspace</th>
+                  <th>Scope & Description</th>
+                  <th>Status</th>
+                  <th>Ownership</th>
+                  <th className="text-right">Action</th>
                 </tr>
               </thead>
               <tbody>
-                {modules.map((module, index) => (
-                  <tr key={module.title} className="border-t border-[var(--color-border)]">
-                    <td className="px-5 py-4">
+                {modules.map((module) => (
+                  <tr key={module.title}>
+                    <td>
                       <div className="flex items-center gap-3">
-                        <span className="ds-mini-module-icon">{module.code}</span>
-                        <span>
-                          <span className="block font-black text-[var(--color-ink)]">{module.title}</span>
-                          <span className="mt-1 block text-xs font-bold text-[var(--color-muted)]">#{String(index + 41).padStart(3, '0')}</span>
+                        <span className="ds-mini-module-icon">
+                          <ModuleIcon type={module.icon} />
                         </span>
+                        <div>
+                          <span className="block font-semibold text-slate-900">{module.title}</span>
+                          <span className="block text-xs text-slate-500">Dar Al Hai Subsystem</span>
+                        </div>
                       </div>
                     </td>
-                    <td className="px-5 py-4">{module.description}</td>
-                    <td className="px-5 py-4"><Badge tone={module.tone}>{module.status}</Badge></td>
-                    <td className="px-5 py-4">Operations Team</td>
-                    <td className="px-5 py-4 text-right">
+                    <td className="max-w-md text-xs text-slate-600">{module.description}</td>
+                    <td><Badge tone={module.tone}>{module.status}</Badge></td>
+                    <td className="text-xs font-medium text-slate-700">Operations Team</td>
+                    <td className="text-right">
                       <Link href={module.href} className="ds-button ds-button-secondary ds-button-small">
-                        Open
+                        Open Workspace
                       </Link>
                     </td>
                   </tr>
@@ -272,43 +339,47 @@ export default function ManagementDashboardPage() {
           </div>
         </Card>
 
+        {/* Upcoming Maintenance Table */}
         <Card className="ds-project-table-card">
-          <div className="flex items-center justify-between border-b border-[var(--color-border)] p-5">
+          <div className="flex items-center justify-between border-b border-slate-200 p-5 bg-slate-50/60">
             <div>
-              <h2 className="ds-panel-title">Upcoming Maintenance</h2>
-              <p className="mt-1 text-sm font-bold text-[var(--color-muted)]">Planned service windows and readiness status.</p>
+              <h2 className="ds-panel-title">Upcoming Maintenance Windows</h2>
+              <p className="mt-0.5 text-xs text-slate-500">Planned field service windows and dispatch readiness</p>
             </div>
-            <Badge tone="pending">{upcomingMaintenance.length} Items</Badge>
+            <Badge tone="pending">{upcomingMaintenance.length} Scheduled</Badge>
           </div>
           <div className="ds-table-wrap">
-            <table className="ds-table min-w-[720px]">
-                <thead>
-                  <tr>
-                    <th className="px-5 py-4 text-left">Machine</th>
-                    <th className="px-5 py-4 text-left">Assigned Technician</th>
-                    <th className="px-5 py-4 text-left">Due Date</th>
-                    <th className="px-5 py-4 text-left">Status</th>
+            <table className="ds-table">
+              <thead>
+                <tr>
+                  <th>Machine Asset</th>
+                  <th>Assigned Technician</th>
+                  <th>Due Date</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {upcomingMaintenance.map((item) => (
+                  <tr key={item.id || `${item.machine}-${item.dueDate}`}>
+                    <td className="font-semibold text-slate-900">{item.machine}</td>
+                    <td className="text-slate-600">{item.technician || 'Unassigned'}</td>
+                    <td className="text-slate-600">{formatDate(item.dueDate)}</td>
+                    <td><Badge tone={statusTone(item.status)}>{item.status}</Badge></td>
                   </tr>
-                </thead>
-                <tbody>
-                  {upcomingMaintenance.map((item) => (
-                    <tr key={item.id || `${item.machine}-${item.dueDate}`} className="border-t border-[var(--color-border)]">
-                      <td className="px-5 py-4 font-black text-[var(--color-ink)]">{item.machine}</td>
-                      <td className="px-5 py-4">{item.technician}</td>
-                      <td className="px-5 py-4">{formatDate(item.dueDate)}</td>
-                      <td className="px-5 py-4"><Badge tone={statusTone(item.status)}>{item.status}</Badge></td>
-                    </tr>
-                  ))}
-                  {!loading && upcomingMaintenance.length === 0 && (
-                    <tr>
-                      <td className="px-5 py-6 text-sm font-bold text-[var(--color-muted)]" colSpan={4}>No upcoming scheduled maintenance tasks.</td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
+                ))}
+                {!loading && upcomingMaintenance.length === 0 && (
+                  <tr>
+                    <td className="py-8 text-center text-xs text-slate-500" colSpan={4}>
+                      No upcoming maintenance tasks currently scheduled.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
           </div>
         </Card>
-      </section>
+      </div>
+
       <Toast message={toast?.message} type={toast?.type} onClose={() => setToast(null)} />
     </SystemShell>
   );

@@ -21,79 +21,47 @@ const supportItems = [
 const iconPaths = {
   dashboard: (
     <>
-      <path d="M4 5.5h6v5H4z" />
-      <path d="M14 5.5h6v3.5h-6z" />
-      <path d="M14 13h6v5.5h-6z" />
-      <path d="M4 14.5h6v4H4z" />
+      <rect x="3" y="3" width="7" height="7" rx="1.5" />
+      <rect x="14" y="3" width="7" height="7" rx="1.5" />
+      <rect x="14" y="14" width="7" height="7" rx="1.5" />
+      <rect x="3" y="14" width="7" height="7" rx="1.5" />
     </>
   ),
   users: (
     <>
-      <path d="M9.5 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z" />
-      <path d="M3.5 20a6 6 0 0 1 12 0" />
-      <path d="M16 11.5a3 3 0 1 0-.5-5.95" />
-      <path d="M17 15.5a5 5 0 0 1 3.5 4.5" />
+      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+      <circle cx="9" cy="7" r="4" />
+      <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+      <path d="M16 3.13a4 4 0 0 1 0 7.75" />
     </>
   ),
   calendar: (
     <>
-      <path d="M6 4v3" />
-      <path d="M18 4v3" />
-      <path d="M4.5 8h15" />
-      <path d="M5 6h14v14H5z" />
-      <path d="M8 12h2" />
-      <path d="M14 12h2" />
-      <path d="M8 16h2" />
+      <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+      <line x1="16" y1="2" x2="16" y2="6" />
+      <line x1="8" y1="2" x2="8" y2="6" />
+      <line x1="3" y1="10" x2="21" y2="10" />
     </>
   ),
   workspace: (
     <>
-      <path d="M5 5h14v14H5z" />
-      <path d="M8 9h4" />
-      <path d="M8 13h8" />
-      <path d="M8 17h5" />
-      <path d="M15.5 7.5l1 1 2-2" />
-    </>
-  ),
-  report: (
-    <>
-      <path d="M7 4.5h7l3 3V20H7z" />
-      <path d="M14 4.5V8h3.5" />
-      <path d="M9.5 12h5" />
-      <path d="M9.5 15h5" />
-      <path d="M9.5 18h3" />
-    </>
-  ),
-  machine: (
-    <>
-      <path d="M4 15h12l2-5h-5l-2 3H8" />
-      <path d="M6 18.5h11" />
-      <path d="M7 18.5a2 2 0 1 0 0-4 2 2 0 0 0 0 4z" />
-      <path d="M16 18.5a2 2 0 1 0 0-4 2 2 0 0 0 0 4z" />
-      <path d="M12 10V6h4" />
-    </>
-  ),
-  archive: (
-    <>
-      <path d="M4 6h16v4H4z" />
-      <path d="M6 10h12v10H6z" />
-      <path d="M9 14h6" />
+      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+      <line x1="8" y1="2" x2="8" y2="6" />
+      <line x1="16" y1="2" x2="16" y2="6" />
+      <line x1="12" y1="11" x2="12" y2="17" />
+      <line x1="9" y1="14" x2="15" y2="14" />
     </>
   ),
   hub: (
     <>
-      <path d="M12 12m-3 0a3 3 0 1 0 6 0 3 3 0 1 0-6 0" />
-      <path d="M12 4v5" />
-      <path d="M12 15v5" />
-      <path d="M4 12h5" />
-      <path d="M15 12h5" />
+      <circle cx="12" cy="12" r="3" />
+      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
     </>
   ),
   mobile: (
     <>
-      <path d="M8 3.5h8v17H8z" />
-      <path d="M11 17.5h2" />
-      <path d="M10 6.5h4" />
+      <rect x="5" y="2" width="14" height="20" rx="2" ry="2" />
+      <line x1="12" y1="18" x2="12.01" y2="18" />
     </>
   ),
 };
@@ -109,15 +77,12 @@ function NavIcon({ name }) {
 function getSessionUser() {
   const platformSession = getStoredPlatformSession();
   if (platformSession?.user) return platformSession.user;
-
   return getStoredUser();
 }
 
 function isActivePath(pathname, href, activePath) {
   const target = activePath || pathname;
-
   if (href === '/management') return target === href;
-
   return target === href || target.startsWith(`${href}/`);
 }
 
@@ -152,6 +117,7 @@ export default function SystemShell({
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -165,14 +131,12 @@ export default function SystemShell({
 
   useEffect(() => {
     if (!requireAuth || !hasHydrated || user) return;
-
     const returnTo = pathname || '/management';
     router.replace(`/?returnTo=${encodeURIComponent(returnTo)}`);
   }, [hasHydrated, pathname, requireAuth, router, user]);
 
   useEffect(() => {
     if (!hasHydrated || !user) return undefined;
-
     let cancelled = false;
 
     async function loadNotifications() {
@@ -197,6 +161,11 @@ export default function SystemShell({
       clearInterval(interval);
     };
   }, [hasHydrated, user]);
+
+  // Close mobile drawer on route changes
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [pathname]);
 
   const roleLabel = useMemo(() => {
     if (userLabel) return userLabel;
@@ -232,7 +201,7 @@ export default function SystemShell({
         setUnreadCount((current) => Math.max(0, current - 1));
       }
     } catch {
-      // Notification read state is non-blocking for navigation.
+      // Non-blocking
     }
 
     if (notification.href) {
@@ -254,8 +223,9 @@ export default function SystemShell({
 
   if (requireAuth && hasHydrated && !user) {
     return (
-      <main className="grid min-h-screen place-items-center bg-[var(--color-canvas)] px-5 text-[var(--color-ink)]">
-        <div className="ds-card px-5 py-4 text-sm font-bold">
+      <main className="grid min-h-screen place-items-center bg-slate-50 px-5 text-slate-900">
+        <div className="ds-card flex items-center gap-3 px-6 py-4 text-sm font-semibold text-slate-700 shadow-md">
+          <span className="h-4 w-4 animate-spin rounded-full border-2 border-amber-500 border-t-transparent" />
           Redirecting to sign in...
         </div>
       </main>
@@ -264,24 +234,45 @@ export default function SystemShell({
 
   return (
     <div className={`ds-shell ds-reference-shell ${sidebarCollapsed ? 'ds-sidebar-collapsed' : ''}`}>
-      <aside className="ds-app-sidebar">
+      {/* Mobile Backdrop */}
+      {mobileMenuOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-slate-900/50 backdrop-blur-sm lg:hidden"
+          onClick={() => setMobileMenuOpen(false)}
+        />
+      )}
+
+      {/* Sidebar */}
+      <aside className={`ds-app-sidebar ${mobileMenuOpen ? '!flex !fixed !left-0 !top-0 !bottom-0 !w-64 z-50 shadow-2xl' : ''}`}>
         <button
           type="button"
-          className="ds-sidebar-toggle"
+          className="ds-sidebar-toggle hidden lg:grid"
           onClick={toggleSidebar}
           aria-label={sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
           title={sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
         >
           <span className="ds-sidebar-chevron" aria-hidden="true" />
         </button>
+
         <div className="ds-sidebar-top">
           <Link href="/management" className="ds-sidebar-brand" aria-label="Dar Al Hai dashboard">
             <span className="ds-sidebar-mark">DH</span>
             <span className="ds-sidebar-brand-text">
-              <span className="block text-lg font-black leading-none text-white">Dar Al Hai</span>
-              <span className="mt-1 block text-[0.64rem] font-black uppercase tracking-[0.18em] text-white/40">Maintenance</span>
+              <span className="block text-sm font-bold leading-none text-white">Dar Al Hai</span>
+              <span className="mt-1 block text-[0.6875rem] font-medium uppercase tracking-wider text-slate-400">Maintenance</span>
             </span>
           </Link>
+          {mobileMenuOpen && (
+            <button
+              type="button"
+              onClick={() => setMobileMenuOpen(false)}
+              className="lg:hidden rounded p-1 text-slate-400 hover:text-white"
+            >
+              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          )}
         </div>
 
         <nav className="ds-sidebar-nav" aria-label="Primary navigation">
@@ -302,7 +293,7 @@ export default function SystemShell({
             );
           })}
 
-          <p className="ds-sidebar-section-label mt-7">Support</p>
+          <p className="ds-sidebar-section-label mt-4">Field Support</p>
           {supportItems.map((item) => {
             const active = isActivePath(pathname, item.href, activePath);
 
@@ -321,20 +312,15 @@ export default function SystemShell({
         </nav>
 
         <div className="ds-sidebar-promo">
-          <p className="text-xs font-black text-[var(--color-accent)]">Service operations</p>
-          <p className="mt-1 text-xs font-bold leading-5 text-white/55">
-            Scheduling, field teams, machine records, and EQP reporting in one system.
+          <p className="text-xs font-bold text-amber-400">Service Operations</p>
+          <p className="mt-1 text-xs text-slate-400 leading-relaxed">
+            Scheduling, field teams, machine records, and EQP reporting.
           </p>
-          <div className="mt-3 grid gap-1.5">
-            <span className="h-1.5 rounded-full bg-[var(--color-accent)]" />
-            <span className="h-1.5 w-10/12 rounded-full bg-[var(--color-accent)]" />
-            <span className="h-1.5 w-7/12 rounded-full bg-white/15" />
-          </div>
         </div>
 
         <div className="ds-sidebar-footer">
           <span className="ds-status-dot" />
-          <span className="ds-footer-label text-xs font-black text-white/55">Live system</span>
+          <span className="ds-footer-label text-xs font-medium text-slate-400">Operations Online</span>
           {user && (
             <button type="button" onClick={logout} className="ds-sidebar-logout" aria-label="Logout">
               Logout
@@ -343,18 +329,36 @@ export default function SystemShell({
         </div>
       </aside>
 
+      {/* Main Area */}
       <div className="ds-app-main">
         <header className="ds-app-topbar">
-          <div className="ds-topbar-brand" aria-label="Dar Al Hai Machinery service operations">
-            <span className="ds-topbar-brand-rule" aria-hidden="true" />
-            <span>
-              <strong>Dar Al Hai Machinery</strong>
-              <small>Service Operations</small>
-            </span>
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              className="lg:hidden ds-icon-button"
+              onClick={() => setMobileMenuOpen(true)}
+              aria-label="Open mobile menu"
+            >
+              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
+            <div className="ds-topbar-brand">
+              <span className="ds-topbar-brand-rule" aria-hidden="true" />
+              <span>
+                <strong>Dar Al Hai Machinery</strong>
+                <small>Service Operations</small>
+              </span>
+            </div>
           </div>
 
           <div className="ds-topbar-actions">
-            <div className="ds-plan-chip">Operations online</div>
+            <div className="ds-plan-chip hidden sm:inline-flex items-center gap-1.5">
+              <span className="h-2 w-2 rounded-full bg-emerald-500" />
+              System Healthy
+            </div>
+
+            {/* Notifications Menu */}
             <div className="ds-notification-anchor">
               <button
                 type="button"
@@ -362,17 +366,22 @@ export default function SystemShell({
                 aria-label="Notifications"
                 onClick={() => setNotificationsOpen((current) => !current)}
               >
-                !
+                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                </svg>
                 {unreadCount > 0 && <span className="ds-notification-count">{unreadCount > 9 ? '9+' : unreadCount}</span>}
               </button>
+
               {notificationsOpen && (
                 <div className="ds-notification-menu">
                   <div className="ds-notification-head">
                     <div>
-                      <p className="text-sm font-black text-[var(--color-ink)]">Notifications</p>
-                      <p className="text-xs font-bold text-[var(--color-muted)]">{unreadCount} unread alerts</p>
+                      <p className="text-sm font-bold text-slate-900">Notifications</p>
+                      <p className="text-xs text-slate-500">{unreadCount} unread alerts</p>
                     </div>
-                    <button type="button" onClick={handleMarkAllRead}>Mark all read</button>
+                    {unreadCount > 0 && (
+                      <button type="button" onClick={handleMarkAllRead}>Mark all read</button>
+                    )}
                   </div>
                   <div className="ds-notification-list">
                     {notifications.length === 0 ? (
@@ -384,12 +393,12 @@ export default function SystemShell({
                         className={`ds-notification-item ${notification.readAt ? '' : 'ds-notification-item-unread'}`}
                         onClick={() => handleNotificationClick(notification)}
                       >
-                        <span className={`ds-notification-dot ds-notification-dot-${notification.severity || 'info'}`} />
+                        <span className={`ds-notification-dot ${notification.readAt ? '!bg-slate-300' : '!bg-sky-500'}`} />
                         <span className="min-w-0">
-                          <span className="block truncate text-sm font-black text-[var(--color-ink)]">{notification.title}</span>
-                          <span className="mt-1 block line-clamp-2 text-xs font-bold leading-5 text-[var(--color-muted)]">{notification.message}</span>
+                          <span className="block truncate text-sm font-semibold text-slate-900">{notification.title}</span>
+                          <span className="mt-0.5 block line-clamp-2 text-xs text-slate-500">{notification.message}</span>
                         </span>
-                        <span className="text-[0.65rem] font-black uppercase tracking-[0.08em] text-[var(--color-subtle)]">
+                        <span className="text-[0.625rem] font-semibold uppercase text-slate-400">
                           {notification.type}
                         </span>
                       </button>
@@ -398,8 +407,20 @@ export default function SystemShell({
                 </div>
               )}
             </div>
-            <div className="ds-avatar" aria-hidden="true">
-              {(hasHydrated ? (user?.fullName || user?.email || 'D') : 'D').slice(0, 1).toUpperCase()}
+
+            {/* Avatar & User Info */}
+            <div className="flex items-center gap-2.5 pl-1">
+              <div className="ds-avatar" aria-hidden="true">
+                {(hasHydrated ? (user?.fullName || user?.email || 'D') : 'D').slice(0, 1).toUpperCase()}
+              </div>
+              <div className="hidden md:block text-left leading-tight">
+                <span className="block text-xs font-bold text-slate-900 truncate max-w-[120px]">
+                  {hasHydrated ? (user?.fullName || user?.email || 'Engineer') : 'User'}
+                </span>
+                <span className="block text-[0.6875rem] text-slate-500 truncate max-w-[120px]">
+                  {roleLabel}
+                </span>
+              </div>
             </div>
           </div>
         </header>
@@ -410,9 +431,6 @@ export default function SystemShell({
               <p className="ds-page-eyebrow">{eyebrow}</p>
               <h1 className="ds-page-title">{title}</h1>
               {description && <p className="ds-page-description">{description}</p>}
-              <p className="mt-2 text-xs font-bold text-[var(--color-muted)]">
-                {hasHydrated ? (user?.fullName || user?.email || roleLabel) : 'Loading session'}
-              </p>
             </div>
             {actions && <div className="ds-page-actions">{actions}</div>}
           </section>

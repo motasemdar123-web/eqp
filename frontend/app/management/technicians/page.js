@@ -7,6 +7,7 @@ import Badge from '../../../components/ui/Badge';
 import Button from '../../../components/ui/Button';
 import EmptyState from '../../../components/ui/EmptyState';
 import Skeleton from '../../../components/ui/Skeleton';
+import Toast from '../../../components/ui/Toast';
 import { createTechnician, deleteTechnician, getShifts, getTechnicians, updateTechnician } from '../../../lib/api';
 import { getStoredPlatformSession } from '../../../lib/auth';
 
@@ -66,8 +67,7 @@ export default function TechniciansManagementPage() {
   const [form, setForm] = useState(emptyForm);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [message, setMessage] = useState('');
-  const [error, setError] = useState('');
+  const [toast, setToast] = useState(null);
   const [availabilityFilter, setAvailabilityFilter] = useState('ALL');
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -76,7 +76,6 @@ export default function TechniciansManagementPage() {
 
     try {
       setLoading(true);
-      setError('');
       const [techniciansResponse, shiftsResponse] = await Promise.all([
         getTechnicians(),
         getShifts(),
@@ -84,7 +83,7 @@ export default function TechniciansManagementPage() {
       setTechnicians(techniciansResponse.technicians || []);
       setShifts(shiftsResponse.shifts || []);
     } catch (loadError) {
-      setError(loadError.message || 'Failed to load technicians.');
+      setToast({ type: 'error', message: loadError.message || 'Failed to load technicians.' });
     } finally {
       setLoading(false);
     }
@@ -139,20 +138,18 @@ export default function TechniciansManagementPage() {
     total: technicians.length,
     available: technicians.filter((technician) => technician.isAvailable).length,
     unavailable: technicians.filter((technician) => !technician.isAvailable).length,
-  }), [technicians]);
+    shifts: shifts.length,
+  }), [technicians, shifts]);
 
   function startCreate() {
     setSelectedTechnicianId('');
     setForm(emptyForm);
-    setMessage('');
-    setError('');
   }
 
   function startEdit(technician) {
     setSelectedTechnicianId(technician.id);
     setForm(formFromTechnician(technician));
-    setMessage('');
-    setError('');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   async function saveTechnician(event) {
@@ -160,40 +157,38 @@ export default function TechniciansManagementPage() {
     if (saving) return;
 
     setSaving(true);
-    setMessage('');
-    setError('');
-
     try {
       const payload = payloadFromForm(form);
 
       if (selectedTechnician) {
         await updateTechnician(selectedTechnician.id, payload);
-        setMessage('Technician updated.');
+        setToast({ type: 'success', message: 'Technician details updated successfully.' });
       } else {
         await createTechnician(payload);
-        setMessage('Technician added.');
+        setToast({ type: 'success', message: 'New technician added to roster.' });
         setForm(emptyForm);
       }
 
       await loadData();
     } catch (saveError) {
-      setError(saveError.message || 'Failed to save technician.');
+      setToast({ type: 'error', message: saveError.message || 'Failed to save technician.' });
     } finally {
       setSaving(false);
     }
   }
 
-  async function setAvailability(technician, isAvailable) {
+  async function toggleAvailability(technician) {
+    const nextState = !technician.isAvailable;
     setSaving(true);
-    setMessage('');
-    setError('');
-
     try {
-      await updateTechnician(technician.id, { isAvailable });
-      setMessage(`${technicianName(technician)} marked ${isAvailable ? 'available' : 'unavailable'}.`);
+      await updateTechnician(technician.id, { isAvailable: nextState });
+      setToast({
+        type: 'info',
+        message: `${technicianName(technician)} marked ${nextState ? 'available' : 'unavailable'}.`,
+      });
       await loadData();
     } catch (updateError) {
-      setError(updateError.message || 'Failed to update availability.');
+      setToast({ type: 'error', message: updateError.message || 'Failed to update availability.' });
     } finally {
       setSaving(false);
     }
@@ -201,20 +196,17 @@ export default function TechniciansManagementPage() {
 
   async function removeTechnician(technician) {
     const name = technicianName(technician);
-    const confirmed = window.confirm(`Delete ${name} from Technicians Management? Existing schedule history will be preserved.`);
+    const confirmed = window.confirm(`Delete ${name} from Technicians Management? Existing schedule records will be preserved.`);
     if (!confirmed) return;
 
     setSaving(true);
-    setMessage('');
-    setError('');
-
     try {
       await deleteTechnician(technician.id);
       if (selectedTechnicianId === technician.id) startCreate();
-      setMessage(`${name} deleted from the active technician roster.`);
+      setToast({ type: 'success', message: `${name} deleted from active roster.` });
       await loadData();
     } catch (deleteError) {
-      setError(deleteError.message || 'Failed to delete technician.');
+      setToast({ type: 'error', message: deleteError.message || 'Failed to delete technician.' });
     } finally {
       setSaving(false);
     }
@@ -225,106 +217,211 @@ export default function TechniciansManagementPage() {
       activePath="/management/technicians"
       eyebrow="Operations Control"
       title="Technicians Management"
-      description="Add technicians, manage availability, assign shifts and regions, and keep skills visible for dispatch."
-      actions={<Button type="button" variant="secondary" onClick={loadData} disabled={loading || saving}>Refresh</Button>}
+      description="Manage field service technicians, duty availability, shifts, assigned regions, and dispatch skills."
+      actions={
+        <Button type="button" variant="secondary" onClick={loadData} disabled={loading || saving}>
+          <svg className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+          </svg>
+          Refresh
+        </Button>
+      }
     >
-      <div className="grid gap-6">
-        {(message || error) && (
-          <div className={`ds-alert ${error ? 'ds-alert-error' : 'ds-alert-success'}`}>
-            {error || message}
-          </div>
-        )}
-
+      <div className="space-y-6">
+        {/* KPI Metrics */}
         <section className="ds-kpi-grid">
-          <Metric label="Technicians" value={stats.total} unit="Registered" detail="Roster records" code="TM" status="Live" tone="live" />
-          <Metric label="Available" value={stats.available} unit="Ready today" detail="Dispatch capacity" code="AV" status="Ready" tone="ready" accent />
-          <Metric label="Unavailable" value={stats.unavailable} unit="Not available" detail="Roster exceptions" code="UN" status="Active" tone="active" />
-          <Metric label="Shifts" value={shifts.length} unit="Shift templates" detail="Assignment options" code="SH" status="Ready" tone="ready" accent />
+          <article className="ds-kpi-card">
+            <div className="ds-icon-tile">
+              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+            </div>
+            <div className="ds-kpi-content">
+              <div className="ds-kpi-head">
+                <p className="ds-kpi-label">Roster</p>
+                <Badge tone="live">Live</Badge>
+              </div>
+              <p className="ds-kpi-main">{stats.total}</p>
+              <p className="ds-kpi-descriptor">Registered Staff</p>
+            </div>
+          </article>
+
+          <article className="ds-kpi-card">
+            <div className="ds-icon-tile ds-icon-tile-accent">
+              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div className="ds-kpi-content">
+              <div className="ds-kpi-head">
+                <p className="ds-kpi-label">Available</p>
+                <Badge tone="ready">Ready</Badge>
+              </div>
+              <p className="ds-kpi-main">{stats.available}</p>
+              <p className="ds-kpi-descriptor">Dispatch Ready</p>
+            </div>
+          </article>
+
+          <article className="ds-kpi-card">
+            <div className="ds-icon-tile">
+              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div className="ds-kpi-content">
+              <div className="ds-kpi-head">
+                <p className="ds-kpi-label">Unavailable</p>
+                <Badge tone="pending">Off-Duty</Badge>
+              </div>
+              <p className="ds-kpi-main">{stats.unavailable}</p>
+              <p className="ds-kpi-descriptor">Exceptions / Leave</p>
+            </div>
+          </article>
+
+          <article className="ds-kpi-card">
+            <div className="ds-icon-tile ds-icon-tile-accent">
+              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div className="ds-kpi-content">
+              <div className="ds-kpi-head">
+                <p className="ds-kpi-label">Shifts</p>
+                <Badge tone="info">Active</Badge>
+              </div>
+              <p className="ds-kpi-main">{stats.shifts}</p>
+              <p className="ds-kpi-descriptor">Shift Schedules</p>
+            </div>
+          </article>
         </section>
 
-        <section className="grid gap-5 xl:grid-cols-[1fr_420px]">
+        {/* Main Grid: Technicians Table & Form Drawer */}
+        <section className="grid gap-6 xl:grid-cols-[1fr_400px]">
+          {/* Technicians Table Card */}
           <Card className="overflow-hidden">
-            <div className="border-b border-zinc-200 p-5">
-              <div className="grid gap-3 lg:grid-cols-[1.4fr_0.8fr_auto]">
-                <input
-                  type="text"
-                  placeholder="Search by name, code, email, region, or shift"
-                  value={searchTerm}
-                  onChange={(event) => setSearchTerm(event.target.value)}
-                  className="ds-input w-full"
-                />
-                <select
-                  value={availabilityFilter}
-                  onChange={(event) => setAvailabilityFilter(event.target.value)}
-                  className="ds-input w-full"
-                >
-                  <option value="ALL">All availability</option>
-                  <option value="AVAILABLE">Available only</option>
-                  <option value="UNAVAILABLE">Unavailable only</option>
-                </select>
-                <Button type="button" variant="ghost" onClick={startCreate}>Add New</Button>
+            <div className="border-b border-slate-200 p-5 bg-slate-50/60">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div className="relative flex-1">
+                  <span className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-400">
+                    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                  </span>
+                  <input
+                    type="text"
+                    placeholder="Search by name, code, email, region..."
+                    value={searchTerm}
+                    onChange={(event) => setSearchTerm(event.target.value)}
+                    className="ds-input pl-9"
+                  />
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <select
+                    value={availabilityFilter}
+                    onChange={(event) => setAvailabilityFilter(event.target.value)}
+                    className="ds-input min-w-[140px]"
+                  >
+                    <option value="ALL">All Statuses</option>
+                    <option value="AVAILABLE">Available Only</option>
+                    <option value="UNAVAILABLE">Unavailable Only</option>
+                  </select>
+
+                  <Button type="button" onClick={startCreate}>
+                    <svg className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                    </svg>
+                    New
+                  </Button>
+                </div>
               </div>
             </div>
 
             {loading ? (
               <div className="grid gap-3 p-6">
-                <Skeleton className="h-14" />
-                <Skeleton className="h-14" />
-                <Skeleton className="h-14" />
+                <Skeleton className="h-16 rounded-xl" />
+                <Skeleton className="h-16 rounded-xl" />
+                <Skeleton className="h-16 rounded-xl" />
               </div>
             ) : filteredTechnicians.length === 0 ? (
               <div className="p-6">
-                <EmptyState title="No technicians found" description="Adjust filters or add a new technician." />
+                <EmptyState
+                  title="No technicians found"
+                  description="No roster records match your search filters."
+                  action={<Button variant="secondary" onClick={startCreate}>Add New Technician</Button>}
+                />
               </div>
             ) : (
-              <div className="overflow-x-auto">
-                <table className="ds-table min-w-[980px]">
+              <div className="ds-table-wrap">
+                <table className="ds-table">
                   <thead>
                     <tr>
-                      <th className="px-5 py-4 text-left">Technician</th>
-                      <th className="px-5 py-4 text-left">Availability</th>
-                      <th className="px-5 py-4 text-left">Shift</th>
-                      <th className="px-5 py-4 text-left">Region</th>
-                      <th className="px-5 py-4 text-left">Skills</th>
-                      <th className="px-5 py-4 text-left">Actions</th>
+                      <th>Technician</th>
+                      <th>Status</th>
+                      <th>Shift</th>
+                      <th>Region</th>
+                      <th>Skills</th>
+                      <th className="text-right">Actions</th>
                     </tr>
                   </thead>
                   <tbody>
                     {filteredTechnicians.map((technician) => (
-                      <tr key={technician.id} className="border-t border-[var(--color-border)] align-top transition hover:bg-[var(--color-brand-soft)]">
-                        <td className="px-5 py-4">
-                          <p className="font-bold text-[var(--color-ink)]">{technicianName(technician)}</p>
-                          <p className="mt-1 font-mono text-xs text-[var(--color-muted)]">{technician.employeeCode}</p>
-                          <p className="mt-1 text-xs text-[var(--color-muted)]">{technician.user?.email}</p>
-                        </td>
-                        <td className="px-5 py-4">
-                          <Badge tone={technician.isAvailable ? 'green' : 'red'}>
-                            {technician.isAvailable ? 'AVAILABLE' : 'UNAVAILABLE'}
-                          </Badge>
-                        </td>
-                        <td className="px-5 py-4 text-sm font-semibold text-[var(--color-ink-soft)]">{technician.shift?.name || '-'}</td>
-                        <td className="px-5 py-4 text-sm text-[var(--color-muted)]">{technician.region || '-'}</td>
-                        <td className="px-5 py-4">
-                          <div className="flex flex-wrap gap-1.5">
-                            {(technician.skills || []).slice(0, 4).map((skill) => (
-                              <Badge key={skill.id} tone="neutral">{skill.skill}</Badge>
-                            ))}
+                      <tr key={technician.id}>
+                        <td>
+                          <div className="flex items-center gap-3">
+                            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-100 font-bold text-xs text-slate-700">
+                              {technicianName(technician).slice(0, 2).toUpperCase()}
+                            </div>
+                            <div>
+                              <p className="font-semibold text-slate-900 leading-snug">{technicianName(technician)}</p>
+                              <div className="flex items-center gap-2 mt-0.5 text-xs text-slate-500">
+                                <span className="font-mono font-medium text-amber-700 bg-amber-50 px-1.5 py-0.2 rounded border border-amber-200/60">
+                                  {technician.employeeCode}
+                                </span>
+                                <span className="truncate max-w-[150px]">{technician.user?.email}</span>
+                              </div>
+                            </div>
                           </div>
                         </td>
-                        <td className="px-5 py-4">
-                          <div className="flex flex-wrap gap-2">
-                            <Button type="button" variant="secondary" onClick={() => startEdit(technician)}>Edit</Button>
+                        <td>
+                          <Badge tone={technician.isAvailable ? 'active' : 'critical'}>
+                            {technician.isAvailable ? 'Available' : 'Unavailable'}
+                          </Badge>
+                        </td>
+                        <td className="text-xs font-medium text-slate-700">{technician.shift?.name || 'Standard'}</td>
+                        <td className="text-xs text-slate-600">{technician.region || 'All Regions'}</td>
+                        <td>
+                          <div className="flex flex-wrap gap-1 max-w-[200px]">
+                            {(technician.skills || []).slice(0, 3).map((skill) => (
+                              <span key={skill.id} className="inline-block rounded bg-slate-100 px-1.5 py-0.5 text-[0.6875rem] font-medium text-slate-600">
+                                {skill.skill}
+                              </span>
+                            ))}
+                            {(technician.skills || []).length > 3 && (
+                              <span className="text-[0.6875rem] text-slate-400 font-medium">
+                                +{(technician.skills || []).length - 3}
+                              </span>
+                            )}
+                          </div>
+                        </td>
+                        <td className="text-right">
+                          <div className="inline-flex items-center gap-1.5">
+                            <Button type="button" variant="secondary" size="sm" onClick={() => startEdit(technician)}>
+                              Edit
+                            </Button>
                             <Button
                               type="button"
-                              variant={technician.isAvailable ? 'ghost' : 'primary'}
-                              onClick={() => setAvailability(technician, !technician.isAvailable)}
+                              variant={technician.isAvailable ? 'ghost' : 'secondary'}
+                              size="sm"
+                              onClick={() => toggleAvailability(technician)}
                               disabled={saving}
                             >
-                              {technician.isAvailable ? 'Set Unavailable' : 'Set Available'}
+                              {technician.isAvailable ? 'Off-Duty' : 'Set Active'}
                             </Button>
                             <Button
                               type="button"
                               variant="danger"
+                              size="sm"
                               onClick={() => removeTechnician(technician)}
                               disabled={saving}
                             >
@@ -340,66 +437,139 @@ export default function TechniciansManagementPage() {
             )}
           </Card>
 
-          <Card className="p-5">
-            <div className="flex items-start justify-between gap-4">
+          {/* Add / Edit Technician Form Drawer */}
+          <Card className="p-6 h-fit">
+            <div className="flex items-start justify-between gap-4 pb-4 border-b border-slate-100">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--color-muted)]">
-                  {selectedTechnician ? 'Edit Technician' : 'Add Technician'}
+                <p className="text-xs font-bold uppercase tracking-wider text-amber-600">
+                  {selectedTechnician ? 'Edit Record' : 'New Registration'}
                 </p>
-                <h2 className="mt-2 text-xl font-black text-[var(--color-ink)]">
-                  {selectedTechnician ? technicianName(selectedTechnician) : 'New technician'}
+                <h2 className="mt-1 text-lg font-bold text-slate-900">
+                  {selectedTechnician ? technicianName(selectedTechnician) : 'Add Technician'}
                 </h2>
               </div>
-              {selectedTechnician && <Button type="button" variant="ghost" onClick={startCreate}>Clear</Button>}
+              {selectedTechnician && (
+                <Button type="button" variant="ghost" size="sm" onClick={startCreate}>
+                  Cancel
+                </Button>
+              )}
             </div>
 
-            <form onSubmit={saveTechnician} className="mt-5 grid gap-3" aria-busy={saving}>
-              <input required className="ds-input" placeholder="Full name" value={form.fullName} onChange={(event) => setForm((current) => ({ ...current, fullName: event.target.value }))} />
-              <input required type="email" className="ds-input" placeholder="Company email" value={form.email} onChange={(event) => setForm((current) => ({ ...current, email: event.target.value }))} />
-              <div className="grid grid-cols-2 gap-3">
-                <input type="number" className="ds-input" placeholder="User number" value={form.userNumber} onChange={(event) => setForm((current) => ({ ...current, userNumber: event.target.value }))} />
-                <input required className="ds-input" placeholder="Employee code" value={form.employeeCode} onChange={(event) => setForm((current) => ({ ...current, employeeCode: event.target.value }))} />
+            <form onSubmit={saveTechnician} className="mt-5 space-y-4">
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">Full Name *</label>
+                <input
+                  required
+                  className="ds-input"
+                  placeholder="e.g. Tariq Al-Mansoor"
+                  value={form.fullName}
+                  onChange={(event) => setForm((current) => ({ ...current, fullName: event.target.value }))}
+                />
               </div>
-              <input className="ds-input" placeholder="Phone" value={form.phone} onChange={(event) => setForm((current) => ({ ...current, phone: event.target.value }))} />
-              <input className="ds-input" placeholder="Region" value={form.region} onChange={(event) => setForm((current) => ({ ...current, region: event.target.value }))} />
-              <select className="ds-input" value={form.shiftId} onChange={(event) => setForm((current) => ({ ...current, shiftId: event.target.value }))}>
-                <option value="">No default shift</option>
-                {shifts.map((shift) => <option key={shift.id} value={shift.id}>{shift.name} ({shift.startsAt}-{shift.endsAt})</option>)}
-              </select>
-              <textarea rows={3} className="ds-input py-2" placeholder="Skills separated by commas" value={form.skills} onChange={(event) => setForm((current) => ({ ...current, skills: event.target.value }))} />
-              <label className="ds-check-row">
-                <input type="checkbox" checked={form.isAvailable} onChange={(event) => setForm((current) => ({ ...current, isAvailable: event.target.checked }))} />
-                Available for dispatch
-              </label>
-              <Button type="submit" disabled={saving}>
-                <span className="flex items-center justify-center gap-2">
-                  {saving && <span className="tech-spinner" aria-hidden="true" />}
-                  {saving ? 'Saving technician...' : (selectedTechnician ? 'Save Technician' : 'Add Technician')}
-                </span>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">Company Email *</label>
+                <input
+                  required
+                  type="email"
+                  className="ds-input"
+                  placeholder="technician@daralhai.com"
+                  value={form.email}
+                  onChange={(event) => setForm((current) => ({ ...current, email: event.target.value }))}
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">User No.</label>
+                  <input
+                    type="number"
+                    className="ds-input"
+                    placeholder="101"
+                    value={form.userNumber}
+                    onChange={(event) => setForm((current) => ({ ...current, userNumber: event.target.value }))}
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Employee Code *</label>
+                  <input
+                    required
+                    className="ds-input uppercase"
+                    placeholder="TEST-1015"
+                    value={form.employeeCode}
+                    onChange={(event) => setForm((current) => ({ ...current, employeeCode: event.target.value }))}
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Phone</label>
+                  <input
+                    className="ds-input"
+                    placeholder="+966 5..."
+                    value={form.phone}
+                    onChange={(event) => setForm((current) => ({ ...current, phone: event.target.value }))}
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Region</label>
+                  <input
+                    className="ds-input"
+                    placeholder="Riyadh / Eastern"
+                    value={form.region}
+                    onChange={(event) => setForm((current) => ({ ...current, region: event.target.value }))}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">Assigned Shift</label>
+                <select
+                  className="ds-input"
+                  value={form.shiftId}
+                  onChange={(event) => setForm((current) => ({ ...current, shiftId: event.target.value }))}
+                >
+                  <option value="">Default Working Hours (08:00 - 16:00)</option>
+                  {shifts.map((shift) => (
+                    <option key={shift.id} value={shift.id}>
+                      {shift.name} ({shift.startsAt} - {shift.endsAt})
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">Skills (Comma-separated)</label>
+                <textarea
+                  rows={2}
+                  className="ds-input"
+                  placeholder="Hydraulics, Engine Overhaul, Transmission, Electrical"
+                  value={form.skills}
+                  onChange={(event) => setForm((current) => ({ ...current, skills: event.target.value }))}
+                />
+              </div>
+
+              <div className="pt-2">
+                <label className="ds-check-row">
+                  <input
+                    type="checkbox"
+                    checked={form.isAvailable}
+                    onChange={(event) => setForm((current) => ({ ...current, isAvailable: event.target.checked }))}
+                  />
+                  <span>Available for immediate dispatch</span>
+                </label>
+              </div>
+
+              <Button type="submit" fullWidth disabled={saving}>
+                {saving ? 'Saving...' : (selectedTechnician ? 'Update Technician' : 'Add Technician to Roster')}
               </Button>
             </form>
           </Card>
         </section>
       </div>
-    </SystemShell>
-  );
-}
 
-function Metric({ label, value, unit, detail, code, status, tone = 'neutral', accent = false }) {
-  return (
-    <article className="ds-kpi-card">
-      <div className={`ds-icon-tile ${accent ? 'ds-icon-tile-accent' : ''}`}>{code}</div>
-      <div className="ds-kpi-content">
-        <div className="ds-kpi-head">
-          <p className="ds-kpi-label">{label}</p>
-          <Badge tone={tone}>{status}</Badge>
-        </div>
-        <div>
-          <p className="ds-kpi-main">{value}</p>
-          <p className="ds-kpi-descriptor">{unit}</p>
-          <p className="ds-kpi-secondary">{detail}</p>
-        </div>
-      </div>
-    </article>
+      <Toast message={toast?.message} type={toast?.type} onClose={() => setToast(null)} />
+    </SystemShell>
   );
 }
