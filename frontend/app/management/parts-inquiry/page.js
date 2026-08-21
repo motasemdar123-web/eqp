@@ -561,7 +561,7 @@ export default function SparePartsPage() {
   async function handleCopySingleToSo(qtnItem) {
     try {
       addSoLog(`Copying quotation ${qtnItem.quotation_no} to Sales Order (SO)...`, 'info');
-      const res = await copyQuotationToSo({ quotationNo: qtnItem.quotation_no, seqNo: qtnItem.revision_no || '00' });
+      const res = await copyKomatsuQuotationToSo({ quotationNo: qtnItem.quotation_no, seqNo: qtnItem.revision_no || '00' });
       if (res && res.status === 'COPIED_TO_SO') {
         addSoLog(`🎉 Quotation ${qtnItem.quotation_no} successfully transferred to Sales Order!`, 'success');
         setInProcessQuotations((prev) =>
@@ -626,7 +626,7 @@ export default function SparePartsPage() {
         // 2. Copy to SO if needed
         if (actionType === 'FULL_CONVERT' || actionType === 'COPY_ONLY') {
           addSoLog(`[#${i + 1}] Step 2/2: Executing Copy to Sales Order for ${q.quotation_no}...`, 'info');
-          await copyQuotationToSo({ quotationNo: q.quotation_no, seqNo: q.revision_no || '00' });
+          await copyKomatsuQuotationToSo({ quotationNo: q.quotation_no, seqNo: q.revision_no || '00' });
           q.status = 'Transferred to SO';
           setInProcessQuotations((prev) =>
             prev.map((item) => (item.quotation_no === q.quotation_no ? { ...item, status: 'Transferred to SO' } : item))
