@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import Link from 'next/link';
 import SystemShell from '../SystemShell';
 import Button from '../ui/Button';
 import Badge from '../ui/Badge';
@@ -8,13 +9,10 @@ import Card from '../ui/Card';
 import Field from '../ui/Field';
 import EmptyState from '../ui/EmptyState';
 import Toast from '../ui/Toast';
-import {
-  getWorkspaceEngineers,
-  getWorkspacePlannerInbox,
-} from '../../lib/api';
 
 const BOARD_STORAGE_KEY = 'dar-al-hai-engineering-workspace-v3';
 const PLANNER_STORAGE_KEY = 'dar-al-hai-engineering-day-planner-v3';
+
 
 const SWATCH_PALETTE = [
   { label: 'Yellow', color: '#FEF3C7', border: '#F59E0B', text: '#78350F' },
@@ -253,42 +251,27 @@ function makeTemplateObjects(templateKey) {
 }
 
 export default function EngineeringWorkspace() {
-  const [activeTab, setActiveTab] = useState('creative');
   const [toast, setToast] = useState('');
 
   return (
     <SystemShell
       activePath="/workspace"
       eyebrow="ENGINEERING WORKSPACE"
-      title={activeTab === 'creative' ? 'Engineering Canvas' : 'Day Planner'}
-      description={
-        activeTab === 'creative'
-          ? 'Interactive collaborative whiteboard for machine troubleshooting, root cause analysis, and maintenance workflows.'
-          : 'Build and track timed engineering task schedules with management dispatch sync.'
-      }
+      title="Engineering Whiteboard"
+      description="Interactive collaborative whiteboard for machine troubleshooting, root cause analysis, and maintenance workflows."
       actions={
-        <div className="eng-tabs" role="tablist" aria-label="Workspace modes">
-          <button
-            type="button"
-            className={`eng-tab ${activeTab === 'creative' ? 'eng-tab-active' : ''}`}
-            onClick={() => setActiveTab('creative')}
-          >
-            Creative Canvas
-          </button>
-          <button
-            type="button"
-            className={`eng-tab ${activeTab === 'planner' ? 'eng-tab-active' : ''}`}
-            onClick={() => setActiveTab('planner')}
-          >
-            Day Planner
-          </button>
+        <div className="flex items-center gap-2">
+          <Link href="/management/daily-planner" className="ds-button ds-button-secondary ds-button-small">
+            📅 Open Daily Planner
+          </Link>
         </div>
       }
     >
       <Toast message={toast} type="info" onClose={() => setToast('')} />
       <section className="eng-workspace-shell">
-        {activeTab === 'creative' ? (
-          <CreativeCanvas onToast={setToast} onConvertToTask={(task) => {
+        <CreativeCanvas
+          onToast={setToast}
+          onConvertToTask={(task) => {
             const planner = loadStorage(PLANNER_STORAGE_KEY, { tasks: [] });
             const newTask = {
               id: createId('task'),
@@ -300,15 +283,14 @@ export default function EngineeringWorkspace() {
             };
             planner.tasks = [newTask, ...(planner.tasks || [])];
             saveStorage(PLANNER_STORAGE_KEY, planner);
-            setToast(`Converted "${task.title}" to Day Planner task.`);
-          }} />
-        ) : (
-          <DayPlannerView onToast={setToast} />
-        )}
+            setToast(`Converted "${task.title}" to Daily Planner task.`);
+          }}
+        />
       </section>
     </SystemShell>
   );
 }
+
 
 function CreativeCanvas({ onToast, onConvertToTask }) {
   const containerRef = useRef(null);
@@ -1389,160 +1371,3 @@ function CreativeCanvas({ onToast, onConvertToTask }) {
   );
 }
 
-function DayPlannerView({ onToast }) {
-  const [plannerData, setPlannerData] = useState(() => ({ tasks: [] }));
-  const [taskTitle, setTaskTitle] = useState('');
-  const [dueTime, setDueTime] = useState('09:00');
-  const [expectedDuration, setExpectedDuration] = useState('30');
-  const [engineers, setEngineers] = useState([]);
-  const [incomingTasks, setIncomingTasks] = useState([]);
-
-  useEffect(() => {
-    const stored = loadStorage(PLANNER_STORAGE_KEY, { tasks: [] });
-    if (stored && Array.isArray(stored.tasks)) {
-      setPlannerData(stored);
-    }
-  }, []);
-
-  useEffect(() => {
-    saveStorage(PLANNER_STORAGE_KEY, plannerData);
-  }, [plannerData]);
-
-  useEffect(() => {
-    async function loadWorkspaceData() {
-      try {
-        const [engRes, inboxRes] = await Promise.all([
-          getWorkspaceEngineers().catch(() => ({ engineers: [] })),
-          getWorkspacePlannerInbox().catch(() => ({ inbox: [] })),
-        ]);
-        setEngineers(engRes.engineers || []);
-        setIncomingTasks(inboxRes.inbox || []);
-      } catch {
-        // Fallback silently
-      }
-    }
-    loadWorkspaceData();
-  }, []);
-
-  function addTask(event) {
-    event.preventDefault();
-    if (!taskTitle.trim()) return;
-    const newTask = {
-      id: createId('task'),
-      title: taskTitle.trim(),
-      dueTime,
-      expectedDuration,
-      completed: false,
-      createdAt: nowIso(),
-    };
-    setPlannerData((curr) => ({
-      ...curr,
-      tasks: [newTask, ...(curr.tasks || [])],
-    }));
-    setTaskTitle('');
-    onToast('Task added to Day Planner.');
-  }
-
-  function toggleTask(id) {
-    setPlannerData((curr) => ({
-      ...curr,
-      tasks: (curr.tasks || []).map((t) => (t.id === id ? { ...t, completed: !t.completed } : t)),
-    }));
-  }
-
-  function deleteTask(id) {
-    setPlannerData((curr) => ({
-      ...curr,
-      tasks: (curr.tasks || []).filter((t) => t.id !== id),
-    }));
-    onToast('Task removed.');
-  }
-
-  const completedCount = (plannerData.tasks || []).filter((t) => t.completed).length;
-  const totalCount = (plannerData.tasks || []).length;
-  const totalMinutes = (plannerData.tasks || []).reduce((acc, t) => acc + Number(t.expectedDuration || 0), 0);
-
-  return (
-    <div className="eng-planner-shell">
-      {/* Top summary KPIs */}
-      <div className="eng-planner-kpis">
-        <div className="eng-planner-kpi-card">
-          <div>
-            <span className="text-xs font-bold text-slate-500 uppercase">Completed Tasks</span>
-            <p className="text-xl font-bold text-slate-900">{completedCount} / {totalCount}</p>
-          </div>
-          <Badge tone={completedCount === totalCount && totalCount > 0 ? 'completed' : 'info'}>
-            {totalCount > 0 ? `${Math.round((completedCount / totalCount) * 100)}%` : '0%'}
-          </Badge>
-        </div>
-        <div className="eng-planner-kpi-card">
-          <div>
-            <span className="text-xs font-bold text-slate-500 uppercase">Estimated Hours</span>
-            <p className="text-xl font-bold text-slate-900">{Math.round((totalMinutes / 60) * 10) / 10} hrs</p>
-          </div>
-          <Badge tone="ready">{totalMinutes} mins</Badge>
-        </div>
-      </div>
-
-      {/* Task input form & task list */}
-      <div className="eng-planner-tasks-layout">
-        <Card className="p-5 h-fit">
-          <h3 className="text-sm font-bold text-slate-900 mb-3">Add Day Schedule Task</h3>
-          <form onSubmit={addTask} className="space-y-3">
-            <Field label="Task Description">
-              <input
-                type="text"
-                placeholder="e.g. Inspect DZR-17 hydraulic seals"
-                value={taskTitle}
-                onChange={(e) => setTaskTitle(e.target.value)}
-                required
-              />
-            </Field>
-            <div className="grid grid-cols-2 gap-2">
-              <Field label="Target Time">
-                <input type="time" value={dueTime} onChange={(e) => setDueTime(e.target.value)} />
-              </Field>
-              <Field label="Duration (Mins)">
-                <input type="number" min="5" step="5" value={expectedDuration} onChange={(e) => setExpectedDuration(e.target.value)} />
-              </Field>
-            </div>
-            <Button type="submit" variant="primary" className="w-full">
-              Add Task
-            </Button>
-          </form>
-        </Card>
-
-        <Card className="p-5">
-          <div className="flex items-center justify-between pb-3 border-b border-slate-100 mb-3">
-            <h3 className="text-sm font-bold text-slate-900">Scheduled Tasks</h3>
-            <Badge tone="neutral">{totalCount} Total</Badge>
-          </div>
-          <div className="space-y-2">
-            {(plannerData.tasks || []).map((task) => (
-              <div key={task.id} className={`eng-planner-task-item ${task.completed ? 'eng-planner-task-item-done' : ''}`}>
-                <div className="flex items-center gap-3">
-                  <input
-                    type="checkbox"
-                    checked={task.completed}
-                    onChange={() => toggleTask(task.id)}
-                    className="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
-                  />
-                  <div>
-                    <span className="font-semibold text-xs text-slate-900 block">{task.title}</span>
-                    <span className="text-[10px] text-slate-500 font-mono">Due: {task.dueTime} ({task.expectedDuration} mins)</span>
-                  </div>
-                </div>
-                <Button type="button" variant="danger" size="sm" onClick={() => deleteTask(task.id)}>
-                  ✕
-                </Button>
-              </div>
-            ))}
-            {(plannerData.tasks || []).length === 0 && (
-              <EmptyState title="No tasks scheduled" description="Add tasks above or convert items from the Creative Canvas." />
-            )}
-          </div>
-        </Card>
-      </div>
-    </div>
-  );
-}

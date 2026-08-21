@@ -10,6 +10,7 @@ const navItems = [
   { href: '/management', label: 'Dashboard', icon: 'dashboard' },
   { href: '/management/technicians', label: 'Technicians', icon: 'users' },
   { href: '/management/scheduling', label: 'Scheduling', icon: 'calendar' },
+  { href: '/management/daily-planner', label: 'Daily Planner', icon: 'planner' },
   { href: '/management/parts-inquiry', label: 'Parts Inquiry', icon: 'parts' },
   { href: '/workspace', label: 'Workspace', icon: 'workspace' },
   { href: '/eqp', label: 'EQP Module', icon: 'hub' },
@@ -42,6 +43,12 @@ const iconPaths = {
       <line x1="16" y1="2" x2="16" y2="6" />
       <line x1="8" y1="2" x2="8" y2="6" />
       <line x1="3" y1="10" x2="21" y2="10" />
+    </>
+  ),
+  planner: (
+    <>
+      <path d="M9 11l3 3L22 4" />
+      <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
     </>
   ),
   parts: (
