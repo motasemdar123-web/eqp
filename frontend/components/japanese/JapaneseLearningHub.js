@@ -25,9 +25,9 @@ import LevelSelectorModal from './LevelSelectorModal';
 import MachinePartsExplorer from './MachinePartsExplorer';
 import WorkshopRoleplayCoach from './WorkshopRoleplayCoach';
 import BusinessEmailStudio from './BusinessEmailStudio';
-import SpeedKanjiRush from './SpeedKanjiRush';
 import ZenFocusModeOverlay from './ZenFocusModeOverlay';
 import SmartFlashcardDojo from './SmartFlashcardDojo';
+import ExamAdminStudio from './ExamAdminStudio';
 
 function speakJapanese(text) {
   if (typeof window === 'undefined' || !window.speechSynthesis) return;
@@ -55,6 +55,7 @@ export default function JapaneseLearningHub() {
   const [isLevelModalOpen, setIsLevelModalOpen] = useState(false);
   const [isFirstTimeUser, setIsFirstTimeUser] = useState(false);
   const [isFocusMode, setIsFocusMode] = useState(false);
+  const [simulatorExamPaper, setSimulatorExamPaper] = useState(null);
 
   // Load persistent user level preference on first mount
   useEffect(() => {
@@ -111,8 +112,21 @@ export default function JapaneseLearningHub() {
 
   const renderActiveToolContent = () => {
     switch (activeTab) {
+      case 'exam_admin':
+        return (
+          <ExamAdminStudio
+            level={level}
+            onToast={showToast}
+            onLaunchSimulator={(paper) => {
+              setSimulatorExamPaper(paper);
+              setActivePillar('exams');
+              setActiveTab('exam');
+              showToast(`🚀 Loaded "${paper.shortTitle || paper.title}" into Simulator!`, 'success');
+            }}
+          />
+        );
       case 'exam':
-        return <JLPTExamSimulator level={level} onToast={showToast} />;
+        return <JLPTExamSimulator level={level} customExamPaper={simulatorExamPaper} onToast={showToast} />;
       case 'rush':
         return <SpeedKanjiRush level={level} onToast={showToast} />;
       case 'mistakes':
@@ -136,7 +150,7 @@ export default function JapaneseLearningHub() {
       case 'technical':
         return <TechnicalJapaneseHub onToast={showToast} />;
       default:
-        return <JLPTExamSimulator level={level} onToast={showToast} />;
+        return <JLPTExamSimulator level={level} customExamPaper={simulatorExamPaper} onToast={showToast} />;
     }
   };
 
@@ -163,6 +177,20 @@ export default function JapaneseLearningHub() {
       description="Streamlined Japanese mastery environment for JLPT proficiency (N5 & N4) and Factory 5S Operations."
       actions={
         <div className="flex items-center gap-2">
+          {/* Exam Admin Studio CTA */}
+          <Button
+            size="sm"
+            variant="outline"
+            className="text-xs font-bold border-slate-300 hover:bg-slate-100 flex items-center gap-1.5 cursor-pointer"
+            onClick={() => {
+              setActivePillar('exams');
+              setActiveTab('exam_admin');
+            }}
+          >
+            <span>🛠️</span>
+            <span>Exam Studio (試験作成)</span>
+          </Button>
+
           {/* Zen Fullscreen Focus Mode CTA */}
           <Button
             size="sm"
@@ -373,6 +401,17 @@ export default function JapaneseLearningHub() {
                 onClick={() => setActiveTab('mistakes')}
               >
                 🎯 Error Vault
+              </button>
+              <button
+                type="button"
+                className={`px-3.5 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer whitespace-nowrap shrink-0 ${
+                  activeTab === 'exam_admin'
+                    ? 'bg-amber-500 text-slate-950 font-black shadow-xs'
+                    : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50'
+                }`}
+                onClick={() => setActiveTab('exam_admin')}
+              >
+                🛠️ Exam Admin Studio (作成・管理)
               </button>
               <button
                 type="button"

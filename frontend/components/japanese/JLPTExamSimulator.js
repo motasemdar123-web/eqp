@@ -30,17 +30,64 @@ function formatTimer(seconds) {
   return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
 }
 
-export default function JLPTExamSimulator({ level = 'N5', onToast }) {
-  const availablePapers = EXAM_PAPERS_CATALOG[level] || [];
-  const [selectedPaperId, setSelectedPaperId] = useState(availablePapers[0]?.id || (level === 'N5' ? 'n5-vol1' : 'n4-vol1'));
+export default function JLPTExamSimulator({
+  level = 'N5',
+  customExamPaper = null,
+  onToast,
+}) {
+  const [customPapers, setCustomPapers] = useState([]);
 
-  // Sync selected paper if level changes
+  // Load custom papers from API / localStorage
   useEffect(() => {
-    const papers = EXAM_PAPERS_CATALOG[level] || [];
-    if (papers.length > 0 && !papers.some((p) => p.id === selectedPaperId)) {
-      setSelectedPaperId(papers[0].id);
+    async function fetchCustomPapers() {
+      let custom = [];
+      try {
+        const res = await fetch(`/api/japanese/exams?level=${level}`);
+        if (res.ok) {
+          const data = await res.json();
+          custom = data.exams || [];
+        }
+      } catch (e) {
+        console.warn('Custom exams fetch fallback', e);
+      }
+
+      try {
+        const localCustom = localStorage.getItem(`jlpt_custom_exams_${level}`);
+        if (localCustom) {
+          const parsed = JSON.parse(localCustom);
+          parsed.forEach((p) => {
+            if (!custom.find((c) => c.id === p.id)) custom.push(p);
+          });
+        }
+      } catch (e) {
+        console.error('LocalStorage load error', e);
+      }
+
+      setCustomPapers(custom);
     }
+    fetchCustomPapers();
   }, [level]);
+
+  const availablePapers = useMemo(() => {
+    const builtin = EXAM_PAPERS_CATALOG[level] || [];
+    if (customExamPaper) {
+      return [customExamPaper, ...customPapers, ...builtin];
+    }
+    return [...customPapers, ...builtin];
+  }, [level, customExamPaper, customPapers]);
+
+  const [selectedPaperId, setSelectedPaperId] = useState(
+    customExamPaper?.id || availablePapers[0]?.id || (level === 'N5' ? 'n5-vol1' : 'n4-vol1')
+  );
+
+  // Sync selected paper if level or customExamPaper changes
+  useEffect(() => {
+    if (customExamPaper) {
+      setSelectedPaperId(customExamPaper.id);
+    } else if (availablePapers.length > 0 && !availablePapers.some((p) => p.id === selectedPaperId)) {
+      setSelectedPaperId(availablePapers[0].id);
+    }
+  }, [level, customExamPaper, availablePapers, selectedPaperId]);
 
   const activePaper = availablePapers.find((p) => p.id === selectedPaperId) || availablePapers[0];
   const sections = activePaper?.sections || (level === 'N5' ? N5_SECTIONS_DATA : N4_SECTIONS_DATA);
@@ -582,12 +629,33 @@ export default function JLPTExamSimulator({ level = 'N5', onToast }) {
                     ref={audioRef}
                     controls
                     className="w-full h-9 rounded-lg"
-                    src={currentQuestion.audioSrc}
+                    src={currentQuestion.audioSrc || currentSection?.masterAudioUrl}
+                    onTimeUpdate={() => {
+                      if (!audioRef.current) return;
+                      if (
+                        currentQuestion?.audioEnd !== null &&
+                        currentQuestion?.audioEnd !== undefined &&
+                        audioRef.current.currentTime >= currentQuestion.audioEnd
+                      ) {
+                        audioRef.current.pause();
+                      }
+                    }}
+                    onPlay={() => {
+                      if (
+                        audioRef.current &&
+                        currentQuestion?.audioStart !== null &&
+                        currentQuestion?.audioStart !== undefined &&
+                        (audioRef.current.currentTime < currentQuestion.audioStart ||
+                          audioRef.current.currentTime > currentQuestion.audioEnd)
+                      ) {
+                        audioRef.current.currentTime = currentQuestion.audioStart;
+                      }
+                    }}
                     autoPlay={false}
                   />
 
                   <p className="text-[11px] text-slate-400">
-                    💡 Listen to the real broadcast recording carefully, then select the best matching answer below.
+                    💡 Listen to the broadcast recording carefully, then select the best matching answer below.
                   </p>
                 </div>
               )}
@@ -610,16 +678,17 @@ export default function JLPTExamSimulator({ level = 'N5', onToast }) {
                 />
               </div>
 
-              {/* 4 Interactive Option Radio Cards */}
+              {/* 4 Interactive Option Radio Cards (Supports Picture & Text Choices) */}
               <div className="grid gap-2.5 sm:gap-3 sm:grid-cols-2 pt-2">
                 {currentQuestion.options.map((optionText, optIdx) => {
                   const isSelected = userAnswers[currentQuestion.id] === optIdx;
+                  const optionImage = currentQuestion.optionImages?.[optIdx];
 
                   return (
                     <button
                       key={optIdx}
                       type="button"
-                      className={`p-3 sm:p-4 min-h-[48px] rounded-xl border-2 text-left text-xs sm:text-sm font-semibold transition-all cursor-pointer flex items-center gap-2.5 sm:gap-3 active:scale-[0.99] ${
+                      className={`p-3 sm:p-4 min-h-[54px] rounded-2xl border-2 text-left text-xs sm:text-sm font-semibold transition-all cursor-pointer flex items-start gap-3 active:scale-[0.99] ${
                         isSelected
                           ? 'border-blue-600 bg-blue-50/70 text-blue-950 shadow-sm'
                           : 'border-slate-200 bg-white hover:border-slate-300 text-slate-800'
@@ -627,13 +696,24 @@ export default function JLPTExamSimulator({ level = 'N5', onToast }) {
                       onClick={() => handleSelectAnswer(currentQuestion.id, optIdx)}
                     >
                       <span
-                        className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full font-mono text-xs font-bold ${
+                        className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full font-mono text-xs font-bold mt-0.5 ${
                           isSelected ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-600'
                         }`}
                       >
                         {optIdx + 1}
                       </span>
-                      <span className="flex-1 leading-snug">{optionText}</span>
+                      <div className="flex-1 flex flex-col gap-2">
+                        {optionImage && (
+                          <div className="p-1 bg-white rounded-lg border border-slate-200 inline-block w-fit">
+                            <img
+                              src={optionImage}
+                              alt={`Choice ${optIdx + 1}`}
+                              className="max-h-24 sm:max-h-32 object-contain rounded"
+                            />
+                          </div>
+                        )}
+                        {optionText && <span className="leading-snug">{optionText}</span>}
+                      </div>
                     </button>
                   );
                 })}

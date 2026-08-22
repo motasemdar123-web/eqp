@@ -36,6 +36,7 @@ const STUDY_TOOLS = [
   { id: 'grammar', label: '📖 Grammar Master', pillar: 'foundations' },
   { id: 'vocab', label: '📚 Vocabulary Vault', pillar: 'foundations' },
   { id: 'exam', label: '⏱️ Full Mock Exams', pillar: 'exams' },
+  { id: 'exam_admin', label: '🛠️ Exam Admin Studio (作成・管理)', pillar: 'exams' },
   { id: 'rush', label: '⚡ Speed Kanji Rush (60s)', pillar: 'exams' },
   { id: 'scramble', label: '🧩 Sentence Scrambler', pillar: 'exams' },
   { id: 'mistakes', label: '🎯 Error Vault', pillar: 'exams' },
