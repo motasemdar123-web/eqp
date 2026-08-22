@@ -350,7 +350,7 @@ export default function SmartFlashcardDojo({ grammarList = [], level = 'N5', onT
         <div
           className={`w-full p-6 sm:p-8 bg-white border-2 ${
             flipped ? 'border-amber-400 bg-amber-50/20' : 'border-slate-300'
-          } rounded-3xl shadow-lg cursor-pointer transition-all duration-200 flex flex-col justify-between h-[360px] sm:h-[400px] select-none`}
+          } rounded-3xl shadow-lg cursor-pointer transition-all duration-200 flex flex-col justify-between min-h-[390px] sm:min-h-[430px] select-none`}
           onClick={() => setFlipped(!flipped)}
         >
           {/* Card Top Header */}
@@ -383,43 +383,76 @@ export default function SmartFlashcardDojo({ grammarList = [], level = 'N5', onT
             </div>
           </div>
 
-          {/* Card Body with Contained Scroll */}
-          <div className="flex-1 overflow-y-auto scrollbar-none flex flex-col justify-center py-3">
+          {/* Card Body */}
+          <div className="flex-1 overflow-y-auto scrollbar-none flex flex-col justify-center py-2">
             {!flipped ? (
-              <div className="text-center space-y-3 my-auto">
-                <h3 className="text-3xl sm:text-5xl font-medium text-slate-900 tracking-wide font-serif">
+              <div className="text-center space-y-4 my-auto">
+                <h3 className="text-4xl sm:text-5xl font-bold text-slate-900 tracking-wide font-sans">
                   {currentCard?.title}
                 </h3>
-                <p className="text-xs font-mono text-slate-500 bg-slate-100 inline-block px-3.5 py-1 rounded-full border border-slate-200">
+                <p className="text-xs font-mono text-slate-600 bg-slate-100 inline-block px-4 py-1.5 rounded-full border border-slate-200">
                   Formula: {currentCard?.formula}
                 </p>
               </div>
             ) : (
-              <div className="space-y-3">
-                <div>
-                  <span className="text-[10px] font-bold uppercase text-amber-600 tracking-wider">Meaning</span>
-                  <p className="text-lg sm:text-xl font-bold text-slate-900 leading-snug">{currentCard?.meaning}</p>
-                  <p className="text-xs text-slate-600 leading-relaxed mt-0.5">{currentCard?.description}</p>
+              <div className="space-y-3.5 my-auto">
+                {/* Meaning Header Card */}
+                <div className="bg-amber-50/60 p-3.5 rounded-2xl border border-amber-200/80">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-extrabold uppercase text-amber-800 tracking-widest">
+                      Meaning
+                    </span>
+                    <span className="text-[11px] font-mono text-slate-500 font-medium">
+                      {currentCard?.formula}
+                    </span>
+                  </div>
+                  <p className="text-xl sm:text-2xl font-black text-slate-950 mt-1">
+                    {currentCard?.meaning}
+                  </p>
+                  {currentCard?.description && (
+                    <p className="text-xs text-slate-600 mt-1 leading-relaxed">
+                      {currentCard?.description}
+                    </p>
+                  )}
                 </div>
-                <div className="pt-2 border-t border-slate-100 space-y-2">
-                  <span className="text-[10px] font-bold uppercase text-slate-400">Example</span>
-                  {(currentCard?.examples || []).slice(0, 2).map((ex, idx) => (
-                    <div key={idx} className="p-2.5 bg-slate-50 rounded-xl border border-slate-200/80 text-xs space-y-0.5">
-                      <div className="flex items-center justify-between">
-                        <span className="font-bold text-slate-900">{ex.jp}</span>
+
+                {/* Example Sentences (Large, High Contrast, Crystal Clear) */}
+                <div className="space-y-2">
+                  <span className="text-[10px] font-extrabold uppercase text-slate-400 tracking-widest block px-1">
+                    Example Sentence
+                  </span>
+                  {(currentCard?.examples || []).slice(0, 1).map((ex, idx) => (
+                    <div
+                      key={idx}
+                      className="p-3.5 sm:p-4 bg-slate-50 rounded-2xl border border-slate-200 text-left space-y-2"
+                    >
+                      {/* Japanese Line (Large font) */}
+                      <div className="flex items-start justify-between gap-2">
+                        <p className="text-base sm:text-lg font-bold text-slate-950 font-sans leading-relaxed">
+                          {ex.jp}
+                        </p>
                         <button
                           type="button"
-                          className="text-indigo-600 hover:opacity-80 text-xs ml-1 cursor-pointer"
+                          className="text-indigo-600 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 p-1.5 rounded-xl text-sm cursor-pointer shrink-0 transition-all active:scale-95"
                           onClick={(e) => {
                             e.stopPropagation();
                             speakJapanese(ex.jp);
                           }}
+                          title="Listen to Japanese"
                         >
                           🔊
                         </button>
                       </div>
-                      <span className="text-[11px] text-slate-500 font-mono block">{ex.romaji}</span>
-                      <span className="text-slate-700 block font-medium">{ex.en}</span>
+
+                      {/* Romaji Reading */}
+                      <p className="text-xs font-mono font-semibold text-indigo-700 bg-indigo-50 inline-block px-2 py-0.5 rounded-md border border-indigo-100">
+                        {ex.romaji}
+                      </p>
+
+                      {/* English Translation */}
+                      <p className="text-sm font-semibold text-slate-700 border-t border-slate-200/80 pt-1.5 leading-normal">
+                        {ex.en}
+                      </p>
                     </div>
                   ))}
                 </div>
@@ -429,7 +462,7 @@ export default function SmartFlashcardDojo({ grammarList = [], level = 'N5', onT
 
           {/* Card Footer */}
           <div className="pt-2.5 border-t border-slate-100 text-center text-xs text-slate-400 font-medium shrink-0">
-            {flipped ? 'Rate recall memory (SM-2):' : '💡 Click card or press Space to flip.'}
+            {flipped ? 'Rate recall memory below (1 - 4):' : '💡 Click card or press Space to flip.'}
           </div>
         </div>
 
