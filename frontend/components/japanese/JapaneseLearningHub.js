@@ -26,6 +26,7 @@ import MachinePartsExplorer from './MachinePartsExplorer';
 import WorkshopRoleplayCoach from './WorkshopRoleplayCoach';
 import BusinessEmailStudio from './BusinessEmailStudio';
 import SpeedKanjiRush from './SpeedKanjiRush';
+import ZenFocusModeOverlay from './ZenFocusModeOverlay';
 
 function speakJapanese(text) {
   if (typeof window === 'undefined' || !window.speechSynthesis) return;
@@ -43,6 +44,7 @@ export default function JapaneseLearningHub() {
   const [toast, setToast] = useState(null);
   const [isLevelModalOpen, setIsLevelModalOpen] = useState(false);
   const [isFirstTimeUser, setIsFirstTimeUser] = useState(false);
+  const [isFocusMode, setIsFocusMode] = useState(false);
 
   // Load persistent user level preference on first mount
   useEffect(() => {
@@ -90,6 +92,37 @@ export default function JapaneseLearningHub() {
     else if (pillar === 'workplace') setActiveTab('parts_explorer');
   };
 
+  const renderActiveToolContent = () => {
+    switch (activeTab) {
+      case 'exam':
+        return <JLPTExamSimulator level={level} onToast={setToast} />;
+      case 'rush':
+        return <SpeedKanjiRush level={level} onToast={showToast} />;
+      case 'mistakes':
+        return <MistakeBankModal onToast={showToast} />;
+      case 'scramble':
+        return <SentenceScramblerGame level={level} onToast={showToast} />;
+      case 'flashcards':
+        return <FlashcardDojo grammarList={currentGrammar} level={level} onToast={showToast} />;
+      case 'kanji':
+        return <KanjiDojo kanjiList={currentKanji} level={level} onToast={setToast} />;
+      case 'grammar':
+        return <GrammarMaster grammarList={currentGrammar} level={level} onToast={setToast} />;
+      case 'vocab':
+        return <VocabularyVault vocabList={currentVocab} level={level} onToast={setToast} />;
+      case 'parts_explorer':
+        return <MachinePartsExplorer onToast={showToast} />;
+      case 'roleplay':
+        return <WorkshopRoleplayCoach onToast={showToast} />;
+      case 'business_email':
+        return <BusinessEmailStudio onToast={showToast} />;
+      case 'technical':
+        return <TechnicalJapaneseHub onToast={showToast} />;
+      default:
+        return <JLPTExamSimulator level={level} onToast={setToast} />;
+    }
+  };
+
   return (
     <SystemShell
       activePath="/japanese"
@@ -98,22 +131,37 @@ export default function JapaneseLearningHub() {
       description="Streamlined Japanese mastery environment for JLPT proficiency (N5 & N4) and Factory 5S Operations."
       actions={
         <div className="flex items-center gap-2">
+          {/* Zen Focus Mode CTA */}
+          <Button
+            size="sm"
+            variant="primary"
+            className="bg-linear-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-black shadow-md flex items-center gap-1.5 active:scale-95 text-xs"
+            onClick={() => {
+              setIsFocusMode(true);
+              showToast('🧘 Zen Focus Mode Activated. Press ESC to exit anytime.', 'info');
+            }}
+          >
+            <span>🎯</span>
+            <span>Focus Mode (集中)</span>
+          </Button>
+
           <div
-            className={`flex items-center gap-2 px-3.5 py-1.5 rounded-xl border text-xs font-bold shadow-xs transition-all ${
+            className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border text-xs font-bold shadow-xs transition-all ${
               level === 'N5'
                 ? 'bg-amber-50 border-amber-300/80 text-amber-900'
                 : 'bg-blue-50 border-blue-300/80 text-blue-900'
             }`}
           >
             <span className="text-sm">{level === 'N5' ? '🌸' : '⛩️'}</span>
-            <span>Target: JLPT {level}</span>
+            <span className="hidden sm:inline">Target:</span>
+            <span>JLPT {level}</span>
             <button
               type="button"
               onClick={() => setIsLevelModalOpen(true)}
-              className="ml-1 text-[11px] text-slate-500 hover:text-slate-900 font-semibold underline cursor-pointer"
+              className="ml-0.5 text-[11px] text-slate-500 hover:text-slate-900 font-semibold underline cursor-pointer"
               title="Switch between JLPT N5 and N4"
             >
-              Switch ▾
+              ▾
             </button>
           </div>
         </div>
@@ -313,54 +361,20 @@ export default function JapaneseLearningHub() {
         </div>
 
         {/* Active Sub-Module View */}
-        {activeTab === 'exam' && (
-          <JLPTExamSimulator level={level} onToast={setToast} />
-        )}
-
-        {activeTab === 'rush' && (
-          <SpeedKanjiRush level={level} onToast={showToast} />
-        )}
-
-        {activeTab === 'mistakes' && (
-          <MistakeBankModal onToast={showToast} />
-        )}
-
-        {activeTab === 'scramble' && (
-          <SentenceScramblerGame level={level} onToast={showToast} />
-        )}
-
-        {activeTab === 'flashcards' && (
-          <FlashcardDojo grammarList={currentGrammar} level={level} onToast={showToast} />
-        )}
-
-        {activeTab === 'kanji' && (
-          <KanjiDojo kanjiList={currentKanji} level={level} onToast={setToast} />
-        )}
-
-        {activeTab === 'grammar' && (
-          <GrammarMaster grammarList={currentGrammar} level={level} onToast={setToast} />
-        )}
-
-        {activeTab === 'vocab' && (
-          <VocabularyVault vocabList={currentVocab} level={level} onToast={setToast} />
-        )}
-
-        {activeTab === 'parts_explorer' && (
-          <MachinePartsExplorer onToast={showToast} />
-        )}
-
-        {activeTab === 'roleplay' && (
-          <WorkshopRoleplayCoach onToast={showToast} />
-        )}
-
-        {activeTab === 'business_email' && (
-          <BusinessEmailStudio onToast={showToast} />
-        )}
-
-        {activeTab === 'technical' && (
-          <TechnicalJapaneseHub onToast={showToast} />
-        )}
+        {renderActiveToolContent()}
       </div>
+
+      {/* Zen Focus Mode Fullscreen Overlay */}
+      <ZenFocusModeOverlay
+        isOpen={isFocusMode}
+        onClose={() => setIsFocusMode(false)}
+        level={level}
+        activeTab={activeTab}
+        onSelectTab={(newTab) => setActiveTab(newTab)}
+        onToast={showToast}
+      >
+        {renderActiveToolContent()}
+      </ZenFocusModeOverlay>
 
       <Toast message={toast?.message} type={toast?.type} onClose={() => setToast(null)} />
 
