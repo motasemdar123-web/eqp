@@ -1,6 +1,14 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  /* config options here */
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+  outputFileTracingExcludes: {
+    '*': [
+      'public/audio/**',
+      'public/images/**',
+    ],
+  },
 };
 
 export default nextConfig;

@@ -117,6 +117,16 @@ export default function JLPTExamSimulator({
   const currentQuestion = currentQuestions[activeQuestionIndex] || currentQuestions[0];
   const allQuestions = useMemo(() => sections.flatMap((s) => s.questions), [sections]);
 
+  const filteredReviewQuestions = useMemo(() => {
+    if (filterReview === 'INCORRECT') {
+      return allQuestions.filter((q) => userAnswers[q.id] !== q.correct);
+    }
+    if (filterReview === 'FLAGGED') {
+      return allQuestions.filter((q) => flaggedQuestions.has(q.id));
+    }
+    return allQuestions;
+  }, [allQuestions, userAnswers, flaggedQuestions, filterReview]);
+
   // Audio player ref for listening section
   const audioRef = useRef(null);
   const timerIntervalRef = useRef(null);
@@ -817,16 +827,6 @@ export default function JLPTExamSimulator({
   // 4. RESULTS & SCORE REPORT SCREEN (合否結果通知書)
   // -------------------------------------------------------------------------
   const isPassed = scoreReport.isOverallPassed;
-
-  const filteredReviewQuestions = useMemo(() => {
-    if (filterReview === 'INCORRECT') {
-      return allQuestions.filter((q) => userAnswers[q.id] !== q.correct);
-    }
-    if (filterReview === 'FLAGGED') {
-      return allQuestions.filter((q) => flaggedQuestions.has(q.id));
-    }
-    return allQuestions;
-  }, [allQuestions, userAnswers, flaggedQuestions, filterReview]);
 
   return (
     <div className="space-y-8 max-w-5xl mx-auto">

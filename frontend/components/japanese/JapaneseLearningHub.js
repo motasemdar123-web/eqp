@@ -27,6 +27,7 @@ import WorkshopRoleplayCoach from './WorkshopRoleplayCoach';
 import BusinessEmailStudio from './BusinessEmailStudio';
 import ZenFocusModeOverlay from './ZenFocusModeOverlay';
 import SmartFlashcardDojo from './SmartFlashcardDojo';
+import SpeedKanjiRush from './SpeedKanjiRush';
 import ExamAdminStudio from './ExamAdminStudio';
 
 function speakJapanese(text) {
