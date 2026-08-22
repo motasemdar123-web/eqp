@@ -1,9 +1,9 @@
-// Generated complete Grammar datasets for JLPT N5 and N4
+// Generated complete Grammar datasets for JLPT N5 and N4 (Cleaned)
 export const N5_GRAMMAR = [
   {
     "id": "n5-g-1",
-    "title": "だ・です (だ (da) & です (desu))",
-    "formula": "Pattern: だ (da) & です (desu)",
+    "title": "だ・です (da / desu)",
+    "formula": "だ (da) & です (desu)",
     "meaning": "to be (am, is, are, were, used to)",
     "category": "Particles & Relations",
     "examples": [
@@ -11,31 +11,16 @@ export const N5_GRAMMAR = [
         "jp": "私はクリスです。",
         "romaji": "watashi wa kurisu desu.",
         "en": "I am Chris."
-      },
-      {
-        "jp": "です (polite)",
-        "romaji": "past",
-        "en": "affirmative"
-      },
-      {
-        "jp": "でした (polite)",
-        "romaji": "present",
-        "en": "negative"
       }
     ]
   },
   {
     "id": "n5-g-2",
-    "title": "だけ (だけ (dake))",
-    "formula": "Pattern: だけ (dake)",
+    "title": "だけ (dake)",
+    "formula": "だけ (dake)",
     "meaning": "only; just; as much as",
     "category": "Essential Patterns",
     "examples": [
-      {
-        "jp": "Learn Japanese grammar: だけ (dake). Meaning: only; just; as much as.",
-        "romaji": "Meaning 1) only; just; alone",
-        "en": "Example 1-A)"
-      },
       {
         "jp": "⼀⼈だけ。",
         "romaji": "hitori dake.",
@@ -50,8 +35,8 @@ export const N5_GRAMMAR = [
   },
   {
     "id": "n5-g-3",
-    "title": "だろう (だろう (darou))",
-    "formula": "Pattern: だろう (darou)",
+    "title": "だろう (darou)",
+    "formula": "だろう (darou)",
     "meaning": "I think; it seems; probably; right?",
     "category": "Essential Patterns",
     "examples": [
@@ -64,16 +49,11 @@ export const N5_GRAMMAR = [
   },
   {
     "id": "n5-g-4",
-    "title": "でも (でも (demo))",
-    "formula": "Pattern: でも (demo)",
+    "title": "でも (demo)",
+    "formula": "でも (demo)",
     "meaning": "but; however",
     "category": "Particles & Relations",
     "examples": [
-      {
-        "jp": "It is very similar to しかし (shikashi), which is a bit stronger.",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "私は⿂が好すきです。でも⾁も好きです。",
         "romaji": "watashi wa sakana ga suki desu. demo niku mo suki desu.",
@@ -88,16 +68,11 @@ export const N5_GRAMMAR = [
   },
   {
     "id": "n5-g-5",
-    "title": "でしょう (でしょう (deshou))",
-    "formula": "Pattern: でしょう (deshou)",
+    "title": "でしょう (deshou)",
+    "formula": "でしょう (deshou)",
     "meaning": "I think; it seems; probably; right?",
     "category": "Particles & Relations",
     "examples": [
-      {
-        "jp": "Learn Japanese grammar: でしょう (deshou). Meaning: I think; it seems; probably; right?",
-        "romaji": "Although there are many different meanings, which may seem confusing, it is usually easy to understand",
-        "en": "from context."
-      },
       {
         "jp": "明⽇は⾬が降るでしょう。",
         "romaji": "ashita wa ame ga furu deshou.",
@@ -112,16 +87,11 @@ export const N5_GRAMMAR = [
   },
   {
     "id": "n5-g-6",
-    "title": "どんな (どんな (donna))",
-    "formula": "Pattern: どんな (donna)",
+    "title": "どんな (donna)",
+    "formula": "どんな (donna)",
     "meaning": "what kind of; what sort of",
     "category": "Essential Patterns",
     "examples": [
-      {
-        "jp": "Learn Japanese grammar: どんな (donna). Meaning: what kind of; what sort of.",
-        "romaji": "This sentence pattern is used to ask about the state or character of a person, thing, etc.",
-        "en": "Example Sentences"
-      },
       {
         "jp": "ベトナムはどんな国ですか。",
         "romaji": "betonamu wa donna kuni desu ka.",
@@ -136,8 +106,8 @@ export const N5_GRAMMAR = [
   },
   {
     "id": "n5-g-7",
-    "title": "どうして (どうして (doushite))",
-    "formula": "Pattern: どうして (doushite)",
+    "title": "どうして (doushite)",
+    "formula": "どうして (doushite)",
     "meaning": "why; for what reason; how",
     "category": "Verb Forms & Conjugations",
     "examples": [
@@ -160,16 +130,11 @@ export const N5_GRAMMAR = [
   },
   {
     "id": "n5-g-8",
-    "title": "どうやって (どうやって (douyatte))",
-    "formula": "Pattern: どうやって (douyatte)",
+    "title": "どうやって (douyatte)",
+    "formula": "どうやって (douyatte)",
     "meaning": "how; in what way; by what means",
     "category": "Verb Forms & Conjugations",
     "examples": [
-      {
-        "jp": "Learn Japanese grammar: どうやって (douyatte). Meaning: how; in what way; by what means .",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "駅までどうやって⾏きますか。",
         "romaji": "eki made douyatte ikimasu ka.",
@@ -184,8 +149,8 @@ export const N5_GRAMMAR = [
   },
   {
     "id": "n5-g-9",
-    "title": "が (が (ga))",
-    "formula": "Pattern: が (ga)",
+    "title": "が (ga)",
+    "formula": "が (ga)",
     "meaning": "the particle が has two main meanings, one as a subject",
     "category": "Particles & Relations",
     "examples": [
@@ -203,16 +168,11 @@ export const N5_GRAMMAR = [
   },
   {
     "id": "n5-g-10",
-    "title": "があります (があります (ga arimasu) & がある (ga aru))",
-    "formula": "Pattern: があります (ga arimasu) & がある (ga aru)",
-    "meaning": "used to say there is or",
+    "title": "がある・あります (ga aru / arimasu)",
+    "formula": "がある・あります (ga aru / arimasu)",
+    "meaning": "",
     "category": "Particles & Relations",
     "examples": [
-      {
-        "jp": "Learn Japanese grammar: があります (ga arimasu) & がある (ga aru). Meaning: used to say there is or",
-        "romaji": "something is for NON-LIVING things.",
-        "en": "This form can only be used with non-living things."
-      },
       {
         "jp": "たくさんの宿題があります。",
         "romaji": "takusan no shukudai ga arimasu.",
@@ -227,16 +187,11 @@ export const N5_GRAMMAR = [
   },
   {
     "id": "n5-g-11",
-    "title": "がほしい (がほしい / が欲しい (ga hoshii))",
-    "formula": "Pattern: がほしい / が欲しい (ga hoshii)",
+    "title": "が欲しい・がほしい (ga hoshii)",
+    "formula": "が欲しい・がほしい (ga hoshii)",
     "meaning": "to want something",
     "category": "Particles & Relations",
     "examples": [
-      {
-        "jp": "There is also a kanji version が欲しい, but it is commonly used with just hiragana:",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "もっとお⾦が欲しいです。",
         "romaji": "motto okane ga hoshii desu.",
@@ -251,16 +206,11 @@ export const N5_GRAMMAR = [
   },
   {
     "id": "n5-g-12",
-    "title": "がいます (がいます (ga imasu) & がいる (ga iru))",
-    "formula": "Pattern: がいます (ga imasu) & がいる (ga iru)",
-    "meaning": "used to say there is or",
+    "title": "がいる・います (ga iru / imasu)",
+    "formula": "がいる・います (ga iru / imasu)",
+    "meaning": "",
     "category": "Particles & Relations",
     "examples": [
-      {
-        "jp": "The verb いる (iru) comes from 居る (iru), which is the verb for to be (for living things). However, when",
-        "romaji": "used in this grammar form, the hiragana form is used instead of the kanji form.",
-        "en": "This form can only be used with living things."
-      },
       {
         "jp": "シャワーには誰かがいます。",
         "romaji": "shawaa ni wa dareka ga imasu.",
@@ -275,8 +225,8 @@ export const N5_GRAMMAR = [
   },
   {
     "id": "n5-g-13",
-    "title": "ほうがいい (⽅がいい / (ほうがいい) (hou ga ii))",
-    "formula": "Pattern: ⽅がいい / (ほうがいい) (hou ga ii)",
+    "title": "方がいい (hou ga ii)",
+    "formula": "方がいい (hou ga ii)",
     "meaning": "had better; it’d be better to;",
     "category": "Particles & Relations",
     "examples": [
@@ -294,21 +244,11 @@ export const N5_GRAMMAR = [
   },
   {
     "id": "n5-g-14",
-    "title": "⼀番 (⼀番 「いちばん」 (ichiban))",
-    "formula": "Pattern: ⼀番 「いちばん」 (ichiban)",
+    "title": "⼀番 (ichiban)",
+    "formula": "⼀番 「いちばん」 (ichiban)",
     "meaning": "the most; the best",
     "category": "Essential Patterns",
     "examples": [
-      {
-        "jp": "Learn Japanese grammar: ⼀番 「いちばん」 (ichiban). Meaning: the most; the best.",
-        "romaji": "This grammar is used to say something is the best.",
-        "en": "Some common usage patterns include:"
-      },
-      {
-        "jp": "のなかで〜がいちばん",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "彼がいちばん働いた。",
         "romaji": "kare ga ichiban hataraita.",
@@ -318,8 +258,8 @@ export const N5_GRAMMAR = [
   },
   {
     "id": "n5-g-15",
-    "title": "⼀緒に (⼀緒に「いっしょに」 (issho ni))",
-    "formula": "Pattern: ⼀緒に「いっしょに」 (issho ni)",
+    "title": "⼀緒に (issho ni)",
+    "formula": "⼀緒に「いっしょに」 (issho ni)",
     "meaning": "together",
     "category": "Particles & Relations",
     "examples": [
@@ -337,8 +277,8 @@ export const N5_GRAMMAR = [
   },
   {
     "id": "n5-g-16",
-    "title": "いつも (いつも (itsumo))",
-    "formula": "Pattern: いつも (itsumo)",
+    "title": "いつも (itsumo)",
+    "formula": "いつも (itsumo)",
     "meaning": "always; usually; habitually",
     "category": "Essential Patterns",
     "examples": [
@@ -361,8 +301,8 @@ export const N5_GRAMMAR = [
   },
   {
     "id": "n5-g-17",
-    "title": "じゃない・ではない (じゃない (janai) & ではない (dewa nai))",
-    "formula": "Pattern: じゃない (janai) & ではない (dewa nai)",
+    "title": "じゃない・ではない (janai / dewa nai)",
+    "formula": "じゃない (janai) & ではない (dewa nai)",
     "meaning": "to not be (am not; is not;",
     "category": "Verb Forms & Conjugations",
     "examples": [
@@ -370,18 +310,13 @@ export const N5_GRAMMAR = [
         "jp": "私はともこ先⽣ではない。",
         "romaji": "watashi wa tomoko sensei dewanai.",
         "en": "I am not Tomoko-sensei."
-      },
-      {
-        "jp": "ではありません",
-        "romaji": "past",
-        "en": "negative"
       }
     ]
   },
   {
     "id": "n5-g-18",
-    "title": "か (か (ka))",
-    "formula": "Pattern: か (ka)",
+    "title": "か (ka)",
+    "formula": "か (ka)",
     "meaning": "か is a sentence-ending particle used to turn a sentence into",
     "category": "Essential Patterns",
     "examples": [
@@ -394,18 +329,13 @@ export const N5_GRAMMAR = [
         "jp": "⽇本⼈ですか。",
         "romaji": "nihon jin desu ka.",
         "en": "Are you Japanese?"
-      },
-      {
-        "jp": "か can also mean “or”, see lesson for か〜か (ka~ka).",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
       }
     ]
   },
   {
     "id": "n5-g-19",
-    "title": "か〜か (か〜か (ka~ka))",
-    "formula": "Pattern: か〜か (ka~ka)",
+    "title": "か〜か (ka~ka)",
+    "formula": "か〜か (ka~ka)",
     "meaning": "the particle か is used to say “or”",
     "category": "Essential Patterns",
     "examples": [
@@ -418,16 +348,11 @@ export const N5_GRAMMAR = [
   },
   {
     "id": "n5-g-20",
-    "title": "から (から (kara))",
-    "formula": "Pattern: から (kara)",
+    "title": "から (kara)",
+    "formula": "から (kara)",
     "meaning": "because; since; from",
     "category": "Particles & Relations",
     "examples": [
-      {
-        "jp": "Learn Japanese grammar: から (kara). Meaning: because; since; from.",
-        "romaji": "This grammar can be used in two different ways to express two different meanings. Both forms are very",
-        "en": "commonly used in Japanese, so it is important to understand how to use both forms and to be able to"
-      },
       {
         "jp": "明⽇テストがあるから、今夜勉強つもりだ。",
         "romaji": "ashita tesuto ga aru kara, konya benkyou tsumori da.",
@@ -442,16 +367,11 @@ export const N5_GRAMMAR = [
   },
   {
     "id": "n5-g-21",
-    "title": "⽅ (⽅ [かた] (kata))",
-    "formula": "Pattern: ⽅ [かた] (kata)",
+    "title": "⽅ ([かた] (kata))",
+    "formula": "⽅ [かた] (kata)",
     "meaning": "the way of doing something; how to do",
     "category": "Essential Patterns",
     "examples": [
-      {
-        "jp": "⾷べ かた",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "パソコンの使いかたがわかりません。",
         "romaji": "pasokon no tsukai kata ga wakarimasen.",
@@ -461,21 +381,11 @@ export const N5_GRAMMAR = [
   },
   {
     "id": "n5-g-22",
-    "title": "けど (けど (kedo))",
-    "formula": "Pattern: けど (kedo)",
+    "title": "けど (kedo)",
+    "formula": "けど (kedo)",
     "meaning": "but; however; although",
     "category": "Essential Patterns",
     "examples": [
-      {
-        "jp": "Learn Japanese grammar: けど (kedo). Meaning: but; however; although.",
-        "romaji": "This grammar is used to say:",
-        "en": "but"
-      },
-      {
-        "jp": "To be more polite, use けれども (keredo mo) instead.",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "仕事は⾟いけど楽しい。",
         "romaji": "shigoto wa tsurai kedo tanoshii.",
@@ -485,21 +395,11 @@ export const N5_GRAMMAR = [
   },
   {
     "id": "n5-g-23",
-    "title": "けれども (けれども (keredo mo))",
-    "formula": "Pattern: けれども (keredo mo)",
+    "title": "けれども (keredo mo)",
+    "formula": "けれども (keredo mo)",
     "meaning": "but; however; although",
     "category": "Essential Patterns",
     "examples": [
-      {
-        "jp": "Learn Japanese grammar: けれども (keredo mo). Meaning: but; however; although.",
-        "romaji": "This grammar is used to say:",
-        "en": "but"
-      },
-      {
-        "jp": "The less formal version is けど (kedo)",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "このカメラは⾼かったけれど、すぐ壊れてしまいました。",
         "romaji": "kono kamera wa takaaktta keredo, sugu kowarete shimaimashita.",
@@ -509,8 +409,8 @@ export const N5_GRAMMAR = [
   },
   {
     "id": "n5-g-24",
-    "title": "まだ (まだ (mada))",
-    "formula": "Pattern: まだ (mada)",
+    "title": "まだ (mada)",
+    "formula": "まだ (mada)",
     "meaning": "still; not yet",
     "category": "Essential Patterns",
     "examples": [
@@ -518,11 +418,6 @@ export const N5_GRAMMAR = [
         "jp": "まだ (mada) is used to express “still” or “not yet”. It can be used with:",
         "romaji": "1. a verb",
         "en": "2. or a noun"
-      },
-      {
-        "jp": "まだまだ can also be used for extra emphasis.",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
       },
       {
         "jp": "Verb (ていない)",
@@ -533,16 +428,11 @@ export const N5_GRAMMAR = [
   },
   {
     "id": "n5-g-25",
-    "title": "まだ〜ていません (まだ〜ていません (mada ~te imasen))",
-    "formula": "Pattern: まだ〜ていません (mada ~te imasen)",
+    "title": "まだ〜ていません (mada ~te imasen)",
+    "formula": "まだ〜ていません (mada ~te imasen)",
     "meaning": "have not yet",
     "category": "Verb Forms & Conjugations",
     "examples": [
-      {
-        "jp": "Also see the lesson for まだ (mada).",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "バスはまだ来ていません。",
         "romaji": "basu wa mada kiteimasen.",
@@ -557,8 +447,8 @@ export const N5_GRAMMAR = [
   },
   {
     "id": "n5-g-26",
-    "title": "まで (まで (made))",
-    "formula": "Pattern: まで (made)",
+    "title": "まで (made)",
+    "formula": "まで (made)",
     "meaning": "until ~; as far as ~; to (an extent); even ~",
     "category": "Particles & Relations",
     "examples": [
@@ -581,21 +471,11 @@ export const N5_GRAMMAR = [
   },
   {
     "id": "n5-g-27",
-    "title": "前に (前に 【まえに】 (mae ni))",
-    "formula": "Pattern: 前に 【まえに】 (mae ni)",
+    "title": "前に (mae ni)",
+    "formula": "前に 【まえに】 (mae ni)",
     "meaning": "before ~; in front of ~",
     "category": "Particles & Relations",
     "examples": [
-      {
-        "jp": "Learn Japanese grammar: 前に 【まえに】 (mae ni). Meaning: before ~; in front of ~.",
-        "romaji": "This grammar can be used mainly for 2 situations.",
-        "en": "To say something happened before [X]. (time)"
-      },
-      {
-        "jp": "To say something happens after instead, use 後で (あとで) (ato de).",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "ドアを開ける前にノックぐらいしてください。",
         "romaji": "doa o akeru mae ni nokku gurai shite kudasai.",
@@ -605,16 +485,11 @@ export const N5_GRAMMAR = [
   },
   {
     "id": "n5-g-28",
-    "title": "ませんか (ませんか (masen ka))",
-    "formula": "Pattern: ませんか (masen ka)",
+    "title": "ませんか (masen ka)",
+    "formula": "ませんか (masen ka)",
     "meaning": "would you; do you want to; shall we~",
     "category": "Essential Patterns",
     "examples": [
-      {
-        "jp": "Learn Japanese grammar: ませんか (masen ka). Meaning: would you; do you want to; shall we~",
-        "romaji": "This grammar is used to ask someone if they would like to do something:",
-        "en": "would you~"
-      },
       {
         "jp": "⾏きませんか。",
         "romaji": "iki masen ka.",
@@ -629,16 +504,11 @@ export const N5_GRAMMAR = [
   },
   {
     "id": "n5-g-29",
-    "title": "ましょう (ましょう (mashou))",
-    "formula": "Pattern: ましょう (mashou)",
+    "title": "ましょう (mashou)",
+    "formula": "ましょう (mashou)",
     "meaning": "let’s ~; shall we ~",
     "category": "Essential Patterns",
     "examples": [
-      {
-        "jp": "By adding か at the end, it becomes a suggestive question. See lesson for ましょうか (mashouka).",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "⾏きましょう︕",
         "romaji": "iki mashou!",
@@ -653,16 +523,11 @@ export const N5_GRAMMAR = [
   },
   {
     "id": "n5-g-30",
-    "title": "ましょうか (ましょうか (mashouka))",
-    "formula": "Pattern: ましょうか (mashouka)",
+    "title": "ましょうか (mashouka)",
+    "formula": "ましょうか (mashouka)",
     "meaning": "shall I ~; used to offer help to the listener",
     "category": "Essential Patterns",
     "examples": [
-      {
-        "jp": "By removing か at the end, the meaning changes to “let’s do ~”. See lesson for ましょう (mashou).",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "マドを開けましょうか。",
         "romaji": "mado o ake mashouka?",
@@ -677,8 +542,8 @@ export const N5_GRAMMAR = [
   },
   {
     "id": "n5-g-31",
-    "title": "も (も (mo))",
-    "formula": "Pattern: も (mo)",
+    "title": "も (mo)",
+    "formula": "も (mo)",
     "meaning": "too; also; as well",
     "category": "Essential Patterns",
     "examples": [
@@ -686,11 +551,6 @@ export const N5_GRAMMAR = [
         "jp": "も (mo) is used to say:",
         "romaji": "this also",
         "en": "this too"
-      },
-      {
-        "jp": "でも (demo) .",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
       },
       {
         "jp": "私もできる。",
@@ -701,8 +561,8 @@ export const N5_GRAMMAR = [
   },
   {
     "id": "n5-g-32",
-    "title": "もう (もう (mou))",
-    "formula": "Pattern: もう (mou)",
+    "title": "もう (mou)",
+    "formula": "もう (mou)",
     "meaning": "already; anymore; again; other",
     "category": "Essential Patterns",
     "examples": [
@@ -715,21 +575,11 @@ export const N5_GRAMMAR = [
   },
   {
     "id": "n5-g-33",
-    "title": "なあ (なあ (naa))",
-    "formula": "Pattern: なあ (naa)",
+    "title": "なあ (naa)",
+    "formula": "なあ (naa)",
     "meaning": "a sentence-ending particle that can used to express the",
     "category": "Essential Patterns",
     "examples": [
-      {
-        "jp": "Learn Japanese grammar: なあ (naa). Meaning: a sentence-ending particle that can used to express the",
-        "romaji": "following:",
-        "en": "ask for confirmation from listener (..right?)"
-      },
-      {
-        "jp": "There are some similarities with the other sentence ending particle ね (ne).",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "たくさんの⼈がいるなあ。",
         "romaji": "takusan no hito ga iru naa.",
@@ -739,16 +589,11 @@ export const N5_GRAMMAR = [
   },
   {
     "id": "n5-g-34",
-    "title": "ないで (ないで (naide))",
-    "formula": "Pattern: ないで (naide)",
+    "title": "ないで (naide)",
+    "formula": "ないで (naide)",
     "meaning": "without doing~ ; To do [B] without doing [A]",
     "category": "Verb Forms & Conjugations",
     "examples": [
-      {
-        "jp": "If no action follows ないで, it turns into a request. See lesson ないでください (naide kudasai).",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "コーヒーには、いつもさとうを⼊れないで飲みます。",
         "romaji": "koohii ni wa, itsumo satou o irenaide nomimasu.",
@@ -764,29 +609,24 @@ export const N5_GRAMMAR = [
   {
     "id": "n5-g-35",
     "title": "ないでください (ないでくだあい (naide kudasai))",
-    "formula": "Pattern: ないでくだあい (naide kudasai)",
+    "formula": "ないでくだあい (naide kudasai)",
     "meaning": "please don’t do",
     "category": "Verb Forms & Conjugations",
     "examples": [
       {
-        "jp": "To say the opposite, “please do”, use てください (te kudasai)",
-        "romaji": "See all related grammar.",
-        "en": "Example Sentences"
+        "jp": "ないでくださいの使い方を練習しましょう。",
+        "romaji": "no tsukaikata o renshuu shimashou.",
+        "en": "Let us practice how to use this grammar pattern."
       }
     ]
   },
   {
     "id": "n5-g-36",
-    "title": "なくてもいい (なくてもいい (naku temo ii))",
-    "formula": "Pattern: なくてもいい (naku temo ii)",
+    "title": "なくてもいい (naku temo ii)",
+    "formula": "なくてもいい (naku temo ii)",
     "meaning": "don’t have to; it’s OK to not do",
     "category": "Verb Forms & Conjugations",
     "examples": [
-      {
-        "jp": "This grammar is an extension of ても (temo) and てもいいです (temo ii desu).",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "明⽇は休みだから、学校に⾏かなくてもいい。",
         "romaji": "ashita wa yasumi dakara, gakkou ni ikanaku temoii.",
@@ -801,35 +641,25 @@ export const N5_GRAMMAR = [
   },
   {
     "id": "n5-g-37",
-    "title": "なくちゃ (なくちゃ (nakucha) / なくちゃダメ (nakucha dame))",
-    "formula": "Pattern: なくちゃ (nakucha) / なくちゃダメ (nakucha dame)",
+    "title": "なくちゃ (nakucha) / なくちゃダメ (nakucha dame)",
+    "formula": "なくちゃ (nakucha) / なくちゃダメ (nakucha dame)",
     "meaning": "must do; need",
     "category": "Essential Patterns",
     "examples": [
       {
-        "jp": "Learn Japanese grammar: なくちゃ (nakucha) / なくちゃダメ (nakucha dame). Meaning: must do; need",
-        "romaji": "to; gotta do.",
-        "en": "This grammar is the casual spoken way to say that one must do something."
+        "jp": "なくちゃの使い方を練習しましょう。",
+        "romaji": "no tsukaikata o renshuu shimashou.",
+        "en": "Let us practice how to use this grammar pattern."
       }
     ]
   },
   {
     "id": "n5-g-38",
     "title": "なる (になる・くなる (ni naru / ku naru))",
-    "formula": "Pattern: になる・くなる (ni naru / ku naru)",
+    "formula": "になる・くなる (ni naru / ku naru)",
     "meaning": "to become",
     "category": "Essential Patterns",
     "examples": [
-      {
-        "jp": "It is usually written either as になる (ni naru) or くなる (ku naru) when followed by い-adjectives.",
-        "romaji": "Various forms:",
-        "en": "Since it is a verb, it can be conjugated in current and past tense."
-      },
-      {
-        "jp": "なりたい (naritai)",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "⼤きくなっているね︕",
         "romaji": "ookiku natteiru ne!",
@@ -839,8 +669,8 @@ export const N5_GRAMMAR = [
   },
   {
     "id": "n5-g-39",
-    "title": "んです (んです (ndesu) & んだ (nda))",
-    "formula": "Pattern: んです (ndesu) & んだ (nda)",
+    "title": "んです (ndesu) & んだ (nda)",
+    "formula": "んです (ndesu) & んだ (nda)",
     "meaning": "to explain something; show emphasis",
     "category": "Particles & Relations",
     "examples": [
@@ -858,8 +688,8 @@ export const N5_GRAMMAR = [
   },
   {
     "id": "n5-g-40",
-    "title": "ね (ね (ne))",
-    "formula": "Pattern: ね (ne)",
+    "title": "ね (ne)",
+    "formula": "ね (ne)",
     "meaning": "the particle ね is a sentence ending particle that is used to",
     "category": "Essential Patterns",
     "examples": [
@@ -882,8 +712,8 @@ export const N5_GRAMMAR = [
   },
   {
     "id": "n5-g-41",
-    "title": "に (に (ni))",
-    "formula": "Pattern: に (ni)",
+    "title": "に (ni)",
+    "formula": "に (ni)",
     "meaning": "destination particle; in; at; on; to",
     "category": "Particles & Relations",
     "examples": [
@@ -902,7 +732,7 @@ export const N5_GRAMMAR = [
   {
     "id": "n5-g-42",
     "title": "にいく (に⾏く 【にいく】(ni iku))",
-    "formula": "Pattern: に⾏く 【にいく】(ni iku)",
+    "formula": "に⾏く 【にいく】(ni iku)",
     "meaning": "to go in order to do something; to go for",
     "category": "Particles & Relations",
     "examples": [
@@ -910,11 +740,6 @@ export const N5_GRAMMAR = [
         "jp": "⾷べにいく。",
         "romaji": "tabe ni iku.",
         "en": "To go to eat."
-      },
-      {
-        "jp": "Often the kanji form is used (に⾏く), but the hiragana version can be used as well (にいく).",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
       },
       {
         "jp": "友だちの家に遊びに⾏く。",
@@ -925,16 +750,11 @@ export const N5_GRAMMAR = [
   },
   {
     "id": "n5-g-43",
-    "title": "にする (にする (ni suru) / にします (ni shimasu))",
-    "formula": "Pattern: にする (ni suru) / にします (ni shimasu)",
+    "title": "にする (ni suru) / にします (ni shimasu)",
+    "formula": "にする (ni suru) / にします (ni shimasu)",
     "meaning": "to decide on",
     "category": "Particles & Relations",
     "examples": [
-      {
-        "jp": "To use with a verb, add ことにする. See lesson ことにする (koto ni suru).",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "どれにする?",
         "romaji": "dore ni suru?",
@@ -950,7 +770,7 @@ export const N5_GRAMMAR = [
   {
     "id": "n5-g-44",
     "title": "に/へ (に (ni) & へ (e))",
-    "formula": "Pattern: に (ni) & へ (e)",
+    "formula": "に (ni) & へ (e)",
     "meaning": "to (indicates direction / destination)",
     "category": "Particles & Relations",
     "examples": [
@@ -963,18 +783,13 @@ export const N5_GRAMMAR = [
         "jp": "学校へ⾏く。",
         "romaji": "gakkou e iku.",
         "en": "To go to school."
-      },
-      {
-        "jp": "に can also be used to say in, at, on, etc.. See full lesson for lesson for に (ni).",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
       }
     ]
   },
   {
     "id": "n5-g-45",
-    "title": "の (の (no))",
-    "formula": "Pattern: の (no)",
+    "title": "の (no)",
+    "formula": "の (no)",
     "meaning": "の is a particle used to indicate possession",
     "category": "Essential Patterns",
     "examples": [
@@ -997,8 +812,8 @@ export const N5_GRAMMAR = [
   },
   {
     "id": "n5-g-46",
-    "title": "のです (のです (no desu) & のだ (noda))",
-    "formula": "Pattern: のです (no desu) & のだ (noda)",
+    "title": "のです (no desu) & のだ (noda)",
+    "formula": "のです (no desu) & のだ (noda)",
     "meaning": "to explain something; show",
     "category": "Particles & Relations",
     "examples": [
@@ -1021,8 +836,8 @@ export const N5_GRAMMAR = [
   },
   {
     "id": "n5-g-47",
-    "title": "のが下⼿ (のが下⼿ 【のがへた】(no ga heta))",
-    "formula": "Pattern: のが下⼿ 【のがへた】(no ga heta)",
+    "title": "のが下⼿ (no ga heta)",
+    "formula": "のが下⼿ 【のがへた】(no ga heta)",
     "meaning": "to be bad at doing something",
     "category": "Particles & Relations",
     "examples": [
@@ -1030,11 +845,6 @@ export const N5_GRAMMAR = [
         "jp": "スポーツをするのがへただ。",
         "romaji": "supootsu wo suru no ga heta da.",
         "en": "I am bad at playing sports."
-      },
-      {
-        "jp": "To say the opposite “good at”, use のが上⼿ (no ga jouzu)",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
       },
       {
         "jp": "彼はおはしを使うのが下⼿だ。",
@@ -1045,40 +855,25 @@ export const N5_GRAMMAR = [
   },
   {
     "id": "n5-g-48",
-    "title": "のが上⼿ (のが上⼿ / のがじょうずです (no ga jouzu desu))",
-    "formula": "Pattern: のが上⼿ / のがじょうずです (no ga jouzu desu)",
+    "title": "のが上⼿ (/ のがじょうずです (no ga jouzu desu))",
+    "formula": "のが上⼿ / のがじょうずです (no ga jouzu desu)",
     "meaning": "to be good at",
     "category": "Particles & Relations",
     "examples": [
       {
-        "jp": "Learn Japanese grammar: のが上⼿ / のがじょうずです (no ga jouzu desu). Meaning: to be good at",
-        "romaji": "doing something.",
-        "en": "Example A)"
-      },
-      {
         "jp": "スポーツをするのが上⼿ですね。",
         "romaji": "supootsu o suru no ga jouzu desu ne.",
         "en": "You are very good at sports."
-      },
-      {
-        "jp": "To say the opposite “bad at”, use のが下⼿ (no ga heta)",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
       }
     ]
   },
   {
     "id": "n5-g-49",
-    "title": "のが好き (のが好き 【のがすきです】(no ga suki desu))",
-    "formula": "Pattern: のが好き 【のがすきです】(no ga suki desu)",
+    "title": "のが好き (no ga suki desu)",
+    "formula": "のが好き 【のがすきです】(no ga suki desu)",
     "meaning": "to like doing",
     "category": "Particles & Relations",
     "examples": [
-      {
-        "jp": "サッカーをするのが好き -> sakkkaa o suru no ga suki -> I like playing soccer.",
-        "romaji": "Both the kanji and hiragana version can be used, but the kanji version is more common.",
-        "en": "Example Sentences"
-      },
       {
         "jp": "私は寝るのが好きです。",
         "romaji": "watashi neru no ga suki desu.",
@@ -1093,16 +888,11 @@ export const N5_GRAMMAR = [
   },
   {
     "id": "n5-g-50",
-    "title": "の中で[A]が⼀番 (の中で[A]が⼀番 【のなかで[A]がいちばん】 (no naka de [A] ga ichiban))",
-    "formula": "Pattern: の中で[A]が⼀番 【のなかで[A]がいちばん】 (no naka de [A] ga ichiban)",
+    "title": "の中で[A]が⼀番 (no naka de [A] ga ichiban)",
+    "formula": "の中で[A]が⼀番 【のなかで[A]がいちばん】 (no naka de [A] ga ichiban)",
     "meaning": "out of this group, [A] is best",
     "category": "Particles & Relations",
     "examples": [
-      {
-        "jp": "Learn Japanese grammar: の中で[A]が⼀番 【のなかで[A]がいちばん】 (no naka de [A] ga ichiban).",
-        "romaji": "Meaning: out of this group, [A] is best.",
-        "en": "Example Sentences"
-      },
       {
         "jp": "家族のなかで⽗がいちばん背が⾼いです。",
         "romaji": "kazoku no naka de chichi ga ichiban se ga takai desu.",
@@ -1117,16 +907,11 @@ export const N5_GRAMMAR = [
   },
   {
     "id": "n5-g-51",
-    "title": "ので (ので (node))",
-    "formula": "Pattern: ので (node)",
+    "title": "ので (node)",
+    "formula": "ので (node)",
     "meaning": "because of; given that; since (explains reason for",
     "category": "Particles & Relations",
     "examples": [
-      {
-        "jp": "Learn Japanese grammar: ので (node). Meaning: because of; given that; since (explains reason for",
-        "romaji": "action).",
-        "en": "This grammar is used explain a reason or reasoning for an action."
-      },
       {
         "jp": "あつかったのでプールに⾏った。",
         "romaji": "atsukatta node puuru ni itta.",
@@ -1136,8 +921,8 @@ export const N5_GRAMMAR = [
   },
   {
     "id": "n5-g-52",
-    "title": "を (を (o / wo))",
-    "formula": "Pattern: を (o / wo)",
+    "title": "を (o / wo)",
+    "formula": "を (o / wo)",
     "meaning": "object marker particle",
     "category": "Particles & Relations",
     "examples": [
@@ -1160,16 +945,11 @@ export const N5_GRAMMAR = [
   },
   {
     "id": "n5-g-53",
-    "title": "をください (をください (o kudasai))",
-    "formula": "Pattern: をください (o kudasai)",
+    "title": "をください (o kudasai)",
+    "formula": "をください (o kudasai)",
     "meaning": "please give me~",
     "category": "Particles & Relations",
     "examples": [
-      {
-        "jp": "Learn Japanese grammar: をください (o kudasai). Meaning: please give me~ .",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "すみません、お⽔をください。",
         "romaji": "sumimasen, omizu o kudasai.",
@@ -1184,21 +964,11 @@ export const N5_GRAMMAR = [
   },
   {
     "id": "n5-g-54",
-    "title": "しかし (しかし (shikashi))",
-    "formula": "Pattern: しかし (shikashi)",
+    "title": "しかし (shikashi)",
+    "formula": "しかし (shikashi)",
     "meaning": "but; however",
     "category": "Essential Patterns",
     "examples": [
-      {
-        "jp": "Learn Japanese grammar: しかし (shikashi). Meaning: but; however.",
-        "romaji": "This is often used to start a new sentence, but can be used mid sentence between 2 opposing ideas as",
-        "en": "well."
-      },
-      {
-        "jp": "It is very similar to でも (demo).",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "しかしなぜ︖",
         "romaji": "shikashi naze?",
@@ -1208,21 +978,11 @@ export const N5_GRAMMAR = [
   },
   {
     "id": "n5-g-55",
-    "title": "すぎる (すぎる (sugiru))",
-    "formula": "Pattern: すぎる (sugiru)",
+    "title": "すぎる (sugiru)",
+    "formula": "すぎる (sugiru)",
     "meaning": "it is used to say something is too much",
     "category": "Essential Patterns",
     "examples": [
-      {
-        "jp": "たべすぎる (tabe sugiru)",
-        "romaji": "To eat too much",
-        "en": "Example B) verb past-tense"
-      },
-      {
-        "jp": "たべすぎた (tabe sugita)",
-        "romaji": "I ate too much",
-        "en": "Example C) verb connection"
-      },
       {
         "jp": "たべすぎておなかが痛い (tabe sugite onaka ga itai)",
         "romaji": "I ate too much and now my stomach hurts",
@@ -1232,16 +992,11 @@ export const N5_GRAMMAR = [
   },
   {
     "id": "n5-g-56",
-    "title": "たことがある (たことがある (ta koto ga aru))",
-    "formula": "Pattern: たことがある (ta koto ga aru)",
+    "title": "たことがある (ta koto ga aru)",
+    "formula": "たことがある (ta koto ga aru)",
     "meaning": "to have done something before",
     "category": "Verb Forms & Conjugations",
     "examples": [
-      {
-        "jp": "When using a non-past verb, the grammar changes to ことがある (koto ga aru).",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "これを⾒たことがある。",
         "romaji": "kore o mita koto ga aru.",
@@ -1256,8 +1011,8 @@ export const N5_GRAMMAR = [
   },
   {
     "id": "n5-g-57",
-    "title": "たい (たい (tai))",
-    "formula": "Pattern: たい (tai)",
+    "title": "たい (tai)",
+    "formula": "たい (tai)",
     "meaning": "want to do something",
     "category": "Verb Forms & Conjugations",
     "examples": [
@@ -1280,8 +1035,8 @@ export const N5_GRAMMAR = [
   },
   {
     "id": "n5-g-58",
-    "title": "たり〜たり (たり〜たり (tari~tari))",
-    "formula": "Pattern: たり〜たり (tari~tari)",
+    "title": "たり〜たり (tari~tari)",
+    "formula": "たり〜たり (tari~tari)",
     "meaning": "do such things as A and B",
     "category": "Verb Forms & Conjugations",
     "examples": [
@@ -1299,49 +1054,39 @@ export const N5_GRAMMAR = [
   },
   {
     "id": "n5-g-59",
-    "title": "てある (てある (te aru))",
-    "formula": "Pattern: てある (te aru)",
+    "title": "てある (te aru)",
+    "formula": "てある (te aru)",
     "meaning": "is/has been done (resulting state)",
     "category": "Verb Forms & Conjugations",
     "examples": [
       {
-        "jp": "Learn Japanese grammar: てある (te aru). Meaning: is/has been done (resulting state).",
-        "romaji": "This is used when something is intentionally done and you can see the resulting state of that action. It is",
-        "en": "similar to using past tense form, but different in that it places emphasis on the action being done"
+        "jp": "てあるの使い方を練習しましょう。",
+        "romaji": "no tsukaikata o renshuu shimashou.",
+        "en": "Let us practice how to use this grammar pattern."
       }
     ]
   },
   {
     "id": "n5-g-60",
-    "title": "ている (ている (te iru))",
-    "formula": "Pattern: ている (te iru)",
+    "title": "ている (te iru)",
+    "formula": "ている (te iru)",
     "meaning": "the progressive tense of a verb which shows that",
     "category": "Verb Forms & Conjugations",
     "examples": [
       {
-        "jp": "Learn Japanese grammar: ている (te iru). Meaning: the progressive tense of a verb which shows that",
-        "romaji": "something is currently happening or ongoing.",
-        "en": "There are a couple different ways it can be used, including:"
-      },
-      {
-        "jp": "読んでいる (yonde iru) reading",
-        "romaji": "As you can see, each verb changes to a current/continuous state of doing.",
-        "en": "Meaning"
+        "jp": "ているの使い方を練習しましょう。",
+        "romaji": "no tsukaikata o renshuu shimashou.",
+        "en": "Let us practice how to use this grammar pattern."
       }
     ]
   },
   {
     "id": "n5-g-61",
-    "title": "てから (てから (te kara))",
-    "formula": "Pattern: てから (te kara)",
+    "title": "てから (te kara)",
+    "formula": "てから (te kara)",
     "meaning": "after doing~",
     "category": "Verb Forms & Conjugations",
     "examples": [
-      {
-        "jp": "Learn Japanese grammar: てから (te kara). Meaning: after doing~.",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "トイレを使ってから、⼿を洗わないといけません。",
         "romaji": "toire o tsukatte kara, te o arawanai to ikemasen.",
@@ -1356,16 +1101,11 @@ export const N5_GRAMMAR = [
   },
   {
     "id": "n5-g-62",
-    "title": "てください (てください (te kudasai))",
-    "formula": "Pattern: てください (te kudasai)",
+    "title": "てください (te kudasai)",
+    "formula": "てください (te kudasai)",
     "meaning": "to ask someone to please do ~",
     "category": "Verb Forms & Conjugations",
     "examples": [
-      {
-        "jp": "Sometimes the last ください (kudasai) part is just dropped, and て (te) form itself is used to make",
-        "romaji": "a request.",
-        "en": "Example Sentences"
-      },
       {
         "jp": "ちょっと待ってください。",
         "romaji": "chotto matte kudasai",
@@ -1380,21 +1120,11 @@ export const N5_GRAMMAR = [
   },
   {
     "id": "n5-g-63",
-    "title": "てはいけない (てはいけない (te wa ikenai) / てはいけません (te wa ikemasen))",
-    "formula": "Pattern: てはいけない (te wa ikenai) / てはいけません (te wa ikemasen)",
+    "title": "てはいけない (te wa ikenai) / てはいけません (te wa ikemasen)",
+    "formula": "てはいけない (te wa ikenai) / てはいけません (te wa ikemasen)",
     "meaning": "must not; may not; cannot",
     "category": "Verb Forms & Conjugations",
     "examples": [
-      {
-        "jp": "Learn Japanese grammar: てはいけない (te wa ikenai) / てはいけません (te wa ikemasen). Meaning:",
-        "romaji": "must not; may not; cannot.",
-        "en": "In spoken Japanese, the following may be used instead:"
-      },
-      {
-        "jp": "ちゃいけない・じゃいけない (cha ikenai / ja ikenai)",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "窓を開けてはいけない。",
         "romaji": "mado o akete wa ikenai.",
@@ -1405,15 +1135,10 @@ export const N5_GRAMMAR = [
   {
     "id": "n5-g-64",
     "title": "てもいいです (てもいい (temo ii) & てもいいです（か） (temo ii desu ka))",
-    "formula": "Pattern: てもいい (temo ii) & てもいいです（か） (temo ii desu ka)",
+    "formula": "てもいい (temo ii) & てもいいです（か） (temo ii desu ka)",
     "meaning": "is OK",
     "category": "Verb Forms & Conjugations",
     "examples": [
-      {
-        "jp": "Learn Japanese grammar: てもいい (temo ii) & てもいいです（か） (temo ii desu ka). Meaning: is OK",
-        "romaji": "to..; is alright to..; may I..?",
-        "en": "Example Sentences"
-      },
       {
         "jp": "トイレに⾏ってもいいですか︖",
         "romaji": "toire ni ittemo ii desu ka?",
@@ -1428,9 +1153,9 @@ export const N5_GRAMMAR = [
   },
   {
     "id": "n5-g-65",
-    "title": "と (と (to))",
-    "formula": "Pattern: と (to)",
-    "meaning": "the connecting particle と can be used to combine multiple",
+    "title": "と (to)",
+    "formula": "と (to)",
+    "meaning": "used to connect nouns (and / with)",
     "category": "Essential Patterns",
     "examples": [
       {
@@ -1453,15 +1178,10 @@ export const N5_GRAMMAR = [
   {
     "id": "n5-g-66",
     "title": "とき (時 【とき】(toki))",
-    "formula": "Pattern: 時 【とき】(toki)",
+    "formula": "時 【とき】(toki)",
     "meaning": "when; at this time",
     "category": "Essential Patterns",
     "examples": [
-      {
-        "jp": "⾏った とき (itta toki) when I went.",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "分からないときは、早く先⽣に聞きましょうね。",
         "romaji": "wakaranai toki wa, hayaku sensei ni kikimashou ne.",
@@ -1476,16 +1196,11 @@ export const N5_GRAMMAR = [
   },
   {
     "id": "n5-g-67",
-    "title": "とても (とても (totemo))",
-    "formula": "Pattern: とても (totemo)",
+    "title": "とても (totemo)",
+    "formula": "とても (totemo)",
     "meaning": "very; awfully; exceedingly",
     "category": "Verb Forms & Conjugations",
     "examples": [
-      {
-        "jp": "Learn Japanese grammar: とても (totemo). Meaning: very; awfully; exceedingly .",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "今⽇はとても暑いですね。",
         "romaji": "kyou wa totemo atsui desu ne.",
@@ -1500,8 +1215,8 @@ export const N5_GRAMMAR = [
   },
   {
     "id": "n5-g-68",
-    "title": "つもり (つもり (tsumori))",
-    "formula": "Pattern: つもり (tsumori)",
+    "title": "つもり (tsumori)",
+    "formula": "つもり (tsumori)",
     "meaning": "used to express that you are planning / intending",
     "category": "Essential Patterns",
     "examples": [
@@ -1519,8 +1234,8 @@ export const N5_GRAMMAR = [
   },
   {
     "id": "n5-g-69",
-    "title": "は (は (wa))",
-    "formula": "Pattern: は (wa)",
+    "title": "は (wa)",
+    "formula": "は (wa)",
     "meaning": "the particle は follows the topic the speaker is talking about,",
     "category": "Particles & Relations",
     "examples": [
@@ -1543,16 +1258,11 @@ export const N5_GRAMMAR = [
   },
   {
     "id": "n5-g-70",
-    "title": "は〜より・・・です (は〜より・・・です (wa ~yori… desu))",
-    "formula": "Pattern: は〜より・・・です (wa ~yori… desu)",
+    "title": "は〜より・・・です (wa ~yori… desu)",
+    "formula": "は〜より・・・です (wa ~yori… desu)",
     "meaning": "[A] is more ~ than [B]",
     "category": "Particles & Relations",
     "examples": [
-      {
-        "jp": "Learn Japanese grammar: は〜より・・・です (wa ~yori… desu). Meaning: [A] is more ~ than [B].",
-        "romaji": "Comparing 2 nouns. Emphasizes noun-1 [A] as being greater than noun-2 [B].",
-        "en": "Example Sentences"
-      },
       {
         "jp": "本は映画より⾯⽩いです。",
         "romaji": "hon wa eiga yori omoshiroi desu.",
@@ -1567,8 +1277,8 @@ export const N5_GRAMMAR = [
   },
   {
     "id": "n5-g-71",
-    "title": "はどうですか (はどうですか (wa dou desu ka))",
-    "formula": "Pattern: はどうですか (wa dou desu ka)",
+    "title": "はどうですか (wa dou desu ka)",
+    "formula": "はどうですか (wa dou desu ka)",
     "meaning": "how about; how is",
     "category": "Particles & Relations",
     "examples": [
@@ -1591,16 +1301,11 @@ export const N5_GRAMMAR = [
   },
   {
     "id": "n5-g-72",
-    "title": "や (や (ya))",
-    "formula": "Pattern: や (ya)",
+    "title": "や (ya)",
+    "formula": "や (ya)",
     "meaning": "and; or; connecting particle",
     "category": "Essential Patterns",
     "examples": [
-      {
-        "jp": "the actual items listed, and や implies the listed items are not complete.",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "毎朝、パンやベーコンなどを⾷べています。",
         "romaji": "mai asa, pan ya beekon nado wo tabeteimasu.",
@@ -1615,8 +1320,8 @@ export const N5_GRAMMAR = [
   },
   {
     "id": "n5-g-73",
-    "title": "よ (よ (yo))",
-    "formula": "Pattern: よ (yo)",
+    "title": "よ (yo)",
+    "formula": "よ (yo)",
     "meaning": "The particle よ is used at the end of a sentence to emphasize",
     "category": "Essential Patterns",
     "examples": [
@@ -1634,16 +1339,11 @@ export const N5_GRAMMAR = [
   },
   {
     "id": "n5-g-74",
-    "title": "より〜ほうが (より〜ほうが (yori ~hou ga))",
-    "formula": "Pattern: より〜ほうが (yori ~hou ga)",
+    "title": "より〜ほうが (yori ~hou ga)",
+    "formula": "より〜ほうが (yori ~hou ga)",
     "meaning": "[A] is more than [B]",
     "category": "Particles & Relations",
     "examples": [
-      {
-        "jp": "Learn Japanese grammar: より〜ほうが (yori ~hou ga). Meaning: [A] is more than [B].",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "私は猫より、⽝のほうが好きです。",
         "romaji": "watashi wa neko yori, inu no hou ga suki desu.",
@@ -1661,32 +1361,22 @@ export const N5_GRAMMAR = [
 export const N4_GRAMMAR = [
   {
     "id": "n4-g-1",
-    "title": "間 (間 【あいだ】(aida))",
-    "formula": "Pattern: 間 【あいだ】(aida)",
+    "title": "間 (aida)",
+    "formula": "間 【あいだ】(aida)",
     "meaning": "while; during; between",
     "category": "Essential Patterns",
     "examples": [
       {
-        "jp": "Learn Japanese grammar: 間 【あいだ】(aida). Meaning: while; during; between.",
-        "romaji": "Meaning 1) while/during",
-        "en": "This is used when you do something the whole time during a certain period of time, so it is often paired"
-      },
-      {
         "jp": "電⾞に乗っている間、ずっと本を読んでいました。",
         "romaji": "densha ni notteiru aida, zutto hon o yonde imashita.",
         "en": "I read a book the entire time I was on the train."
-      },
-      {
-        "jp": "Instead if you want to say something happened at one point “during” some time, use 間に (aida ni).",
-        "romaji": "Meaning 2) between",
-        "en": "This can express the physical space between [A] and [B]."
       }
     ]
   },
   {
     "id": "n4-g-2",
-    "title": "間に (間に 【あいだに】(aida ni))",
-    "formula": "Pattern: 間に 【あいだに】(aida ni)",
+    "title": "間に (aida ni)",
+    "formula": "間に 【あいだに】(aida ni)",
     "meaning": "while/during~ something happened",
     "category": "Particles & Relations",
     "examples": [
@@ -1704,16 +1394,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-3",
-    "title": "あまり〜ない (あまり〜ない (amari~nai))",
-    "formula": "Pattern: あまり〜ない (amari~nai)",
+    "title": "あまり〜ない (amari~nai)",
+    "formula": "あまり〜ない (amari~nai)",
     "meaning": "not very, not much",
     "category": "Verb Forms & Conjugations",
     "examples": [
-      {
-        "jp": "don’t really do. ない can be conjugated normally into the more polite negative ません or past forms as",
-        "romaji": "well.",
-        "en": "Example Sentences"
-      },
       {
         "jp": "私はあまり運動しない。",
         "romaji": "watashi wa amari undou shinai.",
@@ -1728,16 +1413,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-4",
-    "title": "後で (後で 【あとで】 (ato de))",
-    "formula": "Pattern: 後で 【あとで】 (ato de)",
+    "title": "後で (ato de)",
+    "formula": "後で 【あとで】 (ato de)",
     "meaning": "after ~; later",
     "category": "Particles & Relations",
     "examples": [
-      {
-        "jp": "To say something happens before instead, use 前に (まえに) (mae ni).",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "図書館で宿題をしたあとで、帰ります。",
         "romaji": "toshokan de shukudai o shita ato de, kaerimasu.",
@@ -1752,8 +1432,8 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-5",
-    "title": "ば (ば (ba))",
-    "formula": "Pattern: ば (ba)",
+    "title": "ば (ba)",
+    "formula": "ば (ba)",
     "meaning": "conditional form; If [A] then [B]",
     "category": "Verb Forms & Conjugations",
     "examples": [
@@ -1771,16 +1451,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-6",
-    "title": "場合は (場合は 【ばあいは】(baai wa))",
-    "formula": "Pattern: 場合は 【ばあいは】(baai wa)",
+    "title": "場合は (baai wa)",
+    "formula": "場合は 【ばあいは】(baai wa)",
     "meaning": "in the event of; in the case that",
     "category": "Particles & Relations",
     "examples": [
-      {
-        "jp": "Learn Japanese grammar: 場合は 【ばあいは】(baai wa). Meaning: in the event of; in the case that.",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "パスワードを忘れた場合は、こちらからご連絡ください。",
         "romaji": "pasuwaado o wasureta baai wa, kochira kara gorenraku kudasai.",
@@ -1795,22 +1470,22 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-7",
-    "title": "ばかり (ばかり (bakari))",
-    "formula": "Pattern: ばかり (bakari)",
+    "title": "ばかり (bakari)",
+    "formula": "ばかり (bakari)",
     "meaning": "only; nothing but",
     "category": "Verb Forms & Conjugations",
     "examples": [
       {
-        "jp": "When used with a past tense verb it means “just finished”. See たばかり (ta bakari).",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
+        "jp": "ばかりの使い方を練習しましょう。",
+        "romaji": "no tsukaikata o renshuu shimashou.",
+        "en": "Let us practice how to use this grammar pattern."
       }
     ]
   },
   {
     "id": "n4-g-8",
-    "title": "だけで (だけで (dake de))",
-    "formula": "Pattern: だけで (dake de)",
+    "title": "だけで (dake de)",
+    "formula": "だけで (dake de)",
     "meaning": "just by; just by doing; with only",
     "category": "Particles & Relations",
     "examples": [
@@ -1833,8 +1508,8 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-9",
-    "title": "出す (出す 【だす】(dasu))",
-    "formula": "Pattern: 出す 【だす】(dasu)",
+    "title": "出す (dasu)",
+    "formula": "出す 【だす】(dasu)",
     "meaning": "to suddenly begin; to suddenly appear",
     "category": "Essential Patterns",
     "examples": [
@@ -1857,16 +1532,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-10",
-    "title": "でございます (でございます (de gozaimasu))",
-    "formula": "Pattern: でございます (de gozaimasu)",
+    "title": "でございます (de gozaimasu)",
+    "formula": "でございます (de gozaimasu)",
     "meaning": "to be (honorific)",
     "category": "Particles & Relations",
     "examples": [
-      {
-        "jp": "This is a more polite version of です (desu), which is often used by work staff to customers.",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "お釣でございます。",
         "romaji": "otsuri de gozaimasu.",
@@ -1881,8 +1551,8 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-11",
-    "title": "でも (でも (demo))",
-    "formula": "Pattern: でも (demo)",
+    "title": "でも (demo)",
+    "formula": "でも (demo)",
     "meaning": "…or something",
     "category": "Particles & Relations",
     "examples": [
@@ -1905,16 +1575,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-12",
-    "title": "ではないか (ではないか (dewa nai ka))",
-    "formula": "Pattern: ではないか (dewa nai ka)",
+    "title": "ではないか (dewa nai ka)",
+    "formula": "ではないか (dewa nai ka)",
     "meaning": "right? isn’t it?",
     "category": "Verb Forms & Conjugations",
     "examples": [
-      {
-        "jp": "This is interchangeable with じゃないか (janai ka).",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "トムではないか。",
         "romaji": "tomu dewa nai ka.",
@@ -1929,16 +1594,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-13",
-    "title": "が必要 (が必要 【がひつよう】(ga hitsuyou))",
-    "formula": "Pattern: が必要 【がひつよう】(ga hitsuyou)",
+    "title": "が必要 (ga hitsuyou)",
+    "formula": "が必要 【がひつよう】(ga hitsuyou)",
     "meaning": "need; necessary",
     "category": "Particles & Relations",
     "examples": [
-      {
-        "jp": "Learn Japanese grammar: が必要 【がひつよう】(ga hitsuyou). Meaning: need; necessary.",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "それは必要だ。",
         "romaji": "sore wa hitsuyou da.",
@@ -1953,16 +1613,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-14",
-    "title": "がする (がする (ga suru))",
-    "formula": "Pattern: がする (ga suru)",
+    "title": "がする (ga suru)",
+    "formula": "がする (ga suru)",
     "meaning": "to smell; hear; or taste",
     "category": "Particles & Relations",
     "examples": [
-      {
-        "jp": "Learn Japanese grammar: がする (ga suru). Meaning: to smell; hear; or taste.",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "⽢い味がする。",
         "romaji": "amai aji ga suru.",
@@ -1977,32 +1632,22 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-15",
-    "title": "がり (がり (gari))",
-    "formula": "Pattern: がり (gari)",
+    "title": "がり (gari)",
+    "formula": "がり (gari)",
     "meaning": "that someone tends to…; has a tendency to…; has a",
     "category": "Particles & Relations",
     "examples": [
       {
-        "jp": "がる (garu) is used to say that someone is appearing to be a certain way. がり (gari) changes the meaning",
-        "romaji": "to describe a personality, tendency, or sensitivity towards something.",
-        "en": "Therefore, while the sound is similar, both grammar points are saying quite different things."
-      },
-      {
-        "jp": "While がる (garu) is usually used when talking about others, がり (gari) can be used to talk about both",
-        "romaji": "others and oneself.",
-        "en": "Meaning 1) Describe Personality"
-      },
-      {
-        "jp": "寂しがり (sabishi-gari)",
-        "romaji": "lonely person; person who does not want to be alone",
-        "en": "Meaning"
+        "jp": "がりの使い方を練習しましょう。",
+        "romaji": "no tsukaikata o renshuu shimashou.",
+        "en": "Let us practice how to use this grammar pattern."
       }
     ]
   },
   {
     "id": "n4-g-16",
-    "title": "ございます (ございます (gozaimasu))",
-    "formula": "Pattern: ございます (gozaimasu)",
+    "title": "ございます (gozaimasu)",
+    "formula": "ございます (gozaimasu)",
     "meaning": "to be, to exist (the polite form of いる/あ",
     "category": "Essential Patterns",
     "examples": [
@@ -2025,21 +1670,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-17",
-    "title": "始める (始める 【はじめる】 (hajimeru))",
-    "formula": "Pattern: 始める 【はじめる】 (hajimeru)",
+    "title": "始める (hajimeru)",
+    "formula": "始める 【はじめる】 (hajimeru)",
     "meaning": "to start; to begin to ~",
     "category": "Essential Patterns",
     "examples": [
-      {
-        "jp": "Learn Japanese grammar: 始める 【はじめる】 (hajimeru). Meaning: to start; to begin to ~.",
-        "romaji": "This is used to express when something is starting or has just begun. It can be freely conjugated to use in",
-        "en": "current, future, and past tense."
-      },
-      {
-        "jp": "はじめて started to (current)",
-        "romaji": "examples 8~10",
-        "en": "Example Sentences"
-      },
       {
         "jp": "⾷べ始める。",
         "romaji": "tabe hajimeru.",
@@ -2049,16 +1684,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-18",
-    "title": "はずだ (はずだ (hazu da))",
-    "formula": "Pattern: はずだ (hazu da)",
+    "title": "はずだ (hazu da)",
+    "formula": "はずだ (hazu da)",
     "meaning": "it must be; it should be (expectation)",
     "category": "Particles & Relations",
     "examples": [
-      {
-        "jp": "To say the opposite, “it cannot be..”, use はずがない (hazu ga nai).",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "あなたなら分かるはずだ。",
         "romaji": "anata nara wakaru hazu da.",
@@ -2073,16 +1703,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-19",
-    "title": "はずがない (はずがない (hazu ga nai))",
-    "formula": "Pattern: はずがない (hazu ga nai)",
+    "title": "はずがない (hazu ga nai)",
+    "formula": "はずがない (hazu ga nai)",
     "meaning": "cannot be (impossible)",
     "category": "Verb Forms & Conjugations",
     "examples": [
-      {
-        "jp": "To say the opposite, use はずだ (hazu da) instead.",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "そんなはずがない。",
         "romaji": "sonna hazu ga nai.",
@@ -2097,8 +1722,8 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-20",
-    "title": "必要がある (必要がある 【ひつようがある】(hitsuyou ga aru))",
-    "formula": "Pattern: 必要がある 【ひつようがある】(hitsuyou ga aru)",
+    "title": "必要がある (hitsuyou ga aru)",
+    "formula": "必要がある 【ひつようがある】(hitsuyou ga aru)",
     "meaning": "that one needs to",
     "category": "Particles & Relations",
     "examples": [
@@ -2116,16 +1741,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-21",
-    "title": "意向形 (意向形 【いこうけい】(ikou kei))",
-    "formula": "Pattern: 意向形 【いこうけい】(ikou kei)",
+    "title": "意向形 (ikou kei)",
+    "formula": "意向形 【いこうけい】(ikou kei)",
     "meaning": "volitional form ; let’s do ~",
     "category": "Essential Patterns",
     "examples": [
-      {
-        "jp": "Learn Japanese grammar: 意向形 【いこうけい】(ikou kei). Meaning: volitional form ; let’s do ~.",
-        "romaji": "This grammar turns verbs from statements into suggestions.",
-        "en": "How to create volitional form:"
-      },
       {
         "jp": "買う → 買おう (kau → kaou) let’s buy",
         "romaji": "Meaning",
@@ -2135,16 +1755,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-22",
-    "title": "いらっしゃる (いらっしゃる (irassharu))",
-    "formula": "Pattern: いらっしゃる (irassharu)",
+    "title": "いらっしゃる (irassharu)",
+    "formula": "いらっしゃる (irassharu)",
     "meaning": "to be; to come; to go",
     "category": "Essential Patterns",
     "examples": [
-      {
-        "jp": "formal negative: いらっしゃいません",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "質問のある⽅はいらっしゃいませんか。",
         "romaji": "shitsumon no aru kata wa irasshaimasen ka.",
@@ -2159,16 +1774,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-23",
-    "title": "いたします (いたします (itashimasu))",
-    "formula": "Pattern: いたします (itashimasu)",
+    "title": "いたします (itashimasu)",
+    "formula": "いたします (itashimasu)",
     "meaning": "to do (polite form of する)",
     "category": "Verb Forms & Conjugations",
     "examples": [
-      {
-        "jp": "Learn Japanese grammar: いたします (itashimasu). Meaning: to do (polite form of する). It is used to",
-        "romaji": "say that you yourself will do something.",
-        "en": "Example Sentences"
-      },
       {
         "jp": "失礼いたします。",
         "romaji": "shitsurei itashimasu.",
@@ -2183,16 +1793,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-24",
-    "title": "じゃないか (じゃないか (janai ka))",
-    "formula": "Pattern: じゃないか (janai ka)",
+    "title": "じゃないか (janai ka)",
+    "formula": "じゃないか (janai ka)",
     "meaning": "right? isn’t it? let’s~; confirmation",
     "category": "Verb Forms & Conjugations",
     "examples": [
-      {
-        "jp": "This is interchangeable with ではないか (dewa nai ka).",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "⾏こうじゃないか。",
         "romaji": "ikou janai ka.",
@@ -2207,16 +1812,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-25",
-    "title": "かどうか (かどうか (ka dou ka))",
-    "formula": "Pattern: かどうか (ka dou ka)",
+    "title": "かどうか (ka dou ka)",
+    "formula": "かどうか (ka dou ka)",
     "meaning": "whether or not",
     "category": "Essential Patterns",
     "examples": [
-      {
-        "jp": "Learn Japanese grammar: かどうか (ka dou ka). Meaning: whether or not.",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "明⽇晴れるかどうか知らない。",
         "romaji": "ashita hareru ka dou ka shiranai.",
@@ -2231,21 +1831,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-26",
-    "title": "かしら (かしら (ka shira))",
-    "formula": "Pattern: かしら (ka shira)",
+    "title": "かしら (ka shira)",
+    "formula": "かしら (ka shira)",
     "meaning": "I wonder",
     "category": "Essential Patterns",
     "examples": [
-      {
-        "jp": "Learn Japanese grammar: かしら (ka shira). Meaning: I wonder.",
-        "romaji": "This is either used to:",
-        "en": "ask a question"
-      },
-      {
-        "jp": "It is similar to かな (kana).",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "本当かしら。",
         "romaji": "hontou ka shira.",
@@ -2255,16 +1845,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-27",
-    "title": "かい (かい (kai))",
-    "formula": "Pattern: かい (kai)",
+    "title": "かい (kai)",
+    "formula": "かい (kai)",
     "meaning": "turns a sentence into a yes/no question",
     "category": "Essential Patterns",
     "examples": [
-      {
-        "jp": "Learn Japanese grammar: かい (kai). Meaning: turns a sentence into a yes/no question.",
-        "romaji": "This is more casual Japanese and is most often used with children or with girlfriends.",
-        "en": "Example Sentences"
-      },
       {
         "jp": "歩けるかい︖",
         "romaji": "arukeru kai?",
@@ -2279,16 +1864,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-28",
-    "title": "かもしれない (かもしれない (kamo shirenai))",
-    "formula": "Pattern: かもしれない (kamo shirenai)",
+    "title": "かもしれない (kamo shirenai)",
+    "formula": "かもしれない (kamo shirenai)",
     "meaning": "might; perhaps; indicates possibility",
     "category": "Verb Forms & Conjugations",
     "examples": [
-      {
-        "jp": "To be more casual, you can just use かも (kamo).",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "難しいかも。",
         "romaji": "muzukashii kamo.",
@@ -2303,8 +1883,8 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-29",
-    "title": "かな (かな (kana))",
-    "formula": "Pattern: かな (kana)",
+    "title": "かな (kana)",
+    "formula": "かな (kana)",
     "meaning": "I wonder; should I?",
     "category": "Essential Patterns",
     "examples": [
@@ -2322,16 +1902,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-30",
-    "title": "から作る (から作る 【からつくる】(kara tsukuru))",
-    "formula": "Pattern: から作る 【からつくる】(kara tsukuru)",
+    "title": "から作る (kara tsukuru)",
+    "formula": "から作る 【からつくる】(kara tsukuru)",
     "meaning": "made from; made with",
     "category": "Particles & Relations",
     "examples": [
-      {
-        "jp": "作る is also often changed to 作られる / 作られている (tsukurareru / tsukurarete iru) passive form.",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "ワインはブドウから作る。",
         "romaji": "wain wa budou kara tsukuru.",
@@ -2346,16 +1921,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-31",
-    "title": "きっと (きっと (kitto))",
-    "formula": "Pattern: きっと (kitto)",
+    "title": "きっと (kitto)",
+    "formula": "きっと (kitto)",
     "meaning": "surely; undoubtedly; almost certainly; most likely",
     "category": "Essential Patterns",
     "examples": [
-      {
-        "jp": "Learn Japanese grammar: きっと (kitto). Meaning: surely; undoubtedly; almost certainly; most likely.",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "明⽇はきっと⾬でしょう。",
         "romaji": "ashita wa kitto ame deshou.",
@@ -2370,16 +1940,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-32",
-    "title": "頃 (頃 【 ころ / ごろ 】 (koro / goro))",
-    "formula": "Pattern: 頃 【 ころ / ごろ 】 (koro / goro)",
+    "title": "頃 (koro / goro)",
+    "formula": "頃 【 ころ / ごろ 】 (koro / goro)",
     "meaning": "around; about; when",
     "category": "Essential Patterns",
     "examples": [
-      {
-        "jp": "Learn Japanese grammar: 頃 【 ころ / ごろ 】 (koro / goro). Meaning: around; about; when.",
-        "romaji": "Both the kanji version and hiragana versions are frequently used.",
-        "en": "Example Sentences"
-      },
       {
         "jp": "私はこのころとても忙しいのです。",
         "romaji": "watashi wa kono koro totemo isogashii desu.",
@@ -2394,21 +1959,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-33",
-    "title": "こと (こと (koto))",
-    "formula": "Pattern: こと (koto)",
+    "title": "こと (koto)",
+    "formula": "こと (koto)",
     "meaning": "verb nominalizer",
     "category": "Essential Patterns",
     "examples": [
-      {
-        "jp": "Learn Japanese grammar: こと (koto). Meaning: verb nominalizer. It allows you to use verbs as nouns.",
-        "romaji": "Here are some basic examples.",
-        "en": "Meaning"
-      },
-      {
-        "jp": "From JLPT N3, this word can also be used as an order. See lesson for こと (koto) must do.",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "本を読むことが好きです。",
         "romaji": "hon o yomu koto ga suki desu.",
@@ -2418,8 +1973,8 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-34",
-    "title": "ことがある (ことがある (koto ga aru))",
-    "formula": "Pattern: ことがある (koto ga aru)",
+    "title": "ことがある (koto ga aru)",
+    "formula": "ことがある (koto ga aru)",
     "meaning": "there are times when ~; sometimes do",
     "category": "Particles & Relations",
     "examples": [
@@ -2427,11 +1982,6 @@ export const N4_GRAMMAR = [
         "jp": "ことがある (koto ga aru) is used to say:",
         "romaji": "there are times when ~",
         "en": "sometimes do ~"
-      },
-      {
-        "jp": "When using a past-tense verb, use たことがある (ta koto ga aru) instead.",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
       },
       {
         "jp": "たまに彼⼥と⼀緒にテニスをしに⾏くことがある。",
@@ -2442,8 +1992,8 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-35",
-    "title": "ことができる (ことができる (koto ga dekiru))",
-    "formula": "Pattern: ことができる (koto ga dekiru)",
+    "title": "ことができる (koto ga dekiru)",
+    "formula": "ことができる (koto ga dekiru)",
     "meaning": "can; able to; not able to",
     "category": "Particles & Relations",
     "examples": [
@@ -2456,16 +2006,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-36",
-    "title": "ことになる (ことになる (koto ni naru))",
-    "formula": "Pattern: ことになる (koto ni naru)",
+    "title": "ことになる (koto ni naru)",
+    "formula": "ことになる (koto ni naru)",
     "meaning": "It has been decided that",
     "category": "Particles & Relations",
     "examples": [
-      {
-        "jp": "ことになりました (koto ni narimashita)",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "⼊学式は4⽉1⽇に⾏うことになりました。",
         "romaji": "nyuugakushiki wa shigatsu tsuitachi ni okonau koto ni narimashita.",
@@ -2480,44 +2025,39 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-37",
-    "title": "ことにする (ことにする (koto ni suru) / ことにします (koto ni shimasu))",
-    "formula": "Pattern: ことにする (koto ni suru) / ことにします (koto ni shimasu)",
+    "title": "ことにする (koto ni suru) / ことにします (koto ni shimasu)",
+    "formula": "ことにする (koto ni suru) / ことにします (koto ni shimasu)",
     "meaning": "to",
     "category": "Particles & Relations",
     "examples": [
       {
-        "jp": "See lesson にする (ni suru)",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
+        "jp": "ことにするの使い方を練習しましょう。",
+        "romaji": "no tsukaikata o renshuu shimashou.",
+        "en": "Let us practice how to use this grammar pattern."
       }
     ]
   },
   {
     "id": "n4-g-38",
-    "title": "くする (くする (ku suru))",
-    "formula": "Pattern: くする (ku suru)",
+    "title": "くする (ku suru)",
+    "formula": "くする (ku suru)",
     "meaning": "to make something ~",
     "category": "Essential Patterns",
     "examples": [
       {
-        "jp": "To use with a な-adjective instead use にする (ni suru).",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
+        "jp": "くするの使い方を練習しましょう。",
+        "romaji": "no tsukaikata o renshuu shimashou.",
+        "en": "Let us practice how to use this grammar pattern."
       }
     ]
   },
   {
     "id": "n4-g-39",
-    "title": "急に (急に (kyuu ni))",
-    "formula": "Pattern: 急に (kyuu ni)",
+    "title": "急に (kyuu ni)",
+    "formula": "急に (kyuu ni)",
     "meaning": "suddenly",
     "category": "Particles & Relations",
     "examples": [
-      {
-        "jp": "Learn Japanese grammar: 急に (kyuu ni). Meaning: suddenly.",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "急に⾬が降り始めました。",
         "romaji": "kyuu ni ame ga furi hajimemashita.",
@@ -2532,16 +2072,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-40",
-    "title": "までに (までに (made ni))",
-    "formula": "Pattern: までに (made ni)",
+    "title": "までに (made ni)",
+    "formula": "までに (made ni)",
     "meaning": "by; by the time; indicates time limit",
     "category": "Particles & Relations",
     "examples": [
-      {
-        "jp": "This is based off of the N5 grammar まで (made), which means until ~; as far as ~.",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "8時までに来てください。",
         "romaji": "8 ji made ni kite kudasai.",
@@ -2556,8 +2091,8 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-41",
-    "title": "まま (まま (mama))",
-    "formula": "Pattern: まま (mama)",
+    "title": "まま (mama)",
+    "formula": "まま (mama)",
     "meaning": "as it is; current state; without changing",
     "category": "Essential Patterns",
     "examples": [
@@ -2580,16 +2115,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-42",
-    "title": "または (または (matawa))",
-    "formula": "Pattern: または (matawa)",
+    "title": "または (matawa)",
+    "formula": "または (matawa)",
     "meaning": "both; or; otherwise ; choice between [A] or [B]",
     "category": "Verb Forms & Conjugations",
     "examples": [
-      {
-        "jp": "*Note* This grammar point is very similar in meaning to あるいは (aruiwa).",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "コーヒーまたはお茶からお選びください。",
         "romaji": "koohii matawa ocha kara o erabi kudasai.",
@@ -2604,16 +2134,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-43",
-    "title": "みたいだ (みたいだ (mitai da))",
-    "formula": "Pattern: みたいだ (mitai da)",
+    "title": "みたいだ (mitai da)",
+    "formula": "みたいだ (mitai da)",
     "meaning": "like, similar to, resembling",
     "category": "Verb Forms & Conjugations",
     "examples": [
-      {
-        "jp": "Also see lessons for みたいに (mitai ni) and みたいな (mitai na).",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "夢みたいだ。",
         "romaji": "yume mitai da.",
@@ -2628,21 +2153,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-44",
-    "title": "みたいな (みたいな (mitai na))",
-    "formula": "Pattern: みたいな (mitai na)",
+    "title": "みたいな (mitai na)",
+    "formula": "みたいな (mitai na)",
     "meaning": "like, similar to",
     "category": "Verb Forms & Conjugations",
     "examples": [
-      {
-        "jp": "Learn Japanese grammar: みたいな (mitai na). Meaning: like, similar to.",
-        "romaji": "When used after a verb, it means just like doing something.",
-        "en": "* This form must be followed with a noun."
-      },
-      {
-        "jp": "Also see lessons for みたいに (mitai ni) and みたいだ (mitai da).",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "私は、今⽇みたいな⽇が好きだ。",
         "romaji": "watashi wa, kyou mitai na hi ga suki da.",
@@ -2652,16 +2167,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-45",
-    "title": "みたいに (みたいに (mitai ni))",
-    "formula": "Pattern: みたいに (mitai ni)",
+    "title": "みたいに (mitai ni)",
+    "formula": "みたいに (mitai ni)",
     "meaning": "like, similar to",
     "category": "Verb Forms & Conjugations",
     "examples": [
-      {
-        "jp": "Also see lessons for みたいな (mitai na) and みたいだ (mitai da).",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "⼦どもみたいに遊んだ。",
         "romaji": "kodomo mitai ni asonda.",
@@ -2676,16 +2186,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-46",
-    "title": "も (も (mo))",
-    "formula": "Pattern: も (mo)",
+    "title": "も (mo)",
+    "formula": "も (mo)",
     "meaning": "as many as; as much as; up to; nearly",
     "category": "Essential Patterns",
     "examples": [
-      {
-        "jp": "must also be used between that and も.",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "⼟曜⽇は12時間も寝てしまいました。",
         "romaji": "doyoubi wa 12 jikan mo nete shimaimashita.",
@@ -2700,16 +2205,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-47",
-    "title": "な (な (na))",
-    "formula": "Pattern: な (na)",
+    "title": "な (na)",
+    "formula": "な (na)",
     "meaning": "don’t ~ (order somebody to not do something)",
     "category": "Essential Patterns",
     "examples": [
-      {
-        "jp": "Learn Japanese grammar: な (na). Meaning: don’t ~ (order somebody to not do something).",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "晩ごはんの前にデザートを⾷べるな。",
         "romaji": "bangohan no mae ni dezaato o taberu na.",
@@ -2724,16 +2224,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-48",
-    "title": "など (など (nado))",
-    "formula": "Pattern: など (nado)",
+    "title": "など (nado)",
+    "formula": "など (nado)",
     "meaning": "such as, things like",
     "category": "Essential Patterns",
     "examples": [
-      {
-        "jp": "Learn Japanese grammar: など (nado). Meaning: such as, things like.",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "私は⼩説や映画などが好きです。",
         "romaji": "watashi wa shousetsu ya eiga nado ga suki desu.",
@@ -2748,16 +2243,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-49",
-    "title": "ながら (ながら (nagara))",
-    "formula": "Pattern: ながら (nagara)",
+    "title": "ながら (nagara)",
+    "formula": "ながら (nagara)",
     "meaning": "while; during; as; to do two things simultaneously",
     "category": "Particles & Relations",
     "examples": [
-      {
-        "jp": "らも (nagara mo) for more information.",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "話を聞きながらメモします。",
         "romaji": "hanashi o kikinagara memo shimasu.",
@@ -2772,16 +2262,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-50",
-    "title": "なかなか〜ない (なかなか〜ない (nakanaka~nai))",
-    "formula": "Pattern: なかなか〜ない (nakanaka~nai)",
+    "title": "なかなか〜ない (nakanaka~nai)",
+    "formula": "なかなか〜ない (nakanaka~nai)",
     "meaning": "not easy to; struggling to; not able",
     "category": "Verb Forms & Conjugations",
     "examples": [
-      {
-        "jp": "lesson なかなか (nakanaka).",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "カゼがなかなか治らない。",
         "romaji": "kaze ga nakanaka naoranai.",
@@ -2796,16 +2281,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-51",
-    "title": "なければいけない (なければいけない (nakereba ikenai))",
-    "formula": "Pattern: なければいけない (nakereba ikenai)",
+    "title": "なければいけない (nakereba ikenai)",
+    "formula": "なければいけない (nakereba ikenai)",
     "meaning": "must do something; have to do",
     "category": "Verb Forms & Conjugations",
     "examples": [
-      {
-        "jp": "なくてはいけない (nakute wa ikenai);",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "早く寝なければいけない。",
         "romaji": "hayaku nenakereba ikenai.",
@@ -2820,21 +2300,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-52",
-    "title": "なければならない (なければならない (nakereba naranai))",
-    "formula": "Pattern: なければならない (nakereba naranai)",
+    "title": "なければならない (nakereba naranai)",
+    "formula": "なければならない (nakereba naranai)",
     "meaning": "must do something; have to",
     "category": "Verb Forms & Conjugations",
     "examples": [
-      {
-        "jp": "Learn Japanese grammar: なければならない (nakereba naranai). Meaning: must do something; have to",
-        "romaji": "do something.",
-        "en": "It is used very similarly to some other lessons like:"
-      },
-      {
-        "jp": "なくてはいけない (nakute wa ikenai);",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "薬を飲まなければなりません。",
         "romaji": "Kusuri o noma nakereba naranai.",
@@ -2844,16 +2314,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-53",
-    "title": "なら (なら (nara))",
-    "formula": "Pattern: なら (nara)",
+    "title": "なら (nara)",
+    "formula": "なら (nara)",
     "meaning": "if; in the case that ~",
     "category": "Essential Patterns",
     "examples": [
-      {
-        "jp": "Adding a の to become のなら adds more emphasis.",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "もし違うなら。",
         "romaji": "moshi chigau nara.",
@@ -2868,21 +2333,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-54",
-    "title": "なさい (なさい (nasai))",
-    "formula": "Pattern: なさい (nasai)",
+    "title": "なさい (nasai)",
+    "formula": "なさい (nasai)",
     "meaning": "do this (soft/firm command)",
     "category": "Essential Patterns",
     "examples": [
-      {
-        "jp": "Learn Japanese grammar: なさい (nasai). Meaning: do this (soft/firm command).",
-        "romaji": "It is a soft, but firm way of issuing a command, which is often used in situations like parents",
-        "en": "asking/ordering their kids to do something."
-      },
-      {
-        "jp": "Ex) ⾷べな (tabena) “please eat”.",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "まず、質問に答えなさい。",
         "romaji": "mazu, shitsumon ni kotaenasai.",
@@ -2892,16 +2347,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-55",
-    "title": "なさる (なさる (nasaru) / なさいます (nasaimasu))",
-    "formula": "Pattern: なさる (nasaru) / なさいます (nasaimasu)",
+    "title": "なさる (nasaru) / なさいます (nasaimasu)",
+    "formula": "なさる (nasaru) / なさいます (nasaimasu)",
     "meaning": "to do (honorific)",
     "category": "Essential Patterns",
     "examples": [
-      {
-        "jp": "This is a more formal version of する (suru).",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "それからどうなさいました︖",
         "romaji": "sore kara dou nasai mashita?",
@@ -2916,16 +2366,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-56",
-    "title": "に気がつく (に気がつく 【にきがつく】(ni ki ga tsuku))",
-    "formula": "Pattern: に気がつく 【にきがつく】(ni ki ga tsuku)",
+    "title": "に気がつく (ni ki ga tsuku)",
+    "formula": "に気がつく 【にきがつく】(ni ki ga tsuku)",
     "meaning": "to notice; to realize",
     "category": "Particles & Relations",
     "examples": [
-      {
-        "jp": "Learn Japanese grammar: に気がつく 【にきがつく】(ni ki ga tsuku). Meaning: to notice; to realize.",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "電⾞の中にカサを忘れたことに気がついた。",
         "romaji": "kanojo wa densha no naka ni kasa o wasureta koto ni ki ga tsuita.",
@@ -2940,8 +2385,8 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-57",
-    "title": "にみえる (にみえる (ni mieru) / に⾒える)",
-    "formula": "Pattern: にみえる (ni mieru) / に⾒える",
+    "title": "にみえる ((ni mieru) / に⾒える)",
+    "formula": "にみえる (ni mieru) / に⾒える",
     "meaning": "to look; to seem; to appear",
     "category": "Particles & Relations",
     "examples": [
@@ -2949,11 +2394,6 @@ export const N4_GRAMMAR = [
         "jp": "にみえる (ni mieru) is used to say:",
         "romaji": "Looks like ~",
         "en": "Seems like ~"
-      },
-      {
-        "jp": "It can be written both as にみえる and に⾒える.",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
       },
       {
         "jp": "同じに⾒える。",
@@ -2964,16 +2404,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-58",
-    "title": "にする (にする (ni suru))",
-    "formula": "Pattern: にする (ni suru)",
+    "title": "にする (ni suru)",
+    "formula": "にする (ni suru)",
     "meaning": "to make something ~",
     "category": "Particles & Relations",
     "examples": [
-      {
-        "jp": "To use with an い-adjective instead use くする (ku suru).",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "もう少し、静かにしてください。",
         "romaji": "mou sukoshi, shizukani shite kudasai.",
@@ -2983,16 +2418,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-59",
-    "title": "にくい (にくい (nikui))",
-    "formula": "Pattern: にくい (nikui)",
+    "title": "にくい (nikui)",
+    "formula": "にくい (nikui)",
     "meaning": "difficult to do",
     "category": "Particles & Relations",
     "examples": [
-      {
-        "jp": "To say the opposite, that something is “easy to do”, use やすい (yasui) instead.",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "この質問には答えにくいです。",
         "romaji": "kono shitsumon niwa kotaenikui desu.",
@@ -3007,16 +2437,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-60",
-    "title": "の中で (の中で 【のなかで】(no naka de))",
-    "formula": "Pattern: の中で 【のなかで】(no naka de)",
+    "title": "の中で (no naka de)",
+    "formula": "の中で 【のなかで】(no naka de)",
     "meaning": "in, among",
     "category": "Particles & Relations",
     "examples": [
-      {
-        "jp": "Learn Japanese grammar: の中で 【のなかで】(no naka de). Meaning: in, among.",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "⼼の中ではこれを分かっていた。",
         "romaji": "kokoro no naka de kore o wakatteita.",
@@ -3031,16 +2456,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-61",
-    "title": "のに (のに (noni))",
-    "formula": "Pattern: のに (noni)",
+    "title": "のに (noni)",
+    "formula": "のに (noni)",
     "meaning": "although, in spite of, even though",
     "category": "Particles & Relations",
     "examples": [
-      {
-        "jp": "Be careful to not confuse this with the other grammar use of のに (noni) in order to.",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "まだ20時なのに、とても眠い。",
         "romaji": "mada 20 ji nano ni, totemo nemui.",
@@ -3055,8 +2475,8 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-62",
-    "title": "のに (のに (noni))",
-    "formula": "Pattern: のに (noni)",
+    "title": "のに (noni)",
+    "formula": "のに (noni)",
     "meaning": "to (do something); in order to",
     "category": "Particles & Relations",
     "examples": [
@@ -3079,16 +2499,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-63",
-    "title": "のは〜だ (のは〜だ (nowa~da))",
-    "formula": "Pattern: のは〜だ (nowa~da)",
+    "title": "のは〜だ (nowa~da)",
+    "formula": "のは〜だ (nowa~da)",
     "meaning": "[A] is [B]; the reason for [A] is [B]",
     "category": "Particles & Relations",
     "examples": [
-      {
-        "jp": "Learn Japanese grammar: のは〜だ (nowa~da). Meaning: [A] is [B]; the reason for [A] is [B].",
-        "romaji": "This can be used to express 2 different meanings:",
-        "en": "1. The reason for [A] is [B]."
-      },
       {
         "jp": "毎⽇、新しい単語を覚えるのは⼤変です。",
         "romaji": "mainichi, atarashii tango o oboeru nowa taihen desu.",
@@ -3103,16 +2518,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-64",
-    "title": "お〜ください (お〜ください (o~kudasai))",
-    "formula": "Pattern: お〜ください (o~kudasai)",
+    "title": "お〜ください (o~kudasai)",
+    "formula": "お〜ください (o~kudasai)",
     "meaning": "please do (honorific)",
     "category": "Essential Patterns",
     "examples": [
-      {
-        "jp": "becomes: おたべください (otabe kudasai) “please eat”",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "ここでお待ちください。",
         "romaji": "koko de omachi kudasai.",
@@ -3127,16 +2537,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-65",
-    "title": "お〜になる (お〜になる (o~ni naru))",
-    "formula": "Pattern: お〜になる (o~ni naru)",
+    "title": "お〜になる (o~ni naru)",
+    "formula": "お〜になる (o~ni naru)",
     "meaning": "to do (honorific)",
     "category": "Particles & Relations",
     "examples": [
-      {
-        "jp": "becomes: お⾷べになる (otabe in naru) “to eat” (honorific).",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "何をお飲みになりますか。",
         "romaji": "nani o onomi ni narimasu ka.",
@@ -3151,16 +2556,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-66",
-    "title": "おきに (おきに (oki ni))",
-    "formula": "Pattern: おきに (oki ni)",
+    "title": "おきに (oki ni)",
+    "formula": "おきに (oki ni)",
     "meaning": "repeated at intervals, every",
     "category": "Particles & Relations",
     "examples": [
-      {
-        "jp": "Learn Japanese grammar: おきに (oki ni). Meaning: repeated at intervals, every.",
-        "romaji": "It is used following a measurable noun (minutes, hours, days, weeks, months, distance, etc..)",
-        "en": "Example Sentences"
-      },
       {
         "jp": "電⾞は5分おきに⾛っています。",
         "romaji": "densha wa 5 fun oki ni hashitteimasu.",
@@ -3175,16 +2575,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-67",
-    "title": "終わる (終わる (owaru))",
-    "formula": "Pattern: 終わる (owaru)",
+    "title": "終わる (owaru)",
+    "formula": "終わる (owaru)",
     "meaning": "to finish; to end",
     "category": "Essential Patterns",
     "examples": [
-      {
-        "jp": "おわります・おわりました (more polite)",
-        "romaji": "examples 8~10",
-        "en": "Example Sentences"
-      },
       {
         "jp": "みんなが朝⾷を⾷べ終わるまで待ちましょう。",
         "romaji": "minnna ga choushoku o tabe owaru made machimashou.",
@@ -3199,30 +2594,25 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-68",
-    "title": "られる (られる (rareru))",
-    "formula": "Pattern: られる (rareru)",
+    "title": "られる (rareru)",
+    "formula": "られる (rareru)",
     "meaning": "potential form; being able to do something",
     "category": "Essential Patterns",
     "examples": [
       {
-        "jp": "⾷べる -> ⾷べられる (taberu -> taberareru)",
-        "romaji": "To eat -> To be able to eat",
-        "en": "Meaning"
+        "jp": "られるの使い方を練習しましょう。",
+        "romaji": "no tsukaikata o renshuu shimashou.",
+        "en": "Let us practice how to use this grammar pattern."
       }
     ]
   },
   {
     "id": "n4-g-69",
-    "title": "らしい (らしい (rashii) / らしくない (rashiku nai))",
-    "formula": "Pattern: らしい (rashii) / らしくない (rashiku nai)",
+    "title": "らしい (rashii) / らしくない (rashiku nai)",
+    "formula": "らしい (rashii) / らしくない (rashiku nai)",
     "meaning": "it seems like; I heard;",
     "category": "Desires & Conjecture",
     "examples": [
-      {
-        "jp": "Learn Japanese grammar: らしい (rashii) / らしくない (rashiku nai). Meaning: it seems like; I heard;",
-        "romaji": "apparently~",
-        "en": "Standard Meaning"
-      },
       {
         "jp": "らしい is used to say:",
         "romaji": "It seems like~",
@@ -3237,21 +2627,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-70",
-    "title": "さ (さ (sa))",
-    "formula": "Pattern: さ (sa)",
+    "title": "さ (sa)",
+    "formula": "さ (sa)",
     "meaning": "-ness ; nominalizer for adjectives",
     "category": "Essential Patterns",
     "examples": [
-      {
-        "jp": "Learn Japanese grammar: さ (sa). Meaning: -ness ; nominalizer for adjectives. Adding さ after an",
-        "romaji": "adjective it turns it into a Noun.",
-        "en": "It is very similar to English words ending in -ess, for example:"
-      },
-      {
-        "jp": "⻑さ (nagasa) “length”",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "背の⾼さはどれぐらいですか︖",
         "romaji": "se no takasa wa dore gurai desu ka?",
@@ -3261,16 +2641,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-71",
-    "title": "さっき (さっき (sakki))",
-    "formula": "Pattern: さっき (sakki)",
+    "title": "さっき (sakki)",
+    "formula": "さっき (sakki)",
     "meaning": "some time ago; just now; a very short time ago",
     "category": "Essential Patterns",
     "examples": [
-      {
-        "jp": "Learn Japanese grammar: さっき (sakki). Meaning: some time ago; just now; a very short time ago.",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "さっきまで天気がよかったですが、今は⼤⾬です。",
         "romaji": "sakki made tenki ga yokatta desu ga, ima wa ooame desu.",
@@ -3285,16 +2660,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-72",
-    "title": "させられる (させられる (saserareru))",
-    "formula": "Pattern: させられる (saserareru)",
+    "title": "させられる (saserareru)",
+    "formula": "させられる (saserareru)",
     "meaning": "causative-passive form; to be made to do",
     "category": "Essential Patterns",
     "examples": [
-      {
-        "jp": "To use, you must first conjugate the causative form. See lesson for させる (saseru) Causative Form.",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "仕事を辞めさせられた。",
         "romaji": "shigoto o yame saserareta.",
@@ -3309,30 +2679,25 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-73",
-    "title": "させる (させる (saseru))",
-    "formula": "Pattern: させる (saseru)",
+    "title": "させる (saseru)",
+    "formula": "させる (saseru)",
     "meaning": "causative form",
     "category": "Essential Patterns",
     "examples": [
       {
-        "jp": "Learn Japanese grammar: させる (saseru). Meaning: causative form. This can mean either:",
-        "romaji": "1. to make somebody do something.",
-        "en": "2. to let somebody do something."
+        "jp": "させるの使い方を練習しましょう。",
+        "romaji": "no tsukaikata o renshuu shimashou.",
+        "en": "Let us practice how to use this grammar pattern."
       }
     ]
   },
   {
     "id": "n4-g-74",
-    "title": "させてください (させてください (sasete kudasai))",
-    "formula": "Pattern: させてください (sasete kudasai)",
+    "title": "させてください (sasete kudasai)",
+    "formula": "させてください (sasete kudasai)",
     "meaning": "please let me do",
     "category": "Verb Forms & Conjugations",
     "examples": [
-      {
-        "jp": "When referring to yourself, you must use 私に (watashi ni) instead of 私は (watashi wa).",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "質問させてください。",
         "romaji": "shitsumon sasete kudasai.",
@@ -3347,16 +2712,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-75",
-    "title": "さすが (さすが (sasuga))",
-    "formula": "Pattern: さすが (sasuga)",
+    "title": "さすが (sasuga)",
+    "formula": "さすが (sasuga)",
     "meaning": "as one would expect; as is to be expected; even",
     "category": "Particles & Relations",
     "examples": [
-      {
-        "jp": "Learn Japanese grammar: さすが (sasuga). Meaning: as one would expect; as is to be expected; even.",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "私はさすがにビックリした。",
         "romaji": "watashi wa sasuga ni bikkuri shita.",
@@ -3371,8 +2731,8 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-76",
-    "title": "し (し (shi))",
-    "formula": "Pattern: し (shi)",
+    "title": "し (shi)",
+    "formula": "し (shi)",
     "meaning": "and; and what’s more",
     "category": "Essential Patterns",
     "examples": [
@@ -3385,16 +2745,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-77",
-    "title": "そんなに (そんなに (sonna ni))",
-    "formula": "Pattern: そんなに (sonna ni)",
+    "title": "そんなに (sonna ni)",
+    "formula": "そんなに (sonna ni)",
     "meaning": "so, so much, like that",
     "category": "Particles & Relations",
     "examples": [
-      {
-        "jp": "Learn Japanese grammar: そんなに (sonna ni). Meaning: so, so much, like that.",
-        "romaji": "It can be used both mid-sentence or to start a new sentence.",
-        "en": "It can be used to express both both positive and negative meanings."
-      },
       {
         "jp": "昨⽇はそんなに忙しくなかった。",
         "romaji": "kinou wa sonna ni isogashiku nakatta.",
@@ -3409,16 +2764,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-78",
-    "title": "それでも (それでも (sore demo))",
-    "formula": "Pattern: それでも (sore demo)",
+    "title": "それでも (sore demo)",
+    "formula": "それでも (sore demo)",
     "meaning": "but still; and yet; even so",
     "category": "Particles & Relations",
     "examples": [
-      {
-        "jp": "Learn Japanese grammar: それでも (sore demo). Meaning: but still; and yet; even so.",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "それでもいいですか︖",
         "romaji": "sore demo ii desu ka?",
@@ -3433,8 +2783,8 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-79",
-    "title": "そうだ (そうだ (sou da))",
-    "formula": "Pattern: そうだ (sou da)",
+    "title": "そうだ (sou da)",
+    "formula": "そうだ (sou da)",
     "meaning": "I heard that; it is said that",
     "category": "Desires & Conjecture",
     "examples": [
@@ -3452,21 +2802,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-80",
-    "title": "そうだ (そうだ (sou da))",
-    "formula": "Pattern: そうだ (sou da)",
+    "title": "そうだ (sou da)",
+    "formula": "そうだ (sou da)",
     "meaning": "it looks like / appears like",
     "category": "Desires & Conjecture",
     "examples": [
-      {
-        "jp": "そうだ (sou da) has two separate meanings.",
-        "romaji": "Meaning 1) I heard that / it is said that...",
-        "en": "Meaning 2) It looks like / appears like."
-      },
-      {
-        "jp": "そうです / そうでした",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "いまにも、⾬が降りそうだ。",
         "romaji": "imanimo, ame ga furi sou da.",
@@ -3477,15 +2817,10 @@ export const N4_GRAMMAR = [
   {
     "id": "n4-g-81",
     "title": "そうに・そうな (そうに (sou ni) / そうな (sou na))",
-    "formula": "Pattern: そうに (sou ni) / そうな (sou na)",
+    "formula": "そうに (sou ni) / そうな (sou na)",
     "meaning": "seems like; looks like",
     "category": "Particles & Relations",
     "examples": [
-      {
-        "jp": "そうだ - It looks like / appears like",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "楽しそうに⾒える。",
         "romaji": "tanoshi sou ni mieru.",
@@ -3500,8 +2835,8 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-82",
-    "title": "たばかり (たばかり (ta bakari))",
-    "formula": "Pattern: たばかり (ta bakari)",
+    "title": "たばかり (ta bakari)",
+    "formula": "たばかり (ta bakari)",
     "meaning": "just finished; something just occurred",
     "category": "Verb Forms & Conjugations",
     "examples": [
@@ -3519,16 +2854,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-83",
-    "title": "たところ (たところ (ta tokoro))",
-    "formula": "Pattern: たところ (ta tokoro)",
+    "title": "たところ (ta tokoro)",
+    "formula": "たところ (ta tokoro)",
     "meaning": "just finished doing, was just doing",
     "category": "Verb Forms & Conjugations",
     "examples": [
-      {
-        "jp": "Learn Japanese grammar: たところ (ta tokoro). Meaning: just finished doing, was just doing.",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "今起きたところです。",
         "romaji": "ima okita tokoro desu.",
@@ -3544,20 +2874,10 @@ export const N4_GRAMMAR = [
   {
     "id": "n4-g-84",
     "title": "他動詞 & ⾃動詞 (他動詞【たどうし】(tadoushi) & ⾃動詞【じどうし】( jidoushi))",
-    "formula": "Pattern: 他動詞【たどうし】(tadoushi) & ⾃動詞【じどうし】( jidoushi)",
+    "formula": "他動詞【たどうし】(tadoushi) & ⾃動詞【じどうし】( jidoushi)",
     "meaning": "transitive & intransitive verbs",
     "category": "Essential Patterns",
     "examples": [
-      {
-        "jp": "Learn Japanese grammar: 他動詞【たどうし】(tadoushi) & ⾃動詞【じどうし】( jidoushi). Meaning:",
-        "romaji": "transitive & intransitive verbs.",
-        "en": "In this lesson, I will explain what is the difference between transitive and intransitive verbs in Japanese."
-      },
-      {
-        "jp": "Transitive verbs 他動詞 (tadoushi) are verbs indicating personal action of changing something. The focus",
-        "romaji": "is on who did the action.",
-        "en": "Pattern:"
-      },
       {
         "jp": "⽥中さんはドアを閉めました。",
         "romaji": "tanaka san wa doa o shimemashita.",
@@ -3567,8 +2887,8 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-85",
-    "title": "たがる (たがる (tagaru))",
-    "formula": "Pattern: たがる (tagaru)",
+    "title": "たがる (tagaru)",
+    "formula": "たがる (tagaru)",
     "meaning": "wants to do (3rd person)",
     "category": "Verb Forms & Conjugations",
     "examples": [
@@ -3586,16 +2906,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-86",
-    "title": "たら (たら (tara))",
-    "formula": "Pattern: たら (tara)",
+    "title": "たら (tara)",
+    "formula": "たら (tara)",
     "meaning": "if, after, when",
     "category": "Verb Forms & Conjugations",
     "examples": [
-      {
-        "jp": "Learn Japanese grammar: たら (tara). Meaning: if, after, when.",
-        "romaji": "This is a basic conditional, that can be combined with any noun, adjective or verb.",
-        "en": "Example Sentences"
-      },
       {
         "jp": "お⾦があったら、旅⾏します。",
         "romaji": "okane ga attara, ryokou shimasu.",
@@ -3610,16 +2925,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-87",
-    "title": "たらどう (たらどう (tara dou))",
-    "formula": "Pattern: たらどう (tara dou)",
+    "title": "たらどう (tara dou)",
+    "formula": "たらどう (tara dou)",
     "meaning": "why don’t you (used to give advice)",
     "category": "Verb Forms & Conjugations",
     "examples": [
-      {
-        "jp": "Learn Japanese grammar: たらどう (tara dou). Meaning: why don’t you (used to give advice).",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "⼀緒に来たらどうですか︖",
         "romaji": "isshoni kitara dou desu ka?",
@@ -3634,16 +2944,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-88",
-    "title": "たらいいですか (たらいいですか (tara ii desu ka))",
-    "formula": "Pattern: たらいいですか (tara ii desu ka)",
+    "title": "たらいいですか (tara ii desu ka)",
+    "formula": "たらいいですか (tara ii desu ka)",
     "meaning": "what should I do?; speaker seeking",
     "category": "Verb Forms & Conjugations",
     "examples": [
-      {
-        "jp": "Learn Japanese grammar: たらいいですか (tara ii desu ka). Meaning: what should I do?; speaker seeking",
-        "romaji": "instructions from listener.",
-        "en": "Example Sentences"
-      },
       {
         "jp": "どうしたらいいですか︖",
         "romaji": "dou shitara ii desu ka?",
@@ -3658,16 +2963,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-89",
-    "title": "て / で (て / で (te / de))",
-    "formula": "Pattern: て / で (te / de)",
+    "title": "て / で (te / de)",
+    "formula": "て / で (te / de)",
     "meaning": "conjunctive particle; so; because of [A], [B]…",
     "category": "Verb Forms & Conjugations",
     "examples": [
-      {
-        "jp": "[A] + て/で + [B]",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "最近は忙しくてあまり運動をしていない。",
         "romaji": "saikin wa isogashi kute amari undou o shiteinai.",
@@ -3682,21 +2982,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-90",
-    "title": "てあげる (てあげる (te ageru) / てあげます (te agemasu))",
-    "formula": "Pattern: てあげる (te ageru) / てあげます (te agemasu)",
+    "title": "てあげる (te ageru) / てあげます (te agemasu)",
+    "formula": "てあげる (te ageru) / てあげます (te agemasu)",
     "meaning": "to do for; to do a",
     "category": "Verb Forms & Conjugations",
     "examples": [
-      {
-        "jp": "Learn Japanese grammar: てあげる (te ageru) / てあげます (te agemasu). Meaning: to do for; to do a",
-        "romaji": "favor.",
-        "en": "This can be used to either:"
-      },
-      {
-        "jp": "The recipient of the favor should be followed with the に particle.",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "⺟にセーターを買ってあげた。",
         "romaji": "haha ni seetaa o katte ageta.",
@@ -3707,20 +2997,10 @@ export const N4_GRAMMAR = [
   {
     "id": "n4-g-91",
     "title": "てほしい (て欲しい 【てほしい】(te hoshii))",
-    "formula": "Pattern: て欲しい 【てほしい】(te hoshii)",
+    "formula": "て欲しい 【てほしい】(te hoshii)",
     "meaning": "I want you to; need you to~, used",
     "category": "Verb Forms & Conjugations",
     "examples": [
-      {
-        "jp": "Learn Japanese grammar: て欲しい 【てほしい】(te hoshii). Meaning: I want you to; need you to~, used",
-        "romaji": "to ask somebody to do something for you.",
-        "en": "The hiragana version is mostly used, but you can also use the kanji version."
-      },
-      {
-        "jp": "If you want to target your desired activity to a certain person, use に.",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "⽇本語を教えてほしいです。",
         "romaji": "nihongo o oshiete hoshii desu.",
@@ -3730,16 +3010,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-92",
-    "title": "ていく (ていく (te iku) / ていった (te itta))",
-    "formula": "Pattern: ていく (te iku) / ていった (te itta)",
+    "title": "ていく (te iku) / ていった (te itta)",
+    "formula": "ていく (te iku) / ていった (te itta)",
     "meaning": "to start; to continue; to go on",
     "category": "Verb Forms & Conjugations",
     "examples": [
-      {
-        "jp": "Learn Japanese grammar: ていく (te iku) / ていった (te itta). Meaning: to start; to continue; to go on.",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "歩いていく。",
         "romaji": "aruite iku.",
@@ -3754,16 +3029,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-93",
-    "title": "ていた (ていた (te ita) / ていました (te imashita))",
-    "formula": "Pattern: ていた (te ita) / ていました (te imashita)",
+    "title": "ていた (te ita) / ていました (te imashita)",
+    "formula": "ていた (te ita) / ていました (te imashita)",
     "meaning": "was doing something",
     "category": "Verb Forms & Conjugations",
     "examples": [
-      {
-        "jp": "In spoken form, the い is often dropped to become てた (te ta) or てました (te mashita).",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "彼⼥はオレンジを⾷べていた。",
         "romaji": "kanojo wa orenji o tabeteita.",
@@ -3778,16 +3048,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-94",
-    "title": "ていただけませんか (ていただけませんか (te itadakemasen ka))",
-    "formula": "Pattern: ていただけませんか (te itadakemasen ka)",
+    "title": "ていただけませんか (te itadakemasen ka)",
+    "formula": "ていただけませんか (te itadakemasen ka)",
     "meaning": "could you please",
     "category": "Verb Forms & Conjugations",
     "examples": [
-      {
-        "jp": "Learn Japanese grammar: ていただけませんか (te itadakemasen ka). Meaning: could you please.",
-        "romaji": "This grammar can be used in combination with any verb to ask someone to do the action.",
-        "en": "Example Sentences"
-      },
       {
         "jp": "写真を取っていただけませんか。",
         "romaji": "shashin o totte itadake masen ka.",
@@ -3802,40 +3067,25 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-95",
-    "title": "てくれる (てくれる (te kureru) / てくれます (te kuremasu) / てくれた (te kureta))",
-    "formula": "Pattern: てくれる (te kureru) / てくれます (te kuremasu) / てくれた (te kureta)",
+    "title": "てくれる (te kureru) / てくれます (te kuremasu) / てくれた (te kureta)",
+    "formula": "てくれる (te kureru) / てくれます (te kuremasu) / てくれた (te kureta)",
     "meaning": "to do a favor; request a favor; do something for someone",
     "category": "Verb Forms & Conjugations",
     "examples": [
       {
-        "jp": "Learn Japanese grammar: てくれる (te kureru) / てくれます (te kuremasu) / てくれた (te kureta).",
-        "romaji": "Meaning: to do a favor; request a favor; do something for someone.",
-        "en": "This can be used to either:"
-      },
-      {
         "jp": "The recipient of the favor (usually oneself), should be marked with に.",
         "romaji": "Meaning 1) Asking a favor",
         "en": "When asking for a favor, often the negative form is used."
-      },
-      {
-        "jp": "教えてくれませんか︖ (oshiete kuremasen ka)",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
       }
     ]
   },
   {
     "id": "n4-g-96",
-    "title": "てくる (てくる (te kuru) / てきみます (te kimasu))",
-    "formula": "Pattern: てくる (te kuru) / てきみます (te kimasu)",
+    "title": "てくる (te kuru) / てきみます (te kimasu)",
+    "formula": "てくる (te kuru) / てきみます (te kimasu)",
     "meaning": "to do… and come back;",
     "category": "Verb Forms & Conjugations",
     "examples": [
-      {
-        "jp": "Learn Japanese grammar: てくる (te kuru) / てきみます (te kimasu). Meaning: to do… and come back;",
-        "romaji": "to become, to continue, to start.",
-        "en": "This can be used to express various meanings."
-      },
       {
         "jp": "⾒えてくる。",
         "romaji": "miete kuru",
@@ -3850,16 +3100,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-97",
-    "title": "てみる (てみる (te miru) / てみます (te mimasu))",
-    "formula": "Pattern: てみる (te miru) / てみます (te mimasu)",
+    "title": "てみる (te miru) / てみます (te mimasu)",
+    "formula": "てみる (te miru) / てみます (te mimasu)",
     "meaning": "try doing ~",
     "category": "Verb Forms & Conjugations",
     "examples": [
-      {
-        "jp": "みる can be conjugated like a normal verb.",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "やってみる︕",
         "romaji": "yatte miru!",
@@ -3874,16 +3119,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-98",
-    "title": "ておく (ておく (te oku))",
-    "formula": "Pattern: ておく (te oku)",
+    "title": "ておく (te oku)",
+    "formula": "ておく (te oku)",
     "meaning": "to do something in advance",
     "category": "Verb Forms & Conjugations",
     "examples": [
-      {
-        "jp": "Learn Japanese grammar: ておく (te oku). Meaning: to do something in advance.",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "お弁当を作っておいたよ。",
         "romaji": "obentou o tsukutte oita yo.",
@@ -3899,15 +3139,10 @@ export const N4_GRAMMAR = [
   {
     "id": "n4-g-99",
     "title": "てしまう / ちゃう (てしまう (te shimau) & ちゃう (chau))",
-    "formula": "Pattern: てしまう (te shimau) & ちゃう (chau)",
+    "formula": "てしまう (te shimau) & ちゃう (chau)",
     "meaning": "to do something by accident,",
     "category": "Verb Forms & Conjugations",
     "examples": [
-      {
-        "jp": "じゃった = did by accident / finished (casual)",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "仕事は全部終わってしまいました。",
         "romaji": "shigoto wa zenbu owatte shimai mashita.",
@@ -3917,16 +3152,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-100",
-    "title": "てすみません (てすみません (te sumimasen))",
-    "formula": "Pattern: てすみません (te sumimasen)",
+    "title": "てすみません (te sumimasen)",
+    "formula": "てすみません (te sumimasen)",
     "meaning": "I’m sorry for",
     "category": "Verb Forms & Conjugations",
     "examples": [
-      {
-        "jp": "Learn Japanese grammar: てすみません (te sumimasen). Meaning: I’m sorry for..",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "遅れてすみません。",
         "romaji": "okurete sumimasen.",
@@ -3941,16 +3171,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-101",
-    "title": "てやる (てやる (te yaru))",
-    "formula": "Pattern: てやる (te yaru)",
+    "title": "てやる (te yaru)",
+    "formula": "てやる (te yaru)",
     "meaning": "to do for; to do a favor (casual spoken)",
     "category": "Verb Forms & Conjugations",
     "examples": [
-      {
-        "jp": "It is the same as てあげる (te ageru), but more casual and mostly used in spoken Japanese.",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "⼿伝ってやる。",
         "romaji": "tetsudatte yaru.",
@@ -3965,16 +3190,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-102",
-    "title": "てよかった (てよかった (te yokatta))",
-    "formula": "Pattern: てよかった (te yokatta)",
+    "title": "てよかった (te yokatta)",
+    "formula": "てよかった (te yokatta)",
     "meaning": "I’m glad that",
     "category": "Verb Forms & Conjugations",
     "examples": [
-      {
-        "jp": "Learn Japanese grammar: てよかった (te yokatta). Meaning: I’m glad that..",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "⾏ってよかった︕",
         "romaji": "itte yokatta!",
@@ -3989,21 +3209,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-103",
-    "title": "ているところ (ているところ (teiru tokoro))",
-    "formula": "Pattern: ているところ (teiru tokoro)",
+    "title": "ているところ (teiru tokoro)",
+    "formula": "ているところ (teiru tokoro)",
     "meaning": "in the process of doing; in the middle",
     "category": "Verb Forms & Conjugations",
     "examples": [
-      {
-        "jp": "Learn Japanese grammar: ているところ (teiru tokoro). Meaning: in the process of doing; in the middle",
-        "romaji": "of doing.",
-        "en": "This can express either:"
-      },
-      {
-        "jp": "ているところです (teiru tokoro desu).",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "彼は⼊院しているところです。",
         "romaji": "kare wa nyuuin shiteiru tokoro desu.",
@@ -4013,16 +3223,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-104",
-    "title": "ても (ても (temo) & でも (demo))",
-    "formula": "Pattern: ても (temo) & でも (demo)",
+    "title": "ても (temo) & でも (demo)",
+    "formula": "ても (temo) & でも (demo)",
     "meaning": "even; even if; even though",
     "category": "Verb Forms & Conjugations",
     "examples": [
-      {
-        "jp": "Be careful to not confuse this with でも (demo), which is has a separate meaning.",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "たくさん⾷べても、お腹が空きます。",
         "romaji": "takusan tabetemo, onaka ga sukimasu.",
@@ -4037,16 +3242,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-105",
-    "title": "と (と (to))",
-    "formula": "Pattern: と (to)",
+    "title": "と (to)",
+    "formula": "と (to)",
     "meaning": "whenever [A] happens, [B] also happens",
     "category": "Essential Patterns",
     "examples": [
-      {
-        "jp": "Do not confuse this with the と (to) connecting particle.",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "ラーメンを毎⽇⾷べると太りますよ。",
         "romaji": "raamen o mainichi taberu to futorimasu yo.",
@@ -4061,16 +3261,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-106",
-    "title": "と⾔ってもいい (と⾔ってもいい【といってもいい】(to ittemo ii))",
-    "formula": "Pattern: と⾔ってもいい【といってもいい】(to ittemo ii)",
+    "title": "と⾔ってもいい (to ittemo ii)",
+    "formula": "と⾔ってもいい【といってもいい】(to ittemo ii)",
     "meaning": "you could say;",
     "category": "Verb Forms & Conjugations",
     "examples": [
-      {
-        "jp": "ても (temo) – even if; even though.",
-        "romaji": "Both the kanji and hiragana versions are commonly used.",
-        "en": "Example Sentences"
-      },
       {
         "jp": "それはよい買い物だったといってもいいでしょう。",
         "romaji": "sore wa yoi kaimono to ittemo ii deshou.",
@@ -4086,7 +3281,7 @@ export const N4_GRAMMAR = [
   {
     "id": "n4-g-107",
     "title": "という (と⾔う【という】(to iu))",
-    "formula": "Pattern: と⾔う【という】(to iu)",
+    "formula": "と⾔う【という】(to iu)",
     "meaning": "called; named; that",
     "category": "Essential Patterns",
     "examples": [
@@ -4094,11 +3289,6 @@ export const N4_GRAMMAR = [
         "jp": "Many different meanings of という",
         "romaji": "This can be used to express many different meanings, including:",
         "en": "1. to be called, said, named, etc."
-      },
-      {
-        "jp": "Many other grammar points are based off of という to create even more possible meanings.",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
       },
       {
         "jp": "この⽝はバディーという名前です。",
@@ -4109,16 +3299,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-108",
-    "title": "ということ (ということ (to iu koto))",
-    "formula": "Pattern: ということ (to iu koto)",
+    "title": "ということ (to iu koto)",
+    "formula": "ということ (to iu koto)",
     "meaning": "convert phrase into noun",
     "category": "Essential Patterns",
     "examples": [
-      {
-        "jp": "Learn Japanese grammar: ということ (to iu koto). Meaning: convert phrase into noun.",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "あなたが私の声が好きだということがとても嬉しいです。",
         "romaji": "anata ga watashi no koe ga suki da to iu koto ga totemo ureshii desu.",
@@ -4133,8 +3318,8 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-109",
-    "title": "と⾔われている (と⾔われている 【といわれている】(to iwarete iru))",
-    "formula": "Pattern: と⾔われている 【といわれている】(to iwarete iru)",
+    "title": "と⾔われている (to iwarete iru)",
+    "formula": "と⾔われている 【といわれている】(to iwarete iru)",
     "meaning": "it is said",
     "category": "Verb Forms & Conjugations",
     "examples": [
@@ -4157,16 +3342,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-110",
-    "title": "と聞いた (と聞いた 【ときいた】(to kiita))",
-    "formula": "Pattern: と聞いた 【ときいた】(to kiita)",
+    "title": "と聞いた (to kiita)",
+    "formula": "と聞いた 【ときいた】(to kiita)",
     "meaning": "I heard…",
     "category": "Verb Forms & Conjugations",
     "examples": [
-      {
-        "jp": "Learn Japanese grammar: と聞いた 【ときいた】(to kiita). Meaning: I heard….",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "彼がお⽗さんになったと聞いた。",
         "romaji": "kare ga otousan ni natta to kiita.",
@@ -4181,16 +3361,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-111",
-    "title": "と思う (と思う 【とおもう】(to omou))",
-    "formula": "Pattern: と思う 【とおもう】(to omou)",
+    "title": "と思う (to omou)",
+    "formula": "と思う 【とおもう】(to omou)",
     "meaning": "to think…; I think…; you think…",
     "category": "Essential Patterns",
     "examples": [
-      {
-        "jp": "と思わない (to omowanai) don’t you think?",
-        "romaji": "etc..",
-        "en": "Example Sentences"
-      },
       {
         "jp": "きれいだと思わない︖",
         "romaji": "kirei da to omowanai?",
@@ -4205,16 +3380,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-112",
-    "title": "とか〜とか (とか〜とか (toka~toka))",
-    "formula": "Pattern: とか〜とか (toka~toka)",
+    "title": "とか〜とか (toka~toka)",
+    "formula": "とか〜とか (toka~toka)",
     "meaning": "among other things; such as; like",
     "category": "Essential Patterns",
     "examples": [
-      {
-        "jp": "Learn Japanese grammar: とか〜とか (toka~toka). Meaning: among other things; such as; like.",
-        "romaji": "This is usually used to list multiple examples, though it can also be used only once with one example, and",
-        "en": "will imply that you could say more examples (see example 1)."
-      },
       {
         "jp": "趣味とかありますか︖",
         "romaji": "shumi toka arimasu ka?",
@@ -4229,16 +3399,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-113",
-    "title": "ところ (ところ (tokoro))",
-    "formula": "Pattern: ところ (tokoro)",
+    "title": "ところ (tokoro)",
+    "formula": "ところ (tokoro)",
     "meaning": "just about to; on the verge of doing something",
     "category": "Essential Patterns",
     "examples": [
-      {
-        "jp": "Learn Japanese grammar: ところ (tokoro). Meaning: just about to; on the verge of doing something.",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "今、出かけるところです。",
         "romaji": "ima, dekakeru tokoro desu.",
@@ -4253,21 +3418,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-114",
-    "title": "続ける (続ける 【つづける】(tsuzukeru))",
-    "formula": "Pattern: 続ける 【つづける】(tsuzukeru)",
+    "title": "続ける (tsuzukeru)",
+    "formula": "続ける 【つづける】(tsuzukeru)",
     "meaning": "continue to; keen on",
     "category": "Essential Patterns",
     "examples": [
-      {
-        "jp": "Learn Japanese grammar: 続ける 【つづける】(tsuzukeru). Meaning: continue to; keen on.",
-        "romaji": "This is used to express continuous action, or to show someone is keen on doing something.",
-        "en": "It can be freely conjugated to use in current, future, and past tense."
-      },
-      {
-        "jp": "To instead say to end, use 終わる (owaru)",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "昨⽇から⾬が降り続けている。",
         "romaji": "kinou kara ame ga furi tsuzukete iru.",
@@ -4277,16 +3432,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-115",
-    "title": "って (って (tte))",
-    "formula": "Pattern: って (tte)",
+    "title": "って (tte)",
+    "formula": "って (tte)",
     "meaning": "named; called",
     "category": "Verb Forms & Conjugations",
     "examples": [
-      {
-        "jp": "Learn Japanese grammar: って (tte). Meaning: named; called.",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "これはたい焼きっていう⾷べ物だよ。",
         "romaji": "kore wa taiyaki tte iu tabe mono da yo.",
@@ -4301,8 +3451,8 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-116",
-    "title": "受⾝形 (受⾝形【うけみけい】(ukemi kei))",
-    "formula": "Pattern: 受⾝形【うけみけい】(ukemi kei)",
+    "title": "受⾝形 (ukemi kei)",
+    "formula": "受⾝形【うけみけい】(ukemi kei)",
     "meaning": "Japanese passive form or",
     "category": "Essential Patterns",
     "examples": [
@@ -4315,16 +3465,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-117",
-    "title": "は〜が… は (は〜が… は (wa~ga… wa))",
-    "formula": "Pattern: は〜が… は (wa~ga… wa)",
+    "title": "は〜が… は (wa~ga… wa)",
+    "formula": "は〜が… は (wa~ga… wa)",
     "meaning": "[A] but [B]; however; comparison",
     "category": "Particles & Relations",
     "examples": [
-      {
-        "jp": "Learn Japanese grammar: は〜が… は (wa~ga… wa). Meaning: [A] but [B]; however; comparison.",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "ひらがなは書けますが、漢字は書けません。",
         "romaji": "hiragana wa kakemasu ga, kanji wa kakemasen.",
@@ -4339,40 +3484,25 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-118",
-    "title": "やすい (やすい (yasui))",
-    "formula": "Pattern: やすい (yasui)",
+    "title": "やすい (yasui)",
+    "formula": "やすい (yasui)",
     "meaning": "easy to; likely to; prone to; have a tendency to",
     "category": "Essential Patterns",
     "examples": [
       {
-        "jp": "⾒やすい (mi yasui).",
-        "romaji": "Easy to see.",
-        "en": "Meaning 2) likely to happen"
-      },
-      {
-        "jp": "事故が起こりやすい (jiko ga okori yasui) .",
-        "romaji": "Accidents are likely to happen.",
-        "en": "Meaning 3) prone to / tendency to"
-      },
-      {
-        "jp": "To say the opposite, that something is “difficult to do”, use にくい (nikui).",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
+        "jp": "やすいの使い方を練習しましょう。",
+        "romaji": "no tsukaikata o renshuu shimashou.",
+        "en": "Let us practice how to use this grammar pattern."
       }
     ]
   },
   {
     "id": "n4-g-119",
-    "title": "やっと (やっと (yatto))",
-    "formula": "Pattern: やっと (yatto)",
+    "title": "やっと (yatto)",
+    "formula": "やっと (yatto)",
     "meaning": "at last; finally; barely; narrowly",
     "category": "Essential Patterns",
     "examples": [
-      {
-        "jp": "Learn Japanese grammar: やっと (yatto). Meaning: at last; finally; barely; narrowly.",
-        "romaji": "This can be used to express two different meanings:",
-        "en": "1. at last; finally (this meaning is most common)."
-      },
       {
         "jp": "やっとレポートを書き上げた。",
         "romaji": "yatto repooto o kaki ageta.",
@@ -4387,8 +3517,8 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-120",
-    "title": "より (より (yori))",
-    "formula": "Pattern: より (yori)",
+    "title": "より (yori)",
+    "formula": "より (yori)",
     "meaning": "than; rather than; more than",
     "category": "Comparisons & Extent",
     "examples": [
@@ -4396,11 +3526,6 @@ export const N4_GRAMMAR = [
         "jp": "よりきれい",
         "romaji": "More beautiful",
         "en": "Also see examples 9~10"
-      },
-      {
-        "jp": "JLPT N2 and above. See lesson for JLPT N2 より (yori).",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
       },
       {
         "jp": "今⽇は昨⽇より暑いです。",
@@ -4411,16 +3536,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-121",
-    "title": "予定だ (予定だ 【よていだ】(yoteida))",
-    "formula": "Pattern: 予定だ 【よていだ】(yoteida)",
+    "title": "予定だ (yoteida)",
+    "formula": "予定だ 【よていだ】(yoteida)",
     "meaning": "plan to, intend to",
     "category": "Essential Patterns",
     "examples": [
-      {
-        "jp": "Learn Japanese grammar: 予定だ 【よていだ】(yoteida). Meaning: plan to, intend to.",
-        "romaji": "This can be used in combination with either a Verb or Noun to express plans or intention to do",
-        "en": "something."
-      },
       {
         "jp": "私はデートに⾏く予定だ。",
         "romaji": "watashi wa deeto ni iku yotei da.",
@@ -4435,8 +3555,8 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-122",
-    "title": "ようだ (ようだ (you da))",
-    "formula": "Pattern: ようだ (you da)",
+    "title": "ようだ (you da)",
+    "formula": "ようだ (you da)",
     "meaning": "appears; seems; looks as if",
     "category": "Desires & Conjecture",
     "examples": [
@@ -4459,8 +3579,8 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-123",
-    "title": "ように / ような (ように / ような (you ni / you na))",
-    "formula": "Pattern: ように / ような (you ni / you na)",
+    "title": "ように / ような (you ni / you na)",
+    "formula": "ように / ような (you ni / you na)",
     "meaning": "like; as; similar to~",
     "category": "Particles & Relations",
     "examples": [
@@ -4483,16 +3603,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-124",
-    "title": "ようになる (ようになる (you ni naru))",
-    "formula": "Pattern: ようになる (you ni naru)",
+    "title": "ようになる (you ni naru)",
+    "formula": "ようになる (you ni naru)",
     "meaning": "to reach the point that; to come to be",
     "category": "Particles & Relations",
     "examples": [
-      {
-        "jp": "Sometimes よう may be excluded to just be になる.",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "⼤きくなったら分かるようになるよ。",
         "romaji": "ookiku nattara wakaru you ni naru yo.",
@@ -4507,16 +3622,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-125",
-    "title": "ようにする (ようにする (you ni suru) / ようにしている (you ni shiteiru))",
-    "formula": "Pattern: ようにする (you ni suru) / ようにしている (you ni shiteiru)",
+    "title": "ようにする (you ni suru) / ようにしている (you ni shiteiru)",
+    "formula": "ようにする (you ni suru) / ようにしている (you ni shiteiru)",
     "meaning": "to try",
     "category": "Particles & Relations",
     "examples": [
-      {
-        "jp": "ようにしています (you ni shiteimasu) current state polite",
-        "romaji": "examples 7~8",
-        "en": "Example Sentences"
-      },
       {
         "jp": "明⽇早く起きるようにする。",
         "romaji": "ashita hayaku okiru you ni suru.",
@@ -4526,16 +3636,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-126",
-    "title": "ようと思う (ようと思う 【ようとおもう】(you to omou))",
-    "formula": "Pattern: ようと思う 【ようとおもう】(you to omou)",
+    "title": "ようと思う (you to omou)",
+    "formula": "ようと思う 【ようとおもう】(you to omou)",
     "meaning": "thinking of doing;",
     "category": "Desires & Conjecture",
     "examples": [
-      {
-        "jp": "ようとは思わない (you to omowanai) I would not think to…",
-        "romaji": "etc..",
-        "en": "Example Sentences"
-      },
       {
         "jp": "⽇本に留学しようと思っています。",
         "romaji": "nihon ni ryuugaku shiyou to omotte imasu.",
@@ -4545,16 +3650,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-127",
-    "title": "ぜひ (ぜひ (zehi))",
-    "formula": "Pattern: ぜひ (zehi)",
+    "title": "ぜひ (zehi)",
+    "formula": "ぜひ (zehi)",
     "meaning": "by all means; certainly; definitely",
     "category": "Essential Patterns",
     "examples": [
-      {
-        "jp": "In higher JLPT levels, the kanji form will be used 是⾮.",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "私はぜひそこで働きたい。",
         "romaji": "watashi wa zehi soko de hatarakitai.",
@@ -4569,16 +3669,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-128",
-    "title": "全然〜ない (全然〜ない 【ぜんぜん〜ない】(zenzen~nai))",
-    "formula": "Pattern: 全然〜ない 【ぜんぜん〜ない】(zenzen~nai)",
+    "title": "全然〜ない (zenzen~nai)",
+    "formula": "全然〜ない 【ぜんぜん〜ない】(zenzen~nai)",
     "meaning": "(not) at all",
     "category": "Verb Forms & Conjugations",
     "examples": [
-      {
-        "jp": "Learn Japanese grammar: 全然〜ない 【ぜんぜん〜ない】(zenzen~nai). Meaning: (not) at all.",
-        "romaji": "Both the kanji and hiragana versions can be used.",
-        "en": "Example Sentences"
-      },
       {
         "jp": "私は⽇本語がぜんぜん話せない。",
         "romaji": "watashi wa nihongo ga zenzen hanasenai.",
@@ -4593,16 +3688,11 @@ export const N4_GRAMMAR = [
   },
   {
     "id": "n4-g-129",
-    "title": "づらい (づらい (zurai))",
-    "formula": "Pattern: づらい (zurai)",
+    "title": "づらい (zurai)",
+    "formula": "づらい (zurai)",
     "meaning": "difficult to do",
     "category": "Essential Patterns",
     "examples": [
-      {
-        "jp": "To say the opposite, that something is “easy to do”, use やすい (yasui).",
-        "romaji": "Example Sentences",
-        "en": "Meaning"
-      },
       {
         "jp": "この質問には答えづらいです。",
         "romaji": "kono shitsumon niwa kotae zurai desu.",
