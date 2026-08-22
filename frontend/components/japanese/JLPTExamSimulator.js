@@ -402,27 +402,17 @@ export default function JLPTExamSimulator({ level = 'N5', onToast }) {
         </div>
 
         <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
-            <button
-              type="button"
-              className="text-xs font-bold text-blue-600 hover:underline cursor-pointer"
-              onClick={() => {
-                const audio = new Audio('/audio/japanese/n5/captured-media-2-mp3.mp3');
-                audio.play();
-                if (onToast) onToast({ type: 'info', message: 'Playing audio sound check...' });
-              }}
-            >
-              🔊 Test Audio Output
-            </button>
-            <button
-              type="button"
-              className="text-xs text-slate-700 hover:text-slate-950 font-bold bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded-lg flex items-center gap-1 transition-all active:scale-95 cursor-pointer"
-              onClick={toggleFullscreen}
-              title="Toggle Fullscreen Exam Hall"
-            >
-              <span>⛶</span> Fullscreen Mode
-            </button>
-          </div>
+          <button
+            type="button"
+            className="text-xs font-bold text-blue-600 hover:underline cursor-pointer"
+            onClick={() => {
+              const audio = new Audio('/audio/japanese/n5/captured-media-2-mp3.mp3');
+              audio.play();
+              if (onToast) onToast({ type: 'info', message: 'Playing audio sound check...' });
+            }}
+          >
+            🔊 Test Audio Output
+          </button>
           <Button
             type="button"
             size="lg"
@@ -523,16 +513,6 @@ export default function JLPTExamSimulator({ level = 'N5', onToast }) {
               <span>⏱</span>
               <span>{formatTimer(timeRemaining)}</span>
             </div>
-
-            {/* Fullscreen Button */}
-            <button
-              type="button"
-              onClick={toggleFullscreen}
-              className="px-2.5 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-bold transition-all flex items-center gap-1 cursor-pointer"
-              title="Toggle Fullscreen Mode"
-            >
-              <span>⛶</span> <span className="hidden sm:inline">Fullscreen</span>
-            </button>
 
             <Button
               type="button"

@@ -139,6 +139,21 @@ export default function JapaneseLearningHub() {
     }
   };
 
+  const handleToggleFullscreenFocus = () => {
+    if (!isFocusMode) {
+      setIsFocusMode(true);
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen?.().catch(() => {});
+      }
+      showToast('🧘 Fullscreen Focus Activated. Press ESC to exit anytime.', 'info');
+    } else {
+      setIsFocusMode(false);
+      if (document.fullscreenElement) {
+        document.exitFullscreen?.().catch(() => {});
+      }
+    }
+  };
+
   return (
     <SystemShell
       activePath="/japanese"
@@ -147,18 +162,15 @@ export default function JapaneseLearningHub() {
       description="Streamlined Japanese mastery environment for JLPT proficiency (N5 & N4) and Factory 5S Operations."
       actions={
         <div className="flex items-center gap-2">
-          {/* Zen Focus Mode CTA */}
+          {/* Zen Fullscreen Focus Mode CTA */}
           <Button
             size="sm"
             variant="primary"
-            className="bg-linear-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-black shadow-md flex items-center gap-1.5 active:scale-95 text-xs"
-            onClick={() => {
-              setIsFocusMode(true);
-              showToast('🧘 Zen Focus Mode Activated. Press ESC to exit anytime.', 'info');
-            }}
+            className="bg-linear-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-black shadow-md flex items-center gap-1.5 active:scale-95 text-xs cursor-pointer"
+            onClick={handleToggleFullscreenFocus}
           >
-            <span>🎯</span>
-            <span>Focus Mode (集中)</span>
+            <span>⛶</span>
+            <span>Fullscreen Focus (全画面集中)</span>
           </Button>
 
           <div
@@ -525,20 +537,20 @@ function FlashcardDojo({ grammarList, level, onToast }) {
         </div>
       </div>
 
-      {/* Interactive 3D Flip Card */}
-      <div className="flex flex-col items-center justify-center p-6 bg-slate-900/5 rounded-2xl border border-slate-200 min-h-[380px]">
+      {/* Interactive 3D Flip Card with Generous Breathing Area */}
+      <div className="flex flex-col items-center justify-center py-10 sm:py-14 px-4 bg-slate-900/5 rounded-3xl border border-slate-200/80 min-h-[440px]">
         <div
-          className={`w-full max-w-xl p-8 bg-white border-2 ${
+          className={`w-full max-w-2xl p-6 sm:p-10 md:p-12 bg-white border-2 ${
             flipped ? 'border-amber-400 bg-amber-50/20' : 'border-slate-300'
-          } rounded-2xl shadow-lg cursor-pointer transition-all duration-300 transform hover:-translate-y-1 flex flex-col justify-between min-h-[300px]`}
+          } rounded-3xl shadow-xl cursor-pointer transition-all duration-300 transform hover:-translate-y-1 flex flex-col justify-between min-h-[340px]`}
           onClick={() => setFlipped(!flipped)}
         >
           <div>
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-4">
               <div className="flex items-center gap-2">
                 <Badge tone="info">{currentCard?.category || 'Grammar'}</Badge>
                 {cardData.status === 'mastered' && (
-                  <span className="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">
+                  <span className="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2.5 py-0.5 rounded-full">
                     ✓ Mastered
                   </span>
                 )}
@@ -546,18 +558,7 @@ function FlashcardDojo({ grammarList, level, onToast }) {
               <div className="flex items-center gap-2">
                 <button
                   type="button"
-                  className="text-xs text-slate-700 hover:text-slate-950 font-bold bg-slate-100 hover:bg-slate-200 px-2.5 py-1 rounded-lg flex items-center gap-1 transition-all active:scale-95 cursor-pointer"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    toggleFullscreen();
-                  }}
-                  title="Toggle Fullscreen Mode"
-                >
-                  <span>⛶</span> Fullscreen
-                </button>
-                <button
-                  type="button"
-                  className="text-xs text-indigo-600 font-bold hover:underline flex items-center gap-1 cursor-pointer"
+                  className="text-xs text-indigo-600 font-bold hover:underline flex items-center gap-1 cursor-pointer bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-xl transition-all"
                   onClick={(e) => {
                     e.stopPropagation();
                     speakJapanese(currentCard?.title || '');
@@ -570,30 +571,30 @@ function FlashcardDojo({ grammarList, level, onToast }) {
             </div>
 
             {!flipped ? (
-              <div className="py-8 text-center space-y-3">
-                <h3 className="text-3xl font-medium text-slate-800 tracking-wide">
+              <div className="py-10 sm:py-14 text-center space-y-4">
+                <h3 className="text-3xl sm:text-5xl font-medium text-slate-800 tracking-wide font-serif">
                   {currentCard?.title}
                 </h3>
-                <p className="text-xs font-mono text-slate-500 bg-slate-100 inline-block px-3 py-1 rounded-full border border-slate-200">
+                <p className="text-xs font-mono text-slate-500 bg-slate-100 inline-block px-4 py-1.5 rounded-full border border-slate-200">
                   Formula: {currentCard?.formula}
                 </p>
               </div>
             ) : (
-              <div className="py-4 space-y-4">
+              <div className="py-6 space-y-5">
                 <div>
-                  <span className="text-xs font-bold uppercase text-amber-600">English Meaning</span>
-                  <p className="text-xl font-bold text-slate-800 mt-0.5">{currentCard?.meaning}</p>
-                  <p className="text-xs text-slate-600 mt-1">{currentCard?.description}</p>
+                  <span className="text-xs font-bold uppercase text-amber-600 tracking-wider">English Meaning</span>
+                  <p className="text-xl sm:text-2xl font-bold text-slate-900 mt-1">{currentCard?.meaning}</p>
+                  <p className="text-xs sm:text-sm text-slate-600 mt-1.5 leading-relaxed">{currentCard?.description}</p>
                 </div>
-                <div className="pt-2 border-t border-slate-100 space-y-2">
+                <div className="pt-3 border-t border-slate-100 space-y-2.5">
                   <span className="text-xs font-bold uppercase text-slate-400">Example Dialogues</span>
                   {(currentCard?.examples || []).map((ex, idx) => (
-                    <div key={idx} className="p-2.5 bg-white rounded-lg border border-slate-200/80 text-xs">
+                    <div key={idx} className="p-3 bg-slate-50 rounded-xl border border-slate-200/80 text-xs sm:text-sm space-y-1">
                       <div className="flex items-center justify-between">
-                        <span className="font-medium text-slate-800">{ex.jp}</span>
+                        <span className="font-bold text-slate-900">{ex.jp}</span>
                         <button
                           type="button"
-                          className="text-indigo-600 hover:opacity-80 text-xs ml-1"
+                          className="text-indigo-600 hover:opacity-80 text-xs ml-1 cursor-pointer"
                           onClick={(e) => {
                             e.stopPropagation();
                             speakJapanese(ex.jp);
@@ -602,8 +603,8 @@ function FlashcardDojo({ grammarList, level, onToast }) {
                           🔊
                         </button>
                       </div>
-                      <span className="text-[11px] text-slate-500 font-mono block">{ex.romaji}</span>
-                      <span className="text-slate-700 block mt-0.5 font-medium">{ex.en}</span>
+                      <span className="text-xs text-slate-500 font-mono block">{ex.romaji}</span>
+                      <span className="text-slate-700 block font-medium">{ex.en}</span>
                     </div>
                   ))}
                 </div>
@@ -611,38 +612,38 @@ function FlashcardDojo({ grammarList, level, onToast }) {
             )}
           </div>
 
-          <div className="pt-3 border-t border-slate-100 text-center text-xs text-slate-400 font-medium">
+          <div className="pt-4 border-t border-slate-100 text-center text-xs text-slate-400 font-medium">
             {flipped ? 'Rate your recall memory using the SM-2 buttons below:' : '💡 Think of the meaning and formula, then click to flip.'}
           </div>
         </div>
 
         {/* SRS Rating Bar */}
         {flipped && (
-          <div className="flex items-center gap-2 mt-4 max-w-xl w-full">
+          <div className="flex items-center gap-2.5 sm:gap-3 mt-6 max-w-2xl w-full">
             <button
               type="button"
-              className="flex-1 py-2.5 rounded-xl bg-rose-100 text-rose-800 font-bold text-xs hover:bg-rose-200 transition-all cursor-pointer shadow-xs"
+              className="flex-1 py-3 rounded-2xl bg-rose-100 text-rose-900 font-bold text-xs sm:text-sm hover:bg-rose-200 transition-all cursor-pointer shadow-xs active:scale-95 text-center"
               onClick={() => handleNext('again')}
             >
               Again (1d)
             </button>
             <button
               type="button"
-              className="flex-1 py-2.5 rounded-xl bg-amber-100 text-amber-800 font-bold text-xs hover:bg-amber-200 transition-all cursor-pointer shadow-xs"
+              className="flex-1 py-3 rounded-2xl bg-amber-100 text-amber-900 font-bold text-xs sm:text-sm hover:bg-amber-200 transition-all cursor-pointer shadow-xs active:scale-95 text-center"
               onClick={() => handleNext('hard')}
             >
               Hard (2d)
             </button>
             <button
               type="button"
-              className="flex-1 py-2.5 rounded-xl bg-indigo-100 text-indigo-800 font-bold text-xs hover:bg-indigo-200 transition-all cursor-pointer shadow-xs"
+              className="flex-1 py-3 rounded-2xl bg-indigo-100 text-indigo-900 font-bold text-xs sm:text-sm hover:bg-indigo-200 transition-all cursor-pointer shadow-xs active:scale-95 text-center"
               onClick={() => handleNext('good')}
             >
               Good (4d)
             </button>
             <button
               type="button"
-              className="flex-1 py-2.5 rounded-xl bg-emerald-100 text-emerald-800 font-bold text-xs hover:bg-emerald-200 transition-all cursor-pointer shadow-xs"
+              className="flex-1 py-3 rounded-2xl bg-emerald-100 text-emerald-900 font-bold text-xs sm:text-sm hover:bg-emerald-200 transition-all cursor-pointer shadow-xs active:scale-95 text-center"
               onClick={() => handleNext('easy')}
             >
               Easy (7d)
@@ -734,23 +735,13 @@ function KanjiDojo({ kanjiList, level }) {
             <h3 className="text-base font-bold text-slate-900">{level} Kanji Matrix</h3>
             <p className="text-xs text-slate-500">Click any character to inspect readings and practice writing.</p>
           </div>
-          <div className="flex items-center gap-2">
-            <input
-              type="text"
-              placeholder="Search character, meaning, reading..."
-              className="ds-input text-xs w-52 sm:w-64"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-            <button
-              type="button"
-              className="text-xs text-slate-700 hover:text-slate-950 font-bold bg-slate-100 hover:bg-slate-200 px-2.5 py-1.5 rounded-lg flex items-center gap-1 transition-all active:scale-95 cursor-pointer shrink-0"
-              onClick={toggleFullscreen}
-              title="Toggle Fullscreen Mode"
-            >
-              <span>⛶</span> Fullscreen
-            </button>
-          </div>
+          <input
+            type="text"
+            placeholder="Search character, meaning, reading..."
+            className="ds-input text-xs w-full sm:w-64"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
         </div>
 
         <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-2.5 max-h-[500px] overflow-y-auto p-1">
@@ -981,27 +972,17 @@ function VocabularyVault({ vocabList, level }) {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
-        <div className="flex items-center gap-2 overflow-x-auto pb-1">
-          <div className="flex items-center gap-1.5 shrink-0">
-            {categories.map((cat) => (
-              <button
-                key={cat}
-                type="button"
-                className={`px-3 py-1 rounded-lg text-xs font-bold whitespace-nowrap transition-all cursor-pointer ${selectedCategory === cat ? 'bg-slate-900 text-white shadow-xs' : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-100'}`}
-                onClick={() => setSelectedCategory(cat)}
-              >
-                {cat}
-              </button>
-            ))}
-          </div>
-          <button
-            type="button"
-            className="text-xs text-slate-700 hover:text-slate-950 font-bold bg-white border border-slate-200 hover:bg-slate-100 px-2.5 py-1 rounded-lg flex items-center gap-1 transition-all active:scale-95 cursor-pointer shrink-0 ml-auto"
-            onClick={toggleFullscreen}
-            title="Toggle Fullscreen Mode"
-          >
-            <span>⛶</span> Fullscreen
-          </button>
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-1">
+          {categories.map((cat) => (
+            <button
+              key={cat}
+              type="button"
+              className={`px-3 py-1 rounded-lg text-xs font-bold whitespace-nowrap transition-all cursor-pointer ${selectedCategory === cat ? 'bg-slate-900 text-white shadow-xs' : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-100'}`}
+              onClick={() => setSelectedCategory(cat)}
+            >
+              {cat}
+            </button>
+          ))}
         </div>
       </div>
 
