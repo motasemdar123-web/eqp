@@ -148,7 +148,8 @@ export default function JLPTExamSimulator({ level = 'N5', onToast }) {
     if (examState !== 'RESULTS') return;
     try {
       const missed = [];
-      allQuestions.forEach((q) => {
+      (allQuestions || []).forEach((q) => {
+        if (!q || !q.id) return;
         if (userAnswers[q.id] !== q.correct) {
           missed.push({
             ...q,
@@ -159,11 +160,17 @@ export default function JLPTExamSimulator({ level = 'N5', onToast }) {
       });
       if (missed.length > 0) {
         const stored = localStorage.getItem('jlpt_missed_questions');
-        const existing = stored ? JSON.parse(stored) : [];
-        const existingIds = new Set(existing.map((item) => item.id));
+        let existing = [];
+        try {
+          existing = stored ? JSON.parse(stored) : [];
+        } catch {
+          existing = [];
+        }
+        if (!Array.isArray(existing)) existing = [];
+        const existingIds = new Set(existing.map((item) => item?.id).filter(Boolean));
         const combined = [...existing];
         missed.forEach((m) => {
-          if (!existingIds.has(m.id)) {
+          if (m?.id && !existingIds.has(m.id)) {
             combined.push(m);
             existingIds.add(m.id);
           }
@@ -178,18 +185,18 @@ export default function JLPTExamSimulator({ level = 'N5', onToast }) {
   // Scoring computations
   const scoreReport = useMemo(() => {
     let totalScore = 0;
-    const sectionScores = sections.map((sec) => {
+    const sectionScores = (sections || []).map((sec) => {
       let secCorrect = 0;
-      const totalQ = sec.questions.length;
-      sec.questions.forEach((q) => {
-        if (userAnswers[q.id] === q.correct) secCorrect++;
+      const totalQ = sec?.questions?.length || 0;
+      (sec?.questions || []).forEach((q) => {
+        if (q?.id && userAnswers[q.id] === q.correct) secCorrect++;
       });
       // Standard JLPT scaled to 60 pts per section
       const scaledScore = totalQ > 0 ? Math.round((secCorrect / totalQ) * 60) : 0;
       totalScore += scaledScore;
       return {
-        id: sec.id,
-        title: sec.title,
+        id: sec?.id || 'section',
+        title: sec?.title || 'Section',
         correctCount: secCorrect,
         totalQuestions: totalQ,
         scaledScore: scaledScore,
@@ -760,10 +767,10 @@ export default function JLPTExamSimulator({ level = 'N5', onToast }) {
             <span className="text-xs text-slate-300">Passing Mark: 90 / 180</span>
           </div>
 
-          {scoreReport.sectionScores.map((secScore) => (
+          {(scoreReport?.sectionScores || []).map((secScore) => (
             <div key={secScore.id} className="p-4 bg-slate-50 rounded-2xl border border-slate-200 space-y-1">
               <span className="text-xs font-bold uppercase text-slate-500 truncate block">
-                {secScore.title.split(':')[1] || secScore.title}
+                {secScore.title?.split(':')?.[1] || secScore.title || 'Section'}
               </span>
               <p className="text-2xl font-bold font-mono text-slate-900">
                 {secScore.scaledScore} <span className="text-xs text-slate-400 font-normal">/ 60</span>
@@ -786,14 +793,14 @@ export default function JLPTExamSimulator({ level = 'N5', onToast }) {
               className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${filterReview === 'ALL' ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-700'}`}
               onClick={() => setFilterReview('ALL')}
             >
-              All Questions ({allQuestions.length})
+              All Questions ({(allQuestions || []).length})
             </button>
             <button
               type="button"
               className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${filterReview === 'INCORRECT' ? 'bg-red-600 text-white' : 'bg-slate-100 text-slate-700'}`}
               onClick={() => setFilterReview('INCORRECT')}
             >
-              Incorrect Only ({allQuestions.filter((q) => userAnswers[q.id] !== q.correct).length})
+              Incorrect Only ({(allQuestions || []).filter((q) => q && userAnswers[q.id] !== q.correct).length})
             </button>
             <button
               type="button"
@@ -826,17 +833,18 @@ export default function JLPTExamSimulator({ level = 'N5', onToast }) {
       {/* Detailed Question Review List */}
       <div className="space-y-4">
         <h3 className="text-base font-bold text-slate-900">
-          Detailed Question Breakdown & Explanations ({filteredReviewQuestions.length} Items):
+          Detailed Question Breakdown & Explanations ({(filteredReviewQuestions || []).length} Items):
         </h3>
 
-        {filteredReviewQuestions.map((q, idx) => {
+        {(filteredReviewQuestions || []).map((q, idx) => {
+          if (!q) return null;
           const chosen = userAnswers[q.id];
-          const isCorrect = chosen === q.correct;
+          const isCorrect = chosen !== undefined && chosen === q.correct;
           const isAnswered = chosen !== undefined;
 
           return (
             <Card
-              key={q.id}
+              key={q.id || idx}
               className={`p-5 space-y-4 border-2 transition-all ${
                 isCorrect ? 'border-emerald-200 bg-emerald-50/20' : 'border-red-200 bg-red-50/20'
               }`}
@@ -849,7 +857,7 @@ export default function JLPTExamSimulator({ level = 'N5', onToast }) {
                   </Badge>
                   {flaggedQuestions.has(q.id) && <span className="text-xs">🚩 Flagged</span>}
                 </div>
-                <span className="text-xs font-mono text-slate-400">{q.type}</span>
+                <span className="text-xs font-mono text-slate-400">{typeof q.type === 'string' ? q.type : ''}</span>
               </div>
 
               {/* Question Illustration (If present) */}
@@ -865,12 +873,12 @@ export default function JLPTExamSimulator({ level = 'N5', onToast }) {
 
               <div
                 className="text-base font-bold text-slate-900 whitespace-pre-line"
-                dangerouslySetInnerHTML={{ __html: q.question || q.prompt }}
+                dangerouslySetInnerHTML={{ __html: q.question || q.prompt || '' }}
               />
 
               {/* Options */}
               <div className="grid gap-2 sm:grid-cols-2">
-                {q.options.map((opt, optIdx) => {
+                {(q.options || []).map((opt, optIdx) => {
                   const isUserChoice = chosen === optIdx;
                   const isAnswerKey = optIdx === q.correct;
 
@@ -908,10 +916,12 @@ export default function JLPTExamSimulator({ level = 'N5', onToast }) {
               )}
 
               {/* Explanation */}
-              <div className="p-3 bg-blue-50/80 border border-blue-200 rounded-lg text-xs text-blue-950 space-y-1">
-                <span className="font-bold uppercase text-[10px] text-blue-700">Detailed Explanation:</span>
-                <p>{q.explanation}</p>
-              </div>
+              {q.explanation && (
+                <div className="p-3 bg-blue-50/80 border border-blue-200 rounded-lg text-xs text-blue-950 space-y-1">
+                  <span className="font-bold uppercase text-[10px] text-blue-700">Detailed Explanation:</span>
+                  <p>{typeof q.explanation === 'string' ? q.explanation : JSON.stringify(q.explanation)}</p>
+                </div>
+              )}
             </Card>
           );
         })}

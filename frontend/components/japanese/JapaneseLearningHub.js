@@ -74,8 +74,15 @@ export default function JapaneseLearningHub() {
     showToast(`🎯 Target set to JLPT ${newLevel}. Curriculum updated!`, 'success');
   };
 
-  const showToast = (message, type = 'info') => {
-    setToast({ message, type });
+  const showToast = (messageOrObj, type = 'info') => {
+    if (typeof messageOrObj === 'object' && messageOrObj !== null) {
+      setToast({
+        message: messageOrObj.message || messageOrObj.text || JSON.stringify(messageOrObj),
+        type: messageOrObj.type || type,
+      });
+    } else {
+      setToast({ message: String(messageOrObj || ''), type });
+    }
   };
 
   // Active level data
@@ -95,7 +102,7 @@ export default function JapaneseLearningHub() {
   const renderActiveToolContent = () => {
     switch (activeTab) {
       case 'exam':
-        return <JLPTExamSimulator level={level} onToast={setToast} />;
+        return <JLPTExamSimulator level={level} onToast={showToast} />;
       case 'rush':
         return <SpeedKanjiRush level={level} onToast={showToast} />;
       case 'mistakes':
@@ -105,11 +112,11 @@ export default function JapaneseLearningHub() {
       case 'flashcards':
         return <FlashcardDojo grammarList={currentGrammar} level={level} onToast={showToast} />;
       case 'kanji':
-        return <KanjiDojo kanjiList={currentKanji} level={level} onToast={setToast} />;
+        return <KanjiDojo kanjiList={currentKanji} level={level} onToast={showToast} />;
       case 'grammar':
-        return <GrammarMaster grammarList={currentGrammar} level={level} onToast={setToast} />;
+        return <GrammarMaster grammarList={currentGrammar} level={level} onToast={showToast} />;
       case 'vocab':
-        return <VocabularyVault vocabList={currentVocab} level={level} onToast={setToast} />;
+        return <VocabularyVault vocabList={currentVocab} level={level} onToast={showToast} />;
       case 'parts_explorer':
         return <MachinePartsExplorer onToast={showToast} />;
       case 'roleplay':
@@ -119,7 +126,7 @@ export default function JapaneseLearningHub() {
       case 'technical':
         return <TechnicalJapaneseHub onToast={showToast} />;
       default:
-        return <JLPTExamSimulator level={level} onToast={setToast} />;
+        return <JLPTExamSimulator level={level} onToast={showToast} />;
     }
   };
 
