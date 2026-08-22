@@ -203,20 +203,20 @@ export default function BusinessEmailStudio({ onToast }) {
 
           {/* Right Column: Generated Email Preview (7 cols) */}
           <div className="lg:col-span-7 space-y-4">
-            <Card className="p-6 space-y-4 border-slate-200 shadow-sm bg-white">
+            <Card className="p-4 sm:p-6 space-y-4 border-slate-200 shadow-sm bg-white">
               {/* Header action bar */}
-              <div className="flex items-center justify-between border-b pb-3">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b pb-3">
                 <div className="flex items-center gap-2">
                   <span className="text-xs font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full">
                     Ready to Send (完成)
                   </span>
                   <span className="text-xs font-bold text-slate-500 font-mono">Formal Japanese Keigo</span>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 self-end sm:self-auto">
                   <Button
                     size="sm"
                     variant="outline"
-                    className="text-slate-700 border-slate-300 hover:bg-slate-50"
+                    className="text-slate-700 border-slate-300 hover:bg-slate-50 active:scale-95 text-xs"
                     onClick={() => speak(generatedBody)}
                   >
                     🔊 Read Aloud
@@ -224,7 +224,7 @@ export default function BusinessEmailStudio({ onToast }) {
                   <Button
                     size="sm"
                     variant="primary"
-                    className="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold"
+                    className="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold active:scale-95 text-xs"
                     onClick={handleCopyEmail}
                   >
                     📋 Copy Email
@@ -235,13 +235,13 @@ export default function BusinessEmailStudio({ onToast }) {
               {/* Subject Line */}
               <div className="space-y-1 bg-slate-50 p-3 rounded-xl border border-slate-200">
                 <span className="text-[10px] font-bold text-slate-400 uppercase">件名 (Subject Line)</span>
-                <p className="text-sm font-black text-slate-900 font-mono">{generatedSubject}</p>
+                <p className="text-sm font-black text-slate-900 font-mono break-all">{generatedSubject}</p>
               </div>
 
               {/* Email Body */}
               <div className="space-y-1">
                 <span className="text-[10px] font-bold text-slate-400 uppercase">本文 (Email Body)</span>
-                <pre className="text-xs text-slate-800 font-sans whitespace-pre-wrap leading-relaxed bg-slate-50/70 p-4 rounded-xl border border-slate-200 max-h-[500px] overflow-y-auto">
+                <pre className="text-xs text-slate-800 font-sans whitespace-pre-wrap leading-relaxed bg-slate-50/70 p-3 sm:p-4 rounded-xl border border-slate-200 max-h-[500px] overflow-y-auto">
                   {generatedBody}
                 </pre>
               </div>
@@ -250,14 +250,14 @@ export default function BusinessEmailStudio({ onToast }) {
         </div>
       ) : (
         /* KEIGO TRANSFORMATION MATRIX */
-        <Card className="p-6 space-y-6 border-slate-200">
+        <Card className="p-4 sm:p-6 space-y-6 border-slate-200">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b pb-4">
             <div>
               <h3 className="text-lg font-black text-slate-900">
                 Keigo Transformation Matrix (敬語変換マトリックス)
               </h3>
               <p className="text-xs text-slate-500">
-                Master the differences between Plain (普通), Polite (丁寧語), Humble (謙譲語 - for your actions), and Respectful (尊敬語 - for partner actions).
+                Master the differences between Plain (普通), Polite (丁寧語), Humble (謙譲語), and Respectful (尊敬語).
               </p>
             </div>
             <input
@@ -265,12 +265,14 @@ export default function BusinessEmailStudio({ onToast }) {
               placeholder="Filter verbs (e.g. する, see, say)..."
               value={keigoSearch}
               onChange={(e) => setKeigoSearch(e.target.value)}
-              className="px-3 py-1.5 bg-slate-50 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500/20"
+              className="w-full sm:w-auto px-3 py-1.5 bg-slate-50 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500/20"
             />
           </div>
 
-          <div className="overflow-x-auto">
-            <table className="w-full text-xs text-left border-collapse">
+          {/* Table with mobile horizontal scroll */}
+          <div className="overflow-x-auto scrollbar-none -mx-4 px-4 sm:mx-0 sm:px-0">
+            <div className="inline-block min-w-full align-middle">
+              <table className="min-w-[650px] w-full text-xs text-left border-collapse">
               <thead>
                 <tr className="bg-slate-100/80 text-slate-700 border-b">
                   <th className="p-3 font-black">Action / Meaning</th>
@@ -304,6 +306,7 @@ export default function BusinessEmailStudio({ onToast }) {
                 ))}
               </tbody>
             </table>
+            </div>
           </div>
         </Card>
       )}

@@ -586,7 +586,7 @@ export default function JLPTExamSimulator({ level = 'N5', onToast }) {
               </div>
 
               {/* 4 Interactive Option Radio Cards */}
-              <div className="grid gap-3 sm:grid-cols-2 pt-2">
+              <div className="grid gap-2.5 sm:gap-3 sm:grid-cols-2 pt-2">
                 {currentQuestion.options.map((optionText, optIdx) => {
                   const isSelected = userAnswers[currentQuestion.id] === optIdx;
 
@@ -594,7 +594,7 @@ export default function JLPTExamSimulator({ level = 'N5', onToast }) {
                     <button
                       key={optIdx}
                       type="button"
-                      className={`p-4 rounded-xl border-2 text-left text-sm font-semibold transition-all cursor-pointer flex items-center gap-3 ${
+                      className={`p-3 sm:p-4 min-h-[48px] rounded-xl border-2 text-left text-xs sm:text-sm font-semibold transition-all cursor-pointer flex items-center gap-2.5 sm:gap-3 active:scale-[0.99] ${
                         isSelected
                           ? 'border-blue-600 bg-blue-50/70 text-blue-950 shadow-sm'
                           : 'border-slate-200 bg-white hover:border-slate-300 text-slate-800'
@@ -608,7 +608,7 @@ export default function JLPTExamSimulator({ level = 'N5', onToast }) {
                       >
                         {optIdx + 1}
                       </span>
-                      <span className="flex-1">{optionText}</span>
+                      <span className="flex-1 leading-snug">{optionText}</span>
                     </button>
                   );
                 })}
@@ -616,18 +616,19 @@ export default function JLPTExamSimulator({ level = 'N5', onToast }) {
             </div>
 
             {/* Bottom Question Step Bar */}
-            <div className="flex items-center justify-between pt-6 border-t border-slate-100">
+            <div className="flex items-center justify-between pt-4 sm:pt-6 border-t border-slate-100 gap-2">
               <Button
                 type="button"
                 variant="secondary"
                 size="sm"
                 disabled={activeQuestionIndex === 0}
                 onClick={() => setActiveQuestionIndex((prev) => prev - 1)}
+                className="text-xs"
               >
-                ← Previous (J)
+                ← Prev
               </Button>
 
-              <span className="text-xs text-slate-400 font-mono">
+              <span className="text-[11px] text-slate-400 font-mono hidden sm:inline">
                 Keyboard: 1, 2, 3, 4 to answer • ← / → to navigate
               </span>
 
@@ -637,8 +638,9 @@ export default function JLPTExamSimulator({ level = 'N5', onToast }) {
                 size="sm"
                 disabled={activeQuestionIndex === currentQuestions.length - 1}
                 onClick={() => setActiveQuestionIndex((prev) => prev + 1)}
+                className="text-xs"
               >
-                Next (K) →
+                Next →
               </Button>
             </div>
           </Card>

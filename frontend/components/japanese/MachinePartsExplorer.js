@@ -264,13 +264,13 @@ export default function MachinePartsExplorer({ onToast }) {
             </span>
           </div>
 
-          {/* System Pills */}
-          <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
+          {/* System Pills (Scrollable on mobile) */}
+          <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none flex-nowrap -mx-3 px-3 sm:mx-0 sm:px-0">
             {MACHINE_SYSTEM_CATEGORIES.map((cat) => (
               <button
                 key={cat.id}
                 onClick={() => setSelectedSystem(cat.id)}
-                className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all border ${
+                className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap shrink-0 transition-all border ${
                   selectedSystem === cat.id
                     ? 'bg-slate-900 text-amber-400 border-slate-900 shadow-xs'
                     : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'
@@ -292,7 +292,14 @@ export default function MachinePartsExplorer({ onToast }) {
                   return (
                     <div
                       key={comp.id}
-                      onClick={() => setActiveComponent(comp)}
+                      onClick={() => {
+                        setActiveComponent(comp);
+                        if (typeof window !== 'undefined' && window.innerWidth < 1024) {
+                          setTimeout(() => {
+                            document.getElementById('component-detail-card')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                          }, 50);
+                        }
+                      }}
                       className={`p-4 rounded-xl border text-left transition-all cursor-pointer flex flex-col justify-between ${
                         isSelected
                           ? 'bg-amber-50/50 border-amber-400 ring-2 ring-amber-400/20 shadow-md'
@@ -308,7 +315,7 @@ export default function MachinePartsExplorer({ onToast }) {
                           <Button
                             size="xs"
                             variant="ghost"
-                            className="p-1 h-auto text-slate-400 hover:text-amber-600"
+                            className="p-1.5 h-auto text-slate-400 hover:text-amber-600 active:scale-95"
                             onClick={(e) => {
                               e.stopPropagation();
                               speak(comp.kanji);
@@ -343,9 +350,9 @@ export default function MachinePartsExplorer({ onToast }) {
             </div>
 
             {/* Right: Component Detail & Inspection Checklist Card */}
-            <div className="lg:col-span-5">
+            <div id="component-detail-card" className="lg:col-span-5 scroll-mt-20">
               {activeComponent ? (
-                <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-5 sticky top-6">
+                <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-6 space-y-5 sticky top-6">
                   {/* Top Badge & Header */}
                   <div className="flex items-start justify-between gap-2 border-b pb-4">
                     <div>
@@ -357,7 +364,7 @@ export default function MachinePartsExplorer({ onToast }) {
                         <Button
                           size="xs"
                           variant="outline"
-                          className="text-amber-600 border-amber-300 hover:bg-amber-50"
+                          className="text-amber-600 border-amber-300 hover:bg-amber-50 active:scale-95"
                           onClick={() => speak(activeComponent.kanji)}
                         >
                           🔊 Play

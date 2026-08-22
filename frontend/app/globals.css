@@ -2729,6 +2729,20 @@ button:disabled {
     display: none;
   }
 
+  .ds-app-sidebar.ds-sidebar-mobile-open {
+    display: flex !important;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 280px;
+    max-width: 85vw;
+    z-index: 50;
+    background-color: var(--ds-sidebar-bg, #090e17);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+    animation: dsSlideInLeft 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
   .ds-reference-grid {
     grid-template-columns: 1fr;
   }
@@ -2736,6 +2750,23 @@ button:disabled {
   .tech-stat-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+}
+
+@keyframes dsSlideInLeft {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 @media (max-width: 640px) {

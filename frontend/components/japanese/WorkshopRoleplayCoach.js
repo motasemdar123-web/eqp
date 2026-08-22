@@ -134,13 +134,13 @@ export default function WorkshopRoleplayCoach({ onToast }) {
             Practice real spoken Japanese roleplays for reporting heavy machinery breakdowns, handling urgent parts inquiries, and leading 5S morning briefings with instant Keigo analysis.
           </p>
 
-          {/* Scenario Selector Pills */}
-          <div className="flex flex-wrap gap-2 pt-2">
+          {/* Scenario Selector Pills (Scrollable on mobile) */}
+          <div className="flex items-center gap-2 pt-2 overflow-x-auto scrollbar-none flex-nowrap -mx-3 px-3 sm:mx-0 sm:px-0">
             {WORKSHOP_SCENARIOS.map((scen) => (
               <button
                 key={scen.id}
                 onClick={() => startScenario(scen)}
-                className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all border flex items-center gap-1.5 ${
+                className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all border flex items-center gap-1.5 whitespace-nowrap shrink-0 cursor-pointer ${
                   activeScenario.id === scen.id
                     ? 'bg-amber-500 text-slate-950 border-amber-400 shadow-md scale-102'
                     : 'bg-slate-800/80 text-slate-300 border-slate-700 hover:bg-slate-700'

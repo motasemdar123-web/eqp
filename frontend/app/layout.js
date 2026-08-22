@@ -12,6 +12,13 @@ export const metadata = {
   description: "Unified maintenance, scheduling, operations, and EQP reporting platform",
 };
 
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  themeColor: "#0f172a",
+};
+
 export default function RootLayout({ children }) {
   return (
     <html

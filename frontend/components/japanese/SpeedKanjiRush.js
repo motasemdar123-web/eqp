@@ -177,34 +177,34 @@ export default function SpeedKanjiRush({ level = 'N5', onToast }) {
 
       {/* ACTIVE GAME ARENA */}
       {isPlaying ? (
-        <Card className="p-6 space-y-6 border-slate-200 bg-linear-to-b from-slate-50 to-white shadow-md">
+        <Card className="p-4 sm:p-6 space-y-4 sm:space-y-6 border-slate-200 bg-linear-to-b from-slate-50 to-white shadow-md">
           {/* Top Timer & Score Bar */}
-          <div className="flex items-center justify-between border-b pb-4">
-            <div className="flex items-center gap-3">
-              <div className="flex items-center gap-1.5 bg-rose-100 text-rose-900 px-3.5 py-1.5 rounded-xl font-mono font-black text-base border border-rose-200">
+          <div className="flex items-center justify-between border-b pb-3 sm:pb-4">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <div className="flex items-center gap-1.5 bg-rose-100 text-rose-900 px-3 py-1.5 rounded-xl font-mono font-black text-sm sm:text-base border border-rose-200">
                 <span>⏱️</span>
                 <span>{timeLeft}s</span>
               </div>
               {combo > 1 && (
-                <span className="bg-amber-500 text-slate-950 font-black text-xs px-2.5 py-1 rounded-full animate-bounce shadow-xs">
+                <span className="bg-amber-500 text-slate-950 font-black text-[11px] sm:text-xs px-2 sm:px-2.5 py-1 rounded-full animate-bounce shadow-xs">
                   🔥 {combo}x COMBO!
                 </span>
               )}
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5">
               <span className="text-xs font-bold text-slate-500">Score:</span>
-              <span className="text-2xl font-black text-slate-900 font-mono">{score}</span>
+              <span className="text-xl sm:text-2xl font-black text-slate-900 font-mono">{score}</span>
             </div>
           </div>
 
           {/* Target Kanji Display Card */}
           {currentCard && (
-            <div className="text-center py-8 bg-slate-900 rounded-2xl text-white space-y-2 border border-slate-800 shadow-inner">
-              <span className="text-6xl sm:text-7xl font-black tracking-widest text-amber-400 block font-serif">
+            <div className="text-center py-6 sm:py-8 bg-slate-900 rounded-2xl text-white space-y-2 border border-slate-800 shadow-inner">
+              <span className="text-5xl sm:text-7xl font-black tracking-widest text-amber-400 block font-serif">
                 {currentCard.kanji}
               </span>
-              <span className="text-xs font-mono text-slate-400 block">
+              <span className="text-xs font-mono text-slate-400 block px-2 truncate">
                 {currentCard.reading}
               </span>
               <span className="text-[10px] font-bold text-slate-500 uppercase bg-slate-800 px-2 py-0.5 rounded-full inline-block">
@@ -213,16 +213,16 @@ export default function SpeedKanjiRush({ level = 'N5', onToast }) {
             </div>
           )}
 
-          {/* 4 Option Buttons */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {/* 4 Option Buttons (Touch friendly min 52px height) */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
             {options.map((opt, idx) => (
               <button
                 key={idx}
                 onClick={() => handleSelectOption(opt)}
-                className="p-4 bg-white border border-slate-200 hover:border-amber-400 hover:bg-amber-50/50 hover:shadow-md rounded-xl text-left transition-all font-bold text-slate-800 cursor-pointer flex items-center justify-between text-sm group"
+                className="p-3.5 sm:p-4 min-h-[52px] bg-white border border-slate-200 hover:border-amber-400 hover:bg-amber-50/50 active:scale-[0.98] active:bg-amber-100 rounded-xl text-left transition-all font-bold text-slate-800 cursor-pointer flex items-center justify-between text-xs sm:text-sm shadow-2xs group"
               >
-                <span>{opt.meaning}</span>
-                <span className="text-slate-300 group-hover:text-amber-500 text-xs">➔</span>
+                <span className="pr-2">{opt.meaning}</span>
+                <span className="text-slate-300 group-hover:text-amber-500 text-xs shrink-0">➔</span>
               </button>
             ))}
           </div>

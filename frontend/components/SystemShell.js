@@ -347,9 +347,14 @@ export default function SystemShell({
       )}
 
       {/* Sidebar */}
-      <aside className="ds-app-sidebar">
+      <aside className={`ds-app-sidebar ${mobileMenuOpen ? 'ds-sidebar-mobile-open' : ''}`}>
         <div className="ds-sidebar-header">
-          <Link href="/management" className="ds-sidebar-brand" aria-label="Dar Al Hai Home">
+          <Link
+            href="/management"
+            className="ds-sidebar-brand"
+            aria-label="Dar Al Hai Home"
+            onClick={() => setMobileMenuOpen(false)}
+          >
             <span className="ds-sidebar-brand-mark">
               <span className="h-2.5 w-2.5 rounded-full bg-amber-400" />
             </span>
@@ -362,7 +367,8 @@ export default function SystemShell({
             <button
               type="button"
               onClick={() => setMobileMenuOpen(false)}
-              className="lg:hidden rounded p-1 text-slate-400 hover:text-white"
+              className="lg:hidden rounded-lg p-1.5 text-slate-400 hover:text-white hover:bg-slate-800"
+              aria-label="Close mobile menu"
             >
               <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -382,6 +388,7 @@ export default function SystemShell({
                 href={item.href}
                 className={`ds-side-nav-link ${active ? 'ds-side-nav-link-active' : ''}`}
                 title={item.label}
+                onClick={() => setMobileMenuOpen(false)}
               >
                 <span className="ds-side-nav-icon"><NavIcon name={item.icon} /></span>
                 <span className="ds-nav-label truncate">{item.label}</span>
@@ -399,6 +406,7 @@ export default function SystemShell({
                 href={item.href}
                 className={`ds-side-nav-link ${active ? 'ds-side-nav-link-active' : ''}`}
                 title={item.label}
+                onClick={() => setMobileMenuOpen(false)}
               >
                 <span className="ds-side-nav-icon"><NavIcon name={item.icon} /></span>
                 <span className="ds-nav-label truncate">{item.label}</span>

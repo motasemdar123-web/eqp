@@ -162,13 +162,13 @@ export default function JapaneseLearningHub() {
           </button>
         </div>
 
-        {/* Tier 2: Submodule Pills based on selected Pillar */}
-        <div className="flex flex-wrap gap-2 items-center border-b border-slate-200 pb-3">
+        {/* Tier 2: Submodule Pills based on selected Pillar (Scrollable on mobile) */}
+        <div className="flex items-center gap-2 border-b border-slate-200 pb-3 overflow-x-auto scrollbar-none flex-nowrap sm:flex-wrap -mx-3 px-3 sm:mx-0 sm:px-0">
           {activePillar === 'exams' && (
             <>
               <button
                 type="button"
-                className={`px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+                className={`px-3.5 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer whitespace-nowrap shrink-0 ${
                   activeTab === 'exam'
                     ? 'bg-slate-900 text-white shadow-xs'
                     : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50'
@@ -179,29 +179,29 @@ export default function JapaneseLearningHub() {
               </button>
               <button
                 type="button"
-                className={`px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+                className={`px-3.5 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer whitespace-nowrap shrink-0 ${
                   activeTab === 'rush'
                     ? 'bg-rose-600 text-white shadow-xs'
                     : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50'
                 }`}
                 onClick={() => setActiveTab('rush')}
               >
-                ⚡ Speed Kanji Rush (60s Arcade)
+                ⚡ Speed Kanji Rush
               </button>
               <button
                 type="button"
-                className={`px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+                className={`px-3.5 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer whitespace-nowrap shrink-0 ${
                   activeTab === 'mistakes'
                     ? 'bg-rose-700 text-white shadow-xs'
                     : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50'
                 }`}
                 onClick={() => setActiveTab('mistakes')}
               >
-                🎯 Error Vault (弱点ノート)
+                🎯 Error Vault
               </button>
               <button
                 type="button"
-                className={`px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+                className={`px-3.5 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer whitespace-nowrap shrink-0 ${
                   activeTab === 'scramble'
                     ? 'bg-indigo-600 text-white shadow-xs'
                     : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50'
@@ -217,7 +217,7 @@ export default function JapaneseLearningHub() {
             <>
               <button
                 type="button"
-                className={`px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+                className={`px-3.5 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer whitespace-nowrap shrink-0 ${
                   activeTab === 'flashcards'
                     ? 'bg-slate-900 text-white shadow-xs'
                     : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50'
@@ -228,7 +228,7 @@ export default function JapaneseLearningHub() {
               </button>
               <button
                 type="button"
-                className={`px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+                className={`px-3.5 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer whitespace-nowrap shrink-0 ${
                   activeTab === 'kanji'
                     ? 'bg-slate-900 text-white shadow-xs'
                     : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50'
@@ -239,7 +239,7 @@ export default function JapaneseLearningHub() {
               </button>
               <button
                 type="button"
-                className={`px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+                className={`px-3.5 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer whitespace-nowrap shrink-0 ${
                   activeTab === 'grammar'
                     ? 'bg-slate-900 text-white shadow-xs'
                     : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50'
@@ -250,7 +250,7 @@ export default function JapaneseLearningHub() {
               </button>
               <button
                 type="button"
-                className={`px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+                className={`px-3.5 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer whitespace-nowrap shrink-0 ${
                   activeTab === 'vocab'
                     ? 'bg-slate-900 text-white shadow-xs'
                     : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50'
@@ -266,40 +266,40 @@ export default function JapaneseLearningHub() {
             <>
               <button
                 type="button"
-                className={`px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+                className={`px-3.5 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer whitespace-nowrap shrink-0 ${
                   activeTab === 'parts_explorer'
                     ? 'bg-amber-500 text-slate-950 shadow-xs'
                     : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50'
                 }`}
                 onClick={() => setActiveTab('parts_explorer')}
               >
-                🚜 Komatsu Parts Explorer (建機部品図鑑)
+                🚜 Komatsu Parts Explorer
               </button>
               <button
                 type="button"
-                className={`px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+                className={`px-3.5 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer whitespace-nowrap shrink-0 ${
                   activeTab === 'roleplay'
                     ? 'bg-indigo-600 text-white shadow-xs'
                     : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50'
                 }`}
                 onClick={() => setActiveTab('roleplay')}
               >
-                🗣️ Workshop Dialogue Coach (現場会話特訓)
+                🗣️ Dialogue Coach
               </button>
               <button
                 type="button"
-                className={`px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+                className={`px-3.5 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer whitespace-nowrap shrink-0 ${
                   activeTab === 'business_email'
                     ? 'bg-blue-600 text-white shadow-xs'
                     : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50'
                 }`}
                 onClick={() => setActiveTab('business_email')}
               >
-                ✉️ Business Email & Keigo Studio (敬語・メール)
+                ✉️ Business Email & Keigo
               </button>
               <button
                 type="button"
-                className={`px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+                className={`px-3.5 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer whitespace-nowrap shrink-0 ${
                   activeTab === 'technical'
                     ? 'bg-slate-900 text-white shadow-xs'
                     : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50'
