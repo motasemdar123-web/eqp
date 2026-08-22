@@ -122,7 +122,7 @@ export default function SparePartsPage() {
   const [loadingQuotations, setLoadingQuotations] = useState(false);
   const [qtnStatusFilter, setQtnStatusFilter] = useState('1'); // '1' = In-Process, '2' = Confirmed, '' = All
   const [qtnSearchFilter, setQtnSearchFilter] = useState('');
-  const [qtnLimit, setQtnLimit] = useState('100'); // '10', '25', '50', '100'
+  const [qtnLimit, setQtnLimit] = useState('10'); // '10', '25', '50', '100'
   const [qtnPage, setQtnPage] = useState(1);
   const [selectedQtnNumbers, setSelectedQtnNumbers] = useState(new Set());
   const [isConvertingSo, setIsConvertingSo] = useState(false);

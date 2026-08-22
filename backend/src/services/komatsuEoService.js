@@ -444,10 +444,10 @@ async function searchQuotations(filters = {}, customCookie = null) {
     salesOrderNo = '',
     personIncharge = '',
     page = '1',
-    limit = '100',
+    limit = '10',
   } = filters;
 
-  const targetLimit = parseInt(limit, 10) || 100;
+  const targetLimit = parseInt(limit, 10) || 10;
   const maxPages = Math.min(10, Math.ceil(targetLimit / 10));
   const startPage = parseInt(page, 10) || 1;
 
