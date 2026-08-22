@@ -387,7 +387,7 @@ export default function SmartFlashcardDojo({ grammarList = [], level = 'N5', onT
           <div className="flex-1 overflow-y-auto scrollbar-none flex flex-col justify-center py-2">
             {!flipped ? (
               <div className="text-center space-y-4 my-auto">
-                <h3 className="text-4xl sm:text-5xl font-bold text-slate-900 tracking-wide font-sans">
+                <h3 className="jp-title text-3xl sm:text-5xl text-slate-900 tracking-wider font-normal">
                   {currentCard?.title}
                 </h3>
                 <p className="text-xs font-mono text-slate-600 bg-slate-100 inline-block px-4 py-1.5 rounded-full border border-slate-200">
@@ -416,7 +416,7 @@ export default function SmartFlashcardDojo({ grammarList = [], level = 'N5', onT
                   )}
                 </div>
 
-                {/* Example Sentences (Large, High Contrast, Crystal Clear) */}
+                {/* Example Sentences (Large, High Contrast, Clean Font Weight) */}
                 <div className="space-y-2">
                   <span className="text-[10px] font-extrabold uppercase text-slate-400 tracking-widest block px-1">
                     Example Sentence
@@ -424,16 +424,16 @@ export default function SmartFlashcardDojo({ grammarList = [], level = 'N5', onT
                   {(currentCard?.examples || []).slice(0, 1).map((ex, idx) => (
                     <div
                       key={idx}
-                      className="p-3.5 sm:p-4 bg-slate-50 rounded-2xl border border-slate-200 text-left space-y-2"
+                      className="p-4 sm:p-5 bg-slate-50 rounded-2xl border border-slate-200 text-left space-y-2.5"
                     >
-                      {/* Japanese Line (Large font) */}
-                      <div className="flex items-start justify-between gap-2">
-                        <p className="text-base sm:text-lg font-bold text-slate-950 font-sans leading-relaxed">
+                      {/* Japanese Line (Large, perfectly weighted Japanese typography) */}
+                      <div className="flex items-start justify-between gap-3">
+                        <p className="jp-text-lg text-lg sm:text-2xl text-slate-950 font-normal tracking-wide leading-relaxed">
                           {ex.jp}
                         </p>
                         <button
                           type="button"
-                          className="text-indigo-600 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 p-1.5 rounded-xl text-sm cursor-pointer shrink-0 transition-all active:scale-95"
+                          className="text-indigo-600 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 p-2 rounded-xl text-base cursor-pointer shrink-0 transition-all active:scale-95 mt-0.5"
                           onClick={(e) => {
                             e.stopPropagation();
                             speakJapanese(ex.jp);

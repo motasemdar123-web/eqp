@@ -764,10 +764,10 @@ function VocabularyVault({ vocabList, level }) {
           <tbody>
             {filteredVocab.map((item, idx) => (
               <tr key={idx} className="hover:bg-slate-50/60">
-                <td className="font-bold text-base text-slate-900 font-sans">{item.jp}</td>
-                <td className="font-bold text-slate-700 font-mono text-xs">{item.kana}</td>
+                <td className="jp-text text-base sm:text-lg text-slate-900 font-normal tracking-wide">{item.jp}</td>
+                <td className="jp-text font-normal text-slate-700 text-xs sm:text-sm">{item.kana}</td>
                 <td className="font-mono text-slate-500 text-xs">{item.romaji}</td>
-                <td className="font-semibold text-slate-800 text-xs">{item.en}</td>
+                <td className="font-medium text-slate-800 text-xs sm:text-sm">{item.en}</td>
                 <td><Badge tone="neutral">{item.category}</Badge></td>
                 <td className="text-right">
                   <button
