@@ -510,86 +510,82 @@ function FlashcardDojo({ grammarList, level, onToast }) {
   }
 
   return (
-    <div className="space-y-6">
-      {/* Top progress metrics */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <div className="p-3.5 bg-white border border-slate-200 rounded-xl shadow-xs">
-          <span className="text-xs font-bold uppercase text-slate-400">Current Deck</span>
-          <p className="text-lg font-black text-slate-900 mt-0.5">{level} Mastery</p>
+    <div className="space-y-4 max-w-2xl mx-auto">
+      {/* Sleek Compact Progress HUD (No heavy grid boxes) */}
+      <div className="flex flex-wrap items-center justify-between gap-2 p-3 bg-white border border-slate-200/80 rounded-2xl shadow-xs text-xs font-bold">
+        <div className="flex items-center gap-2">
+          <span className="bg-amber-100 text-amber-900 px-2.5 py-0.5 rounded-lg">
+            JLPT {level}
+          </span>
+          <span className="text-slate-500 font-mono">
+            Card {currentIndex + 1} / {grammarList.length}
+          </span>
         </div>
-        <div className="p-3.5 bg-white border border-slate-200 rounded-xl shadow-xs">
-          <span className="text-xs font-bold uppercase text-slate-400">Deck Progress</span>
-          <p className="text-lg font-black text-slate-900 mt-0.5">
-            {currentIndex + 1} / {grammarList.length}
-          </p>
-        </div>
-        <div className="p-3.5 bg-white border border-slate-200 rounded-xl shadow-xs">
-          <span className="text-xs font-bold uppercase text-slate-400">SRS Mastered</span>
-          <p className="text-lg font-black text-emerald-600 mt-0.5">
-            {masteredCount} Cards
-          </p>
-        </div>
-        <div className="p-3.5 bg-white border border-slate-200 rounded-xl shadow-xs">
-          <span className="text-xs font-bold uppercase text-slate-400">Active Streak</span>
-          <p className="text-lg font-black text-amber-600 mt-0.5">
+        <div className="flex items-center gap-3">
+          <span className="text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-lg">
+            ✓ {masteredCount} Mastered
+          </span>
+          <span className="text-amber-600 bg-amber-50 border border-amber-200 px-2.5 py-0.5 rounded-lg">
             🔥 {streak} {streak === 1 ? 'Day' : 'Days'}
-          </p>
+          </span>
         </div>
       </div>
 
-      {/* Interactive 3D Flip Card with Generous Breathing Area */}
-      <div className="flex flex-col items-center justify-center py-10 sm:py-14 px-4 bg-slate-900/5 rounded-3xl border border-slate-200/80 min-h-[440px]">
+      {/* Interactive Fixed-Height 3D Flip Card (Zero page scrolling / no layout shift) */}
+      <div className="flex flex-col items-center justify-center p-2 sm:p-4 bg-slate-900/5 rounded-3xl border border-slate-200/80">
         <div
-          className={`w-full max-w-2xl p-6 sm:p-10 md:p-12 bg-white border-2 ${
+          className={`w-full p-6 sm:p-8 bg-white border-2 ${
             flipped ? 'border-amber-400 bg-amber-50/20' : 'border-slate-300'
-          } rounded-3xl shadow-xl cursor-pointer transition-all duration-300 transform hover:-translate-y-1 flex flex-col justify-between min-h-[340px]`}
+          } rounded-3xl shadow-lg cursor-pointer transition-all duration-200 flex flex-col justify-between h-[360px] sm:h-[400px] select-none`}
           onClick={() => setFlipped(!flipped)}
         >
-          <div>
-            <div className="flex items-center justify-between border-b border-slate-100 pb-4">
-              <div className="flex items-center gap-2">
-                <Badge tone="info">{currentCard?.category || 'Grammar'}</Badge>
-                {cardData.status === 'mastered' && (
-                  <span className="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2.5 py-0.5 rounded-full">
-                    ✓ Mastered
-                  </span>
-                )}
-              </div>
-              <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  className="text-xs text-indigo-600 font-bold hover:underline flex items-center gap-1 cursor-pointer bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-xl transition-all"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    speakJapanese(currentCard?.title || '');
-                  }}
-                >
-                  <span>🔊</span> Listen
-                </button>
-                <span className="text-xs text-slate-400 font-mono hidden sm:inline">Click to Flip</span>
-              </div>
+          {/* Card Top Header */}
+          <div className="flex items-center justify-between border-b border-slate-100 pb-3 shrink-0">
+            <div className="flex items-center gap-2">
+              <Badge tone="info">{currentCard?.category || 'Grammar'}</Badge>
+              {cardData.status === 'mastered' && (
+                <span className="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">
+                  ✓ Mastered
+                </span>
+              )}
             </div>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                className="text-xs text-indigo-600 font-bold hover:underline flex items-center gap-1 cursor-pointer bg-indigo-50 hover:bg-indigo-100 px-2.5 py-1 rounded-xl transition-all"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  speakJapanese(currentCard?.title || '');
+                }}
+              >
+                <span>🔊</span> Listen
+              </button>
+              <span className="text-xs text-slate-400 font-mono hidden sm:inline">Click card to Flip</span>
+            </div>
+          </div>
 
+          {/* Card Body with Contained Scroll if needed */}
+          <div className="flex-1 overflow-y-auto scrollbar-none flex flex-col justify-center py-3">
             {!flipped ? (
-              <div className="py-10 sm:py-14 text-center space-y-4">
-                <h3 className="text-3xl sm:text-5xl font-medium text-slate-800 tracking-wide font-serif">
+              <div className="text-center space-y-3 my-auto">
+                <h3 className="text-3xl sm:text-5xl font-medium text-slate-900 tracking-wide font-serif">
                   {currentCard?.title}
                 </h3>
-                <p className="text-xs font-mono text-slate-500 bg-slate-100 inline-block px-4 py-1.5 rounded-full border border-slate-200">
+                <p className="text-xs font-mono text-slate-500 bg-slate-100 inline-block px-3.5 py-1 rounded-full border border-slate-200">
                   Formula: {currentCard?.formula}
                 </p>
               </div>
             ) : (
-              <div className="py-6 space-y-5">
+              <div className="space-y-3">
                 <div>
-                  <span className="text-xs font-bold uppercase text-amber-600 tracking-wider">English Meaning</span>
-                  <p className="text-xl sm:text-2xl font-bold text-slate-900 mt-1">{currentCard?.meaning}</p>
-                  <p className="text-xs sm:text-sm text-slate-600 mt-1.5 leading-relaxed">{currentCard?.description}</p>
+                  <span className="text-[10px] font-bold uppercase text-amber-600 tracking-wider">Meaning</span>
+                  <p className="text-lg sm:text-xl font-bold text-slate-900 leading-snug">{currentCard?.meaning}</p>
+                  <p className="text-xs text-slate-600 leading-relaxed mt-0.5">{currentCard?.description}</p>
                 </div>
-                <div className="pt-3 border-t border-slate-100 space-y-2.5">
-                  <span className="text-xs font-bold uppercase text-slate-400">Example Dialogues</span>
-                  {(currentCard?.examples || []).map((ex, idx) => (
-                    <div key={idx} className="p-3 bg-slate-50 rounded-xl border border-slate-200/80 text-xs sm:text-sm space-y-1">
+                <div className="pt-2 border-t border-slate-100 space-y-2">
+                  <span className="text-[10px] font-bold uppercase text-slate-400">Example</span>
+                  {(currentCard?.examples || []).slice(0, 2).map((ex, idx) => (
+                    <div key={idx} className="p-2.5 bg-slate-50 rounded-xl border border-slate-200/80 text-xs space-y-0.5">
                       <div className="flex items-center justify-between">
                         <span className="font-bold text-slate-900">{ex.jp}</span>
                         <button
@@ -603,7 +599,7 @@ function FlashcardDojo({ grammarList, level, onToast }) {
                           🔊
                         </button>
                       </div>
-                      <span className="text-xs text-slate-500 font-mono block">{ex.romaji}</span>
+                      <span className="text-[11px] text-slate-500 font-mono block">{ex.romaji}</span>
                       <span className="text-slate-700 block font-medium">{ex.en}</span>
                     </div>
                   ))}
@@ -612,44 +608,51 @@ function FlashcardDojo({ grammarList, level, onToast }) {
             )}
           </div>
 
-          <div className="pt-4 border-t border-slate-100 text-center text-xs text-slate-400 font-medium">
-            {flipped ? 'Rate your recall memory using the SM-2 buttons below:' : '💡 Think of the meaning and formula, then click to flip.'}
+          {/* Card Footer Hint */}
+          <div className="pt-2.5 border-t border-slate-100 text-center text-xs text-slate-400 font-medium shrink-0">
+            {flipped ? 'Rate memory recall below:' : '💡 Click card or press Space to flip.'}
           </div>
         </div>
 
-        {/* SRS Rating Bar */}
-        {flipped && (
-          <div className="flex items-center gap-2.5 sm:gap-3 mt-6 max-w-2xl w-full">
-            <button
-              type="button"
-              className="flex-1 py-3 rounded-2xl bg-rose-100 text-rose-900 font-bold text-xs sm:text-sm hover:bg-rose-200 transition-all cursor-pointer shadow-xs active:scale-95 text-center"
-              onClick={() => handleNext('again')}
-            >
-              Again (1d)
-            </button>
-            <button
-              type="button"
-              className="flex-1 py-3 rounded-2xl bg-amber-100 text-amber-900 font-bold text-xs sm:text-sm hover:bg-amber-200 transition-all cursor-pointer shadow-xs active:scale-95 text-center"
-              onClick={() => handleNext('hard')}
-            >
-              Hard (2d)
-            </button>
-            <button
-              type="button"
-              className="flex-1 py-3 rounded-2xl bg-indigo-100 text-indigo-900 font-bold text-xs sm:text-sm hover:bg-indigo-200 transition-all cursor-pointer shadow-xs active:scale-95 text-center"
-              onClick={() => handleNext('good')}
-            >
-              Good (4d)
-            </button>
-            <button
-              type="button"
-              className="flex-1 py-3 rounded-2xl bg-emerald-100 text-emerald-900 font-bold text-xs sm:text-sm hover:bg-emerald-200 transition-all cursor-pointer shadow-xs active:scale-95 text-center"
-              onClick={() => handleNext('easy')}
-            >
-              Easy (7d)
-            </button>
-          </div>
-        )}
+        {/* SRS Rating Bar (Reserved height to prevent layout jump) */}
+        <div className="w-full mt-3 h-[52px] flex items-center">
+          {flipped ? (
+            <div className="flex items-center gap-2 sm:gap-3 w-full animate-fadeIn">
+              <button
+                type="button"
+                className="flex-1 py-2.5 rounded-2xl bg-rose-100 text-rose-900 font-bold text-xs hover:bg-rose-200 transition-all cursor-pointer shadow-xs active:scale-95 text-center"
+                onClick={() => handleNext('again')}
+              >
+                Again (1d)
+              </button>
+              <button
+                type="button"
+                className="flex-1 py-2.5 rounded-2xl bg-amber-100 text-amber-900 font-bold text-xs hover:bg-amber-200 transition-all cursor-pointer shadow-xs active:scale-95 text-center"
+                onClick={() => handleNext('hard')}
+              >
+                Hard (2d)
+              </button>
+              <button
+                type="button"
+                className="flex-1 py-2.5 rounded-2xl bg-indigo-100 text-indigo-900 font-bold text-xs hover:bg-indigo-200 transition-all cursor-pointer shadow-xs active:scale-95 text-center"
+                onClick={() => handleNext('good')}
+              >
+                Good (4d)
+              </button>
+              <button
+                type="button"
+                className="flex-1 py-2.5 rounded-2xl bg-emerald-100 text-emerald-900 font-bold text-xs hover:bg-emerald-200 transition-all cursor-pointer shadow-xs active:scale-95 text-center"
+                onClick={() => handleNext('easy')}
+              >
+                Easy (7d)
+              </button>
+            </div>
+          ) : (
+            <div className="text-center w-full text-xs text-slate-400 font-mono">
+              Press <kbd className="px-1.5 py-0.5 bg-slate-200 rounded font-semibold text-slate-700">Space</kbd> or click card to flip
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

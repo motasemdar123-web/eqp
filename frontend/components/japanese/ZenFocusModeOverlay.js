@@ -252,9 +252,9 @@ export default function ZenFocusModeOverlay({
         </div>
       </header>
 
-      {/* Main Focus Canvas with Generous Breathing Area */}
-      <main className="flex-1 overflow-y-auto p-4 sm:p-8 md:p-12 max-w-5xl mx-auto w-full flex flex-col justify-start">
-        <div className="w-full my-auto py-4">
+      {/* Main Focus Canvas with Generous Centered Breathing Area */}
+      <main className="flex-1 overflow-y-auto p-3 sm:p-6 max-w-4xl mx-auto w-full flex flex-col justify-center items-center">
+        <div className="w-full my-auto">
           {children}
         </div>
       </main>
