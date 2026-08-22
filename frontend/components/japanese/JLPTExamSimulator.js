@@ -681,12 +681,14 @@ export default function JLPTExamSimulator({
                 </div>
               )}
 
-              {/* Question Text */}
-              <div className="text-lg font-bold text-slate-900 whitespace-pre-line leading-relaxed">
-                <span
-                  dangerouslySetInnerHTML={{ __html: currentQuestion.question || currentQuestion.prompt }}
-                />
-              </div>
+              {/* Question Text (Only for text questions without an image) */}
+              {!currentQuestion.image && (currentQuestion.question || currentQuestion.prompt) && (
+                <div className="text-lg font-bold text-slate-900 whitespace-pre-line leading-relaxed">
+                  <span
+                    dangerouslySetInnerHTML={{ __html: currentQuestion.question || currentQuestion.prompt }}
+                  />
+                </div>
+              )}
 
               {/* 4 Interactive Option Radio Cards (Supports Picture & Text Choices) */}
               <div className="grid gap-2.5 sm:gap-3 sm:grid-cols-2 pt-2">

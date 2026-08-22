@@ -883,10 +883,10 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e1-l-1",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_01.mp3",
-              "audioStart": 169.2,
-              "audioEnd": 236.4,
+              "audioStart": 158.5,
+              "audioEnd": 232.5,
               "image": "/images/japanese/n5_listening/exam_01/q_01.png",
-              "question": "1. 録音を聞いて、問題用紙の1〜4の絵（選択肢）の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -895,16 +895,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "一番 女の人と 男の人が話しています 男の人はどのかさを取りますか すみません 私のかさを取ってください はい どれですか 白いかさです 白くて 花の絵のかさです これですか いいえ その小さい花がたくさんある ああ、これですね どうぞ 男の人はどのかさを取りますか",
-              "explanation": "In Mondai 1 Q1, listen to the task question and the conversation. Option 3 represents the correct drawing/choice."
+              "explanation": "Mondai 1 Q1: Based on the spoken dialogue and task question, choice 3 is correct."
             },
             {
               "id": "n5-e1-l-2",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_01.mp3",
-              "audioStart": 236.4,
-              "audioEnd": 313.6,
+              "audioStart": 232.5,
+              "audioEnd": 307.5,
               "image": "/images/japanese/n5_listening/exam_01/q_02.png",
-              "question": "2. 録音を聞いて、問題用紙の1〜4の絵（選択肢）の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -913,16 +913,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 3,
               "transcript": "2番 男の人と女の人が話しています 二人は何時に会いますか こんばん 一緒にご飯を食べませんか いいですね じゃあ仕事が終わってから 駅で会いましょう 6時はどうですか すみません 今日はちょっと忙しいですから 6時は難しいです そうですか じゃあ 1時間ぐらい 遅い時間にしましょうか いいえ 30分で大丈夫です そうですか わかりました 2人は何時に会いますか",
-              "explanation": "In Mondai 1 Q2, listen to the task question and the conversation. Option 4 represents the correct drawing/choice."
+              "explanation": "Mondai 1 Q2: Based on the spoken dialogue and task question, choice 4 is correct."
             },
             {
               "id": "n5-e1-l-3",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_01.mp3",
-              "audioStart": 313.6,
-              "audioEnd": 381.3,
+              "audioStart": 307.5,
+              "audioEnd": 376.5,
               "image": "/images/japanese/n5_listening/exam_01/q_03.png",
-              "question": "3. 録音を聞いて、問題用紙の1〜4の絵（選択肢）の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -931,16 +931,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "3番 先生が話しています 学生は何を書きますか うーん 皆さん 髪の左上に 順曜の名前を書いてください この授業は 日本語1です それからその下に 自分の名前を書いてください そして右上に 今日の日を書いてください 今日は7月4日です 学生は何を書きますか",
-              "explanation": "In Mondai 1 Q3, listen to the task question and the conversation. Option 1 represents the correct drawing/choice."
+              "explanation": "Mondai 1 Q3: Based on the spoken dialogue and task question, choice 1 is correct."
             },
             {
               "id": "n5-e1-l-4",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_01.mp3",
-              "audioStart": 381.3,
-              "audioEnd": 453.7,
+              "audioStart": 376.5,
+              "audioEnd": 448.5,
               "image": "/images/japanese/n5_listening/exam_01/q_04.png",
-              "question": "4. 録音を聞いて、問題用紙の1〜4の絵（選択肢）の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -949,16 +949,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "4番 男の人と女の人が話しています 2人はテーブルの上に 何を置きますか 壁はどこに置きますか そうですね テーブルの上に置きましょう コップはテーブルに並べますか そうですね いつつ並べましょう ジュースも置きましょうか いいえ 皆さんが来てから 冷蔵庫から出しましょう そうですね 2人はテーブルの上に 何を置きますか",
-              "explanation": "In Mondai 1 Q4, listen to the task question and the conversation. Option 2 represents the correct drawing/choice."
+              "explanation": "Mondai 1 Q4: Based on the spoken dialogue and task question, choice 2 is correct."
             },
             {
               "id": "n5-e1-l-5",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_01.mp3",
-              "audioStart": 453.7,
-              "audioEnd": 523.4,
+              "audioStart": 448.5,
+              "audioEnd": 517.5,
               "image": "/images/japanese/n5_listening/exam_01/q_05.png",
-              "question": "5. 録音を聞いて、問題用紙の1〜4の絵（選択肢）の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -967,16 +967,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "5番 女の人と男の人が話しています 女の人は何を書いますか コンビニにお弁当を書いに行きますが 欲しいものはありますか そうですね じゃあパンを買ってきてください 飲み物は入りますか そうですね 冷たい飲み物をお願いします 分かりました 好弊でいいですか はい お願いします 女の人は何を買いますか",
-              "explanation": "In Mondai 1 Q5, listen to the task question and the conversation. Option 3 represents the correct drawing/choice."
+              "explanation": "Mondai 1 Q5: Based on the spoken dialogue and task question, choice 3 is correct."
             },
             {
               "id": "n5-e1-l-6",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_01.mp3",
-              "audioStart": 523.4,
-              "audioEnd": 596.2,
+              "audioStart": 517.5,
+              "audioEnd": 592.5,
               "image": "/images/japanese/n5_listening/exam_01/q_06.png",
-              "question": "6. 録音を聞いて、問題用紙の1〜4の絵（選択肢）の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -985,16 +985,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 3,
               "transcript": "6番 女の人と男の人が話しています 女の人はこれからどうしますか すみません ちょっと窓を閉めてください 風が強くて そうですね 閉めましょう でもちょっと熱いですね そうですね じゃあエアコンをつけてください はい えっと あ 一番右のボタンです これですね はい 女の人はこれからどうしますか",
-              "explanation": "In Mondai 1 Q6, listen to the task question and the conversation. Option 4 represents the correct drawing/choice."
+              "explanation": "Mondai 1 Q6: Based on the spoken dialogue and task question, choice 4 is correct."
             },
             {
               "id": "n5-e1-l-7",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_01.mp3",
-              "audioStart": 596.2,
-              "audioEnd": 721.8,
+              "audioStart": 592.5,
+              "audioEnd": 824.5,
               "image": "/images/japanese/n5_listening/exam_01/q_07.png",
-              "question": "7. 録音を聞いて、問題用紙の1〜4の絵（選択肢）の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -1003,16 +1003,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "7番 女の人と男の人がデパートで話しています 男の人は何回へ行きますか 私は服を書いたいですから 3回に行きます 分かりました 僕も服を見たいです えっと 男の人の服は5回ですね いや 友達の子供の服です そうですか じゃあ 7回ですね 分かりました じゃあ僕はそれを買った後 1回に降りて あの辺にいます あああの入り口ですね 分かりました 男の人は何回へ行きますか 問題に 問題にでは 初めに質問を聞いてください それから話を聞いて 問題用紙の 1から4の中から 1番いいものを1つ選んでください では練習しましょう",
-              "explanation": "In Mondai 1 Q7, listen to the task question and the conversation. Option 1 represents the correct drawing/choice."
+              "explanation": "Mondai 1 Q7: Based on the spoken dialogue and task question, choice 1 is correct."
             },
             {
               "id": "n5-e1-l-8",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_01.mp3",
-              "audioStart": 835.2,
-              "audioEnd": 962.7,
+              "audioStart": 824.5,
+              "audioEnd": 958.5,
               "image": "/images/japanese/n5_listening/exam_01/q_08.png",
-              "question": "1. まず質問を聞いてください。それから話を聞いて、1〜4の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -1021,16 +1021,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 3,
               "transcript": "1番 女の人と 男の人が話しています 男の人の家から 女の人の家まで歩いて 何分ぐらいかかりますか 山田さんは いつも大学へ自転車できますね 大学の近くに住んでいますか いえ 大川駅の すぐそばです 電車で7分ですが 自転車が好きですから え 大川駅ですか 私もですよ 私は駅の南側で 駅から歩いて3分です そうですか 私は駅の北側で 駅から5分くらいです じゃあ歩いて8分ぐらいです 近いですね え 自転車で3分ですね 男の人の家から 女の人の家まで 歩いて 何分ぐらいかかりますか",
-              "explanation": "In Mondai 2 Q1, pay attention to the key detail asked in the question. Option 4 is the accurate answer."
+              "explanation": "Mondai 2 Q1: Listen for the key detail asked in the question. Option 4 is correct."
             },
             {
               "id": "n5-e1-l-9",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_01.mp3",
-              "audioStart": 962.7,
-              "audioEnd": 1078.4,
+              "audioStart": 958.5,
+              "audioEnd": 1072.5,
               "image": "/images/japanese/n5_listening/exam_01/q_09.png",
-              "question": "2. まず質問を聞いてください。それから話を聞いて、1〜4の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -1039,16 +1039,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "二番 電話で 男の人と 病院の人が話しています 男の人の病院のカードは 何番ですか 今日はどうしましたか 昨日の夜から熱があって 頭もすごく痛いです わかりました ではお名前と 病院のカードの番号を教えてください はい 山田竹市です 2014です えっと 20184ですか え 1が2つです 2014です わかりました じゃあ気をつけて 来てください 男の人の病院のカードは 何番ですか",
-              "explanation": "In Mondai 2 Q2, pay attention to the key detail asked in the question. Option 1 is the accurate answer."
+              "explanation": "Mondai 2 Q2: Listen for the key detail asked in the question. Option 1 is correct."
             },
             {
               "id": "n5-e1-l-10",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_01.mp3",
-              "audioStart": 1078.4,
-              "audioEnd": 1183.8,
+              "audioStart": 1072.5,
+              "audioEnd": 1180.5,
               "image": "/images/japanese/n5_listening/exam_01/q_10.png",
-              "question": "3. まず質問を聞いてください。それから話を聞いて、1〜4の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -1057,16 +1057,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "3番 女の人と 男の人が話しています 女の人はいつも誰と 散歩していますか 女さんは最近も サッカーをしていますか え 週に2回ぐらい 友達としています マリアさんはどんなスポーツをしていますか 私はスポーツはあまりできませんが マイアさんアネット公園を散歩しています それはいいですね マリアさんはお姉さんと住んでいますか はい アネット妹と3人で住んでいます 女の人はいつも誰と散歩していますか",
-              "explanation": "In Mondai 2 Q3, pay attention to the key detail asked in the question. Option 2 is the accurate answer."
+              "explanation": "Mondai 2 Q3: Listen for the key detail asked in the question. Option 2 is correct."
             },
             {
               "id": "n5-e1-l-11",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_01.mp3",
-              "audioStart": 1183.8,
-              "audioEnd": 1292.2,
+              "audioStart": 1180.5,
+              "audioEnd": 1288.5,
               "image": "/images/japanese/n5_listening/exam_01/q_11.png",
-              "question": "4. まず質問を聞いてください。それから話を聞いて、1〜4の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -1075,16 +1075,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "4番 男の学生と女の学生が話しています 男の学生は昨日どこへ行きましたか 風はどうですか 病院へ行って薬をもらいましたから 大丈夫です スミスさんも昨日病院の近くに いませんでしたか 日曜日病院のそばのカフェにいましたが カフェに来ましたか いえ 病院の窓から見えました そうですか 私はいつも年を間で仕草をしますが 日曜日休みでしたから カフェで仕草をしました そうですか 男の学生は昨日どこへ行きましたか",
-              "explanation": "In Mondai 2 Q4, pay attention to the key detail asked in the question. Option 3 is the accurate answer."
+              "explanation": "Mondai 2 Q4: Listen for the key detail asked in the question. Option 3 is correct."
             },
             {
               "id": "n5-e1-l-12",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_01.mp3",
-              "audioStart": 1292.2,
-              "audioEnd": 1390.9,
+              "audioStart": 1288.5,
+              "audioEnd": 1387.5,
               "image": "/images/japanese/n5_listening/exam_01/q_12.png",
-              "question": "5. まず質問を聞いてください。それから話を聞いて、1〜4の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -1093,16 +1093,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 3,
               "transcript": "5番 男の人と女の人が電話で話しています 2人はない曜日に会いますか 来週そちらへ行ってもいいですか えい 月曜日と近曜日は忙しいですが 他の日は大丈夫です そうですか 私は水曜日がダメですから 火曜日か木曜日ですね どっちでもいいですよ じゃあ早い方がいいですから わかりました じゃあ15日ですね 時間は1時でいいですか え 2人はない曜日に会いますか",
-              "explanation": "In Mondai 2 Q5, pay attention to the key detail asked in the question. Option 4 is the accurate answer."
+              "explanation": "Mondai 2 Q5: Listen for the key detail asked in the question. Option 4 is correct."
             },
             {
               "id": "n5-e1-l-13",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_01.mp3",
-              "audioStart": 1390.9,
-              "audioEnd": 1488.5,
+              "audioStart": 1387.5,
+              "audioEnd": 1574.5,
               "image": "/images/japanese/n5_listening/exam_01/q_13.png",
-              "question": "6. まず質問を聞いてください。それから話を聞いて、1〜4の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -1111,16 +1111,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "6番 男の人と女の人が 電気の話をしています 日曜日の電気はどうですか 次の土曜日か日曜日に 朝くさに行きませんか いいですね じゃあ日曜日は雨ですから 土曜日にしましょう え 本当ですか 下さのニュースでは土曜日が雨で 日曜日はくもりでしたよ そうですか 私は機能を見ましたから ちょっと古いですね じゃあ 日曜日に行きましょう え 日曜日の天気はどうですか",
-              "explanation": "In Mondai 2 Q6, pay attention to the key detail asked in the question. Option 1 is the accurate answer."
+              "explanation": "Mondai 2 Q6: Listen for the key detail asked in the question. Option 1 is correct."
             },
             {
               "id": "n5-e1-l-14",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_listening/exam_01.mp3",
-              "audioStart": 1585.8,
-              "audioEnd": 1623.3,
+              "audioStart": 1574.5,
+              "audioEnd": 1618.5,
               "image": "/images/japanese/n5_listening/exam_01/q_14.png",
-              "question": "1. 絵を見ながら質問を聞いてください。矢印（➡）の人は 何と言いますか。1〜3の中から 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -1128,16 +1128,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "一番 優勉曲で 手紙を出します 何と言いますか 1 これお願いします 2 手紙をください 3 ありがとうございます",
-              "explanation": "In Mondai 3 Q1, observe the situation indicated by the arrow. Option 3 is the appropriate utterance in this situation."
+              "explanation": "Mondai 3 Q1: Observe the arrow (➡) in the illustration. Option 3 is the most appropriate spoken phrase."
             },
             {
               "id": "n5-e1-l-15",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_listening/exam_01.mp3",
-              "audioStart": 1623.3,
-              "audioEnd": 1659.5,
+              "audioStart": 1618.5,
+              "audioEnd": 1654.5,
               "image": "/images/japanese/n5_listening/exam_01/q_15.png",
-              "question": "2. 絵を見ながら質問を聞いてください。矢印（➡）の人は 何と言いますか。1〜3の中から 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -1145,16 +1145,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "2番 エレベーターが来ました 他の人に何と言いますか 1 お先にどうぞ 2 お願いします 3 こちらこそ",
-              "explanation": "In Mondai 3 Q2, observe the situation indicated by the arrow. Option 1 is the appropriate utterance in this situation."
+              "explanation": "Mondai 3 Q2: Observe the arrow (➡) in the illustration. Option 1 is the most appropriate spoken phrase."
             },
             {
               "id": "n5-e1-l-16",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_listening/exam_01.mp3",
-              "audioStart": 1659.5,
-              "audioEnd": 1699.7,
+              "audioStart": 1654.5,
+              "audioEnd": 1696.5,
               "image": "/images/japanese/n5_listening/exam_01/q_16.png",
-              "question": "3. 絵を見ながら質問を聞いてください。矢印（➡）の人は 何と言いますか。1〜3の中から 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -1162,16 +1162,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "3番 部屋の中が 熱いです 何と言いますか 1 窓をもう開けますか 2 窓を開けましょうか 3 窓を開けなければなりませんか",
-              "explanation": "In Mondai 3 Q3, observe the situation indicated by the arrow. Option 2 is the appropriate utterance in this situation."
+              "explanation": "Mondai 3 Q3: Observe the arrow (➡) in the illustration. Option 2 is the most appropriate spoken phrase."
             },
             {
               "id": "n5-e1-l-17",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_listening/exam_01.mp3",
-              "audioStart": 1699.7,
-              "audioEnd": 1741.0,
+              "audioStart": 1696.5,
+              "audioEnd": 1735.5,
               "image": "/images/japanese/n5_listening/exam_01/q_17.png",
-              "question": "4. 絵を見ながら質問を聞いてください。矢印（➡）の人は 何と言いますか。1〜3の中から 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -1179,16 +1179,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "4番 テレビで 明日の天気の話をしています 何と言いますか 1 明日は晴れたいです 2 明日は晴れるでしょう 3 明日は晴れましょう",
-              "explanation": "In Mondai 3 Q4, observe the situation indicated by the arrow. Option 3 is the appropriate utterance in this situation."
+              "explanation": "Mondai 3 Q4: Observe the arrow (➡) in the illustration. Option 3 is the most appropriate spoken phrase."
             },
             {
               "id": "n5-e1-l-18",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_listening/exam_01.mp3",
-              "audioStart": 1741.0,
-              "audioEnd": 1786.2,
+              "audioStart": 1735.5,
+              "audioEnd": 1862.5,
               "image": "/images/japanese/n5_listening/exam_01/q_18.png",
-              "question": "5. 絵を見ながら質問を聞いてください。矢印（➡）の人は 何と言いますか。1〜3の中から 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -1196,16 +1196,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "5番 年間で 女の人たちが 大きい声で話しています 年間の人は 何と言いますか 1 静かにしてくださいませんか 2 静かにしたいです 3 静かにするでしょう",
-              "explanation": "In Mondai 3 Q5, observe the situation indicated by the arrow. Option 1 is the appropriate utterance in this situation."
+              "explanation": "Mondai 3 Q5: Observe the arrow (➡) in the illustration. Option 1 is the most appropriate spoken phrase."
             },
             {
               "id": "n5-e1-l-19",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5_listening/exam_01.mp3",
-              "audioStart": 1873.9,
-              "audioEnd": 1908.7,
+              "audioStart": 1862.5,
+              "audioEnd": 1903.5,
               "image": "/images/japanese/n5_listening/exam_01/q_19.png",
-              "question": "1. 短い文を聞いて、1〜3の中から 一番いい返事を 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -1213,16 +1213,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "1番 あの赤いシャツを 来ている人は誰ですか 1 あそこにいますね 2 え 赤いシャツです 3 山田さんですよ",
-              "explanation": "In Mondai 4 Q1, respond immediately to the prompt. Option 2 is the natural conversational reply."
+              "explanation": "Mondai 4 Q1: Option 2 is the natural immediate conversational response."
             },
             {
               "id": "n5-e1-l-20",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5_listening/exam_01.mp3",
-              "audioStart": 1908.7,
-              "audioEnd": 1935.6,
+              "audioStart": 1903.5,
+              "audioEnd": 1930.5,
               "image": "/images/japanese/n5_listening/exam_01/q_20.png",
-              "question": "2. 短い文を聞いて、1〜3の中から 一番いい返事を 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -1230,16 +1230,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "2番 ここまで何で来ましたか 1 ペンです 2 電車です 3 電話です",
-              "explanation": "In Mondai 4 Q2, respond immediately to the prompt. Option 3 is the natural conversational reply."
+              "explanation": "Mondai 4 Q2: Option 3 is the natural immediate conversational response."
             },
             {
               "id": "n5-e1-l-21",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5_listening/exam_01.mp3",
-              "audioStart": 1935.6,
-              "audioEnd": 1968.3,
+              "audioStart": 1930.5,
+              "audioEnd": 1963.5,
               "image": "/images/japanese/n5_listening/exam_01/q_21.png",
-              "question": "3. 短い文を聞いて、1〜3の中から 一番いい返事を 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -1247,16 +1247,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "3番 有名曲は何時からですか 1 手紙を送りました 2 1時間くらいですね 3 9時からです",
-              "explanation": "In Mondai 4 Q3, respond immediately to the prompt. Option 1 is the natural conversational reply."
+              "explanation": "Mondai 4 Q3: Option 1 is the natural immediate conversational response."
             },
             {
               "id": "n5-e1-l-22",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5_listening/exam_01.mp3",
-              "audioStart": 1968.3,
-              "audioEnd": 1997.7,
+              "audioStart": 1963.5,
+              "audioEnd": 1993.5,
               "image": "/images/japanese/n5_listening/exam_01/q_22.png",
-              "question": "4. 短い文を聞いて、1〜3の中から 一番いい返事を 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -1264,16 +1264,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "4番 青いペンで書いてもいいですか 1 え ありますよ 2 え いいですよ 3 いえ 書きたくないです",
-              "explanation": "In Mondai 4 Q4, respond immediately to the prompt. Option 2 is the natural conversational reply."
+              "explanation": "Mondai 4 Q4: Option 2 is the natural immediate conversational response."
             },
             {
               "id": "n5-e1-l-23",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5_listening/exam_01.mp3",
-              "audioStart": 1997.7,
-              "audioEnd": 2029.2,
+              "audioStart": 1993.5,
+              "audioEnd": 2023.5,
               "image": "/images/japanese/n5_listening/exam_01/q_23.png",
-              "question": "5. 短い文を聞いて、1〜3の中から 一番いい返事を 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -1281,16 +1281,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "5番 もう 仕下いをしましたか 1 え もうしました 2 いえ 大変でした 3 よく勉強しました",
-              "explanation": "In Mondai 4 Q5, respond immediately to the prompt. Option 3 is the natural conversational reply."
+              "explanation": "Mondai 4 Q5: Option 3 is the natural immediate conversational response."
             },
             {
               "id": "n5-e1-l-24",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5_listening/exam_01.mp3",
-              "audioStart": 2029.2,
-              "audioEnd": 2062.4,
+              "audioStart": 2023.5,
+              "audioEnd": 2078.5,
               "image": "/images/japanese/n5_listening/exam_01/q_24.png",
-              "question": "6. 短い文を聞いて、1〜3の中から 一番いい返事を 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -1298,7 +1298,7 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "6番 カバンを持ちましょうか 1 いいですね 2 ありがとうございます 3 持ちませんよ これで 紹介試験を終わります",
-              "explanation": "In Mondai 4 Q6, respond immediately to the prompt. Option 1 is the natural conversational reply."
+              "explanation": "Mondai 4 Q6: Option 1 is the natural immediate conversational response."
             }
           ]
         }
@@ -2185,10 +2185,10 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e2-l-1",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_02.mp3",
-              "audioStart": 110.8,
-              "audioEnd": 176.6,
+              "audioStart": 143.5,
+              "audioEnd": 205.5,
               "image": "/images/japanese/n5_listening/exam_02/q_01.png",
-              "question": "1. 録音を聞いて、問題用紙の1〜4の絵（選択肢）の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -2197,16 +2197,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 3,
               "transcript": "The. Best answer is number 3. Look at the example of question 1 on the answer sheet. The best answer is number 3. The answer is written like this. Let's get started. First, in cooking class, a female teacher and a male student are talking. What will the male student do right after this? Let's make curry now. Teacher, shall I cut the vegetables?",
-              "explanation": "In Mondai 1 Q1, listen to the task question and the conversation. Option 4 represents the correct drawing/choice."
+              "explanation": "Mondai 1 Q1: Based on the spoken dialogue and task question, choice 4 is correct."
             },
             {
               "id": "n5-e2-l-2",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_02.mp3",
-              "audioStart": 176.6,
-              "audioEnd": 242.4,
+              "audioStart": 205.5,
+              "audioEnd": 271.5,
               "image": "/images/japanese/n5_listening/exam_02/q_02.png",
-              "question": "2. 録音を聞いて、問題用紙の1〜4の絵（選択肢）の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -2215,16 +2215,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "No, cut the meat, not the vegetables. Yes, what will the male student do next? Number 2 A. Man and a woman are talking at a coffee shop. Who will the man give the gloves to? Oh, these gloves belong to the woman who just left the shop. Oh, there's a group of four. They're over there. Please take them and give them to her right away.",
-              "explanation": "In Mondai 1 Q2, listen to the task question and the conversation. Option 1 represents the correct drawing/choice."
+              "explanation": "Mondai 1 Q2: Based on the spoken dialogue and task question, choice 1 is correct."
             },
             {
               "id": "n5-e2-l-3",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_02.mp3",
-              "audioStart": 242.4,
-              "audioEnd": 308.3,
+              "audioStart": 271.5,
+              "audioEnd": 334.5,
               "image": "/images/japanese/n5_listening/exam_02/q_03.png",
-              "question": "3. 録音を聞いて、問題用紙の1〜4の絵（選択肢）の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -2233,16 +2233,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "They belong to the woman with short hair and glasses. Who will the man give the gloves to? Number 3 A. Boy and his mother are talking. Where will the boy put his luggage? Mom, I got some luggage. Where should I put it? Is it okay to put it on the table? That's food. Not on the table. Put it in the fridge, mom. It's the fridge. Then put it on the chair next to the fridge.",
-              "explanation": "In Mondai 1 Q3, listen to the task question and the conversation. Option 2 represents the correct drawing/choice."
+              "explanation": "Mondai 1 Q3: Based on the spoken dialogue and task question, choice 2 is correct."
             },
             {
               "id": "n5-e2-l-4",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_02.mp3",
-              "audioStart": 308.3,
-              "audioEnd": 374.1,
+              "audioStart": 334.5,
+              "audioEnd": 394.5,
               "image": "/images/japanese/n5_listening/exam_02/q_04.png",
-              "question": "4. 録音を聞いて、問題用紙の1〜4の絵（選択肢）の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -2251,16 +2251,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "Okay. Dot. Where will the boy put his luggage? Number 4 A. Woman and a man are talking on the phone. Where will the woman go next? Hello, I just arrived at the station. Is. That's so? I'm at a coffee shop. Oh. The coffee shop next to the station. Now. The coffee shop in front of the university. Oh. Okay. I'll be right there. Where will the girls go after this?",
-              "explanation": "In Mondai 1 Q4, listen to the task question and the conversation. Option 3 represents the correct drawing/choice."
+              "explanation": "Mondai 1 Q4: Based on the spoken dialogue and task question, choice 3 is correct."
             },
             {
               "id": "n5-e2-l-5",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_02.mp3",
-              "audioStart": 374.1,
-              "audioEnd": 439.9,
+              "audioStart": 394.5,
+              "audioEnd": 460.5,
               "image": "/images/japanese/n5_listening/exam_02/q_05.png",
-              "question": "5. 録音を聞いて、問題用紙の1〜4の絵（選択肢）の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -2269,16 +2269,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 3,
               "transcript": "The. Teacher is speaking in class 5. Where will you buy a new textbook? Everyone, please buy a new textbook after today's class and bring it to the next class. The name of the textbook is Japanese 2. Textbooks are sold in classroom 101 on the first floor until tomorrow. This classroom is 2011 on the second floor, so it's the classroom just below this one.",
-              "explanation": "In Mondai 1 Q5, listen to the task question and the conversation. Option 4 represents the correct drawing/choice."
+              "explanation": "Mondai 1 Q5: Based on the spoken dialogue and task question, choice 4 is correct."
             },
             {
               "id": "n5-e2-l-6",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_02.mp3",
-              "audioStart": 439.9,
-              "audioEnd": 505.7,
+              "audioStart": 460.5,
+              "audioEnd": 535.5,
               "image": "/images/japanese/n5_listening/exam_02/q_06.png",
-              "question": "6. 録音を聞いて、問題用紙の1〜4の絵（選択肢）の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -2287,16 +2287,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "Where will the students buy a new textbook? Student of the sixth male female talk. What color hat will you give to the male student? I like your red hat. This is a hat I made. You're good at it. I made three of the same one in other colors, so I'll give you one of them. Oh, really? Thank you. I have a yellow hat, a blue one, and a black one. Which one do you want?",
-              "explanation": "In Mondai 1 Q6, listen to the task question and the conversation. Option 1 represents the correct drawing/choice."
+              "explanation": "Mondai 1 Q6: Based on the spoken dialogue and task question, choice 1 is correct."
             },
             {
               "id": "n5-e2-l-7",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_02.mp3",
-              "audioStart": 505.7,
-              "audioEnd": 571.5,
+              "audioStart": 535.5,
+              "audioEnd": 725.5,
               "image": "/images/japanese/n5_listening/exam_02/q_07.png",
-              "question": "7. 録音を聞いて、問題用紙の1〜4の絵（選択肢）の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -2305,16 +2305,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "Then I have a black and a blue hat, so I'll choose yellow. Okay. What color hat will the female student give to the male student? The. Teacher is speaking in school 7. What will the students take to the mountain? Tomorrow we're going to Hagashiyama. We'll take the bus from the bus stop in front of the school to the bottom of the mountain. The bus ticket is 500 yen, but you will climb the mountain and then return by bus, so please bring 1000 yen. It's a little cold on the mountain, so don't forget to bring a jacket.",
-              "explanation": "In Mondai 1 Q7, listen to the task question and the conversation. Option 2 represents the correct drawing/choice."
+              "explanation": "Mondai 1 Q7: Based on the spoken dialogue and task question, choice 2 is correct."
             },
             {
               "id": "n5-e2-l-8",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_02.mp3",
-              "audioStart": 687.1,
-              "audioEnd": 757.6,
+              "audioStart": 725.5,
+              "audioEnd": 799.5,
               "image": "/images/japanese/n5_listening/exam_02/q_08.png",
-              "question": "1. まず質問を聞いてください。それから話を聞いて、1〜4の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -2323,16 +2323,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "Right. Where did the man go yesterday? The best one is number 3. Look at the example of question 2 on the answer sheet. The best one is number 3. Write the answer like this. Let's start. Number 1A. Female and a male international student are talking. What do you do on Friday? How is Japan? Yes, it's very fun. Do you? Go to university every day? No.",
-              "explanation": "In Mondai 2 Q1, pay attention to the key detail asked in the question. Option 1 is the accurate answer."
+              "explanation": "Mondai 2 Q1: Listen for the key detail asked in the question. Option 1 is correct."
             },
             {
               "id": "n5-e2-l-9",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_02.mp3",
-              "audioStart": 757.6,
-              "audioEnd": 828.2,
+              "audioStart": 799.5,
+              "audioEnd": 856.5,
               "image": "/images/japanese/n5_listening/exam_02/q_09.png",
-              "question": "2. まず質問を聞いてください。それから話を聞いて、1〜4の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -2341,16 +2341,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "No. I go to university from Monday to Thursday and study at a nearby library on Friday. What do you do on Saturday and Sunday? I. Clean and meet up with friends. Is that so? What do you do on Friday? Number 2A. Male and a female are talking. What are you going to do now, female? Are you done with work? Yes, then why? Don't we go out for dinner together?",
-              "explanation": "In Mondai 2 Q2, pay attention to the key detail asked in the question. Option 2 is the accurate answer."
+              "explanation": "Mondai 2 Q2: Listen for the key detail asked in the question. Option 2 is correct."
             },
             {
               "id": "n5-e2-l-10",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_02.mp3",
-              "audioStart": 828.2,
-              "audioEnd": 898.7,
+              "audioStart": 856.5,
+              "audioEnd": 910.5,
               "image": "/images/japanese/n5_listening/exam_02/q_10.png",
-              "question": "3. まず質問を聞いてください。それから話を聞いて、1〜4の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -2359,16 +2359,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "Oh, sorry. I have a bit of a headache. I'm going home now. Right? See you later. What are you going to do now, female? Number 3A. Female and an international student are talking. When are you going back to your country, male? Question mark, Rin San. When are you going? Back to your country? Today is March 4th, so it's exactly two weeks from now. Is that so? It's the Friday after next week. Yes, well the male international student go back to his country. Question mark.",
-              "explanation": "In Mondai 2 Q3, pay attention to the key detail asked in the question. Option 3 is the accurate answer."
+              "explanation": "Mondai 2 Q3: Listen for the key detail asked in the question. Option 3 is correct."
             },
             {
               "id": "n5-e2-l-11",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_02.mp3",
-              "audioStart": 898.7,
-              "audioEnd": 969.3,
+              "audioStart": 910.5,
+              "audioEnd": 973.5,
               "image": "/images/japanese/n5_listening/exam_02/q_11.png",
-              "question": "4. まず質問を聞いてください。それから話を聞いて、1〜4の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -2377,16 +2377,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 3,
               "transcript": "Number 4A. Male international student is talking in Japanese class. What sport does the male international student do every day? I love sports. Every morning before class, I practice basketball with my friends. Sometimes I swim or play tennis at the university pool. I don't play soccer much, but I watch it every day. What sports do male international students play every day? Number 5A.",
-              "explanation": "In Mondai 2 Q4, pay attention to the key detail asked in the question. Option 4 is the accurate answer."
+              "explanation": "Mondai 2 Q4: Listen for the key detail asked in the question. Option 4 is correct."
             },
             {
               "id": "n5-e2-l-12",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_02.mp3",
-              "audioStart": 969.3,
-              "audioEnd": 1039.8,
+              "audioStart": 973.5,
+              "audioEnd": 1033.5,
               "image": "/images/japanese/n5_listening/exam_02/q_12.png",
-              "question": "5. まず質問を聞いてください。それから話を聞いて、1〜4の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -2395,16 +2395,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "Male student and a female student are talking. What month and date is the female students birthday? Yamamoto San. Today is May 29th. It's Yamamoto San's birthday. Here's a present. Here you go. These flowers are beautiful. Thank you. But her birthday isn't yet. It's one day. Early. Oh, sorry. What month and date is the female students birthday?",
-              "explanation": "In Mondai 2 Q5, pay attention to the key detail asked in the question. Option 1 is the accurate answer."
+              "explanation": "Mondai 2 Q5: Listen for the key detail asked in the question. Option 1 is correct."
             },
             {
               "id": "n5-e2-l-13",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_02.mp3",
-              "audioStart": 1039.8,
-              "audioEnd": 1110.4,
+              "audioStart": 1033.5,
+              "audioEnd": 1199.5,
               "image": "/images/japanese/n5_listening/exam_02/q_13.png",
-              "question": "6. まず質問を聞いてください。それから話を聞いて、1〜4の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -2413,16 +2413,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "At store number 6, a woman and a man are talking while looking at postcards. Which postcards did you two choose? There are. Many beautiful postcards. Shall we pick one and send it to you together? It's. Nice. There are many pictures of flowers and seas. What do you think of this mountain postcard? Rin San. The mountains and the sea are close to her house, so she sees them every day. What do you think of this postcard with a picture of a bridge? The flowers are beautiful. It's. Nice. Let's send it out. Which shoes did the two of them choose?",
-              "explanation": "In Mondai 2 Q6, pay attention to the key detail asked in the question. Option 2 is the accurate answer."
+              "explanation": "Mondai 2 Q6: Listen for the key detail asked in the question. Option 2 is correct."
             },
             {
               "id": "n5-e2-l-14",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_listening/exam_02.mp3",
-              "audioStart": 1186.0,
-              "audioEnd": 1216.6,
+              "audioStart": 1199.5,
+              "audioEnd": 1243.5,
               "image": "/images/japanese/n5_listening/exam_02/q_14.png",
-              "question": "1. 絵を見ながら質問を聞いてください。矢印（➡）の人は 何と言いますか。1〜3の中から 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -2430,16 +2430,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "Write the answer like this. Let's start point one I. Forgot my watch. I want to know the time now. What do you say to your friend?",
-              "explanation": "In Mondai 3 Q1, observe the situation indicated by the arrow. Option 1 is the appropriate utterance in this situation."
+              "explanation": "Mondai 3 Q1: Observe the arrow (➡) in the illustration. Option 1 is the most appropriate spoken phrase."
             },
             {
               "id": "n5-e2-l-15",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_listening/exam_02.mp3",
-              "audioStart": 1216.6,
-              "audioEnd": 1247.2,
+              "audioStart": 1243.5,
+              "audioEnd": 1273.5,
               "image": "/images/japanese/n5_listening/exam_02/q_15.png",
-              "question": "2. 絵を見ながら質問を聞いてください。矢印（➡）の人は 何と言いますか。1〜3の中から 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -2447,16 +2447,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "One what? Time is it now? Two I. Have time now. Three it's ten o'clock now point two I.",
-              "explanation": "In Mondai 3 Q2, observe the situation indicated by the arrow. Option 2 is the appropriate utterance in this situation."
+              "explanation": "Mondai 3 Q2: Observe the arrow (➡) in the illustration. Option 2 is the most appropriate spoken phrase."
             },
             {
               "id": "n5-e2-l-16",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_listening/exam_02.mp3",
-              "audioStart": 1247.2,
-              "audioEnd": 1277.8,
+              "audioStart": 1273.5,
+              "audioEnd": 1306.5,
               "image": "/images/japanese/n5_listening/exam_02/q_16.png",
-              "question": "3. 絵を見ながら質問を聞いてください。矢印（➡）の人は 何と言いますか。1〜3の中から 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -2464,16 +2464,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "Go into the teacher's room. What do you say? One see you. Tomorrow. Two excuse me. Three please point three my friend is getting married.",
-              "explanation": "In Mondai 3 Q3, observe the situation indicated by the arrow. Option 3 is the appropriate utterance in this situation."
+              "explanation": "Mondai 3 Q3: Observe the arrow (➡) in the illustration. Option 3 is the most appropriate spoken phrase."
             },
             {
               "id": "n5-e2-l-17",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_listening/exam_02.mp3",
-              "audioStart": 1277.8,
-              "audioEnd": 1308.4,
+              "audioStart": 1306.5,
+              "audioEnd": 1342.5,
               "image": "/images/japanese/n5_listening/exam_02/q_17.png",
-              "question": "4. 絵を見ながら質問を聞いてください。矢印（➡）の人は 何と言いますか。1〜3の中から 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -2481,16 +2481,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "What do you say? One welcome. Two congratulations. Three think. You point four I'm.",
-              "explanation": "In Mondai 3 Q4, observe the situation indicated by the arrow. Option 1 is the appropriate utterance in this situation."
+              "explanation": "Mondai 3 Q4: Observe the arrow (➡) in the illustration. Option 1 is the most appropriate spoken phrase."
             },
             {
               "id": "n5-e2-l-18",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_listening/exam_02.mp3",
-              "audioStart": 1308.4,
-              "audioEnd": 1339.0,
+              "audioStart": 1342.5,
+              "audioEnd": 1454.5,
               "image": "/images/japanese/n5_listening/exam_02/q_18.png",
-              "question": "5. 絵を見ながら質問を聞いてください。矢印（➡）の人は 何と言いますか。1〜3の中から 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -2498,16 +2498,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "Going to Kyoto by bus. I'm buying a ticket. What do you say? One please. Take the bus to Kyoto. Two please. Buy a ticket in Kyoto. Three I. Want one in Kyoto.",
-              "explanation": "In Mondai 3 Q5, observe the situation indicated by the arrow. Option 2 is the appropriate utterance in this situation."
+              "explanation": "Mondai 3 Q5: Observe the arrow (➡) in the illustration. Option 2 is the most appropriate spoken phrase."
             },
             {
               "id": "n5-e2-l-19",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5_listening/exam_02.mp3",
-              "audioStart": 1419.5,
-              "audioEnd": 1455.1,
+              "audioStart": 1454.5,
+              "audioEnd": 1486.5,
               "image": "/images/japanese/n5_listening/exam_02/q_19.png",
-              "question": "1. 短い文を聞いて、1〜3の中から 一番いい返事を 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -2515,16 +2515,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "One it's. Over there. Two. America. Dot. Three a room. The best one is number two. Look at the zero in question four on the answer sheet. The best one is number two. The answer is written like this.",
-              "explanation": "In Mondai 4 Q1, respond immediately to the prompt. Option 3 is the natural conversational reply."
+              "explanation": "Mondai 4 Q1: Option 3 is the natural immediate conversational response."
             },
             {
               "id": "n5-e2-l-20",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5_listening/exam_02.mp3",
-              "audioStart": 1455.1,
-              "audioEnd": 1490.6,
+              "audioStart": 1486.5,
+              "audioEnd": 1513.5,
               "image": "/images/japanese/n5_listening/exam_02/q_20.png",
-              "question": "2. 短い文を聞いて、1〜3の中から 一番いい返事を 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -2532,16 +2532,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "Let's start. Number one I'm going. One welcome home. Two I'm back. Three have a nice trip. Number two. Where is that camera? It's on the 11th floor.",
-              "explanation": "In Mondai 4 Q2, respond immediately to the prompt. Option 1 is the natural conversational reply."
+              "explanation": "Mondai 4 Q2: Option 1 is the natural immediate conversational response."
             },
             {
               "id": "n5-e2-l-21",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5_listening/exam_02.mp3",
-              "audioStart": 1490.6,
-              "audioEnd": 1526.2,
+              "audioStart": 1513.5,
+              "audioEnd": 1540.5,
               "image": "/images/japanese/n5_listening/exam_02/q_21.png",
-              "question": "3. 短い文を聞いて、1〜3の中から 一番いい返事を 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -2549,16 +2549,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "It's two. Three I'll get it there. Number three what kind of camera did you forget? One it's on the train.",
-              "explanation": "In Mondai 4 Q3, respond immediately to the prompt. Option 2 is the natural conversational reply."
+              "explanation": "Mondai 4 Q3: Option 2 is the natural immediate conversational response."
             },
             {
               "id": "n5-e2-l-22",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5_listening/exam_02.mp3",
-              "audioStart": 1526.2,
-              "audioEnd": 1561.8,
+              "audioStart": 1540.5,
+              "audioEnd": 1570.5,
               "image": "/images/japanese/n5_listening/exam_02/q_22.png",
-              "question": "4. 短い文を聞いて、1〜3の中から 一番いい返事を 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -2566,16 +2566,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "Two it's. A black one. Three it's. Mine. Number four the. Restaurant we went to on Sunday. One. What do you eat? Two it's. Fine on Sunday. Three I'd like to go again.",
-              "explanation": "In Mondai 4 Q4, respond immediately to the prompt. Option 3 is the natural conversational reply."
+              "explanation": "Mondai 4 Q4: Option 3 is the natural immediate conversational response."
             },
             {
               "id": "n5-e2-l-23",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5_listening/exam_02.mp3",
-              "audioStart": 1561.8,
-              "audioEnd": 1597.3,
+              "audioStart": 1570.5,
+              "audioEnd": 1603.5,
               "image": "/images/japanese/n5_listening/exam_02/q_23.png",
-              "question": "5. 短い文を聞いて、1〜3の中から 一番いい返事を 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -2583,16 +2583,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "Three I'd like to go again. Number five did you. Play any sports when you were a student? One I. Didn't do anything. Two. Let's play soccer. Three. That student did.",
-              "explanation": "In Mondai 4 Q5, respond immediately to the prompt. Option 1 is the natural conversational reply."
+              "explanation": "Mondai 4 Q5: Option 1 is the natural immediate conversational response."
             },
             {
               "id": "n5-e2-l-24",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5_listening/exam_02.mp3",
-              "audioStart": 1597.3,
-              "audioEnd": 1632.9,
+              "audioStart": 1603.5,
+              "audioEnd": 1658.5,
               "image": "/images/japanese/n5_listening/exam_02/q_24.png",
-              "question": "6. 短い文を聞いて、1〜3の中から 一番いい返事を 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -2600,7 +2600,7 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "Number six. Excuse me. How long does it take by train from this station to Yamakawa station? One it's. Ten fifteen. Two it's. That train. Three it's. About ten minutes. This is the end of the introduction.",
-              "explanation": "In Mondai 4 Q6, respond immediately to the prompt. Option 2 is the natural conversational reply."
+              "explanation": "Mondai 4 Q6: Option 2 is the natural immediate conversational response."
             }
           ]
         }
@@ -2613,7 +2613,7 @@ export const EXAM_PAPERS_CATALOG = {
       "badge": "2024 Test 1b",
       "year": "2024",
       "description": "Authentic JLPT N5 Examination with complete real studio broadcast audio, question illustrations, and synchronized transcript.",
-      "totalQuestions": 89,
+      "totalQuestions": 72,
       "sections": [
         {
           "id": "n5-e3-sec-vocab",
@@ -3487,10 +3487,10 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e3-l-1",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_03.mp3",
-              "audioStart": 66.9,
-              "audioEnd": 125.1,
+              "audioStart": 53.5,
+              "audioEnd": 121.5,
               "image": "/images/japanese/n5_listening/exam_03/q_01.png",
-              "question": "1. 録音を聞いて、問題用紙の1〜4の絵（選択肢）の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -3499,16 +3499,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "男の人と女の人が話しています 男の人が一番欲しいのは何ですか もしお金があったらダイヤモンドの指話が欲しいな それはもったいないよ 家とか 車とか買ったらいいんだけど でも僕が一番欲しいのはパソコンだな え?もう何台もあるじゃない あなたこそもったいないよ 男の人が一番欲しいのは何ですか",
-              "explanation": "In Mondai 1 Q1, listen to the task question and the conversation. Option 1 represents the correct drawing/choice."
+              "explanation": "Mondai 1 Q1: Based on the spoken dialogue and task question, choice 1 is correct."
             },
             {
               "id": "n5-e3-l-2",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_03.mp3",
-              "audioStart": 125.1,
-              "audioEnd": 132.5,
+              "audioStart": 121.5,
+              "audioEnd": 172.5,
               "image": "/images/japanese/n5_listening/exam_03/q_02.png",
-              "question": "2. 録音を聞いて、問題用紙の1〜4の絵（選択肢）の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -3517,16 +3517,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "2番 男の人と女の人が話しています",
-              "explanation": "In Mondai 1 Q2, listen to the task question and the conversation. Option 2 represents the correct drawing/choice."
+              "explanation": "Mondai 1 Q2: Based on the spoken dialogue and task question, choice 2 is correct."
             },
             {
               "id": "n5-e3-l-3",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_03.mp3",
-              "audioStart": 132.5,
-              "audioEnd": 140.0,
+              "audioStart": 172.5,
+              "audioEnd": 235.5,
               "image": "/images/japanese/n5_listening/exam_03/q_03.png",
-              "question": "3. 録音を聞いて、問題用紙の1〜4の絵（選択肢）の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -3535,16 +3535,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "椅子をいくつ用意しますか 先生 パーティーの椅子はいくつ用意すればいいですか",
-              "explanation": "In Mondai 1 Q3, listen to the task question and the conversation. Option 3 represents the correct drawing/choice."
+              "explanation": "Mondai 1 Q3: Based on the spoken dialogue and task question, choice 3 is correct."
             },
             {
               "id": "n5-e3-l-4",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_03.mp3",
-              "audioStart": 140.0,
-              "audioEnd": 147.4,
+              "audioStart": 235.5,
+              "audioEnd": 292.5,
               "image": "/images/japanese/n5_listening/exam_03/q_04.png",
-              "question": "4. 録音を聞いて、問題用紙の1〜4の絵（選択肢）の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -3553,16 +3553,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 3,
               "transcript": "そうですね 三十人ぐらい参加しますが それよりいつつ多く用意してください",
-              "explanation": "In Mondai 1 Q4, listen to the task question and the conversation. Option 4 represents the correct drawing/choice."
+              "explanation": "Mondai 1 Q4: Based on the spoken dialogue and task question, choice 4 is correct."
             },
             {
               "id": "n5-e3-l-5",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_03.mp3",
-              "audioStart": 147.4,
-              "audioEnd": 154.9,
+              "audioStart": 292.5,
+              "audioEnd": 355.5,
               "image": "/images/japanese/n5_listening/exam_03/q_05.png",
-              "question": "5. 録音を聞いて、問題用紙の1〜4の絵（選択肢）の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -3571,16 +3571,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "はいわかりました 椅子をいくつ用意しますか",
-              "explanation": "In Mondai 1 Q5, listen to the task question and the conversation. Option 1 represents the correct drawing/choice."
+              "explanation": "Mondai 1 Q5: Based on the spoken dialogue and task question, choice 1 is correct."
             },
             {
               "id": "n5-e3-l-6",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_03.mp3",
-              "audioStart": 154.9,
-              "audioEnd": 162.3,
+              "audioStart": 355.5,
+              "audioEnd": 415.5,
               "image": "/images/japanese/n5_listening/exam_03/q_06.png",
-              "question": "6. 録音を聞いて、問題用紙の1〜4の絵（選択肢）の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -3589,16 +3589,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "はいわかりました 椅子をいくつ用意しますか",
-              "explanation": "In Mondai 1 Q6, listen to the task question and the conversation. Option 2 represents the correct drawing/choice."
+              "explanation": "Mondai 1 Q6: Based on the spoken dialogue and task question, choice 2 is correct."
             },
             {
               "id": "n5-e3-l-7",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_03.mp3",
-              "audioStart": 162.3,
-              "audioEnd": 169.8,
+              "audioStart": 415.5,
+              "audioEnd": 470.5,
               "image": "/images/japanese/n5_listening/exam_03/q_07.png",
-              "question": "7. 録音を聞いて、問題用紙の1〜4の絵（選択肢）の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -3607,302 +3607,7 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "第3回 日本語能力試験N5 聴解 問題1 7番の公式問題音声です。",
-              "explanation": "In Mondai 1 Q7, listen to the task question and the conversation. Option 3 represents the correct drawing/choice."
-            },
-            {
-              "id": "n5-e3-l-8",
-              "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n5_listening/exam_03.mp3",
-              "audioStart": 231.2,
-              "audioEnd": 247.6,
-              "image": "/images/japanese/n5_listening/exam_03/q_08.png",
-              "question": "1. まず質問を聞いてください。それから話を聞いて、1〜4の中から 一番いいものを 1つ選んでください。",
-              "options": [
-                "1",
-                "2",
-                "3",
-                "4"
-              ],
-              "correct": 1,
-              "transcript": "四番 男の人と女の人が話しています 男の人は昨日何をしていましたか",
-              "explanation": "In Mondai 2 Q1, pay attention to the key detail asked in the question. Option 2 is the accurate answer."
-            },
-            {
-              "id": "n5-e3-l-9",
-              "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n5_listening/exam_03.mp3",
-              "audioStart": 247.6,
-              "audioEnd": 264.1,
-              "image": "/images/japanese/n5_listening/exam_03/q_09.png",
-              "question": "2. まず質問を聞いてください。それから話を聞いて、1〜4の中から 一番いいものを 1つ選んでください。",
-              "options": [
-                "1",
-                "2",
-                "3",
-                "4"
-              ],
-              "correct": 2,
-              "transcript": "山田さん 昨日は何をしましたか 年間に行きました 公園のそばの年間ですね 面白い本を読みましたか",
-              "explanation": "In Mondai 2 Q2, pay attention to the key detail asked in the question. Option 3 is the accurate answer."
-            },
-            {
-              "id": "n5-e3-l-10",
-              "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n5_listening/exam_03.mp3",
-              "audioStart": 264.1,
-              "audioEnd": 280.5,
-              "image": "/images/japanese/n5_listening/exam_03/q_10.png",
-              "question": "3. まず質問を聞いてください。それから話を聞いて、1〜4の中から 一番いいものを 1つ選んでください。",
-              "options": [
-                "1",
-                "2",
-                "3",
-                "4"
-              ],
-              "correct": 3,
-              "transcript": "面白い本を読みましたか いいえ 年間は鈴仕草て静かですから 寝ていました うちは熱くて 男の人は昨日何をしていましたか",
-              "explanation": "In Mondai 2 Q3, pay attention to the key detail asked in the question. Option 4 is the accurate answer."
-            },
-            {
-              "id": "n5-e3-l-11",
-              "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n5_listening/exam_03.mp3",
-              "audioStart": 280.5,
-              "audioEnd": 298.1,
-              "image": "/images/japanese/n5_listening/exam_03/q_11.png",
-              "question": "4. まず質問を聞いてください。それから話を聞いて、1〜4の中から 一番いいものを 1つ選んでください。",
-              "options": [
-                "1",
-                "2",
-                "3",
-                "4"
-              ],
-              "correct": 0,
-              "transcript": "第3回 日本語能力試験N5 聴解 問題2 4番の公式問題音声です。",
-              "explanation": "In Mondai 2 Q4, pay attention to the key detail asked in the question. Option 1 is the accurate answer."
-            },
-            {
-              "id": "n5-e3-l-12",
-              "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n5_listening/exam_03.mp3",
-              "audioStart": 298.1,
-              "audioEnd": 313.9,
-              "image": "/images/japanese/n5_listening/exam_03/q_12.png",
-              "question": "5. まず質問を聞いてください。それから話を聞いて、1〜4の中から 一番いいものを 1つ選んでください。",
-              "options": [
-                "1",
-                "2",
-                "3",
-                "4"
-              ],
-              "correct": 1,
-              "transcript": "五番 男の人と女の人が話しています 男の人はけさ 何で会社に来ましたか おはようございます",
-              "explanation": "In Mondai 2 Q5, pay attention to the key detail asked in the question. Option 2 is the accurate answer."
-            },
-            {
-              "id": "n5-e3-l-13",
-              "type": "Mondai 2 (ポイント理解)",
-              "audioSrc": "/audio/japanese/n5_listening/exam_03.mp3",
-              "audioStart": 313.9,
-              "audioEnd": 329.8,
-              "image": "/images/japanese/n5_listening/exam_03/q_13.png",
-              "question": "6. まず質問を聞いてください。それから話を聞いて、1〜4の中から 一番いいものを 1つ選んでください。",
-              "options": [
-                "1",
-                "2",
-                "3",
-                "4"
-              ],
-              "correct": 2,
-              "transcript": "おはようございます いつもバスで来ますか いえ いつも自転車ですが 今日は雨が降っていますから あ だからバスで 内は近いですか",
-              "explanation": "In Mondai 2 Q6, pay attention to the key detail asked in the question. Option 3 is the accurate answer."
-            },
-            {
-              "id": "n5-e3-l-14",
-              "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n5_listening/exam_03.mp3",
-              "audioStart": 378.6,
-              "audioEnd": 382.4,
-              "image": "/images/japanese/n5_listening/exam_03/q_14.png",
-              "question": "1. 絵を見ながら質問を聞いてください。矢印（➡）の人は 何と言いますか。1〜3の中から 1つ選んでください。",
-              "options": [
-                "1",
-                "2",
-                "3"
-              ],
-              "correct": 1,
-              "transcript": "いいえ 去年までは高校の先生でしたが",
-              "explanation": "In Mondai 3 Q1, observe the situation indicated by the arrow. Option 2 is the appropriate utterance in this situation."
-            },
-            {
-              "id": "n5-e3-l-15",
-              "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n5_listening/exam_03.mp3",
-              "audioStart": 382.4,
-              "audioEnd": 386.2,
-              "image": "/images/japanese/n5_listening/exam_03/q_15.png",
-              "question": "2. 絵を見ながら質問を聞いてください。矢印（➡）の人は 何と言いますか。1〜3の中から 1つ選んでください。",
-              "options": [
-                "1",
-                "2",
-                "3"
-              ],
-              "correct": 2,
-              "transcript": "今年から大学生になりました",
-              "explanation": "In Mondai 3 Q2, observe the situation indicated by the arrow. Option 3 is the appropriate utterance in this situation."
-            },
-            {
-              "id": "n5-e3-l-16",
-              "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n5_listening/exam_03.mp3",
-              "audioStart": 386.2,
-              "audioEnd": 390.1,
-              "image": "/images/japanese/n5_listening/exam_03/q_16.png",
-              "question": "3. 絵を見ながら質問を聞いてください。矢印（➡）の人は 何と言いますか。1〜3の中から 1つ選んでください。",
-              "options": [
-                "1",
-                "2",
-                "3"
-              ],
-              "correct": 0,
-              "transcript": "医者になる勉強をしています",
-              "explanation": "In Mondai 3 Q3, observe the situation indicated by the arrow. Option 1 is the appropriate utterance in this situation."
-            },
-            {
-              "id": "n5-e3-l-17",
-              "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n5_listening/exam_03.mp3",
-              "audioStart": 390.1,
-              "audioEnd": 393.9,
-              "image": "/images/japanese/n5_listening/exam_03/q_17.png",
-              "question": "4. 絵を見ながら質問を聞いてください。矢印（➡）の人は 何と言いますか。1〜3の中から 1つ選んでください。",
-              "options": [
-                "1",
-                "2",
-                "3"
-              ],
-              "correct": 1,
-              "transcript": "え 御者さんに それはすごいですね",
-              "explanation": "In Mondai 3 Q4, observe the situation indicated by the arrow. Option 2 is the appropriate utterance in this situation."
-            },
-            {
-              "id": "n5-e3-l-18",
-              "type": "Mondai 3 (発話表現)",
-              "audioSrc": "/audio/japanese/n5_listening/exam_03.mp3",
-              "audioStart": 393.9,
-              "audioEnd": 397.7,
-              "image": "/images/japanese/n5_listening/exam_03/q_18.png",
-              "question": "5. 絵を見ながら質問を聞いてください。矢印（➡）の人は 何と言いますか。1〜3の中から 1つ選んでください。",
-              "options": [
-                "1",
-                "2",
-                "3"
-              ],
-              "correct": 2,
-              "transcript": "第3回 日本語能力試験N5 聴解 問題3 5番の公式問題音声です。",
-              "explanation": "In Mondai 3 Q5, observe the situation indicated by the arrow. Option 3 is the appropriate utterance in this situation."
-            },
-            {
-              "id": "n5-e3-l-19",
-              "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n5_listening/exam_03.mp3",
-              "audioStart": 448.7,
-              "audioEnd": 454.8,
-              "image": "/images/japanese/n5_listening/exam_03/q_19.png",
-              "question": "1. 短い文を聞いて、1〜3の中から 一番いい返事を 1つ選んでください。",
-              "options": [
-                "1",
-                "2",
-                "3"
-              ],
-              "correct": 0,
-              "transcript": "いやー 疲れましたね",
-              "explanation": "In Mondai 4 Q1, respond immediately to the prompt. Option 1 is the natural conversational reply."
-            },
-            {
-              "id": "n5-e3-l-20",
-              "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n5_listening/exam_03.mp3",
-              "audioStart": 454.8,
-              "audioEnd": 460.8,
-              "image": "/images/japanese/n5_listening/exam_03/q_20.png",
-              "question": "2. 短い文を聞いて、1〜3の中から 一番いい返事を 1つ選んでください。",
-              "options": [
-                "1",
-                "2",
-                "3"
-              ],
-              "correct": 1,
-              "transcript": "この人は先週何日休みましたか",
-              "explanation": "In Mondai 4 Q2, respond immediately to the prompt. Option 2 is the natural conversational reply."
-            },
-            {
-              "id": "n5-e3-l-21",
-              "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n5_listening/exam_03.mp3",
-              "audioStart": 460.8,
-              "audioEnd": 466.9,
-              "image": "/images/japanese/n5_listening/exam_03/q_21.png",
-              "question": "3. 短い文を聞いて、1〜3の中から 一番いい返事を 1つ選んでください。",
-              "options": [
-                "1",
-                "2",
-                "3"
-              ],
-              "correct": 2,
-              "transcript": "第3回 日本語能力試験N5 聴解 問題4 3番の公式問題音声です。",
-              "explanation": "In Mondai 4 Q3, respond immediately to the prompt. Option 3 is the natural conversational reply."
-            },
-            {
-              "id": "n5-e3-l-22",
-              "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n5_listening/exam_03.mp3",
-              "audioStart": 466.9,
-              "audioEnd": 472.9,
-              "image": "/images/japanese/n5_listening/exam_03/q_22.png",
-              "question": "4. 短い文を聞いて、1〜3の中から 一番いい返事を 1つ選んでください。",
-              "options": [
-                "1",
-                "2",
-                "3"
-              ],
-              "correct": 0,
-              "transcript": "第3回 日本語能力試験N5 聴解 問題4 4番の公式問題音声です。",
-              "explanation": "In Mondai 4 Q4, respond immediately to the prompt. Option 1 is the natural conversational reply."
-            },
-            {
-              "id": "n5-e3-l-23",
-              "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n5_listening/exam_03.mp3",
-              "audioStart": 472.9,
-              "audioEnd": 479.0,
-              "image": "/images/japanese/n5_listening/exam_03/q_23.png",
-              "question": "5. 短い文を聞いて、1〜3の中から 一番いい返事を 1つ選んでください。",
-              "options": [
-                "1",
-                "2",
-                "3"
-              ],
-              "correct": 1,
-              "transcript": "第3回 日本語能力試験N5 聴解 問題4 5番の公式問題音声です。",
-              "explanation": "In Mondai 4 Q5, respond immediately to the prompt. Option 2 is the natural conversational reply."
-            },
-            {
-              "id": "n5-e3-l-24",
-              "type": "Mondai 4 (即時応答)",
-              "audioSrc": "/audio/japanese/n5_listening/exam_03.mp3",
-              "audioStart": 479.0,
-              "audioEnd": 485.0,
-              "image": "/images/japanese/n5_listening/exam_03/q_24.png",
-              "question": "6. 短い文を聞いて、1〜3の中から 一番いい返事を 1つ選んでください。",
-              "options": [
-                "1",
-                "2",
-                "3"
-              ],
-              "correct": 2,
-              "transcript": "これで 紹介試験を終わります",
-              "explanation": "In Mondai 4 Q6, respond immediately to the prompt. Option 3 is the natural conversational reply."
+              "explanation": "Mondai 1 Q7: Based on the spoken dialogue and task question, choice 3 is correct."
             }
           ]
         }
@@ -4789,10 +4494,10 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e4-l-1",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_04.mp3",
-              "audioStart": 163.6,
-              "audioEnd": 235.3,
+              "audioStart": 155.5,
+              "audioEnd": 229.5,
               "image": "/images/japanese/n5_listening/exam_04/q_01.png",
-              "question": "1. 録音を聞いて、問題用紙の1〜4の絵（選択肢）の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -4801,16 +4506,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "1番 旅行会社の人が学生に話しています 学生は始めに何をしますか 桜に本語学校の皆さん ここに来てください 今からみんなで写真を取ります 写真を取った後はフリータイムです ご飯を食べたりお寺を見たり 買い物をしたり好きなことをしてください 2時にまたここへ来てください では写真を取りましょう 学生は始めに何をしますか",
-              "explanation": "In Mondai 1 Q1, listen to the task question and the conversation. Option 2 represents the correct drawing/choice."
+              "explanation": "Mondai 1 Q1: Based on the spoken dialogue and task question, choice 2 is correct."
             },
             {
               "id": "n5-e4-l-2",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_04.mp3",
-              "audioStart": 235.3,
-              "audioEnd": 293.6,
+              "audioStart": 229.5,
+              "audioEnd": 289.5,
               "image": "/images/japanese/n5_listening/exam_04/q_02.png",
-              "question": "2. 録音を聞いて、問題用紙の1〜4の絵（選択肢）の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -4819,16 +4524,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "2番 デパートで 男の人と店の人が話しています 男の人は何回に行きますか あのーすびません メガネ売り場はどこですか 6回でございます 6回ですね あここは何回ですか 2回でございます あどうも 男の人は何回に行きますか",
-              "explanation": "In Mondai 1 Q2, listen to the task question and the conversation. Option 3 represents the correct drawing/choice."
+              "explanation": "Mondai 1 Q2: Based on the spoken dialogue and task question, choice 3 is correct."
             },
             {
               "id": "n5-e4-l-3",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_04.mp3",
-              "audioStart": 293.6,
-              "audioEnd": 372.2,
+              "audioStart": 289.5,
+              "audioEnd": 367.5,
               "image": "/images/japanese/n5_listening/exam_04/q_03.png",
-              "question": "3. 録音を聞いて、問題用紙の1〜4の絵（選択肢）の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -4837,16 +4542,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 3,
               "transcript": "3番 教室で先生が話しています 学生は明日どの本を持ってきますか 明日から日本語のクラスが始まります この日本語一は毎日使いますから 忘れないでください 2は今は使いません それから明日は火曜日ですから 漢字の順調もあります 漢字の本も持ってきてください 先生 この本は? その本は練習に使う本です うちで使ってください 学生は明日 どの本を持ってきますか",
-              "explanation": "In Mondai 1 Q3, listen to the task question and the conversation. Option 4 represents the correct drawing/choice."
+              "explanation": "Mondai 1 Q3: Based on the spoken dialogue and task question, choice 4 is correct."
             },
             {
               "id": "n5-e4-l-4",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_04.mp3",
-              "audioStart": 372.2,
-              "audioEnd": 425.2,
+              "audioStart": 367.5,
+              "audioEnd": 421.5,
               "image": "/images/japanese/n5_listening/exam_04/q_04.png",
-              "question": "4. 録音を聞いて、問題用紙の1〜4の絵（選択肢）の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -4855,16 +4560,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "4番 女の人と男の人が話しています 男の人は何をしますか この部屋熱いですね そうですね 窓を開けましょうか いえ今日は風が強いですから 窓を開けないでください エアコンをつけましょう そうですね 男の人は何をしますか",
-              "explanation": "In Mondai 1 Q4, listen to the task question and the conversation. Option 1 represents the correct drawing/choice."
+              "explanation": "Mondai 1 Q4: Based on the spoken dialogue and task question, choice 1 is correct."
             },
             {
               "id": "n5-e4-l-5",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_04.mp3",
-              "audioStart": 425.2,
-              "audioEnd": 496.7,
+              "audioStart": 421.5,
+              "audioEnd": 493.5,
               "image": "/images/japanese/n5_listening/exam_04/q_05.png",
-              "question": "5. 録音を聞いて、問題用紙の1〜4の絵（選択肢）の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -4873,16 +4578,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "5番 男の学生と女の学生が話しています 女の学生はどのカーテンを買いますか 明日は何をしますか カーテンを買います カーテンを? 小さいカーテンですか いえ大きいカーテンです 私の部屋に最初からありましたが あまり好きなデザインではありませんでした 花の絵で そうだしたか どんなカーテンにしますか 白で何も書いていないものにします 女の学生はどのカーテンを買いますか",
-              "explanation": "In Mondai 1 Q5, listen to the task question and the conversation. Option 2 represents the correct drawing/choice."
+              "explanation": "Mondai 1 Q5: Based on the spoken dialogue and task question, choice 2 is correct."
             },
             {
               "id": "n5-e4-l-6",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_04.mp3",
-              "audioStart": 496.7,
-              "audioEnd": 551.4,
+              "audioStart": 493.5,
+              "audioEnd": 547.5,
               "image": "/images/japanese/n5_listening/exam_04/q_06.png",
-              "question": "6. 録音を聞いて、問題用紙の1〜4の絵（選択肢）の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -4891,16 +4596,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "6番 車の後ろで 男の人と女の人が話しています 男の人はどのカバンを取りますか 花さんのカバンはどれ? その白いの これ? うん その横の ああこれ 結構大きいな 男の人はどのカバンを取りますか",
-              "explanation": "In Mondai 1 Q6, listen to the task question and the conversation. Option 3 represents the correct drawing/choice."
+              "explanation": "Mondai 1 Q6: Based on the spoken dialogue and task question, choice 3 is correct."
             },
             {
               "id": "n5-e4-l-7",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_04.mp3",
-              "audioStart": 551.4,
-              "audioEnd": 619.3,
+              "audioStart": 547.5,
+              "audioEnd": 746.5,
               "image": "/images/japanese/n5_listening/exam_04/q_07.png",
-              "question": "7. 録音を聞いて、問題用紙の1〜4の絵（選択肢）の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -4909,16 +4614,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 3,
               "transcript": "7番 駅で 女の人と駅員が話しています 女の人は何番ホームの電車に乗りますか すみません 一番ホームの電車は京都に行きますか 京都ですか いえ 一番ホームと二番ホームは大阪駅です 京都に行くのは3番と4番です 3番と4番ですね あでも今日は日曜日ですから 4番ホームの電車は京都には止まりません そうですか わかりました 女の人は 何番ホームの電車に乗りますか",
-              "explanation": "In Mondai 1 Q7, listen to the task question and the conversation. Option 4 represents the correct drawing/choice."
+              "explanation": "Mondai 1 Q7: Based on the spoken dialogue and task question, choice 4 is correct."
             },
             {
               "id": "n5-e4-l-8",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_04.mp3",
-              "audioStart": 756.6,
-              "audioEnd": 828.0,
+              "audioStart": 746.5,
+              "audioEnd": 823.5,
               "image": "/images/japanese/n5_listening/exam_04/q_08.png",
-              "question": "1. まず質問を聞いてください。それから話を聞いて、1〜4の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -4927,16 +4632,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "1番 有名曲で 女の人と 有名曲の人が話しています 女の人は いくら払いますか 80円のきってを2枚ください 80円のきってを2枚ですね 160円です あ それから ハガキ目ください 何枚ですか 5枚お願いします では ハガキが5枚で 250円ですから 全部で 410円です じゃあこれで ちょうどです 女の人は いくら払いますか",
-              "explanation": "In Mondai 2 Q1, pay attention to the key detail asked in the question. Option 3 is the accurate answer."
+              "explanation": "Mondai 2 Q1: Listen for the key detail asked in the question. Option 3 is correct."
             },
             {
               "id": "n5-e4-l-9",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_04.mp3",
-              "audioStart": 828.0,
-              "audioEnd": 899.9,
+              "audioStart": 823.5,
+              "audioEnd": 895.5,
               "image": "/images/japanese/n5_listening/exam_04/q_09.png",
-              "question": "2. まず質問を聞いてください。それから話を聞いて、1〜4の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -4945,16 +4650,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 3,
               "transcript": "2番 年間で 男の学生と 年間の人が話しています 男の学生は 本を 南撮かりましたか えーと かれるのはここでいいですか はい お願いします 7撮ですね あ すみません 学生の方は 5撮までです え そうですか えー 先生は10撮までですが わかりました じゃあ この2撮は いいです 男の学生は 本を 南撮かりましたか",
-              "explanation": "In Mondai 2 Q2, pay attention to the key detail asked in the question. Option 4 is the accurate answer."
+              "explanation": "Mondai 2 Q2: Listen for the key detail asked in the question. Option 4 is correct."
             },
             {
               "id": "n5-e4-l-10",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_04.mp3",
-              "audioStart": 899.9,
-              "audioEnd": 981.8,
+              "audioStart": 895.5,
+              "audioEnd": 976.5,
               "image": "/images/japanese/n5_listening/exam_04/q_10.png",
-              "question": "3. まず質問を聞いてください。それから話を聞いて、1〜4の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -4963,16 +4668,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "3番 女の人と 男の人が話しています 男の人は 大阪まで 何で 行きましたか お正月は どこかへ行きましたか 大阪の家へ帰りました 毎年 正月は 親と一緒に過ごします そうですか 大阪へは 何で行きますか 今回は バスを使いました いつもは車で行きますが 少し 疲れていましたから 新幹線や 飛行機は 新幹線は 便利ですが ちょっと高くて 飛行機は 空港がちょっと遠いですね そうですか 男の人は 大阪まで 何で行きましたか",
-              "explanation": "In Mondai 2 Q3, pay attention to the key detail asked in the question. Option 1 is the accurate answer."
+              "explanation": "Mondai 2 Q3: Listen for the key detail asked in the question. Option 1 is correct."
             },
             {
               "id": "n5-e4-l-11",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_04.mp3",
-              "audioStart": 981.8,
-              "audioEnd": 1052.9,
+              "audioStart": 976.5,
+              "audioEnd": 1048.5,
               "image": "/images/japanese/n5_listening/exam_04/q_11.png",
-              "question": "4. まず質問を聞いてください。それから話を聞いて、1〜4の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -4981,16 +4686,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "4番 女の学生と 男の学生が 話しています 女の学生は 明日 何時ごろ 学校へ行きますか 明日のテスト 早いですね そうですね 口はちょっと早いですね 田中さんは 何時に行きますか そうですね テストの 10分ぐらい前に行きます そうですか 私は 30分ぐらい前に来て 少し勉強します そうですか 女の学生は 明日 何時ごろ 学校へ行きますか",
-              "explanation": "In Mondai 2 Q4, pay attention to the key detail asked in the question. Option 2 is the accurate answer."
+              "explanation": "Mondai 2 Q4: Listen for the key detail asked in the question. Option 2 is correct."
             },
             {
               "id": "n5-e4-l-12",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_04.mp3",
-              "audioStart": 1052.9,
-              "audioEnd": 1118.6,
+              "audioStart": 1048.5,
+              "audioEnd": 1114.5,
               "image": "/images/japanese/n5_listening/exam_04/q_12.png",
-              "question": "5. まず質問を聞いてください。それから話を聞いて、1〜4の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -4999,16 +4704,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "5番 男の学生と 女の学生が 話しています 2人は いつ 映画を見に行きますか 今週 一緒に 映画を見に行きませんか 今週はちょっと 忙しくて そうですか でも 来週は大丈夫ですよ 火曜日か 水曜日はどうですか そうですか じゃあ 火曜日がいいです 水曜日は バイトがありますから いいですよ 2人は いつ 映画を見に行きますか",
-              "explanation": "In Mondai 2 Q5, pay attention to the key detail asked in the question. Option 3 is the accurate answer."
+              "explanation": "Mondai 2 Q5: Listen for the key detail asked in the question. Option 3 is correct."
             },
             {
               "id": "n5-e4-l-13",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_04.mp3",
-              "audioStart": 1118.6,
-              "audioEnd": 1203.3,
+              "audioStart": 1114.5,
+              "audioEnd": 1274.5,
               "image": "/images/japanese/n5_listening/exam_04/q_13.png",
-              "question": "6. まず質問を聞いてください。それから話を聞いて、1〜4の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -5017,16 +4722,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 3,
               "transcript": "6番 男の人と 女の人が 話しています 女の人は 明日 どこへ行きますか 山田さんは 休みの日 何をしますか そうですね 公園で ジョギングしたり デパートに買い物に行ったりします そうですか 明日は 何をしますか 明日は雨ですから 多分 年間で本を読みます 田中さんは 私は 友達と 映画を見に行きます そうですか 女の人は 明日 どこへ行きますか 問題さん 問題さんでは 絵を見ながら 質問を聞いてください 矢印の人は 何と言いますか",
-              "explanation": "In Mondai 2 Q6, pay attention to the key detail asked in the question. Option 4 is the accurate answer."
+              "explanation": "Mondai 2 Q6: Listen for the key detail asked in the question. Option 4 is correct."
             },
             {
               "id": "n5-e4-l-14",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_listening/exam_04.mp3",
-              "audioStart": 1282.7,
-              "audioEnd": 1323.6,
+              "audioStart": 1274.5,
+              "audioEnd": 1318.5,
               "image": "/images/japanese/n5_listening/exam_04/q_14.png",
-              "question": "1. 絵を見ながら質問を聞いてください。矢印（➡）の人は 何と言いますか。1〜3の中から 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -5034,16 +4739,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "1番 初めて会う人に 挨拶をします 何と言いますか 1 山田です よろしくお願いします 2 山田です どういたしまして 3 山田です こちらこそ",
-              "explanation": "In Mondai 3 Q1, observe the situation indicated by the arrow. Option 3 is the appropriate utterance in this situation."
+              "explanation": "Mondai 3 Q1: Observe the arrow (➡) in the illustration. Option 3 is the most appropriate spoken phrase."
             },
             {
               "id": "n5-e4-l-15",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_listening/exam_04.mp3",
-              "audioStart": 1323.6,
-              "audioEnd": 1357.6,
+              "audioStart": 1318.5,
+              "audioEnd": 1354.5,
               "image": "/images/japanese/n5_listening/exam_04/q_15.png",
-              "question": "2. 絵を見ながら質問を聞いてください。矢印（➡）の人は 何と言いますか。1〜3の中から 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -5051,16 +4756,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "2番 先生の部屋に入ります 何と言いますか 1 ただいま 2 入りました 3 失礼します",
-              "explanation": "In Mondai 3 Q2, observe the situation indicated by the arrow. Option 1 is the appropriate utterance in this situation."
+              "explanation": "Mondai 3 Q2: Observe the arrow (➡) in the illustration. Option 1 is the most appropriate spoken phrase."
             },
             {
               "id": "n5-e4-l-16",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_listening/exam_04.mp3",
-              "audioStart": 1357.6,
-              "audioEnd": 1407.0,
+              "audioStart": 1354.5,
+              "audioEnd": 1402.5,
               "image": "/images/japanese/n5_listening/exam_04/q_16.png",
-              "question": "3. 絵を見ながら質問を聞いてください。矢印（➡）の人は 何と言いますか。1〜3の中から 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -5068,16 +4773,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "3番 友達にお見上げを上げます 何と言いますか 1 これ 私の国のおかしです 1つもらいます 2 これ 私の国のおかしです 1つどうぞ 3 これ 私の国のおかしです 1つください",
-              "explanation": "In Mondai 3 Q3, observe the situation indicated by the arrow. Option 2 is the appropriate utterance in this situation."
+              "explanation": "Mondai 3 Q3: Observe the arrow (➡) in the illustration. Option 2 is the most appropriate spoken phrase."
             },
             {
               "id": "n5-e4-l-17",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_listening/exam_04.mp3",
-              "audioStart": 1407.0,
-              "audioEnd": 1445.9,
+              "audioStart": 1402.5,
+              "audioEnd": 1441.5,
               "image": "/images/japanese/n5_listening/exam_04/q_17.png",
-              "question": "4. 絵を見ながら質問を聞いてください。矢印（➡）の人は 何と言いますか。1〜3の中から 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -5085,16 +4790,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "4番 食堂です ここに座りたいです 何と言いますか 1 ここ いいですか 2 ここ 座りませんか 3 ここ 座りましょうか",
-              "explanation": "In Mondai 3 Q4, observe the situation indicated by the arrow. Option 3 is the appropriate utterance in this situation."
+              "explanation": "Mondai 3 Q4: Observe the arrow (➡) in the illustration. Option 3 is the most appropriate spoken phrase."
             },
             {
               "id": "n5-e4-l-18",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_listening/exam_04.mp3",
-              "audioStart": 1445.9,
-              "audioEnd": 1493.2,
+              "audioStart": 1441.5,
+              "audioEnd": 1568.5,
               "image": "/images/japanese/n5_listening/exam_04/q_18.png",
-              "question": "5. 絵を見ながら質問を聞いてください。矢印（➡）の人は 何と言いますか。1〜3の中から 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -5102,16 +4807,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "5番 食堂で友達と食べています 使用がほしいです 何と言いますか 1 すみません そこの使用を取ってください 2 すみません そこの使用を使いましょうか 3 すみません この使用を上げますか",
-              "explanation": "In Mondai 3 Q5, observe the situation indicated by the arrow. Option 1 is the appropriate utterance in this situation."
+              "explanation": "Mondai 3 Q5: Observe the arrow (➡) in the illustration. Option 1 is the most appropriate spoken phrase."
             },
             {
               "id": "n5-e4-l-19",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5_listening/exam_04.mp3",
-              "audioStart": 1576.6,
-              "audioEnd": 1605.0,
+              "audioStart": 1568.5,
+              "audioEnd": 1600.5,
               "image": "/images/japanese/n5_listening/exam_04/q_19.png",
-              "question": "1. 短い文を聞いて、1〜3の中から 一番いい返事を 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -5119,16 +4824,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "1番 今何時ですか 1 4月です 2 4日です 3 4時です",
-              "explanation": "In Mondai 4 Q1, respond immediately to the prompt. Option 2 is the natural conversational reply."
+              "explanation": "Mondai 4 Q1: Option 2 is the natural immediate conversational response."
             },
             {
               "id": "n5-e4-l-20",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5_listening/exam_04.mp3",
-              "audioStart": 1605.0,
-              "audioEnd": 1637.2,
+              "audioStart": 1600.5,
+              "audioEnd": 1633.5,
               "image": "/images/japanese/n5_listening/exam_04/q_20.png",
-              "question": "2. 短い文を聞いて、1〜3の中から 一番いい返事を 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -5136,16 +4841,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "2番 田中さんは大学はどこですか 1 不時大学です 2 東京にあります 3 東京へ来から近いです",
-              "explanation": "In Mondai 4 Q2, respond immediately to the prompt. Option 3 is the natural conversational reply."
+              "explanation": "Mondai 4 Q2: Option 3 is the natural immediate conversational response."
             },
             {
               "id": "n5-e4-l-21",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5_listening/exam_04.mp3",
-              "audioStart": 1637.2,
-              "audioEnd": 1666.7,
+              "audioStart": 1633.5,
+              "audioEnd": 1660.5,
               "image": "/images/japanese/n5_listening/exam_04/q_21.png",
-              "question": "3. 短い文を聞いて、1〜3の中から 一番いい返事を 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -5153,16 +4858,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "3番 旅行はどうでしたか 1 京都でした 2 楽しかったです 3 3日間でした",
-              "explanation": "In Mondai 4 Q3, respond immediately to the prompt. Option 1 is the natural conversational reply."
+              "explanation": "Mondai 4 Q3: Option 1 is the natural immediate conversational response."
             },
             {
               "id": "n5-e4-l-22",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5_listening/exam_04.mp3",
-              "audioStart": 1666.7,
-              "audioEnd": 1699.1,
+              "audioStart": 1660.5,
+              "audioEnd": 1693.5,
               "image": "/images/japanese/n5_listening/exam_04/q_22.png",
-              "question": "4. 短い文を聞いて、1〜3の中から 一番いい返事を 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -5170,16 +4875,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "4番 一緒に昼ご飯を食べませんか 1 いいですね 2 ええ食べません 3 ええ食べます",
-              "explanation": "In Mondai 4 Q4, respond immediately to the prompt. Option 2 is the natural conversational reply."
+              "explanation": "Mondai 4 Q4: Option 2 is the natural immediate conversational response."
             },
             {
               "id": "n5-e4-l-23",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5_listening/exam_04.mp3",
-              "audioStart": 1699.1,
-              "audioEnd": 1731.8,
+              "audioStart": 1693.5,
+              "audioEnd": 1726.5,
               "image": "/images/japanese/n5_listening/exam_04/q_23.png",
-              "question": "5. 短い文を聞いて、1〜3の中から 一番いい返事を 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -5187,16 +4892,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "5番 この薬はご飯の後に飲んでください 1 はい そうしましょう 2 はい お願いします 3 はい わかりました",
-              "explanation": "In Mondai 4 Q5, respond immediately to the prompt. Option 3 is the natural conversational reply."
+              "explanation": "Mondai 4 Q5: Option 3 is the natural immediate conversational response."
             },
             {
               "id": "n5-e4-l-24",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5_listening/exam_04.mp3",
-              "audioStart": 1731.8,
-              "audioEnd": 1769.6,
+              "audioStart": 1726.5,
+              "audioEnd": 1781.5,
               "image": "/images/japanese/n5_listening/exam_04/q_24.png",
-              "question": "6. 短い文を聞いて、1〜3の中から 一番いい返事を 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -5204,7 +4909,7 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "6番 この車どこのですか 1 赤いのです 2 私のです 3 2本のです これで 紹介試験を終わります",
-              "explanation": "In Mondai 4 Q6, respond immediately to the prompt. Option 1 is the natural conversational reply."
+              "explanation": "Mondai 4 Q6: Option 1 is the natural immediate conversational response."
             }
           ]
         }
@@ -6091,10 +5796,10 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e5-l-1",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_05.mp3",
-              "audioStart": 113.1,
-              "audioEnd": 159.1,
+              "audioStart": 50.5,
+              "audioEnd": 103.5,
               "image": "/images/japanese/n5_listening/exam_05/q_01.png",
-              "question": "1. 録音を聞いて、問題用紙の1〜4の絵（選択肢）の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -6103,16 +5808,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "日曜日女の人は海へ行く前に何をしますか 日曜日僕の車で海へ行きませんか インターネットでいいところがありましたから いいですねじゃあ私オベントを作りますね 飲み物も ああオベントですか嬉しいなぁ でも飲み物は思いですからいいですよ そうですかじゃあ掃除します 日曜日女の人は海へ行く前に 何をしますか 3番 先生が学生に話しています",
-              "explanation": "In Mondai 1 Q1, listen to the task question and the conversation. Option 3 represents the correct drawing/choice."
+              "explanation": "Mondai 1 Q1: Based on the spoken dialogue and task question, choice 3 is correct."
             },
             {
               "id": "n5-e5-l-2",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_05.mp3",
-              "audioStart": 159.1,
-              "audioEnd": 205.1,
+              "audioStart": 103.5,
+              "audioEnd": 163.5,
               "image": "/images/japanese/n5_listening/exam_05/q_02.png",
-              "question": "2. 録音を聞いて、問題用紙の1〜4の絵（選択肢）の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -6121,16 +5826,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 3,
               "transcript": "これから学生はどの順番でしますか 今から神しばいを作ります 先生神しばいは何ですか 初めにお話を考えてください それからこの髪に絵を書いて後ろにお話を書いてください えっとお話を書いた後でこの絵を見せながらお話を読みます いいですか はいこれから学生はどの順番でしますか",
-              "explanation": "In Mondai 1 Q2, listen to the task question and the conversation. Option 4 represents the correct drawing/choice."
+              "explanation": "Mondai 1 Q2: Based on the spoken dialogue and task question, choice 4 is correct."
             },
             {
               "id": "n5-e5-l-3",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_05.mp3",
-              "audioStart": 205.1,
-              "audioEnd": 221.8,
+              "audioStart": 163.5,
+              "audioEnd": 217.5,
               "image": "/images/japanese/n5_listening/exam_05/q_03.png",
-              "question": "3. 録音を聞いて、問題用紙の1〜4の絵（選択肢）の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -6139,16 +5844,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "第5回 日本語能力試験N5 聴解 問題1 3番の公式問題音声です。",
-              "explanation": "In Mondai 1 Q3, listen to the task question and the conversation. Option 1 represents the correct drawing/choice."
+              "explanation": "Mondai 1 Q3: Based on the spoken dialogue and task question, choice 1 is correct."
             },
             {
               "id": "n5-e5-l-4",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_05.mp3",
-              "audioStart": 221.8,
-              "audioEnd": 256.6,
+              "audioStart": 217.5,
+              "audioEnd": 268.5,
               "image": "/images/japanese/n5_listening/exam_05/q_04.png",
-              "question": "4. 録音を聞いて、問題用紙の1〜4の絵（選択肢）の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -6157,16 +5862,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "4番 男の人と女の人が電話で話しています 2人は明日どこで会いますか 明日のポンサーとは4時からですから 3時半に駅で会いましょう 駅は人が多いですから海上の 入り口はどうですか 外は寒いですよ そうですねじゃあ入り口 じゃなくて中に入って待っていてください 分かりました",
-              "explanation": "In Mondai 1 Q4, listen to the task question and the conversation. Option 2 represents the correct drawing/choice."
+              "explanation": "Mondai 1 Q4: Based on the spoken dialogue and task question, choice 2 is correct."
             },
             {
               "id": "n5-e5-l-5",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_05.mp3",
-              "audioStart": 256.6,
-              "audioEnd": 301.1,
+              "audioStart": 268.5,
+              "audioEnd": 313.5,
               "image": "/images/japanese/n5_listening/exam_05/q_05.png",
-              "question": "5. 録音を聞いて、問題用紙の1〜4の絵（選択肢）の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -6175,16 +5880,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "2人は明日どこで会いますか 五番 女の人と男の人が話しています 女の人は誰と共討へ行きますか 来週共討へ旅行に行きます いいですね一人で いいえ母とあねと一緒に行きます お父さんは 父は仕事が忙しいですから そうですか",
-              "explanation": "In Mondai 1 Q5, listen to the task question and the conversation. Option 3 represents the correct drawing/choice."
+              "explanation": "Mondai 1 Q5: Based on the spoken dialogue and task question, choice 3 is correct."
             },
             {
               "id": "n5-e5-l-6",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_05.mp3",
-              "audioStart": 301.1,
-              "audioEnd": 372.5,
+              "audioStart": 313.5,
+              "audioEnd": 367.5,
               "image": "/images/japanese/n5_listening/exam_05/q_06.png",
-              "question": "6. 録音を聞いて、問題用紙の1〜4の絵（選択肢）の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -6193,16 +5898,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 3,
               "transcript": "女の人は誰と共討へ行きますか 六番 教室で先生が話しています この学生は机の上に何を置きますか 今からテストをしますから机の上のものは 幅に入れてください 先生 鉛筆と決使もも幅に入れますか いいえそれは机の上においてください 先生 時計は時計はいいですが携帯電話はだめですよ はい分かりました この学生は机の上に何を置きますか",
-              "explanation": "In Mondai 1 Q6, listen to the task question and the conversation. Option 4 represents the correct drawing/choice."
+              "explanation": "Mondai 1 Q6: Based on the spoken dialogue and task question, choice 4 is correct."
             },
             {
               "id": "n5-e5-l-7",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_05.mp3",
-              "audioStart": 372.5,
-              "audioEnd": 435.0,
+              "audioStart": 367.5,
+              "audioEnd": 446.5,
               "image": "/images/japanese/n5_listening/exam_05/q_07.png",
-              "question": "7. 録音を聞いて、問題用紙の1〜4の絵（選択肢）の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -6211,16 +5916,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "七番 男の人と女の人が話しています 男の人は女の人といつどこへ行きますか 鈴木さん僕明日友達と山へ行きますが 一緒に行きませんか とても綺麗な山ですよ 住みません明日は山田さんとコンサート に行きますから そうですか残念だな じゃあ朝っての日曜日に一緒に食事 をしましょう えじゃあ朝って男の人は女の人といつどこへ行きますか 問題に 問題二では初めに質問を聞いてください",
-              "explanation": "In Mondai 1 Q7, listen to the task question and the conversation. Option 1 represents the correct drawing/choice."
+              "explanation": "Mondai 1 Q7: Based on the spoken dialogue and task question, choice 1 is correct."
             },
             {
               "id": "n5-e5-l-8",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_05.mp3",
-              "audioStart": 522.0,
-              "audioEnd": 564.0,
+              "audioStart": 446.5,
+              "audioEnd": 499.5,
               "image": "/images/japanese/n5_listening/exam_05/q_08.png",
-              "question": "1. まず質問を聞いてください。それから話を聞いて、1〜4の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -6229,16 +5934,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 3,
               "transcript": "ええそうです左側にありますよ 右に行って左ですね ありがとうございましたABホテルはどこにありますか 三番 男の人と女の人が話しています 女の人はいつからアルバイトをしますか",
-              "explanation": "In Mondai 2 Q1, pay attention to the key detail asked in the question. Option 4 is the accurate answer."
+              "explanation": "Mondai 2 Q1: Listen for the key detail asked in the question. Option 4 is correct."
             },
             {
               "id": "n5-e5-l-9",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_05.mp3",
-              "audioStart": 564.0,
-              "audioEnd": 606.1,
+              "audioStart": 499.5,
+              "audioEnd": 553.5,
               "image": "/images/japanese/n5_listening/exam_05/q_09.png",
-              "question": "2. まず質問を聞いてください。それから話を聞いて、1〜4の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -6247,16 +5952,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "じゃあよろしくお願いします 明日から来てください え明日はちょっとじゃあ朝っての木曜日からは 住みませんが来週からお願いします わかりましたじゃあ来週月曜日から来てください はい女の人はいつからアルバイトをしますか",
-              "explanation": "In Mondai 2 Q2, pay attention to the key detail asked in the question. Option 1 is the accurate answer."
+              "explanation": "Mondai 2 Q2: Listen for the key detail asked in the question. Option 1 is correct."
             },
             {
               "id": "n5-e5-l-10",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_05.mp3",
-              "audioStart": 606.1,
-              "audioEnd": 608.8,
+              "audioStart": 553.5,
+              "audioEnd": 604.5,
               "image": "/images/japanese/n5_listening/exam_05/q_10.png",
-              "question": "3. まず質問を聞いてください。それから話を聞いて、1〜4の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -6265,16 +5970,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "第5回 日本語能力試験N5 聴解 問題2 3番の公式問題音声です。",
-              "explanation": "In Mondai 2 Q3, pay attention to the key detail asked in the question. Option 2 is the accurate answer."
+              "explanation": "Mondai 2 Q3: Listen for the key detail asked in the question. Option 2 is correct."
             },
             {
               "id": "n5-e5-l-11",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_05.mp3",
-              "audioStart": 608.8,
-              "audioEnd": 648.4,
+              "audioStart": 604.5,
+              "audioEnd": 661.5,
               "image": "/images/japanese/n5_listening/exam_05/q_11.png",
-              "question": "4. まず質問を聞いてください。それから話を聞いて、1〜4の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -6283,16 +5988,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "四番 男の人と女の人が話しています 女の人は毎日何時間インターネットをしますか ああ疲れた朝から元気がないね 昨日の場遅くまでゲームをしていたから うんいつもは3時間くらいだけど 昨日は5時間やったからちょっと疲れたよ そう私も毎日2時間くらいインターネットするけど ゲームは全然しない そう面白いよ",
-              "explanation": "In Mondai 2 Q4, pay attention to the key detail asked in the question. Option 3 is the accurate answer."
+              "explanation": "Mondai 2 Q4: Listen for the key detail asked in the question. Option 3 is correct."
             },
             {
               "id": "n5-e5-l-12",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_05.mp3",
-              "audioStart": 648.4,
-              "audioEnd": 710.8,
+              "audioStart": 661.5,
+              "audioEnd": 706.5,
               "image": "/images/japanese/n5_listening/exam_05/q_12.png",
-              "question": "5. まず質問を聞いてください。それから話を聞いて、1〜4の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -6301,16 +6006,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 3,
               "transcript": "女の人は毎日何時間インターネットをしますか 五番 先生が話しています 試験の答えはなんで書きますか 今から試験をします 試験の答えは鉛筆で書いてください ペインやボールペインは使わないでください 間違えたところは消しゴムで綺麗に消してください わかりましたか はい試験の答えはなんで書きますか",
-              "explanation": "In Mondai 2 Q5, pay attention to the key detail asked in the question. Option 4 is the accurate answer."
+              "explanation": "Mondai 2 Q5: Listen for the key detail asked in the question. Option 4 is correct."
             },
             {
               "id": "n5-e5-l-13",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_05.mp3",
-              "audioStart": 710.8,
-              "audioEnd": 774.1,
+              "audioStart": 706.5,
+              "audioEnd": 788.5,
               "image": "/images/japanese/n5_listening/exam_05/q_13.png",
-              "question": "6. まず質問を聞いてください。それから話を聞いて、1〜4の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -6319,16 +6024,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "6番 女の人が電話で男の人に住所を聞いています 正しい住所はどれですか もしもしそちらの住所ですが 東島地一の12の12ですよね いや東島地じゃなくて西島地です 西島地の12の13です あそうですか西島地の12の13です はい そうです ありがとうございました 正しい住所はどれですか",
-              "explanation": "In Mondai 2 Q6, pay attention to the key detail asked in the question. Option 1 is the accurate answer."
+              "explanation": "Mondai 2 Q6: Listen for the key detail asked in the question. Option 1 is correct."
             },
             {
               "id": "n5-e5-l-14",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_listening/exam_05.mp3",
-              "audioStart": 845.8,
-              "audioEnd": 872.4,
+              "audioStart": 788.5,
+              "audioEnd": 832.5,
               "image": "/images/japanese/n5_listening/exam_05/q_14.png",
-              "question": "1. 絵を見ながら質問を聞いてください。矢印（➡）の人は 何と言いますか。1〜3の中から 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -6336,16 +6041,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "2 今日の会議何時からですか 3 今日の会議誰が出ますか",
-              "explanation": "In Mondai 3 Q1, observe the situation indicated by the arrow. Option 1 is the appropriate utterance in this situation."
+              "explanation": "Mondai 3 Q1: Observe the arrow (➡) in the illustration. Option 1 is the most appropriate spoken phrase."
             },
             {
               "id": "n5-e5-l-15",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_listening/exam_05.mp3",
-              "audioStart": 872.4,
-              "audioEnd": 880.7,
+              "audioStart": 832.5,
+              "audioEnd": 877.5,
               "image": "/images/japanese/n5_listening/exam_05/q_15.png",
-              "question": "2. 絵を見ながら質問を聞いてください。矢印（➡）の人は 何と言いますか。1〜3の中から 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -6353,16 +6058,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "第5回 日本語能力試験N5 聴解 問題3 2番の公式問題音声です。",
-              "explanation": "In Mondai 3 Q2, observe the situation indicated by the arrow. Option 2 is the appropriate utterance in this situation."
+              "explanation": "Mondai 3 Q2: Observe the arrow (➡) in the illustration. Option 2 is the most appropriate spoken phrase."
             },
             {
               "id": "n5-e5-l-16",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_listening/exam_05.mp3",
-              "audioStart": 880.7,
-              "audioEnd": 920.4,
+              "audioStart": 877.5,
+              "audioEnd": 916.5,
               "image": "/images/japanese/n5_listening/exam_05/q_16.png",
-              "question": "3. 絵を見ながら質問を聞いてください。矢印（➡）の人は 何と言いますか。1〜3の中から 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -6370,16 +6075,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "3番 パン屋でパンを買います 店の人に何と言いますか 1 このパンください 2 このパン買ってください 3 このパン買いますか",
-              "explanation": "In Mondai 3 Q3, observe the situation indicated by the arrow. Option 3 is the appropriate utterance in this situation."
+              "explanation": "Mondai 3 Q3: Observe the arrow (➡) in the illustration. Option 3 is the most appropriate spoken phrase."
             },
             {
               "id": "n5-e5-l-17",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_listening/exam_05.mp3",
-              "audioStart": 920.4,
-              "audioEnd": 960.5,
+              "audioStart": 916.5,
+              "audioEnd": 955.5,
               "image": "/images/japanese/n5_listening/exam_05/q_17.png",
-              "question": "4. 絵を見ながら質問を聞いてください。矢印（➡）の人は 何と言いますか。1〜3の中から 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -6387,16 +6092,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "4番 友達の本を借りたいです 友達に何と言いますか 一その本もらってください 2 その本借りてください 3 その本貸してください",
-              "explanation": "In Mondai 3 Q4, observe the situation indicated by the arrow. Option 1 is the appropriate utterance in this situation."
+              "explanation": "Mondai 3 Q4: Observe the arrow (➡) in the illustration. Option 1 is the most appropriate spoken phrase."
             },
             {
               "id": "n5-e5-l-18",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_listening/exam_05.mp3",
-              "audioStart": 960.5,
-              "audioEnd": 978.9,
+              "audioStart": 955.5,
+              "audioEnd": 1013.5,
               "image": "/images/japanese/n5_listening/exam_05/q_18.png",
-              "question": "5. 絵を見ながら質問を聞いてください。矢印（➡）の人は 何と言いますか。1〜3の中から 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -6404,16 +6109,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "5番 友達が旅行から帰ってきました 友達に何と言いますか 一 旅行どれにした",
-              "explanation": "In Mondai 3 Q5, observe the situation indicated by the arrow. Option 2 is the appropriate utterance in this situation."
+              "explanation": "Mondai 3 Q5: Observe the arrow (➡) in the illustration. Option 2 is the most appropriate spoken phrase."
             },
             {
               "id": "n5-e5-l-19",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5_listening/exam_05.mp3",
-              "audioStart": 1055.2,
-              "audioEnd": 1086.5,
+              "audioStart": 1013.5,
+              "audioEnd": 1054.5,
               "image": "/images/japanese/n5_listening/exam_05/q_19.png",
-              "question": "1. 短い文を聞いて、1〜3の中から 一番いい返事を 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -6421,16 +6126,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "お腹が隙ましたね 1 そうですね食事にしましょう 2 そうですよお腹ですよ 3 そうですね好きですよ 3番 キムラさん映画上手ですね",
-              "explanation": "In Mondai 4 Q1, respond immediately to the prompt. Option 3 is the natural conversational reply."
+              "explanation": "Mondai 4 Q1: Option 3 is the natural immediate conversational response."
             },
             {
               "id": "n5-e5-l-20",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5_listening/exam_05.mp3",
-              "audioStart": 1086.5,
-              "audioEnd": 1117.8,
+              "audioStart": 1054.5,
+              "audioEnd": 1090.5,
               "image": "/images/japanese/n5_listening/exam_05/q_20.png",
-              "question": "2. 短い文を聞いて、1〜3の中から 一番いい返事を 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -6438,16 +6143,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "1 いいえ好きですね 2え 減ったですか 3",
-              "explanation": "In Mondai 4 Q2, respond immediately to the prompt. Option 1 is the natural conversational reply."
+              "explanation": "Mondai 4 Q2: Option 1 is the natural immediate conversational response."
             },
             {
               "id": "n5-e5-l-21",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5_listening/exam_05.mp3",
-              "audioStart": 1117.8,
-              "audioEnd": 1120.9,
+              "audioStart": 1090.5,
+              "audioEnd": 1129.5,
               "image": "/images/japanese/n5_listening/exam_05/q_21.png",
-              "question": "3. 短い文を聞いて、1〜3の中から 一番いい返事を 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -6455,16 +6160,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "第5回 日本語能力試験N5 聴解 問題4 3番の公式問題音声です。",
-              "explanation": "In Mondai 4 Q3, respond immediately to the prompt. Option 2 is the natural conversational reply."
+              "explanation": "Mondai 4 Q3: Option 2 is the natural immediate conversational response."
             },
             {
               "id": "n5-e5-l-22",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5_listening/exam_05.mp3",
-              "audioStart": 1120.9,
-              "audioEnd": 1139.7,
+              "audioStart": 1129.5,
+              "audioEnd": 1162.5,
               "image": "/images/japanese/n5_listening/exam_05/q_22.png",
-              "question": "4. 短い文を聞いて、1〜3の中から 一番いい返事を 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -6472,16 +6177,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "ありがとうございます 4番 新宿までなんで行きますか",
-              "explanation": "In Mondai 4 Q4, respond immediately to the prompt. Option 3 is the natural conversational reply."
+              "explanation": "Mondai 4 Q4: Option 3 is the natural immediate conversational response."
             },
             {
               "id": "n5-e5-l-23",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5_listening/exam_05.mp3",
-              "audioStart": 1139.7,
-              "audioEnd": 1182.5,
+              "audioStart": 1162.5,
+              "audioEnd": 1198.5,
               "image": "/images/japanese/n5_listening/exam_05/q_23.png",
-              "question": "5. 短い文を聞いて、1〜3の中から 一番いい返事を 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -6489,16 +6194,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "1 友達と行きます 2 明日行きます 3 バスで行きます 5番 日本語の勉強はどうですか 1 はい日本語の勉強です",
-              "explanation": "In Mondai 4 Q5, respond immediately to the prompt. Option 1 is the natural conversational reply."
+              "explanation": "Mondai 4 Q5: Option 1 is the natural immediate conversational response."
             },
             {
               "id": "n5-e5-l-24",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5_listening/exam_05.mp3",
-              "audioStart": 1182.5,
-              "audioEnd": 1242.9,
+              "audioStart": 1198.5,
+              "audioEnd": 1253.5,
               "image": "/images/japanese/n5_listening/exam_05/q_24.png",
-              "question": "6. 短い文を聞いて、1〜3の中から 一番いい返事を 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -6506,7 +6211,7 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "2 多分面白いです 3 はいこれです 6番 あの人をどれ1 あの人よ2 私よ3 高橋さんよ これで紹介試験を終わります",
-              "explanation": "In Mondai 4 Q6, respond immediately to the prompt. Option 2 is the natural conversational reply."
+              "explanation": "Mondai 4 Q6: Option 2 is the natural immediate conversational response."
             }
           ]
         }
@@ -7393,10 +7098,10 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e6-l-1",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_06.mp3",
-              "audioStart": 87.5,
-              "audioEnd": 130.8,
+              "audioStart": 56.5,
+              "audioEnd": 127.5,
               "image": "/images/japanese/n5_listening/exam_06/q_01.png",
-              "question": "1. 録音を聞いて、問題用紙の1〜4の絵（選択肢）の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -7405,16 +7110,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 3,
               "transcript": "街には日本で一番古いホテルがあります 綺麗な公園もあります 明日は学校に来てから行きますか いや 駅に来てください 8時半に待っています 学生は明日の朝どこで先生に会いますか",
-              "explanation": "In Mondai 1 Q1, listen to the task question and the conversation. Option 4 represents the correct drawing/choice."
+              "explanation": "Mondai 1 Q1: Based on the spoken dialogue and task question, choice 4 is correct."
             },
             {
               "id": "n5-e6-l-2",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_06.mp3",
-              "audioStart": 130.8,
-              "audioEnd": 166.3,
+              "audioStart": 127.5,
+              "audioEnd": 181.5,
               "image": "/images/japanese/n5_listening/exam_06/q_02.png",
-              "question": "2. 録音を聞いて、問題用紙の1〜4の絵（選択肢）の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -7423,16 +7128,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "2番 学校で男の学生と女の先生が話しています 男の学生は 椅子をどこに置きますか 先生 この椅子はどこに置きますか 机の左側に置いてください はい 窓のそばですね そうです どうもありがとう",
-              "explanation": "In Mondai 1 Q2, listen to the task question and the conversation. Option 1 represents the correct drawing/choice."
+              "explanation": "Mondai 1 Q2: Based on the spoken dialogue and task question, choice 1 is correct."
             },
             {
               "id": "n5-e6-l-3",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_06.mp3",
-              "audioStart": 166.3,
-              "audioEnd": 248.6,
+              "audioStart": 181.5,
+              "audioEnd": 244.5,
               "image": "/images/japanese/n5_listening/exam_06/q_03.png",
-              "question": "3. 録音を聞いて、問題用紙の1〜4の絵（選択肢）の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -7441,16 +7146,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "男の学生は椅子をどこに置きますか 三番 教室で女の先生と男の学生が話しています 男の学生はどの本を持ってきますか すみません あそこの机の上の本を持ってきてください はい 先生 どの本ですか 黒い本ですか いいえ 白い本です 暑い本ですか いいえ 薄い本です わかりました 男の学生は どの本を持ってきますか",
-              "explanation": "In Mondai 1 Q3, listen to the task question and the conversation. Option 2 represents the correct drawing/choice."
+              "explanation": "Mondai 1 Q3: Based on the spoken dialogue and task question, choice 2 is correct."
             },
             {
               "id": "n5-e6-l-4",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_06.mp3",
-              "audioStart": 248.6,
-              "audioEnd": 287.0,
+              "audioStart": 244.5,
+              "audioEnd": 307.5,
               "image": "/images/japanese/n5_listening/exam_06/q_04.png",
-              "question": "4. 録音を聞いて、問題用紙の1〜4の絵（選択肢）の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -7459,16 +7164,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "4番 女の人が男の人に道を聞いています 桜ビルはどこですか すみません あの桜ビルへ行きたいです 桜ビルはどこですか 桜ビルですね この道を真っすぐ行ってください あそこに大きいデパートがありますね その向こうです この道の右側ですね",
-              "explanation": "In Mondai 1 Q4, listen to the task question and the conversation. Option 3 represents the correct drawing/choice."
+              "explanation": "Mondai 1 Q4: Based on the spoken dialogue and task question, choice 3 is correct."
             },
             {
               "id": "n5-e6-l-5",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_06.mp3",
-              "audioStart": 287.0,
-              "audioEnd": 375.3,
+              "audioStart": 307.5,
+              "audioEnd": 370.5,
               "image": "/images/japanese/n5_listening/exam_06/q_05.png",
-              "question": "5. 録音を聞いて、問題用紙の1〜4の絵（選択肢）の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -7477,16 +7182,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 3,
               "transcript": "ありがとうございます 桜ビルはどこですか 五番 花屋で店の人と男の人が話しています 店の人は花をどうしますか いらっしゃいませ すみません この花を日本ください はい これですね プレゼントですか はい あすみません もう一本お願いします はい リボンはどうしますか リボンですか 入りません わかりました 店の人は花をどうしますか",
-              "explanation": "In Mondai 1 Q5, listen to the task question and the conversation. Option 4 represents the correct drawing/choice."
+              "explanation": "Mondai 1 Q5: Based on the spoken dialogue and task question, choice 4 is correct."
             },
             {
               "id": "n5-e6-l-6",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_06.mp3",
-              "audioStart": 375.3,
-              "audioEnd": 448.6,
+              "audioStart": 370.5,
+              "audioEnd": 442.5,
               "image": "/images/japanese/n5_listening/exam_06/q_06.png",
-              "question": "6. 録音を聞いて、問題用紙の1〜4の絵（選択肢）の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -7495,16 +7200,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "6番 男の人と女の人が話しています 女の人は何を持っていきますか 山田さん 来週の日曜日 緑幸園の想像をします 近くに住んでいる人がたくさん来ますよ 山田さんも来てください わかりました 何を持っていきますか 熱いですから 防止を忘れないでください それから 皆さんのお茶は私が持っていきますから カップを持って来てください よろしくお願いします はい 女の人は何を持っていきますか",
-              "explanation": "In Mondai 1 Q6, listen to the task question and the conversation. Option 1 represents the correct drawing/choice."
+              "explanation": "Mondai 1 Q6: Based on the spoken dialogue and task question, choice 1 is correct."
             },
             {
               "id": "n5-e6-l-7",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_06.mp3",
-              "audioStart": 448.6,
-              "audioEnd": 489.2,
+              "audioStart": 442.5,
+              "audioEnd": 557.5,
               "image": "/images/japanese/n5_listening/exam_06/q_07.png",
-              "question": "7. 録音を聞いて、問題用紙の1〜4の絵（選択肢）の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -7513,16 +7218,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "7番 女の人がバス会社の人と話しています 女の人はどのバスに乗りますか すみません 一番のバスは山川へきへ行きますか いえ 山川へきは2番と3番と4番のバスですよ でも4番は土曜日と日曜日のバスですから 今日はありません あ 3番のバスが来ました あれに乗ります あ すぐ2番のバスが来ますよ",
-              "explanation": "In Mondai 1 Q7, listen to the task question and the conversation. Option 2 represents the correct drawing/choice."
+              "explanation": "Mondai 1 Q7: Based on the spoken dialogue and task question, choice 2 is correct."
             },
             {
               "id": "n5-e6-l-8",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_06.mp3",
-              "audioStart": 566.4,
-              "audioEnd": 603.3,
+              "audioStart": 557.5,
+              "audioEnd": 619.5,
               "image": "/images/japanese/n5_listening/exam_06/q_08.png",
-              "question": "1. まず質問を聞いてください。それから話を聞いて、1〜4の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -7531,16 +7236,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "1番 男の学生と女の学生が話しています 男の学生は 防止を誰にもらいましたか 防止です おはよう おはよう リンさん 綺麗な色のセーターですね 単純美にアニットアネにもらいました この防止もプレゼントです 父がくれました いいですね",
-              "explanation": "In Mondai 2 Q1, pay attention to the key detail asked in the question. Option 1 is the accurate answer."
+              "explanation": "Mondai 2 Q1: Listen for the key detail asked in the question. Option 1 is correct."
             },
             {
               "id": "n5-e6-l-9",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_06.mp3",
-              "audioStart": 603.3,
-              "audioEnd": 668.1,
+              "audioStart": 619.5,
+              "audioEnd": 682.5,
               "image": "/images/japanese/n5_listening/exam_06/q_09.png",
-              "question": "2. まず質問を聞いてください。それから話を聞いて、1〜4の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -7549,16 +7254,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "男の学生は防止を誰にもらいましたか 2番 男の学生は ダンス教室で山田先生が話しています 山田先生のクラスは何曜日ですか 皆さん 始めまして山田です 同僧宜しくお願いします 今日からダンスのクラスが始まります 私は月曜日に教えます 目標と金曜は他の先生が教えます 火曜と水曜はクラスはありません",
-              "explanation": "In Mondai 2 Q2, pay attention to the key detail asked in the question. Option 2 is the accurate answer."
+              "explanation": "Mondai 2 Q2: Listen for the key detail asked in the question. Option 2 is correct."
             },
             {
               "id": "n5-e6-l-10",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_06.mp3",
-              "audioStart": 668.1,
-              "audioEnd": 728.1,
+              "audioStart": 682.5,
+              "audioEnd": 742.5,
               "image": "/images/japanese/n5_listening/exam_06/q_10.png",
-              "question": "3. まず質問を聞いてください。それから話を聞いて、1〜4の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -7567,16 +7272,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "山田先生のクラスは何曜日ですか 三番 うちで女の人と男の人が話しています 男の人はどこを掃除しますか 男の人です 明日はうちでパーティーだね 私は現感を掃除してから大所を掃除するね トイレの掃除をお願い トイレはもう掃除をしたよ じゃあにはの掃除をしてから買い物に行くね",
-              "explanation": "In Mondai 2 Q3, pay attention to the key detail asked in the question. Option 3 is the accurate answer."
+              "explanation": "Mondai 2 Q3: Listen for the key detail asked in the question. Option 3 is correct."
             },
             {
               "id": "n5-e6-l-11",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_06.mp3",
-              "audioStart": 728.1,
-              "audioEnd": 790.8,
+              "audioStart": 742.5,
+              "audioEnd": 805.5,
               "image": "/images/japanese/n5_listening/exam_06/q_11.png",
-              "question": "4. まず質問を聞いてください。それから話を聞いて、1〜4の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -7585,16 +7290,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 3,
               "transcript": "男の人はどこを掃除しますか 4番 ホテルで先生が学生に話しています 学生の部屋は何回ですか えー皆さん このホテルは一回と二回にレストランがあります お風呂は一番上の10回にあります 皆さんの部屋は8回です えー今から部屋に行って自分の荷物を置いてください それから二回のレストランに来てください",
-              "explanation": "In Mondai 2 Q4, pay attention to the key detail asked in the question. Option 4 is the accurate answer."
+              "explanation": "Mondai 2 Q4: Listen for the key detail asked in the question. Option 4 is correct."
             },
             {
               "id": "n5-e6-l-12",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_06.mp3",
-              "audioStart": 790.8,
-              "audioEnd": 854.3,
+              "audioStart": 805.5,
+              "audioEnd": 868.5,
               "image": "/images/japanese/n5_listening/exam_06/q_12.png",
-              "question": "5. まず質問を聞いてください。それから話を聞いて、1〜4の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -7603,16 +7308,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "学生の部屋は何回ですか 五番 女の人と男の人が話しています 男の人は昨日何をしましたか 男の人です 昨日の日曜日風が強くて寒かったですね えー毎週日曜日は友達とテニスをしていますが 昨日は宇宙で本を読みました 買い物も行きませんでした 私も昨日は家でテレビを見たり本を読んだりしました",
-              "explanation": "In Mondai 2 Q5, pay attention to the key detail asked in the question. Option 1 is the accurate answer."
+              "explanation": "Mondai 2 Q5: Listen for the key detail asked in the question. Option 1 is correct."
             },
             {
               "id": "n5-e6-l-13",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_06.mp3",
-              "audioStart": 854.3,
-              "audioEnd": 950.5,
+              "audioStart": 868.5,
+              "audioEnd": 983.5,
               "image": "/images/japanese/n5_listening/exam_06/q_13.png",
-              "question": "6. まず質問を聞いてください。それから話を聞いて、1〜4の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -7621,16 +7326,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "男の人は昨日何をしましたか 六番 デパートで女の人と男の人が話しています 二人は何時にデグチの前で会いますか 田中さん この後私はスカートを見たいです そうですか じゃあ私は本を見に行きます 今から一時間ぐらい自分が好きなものを見て それからデパートのデグチの前で会いましょう 今七時二十分ですから八時二十分にデグチの前で会いませんか でもこのデパートは八時にしまりますよ あそうですか それじゃあ八時五分前に会いましょう 二人は何時にデグチの前で会いますか",
-              "explanation": "In Mondai 2 Q6, pay attention to the key detail asked in the question. Option 2 is the accurate answer."
+              "explanation": "Mondai 2 Q6: Listen for the key detail asked in the question. Option 2 is correct."
             },
             {
               "id": "n5-e6-l-14",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_listening/exam_06.mp3",
-              "audioStart": 1019.8,
-              "audioEnd": 1045.1,
+              "audioStart": 983.5,
+              "audioEnd": 1021.5,
               "image": "/images/japanese/n5_listening/exam_06/q_14.png",
-              "question": "1. 絵を見ながら質問を聞いてください。矢印（➡）の人は 何と言いますか。1〜3の中から 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -7638,16 +7343,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "時計がありません 時間が知りたいです 何と言いますか 一 あの いくらいですか 二 あのどのぐらいですか",
-              "explanation": "In Mondai 3 Q1, observe the situation indicated by the arrow. Option 2 is the appropriate utterance in this situation."
+              "explanation": "Mondai 3 Q1: Observe the arrow (➡) in the illustration. Option 2 is the most appropriate spoken phrase."
             },
             {
               "id": "n5-e6-l-15",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_listening/exam_06.mp3",
-              "audioStart": 1045.1,
-              "audioEnd": 1065.0,
+              "audioStart": 1021.5,
+              "audioEnd": 1060.5,
               "image": "/images/japanese/n5_listening/exam_06/q_15.png",
-              "question": "2. 絵を見ながら質問を聞いてください。矢印（➡）の人は 何と言いますか。1〜3の中から 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -7655,16 +7360,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "三 あの今何時ですか",
-              "explanation": "In Mondai 3 Q2, observe the situation indicated by the arrow. Option 3 is the appropriate utterance in this situation."
+              "explanation": "Mondai 3 Q2: Observe the arrow (➡) in the illustration. Option 3 is the most appropriate spoken phrase."
             },
             {
               "id": "n5-e6-l-16",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_listening/exam_06.mp3",
-              "audioStart": 1065.0,
-              "audioEnd": 1101.1,
+              "audioStart": 1060.5,
+              "audioEnd": 1096.5,
               "image": "/images/japanese/n5_listening/exam_06/q_16.png",
-              "question": "3. 絵を見ながら質問を聞いてください。矢印（➡）の人は 何と言いますか。1〜3の中から 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -7672,16 +7377,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "三番 昼ごはんを食べます 座りたいです 何と言いますか 一 座りませんでしたか 二 ドノイスですか 三 ここいいですか",
-              "explanation": "In Mondai 3 Q3, observe the situation indicated by the arrow. Option 1 is the appropriate utterance in this situation."
+              "explanation": "Mondai 3 Q3: Observe the arrow (➡) in the illustration. Option 1 is the most appropriate spoken phrase."
             },
             {
               "id": "n5-e6-l-17",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_listening/exam_06.mp3",
-              "audioStart": 1101.1,
-              "audioEnd": 1136.1,
+              "audioStart": 1096.5,
+              "audioEnd": 1132.5,
               "image": "/images/japanese/n5_listening/exam_06/q_17.png",
-              "question": "4. 絵を見ながら質問を聞いてください。矢印（➡）の人は 何と言いますか。1〜3の中から 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -7689,16 +7394,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "四番 おかしいをあげたいです 何と言いますか 一 これ何ですか 二 これいかがですか 三 これどうしてですか",
-              "explanation": "In Mondai 3 Q4, observe the situation indicated by the arrow. Option 2 is the appropriate utterance in this situation."
+              "explanation": "Mondai 3 Q4: Observe the arrow (➡) in the illustration. Option 2 is the most appropriate spoken phrase."
             },
             {
               "id": "n5-e6-l-18",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_listening/exam_06.mp3",
-              "audioStart": 1136.1,
-              "audioEnd": 1146.2,
+              "audioStart": 1132.5,
+              "audioEnd": 1193.5,
               "image": "/images/japanese/n5_listening/exam_06/q_18.png",
-              "question": "5. 絵を見ながら質問を聞いてください。矢印（➡）の人は 何と言いますか。1〜3の中から 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -7706,16 +7411,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "五番 カメラを見たいです 店の人に何と言いますか 一 このカメラを見せたいです",
-              "explanation": "In Mondai 3 Q5, observe the situation indicated by the arrow. Option 3 is the appropriate utterance in this situation."
+              "explanation": "Mondai 3 Q5: Observe the arrow (➡) in the illustration. Option 3 is the most appropriate spoken phrase."
             },
             {
               "id": "n5-e6-l-19",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5_listening/exam_06.mp3",
-              "audioStart": 1204.1,
-              "audioEnd": 1233.5,
+              "audioStart": 1193.5,
+              "audioEnd": 1228.5,
               "image": "/images/japanese/n5_listening/exam_06/q_19.png",
-              "question": "1. 短い文を聞いて、1〜3の中から 一番いい返事を 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -7723,16 +7428,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "一番 学校まで何できますか 一 一人できます 二 口にきます 三 自転車できます",
-              "explanation": "In Mondai 4 Q1, respond immediately to the prompt. Option 1 is the natural conversational reply."
+              "explanation": "Mondai 4 Q1: Option 1 is the natural immediate conversational response."
             },
             {
               "id": "n5-e6-l-20",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5_listening/exam_06.mp3",
-              "audioStart": 1233.5,
-              "audioEnd": 1262.7,
+              "audioStart": 1228.5,
+              "audioEnd": 1258.5,
               "image": "/images/japanese/n5_listening/exam_06/q_20.png",
-              "question": "2. 短い文を聞いて、1〜3の中から 一番いい返事を 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -7740,16 +7445,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "二番 この座子 誰のですか 一 日本語のです 二 五 サツです 三 私のです",
-              "explanation": "In Mondai 4 Q2, respond immediately to the prompt. Option 2 is the natural conversational reply."
+              "explanation": "Mondai 4 Q2: Option 2 is the natural immediate conversational response."
             },
             {
               "id": "n5-e6-l-21",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5_listening/exam_06.mp3",
-              "audioStart": 1262.7,
-              "audioEnd": 1294.1,
+              "audioStart": 1258.5,
+              "audioEnd": 1288.5,
               "image": "/images/japanese/n5_listening/exam_06/q_21.png",
-              "question": "3. 短い文を聞いて、1〜3の中から 一番いい返事を 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -7757,16 +7462,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "三番 鈴木先生 作家はいくつ並べますか 一 三 三です 二 え 並べましょう 三 教室です",
-              "explanation": "In Mondai 4 Q3, respond immediately to the prompt. Option 3 is the natural conversational reply."
+              "explanation": "Mondai 4 Q3: Option 3 is the natural immediate conversational response."
             },
             {
               "id": "n5-e6-l-22",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5_listening/exam_06.mp3",
-              "audioStart": 1294.1,
-              "audioEnd": 1326.2,
+              "audioStart": 1288.5,
+              "audioEnd": 1321.5,
               "image": "/images/japanese/n5_listening/exam_06/q_22.png",
-              "question": "4. 短い文を聞いて、1〜3の中から 一番いい返事を 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -7774,16 +7479,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "四番 あそこにいる 髪が長い人は誰ですか 一 都でも長いです 二 ドアの近くにいます 三 私の妹です",
-              "explanation": "In Mondai 4 Q4, respond immediately to the prompt. Option 1 is the natural conversational reply."
+              "explanation": "Mondai 4 Q4: Option 1 is the natural immediate conversational response."
             },
             {
               "id": "n5-e6-l-23",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5_listening/exam_06.mp3",
-              "audioStart": 1326.2,
-              "audioEnd": 1357.6,
+              "audioStart": 1321.5,
+              "audioEnd": 1354.5,
               "image": "/images/japanese/n5_listening/exam_06/q_23.png",
-              "question": "5. 短い文を聞いて、1〜3の中から 一番いい返事を 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -7791,16 +7496,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "五番 来週の日曜日 どこかへ行きますか 一 そうですか 二 山に登ります 三 電車でいきます",
-              "explanation": "In Mondai 4 Q5, respond immediately to the prompt. Option 2 is the natural conversational reply."
+              "explanation": "Mondai 4 Q5: Option 2 is the natural immediate conversational response."
             },
             {
               "id": "n5-e6-l-24",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5_listening/exam_06.mp3",
-              "audioStart": 1357.6,
-              "audioEnd": 1397.8,
+              "audioStart": 1354.5,
+              "audioEnd": 1409.5,
               "image": "/images/japanese/n5_listening/exam_06/q_24.png",
-              "question": "6. 短い文を聞いて、1〜3の中から 一番いい返事を 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -7808,7 +7513,7 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "六番 田中さんは子供の時 よく本を読みましたか 一 毎週都初間に行きます 二 あまり読みませんでした 三 時々本を読みます これで 紹介試験を終わります",
-              "explanation": "In Mondai 4 Q6, respond immediately to the prompt. Option 3 is the natural conversational reply."
+              "explanation": "Mondai 4 Q6: Option 3 is the natural immediate conversational response."
             }
           ]
         }
@@ -8695,10 +8400,10 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e7-l-1",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_07.mp3",
-              "audioStart": 163.6,
-              "audioEnd": 220.4,
+              "audioStart": 155.5,
+              "audioEnd": 214.5,
               "image": "/images/japanese/n5_listening/exam_07/q_01.png",
-              "question": "1. 録音を聞いて、問題用紙の1〜4の絵（選択肢）の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -8707,16 +8412,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "1番 デパートで 男の人と 店の人が話しています 男の人はどこへ行きますか あのーすみません お手洗いはどこですか お手洗いはあちらの階段の横にございます カバンウリバの向こうですね ええ 分かりました どうも 男の人はどこへ行きますか",
-              "explanation": "In Mondai 1 Q1, listen to the task question and the conversation. Option 1 represents the correct drawing/choice."
+              "explanation": "Mondai 1 Q1: Based on the spoken dialogue and task question, choice 1 is correct."
             },
             {
               "id": "n5-e7-l-2",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_07.mp3",
-              "audioStart": 220.4,
-              "audioEnd": 298.3,
+              "audioStart": 214.5,
+              "audioEnd": 292.5,
               "image": "/images/japanese/n5_listening/exam_07/q_02.png",
-              "question": "2. 録音を聞いて、問題用紙の1〜4の絵（選択肢）の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -8725,16 +8430,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "2番 教室で先生が話しています 学生は初めに どのページをあけますか 今から 日本語のテストをします テストは全部で 4ページあります 1ページは 聞く問題です 2ページから 4ページは 各問題で 4ページには 漢字の問題もあります 初めに 聞く問題をします 時間は10分です では問題をあけてください 学生は初めに どのページをあけますか",
-              "explanation": "In Mondai 1 Q2, listen to the task question and the conversation. Option 2 represents the correct drawing/choice."
+              "explanation": "Mondai 1 Q2: Based on the spoken dialogue and task question, choice 2 is correct."
             },
             {
               "id": "n5-e7-l-3",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_07.mp3",
-              "audioStart": 298.3,
-              "audioEnd": 374.9,
+              "audioStart": 292.5,
+              "audioEnd": 370.5,
               "image": "/images/japanese/n5_listening/exam_07/q_03.png",
-              "question": "3. 録音を聞いて、問題用紙の1〜4の絵（選択肢）の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -8743,16 +8448,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "3番 学校で 女の学生と 男の学生が話しています 女の学生は どの先生のところへ行きますか 山田さん この髪は書いたあと どの先生に出しますか 田中先生ですよ 田中先生 男の先生ですか 女の先生ですか 男の先生です 目が寝をかけていて せが高い先生です そうですか じゃああとで田中先生のところに 持っていきます 女の学生は どの先生のところへ行きますか",
-              "explanation": "In Mondai 1 Q3, listen to the task question and the conversation. Option 3 represents the correct drawing/choice."
+              "explanation": "Mondai 1 Q3: Based on the spoken dialogue and task question, choice 3 is correct."
             },
             {
               "id": "n5-e7-l-4",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_07.mp3",
-              "audioStart": 374.9,
-              "audioEnd": 462.0,
+              "audioStart": 370.5,
+              "audioEnd": 457.5,
               "image": "/images/japanese/n5_listening/exam_07/q_04.png",
-              "question": "4. 録音を聞いて、問題用紙の1〜4の絵（選択肢）の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -8761,16 +8466,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 3,
               "transcript": "4番 店で 女の人と男の人が話しています 男の人は どの反価値を買いますか 山田さんの娘さんの 誕生日プレゼント 反価値にしませんか ああ いいですね このピンクの花のは どうですか 女の子は好きだと思いますよ ああ こっちの子どものがいろいろ書いてあるのも 可愛いですね どっちもいいですね あ これはどうですか 山田さんの家 犬が二匹いますよね ええ 丁度これと同じですよ 黒いのと白いのです いいですね これにしましょう じゃあ 買ってきますね 男の人は どの反価値を買いますか",
-              "explanation": "In Mondai 1 Q4, listen to the task question and the conversation. Option 4 represents the correct drawing/choice."
+              "explanation": "Mondai 1 Q4: Based on the spoken dialogue and task question, choice 4 is correct."
             },
             {
               "id": "n5-e7-l-5",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_07.mp3",
-              "audioStart": 462.0,
-              "audioEnd": 524.5,
+              "audioStart": 457.5,
+              "audioEnd": 520.5,
               "image": "/images/japanese/n5_listening/exam_07/q_05.png",
-              "question": "5. 録音を聞いて、問題用紙の1〜4の絵（選択肢）の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -8779,16 +8484,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "5番 学校で先生と学生が話しています 学生は 椅子をどう並べますか 明日この教室でスピーチコンテストをしますから 椅子を並べてください はい どう並べますか 横にむつ 縦にやつ並べてください 横にむつ 縦にやつですね わかりました 学生は椅子をどう並べますか",
-              "explanation": "In Mondai 1 Q5, listen to the task question and the conversation. Option 1 represents the correct drawing/choice."
+              "explanation": "Mondai 1 Q5: Based on the spoken dialogue and task question, choice 1 is correct."
             },
             {
               "id": "n5-e7-l-6",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_07.mp3",
-              "audioStart": 524.5,
-              "audioEnd": 579.0,
+              "audioStart": 520.5,
+              "audioEnd": 574.5,
               "image": "/images/japanese/n5_listening/exam_07/q_06.png",
-              "question": "6. 録音を聞いて、問題用紙の1〜4の絵（選択肢）の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -8797,16 +8502,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "6番 病院で病院の人と女の人が話しています 女の人はどこに座りますか 山田さん はい じゃあ名前を呼びますから それまであそこの椅子でちょっと待っていてください あの窓のそばのおそばですか ええ そうです 女の人は どこに座りますか",
-              "explanation": "In Mondai 1 Q6, listen to the task question and the conversation. Option 2 represents the correct drawing/choice."
+              "explanation": "Mondai 1 Q6: Based on the spoken dialogue and task question, choice 2 is correct."
             },
             {
               "id": "n5-e7-l-7",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_07.mp3",
-              "audioStart": 579.0,
-              "audioEnd": 618.2,
+              "audioStart": 574.5,
+              "audioEnd": 785.5,
               "image": "/images/japanese/n5_listening/exam_07/q_07.png",
-              "question": "7. 録音を聞いて、問題用紙の1〜4の絵（選択肢）の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -8815,16 +8520,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "7番 学校で 男の学生と学校の人が話しています 男の学生は 何時頃にもう一度来ますか すみません 山田先生はいますか いいえ まだ来ていませんが そうですか 何時頃に行きますか もうすぐ来ますよ 10時から順要がありますから そうですか あの",
-              "explanation": "In Mondai 1 Q7, listen to the task question and the conversation. Option 3 represents the correct drawing/choice."
+              "explanation": "Mondai 1 Q7: Based on the spoken dialogue and task question, choice 3 is correct."
             },
             {
               "id": "n5-e7-l-8",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_07.mp3",
-              "audioStart": 794.4,
-              "audioEnd": 855.0,
+              "audioStart": 785.5,
+              "audioEnd": 850.5,
               "image": "/images/japanese/n5_listening/exam_07/q_08.png",
-              "question": "1. まず質問を聞いてください。それから話を聞いて、1〜4の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -8833,16 +8538,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "1番 男の人と女の人が話しています 女の人の誕生日はいつですか きれいな花ですね えい 誕生日に友達にもらいました へいいつですか おとといです 11日です そうですか え じゃあ1が4つ並びますね えい そうですよ 女の人の誕生日はいつですか",
-              "explanation": "In Mondai 2 Q1, pay attention to the key detail asked in the question. Option 2 is the accurate answer."
+              "explanation": "Mondai 2 Q1: Listen for the key detail asked in the question. Option 2 is correct."
             },
             {
               "id": "n5-e7-l-9",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_07.mp3",
-              "audioStart": 855.0,
-              "audioEnd": 928.1,
+              "audioStart": 850.5,
+              "audioEnd": 922.5,
               "image": "/images/japanese/n5_listening/exam_07/q_09.png",
-              "question": "2. まず質問を聞いてください。それから話を聞いて、1〜4の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -8851,16 +8556,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "2番 大学で男の学生と女の学生が話しています 2人はどこで食べますか 山田さんお昼一緒に食べませんか いいですよ じゃあ 学生食堂が新しくなったから 行きませんか そうですね でも今日は天気がいいから外で食べたいです 朝からずっと教室の中にいましたから じゃあお店でパンカを弁当を買って 桜公園まで行きましょうか えい そうしましょう 2人はどこで食べますか",
-              "explanation": "In Mondai 2 Q2, pay attention to the key detail asked in the question. Option 3 is the accurate answer."
+              "explanation": "Mondai 2 Q2: Listen for the key detail asked in the question. Option 3 is correct."
             },
             {
               "id": "n5-e7-l-10",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_07.mp3",
-              "audioStart": 928.1,
-              "audioEnd": 992.3,
+              "audioStart": 922.5,
+              "audioEnd": 988.5,
               "image": "/images/japanese/n5_listening/exam_07/q_10.png",
-              "question": "3. まず質問を聞いてください。それから話を聞いて、1〜4の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -8869,16 +8574,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 3,
               "transcript": "3番 レストランで女の人と店の人が話しています 女の人は何を食べますか すみません これはトリニクですか いえ こちらは豚肉でございます そうですか これは こちらは魚です そうですか あのー トリニクの料理はありませんか はい こちらです じゃあ これをお願いします 女の人は何を食べますか",
-              "explanation": "In Mondai 2 Q3, pay attention to the key detail asked in the question. Option 4 is the accurate answer."
+              "explanation": "Mondai 2 Q3: Listen for the key detail asked in the question. Option 4 is correct."
             },
             {
               "id": "n5-e7-l-11",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_07.mp3",
-              "audioStart": 992.3,
-              "audioEnd": 1051.2,
+              "audioStart": 988.5,
+              "audioEnd": 1060.5,
               "image": "/images/japanese/n5_listening/exam_07/q_11.png",
-              "question": "4. まず質問を聞いてください。それから話を聞いて、1〜4の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -8887,16 +8592,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "4番 大学で男の学生と女の学生が話しています 明日のパーティーに先生は何人来ますか 明日のおクラスのパーティーには全部で何人くらい行きますか えっと 来ない人が3人いますから 全部で24人です そうですか 先生たちも来ますか え 山田先生と田中先生が来ます 川島先生は 川島先生は来ないと言っていました そうですか 明日のパーティーに先生は何人来ますか",
-              "explanation": "In Mondai 2 Q4, pay attention to the key detail asked in the question. Option 1 is the accurate answer."
+              "explanation": "Mondai 2 Q4: Listen for the key detail asked in the question. Option 1 is correct."
             },
             {
               "id": "n5-e7-l-12",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_07.mp3",
-              "audioStart": 1051.2,
-              "audioEnd": 1149.2,
+              "audioStart": 1060.5,
+              "audioEnd": 1144.5,
               "image": "/images/japanese/n5_listening/exam_07/q_12.png",
-              "question": "5. まず質問を聞いてください。それから話を聞いて、1〜4の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -8905,16 +8610,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "5番 男の人と女の人が話しています 明日の5号 女の人はどこへ行きますか 明日の5号 一緒にヘガを見に行きませんか すみません明日はちょっと 忙しいですか え 午前は病院へ行ったり 荷物を出しに有名曲へ行ったりします 午後は山田先生の順行のレポートを書きます 月曜日に出しますから え そのレポート出すのは金曜日までですよ 本当ですか じゃあ私も笑顔を見に行きたいです じゃあ行きましょう 明日の5号 女の人はどこへ行きますか",
-              "explanation": "In Mondai 2 Q5, pay attention to the key detail asked in the question. Option 2 is the accurate answer."
+              "explanation": "Mondai 2 Q5: Listen for the key detail asked in the question. Option 2 is correct."
             },
             {
               "id": "n5-e7-l-13",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_07.mp3",
-              "audioStart": 1149.2,
-              "audioEnd": 1201.1,
+              "audioStart": 1144.5,
+              "audioEnd": 1307.5,
               "image": "/images/japanese/n5_listening/exam_07/q_13.png",
-              "question": "6. まず質問を聞いてください。それから話を聞いて、1〜4の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -8923,16 +8628,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "6番 パーティーで 男の人と女の人が話しています 女の人は何を飲みますか あ 山田さん飲み物がありませんね 何を飲みますか ビールとワイン あと ジュースとお茶がありますけど あの 午日はありませんか うん 午日はありませんね そうですか 暖かいものはありませんか あ あたたかいお茶はできますよ そうですか じゃあそれをお願いします",
-              "explanation": "In Mondai 2 Q6, pay attention to the key detail asked in the question. Option 3 is the accurate answer."
+              "explanation": "Mondai 2 Q6: Listen for the key detail asked in the question. Option 3 is correct."
             },
             {
               "id": "n5-e7-l-14",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_listening/exam_07.mp3",
-              "audioStart": 1317.0,
-              "audioEnd": 1336.1,
+              "audioStart": 1307.5,
+              "audioEnd": 1342.5,
               "image": "/images/japanese/n5_listening/exam_07/q_14.png",
-              "question": "1. 絵を見ながら質問を聞いてください。矢印（➡）の人は 何と言いますか。1〜3の中から 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -8940,16 +8645,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "1番 寝ます 他の人に何と言いますか 1 お疲れ様 2 おやすみなさい 3",
-              "explanation": "In Mondai 3 Q1, observe the situation indicated by the arrow. Option 3 is the appropriate utterance in this situation."
+              "explanation": "Mondai 3 Q1: Observe the arrow (➡) in the illustration. Option 3 is the most appropriate spoken phrase."
             },
             {
               "id": "n5-e7-l-15",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_listening/exam_07.mp3",
-              "audioStart": 1336.1,
-              "audioEnd": 1380.5,
+              "audioStart": 1342.5,
+              "audioEnd": 1375.5,
               "image": "/images/japanese/n5_listening/exam_07/q_15.png",
-              "question": "2. 絵を見ながら質問を聞いてください。矢印（➡）の人は 何と言いますか。1〜3の中から 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -8957,16 +8662,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "またした2番 学校へ出かけます 家族に何と言いますか 1 失礼します 2 今いきます 3 行ってきます",
-              "explanation": "In Mondai 3 Q2, observe the situation indicated by the arrow. Option 1 is the appropriate utterance in this situation."
+              "explanation": "Mondai 3 Q2: Observe the arrow (➡) in the illustration. Option 1 is the most appropriate spoken phrase."
             },
             {
               "id": "n5-e7-l-16",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_listening/exam_07.mp3",
-              "audioStart": 1380.5,
-              "audioEnd": 1417.1,
+              "audioStart": 1375.5,
+              "audioEnd": 1411.5,
               "image": "/images/japanese/n5_listening/exam_07/q_16.png",
-              "question": "3. 絵を見ながら質問を聞いてください。矢印（➡）の人は 何と言いますか。1〜3の中から 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -8974,16 +8679,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "3番 電車に乗ります 東京まで何分で行くか聞きたいです 何と言いますか 1 どのぐらいかかりますか 2 いくらですか 3 今何時ですか",
-              "explanation": "In Mondai 3 Q3, observe the situation indicated by the arrow. Option 2 is the appropriate utterance in this situation."
+              "explanation": "Mondai 3 Q3: Observe the arrow (➡) in the illustration. Option 2 is the most appropriate spoken phrase."
             },
             {
               "id": "n5-e7-l-17",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_listening/exam_07.mp3",
-              "audioStart": 1417.1,
-              "audioEnd": 1456.1,
+              "audioStart": 1411.5,
+              "audioEnd": 1450.5,
               "image": "/images/japanese/n5_listening/exam_07/q_17.png",
-              "question": "4. 絵を見ながら質問を聞いてください。矢印（➡）の人は 何と言いますか。1〜3の中から 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -8991,16 +8696,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "4番 タクシーの中です どこへ行きたいか言います 何と言いますか 1 近くの駅までお願いします 2 近くの駅まで行きます 3 近くの駅まで来てください",
-              "explanation": "In Mondai 3 Q4, observe the situation indicated by the arrow. Option 3 is the appropriate utterance in this situation."
+              "explanation": "Mondai 3 Q4: Observe the arrow (➡) in the illustration. Option 3 is the most appropriate spoken phrase."
             },
             {
               "id": "n5-e7-l-18",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_listening/exam_07.mp3",
-              "audioStart": 1456.1,
-              "audioEnd": 1491.9,
+              "audioStart": 1450.5,
+              "audioEnd": 1565.5,
               "image": "/images/japanese/n5_listening/exam_07/q_18.png",
-              "question": "5. 絵を見ながら質問を聞いてください。矢印（➡）の人は 何と言いますか。1〜3の中から 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -9008,16 +8713,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "5番 きさてにいます コーヒーを飲みたいです 何と言いますか 1 コーヒーをお願いします 2 コーヒーを取ってください 3 コーヒーがあります",
-              "explanation": "In Mondai 3 Q5, observe the situation indicated by the arrow. Option 1 is the appropriate utterance in this situation."
+              "explanation": "Mondai 3 Q5: Observe the arrow (➡) in the illustration. Option 1 is the most appropriate spoken phrase."
             },
             {
               "id": "n5-e7-l-19",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5_listening/exam_07.mp3",
-              "audioStart": 1575.3,
-              "audioEnd": 1606.4,
+              "audioStart": 1565.5,
+              "audioEnd": 1600.5,
               "image": "/images/japanese/n5_listening/exam_07/q_19.png",
-              "question": "1. 短い文を聞いて、1〜3の中から 一番いい返事を 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -9025,16 +8730,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "1番 あの方はどなたですか 1 とても親切な人です 2 いいえ違います 3 山田先生です",
-              "explanation": "In Mondai 4 Q1, respond immediately to the prompt. Option 2 is the natural conversational reply."
+              "explanation": "Mondai 4 Q1: Option 2 is the natural immediate conversational response."
             },
             {
               "id": "n5-e7-l-20",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5_listening/exam_07.mp3",
-              "audioStart": 1606.4,
-              "audioEnd": 1636.0,
+              "audioStart": 1600.5,
+              "audioEnd": 1630.5,
               "image": "/images/japanese/n5_listening/exam_07/q_20.png",
-              "question": "2. 短い文を聞いて、1〜3の中から 一番いい返事を 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -9042,16 +8747,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "2番 お父さんはお幾つですか 1 ええそうです 2 50枚です 3 50歳です",
-              "explanation": "In Mondai 4 Q2, respond immediately to the prompt. Option 3 is the natural conversational reply."
+              "explanation": "Mondai 4 Q2: Option 3 is the natural immediate conversational response."
             },
             {
               "id": "n5-e7-l-21",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5_listening/exam_07.mp3",
-              "audioStart": 1636.0,
-              "audioEnd": 1667.1,
+              "audioStart": 1630.5,
+              "audioEnd": 1663.5,
               "image": "/images/japanese/n5_listening/exam_07/q_21.png",
-              "question": "3. 短い文を聞いて、1〜3の中から 一番いい返事を 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -9059,16 +8764,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "3番 日本料理は何が好きですか 1 おいしいです 2 テンプラが好きです 3 時々食べます",
-              "explanation": "In Mondai 4 Q3, respond immediately to the prompt. Option 1 is the natural conversational reply."
+              "explanation": "Mondai 4 Q3: Option 1 is the natural immediate conversational response."
             },
             {
               "id": "n5-e7-l-22",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5_listening/exam_07.mp3",
-              "audioStart": 1667.1,
-              "audioEnd": 1697.7,
+              "audioStart": 1663.5,
+              "audioEnd": 1693.5,
               "image": "/images/japanese/n5_listening/exam_07/q_22.png",
-              "question": "4. 短い文を聞いて、1〜3の中から 一番いい返事を 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -9076,16 +8781,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "4番 窓を開けましょうか 1 ええお願いします 2 ええ開けますね 3 いえ開けてください",
-              "explanation": "In Mondai 4 Q4, respond immediately to the prompt. Option 2 is the natural conversational reply."
+              "explanation": "Mondai 4 Q4: Option 2 is the natural immediate conversational response."
             },
             {
               "id": "n5-e7-l-23",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5_listening/exam_07.mp3",
-              "audioStart": 1697.7,
-              "audioEnd": 1728.8,
+              "audioStart": 1693.5,
+              "audioEnd": 1723.5,
               "image": "/images/japanese/n5_listening/exam_07/q_23.png",
-              "question": "5. 短い文を聞いて、1〜3の中から 一番いい返事を 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -9093,16 +8798,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "5番 すみません オレンジジュースをお願いします 1 結構です 2 かしこまりました 3 はい おいしいです",
-              "explanation": "In Mondai 4 Q5, respond immediately to the prompt. Option 3 is the natural conversational reply."
+              "explanation": "Mondai 4 Q5: Option 3 is the natural immediate conversational response."
             },
             {
               "id": "n5-e7-l-24",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5_listening/exam_07.mp3",
-              "audioStart": 1728.8,
-              "audioEnd": 1766.3,
+              "audioStart": 1723.5,
+              "audioEnd": 1778.5,
               "image": "/images/japanese/n5_listening/exam_07/q_24.png",
-              "question": "6. 短い文を聞いて、1〜3の中から 一番いい返事を 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -9110,7 +8815,7 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "6番 会社まで何でいきますか 1 とても遠いです 2 バスでいきます 3 9時にいきます これで 紹介試験を終わります",
-              "explanation": "In Mondai 4 Q6, respond immediately to the prompt. Option 1 is the natural conversational reply."
+              "explanation": "Mondai 4 Q6: Option 1 is the natural immediate conversational response."
             }
           ]
         }
@@ -9997,10 +9702,10 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e8-l-1",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_08.mp3",
-              "audioStart": 125.2,
-              "audioEnd": 140.4,
+              "audioStart": 53.5,
+              "audioEnd": 136.5,
               "image": "/images/japanese/n5_listening/exam_08/q_01.png",
-              "question": "1. 録音を聞いて、問題用紙の1〜4の絵（選択肢）の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -10009,16 +9714,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "第8回 日本語能力試験N5 聴解 問題1 1番の公式問題音声です。",
-              "explanation": "In Mondai 1 Q1, listen to the task question and the conversation. Option 2 represents the correct drawing/choice."
+              "explanation": "Mondai 1 Q1: Based on the spoken dialogue and task question, choice 2 is correct."
             },
             {
               "id": "n5-e8-l-2",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_08.mp3",
-              "audioStart": 140.4,
-              "audioEnd": 186.8,
+              "audioStart": 136.5,
+              "audioEnd": 202.5,
               "image": "/images/japanese/n5_listening/exam_08/q_02.png",
-              "question": "2. 録音を聞いて、問題用紙の1〜4の絵（選択肢）の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -10027,16 +9732,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "2番 女の人と男の人が話しています 女の人は全部でいくら払いますか すみません 82円のきっておく ださい 何枚ですか 10枚お願いします それからハガキも1枚く ださい はいハガキはいくらですか はいハガキは1枚 52円です ありがとうございます",
-              "explanation": "In Mondai 1 Q2, listen to the task question and the conversation. Option 3 represents the correct drawing/choice."
+              "explanation": "Mondai 1 Q2: Based on the spoken dialogue and task question, choice 3 is correct."
             },
             {
               "id": "n5-e8-l-3",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_08.mp3",
-              "audioStart": 186.8,
-              "audioEnd": 267.9,
+              "audioStart": 202.5,
+              "audioEnd": 262.5,
               "image": "/images/japanese/n5_listening/exam_08/q_03.png",
-              "question": "3. 録音を聞いて、問題用紙の1〜4の絵（選択肢）の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -10045,16 +9750,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 3,
               "transcript": "女の人は全部でいくら払いますか 三番 女の人と男の人が話しています 女の人はどのかばんを見たい ですか すみません あのかばんを見せてください この白いのですか いやその黒いのです こちらでしょうか いや小さい方です こちらですね はいありがとうございます 女の人はどのかばんを見たいですか",
-              "explanation": "In Mondai 1 Q3, listen to the task question and the conversation. Option 4 represents the correct drawing/choice."
+              "explanation": "Mondai 1 Q3: Based on the spoken dialogue and task question, choice 4 is correct."
             },
             {
               "id": "n5-e8-l-4",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_08.mp3",
-              "audioStart": 267.9,
-              "audioEnd": 332.1,
+              "audioStart": 262.5,
+              "audioEnd": 328.5,
               "image": "/images/japanese/n5_listening/exam_08/q_04.png",
-              "question": "4. 録音を聞いて、問題用紙の1〜4の絵（選択肢）の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -10063,16 +9768,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "4番 女の人と男の人が写真を見て話しています 男の人の妹はどの人ですか これは家族の写真ですか はい この髪の長い人は妹さんですか いいえそれは穴です 妹はこっちです 目がねをかけています ああこれが妹さんですか 男の人の妹はどの人ですか",
-              "explanation": "In Mondai 1 Q4, listen to the task question and the conversation. Option 1 represents the correct drawing/choice."
+              "explanation": "Mondai 1 Q4: Based on the spoken dialogue and task question, choice 1 is correct."
             },
             {
               "id": "n5-e8-l-5",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_08.mp3",
-              "audioStart": 332.1,
-              "audioEnd": 400.8,
+              "audioStart": 328.5,
+              "audioEnd": 397.5,
               "image": "/images/japanese/n5_listening/exam_08/q_05.png",
-              "question": "5. 録音を聞いて、問題用紙の1〜4の絵（選択肢）の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -10081,16 +9786,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "5番 男の人と女の人がパーティーの準備をしています 部屋は今どうなっていますか この辺にテーブルを2つ並べましょう わかりました 椅子はどうしますか テーブルのそばにはおかないで 壁の方に並べましょう 料理と飲み物はどうしますか 3度1はテーブルの上に置いてください 飲み物は冷蔵庫の中に入れてください わかりました 部屋は今どうなっていますか",
-              "explanation": "In Mondai 1 Q5, listen to the task question and the conversation. Option 2 represents the correct drawing/choice."
+              "explanation": "Mondai 1 Q5: Based on the spoken dialogue and task question, choice 2 is correct."
             },
             {
               "id": "n5-e8-l-6",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_08.mp3",
-              "audioStart": 400.8,
-              "audioEnd": 458.1,
+              "audioStart": 397.5,
+              "audioEnd": 472.5,
               "image": "/images/japanese/n5_listening/exam_08/q_06.png",
-              "question": "6. 録音を聞いて、問題用紙の1〜4の絵（選択肢）の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -10099,16 +9804,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "6番 男の人と女の人が話しています 2人は何時に会いますか 明日は何時に駅で会いましょう 映画は4時に始まりますから3時半にしますか 映画館までは5分くらいでしょう ええでもちょっと遅いと思いますよ じゃあ3時15分にしますか 1時間前にしましょうよ シケットもまだ買っていませんから 人も多いですよ あああそうですねじゃあそうしましょう",
-              "explanation": "In Mondai 1 Q6, listen to the task question and the conversation. Option 3 represents the correct drawing/choice."
+              "explanation": "Mondai 1 Q6: Based on the spoken dialogue and task question, choice 3 is correct."
             },
             {
               "id": "n5-e8-l-7",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_08.mp3",
-              "audioStart": 458.1,
-              "audioEnd": 528.2,
+              "audioStart": 472.5,
+              "audioEnd": 566.5,
               "image": "/images/japanese/n5_listening/exam_08/q_07.png",
-              "question": "7. 録音を聞いて、問題用紙の1〜4の絵（選択肢）の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -10117,16 +9822,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 3,
               "transcript": "2人は何時に会いますか 7番 病院で女の人と男の人が話しています 男の人は朝ごはんの後 どの薬を飲みますかこの白いくすりは 朝と夜の1日2日 食事の後に飲んでください はい それからこの青いくすりは朝ごはんの後だけ飲んでください 1つですか いや2つ飲んでください男の人は朝ごはんの後",
-              "explanation": "In Mondai 1 Q7, listen to the task question and the conversation. Option 4 represents the correct drawing/choice."
+              "explanation": "Mondai 1 Q7: Based on the spoken dialogue and task question, choice 4 is correct."
             },
             {
               "id": "n5-e8-l-8",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_08.mp3",
-              "audioStart": 577.2,
-              "audioEnd": 646.8,
+              "audioStart": 566.5,
+              "audioEnd": 670.5,
               "image": "/images/japanese/n5_listening/exam_08/q_08.png",
-              "question": "1. まず質問を聞いてください。それから話を聞いて、1〜4の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -10135,16 +9840,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "1番 病院で女の人と男の人が話しています 男の人は朝どの薬を飲みますか この白いくすりは1日3回1つずつごはんを食べてから飲んでください はい この黄色いくすりは1日2回朝と夜に2つずつ飲んでください わかりました それからこの赤いくすりは熱が高い時飲んでください わかりました ありがとうございました",
-              "explanation": "In Mondai 2 Q1, pay attention to the key detail asked in the question. Option 3 is the accurate answer."
+              "explanation": "Mondai 2 Q1: Listen for the key detail asked in the question. Option 3 is correct."
             },
             {
               "id": "n5-e8-l-9",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_08.mp3",
-              "audioStart": 646.8,
-              "audioEnd": 745.9,
+              "audioStart": 670.5,
+              "audioEnd": 760.5,
               "image": "/images/japanese/n5_listening/exam_08/q_09.png",
-              "question": "2. まず質問を聞いてください。それから話を聞いて、1〜4の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -10153,16 +9858,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 3,
               "transcript": "おだいじに男の人は朝どの薬を飲みますか 2番 先生と男の学生が話しています 男の学生は何枚コピーしますか 田中さんこの髪をコピーしてください 今日のパーティーで使います わかりました 何枚コピーしますか 学生みんなと先生5人に2枚ずつです 学生は3つのクラスのみんなですね 何人かわかりますか えっと45人です わかりました",
-              "explanation": "In Mondai 2 Q2, pay attention to the key detail asked in the question. Option 4 is the accurate answer."
+              "explanation": "Mondai 2 Q2: Listen for the key detail asked in the question. Option 4 is correct."
             },
             {
               "id": "n5-e8-l-10",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_08.mp3",
-              "audioStart": 745.9,
-              "audioEnd": 860.0,
+              "audioStart": 760.5,
+              "audioEnd": 856.5,
               "image": "/images/japanese/n5_listening/exam_08/q_10.png",
-              "question": "3. まず質問を聞いてください。それから話を聞いて、1〜4の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -10171,16 +9876,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "男の学生は何枚コピーしますか 3番 女の学生と男の学生が話しています 男の学生は今日何時に学校へ来ましたか あれー田中さん今日は早いですね はい今日は試験ですから いつもより早く来ました いつもは8時45分ぐらいでしょう そうですね じゃあ今日は8時半ぐらいに来ましたか もっと早かったですよ いつもの1時間前くらいです へえ早いですね 男の学生は今日何時に学校へ来ましたか",
-              "explanation": "In Mondai 2 Q3, pay attention to the key detail asked in the question. Option 1 is the accurate answer."
+              "explanation": "Mondai 2 Q3: Listen for the key detail asked in the question. Option 1 is correct."
             },
             {
               "id": "n5-e8-l-11",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_08.mp3",
-              "audioStart": 860.0,
-              "audioEnd": 952.9,
+              "audioStart": 856.5,
+              "audioEnd": 949.5,
               "image": "/images/japanese/n5_listening/exam_08/q_11.png",
-              "question": "4. まず質問を聞いてください。それから話を聞いて、1〜4の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -10189,16 +9894,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "4番 男の人と女の人が話しています 2人はいつ映画を見ますか 山田さん今週の土曜日 映画を見に行きませんか いいですね何時ですか 午後6時からです 夜ですか 夜はアルバイトがあります そうですか じゃあ日曜日はどうですか 同じ時間ですが 日曜日もアルバイトがありますが 4時に終わります じゃあ大丈夫ですね 良かったです 2人はいつ映画を見ますか",
-              "explanation": "In Mondai 2 Q4, pay attention to the key detail asked in the question. Option 2 is the accurate answer."
+              "explanation": "Mondai 2 Q4: Listen for the key detail asked in the question. Option 2 is correct."
             },
             {
               "id": "n5-e8-l-12",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_08.mp3",
-              "audioStart": 952.9,
-              "audioEnd": 1032.0,
+              "audioStart": 949.5,
+              "audioEnd": 1027.5,
               "image": "/images/japanese/n5_listening/exam_08/q_12.png",
-              "question": "5. まず質問を聞いてください。それから話を聞いて、1〜4の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -10207,16 +9912,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "5番 男の人と女の人が話しています 男の人の誕生日はいつですか 田中さんの誕生日はいつですか 2月2日です ああ私の誕生日と近いです へいつですか いつかです へいみっか違うだけですね 男の人の誕生日はいつですか",
-              "explanation": "In Mondai 2 Q5, pay attention to the key detail asked in the question. Option 3 is the accurate answer."
+              "explanation": "Mondai 2 Q5: Listen for the key detail asked in the question. Option 3 is correct."
             },
             {
               "id": "n5-e8-l-13",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_08.mp3",
-              "audioStart": 1032.0,
-              "audioEnd": 1071.9,
+              "audioStart": 1027.5,
+              "audioEnd": 1151.5,
               "image": "/images/japanese/n5_listening/exam_08/q_13.png",
-              "question": "6. まず質問を聞いてください。それから話を聞いて、1〜4の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -10225,16 +9930,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 3,
               "transcript": "6番 病院で医者と女の人が話しています 女の人はこの後いつ病院へ来ますか じゃあ次は大集期待ください 今日と同じ月曜日はどうですか",
-              "explanation": "In Mondai 2 Q6, pay attention to the key detail asked in the question. Option 4 is the accurate answer."
+              "explanation": "Mondai 2 Q6: Listen for the key detail asked in the question. Option 4 is correct."
             },
             {
               "id": "n5-e8-l-14",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_listening/exam_08.mp3",
-              "audioStart": 1148.2,
-              "audioEnd": 1200.4,
+              "audioStart": 1151.5,
+              "audioEnd": 1195.5,
               "image": "/images/japanese/n5_listening/exam_08/q_14.png",
-              "question": "1. 絵を見ながら質問を聞いてください。矢印（➡）の人は 何と言いますか。1〜3の中から 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -10242,16 +9947,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "1から3の中から 一番いいものを一つ選んでください 1番 夜となりの部屋の人に会いました なんと言いますか 1 お休みなさい 2 今番は 3 お疲れ様でした",
-              "explanation": "In Mondai 3 Q1, observe the situation indicated by the arrow. Option 1 is the appropriate utterance in this situation."
+              "explanation": "Mondai 3 Q1: Observe the arrow (➡) in the illustration. Option 1 is the most appropriate spoken phrase."
             },
             {
               "id": "n5-e8-l-15",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_listening/exam_08.mp3",
-              "audioStart": 1200.4,
-              "audioEnd": 1245.8,
+              "audioStart": 1195.5,
+              "audioEnd": 1240.5,
               "image": "/images/japanese/n5_listening/exam_08/q_15.png",
-              "question": "2. 絵を見ながら質問を聞いてください。矢印（➡）の人は 何と言いますか。1〜3の中から 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -10259,16 +9964,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "2番 友達が荷物をたくさん持っています 1つ持ちたいです 何と言いますか 1 一つ持ちませんか 2 一つ持ちましょうか 3 一つ持ってください",
-              "explanation": "In Mondai 3 Q2, observe the situation indicated by the arrow. Option 2 is the appropriate utterance in this situation."
+              "explanation": "Mondai 3 Q2: Observe the arrow (➡) in the illustration. Option 2 is the most appropriate spoken phrase."
             },
             {
               "id": "n5-e8-l-16",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_listening/exam_08.mp3",
-              "audioStart": 1245.8,
-              "audioEnd": 1282.8,
+              "audioStart": 1240.5,
+              "audioEnd": 1279.5,
               "image": "/images/japanese/n5_listening/exam_08/q_16.png",
-              "question": "3. 絵を見ながら質問を聞いてください。矢印（➡）の人は 何と言いますか。1〜3の中から 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -10276,16 +9981,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "3番 先生の部屋に入ります なんと言いますか 1 失礼します 2 こんにちは 3 お邪魔します",
-              "explanation": "In Mondai 3 Q3, observe the situation indicated by the arrow. Option 3 is the appropriate utterance in this situation."
+              "explanation": "Mondai 3 Q3: Observe the arrow (➡) in the illustration. Option 3 is the most appropriate spoken phrase."
             },
             {
               "id": "n5-e8-l-17",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_listening/exam_08.mp3",
-              "audioStart": 1282.8,
-              "audioEnd": 1322.0,
+              "audioStart": 1279.5,
+              "audioEnd": 1318.5,
               "image": "/images/japanese/n5_listening/exam_08/q_17.png",
-              "question": "4. 絵を見ながら質問を聞いてください。矢印（➡）の人は 何と言いますか。1〜3の中から 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -10293,16 +9998,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "4番 美容器の友達のおみ前に行って帰ります なんと言いますか 1 さようなら 2 お題じ2 3 大丈夫ですか",
-              "explanation": "In Mondai 3 Q4, observe the situation indicated by the arrow. Option 1 is the appropriate utterance in this situation."
+              "explanation": "Mondai 3 Q4: Observe the arrow (➡) in the illustration. Option 1 is the most appropriate spoken phrase."
             },
             {
               "id": "n5-e8-l-18",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_listening/exam_08.mp3",
-              "audioStart": 1322.0,
-              "audioEnd": 1366.7,
+              "audioStart": 1318.5,
+              "audioEnd": 1382.5,
               "image": "/images/japanese/n5_listening/exam_08/q_18.png",
-              "question": "5. 絵を見ながら質問を聞いてください。矢印（➡）の人は 何と言いますか。1〜3の中から 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -10310,16 +10015,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "5番 となりの人にペンを借りたいです なんと言いますか 1 住みません ペンを貸してください 2 住みません ペンを借りましょうか 3 住みません ペンを貸しませんか",
-              "explanation": "In Mondai 3 Q5, observe the situation indicated by the arrow. Option 2 is the appropriate utterance in this situation."
+              "explanation": "Mondai 3 Q5: Observe the arrow (➡) in the illustration. Option 2 is the most appropriate spoken phrase."
             },
             {
               "id": "n5-e8-l-19",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5_listening/exam_08.mp3",
-              "audioStart": 1435.2,
-              "audioEnd": 1458.7,
+              "audioStart": 1382.5,
+              "audioEnd": 1417.5,
               "image": "/images/japanese/n5_listening/exam_08/q_19.png",
-              "question": "1. 短い文を聞いて、1〜3の中から 一番いい返事を 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -10327,16 +10032,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "こちらこそ 3 どういたしまして3番 会社までどのくらいかかりますか 1",
-              "explanation": "In Mondai 4 Q1, respond immediately to the prompt. Option 3 is the natural conversational reply."
+              "explanation": "Mondai 4 Q1: Option 3 is the natural immediate conversational response."
             },
             {
               "id": "n5-e8-l-20",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5_listening/exam_08.mp3",
-              "audioStart": 1458.7,
-              "audioEnd": 1482.2,
+              "audioStart": 1417.5,
+              "audioEnd": 1444.5,
               "image": "/images/japanese/n5_listening/exam_08/q_20.png",
-              "question": "2. 短い文を聞いて、1〜3の中から 一番いい返事を 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -10344,16 +10049,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "バスでいきます 2 30分ぐらいです 3 8時半です 4番 どんなスポーツが好きですか",
-              "explanation": "In Mondai 4 Q2, respond immediately to the prompt. Option 1 is the natural conversational reply."
+              "explanation": "Mondai 4 Q2: Option 1 is the natural immediate conversational response."
             },
             {
               "id": "n5-e8-l-21",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5_listening/exam_08.mp3",
-              "audioStart": 1482.2,
-              "audioEnd": 1505.7,
+              "audioStart": 1444.5,
+              "audioEnd": 1474.5,
               "image": "/images/japanese/n5_listening/exam_08/q_21.png",
-              "question": "3. 短い文を聞いて、1〜3の中から 一番いい返事を 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -10361,16 +10066,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "どんなスポーツが好きですか 1 サッカーです 2 いいえ 好きじゃありません 3 手にすができます",
-              "explanation": "In Mondai 4 Q3, respond immediately to the prompt. Option 2 is the natural conversational reply."
+              "explanation": "Mondai 4 Q3: Option 2 is the natural immediate conversational response."
             },
             {
               "id": "n5-e8-l-22",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5_listening/exam_08.mp3",
-              "audioStart": 1505.7,
-              "audioEnd": 1508.7,
+              "audioStart": 1474.5,
+              "audioEnd": 1504.5,
               "image": "/images/japanese/n5_listening/exam_08/q_22.png",
-              "question": "4. 短い文を聞いて、1〜3の中から 一番いい返事を 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -10378,16 +10083,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "第8回 日本語能力試験N5 聴解 問題4 4番の公式問題音声です。",
-              "explanation": "In Mondai 4 Q4, respond immediately to the prompt. Option 3 is the natural conversational reply."
+              "explanation": "Mondai 4 Q4: Option 3 is the natural immediate conversational response."
             },
             {
               "id": "n5-e8-l-23",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5_listening/exam_08.mp3",
-              "audioStart": 1508.7,
-              "audioEnd": 1542.2,
+              "audioStart": 1504.5,
+              "audioEnd": 1537.5,
               "image": "/images/japanese/n5_listening/exam_08/q_23.png",
-              "question": "5. 短い文を聞いて、1〜3の中から 一番いい返事を 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -10395,16 +10100,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "5番 こんばん一緒に 笑顔見に行きませんか 1 いかないと思います 2 すみませんちょっと 3 8いきますよ",
-              "explanation": "In Mondai 4 Q5, respond immediately to the prompt. Option 1 is the natural conversational reply."
+              "explanation": "Mondai 4 Q5: Option 1 is the natural immediate conversational response."
             },
             {
               "id": "n5-e8-l-24",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5_listening/exam_08.mp3",
-              "audioStart": 1542.2,
-              "audioEnd": 1576.3,
+              "audioStart": 1537.5,
+              "audioEnd": 1592.5,
               "image": "/images/japanese/n5_listening/exam_08/q_24.png",
-              "question": "6. 短い文を聞いて、1〜3の中から 一番いい返事を 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -10412,7 +10117,7 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "6番 この重はいくらですか 1 1500円です 2 少し高いです 3 田中さんのです これで 紹介試験を終わります",
-              "explanation": "In Mondai 4 Q6, respond immediately to the prompt. Option 2 is the natural conversational reply."
+              "explanation": "Mondai 4 Q6: Option 2 is the natural immediate conversational response."
             }
           ]
         }
@@ -11299,10 +11004,10 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e9-l-1",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_09.mp3",
-              "audioStart": 140.5,
-              "audioEnd": 211.1,
+              "audioStart": 131.5,
+              "audioEnd": 205.5,
               "image": "/images/japanese/n5_listening/exam_09/q_01.png",
-              "question": "1. 録音を聞いて、問題用紙の1〜4の絵（選択肢）の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -11311,16 +11016,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "一番 銀行で、銀行の人と男の人が話しています。 男の人は、髪にどう書きますか? この髪に、名前を書いてください。 名前の下に、重症を書いてください。 重症は、感じで書いて、上に、ひらがなを書いてくださいね。 一番下には、電話番号を書いてください。 あの、名前は英語で書きますか? いいえ、片方でお願いします。 はい、わかりました。 男の人は、髪にどう書きますか?",
-              "explanation": "In Mondai 1 Q1, listen to the task question and the conversation. Option 3 represents the correct drawing/choice."
+              "explanation": "Mondai 1 Q1: Based on the spoken dialogue and task question, choice 3 is correct."
             },
             {
               "id": "n5-e9-l-2",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_09.mp3",
-              "audioStart": 211.1,
-              "audioEnd": 276.3,
+              "audioStart": 205.5,
+              "audioEnd": 271.5,
               "image": "/images/japanese/n5_listening/exam_09/q_02.png",
-              "question": "2. 録音を聞いて、問題用紙の1〜4の絵（選択肢）の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -11329,16 +11034,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 3,
               "transcript": "二番 女の人と男の人が話しています。 男の人は、何を持っていきますか? 来週は、花味ですね。 私は、おかしいを持っていきますね。 じゃあ、私は飲み物を持っていきます。 飲み物は、何がいいですか? そうですね。 じゃあ、ジュースとお茶を日本ずつお願いします。 わかりました。日本ずつですね。 男の人は、何を持っていきますか?",
-              "explanation": "In Mondai 1 Q2, listen to the task question and the conversation. Option 4 represents the correct drawing/choice."
+              "explanation": "Mondai 1 Q2: Based on the spoken dialogue and task question, choice 4 is correct."
             },
             {
               "id": "n5-e9-l-3",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_09.mp3",
-              "audioStart": 276.3,
-              "audioEnd": 335.6,
+              "audioStart": 271.5,
+              "audioEnd": 331.5,
               "image": "/images/japanese/n5_listening/exam_09/q_03.png",
-              "question": "3. 録音を聞いて、問題用紙の1〜4の絵（選択肢）の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -11347,16 +11052,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "三番 男の人と女の人が話しています。 男の人は、どこへ行きますか? すみません。近くに、有名曲はありますか? あの大きい銀行を見えますか? あそこの高差点を左に曲がって、少し歩きます。 有名曲は、コンビニの隣ですよ? は、ありがとうございます。 男の人は、どこへ行きますか?",
-              "explanation": "In Mondai 1 Q3, listen to the task question and the conversation. Option 1 represents the correct drawing/choice."
+              "explanation": "Mondai 1 Q3: Based on the spoken dialogue and task question, choice 1 is correct."
             },
             {
               "id": "n5-e9-l-4",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_09.mp3",
-              "audioStart": 335.6,
-              "audioEnd": 599.0,
+              "audioStart": 331.5,
+              "audioEnd": 406.5,
               "image": "/images/japanese/n5_listening/exam_09/q_04.png",
-              "question": "4. 録音を聞いて、問題用紙の1〜4の絵（選択肢）の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -11365,16 +11070,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "四番 病院で、医者と男の人が話しています。 男の人は、こんばん、どの薬を飲みますか? んー、風ですね。 薬を出しますから、こんばんから飲んでください。 ご飯の後に、この白くて小さい薬を2つ。 白くて、大きい薬を一つ飲んでください。 わかりました。この黒い薬も飲みますか? 黒い薬は、明日の朝飲んでください。 わかりました。ありがとうございます。 男の人は、こんばん、どの薬を飲みますか? ご飯 電話で、お店の人と、女の人が話しています。 女の人は、いつお店に行きますか? お電話、ありがとうございます。 青葉カフェです。 すみません。 昨日、お店でカッサーを忘れたと思います。 黄色いカッサーありませんでしたか? えーっと、黄色いカッサーですね。 あ、ありますよ。 よかった。私のです。 あの、日曜日の夜、鳥に行ってもいいですか? 申し訳ありません。日曜日はお休みです。 土曜日はどうですか? 土曜日ですか? わかりました。お昼でもいいですか? はい、大丈夫ですよ。 女の人は、いつお店に行きますか? 6番 電話で、男の学生と女の先生が話しています。 学生は、学校で初めに何をしますか? 先生、すみません。今起きました。 そうですか。じゃあ、早く学校に来てください。 はい、すみません。 私はこれから、他のクラスで従業がありますから、 私の机の上に、仕事を出してください。 それから、教室に行ってください。 はい、わかりました。すみませんでした。 学生は、学校で初めに何をしますか? 7番 学校で先生が学生に話しています。 学生は、明日の朝、どのバスに乗りますか? 明日は、博物館に行きます。 博物館にはバスで来てください。",
-              "explanation": "In Mondai 1 Q4, listen to the task question and the conversation. Option 2 represents the correct drawing/choice."
+              "explanation": "Mondai 1 Q4: Based on the spoken dialogue and task question, choice 2 is correct."
             },
             {
               "id": "n5-e9-l-5",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_09.mp3",
-              "audioStart": 599.0,
-              "audioEnd": 613.4,
+              "audioStart": 406.5,
+              "audioEnd": 496.5,
               "image": "/images/japanese/n5_listening/exam_09/q_05.png",
-              "question": "5. 録音を聞いて、問題用紙の1〜4の絵（選択肢）の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -11383,16 +11088,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "博物館へ行くバスは24番と25番ですが、 朝は25番の白いバスに乗ってください。 24番のバスは5号からで、朝はありません。",
-              "explanation": "In Mondai 1 Q5, listen to the task question and the conversation. Option 3 represents the correct drawing/choice."
+              "explanation": "Mondai 1 Q5: Based on the spoken dialogue and task question, choice 3 is correct."
             },
             {
               "id": "n5-e9-l-6",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_09.mp3",
-              "audioStart": 613.4,
-              "audioEnd": 627.7,
+              "audioStart": 496.5,
+              "audioEnd": 571.5,
               "image": "/images/japanese/n5_listening/exam_09/q_06.png",
-              "question": "6. 録音を聞いて、問題用紙の1〜4の絵（選択肢）の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -11401,16 +11106,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 3,
               "transcript": "気をつけてください。 学生は、明日の朝、どのバスに乗りますか?",
-              "explanation": "In Mondai 1 Q6, listen to the task question and the conversation. Option 4 represents the correct drawing/choice."
+              "explanation": "Mondai 1 Q6: Based on the spoken dialogue and task question, choice 4 is correct."
             },
             {
               "id": "n5-e9-l-7",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_09.mp3",
-              "audioStart": 627.7,
-              "audioEnd": 642.0,
+              "audioStart": 571.5,
+              "audioEnd": 755.5,
               "image": "/images/japanese/n5_listening/exam_09/q_07.png",
-              "question": "7. 録音を聞いて、問題用紙の1〜4の絵（選択肢）の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -11419,16 +11124,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "第9回 日本語能力試験N5 聴解 問題1 7番の公式問題音声です。",
-              "explanation": "In Mondai 1 Q7, listen to the task question and the conversation. Option 1 represents the correct drawing/choice."
+              "explanation": "Mondai 1 Q7: Based on the spoken dialogue and task question, choice 1 is correct."
             },
             {
               "id": "n5-e9-l-8",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_09.mp3",
-              "audioStart": 764.8,
-              "audioEnd": 829.3,
+              "audioStart": 755.5,
+              "audioEnd": 823.5,
               "image": "/images/japanese/n5_listening/exam_09/q_08.png",
-              "question": "1. まず質問を聞いてください。それから話を聞いて、1〜4の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -11437,16 +11142,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 3,
               "transcript": "一番 女の人と男の人が話しています。 男の人の弟は、何が好きですか? 山田さんも、兄弟がいますか? 弟と、妹がいます。 私はスポーツが好きですが、弟はいつもゲームをしています。 妹は、料理を作ることと、本を読むことが好きです。 そうですか、兄弟、みんな違いますね。 男の人の弟は、何が好きですか?",
-              "explanation": "In Mondai 2 Q1, pay attention to the key detail asked in the question. Option 4 is the accurate answer."
+              "explanation": "Mondai 2 Q1: Listen for the key detail asked in the question. Option 4 is correct."
             },
             {
               "id": "n5-e9-l-9",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_09.mp3",
-              "audioStart": 829.3,
-              "audioEnd": 891.0,
+              "audioStart": 823.5,
+              "audioEnd": 886.5,
               "image": "/images/japanese/n5_listening/exam_09/q_09.png",
-              "question": "2. まず質問を聞いてください。それから話を聞いて、1〜4の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -11455,16 +11160,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "二番 矢親で、男の人とお店の人が話しています。 男の人は、いくら払いますか? すみません。この80円のトマトを、みっつください。 はい、ありがとうございます。 このトマトを、2つで、150円ですよ。 そうですか。じゃあ、もう一つお願いします。 はい、ありがとうございます。 男の人は、いくら払いますか?",
-              "explanation": "In Mondai 2 Q2, pay attention to the key detail asked in the question. Option 1 is the accurate answer."
+              "explanation": "Mondai 2 Q2: Listen for the key detail asked in the question. Option 1 is correct."
             },
             {
               "id": "n5-e9-l-10",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_09.mp3",
-              "audioStart": 891.0,
-              "audioEnd": 978.1,
+              "audioStart": 886.5,
+              "audioEnd": 973.5,
               "image": "/images/japanese/n5_listening/exam_09/q_10.png",
-              "question": "3. まず質問を聞いてください。それから話を聞いて、1〜4の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -11473,16 +11178,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "三番 大学で、女の人と、男の人が話しています。 男の人は、昨日、どうやって学校に来ましたか? 山田さんのアパートから学校まで、どのぐらいですか? 少し遠いです。自転車で30分ぐらいかかります。 大変ですね。バスはありませんか? ありますが、あまり乗りません。 雨の日だけバスに乗ります。 昨日は雨でしたね。バスで来ましたか? いいえ、たくしで来ました。朝疲れていましたから。 そうですか。 はい、でも、帰る時は歩きました。 男の人は、昨日、どうやって学校に来ましたか?",
-              "explanation": "In Mondai 2 Q3, pay attention to the key detail asked in the question. Option 2 is the accurate answer."
+              "explanation": "Mondai 2 Q3: Listen for the key detail asked in the question. Option 2 is correct."
             },
             {
               "id": "n5-e9-l-11",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_09.mp3",
-              "audioStart": 978.1,
-              "audioEnd": 1035.8,
+              "audioStart": 973.5,
+              "audioEnd": 1042.5,
               "image": "/images/japanese/n5_listening/exam_09/q_11.png",
-              "question": "4. まず質問を聞いてください。それから話を聞いて、1〜4の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -11491,16 +11196,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "四番 男の人と女の人が話しています。 二人は、明日、まずどこで会いますか? 明日の映画、何時からですか? 午後2時からですよ。 じゃあ、映画の前に、デパートのレストランでご飯を食べませんか? いいですね。 じゃあ、レストランの前で会いましょうか? えーと、駅前のバステーから、一緒に行きましょう。 わかりました。そうしましょう。 二人は、明日、まずどこで会いますか?",
-              "explanation": "In Mondai 2 Q4, pay attention to the key detail asked in the question. Option 3 is the accurate answer."
+              "explanation": "Mondai 2 Q4: Listen for the key detail asked in the question. Option 3 is correct."
             },
             {
               "id": "n5-e9-l-12",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_09.mp3",
-              "audioStart": 1035.8,
-              "audioEnd": 1103.1,
+              "audioStart": 1042.5,
+              "audioEnd": 1099.5,
               "image": "/images/japanese/n5_listening/exam_09/q_12.png",
-              "question": "5. まず質問を聞いてください。それから話を聞いて、1〜4の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -11509,16 +11214,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 3,
               "transcript": "午番 学校で、先生が学生に話しています。 先生は、いつ宿題を返しますか? 皆さん、来週の水曜日はテストです。 今日、宿題がありますから、来週の月曜日に出してください。 私が宿題を見て、次の日に返します。 よく勉強してくださいね。 先生は、いつ宿題を返しますか?",
-              "explanation": "In Mondai 2 Q5, pay attention to the key detail asked in the question. Option 4 is the accurate answer."
+              "explanation": "Mondai 2 Q5: Listen for the key detail asked in the question. Option 4 is correct."
             },
             {
               "id": "n5-e9-l-13",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_09.mp3",
-              "audioStart": 1103.1,
-              "audioEnd": 1151.0,
+              "audioStart": 1099.5,
+              "audioEnd": 1241.5,
               "image": "/images/japanese/n5_listening/exam_09/q_13.png",
-              "question": "6. まず質問を聞いてください。それから話を聞いて、1〜4の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -11527,16 +11232,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "六番 女の人と男の人が話しています。 女の人は、何人で旅行に行きましたか? 山田さん、これ、お土産です。 ありがとうございます。どこのお土産ですか? お気なわです。 おとと、おとの両親と一緒に行きました。 はい、いいですね。 女の人は、何人で旅行に行きましたか?",
-              "explanation": "In Mondai 2 Q6, pay attention to the key detail asked in the question. Option 1 is the accurate answer."
+              "explanation": "Mondai 2 Q6: Listen for the key detail asked in the question. Option 1 is correct."
             },
             {
               "id": "n5-e9-l-14",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_listening/exam_09.mp3",
-              "audioStart": 1251.8,
-              "audioEnd": 1287.3,
+              "audioStart": 1241.5,
+              "audioEnd": 1282.5,
               "image": "/images/japanese/n5_listening/exam_09/q_14.png",
-              "question": "1. 絵を見ながら質問を聞いてください。矢印（➡）の人は 何と言いますか。1〜3の中から 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -11544,16 +11249,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "一番 友達にプレゼントをあげます。 なんと言いますか? 一 これ、どうぞ。 二 これ、どうも。 三 これ、どうでしたか?",
-              "explanation": "In Mondai 3 Q1, observe the situation indicated by the arrow. Option 2 is the appropriate utterance in this situation."
+              "explanation": "Mondai 3 Q1: Observe the arrow (➡) in the illustration. Option 2 is the most appropriate spoken phrase."
             },
             {
               "id": "n5-e9-l-15",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_listening/exam_09.mp3",
-              "audioStart": 1287.3,
-              "audioEnd": 1326.1,
+              "audioStart": 1282.5,
+              "audioEnd": 1321.5,
               "image": "/images/japanese/n5_listening/exam_09/q_15.png",
-              "question": "2. 絵を見ながら質問を聞いてください。矢印（➡）の人は 何と言いますか。1〜3の中から 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -11561,16 +11266,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "二番 タクシーに乗っています。 駅に行きたいです。 なんと言いますか? 一 駅までお願いします。 二 駅まで行きませんか? 三 駅が欲しいです。",
-              "explanation": "In Mondai 3 Q2, observe the situation indicated by the arrow. Option 3 is the appropriate utterance in this situation."
+              "explanation": "Mondai 3 Q2: Observe the arrow (➡) in the illustration. Option 3 is the most appropriate spoken phrase."
             },
             {
               "id": "n5-e9-l-16",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_listening/exam_09.mp3",
-              "audioStart": 1326.1,
-              "audioEnd": 1360.4,
+              "audioStart": 1321.5,
+              "audioEnd": 1354.5,
               "image": "/images/japanese/n5_listening/exam_09/q_16.png",
-              "question": "3. 絵を見ながら質問を聞いてください。矢印（➡）の人は 何と言いますか。1〜3の中から 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -11578,16 +11283,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "三番 先生の家に入ります。 なんと言いますか? 一 失礼です。 二 失礼でした。 三 失礼します。",
-              "explanation": "In Mondai 3 Q3, observe the situation indicated by the arrow. Option 1 is the appropriate utterance in this situation."
+              "explanation": "Mondai 3 Q3: Observe the arrow (➡) in the illustration. Option 1 is the most appropriate spoken phrase."
             },
             {
               "id": "n5-e9-l-17",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_listening/exam_09.mp3",
-              "audioStart": 1360.4,
-              "audioEnd": 1379.0,
+              "audioStart": 1354.5,
+              "audioEnd": 1390.5,
               "image": "/images/japanese/n5_listening/exam_09/q_17.png",
-              "question": "4. 絵を見ながら質問を聞いてください。矢印（➡）の人は 何と言いますか。1〜3の中から 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -11595,16 +11300,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "四番 初めて会う人に、挨拶をします。 なんと言いますか? 一 初めてです。 二 初めて 三",
-              "explanation": "In Mondai 3 Q4, observe the situation indicated by the arrow. Option 2 is the appropriate utterance in this situation."
+              "explanation": "Mondai 3 Q4: Observe the arrow (➡) in the illustration. Option 2 is the most appropriate spoken phrase."
             },
             {
               "id": "n5-e9-l-18",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_listening/exam_09.mp3",
-              "audioStart": 1379.0,
-              "audioEnd": 1388.0,
+              "audioStart": 1390.5,
+              "audioEnd": 1496.5,
               "image": "/images/japanese/n5_listening/exam_09/q_18.png",
-              "question": "5. 絵を見ながら質問を聞いてください。矢印（➡）の人は 何と言いますか。1〜3の中から 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -11612,16 +11317,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "初めますね、五番",
-              "explanation": "In Mondai 3 Q5, observe the situation indicated by the arrow. Option 3 is the appropriate utterance in this situation."
+              "explanation": "Mondai 3 Q5: Observe the arrow (➡) in the illustration. Option 3 is the most appropriate spoken phrase."
             },
             {
               "id": "n5-e9-l-19",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5_listening/exam_09.mp3",
-              "audioStart": 1505.5,
-              "audioEnd": 1532.9,
+              "audioStart": 1496.5,
+              "audioEnd": 1528.5,
               "image": "/images/japanese/n5_listening/exam_09/q_19.png",
-              "question": "1. 短い文を聞いて、1〜3の中から 一番いい返事を 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -11629,16 +11334,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "一番 問いではどこですか? 一 三回ですよ。 二 綺麗ですよ。 三 二つありますよ。",
-              "explanation": "In Mondai 4 Q1, respond immediately to the prompt. Option 1 is the natural conversational reply."
+              "explanation": "Mondai 4 Q1: Option 1 is the natural immediate conversational response."
             },
             {
               "id": "n5-e9-l-20",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5_listening/exam_09.mp3",
-              "audioStart": 1532.9,
-              "audioEnd": 1562.9,
+              "audioStart": 1528.5,
+              "audioEnd": 1558.5,
               "image": "/images/japanese/n5_listening/exam_09/q_20.png",
-              "question": "2. 短い文を聞いて、1〜3の中から 一番いい返事を 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -11646,16 +11351,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "二番 ここから空港までどのぐらいかかりますか? 一 十二時に出ます。 二 バスでいきます。 三 一時間です。",
-              "explanation": "In Mondai 4 Q2, respond immediately to the prompt. Option 2 is the natural conversational reply."
+              "explanation": "Mondai 4 Q2: Option 2 is the natural immediate conversational response."
             },
             {
               "id": "n5-e9-l-21",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5_listening/exam_09.mp3",
-              "audioStart": 1562.9,
-              "audioEnd": 1593.5,
+              "audioStart": 1558.5,
+              "audioEnd": 1588.5,
               "image": "/images/japanese/n5_listening/exam_09/q_21.png",
-              "question": "3. 短い文を聞いて、1〜3の中から 一番いい返事を 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -11663,16 +11368,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "三番 テストはどうでしたか? 一 頑張ってください。 二 あまりわかりませんでした。 三 たくさん勉強しました。",
-              "explanation": "In Mondai 4 Q3, respond immediately to the prompt. Option 3 is the natural conversational reply."
+              "explanation": "Mondai 4 Q3: Option 3 is the natural immediate conversational response."
             },
             {
               "id": "n5-e9-l-22",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5_listening/exam_09.mp3",
-              "audioStart": 1593.5,
-              "audioEnd": 1625.5,
+              "audioStart": 1588.5,
+              "audioEnd": 1621.5,
               "image": "/images/japanese/n5_listening/exam_09/q_22.png",
-              "question": "4. 短い文を聞いて、1〜3の中から 一番いい返事を 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -11680,16 +11385,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "四番 山田先生のことを知っていますか? 一 いいえしません。 二 いいえしりません。 三 いいえ知っていません。",
-              "explanation": "In Mondai 4 Q4, respond immediately to the prompt. Option 1 is the natural conversational reply."
+              "explanation": "Mondai 4 Q4: Option 1 is the natural immediate conversational response."
             },
             {
               "id": "n5-e9-l-23",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5_listening/exam_09.mp3",
-              "audioStart": 1625.5,
-              "audioEnd": 1658.1,
+              "audioStart": 1621.5,
+              "audioEnd": 1654.5,
               "image": "/images/japanese/n5_listening/exam_09/q_23.png",
-              "question": "5. 短い文を聞いて、1〜3の中から 一番いい返事を 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -11697,16 +11402,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "五番 少し休みませんか? 一 そうですね。休みましょう。 二 そうですね。休みませんでした。 三 そうですね。休みです。",
-              "explanation": "In Mondai 4 Q5, respond immediately to the prompt. Option 2 is the natural conversational reply."
+              "explanation": "Mondai 4 Q5: Option 2 is the natural immediate conversational response."
             },
             {
               "id": "n5-e9-l-24",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5_listening/exam_09.mp3",
-              "audioStart": 1658.1,
-              "audioEnd": 1692.7,
+              "audioStart": 1654.5,
+              "audioEnd": 1709.5,
               "image": "/images/japanese/n5_listening/exam_09/q_24.png",
-              "question": "6. 短い文を聞いて、1〜3の中から 一番いい返事を 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -11714,7 +11419,7 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "六番 おこさんは何歳ですか? 一 発祭です。 二 学校にいます。 三 二人います。 これで、紹介試験を終わります。",
-              "explanation": "In Mondai 4 Q6, respond immediately to the prompt. Option 3 is the natural conversational reply."
+              "explanation": "Mondai 4 Q6: Option 3 is the natural immediate conversational response."
             }
           ]
         }
@@ -12601,10 +12306,10 @@ export const EXAM_PAPERS_CATALOG = {
               "id": "n5-e10-l-1",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_10.mp3",
-              "audioStart": 64.7,
-              "audioEnd": 115.7,
+              "audioStart": 53.5,
+              "audioEnd": 130.5,
               "image": "/images/japanese/n5_listening/exam_10/q_01.png",
-              "question": "1. 録音を聞いて、問題用紙の1〜4の絵（選択肢）の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -12613,16 +12318,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 3,
               "transcript": "1番 男の人と女の人が話しています 二人はどの写真を見ていますか 山田さん この写真は ああこれは去年の春に 海へ行った時の写真です へー 横にいる人は誰ですか ああ 妹です 海がとても綺麗ですね え でもこの日はとても扱ったです 冒子を忘れて大変でした",
-              "explanation": "In Mondai 1 Q1, listen to the task question and the conversation. Option 4 represents the correct drawing/choice."
+              "explanation": "Mondai 1 Q1: Based on the spoken dialogue and task question, choice 4 is correct."
             },
             {
               "id": "n5-e10-l-2",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_10.mp3",
-              "audioStart": 115.7,
-              "audioEnd": 205.3,
+              "audioStart": 130.5,
+              "audioEnd": 199.5,
               "image": "/images/japanese/n5_listening/exam_10/q_02.png",
-              "question": "2. 録音を聞いて、問題用紙の1〜4の絵（選択肢）の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -12631,16 +12336,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "二人はどの写真を見ていますか 二番 教室で先生と男の学生が話しています 先生は何を持っていきますか 先生 明日みんなで近くの公園で 花を見ながらお昼を食べませんか いいですね 何を持っていきましょうか お弁当は公園の近くのスーパーで買います 飲み物はもう買いました そうですか じゃあ私はおかしいを作って持っていきますね そうですか 先生は何を持っていきますか",
-              "explanation": "In Mondai 1 Q2, listen to the task question and the conversation. Option 1 represents the correct drawing/choice."
+              "explanation": "Mondai 1 Q2: Based on the spoken dialogue and task question, choice 1 is correct."
             },
             {
               "id": "n5-e10-l-3",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_10.mp3",
-              "audioStart": 205.3,
-              "audioEnd": 260.7,
+              "audioStart": 199.5,
+              "audioEnd": 256.5,
               "image": "/images/japanese/n5_listening/exam_10/q_03.png",
-              "question": "3. 録音を聞いて、問題用紙の1〜4の絵（選択肢）の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -12649,16 +12354,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "三番 男の人と女の人が話しています 男の人は何をしますか 疲れましたね 少し休みませんか そうしましょう あそこに座りませんか そうですね あ僕飲み物を買ってきますよ じゃあお願いします 男の人は何をしますか",
-              "explanation": "In Mondai 1 Q3, listen to the task question and the conversation. Option 2 represents the correct drawing/choice."
+              "explanation": "Mondai 1 Q3: Based on the spoken dialogue and task question, choice 2 is correct."
             },
             {
               "id": "n5-e10-l-4",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_10.mp3",
-              "audioStart": 260.7,
-              "audioEnd": 290.6,
+              "audioStart": 256.5,
+              "audioEnd": 310.5,
               "image": "/images/japanese/n5_listening/exam_10/q_04.png",
-              "question": "4. 録音を聞いて、問題用紙の1〜4の絵（選択肢）の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -12667,16 +12372,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "四番 女の人と男の人が話しています 作への上に何を置きますか じゃあおさらとグラスを作への上に並べてください はい 内部と報告は入りますか いえ 今日は端を使いましょう わかりました",
-              "explanation": "In Mondai 1 Q4, listen to the task question and the conversation. Option 3 represents the correct drawing/choice."
+              "explanation": "Mondai 1 Q4: Based on the spoken dialogue and task question, choice 3 is correct."
             },
             {
               "id": "n5-e10-l-5",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_10.mp3",
-              "audioStart": 290.6,
-              "audioEnd": 376.1,
+              "audioStart": 310.5,
+              "audioEnd": 370.5,
               "image": "/images/japanese/n5_listening/exam_10/q_05.png",
-              "question": "5. 録音を聞いて、問題用紙の1〜4の絵（選択肢）の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -12685,16 +12390,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 3,
               "transcript": "くえの上に何を置きますか 五番 女の人と男の人が話しています 男の人は何を買いますか 大変もうすぐパーティンが始まりますがパンがありません じゃあ今から買ってきますよ ありがとうございます バターも少ないですからお願いします ジュースはもっと入りますか いえ ジュースは大丈夫です 男の人は何を買いますか",
-              "explanation": "In Mondai 1 Q5, listen to the task question and the conversation. Option 4 represents the correct drawing/choice."
+              "explanation": "Mondai 1 Q5: Based on the spoken dialogue and task question, choice 4 is correct."
             },
             {
               "id": "n5-e10-l-6",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_10.mp3",
-              "audioStart": 376.1,
-              "audioEnd": 436.2,
+              "audioStart": 370.5,
+              "audioEnd": 430.5,
               "image": "/images/japanese/n5_listening/exam_10/q_06.png",
-              "question": "6. 録音を聞いて、問題用紙の1〜4の絵（選択肢）の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -12703,16 +12408,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "六番 優秀極で男の人と女の人が話しています 男の人は何を買いますか すみません 八十二円切っておください はい何枚ですか 三枚です それから五十一円のハガキを一枚お願いします はい 全部で二百九十七円です 男の人は何を買いますか",
-              "explanation": "In Mondai 1 Q6, listen to the task question and the conversation. Option 1 represents the correct drawing/choice."
+              "explanation": "Mondai 1 Q6: Based on the spoken dialogue and task question, choice 1 is correct."
             },
             {
               "id": "n5-e10-l-7",
               "type": "Mondai 1 (課題理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_10.mp3",
-              "audioStart": 436.2,
-              "audioEnd": 555.8,
+              "audioStart": 430.5,
+              "audioEnd": 608.5,
               "image": "/images/japanese/n5_listening/exam_10/q_07.png",
-              "question": "7. 録音を聞いて、問題用紙の1〜4の絵（選択肢）の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -12721,16 +12426,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "七番 デパートで女の人と男の人が話しています 女の人はどのお皿を買いますか この魚の絵のお皿いいですね そうですね でも少し小さくないですか そうですね じゃあこの花の絵のお皿はどうですか あっいいですね でも綺麗です じゃあこれにしましょう 女の人はどのお皿を買いますか 八番 女の人と男の人が話しています 女の人は何を買いますか 山田さんの誕生日に何をあげますか 彼女は音楽が好きですから CDをあげます そうですか じゃあ私はコンサートのチケットにします でもコンサートに一人でいきますか うん じゃあ花か半価値にします どっちがいいと思いますか どっちもいいですが長く使うものがいいと思いますよ",
-              "explanation": "In Mondai 1 Q7, listen to the task question and the conversation. Option 2 represents the correct drawing/choice."
+              "explanation": "Mondai 1 Q7: Based on the spoken dialogue and task question, choice 2 is correct."
             },
             {
               "id": "n5-e10-l-8",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_10.mp3",
-              "audioStart": 607.5,
-              "audioEnd": 689.2,
+              "audioStart": 608.5,
+              "audioEnd": 706.5,
               "image": "/images/japanese/n5_listening/exam_10/q_08.png",
-              "question": "1. まず質問を聞いてください。それから話を聞いて、1〜4の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -12739,16 +12444,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "一番いいものを 一つ選んでください 一番 男の人と女の人が話しています 男の人は夏休みに何をしますか 夏休みはどうしますか ずっとアルバイトです でも 旅行にも行きたいです 田中さんは 家族みんなで 富士さんに登ります いいですね でも高いですから気をつけてくださいね 今父と母が毎日走っていますよ",
-              "explanation": "In Mondai 2 Q1, pay attention to the key detail asked in the question. Option 1 is the accurate answer."
+              "explanation": "Mondai 2 Q1: Listen for the key detail asked in the question. Option 1 is correct."
             },
             {
               "id": "n5-e10-l-9",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_10.mp3",
-              "audioStart": 689.2,
-              "audioEnd": 777.2,
+              "audioStart": 706.5,
+              "audioEnd": 790.5,
               "image": "/images/japanese/n5_listening/exam_10/q_09.png",
-              "question": "2. まず質問を聞いてください。それから話を聞いて、1〜4の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -12757,16 +12462,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "男の人は夏休みに何をしますか 二番 男の人と女の人が話しています 二人はどこで会いますか 明日の映画は1時からですね じゃあ映画の前に昼ごはんを食べましょうか そうですね じゃあ駅で会いましょう 駅の近くにいろいろレストランがあります から えーデパートも近くにありますから その中で食べてもいいですね ああそれがいいですね そうしましょう",
-              "explanation": "In Mondai 2 Q2, pay attention to the key detail asked in the question. Option 2 is the accurate answer."
+              "explanation": "Mondai 2 Q2: Listen for the key detail asked in the question. Option 2 is correct."
             },
             {
               "id": "n5-e10-l-10",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_10.mp3",
-              "audioStart": 777.2,
-              "audioEnd": 883.7,
+              "audioStart": 790.5,
+              "audioEnd": 877.5,
               "image": "/images/japanese/n5_listening/exam_10/q_10.png",
-              "question": "3. まず質問を聞いてください。それから話を聞いて、1〜4の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -12775,16 +12480,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "二人はどこで会いますか 三番 女の人と男の人が話しています 女の人は何を 飲みますかごちそうさまでした 料理とても美味しかったです それは良かったです 飲み物は何がいいですか コーヒーコーチャあとお茶があります じゃあコーチャで わかりました ミルクはどうしますか ミルクは結構です わかりました 少し待ってください 女の人は何を飲みますか",
-              "explanation": "In Mondai 2 Q3, pay attention to the key detail asked in the question. Option 3 is the accurate answer."
+              "explanation": "Mondai 2 Q3: Listen for the key detail asked in the question. Option 3 is correct."
             },
             {
               "id": "n5-e10-l-11",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_10.mp3",
-              "audioStart": 883.7,
-              "audioEnd": 964.7,
+              "audioStart": 877.5,
+              "audioEnd": 958.5,
               "image": "/images/japanese/n5_listening/exam_10/q_11.png",
-              "question": "4. まず質問を聞いてください。それから話を聞いて、1〜4の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -12793,16 +12498,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 3,
               "transcript": "四番 病院で女の人が男の人に話しています 病院の部屋には何がありますか といれは部屋にはありませんが すぐ近くにあります シャワールームはといれのとなり です 好きな時に使ってください 部屋には小さい冷蔵庫がありますから 飲み物などを入れてください 病院の部屋には何がありますか",
-              "explanation": "In Mondai 2 Q4, pay attention to the key detail asked in the question. Option 4 is the accurate answer."
+              "explanation": "Mondai 2 Q4: Listen for the key detail asked in the question. Option 4 is correct."
             },
             {
               "id": "n5-e10-l-12",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_10.mp3",
-              "audioStart": 964.7,
-              "audioEnd": 1022.2,
+              "audioStart": 958.5,
+              "audioEnd": 1465.5,
               "image": "/images/japanese/n5_listening/exam_10/q_12.png",
-              "question": "5. まず質問を聞いてください。それから話を聞いて、1〜4の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -12811,16 +12516,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "五番 男の人と女の人が話しています 男の人はこの後何をしますか 昨日は楽しかったですね そうですね 田中さんもパーティーの後からおけに行きましたか いや私は行きませんでした 宿題がたくさんありましたから そうですか 今日も宿題をしますか いや今日はこれからデパートでアルバイトです 忙しいですね",
-              "explanation": "In Mondai 2 Q5, pay attention to the key detail asked in the question. Option 1 is the accurate answer."
+              "explanation": "Mondai 2 Q5: Listen for the key detail asked in the question. Option 1 is correct."
             },
             {
               "id": "n5-e10-l-13",
               "type": "Mondai 2 (ポイント理解)",
               "audioSrc": "/audio/japanese/n5_listening/exam_10.mp3",
-              "audioStart": 1022.2,
-              "audioEnd": 1079.8,
+              "audioStart": 1465.5,
+              "audioEnd": 1523.5,
               "image": "/images/japanese/n5_listening/exam_10/q_13.png",
-              "question": "6. まず質問を聞いてください。それから話を聞いて、1〜4の中から 一番いいものを 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -12829,16 +12534,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "いや今日はこれからデパートでアルバイトです 忙しいですね じゃあ食べに行く時間はないですか いや大丈夫ですよ 行きましょう 男の人はこの後何をしますか 問題さん 問題さんでは絵を見ながら質問を聞いてください 矢印の人は何と言いますか 一から3の中から",
-              "explanation": "In Mondai 2 Q6, pay attention to the key detail asked in the question. Option 2 is the accurate answer."
+              "explanation": "Mondai 2 Q6: Listen for the key detail asked in the question. Option 2 is correct."
             },
             {
               "id": "n5-e10-l-14",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_listening/exam_10.mp3",
-              "audioStart": 1154.3,
-              "audioEnd": 1183.9,
+              "audioStart": 1523.5,
+              "audioEnd": 1546.5,
               "image": "/images/japanese/n5_listening/exam_10/q_14.png",
-              "question": "1. 絵を見ながら質問を聞いてください。矢印（➡）の人は 何と言いますか。1〜3の中から 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -12846,16 +12551,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "二 お休みなさい 三 ごめんなさい 三番 客に料理を出します 何と言いますか",
-              "explanation": "In Mondai 3 Q1, observe the situation indicated by the arrow. Option 3 is the appropriate utterance in this situation."
+              "explanation": "Mondai 3 Q1: Observe the arrow (➡) in the illustration. Option 3 is the most appropriate spoken phrase."
             },
             {
               "id": "n5-e10-l-15",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_listening/exam_10.mp3",
-              "audioStart": 1183.9,
-              "audioEnd": 1213.4,
+              "audioStart": 1546.5,
+              "audioEnd": 1606.5,
               "image": "/images/japanese/n5_listening/exam_10/q_15.png",
-              "question": "2. 絵を見ながら質問を聞いてください。矢印（➡）の人は 何と言いますか。1〜3の中から 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -12863,16 +12568,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "一 ごちそうさまでした 二 入どうぞ 三 住みません 四番 靴を買います",
-              "explanation": "In Mondai 3 Q2, observe the situation indicated by the arrow. Option 1 is the appropriate utterance in this situation."
+              "explanation": "Mondai 3 Q2: Observe the arrow (➡) in the illustration. Option 1 is the most appropriate spoken phrase."
             },
             {
               "id": "n5-e10-l-16",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_listening/exam_10.mp3",
-              "audioStart": 1213.4,
-              "audioEnd": 1243.0,
+              "audioStart": 1606.5,
+              "audioEnd": 1666.5,
               "image": "/images/japanese/n5_listening/exam_10/q_16.png",
-              "question": "3. 絵を見ながら質問を聞いてください。矢印（➡）の人は 何と言いますか。1〜3の中から 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -12880,16 +12585,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "何と言いますか 一 この靴をください 二 この靴を買いたいです 三 この靴はいいです 五番",
-              "explanation": "In Mondai 3 Q3, observe the situation indicated by the arrow. Option 2 is the appropriate utterance in this situation."
+              "explanation": "Mondai 3 Q3: Observe the arrow (➡) in the illustration. Option 2 is the most appropriate spoken phrase."
             },
             {
               "id": "n5-e10-l-17",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_listening/exam_10.mp3",
-              "audioStart": 1243.0,
-              "audioEnd": 1272.5,
+              "audioStart": 1666.5,
+              "audioEnd": 1726.5,
               "image": "/images/japanese/n5_listening/exam_10/q_17.png",
-              "question": "4. 絵を見ながら質問を聞いてください。矢印（➡）の人は 何と言いますか。1〜3の中から 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -12897,16 +12602,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "先生と食事をしました 先生がお金を払いました 何と言いますか 一 いただきます 二 よろしくお願いします 三",
-              "explanation": "In Mondai 3 Q4, observe the situation indicated by the arrow. Option 3 is the appropriate utterance in this situation."
+              "explanation": "Mondai 3 Q4: Observe the arrow (➡) in the illustration. Option 3 is the most appropriate spoken phrase."
             },
             {
               "id": "n5-e10-l-18",
               "type": "Mondai 3 (発話表現)",
               "audioSrc": "/audio/japanese/n5_listening/exam_10.mp3",
-              "audioStart": 1272.5,
-              "audioEnd": 1302.1,
+              "audioStart": 1726.5,
+              "audioEnd": 1784.5,
               "image": "/images/japanese/n5_listening/exam_10/q_18.png",
-              "question": "5. 絵を見ながら質問を聞いてください。矢印（➡）の人は 何と言いますか。1〜3の中から 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -12914,16 +12619,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "ごちそうさまでした 問題四 問題四はエナドがありません 文を聞いて",
-              "explanation": "In Mondai 3 Q5, observe the situation indicated by the arrow. Option 1 is the appropriate utterance in this situation."
+              "explanation": "Mondai 3 Q5: Observe the arrow (➡) in the illustration. Option 1 is the most appropriate spoken phrase."
             },
             {
               "id": "n5-e10-l-19",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5_listening/exam_10.mp3",
-              "audioStart": 1381.5,
-              "audioEnd": 1415.9,
+              "audioStart": 1784.5,
+              "audioEnd": 1846.5,
               "image": "/images/japanese/n5_listening/exam_10/q_19.png",
-              "question": "1. 短い文を聞いて、1〜3の中から 一番いい返事を 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -12931,16 +12636,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "一 二 はい どうもありがとう 二 いいえ どういたしまして 三 こちらこそ どうぞよろしく 四番 お父さんはおいくつですか",
-              "explanation": "In Mondai 4 Q1, respond immediately to the prompt. Option 2 is the natural conversational reply."
+              "explanation": "Mondai 4 Q1: Option 2 is the natural immediate conversational response."
             },
             {
               "id": "n5-e10-l-20",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5_listening/exam_10.mp3",
-              "audioStart": 1415.9,
-              "audioEnd": 1450.3,
+              "audioStart": 1846.5,
+              "audioEnd": 1906.5,
               "image": "/images/japanese/n5_listening/exam_10/q_20.png",
-              "question": "2. 短い文を聞いて、1〜3の中から 一番いい返事を 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -12948,16 +12653,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "一 五十五歳です 二 一つで結構です 三 七日か行かです 五番 ちょっと食べるものを作りましょうか 一 何も食べません",
-              "explanation": "In Mondai 4 Q2, respond immediately to the prompt. Option 3 is the natural conversational reply."
+              "explanation": "Mondai 4 Q2: Option 3 is the natural immediate conversational response."
             },
             {
               "id": "n5-e10-l-21",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5_listening/exam_10.mp3",
-              "audioStart": 1450.3,
-              "audioEnd": 1484.7,
+              "audioStart": 1906.5,
+              "audioEnd": 1966.5,
               "image": "/images/japanese/n5_listening/exam_10/q_21.png",
-              "question": "3. 短い文を聞いて、1〜3の中から 一番いい返事を 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -12965,16 +12670,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "二 全部食べました 三 お願いします 六番 兄弟は何人いますか 一 お父とです 二 一つです 三",
-              "explanation": "In Mondai 4 Q3, respond immediately to the prompt. Option 1 is the natural conversational reply."
+              "explanation": "Mondai 4 Q3: Option 1 is the natural immediate conversational response."
             },
             {
               "id": "n5-e10-l-22",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5_listening/exam_10.mp3",
-              "audioStart": 1484.7,
-              "audioEnd": 1519.1,
+              "audioStart": 1966.5,
+              "audioEnd": 2026.5,
               "image": "/images/japanese/n5_listening/exam_10/q_22.png",
-              "question": "4. 短い文を聞いて、1〜3の中から 一番いい返事を 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -12982,16 +12687,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 1,
               "transcript": "二人です 七番 今日は何日ですか 一 八日です 二 二人です 三 土曜日です 八番",
-              "explanation": "In Mondai 4 Q4, respond immediately to the prompt. Option 2 is the natural conversational reply."
+              "explanation": "Mondai 4 Q4: Option 2 is the natural immediate conversational response."
             },
             {
               "id": "n5-e10-l-23",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5_listening/exam_10.mp3",
-              "audioStart": 1519.1,
-              "audioEnd": 1553.5,
+              "audioStart": 2026.5,
+              "audioEnd": 2086.5,
               "image": "/images/japanese/n5_listening/exam_10/q_23.png",
-              "question": "5. 短い文を聞いて、1〜3の中から 一番いい返事を 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -12999,16 +12704,16 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 2,
               "transcript": "新しい先生はどうですか 一 え そうです 二 面白いです 三 教室にいます 九番 ここで写真を取ってもいいですか",
-              "explanation": "In Mondai 4 Q5, respond immediately to the prompt. Option 3 is the natural conversational reply."
+              "explanation": "Mondai 4 Q5: Option 3 is the natural immediate conversational response."
             },
             {
               "id": "n5-e10-l-24",
               "type": "Mondai 4 (即時応答)",
               "audioSrc": "/audio/japanese/n5_listening/exam_10.mp3",
-              "audioStart": 1553.5,
-              "audioEnd": 1587.9,
+              "audioStart": 2086.5,
+              "audioEnd": 2141.5,
               "image": "/images/japanese/n5_listening/exam_10/q_24.png",
-              "question": "6. 短い文を聞いて、1〜3の中から 一番いい返事を 1つ選んでください。",
+              "question": "",
               "options": [
                 "1",
                 "2",
@@ -13016,7 +12721,7 @@ export const EXAM_PAPERS_CATALOG = {
               ],
               "correct": 0,
               "transcript": "一 いや いや 取りません 二 いいえ 減たです 三 いいえ 行けません これで 紹介試験を終わります",
-              "explanation": "In Mondai 4 Q6, respond immediately to the prompt. Option 1 is the natural conversational reply."
+              "explanation": "Mondai 4 Q6: Option 1 is the natural immediate conversational response."
             }
           ]
         }
