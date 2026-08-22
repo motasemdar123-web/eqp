@@ -37,10 +37,19 @@ function speakJapanese(text) {
   window.speechSynthesis.speak(utterance);
 }
 
+function toggleFullscreen() {
+  if (typeof document === 'undefined') return;
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen?.().catch((e) => console.error(e));
+  } else {
+    document.exitFullscreen?.().catch((e) => console.error(e));
+  }
+}
+
 export default function JapaneseLearningHub() {
   const [level, setLevel] = useState('N5'); // 'N5' | 'N4'
-  const [activePillar, setActivePillar] = useState('exams'); // 'exams' | 'foundations' | 'workplace'
-  const [activeTab, setActiveTab] = useState('exam'); // 'exam' | 'mistakes' | 'scramble' | 'flashcards' | 'kanji' | 'grammar' | 'vocab' | 'technical'
+  const [activePillar, setActivePillar] = useState('foundations'); // 'foundations' | 'workplace' | 'exams'
+  const [activeTab, setActiveTab] = useState('vocab'); // 'vocab' | 'flashcards' | 'kanji' | 'grammar' | 'exam' ...
   const [toast, setToast] = useState(null);
   const [isLevelModalOpen, setIsLevelModalOpen] = useState(false);
   const [isFirstTimeUser, setIsFirstTimeUser] = useState(false);
@@ -94,9 +103,9 @@ export default function JapaneseLearningHub() {
   // Handle switching pillar
   const handlePillarChange = (pillar) => {
     setActivePillar(pillar);
-    if (pillar === 'exams') setActiveTab('exam');
-    else if (pillar === 'foundations') setActiveTab('flashcards');
+    if (pillar === 'foundations') setActiveTab('vocab');
     else if (pillar === 'workplace') setActiveTab('parts_explorer');
+    else if (pillar === 'exams') setActiveTab('exam');
   };
 
   const renderActiveToolContent = () => {
@@ -175,21 +184,8 @@ export default function JapaneseLearningHub() {
       }
     >
       <div className="space-y-6">
-        {/* Tier 1: Main Learning Pillars */}
+        {/* Tier 1: Main Learning Pillars (Skills & Foundations first, Exams last) */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 bg-slate-100 p-1.5 rounded-2xl border border-slate-200/80">
-          <button
-            type="button"
-            onClick={() => handlePillarChange('exams')}
-            className={`py-2.5 px-4 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer ${
-              activePillar === 'exams'
-                ? 'bg-white text-slate-900 shadow-sm border border-slate-200/60'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
-            }`}
-          >
-            <span className="text-base">⛩️</span>
-            <span>JLPT Exam Suite (試験対策)</span>
-          </button>
-
           <button
             type="button"
             onClick={() => handlePillarChange('foundations')}
@@ -200,7 +196,7 @@ export default function JapaneseLearningHub() {
             }`}
           >
             <span className="text-base">📖</span>
-            <span>Skills & Foundations (基礎ドリル)</span>
+            <span>Skills & Vocabulary (基礎・単語・文法)</span>
           </button>
 
           <button
@@ -215,61 +211,36 @@ export default function JapaneseLearningHub() {
             <span className="text-base">🏭</span>
             <span>Factory & Komatsu (現場・建機・敬語)</span>
           </button>
+
+          <button
+            type="button"
+            onClick={() => handlePillarChange('exams')}
+            className={`py-2.5 px-4 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer ${
+              activePillar === 'exams'
+                ? 'bg-white text-slate-900 shadow-sm border border-slate-200/60'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
+            }`}
+          >
+            <span className="text-base">⛩️</span>
+            <span>JLPT Exam Suite (試験対策)</span>
+          </button>
         </div>
 
         {/* Tier 2: Submodule Pills based on selected Pillar (Scrollable on mobile) */}
         <div className="flex items-center gap-2 border-b border-slate-200 pb-3 overflow-x-auto scrollbar-none flex-nowrap sm:flex-wrap -mx-3 px-3 sm:mx-0 sm:px-0">
-          {activePillar === 'exams' && (
+          {activePillar === 'foundations' && (
             <>
               <button
                 type="button"
                 className={`px-3.5 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer whitespace-nowrap shrink-0 ${
-                  activeTab === 'exam'
+                  activeTab === 'vocab'
                     ? 'bg-slate-900 text-white shadow-xs'
                     : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50'
                 }`}
-                onClick={() => setActiveTab('exam')}
+                onClick={() => setActiveTab('vocab')}
               >
-                ⏱️ Full Mock Exams
+                📚 Vocabulary Vault
               </button>
-              <button
-                type="button"
-                className={`px-3.5 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer whitespace-nowrap shrink-0 ${
-                  activeTab === 'rush'
-                    ? 'bg-rose-600 text-white shadow-xs'
-                    : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50'
-                }`}
-                onClick={() => setActiveTab('rush')}
-              >
-                ⚡ Speed Kanji Rush
-              </button>
-              <button
-                type="button"
-                className={`px-3.5 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer whitespace-nowrap shrink-0 ${
-                  activeTab === 'mistakes'
-                    ? 'bg-rose-700 text-white shadow-xs'
-                    : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50'
-                }`}
-                onClick={() => setActiveTab('mistakes')}
-              >
-                🎯 Error Vault
-              </button>
-              <button
-                type="button"
-                className={`px-3.5 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer whitespace-nowrap shrink-0 ${
-                  activeTab === 'scramble'
-                    ? 'bg-indigo-600 text-white shadow-xs'
-                    : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50'
-                }`}
-                onClick={() => setActiveTab('scramble')}
-              >
-                🧩 Sentence Scrambler
-              </button>
-            </>
-          )}
-
-          {activePillar === 'foundations' && (
-            <>
               <button
                 type="button"
                 className={`px-3.5 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer whitespace-nowrap shrink-0 ${
@@ -302,17 +273,6 @@ export default function JapaneseLearningHub() {
                 onClick={() => setActiveTab('grammar')}
               >
                 📖 Grammar Master
-              </button>
-              <button
-                type="button"
-                className={`px-3.5 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer whitespace-nowrap shrink-0 ${
-                  activeTab === 'vocab'
-                    ? 'bg-slate-900 text-white shadow-xs'
-                    : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50'
-                }`}
-                onClick={() => setActiveTab('vocab')}
-              >
-                📚 Vocabulary Vault
               </button>
             </>
           )}
@@ -362,6 +322,55 @@ export default function JapaneseLearningHub() {
                 onClick={() => setActiveTab('technical')}
               >
                 🏭 5S & Safety Glossary
+              </button>
+            </>
+          )}
+
+          {activePillar === 'exams' && (
+            <>
+              <button
+                type="button"
+                className={`px-3.5 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer whitespace-nowrap shrink-0 ${
+                  activeTab === 'exam'
+                    ? 'bg-slate-900 text-white shadow-xs'
+                    : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50'
+                }`}
+                onClick={() => setActiveTab('exam')}
+              >
+                ⏱️ Full Mock Exams
+              </button>
+              <button
+                type="button"
+                className={`px-3.5 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer whitespace-nowrap shrink-0 ${
+                  activeTab === 'rush'
+                    ? 'bg-rose-600 text-white shadow-xs'
+                    : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50'
+                }`}
+                onClick={() => setActiveTab('rush')}
+              >
+                ⚡ Speed Kanji Rush
+              </button>
+              <button
+                type="button"
+                className={`px-3.5 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer whitespace-nowrap shrink-0 ${
+                  activeTab === 'mistakes'
+                    ? 'bg-rose-700 text-white shadow-xs'
+                    : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50'
+                }`}
+                onClick={() => setActiveTab('mistakes')}
+              >
+                🎯 Error Vault
+              </button>
+              <button
+                type="button"
+                className={`px-3.5 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer whitespace-nowrap shrink-0 ${
+                  activeTab === 'scramble'
+                    ? 'bg-indigo-600 text-white shadow-xs'
+                    : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50'
+                }`}
+                onClick={() => setActiveTab('scramble')}
+              >
+                🧩 Sentence Scrambler
               </button>
             </>
           )}
@@ -537,7 +546,18 @@ function FlashcardDojo({ grammarList, level, onToast }) {
               <div className="flex items-center gap-2">
                 <button
                   type="button"
-                  className="text-xs text-indigo-600 font-bold hover:underline flex items-center gap-1"
+                  className="text-xs text-slate-700 hover:text-slate-950 font-bold bg-slate-100 hover:bg-slate-200 px-2.5 py-1 rounded-lg flex items-center gap-1 transition-all active:scale-95 cursor-pointer"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    toggleFullscreen();
+                  }}
+                  title="Toggle Fullscreen Mode"
+                >
+                  <span>⛶</span> Fullscreen
+                </button>
+                <button
+                  type="button"
+                  className="text-xs text-indigo-600 font-bold hover:underline flex items-center gap-1 cursor-pointer"
                   onClick={(e) => {
                     e.stopPropagation();
                     speakJapanese(currentCard?.title || '');
@@ -545,7 +565,7 @@ function FlashcardDojo({ grammarList, level, onToast }) {
                 >
                   <span>🔊</span> Listen
                 </button>
-                <span className="text-xs text-slate-400 font-mono">Click to Flip</span>
+                <span className="text-xs text-slate-400 font-mono hidden sm:inline">Click to Flip</span>
               </div>
             </div>
 
@@ -714,13 +734,23 @@ function KanjiDojo({ kanjiList, level }) {
             <h3 className="text-base font-bold text-slate-900">{level} Kanji Matrix</h3>
             <p className="text-xs text-slate-500">Click any character to inspect readings and practice writing.</p>
           </div>
-          <input
-            type="text"
-            placeholder="Search character, meaning, reading..."
-            className="ds-input text-xs w-64"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
+          <div className="flex items-center gap-2">
+            <input
+              type="text"
+              placeholder="Search character, meaning, reading..."
+              className="ds-input text-xs w-52 sm:w-64"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+            <button
+              type="button"
+              className="text-xs text-slate-700 hover:text-slate-950 font-bold bg-slate-100 hover:bg-slate-200 px-2.5 py-1.5 rounded-lg flex items-center gap-1 transition-all active:scale-95 cursor-pointer shrink-0"
+              onClick={toggleFullscreen}
+              title="Toggle Fullscreen Mode"
+            >
+              <span>⛶</span> Fullscreen
+            </button>
+          </div>
         </div>
 
         <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-2.5 max-h-[500px] overflow-y-auto p-1">
@@ -951,17 +981,27 @@ function VocabularyVault({ vocabList, level }) {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1">
-          {categories.map((cat) => (
-            <button
-              key={cat}
-              type="button"
-              className={`px-3 py-1 rounded-lg text-xs font-bold whitespace-nowrap transition-all ${selectedCategory === cat ? 'bg-slate-900 text-white shadow-xs' : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-100'}`}
-              onClick={() => setSelectedCategory(cat)}
-            >
-              {cat}
-            </button>
-          ))}
+        <div className="flex items-center gap-2 overflow-x-auto pb-1">
+          <div className="flex items-center gap-1.5 shrink-0">
+            {categories.map((cat) => (
+              <button
+                key={cat}
+                type="button"
+                className={`px-3 py-1 rounded-lg text-xs font-bold whitespace-nowrap transition-all cursor-pointer ${selectedCategory === cat ? 'bg-slate-900 text-white shadow-xs' : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-100'}`}
+                onClick={() => setSelectedCategory(cat)}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+          <button
+            type="button"
+            className="text-xs text-slate-700 hover:text-slate-950 font-bold bg-white border border-slate-200 hover:bg-slate-100 px-2.5 py-1 rounded-lg flex items-center gap-1 transition-all active:scale-95 cursor-pointer shrink-0 ml-auto"
+            onClick={toggleFullscreen}
+            title="Toggle Fullscreen Mode"
+          >
+            <span>⛶</span> Fullscreen
+          </button>
         </div>
       </div>
 

@@ -6,6 +6,24 @@ import Badge from '../ui/Badge';
 import Button from '../ui/Button';
 import { EXAM_PAPERS_CATALOG, N5_SECTIONS_DATA, N4_SECTIONS_DATA } from '../../lib/japanese/examQuestionsData';
 
+function speakJapanese(text) {
+  if (typeof window === 'undefined' || !window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = 'ja-JP';
+  utterance.rate = 0.85;
+  window.speechSynthesis.speak(utterance);
+}
+
+function toggleFullscreen() {
+  if (typeof document === 'undefined') return;
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen?.().catch((e) => console.error(e));
+  } else {
+    document.exitFullscreen?.().catch((e) => console.error(e));
+  }
+}
+
 function formatTimer(seconds) {
   const mins = Math.floor(seconds / 60);
   const secs = seconds % 60;
@@ -384,21 +402,31 @@ export default function JLPTExamSimulator({ level = 'N5', onToast }) {
         </div>
 
         <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <button
-            type="button"
-            className="text-xs font-bold text-blue-600 hover:underline cursor-pointer"
-            onClick={() => {
-              const audio = new Audio('/audio/japanese/n5/captured-media-2-mp3.mp3');
-              audio.play();
-              if (onToast) onToast({ type: 'info', message: 'Playing audio sound check...' });
-            }}
-          >
-            🔊 Test Audio Output
-          </button>
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              className="text-xs font-bold text-blue-600 hover:underline cursor-pointer"
+              onClick={() => {
+                const audio = new Audio('/audio/japanese/n5/captured-media-2-mp3.mp3');
+                audio.play();
+                if (onToast) onToast({ type: 'info', message: 'Playing audio sound check...' });
+              }}
+            >
+              🔊 Test Audio Output
+            </button>
+            <button
+              type="button"
+              className="text-xs text-slate-700 hover:text-slate-950 font-bold bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded-lg flex items-center gap-1 transition-all active:scale-95 cursor-pointer"
+              onClick={toggleFullscreen}
+              title="Toggle Fullscreen Exam Hall"
+            >
+              <span>⛶</span> Fullscreen Mode
+            </button>
+          </div>
           <Button
             type="button"
             size="lg"
-            className="w-full sm:w-auto px-8 font-bold shadow-md"
+            className="w-full sm:w-auto px-8 font-bold shadow-md cursor-pointer"
             onClick={() => {
               setUserAnswers({});
               setFlaggedQuestions(new Set());
@@ -461,7 +489,7 @@ export default function JLPTExamSimulator({ level = 'N5', onToast }) {
     return (
       <div className="space-y-6 max-w-6xl mx-auto">
         {/* Top Floating Exam Control Header */}
-        <div className="sticky top-0 z-30 p-4 bg-slate-900 text-white rounded-2xl shadow-xl flex flex-wrap items-center justify-between gap-4">
+        <div className="sticky top-0 z-30 p-3 sm:p-4 bg-slate-900 text-white rounded-2xl shadow-xl flex flex-wrap items-center justify-between gap-3 sm:gap-4">
           <div className="flex items-center gap-3">
             <span className="text-xl font-bold font-mono bg-blue-600 px-2.5 py-1 rounded-lg">
               {level}
@@ -481,7 +509,7 @@ export default function JLPTExamSimulator({ level = 'N5', onToast }) {
             </div>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 sm:gap-4">
             {/* Live Countdown Timer */}
             <div
               className={`flex items-center gap-2 px-3.5 py-1.5 rounded-xl font-mono text-base font-bold transition-all ${
@@ -496,11 +524,21 @@ export default function JLPTExamSimulator({ level = 'N5', onToast }) {
               <span>{formatTimer(timeRemaining)}</span>
             </div>
 
+            {/* Fullscreen Button */}
+            <button
+              type="button"
+              onClick={toggleFullscreen}
+              className="px-2.5 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-bold transition-all flex items-center gap-1 cursor-pointer"
+              title="Toggle Fullscreen Mode"
+            >
+              <span>⛶</span> <span className="hidden sm:inline">Fullscreen</span>
+            </button>
+
             <Button
               type="button"
               variant="secondary"
               size="sm"
-              className="!bg-white/10 !text-white !border-white/20 hover:!bg-white/20"
+              className="!bg-white/10 !text-white !border-white/20 hover:!bg-white/20 cursor-pointer text-xs"
               onClick={() => {
                 const unanswered = currentQuestions.length - answeredCount;
                 if (
