@@ -12,6 +12,7 @@ const machineRepository = require('../repositories/machineRepository');
 const commentRepository = require('../repositories/commentRepository');
 const reportRepository = require('../repositories/reportRepository');
 const storageService = require('./storageService');
+const komatsuEqpCareService = require('./komatsuEqpCareService');
 const { findSignaturePath, getSignatureStatus } = require('./reportSignatureService');
 const { ApiError } = require('../utils/ApiError');
 const { getLifecycleReportCount } = require('../data/lifecycleReportCounts');
@@ -1719,6 +1720,27 @@ async function generateReports(payload) {
 
   for (const [machineId, counters] of machineCounterUpdates.entries()) {
     await machineRepository.updateCounters(machineId, counters);
+  }
+
+  if (payload.autoUploadToEqp || payload.autoUploadToEqpc) {
+    const eqpcItems = reportJobs.map((job) => {
+      const matchedFile = generatedFiles.find((f) => String(f.machine) === String(job.machine.machine_number));
+      return {
+        model: job.machine.machine_type,
+        serialNo: job.machine.machine_number,
+        smr: job.smr,
+        serviceDate: job.serviceDate,
+        eventCode: komatsuEqpCareService.mapServiceTypeToEventCode(job.serviceType),
+        customer: job.customerName || "LA'ALA AL-KUWAIT REAL ESTATE CO.",
+        comments: job.comments,
+        fileName: job.fileName,
+        fileUrl: matchedFile?.fileUrl || null,
+      };
+    });
+
+    komatsuEqpCareService.batchUploadReports(eqpcItems).catch((err) => {
+      console.warn('[autoUploadToEqp] Background EQP Care auto-upload notice:', err.message);
+    });
   }
 
   return {

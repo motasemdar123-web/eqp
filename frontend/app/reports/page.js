@@ -246,6 +246,57 @@ export default function ReportsPage() {
     }
   }
 
+  async function handleAutoUploadToEqp(targetReports) {
+    if (!targetReports || targetReports.length === 0) return;
+    const count = targetReports.length;
+    setEqpProgress({ active: true, current: 0, total: count, statusText: `Starting automated upload of ${count} reports to EQP Care...` });
+
+    const batchItems = targetReports.map((r) => {
+      let mappedCode = 'W413';
+      const sType = (r.service_type || r.report_type || '').toUpperCase();
+      if (sType.includes('1ST') || sType.includes('250')) mappedCode = 'W411';
+      else if (sType.includes('2ND') || sType.includes('500')) mappedCode = 'W412';
+      else if (sType.includes('3RD') || sType.includes('1000')) mappedCode = 'W413';
+      else if (sType.includes('4TH') || sType.includes('2000')) mappedCode = 'W41X';
+      else if (sType.includes('PRE-DELIVERY') || sType.includes('PDI')) mappedCode = 'W41P';
+      else if (sType.includes('NEW') || sType.includes('DELIVERY')) mappedCode = 'W41N';
+      else mappedCode = 'W41X';
+
+      const rawDate = r.service_date || r.created_at || new Date().toISOString();
+      const serviceDate = rawDate ? new Date(rawDate).toISOString().slice(0, 10) : new Date().toISOString().slice(0, 10);
+
+      return {
+        model: r.machine_type || r.machine?.machineType || 'HM400',
+        type: '3',
+        subtype: 'R',
+        serialNo: r.machine_number || r.machine?.machineNumber || '',
+        eventCode: mappedCode,
+        serviceDate,
+        smr: Number(r.smr) || (r.machine?.smr ? Number(r.machine.smr) : 0),
+        customer: r.machine?.customerName || "LA'ALA AL-KUWAIT REAL ESTATE CO.",
+        comments: r.comments || `Scheduled periodic maintenance service (${sType || 'PM'}) completed according to Komatsu specifications.`,
+        reportId: r.id,
+        fileName: r.file_name,
+        fileUrl: r.file_url,
+      };
+    });
+
+    try {
+      setToast({ type: 'info', message: `🚀 Dispatched ${count} reports to Komatsu Equipment Care Daily Operation...` });
+      const res = await batchUploadEqpcReports({ items: batchItems });
+      setToast({
+        type: 'success',
+        message: `✅ Automated Upload Finished: ${res.successful || 0} of ${count} reports successfully uploaded to Komatsu EQP Care!`,
+      });
+      setSelectedReportIds([]);
+      await loadReports();
+    } catch (err) {
+      setToast({ type: 'error', message: err.message || 'Automated EQP Care upload encountered an issue.' });
+    } finally {
+      setEqpProgress({ active: false, current: 0, total: 0, statusText: '' });
+    }
+  }
+
   async function openEqpUploadModal(targetReports) {
     if (!targetReports || targetReports.length === 0) return;
     setEqpUploadModal({ reports: targetReports });
@@ -286,48 +337,8 @@ export default function ReportsPage() {
   async function handleExecuteEqpUpload() {
     if (!eqpUploadModal?.reports?.length) return;
     const targetReports = eqpUploadModal.reports;
-    setEqpProgress({ active: true, current: 0, total: targetReports.length });
-
-    const batchItems = targetReports.map((r) => {
-      let mappedCode = 'W413';
-      const sType = (r.service_type || r.report_type || '').toUpperCase();
-      if (sType.includes('1ST') || sType.includes('250')) mappedCode = 'W411';
-      else if (sType.includes('2ND') || sType.includes('500')) mappedCode = 'W412';
-      else if (sType.includes('3RD') || sType.includes('1000')) mappedCode = 'W413';
-      else if (sType.includes('PRE-DELIVERY') || sType.includes('PDI')) mappedCode = 'W41P';
-      else if (sType.includes('NEW') || sType.includes('DELIVERY')) mappedCode = 'W41N';
-      else mappedCode = 'W41X';
-
-      return {
-        model: r.machine_type || r.machine?.machineType || 'HM400',
-        type: '3',
-        subtype: 'R',
-        serialNo: r.machine_number || r.machine?.machineNumber || '',
-        eventCode: mappedCode,
-        serviceDate: r.service_date ? new Date(r.service_date).toISOString().slice(0, 10) : new Date().toISOString().slice(0, 10),
-        smr: r.smr || 0,
-        customer: r.machine?.customerName || "LA'ALA AL-KUWAIT REAL ESTATE CO.",
-        comments: r.comments || 'Scheduled periodic maintenance service completed.',
-        reportId: r.id,
-        fileName: r.file_name,
-        fileUrl: r.file_url,
-      };
-    });
-
-    try {
-      const res = await batchUploadEqpcReports({ items: batchItems });
-      setToast({
-        type: 'success',
-        message: `Uploaded ${res.successful || 0} of ${batchItems.length} reports to Komatsu Equipment Care!`,
-      });
-      setEqpUploadModal(null);
-      setSelectedReportIds([]);
-      await loadReports();
-    } catch (err) {
-      setToast({ type: 'error', message: err.message || 'EQP Care upload failed.' });
-    } finally {
-      setEqpProgress({ active: false, current: 0, total: 0 });
-    }
+    setEqpUploadModal(null);
+    await handleAutoUploadToEqp(targetReports);
   }
 
   return (
@@ -449,17 +460,27 @@ export default function ReportsPage() {
                     <Badge tone="yellow">{selectedReportIds.length} Selected</Badge>
                   )}
 
-                  {/* Primary Upload Selected to EQP Button */}
+                  {/* Primary 1-Click Automated Upload Selected Button */}
                   {selectedReports.length > 0 && (
                     <button
                       type="button"
-                      onClick={() => openEqpUploadModal(selectedReports)}
+                      disabled={eqpProgress.active}
+                      onClick={() => handleAutoUploadToEqp(selectedReports)}
                       className="ds-button bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs py-2 px-3.5 flex items-center gap-1.5 shadow-sm rounded-lg transition-all"
+                      title="1-Click automated dispatch of all selected reports to Komatsu Equipment Care"
                     >
-                      <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                      </svg>
-                      Upload Selected to EQP ({selectedReports.length})
+                      {eqpProgress.active ? (
+                        <>
+                          <span className="animate-spin">⏳</span> Uploading ({selectedReports.length})...
+                        </>
+                      ) : (
+                        <>
+                          <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                          </svg>
+                          ⚡ Auto-Upload to EQP ({selectedReports.length})
+                        </>
+                      )}
                     </button>
                   )}
 
@@ -482,6 +503,24 @@ export default function ReportsPage() {
                 </div>
               </div>
             </div>
+
+            {/* In-Page Automated Upload Progress Banner */}
+            {eqpProgress.active && (
+              <div className="p-3.5 bg-gradient-to-r from-sky-50 to-blue-50 border-b border-sky-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                <div className="flex items-center gap-3">
+                  <span className="text-2xl animate-bounce">🚀</span>
+                  <div>
+                    <h4 className="text-xs font-bold text-sky-900 flex items-center gap-2">
+                      <span>Automated Komatsu EQP Care Dispatch In Progress</span>
+                      <Badge tone="live">Processing</Badge>
+                    </h4>
+                    <p className="text-[11px] text-sky-700">
+                      Reading SMR, service dates, event codes & dispatching PDF documents to Daily Operation (E0295)...
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
 
             <div className="ds-table-wrap">
               <table className="ds-table">
@@ -547,11 +586,12 @@ export default function ReportsPage() {
                             </Button>
                             <button
                               type="button"
-                              onClick={() => openEqpUploadModal([report])}
+                              disabled={eqpProgress.active}
+                              onClick={() => handleAutoUploadToEqp([report])}
                               className="ds-button ds-button-secondary text-xs py-1 px-2.5 font-bold text-sky-700 border-sky-200 bg-sky-50 hover:bg-sky-100 flex items-center gap-1"
-                              title="Upload directly to Komatsu Equipment Care Daily Operation (E0295)"
+                              title="1-Click Auto Upload this report to Komatsu Equipment Care Daily Operation"
                             >
-                              <span>⬆</span> EQP Care
+                              <span>⚡</span> Auto EQP
                             </button>
                             <Button
                               type="button"

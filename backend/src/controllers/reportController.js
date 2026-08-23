@@ -58,6 +58,7 @@ async function generateReports(req, res) {
     serviceType: req.body.serviceType,
     selectedMachines: req.body.selectedMachines.map(Number),
     reportDates: req.body.reportDates,
+    autoUploadToEqp: Boolean(req.body.autoUploadToEqp),
   });
 
   res.json({
