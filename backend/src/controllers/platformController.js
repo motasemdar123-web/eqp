@@ -368,7 +368,7 @@ async function saveEqpcCookie(req, res) {
   }
   const saved = komatsuEqpCareService.saveCookie(cookie);
   const status = await komatsuEqpCareService.testEqpcConnection(saved);
-  res.json({ success: true, ...status });
+  res.json({ success: true, cleanCookie: saved, ...status });
 }
 
 async function getEqpcEventCodes(req, res) {

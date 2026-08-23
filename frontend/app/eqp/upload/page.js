@@ -144,10 +144,10 @@ export default function EqpCareUploadPage() {
     setSavingCookie(true);
     try {
       const cleanCookie = cookieInput.trim();
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('eqpc_user_cookie', cleanCookie);
-      }
       const res = await saveEqpcCookie(cleanCookie);
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('eqpc_user_cookie', res.cleanCookie || cleanCookie);
+      }
       setStatus({
         connected: Boolean(res.connected),
         loading: false,

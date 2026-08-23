@@ -14,29 +14,61 @@ const DEFAULT_INITIAL_COOKIES =
 
 let inMemoryCookie = '';
 
+function cleanCookieString(cookie) {
+  return String(cookie || '')
+    .replace(/\^/g, '')
+    .replace(/\\"/g, '"')
+    .replace(/\\'/g, "'")
+    .replace(/^cookie:\s*/i, '')
+    .replace(/[\r\n]+/g, ' ')
+    .trim();
+}
+
 /**
  * Parses raw cookie strings, cURL commands, or header dumps.
  */
 function parseCookieInput(rawInput = '') {
-  const trimmed = String(rawInput || '').trim();
-  if (!trimmed) return '';
+  let text = String(rawInput || '').trim();
+  if (!text) return '';
 
-  if (trimmed.toLowerCase().includes('curl') || trimmed.toLowerCase().includes('invoke-webrequest') || trimmed.includes('fetch(')) {
-    const match = trimmed.match(/-(?:H|-header)\s+['"](?:cookie:\s*)?([^'"]+)['"]/i);
-    if (match) return match[1].trim();
-
-    const match2 = trimmed.match(/["']?cookie["']?\s*:\s*["']([^"']+)["']/i);
-    if (match2) return match2[1].trim();
+  // 1. Check for -b or --cookie flag (including Windows cmd ^ escaping)
+  const bMatch = text.match(/(?:-b|--cookie)\s+\^?["']([\s\S]*?)\^?["'](?:\s+[\^-]|$)/i);
+  if (bMatch) {
+    return cleanCookieString(bMatch[1]);
   }
 
-  for (const line of trimmed.split('\n')) {
+  // 2. Check for -H "Cookie: ..." or -H ^"Cookie: ...^"
+  const hMatch = text.match(/(?:-H|--header)\s+\^?["'](?:cookie:\s*)?([\s\S]*?)\^?["'](?:\s+[\^-]|$)/i);
+  if (hMatch && hMatch[1].toLowerCase().includes('jsessionid')) {
+    return cleanCookieString(hMatch[1]);
+  }
+
+  // 3. Check for direct Cookie: header line
+  for (const line of text.split('\n')) {
     const lineTrimmed = line.trim();
     if (lineTrimmed.toLowerCase().startsWith('cookie:')) {
-      return lineTrimmed.slice(7).trim();
+      return cleanCookieString(lineTrimmed.slice(7));
     }
   }
 
-  return trimmed;
+  // 4. If raw input contains JSESSIONID= or mkmwFlg= or userId=
+  if (text.includes('JSESSIONID=') || text.includes('userId=') || text.includes('eqpMenuCtg=')) {
+    const inlineBMatch = text.match(/-b\s+\^?["']([^"']+)["']/i);
+    if (inlineBMatch) {
+      return cleanCookieString(inlineBMatch[1]);
+    }
+    const tokens = [];
+    const pairRegex = /(JSESSIONID|userId|langCd|bandwidth|eqpMenuCtg|dispMenu|mkmwFlg)=([^;^"'\s]+|""|'')/gi;
+    let m;
+    while ((m = pairRegex.exec(text)) !== null) {
+      tokens.push(`${m[1]}=${m[2]}`);
+    }
+    if (tokens.length > 0) {
+      return cleanCookieString(tokens.join('; '));
+    }
+  }
+
+  return cleanCookieString(text);
 }
 
 /**
