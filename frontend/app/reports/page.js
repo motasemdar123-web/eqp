@@ -285,7 +285,8 @@ export default function ReportsPage() {
 
     try {
       setToast({ type: 'info', message: `🚀 Dispatched ${count} reports to Komatsu Equipment Care Daily Operation...` });
-      const res = await batchUploadEqpcReports({ items: batchItems });
+      const storedCookie = typeof window !== 'undefined' ? localStorage.getItem('eqpc_user_cookie') || '' : '';
+      const res = await batchUploadEqpcReports({ items: batchItems, cookie: storedCookie });
       if (res.failed > 0 && res.successful === 0) {
         const firstErr = res.results?.find((r) => r.status === 'FAILED')?.error || 'Upload failed.';
         setToast({
@@ -333,7 +334,11 @@ export default function ReportsPage() {
     if (!cookieInput.trim()) return;
     setSavingCookie(true);
     try {
-      const res = await saveEqpcCookie(cookieInput.trim());
+      const cleanCookie = cookieInput.trim();
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('eqpc_user_cookie', cleanCookie);
+      }
+      const res = await saveEqpcCookie(cleanCookie);
       setEqpConnection({
         checked: true,
         connected: Boolean(res.connected),

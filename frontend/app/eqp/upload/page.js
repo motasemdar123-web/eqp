@@ -143,7 +143,11 @@ export default function EqpCareUploadPage() {
     }
     setSavingCookie(true);
     try {
-      const res = await saveEqpcCookie(cookieInput.trim());
+      const cleanCookie = cookieInput.trim();
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('eqpc_user_cookie', cleanCookie);
+      }
+      const res = await saveEqpcCookie(cleanCookie);
       setStatus({
         connected: Boolean(res.connected),
         loading: false,
@@ -229,7 +233,7 @@ export default function EqpCareUploadPage() {
     addLog(`Starting upload for ${formData.model} #${formData.serialNo} (${formData.eventCode})...`, 'info');
 
     try {
-      const selectedReport = generatedReports.find((r) => String(r.id) === String(formData.selectedReportId));
+      const storedCookie = typeof window !== 'undefined' ? localStorage.getItem('eqpc_user_cookie') || '' : '';
       const payload = {
         model: formData.model,
         type: formData.type,
@@ -253,6 +257,7 @@ export default function EqpCareUploadPage() {
         reportId: selectedReport?.id || null,
         fileName: selectedReport?.file_name || `Report_${formData.model}_${formData.serialNo}.pdf`,
         fileUrl: selectedReport?.file_url || null,
+        cookie: storedCookie,
       };
 
       const res = await uploadEqpcReport(payload);
@@ -317,7 +322,8 @@ export default function EqpCareUploadPage() {
     });
 
     try {
-      const res = await batchUploadEqpcReports({ items: batchItems });
+      const storedCookie = typeof window !== 'undefined' ? localStorage.getItem('eqpc_user_cookie') || '' : '';
+      const res = await batchUploadEqpcReports({ items: batchItems, cookie: storedCookie });
       setBatchProgress({
         active: false,
         current: batchItems.length,
