@@ -301,43 +301,43 @@ export default function TechniciansManagementPage() {
           </article>
         </section>
 
-        {/* Sub-tabs Selector */}
-        <section className="bg-white dark:bg-slate-900 p-1.5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-xs">
+        {/* Sub-tabs Selector Ribbon */}
+        <section className="ds-card p-1.5 border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs">
           <div className="flex flex-wrap gap-1">
             <button
               onClick={() => setActiveTab('roster')}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold transition-all ${
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs font-semibold transition-all ${
                 activeTab === 'roster'
-                  ? 'bg-amber-500 text-slate-950 shadow-xs font-bold'
+                  ? 'bg-slate-900 text-white dark:bg-amber-500 dark:text-slate-950 shadow-xs font-bold'
                   : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
               }`}
             >
-              <span>👥</span>
-              <span>Roster & Profiles</span>
+              <span className="text-base">👥</span>
+              <span>Roster & Shift Assignment</span>
             </button>
 
             <button
               onClick={() => setActiveTab('skills')}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold transition-all ${
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs font-semibold transition-all ${
                 activeTab === 'skills'
-                  ? 'bg-amber-500 text-slate-950 shadow-xs font-bold'
+                  ? 'bg-slate-900 text-white dark:bg-amber-500 dark:text-slate-950 shadow-xs font-bold'
                   : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
               }`}
             >
-              <span>🎓</span>
-              <span>Skills Matrix (Proficiency)</span>
+              <span className="text-base">🎓</span>
+              <span>Skills Matrix & Authorizations</span>
             </button>
 
             <button
               onClick={() => setActiveTab('infractions')}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold transition-all ${
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs font-semibold transition-all ${
                 activeTab === 'infractions'
-                  ? 'bg-amber-500 text-slate-950 shadow-xs font-bold'
+                  ? 'bg-slate-900 text-white dark:bg-amber-500 dark:text-slate-950 shadow-xs font-bold'
                   : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
               }`}
             >
-              <span>⚠️</span>
-              <span>Quality & Disciplinary Log</span>
+              <span className="text-base">⚠️</span>
+              <span>Quality & Disciplinary Audit Log</span>
             </button>
           </div>
         </section>
@@ -619,24 +619,26 @@ export default function TechniciansManagementPage() {
 
         {/* TAB 2: SKILLS & PROFICIENCY MATRIX */}
         {activeTab === 'skills' && (
-          <Card className="p-6">
+          <Card className="p-6 border border-slate-200/80 dark:border-slate-800 shadow-xs">
             <div className="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
               <div>
                 <div className="flex items-center gap-2">
                   <span className="text-xl">🎓</span>
-                  <h2 className="text-lg font-bold text-slate-900 dark:text-white">Technicians Skills & Proficiency Matrix</h2>
+                  <h2 className="text-base font-bold text-slate-900 dark:text-white">
+                    Technicians Skills & Authorizations Matrix
+                  </h2>
                   <Badge tone="live">Certified Matrix</Badge>
                 </div>
-                <p className="text-xs text-slate-500 mt-1">
+                <p className="text-xs text-slate-500 mt-0.5">
                   Track technical competencies, equipment operational authorizations, and tool proficiencies.
                 </p>
               </div>
             </div>
 
-            <div className="mt-4 overflow-x-auto">
+            <div className="mt-4 overflow-x-auto border border-slate-200 dark:border-slate-800 rounded-xl">
               <table className="w-full text-left text-xs border-collapse min-w-[850px]">
-                <thead>
-                  <tr className="bg-slate-50 dark:bg-slate-800/60 text-slate-600 dark:text-slate-300 font-semibold border-b border-slate-200 dark:border-slate-700">
+                <thead className="bg-slate-100 dark:bg-slate-800">
+                  <tr className="border-b border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-bold text-[10px] uppercase tracking-wider">
                     <th className="py-2.5 px-3">Technician</th>
                     <th className="py-2.5 px-2 text-center">Crane</th>
                     <th className="py-2.5 px-2 text-center">Pumps</th>
@@ -644,13 +646,13 @@ export default function TechniciansManagementPage() {
                     <th className="py-2.5 px-2 text-center">Compressor</th>
                     <th className="py-2.5 px-2 text-center">Generator</th>
                     <th className="py-2.5 px-2 text-center">Grinder</th>
-                    <th className="py-2.5 px-2 text-center">Hydraulic Press</th>
+                    <th className="py-2.5 px-2 text-center">Press</th>
                     <th className="py-2.5 px-2 text-center">Driller</th>
-                    <th className="py-2.5 px-2 text-center">Oxy-Acetylene</th>
-                    <th className="py-2.5 px-3 text-right">Certified</th>
+                    <th className="py-2.5 px-2 text-center">Oxy-Cut</th>
+                    <th className="py-2.5 px-3 text-right">Score</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100 dark:divide-slate-800 font-mono">
+                <tbody className="divide-y divide-slate-100 dark:divide-slate-800 font-mono text-[11px]">
                   {(governanceData.technicianSkills || []).map((t, idx) => (
                     <tr key={idx} className="hover:bg-slate-50/70 dark:hover:bg-slate-800/40">
                       <td className="py-2.5 px-3 font-sans font-bold text-slate-900 dark:text-white">
@@ -661,7 +663,7 @@ export default function TechniciansManagementPage() {
                         return (
                           <td key={skillKey} className="py-2.5 px-2 text-center">
                             {hasSkill ? (
-                              <span className="inline-block w-5 h-5 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 font-bold text-xs leading-5">
+                              <span className="inline-block w-5 h-5 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 font-bold text-xs leading-5 shadow-xs">
                                 ✓
                               </span>
                             ) : (
@@ -687,24 +689,26 @@ export default function TechniciansManagementPage() {
 
         {/* TAB 3: DISCIPLINARY & QUALITY LOG */}
         {activeTab === 'infractions' && (
-          <Card className="p-6">
+          <Card className="p-6 border border-slate-200/80 dark:border-slate-800 shadow-xs">
             <div className="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
               <div>
                 <div className="flex items-center gap-2">
                   <span className="text-xl">⚠️</span>
-                  <h2 className="text-lg font-bold text-slate-900 dark:text-white">Quality, Safety & Disciplinary Infraction Log</h2>
+                  <h2 className="text-base font-bold text-slate-900 dark:text-white">
+                    Quality, Safety & Disciplinary Infraction Log
+                  </h2>
                   <Badge tone="live">Supervision Audit</Badge>
                 </div>
-                <p className="text-xs text-slate-500 mt-1">
+                <p className="text-xs text-slate-500 mt-0.5">
                   Incident documentation, workshop policy compliance, and supervisor corrective notices.
                 </p>
               </div>
             </div>
 
-            <div className="mt-4 overflow-x-auto">
+            <div className="mt-4 overflow-x-auto border border-slate-200 dark:border-slate-800 rounded-xl">
               <table className="w-full text-left text-xs border-collapse">
-                <thead>
-                  <tr className="bg-slate-50 dark:bg-slate-800/60 text-slate-600 dark:text-slate-300 font-semibold border-b border-slate-200 dark:border-slate-700">
+                <thead className="bg-slate-100 dark:bg-slate-800">
+                  <tr className="border-b border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-bold text-[10px] uppercase tracking-wider">
                     <th className="py-2.5 px-3">Date</th>
                     <th className="py-2.5 px-3">Technician</th>
                     <th className="py-2.5 px-3">Infraction Category</th>
@@ -712,7 +716,7 @@ export default function TechniciansManagementPage() {
                     <th className="py-2.5 px-3 text-right">Severity</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+                <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-[11px]">
                   {(governanceData.technicianInfractions || []).map((inf, idx) => (
                     <tr key={idx} className="hover:bg-slate-50/70 dark:hover:bg-slate-800/40">
                       <td className="py-2.5 px-3 font-mono text-slate-500">{inf.date}</td>
@@ -720,13 +724,15 @@ export default function TechniciansManagementPage() {
                       <td className="py-2.5 px-3 text-amber-600 dark:text-amber-400 font-semibold">{inf.type}</td>
                       <td className="py-2.5 px-3 text-slate-600 dark:text-slate-300 max-w-md">{inf.comments}</td>
                       <td className="py-2.5 px-3 text-right">
-                        <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
-                          inf.severity === 'HIGH'
-                            ? 'bg-rose-100 text-rose-700'
-                            : inf.severity === 'MEDIUM'
-                            ? 'bg-amber-100 text-amber-700'
-                            : 'bg-slate-100 text-slate-700'
-                        }`}>
+                        <span
+                          className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                            inf.severity === 'HIGH'
+                              ? 'bg-rose-100 text-rose-700'
+                              : inf.severity === 'MEDIUM'
+                              ? 'bg-amber-100 text-amber-700'
+                              : 'bg-slate-100 text-slate-700'
+                          }`}
+                        >
                           {inf.severity}
                         </span>
                       </td>
