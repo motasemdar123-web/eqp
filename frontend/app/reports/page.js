@@ -1,8 +1,14 @@
-'use client';
-
 import { useEffect, useMemo, useState } from 'react';
+import Link from 'next/link';
 import JSZip from 'jszip';
-import { deleteReport, getReports, renameReport } from '../../lib/api';
+import {
+  deleteReport,
+  getReports,
+  renameReport,
+  batchUploadEqpcReports,
+  getEqpcStatus,
+  saveEqpcCookie,
+} from '../../lib/api';
 import { getStoredPlatformSession, getStoredUser } from '../../lib/auth';
 import SystemShell from '../../components/SystemShell';
 import Button from '../../components/ui/Button';
@@ -23,6 +29,14 @@ export default function ReportsPage() {
   const [renameValue, setRenameValue] = useState('');
   const [selectedReportIds, setSelectedReportIds] = useState([]);
   const [downloadBusy, setDownloadBusy] = useState(false);
+
+  // EQP Care Upload States
+  const [eqpUploadModal, setEqpUploadModal] = useState(null); // { reports: [] }
+  const [eqpConnection, setEqpConnection] = useState({ checked: false, connected: false, user: '', message: '' });
+  const [eqpProgress, setEqpProgress] = useState({ active: false, current: 0, total: 0 });
+  const [cookieInput, setCookieInput] = useState('');
+  const [savingCookie, setSavingCookie] = useState(false);
+
 
   useEffect(() => {
     const platformSession = getStoredPlatformSession();
@@ -232,6 +246,90 @@ export default function ReportsPage() {
     }
   }
 
+  async function openEqpUploadModal(targetReports) {
+    if (!targetReports || targetReports.length === 0) return;
+    setEqpUploadModal({ reports: targetReports });
+    try {
+      const res = await getEqpcStatus();
+      setEqpConnection({
+        checked: true,
+        connected: Boolean(res.connected),
+        user: res.user || 'IBRAHIM AHMAD ALDARAWSHEH',
+        message: res.message || '',
+      });
+    } catch {
+      setEqpConnection({ checked: true, connected: false, user: '', message: 'Session cookie required' });
+    }
+  }
+
+  async function handleSaveEqpCookieInModal(e) {
+    e.preventDefault();
+    if (!cookieInput.trim()) return;
+    setSavingCookie(true);
+    try {
+      const res = await saveEqpcCookie(cookieInput.trim());
+      setEqpConnection({
+        checked: true,
+        connected: Boolean(res.connected),
+        user: res.user || 'IBRAHIM AHMAD ALDARAWSHEH',
+        message: res.message || 'Session saved',
+      });
+      setToast({ type: 'success', message: 'EQP Care session updated successfully!' });
+      setCookieInput('');
+    } catch (err) {
+      setToast({ type: 'error', message: err.message || 'Failed to update cookie' });
+    } finally {
+      setSavingCookie(false);
+    }
+  }
+
+  async function handleExecuteEqpUpload() {
+    if (!eqpUploadModal?.reports?.length) return;
+    const targetReports = eqpUploadModal.reports;
+    setEqpProgress({ active: true, current: 0, total: targetReports.length });
+
+    const batchItems = targetReports.map((r) => {
+      let mappedCode = 'W413';
+      const sType = (r.service_type || r.report_type || '').toUpperCase();
+      if (sType.includes('1ST') || sType.includes('250')) mappedCode = 'W411';
+      else if (sType.includes('2ND') || sType.includes('500')) mappedCode = 'W412';
+      else if (sType.includes('3RD') || sType.includes('1000')) mappedCode = 'W413';
+      else if (sType.includes('PRE-DELIVERY') || sType.includes('PDI')) mappedCode = 'W41P';
+      else if (sType.includes('NEW') || sType.includes('DELIVERY')) mappedCode = 'W41N';
+      else mappedCode = 'W41X';
+
+      return {
+        model: r.machine_type || r.machine?.machineType || 'HM400',
+        type: '3',
+        subtype: 'R',
+        serialNo: r.machine_number || r.machine?.machineNumber || '',
+        eventCode: mappedCode,
+        serviceDate: r.service_date ? new Date(r.service_date).toISOString().slice(0, 10) : new Date().toISOString().slice(0, 10),
+        smr: r.smr || 0,
+        customer: r.machine?.customerName || "LA'ALA AL-KUWAIT REAL ESTATE CO.",
+        comments: r.comments || 'Scheduled periodic maintenance service completed.',
+        reportId: r.id,
+        fileName: r.file_name,
+        fileUrl: r.file_url,
+      };
+    });
+
+    try {
+      const res = await batchUploadEqpcReports({ items: batchItems });
+      setToast({
+        type: 'success',
+        message: `Uploaded ${res.successful || 0} of ${batchItems.length} reports to Komatsu Equipment Care!`,
+      });
+      setEqpUploadModal(null);
+      setSelectedReportIds([]);
+      await loadReports();
+    } catch (err) {
+      setToast({ type: 'error', message: err.message || 'EQP Care upload failed.' });
+    } finally {
+      setEqpProgress({ active: false, current: 0, total: 0 });
+    }
+  }
+
   return (
     <SystemShell
       activePath="/eqp/reports"
@@ -239,12 +337,20 @@ export default function ReportsPage() {
       title="PDF Reports Archive"
       description="Permanent archive of certified preventive maintenance PDF reports with sequential indexing and batch export."
       actions={
-        <Button type="button" variant="secondary" onClick={loadReports}>
-          <svg className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-          </svg>
-          Refresh Archive
-        </Button>
+        <div className="flex items-center gap-2">
+          <Link
+            href="/eqp/upload"
+            className="ds-button ds-button-secondary text-xs py-1.5 px-3 flex items-center gap-1.5 font-semibold"
+          >
+            <span>🚀</span> EQP Care Studio
+          </Link>
+          <Button type="button" variant="secondary" onClick={loadReports}>
+            <svg className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+            Refresh Archive
+          </Button>
+        </div>
       }
     >
       <div className="space-y-6">
@@ -343,6 +449,20 @@ export default function ReportsPage() {
                     <Badge tone="yellow">{selectedReportIds.length} Selected</Badge>
                   )}
 
+                  {/* Primary Upload Selected to EQP Button */}
+                  {selectedReports.length > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => openEqpUploadModal(selectedReports)}
+                      className="ds-button bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs py-2 px-3.5 flex items-center gap-1.5 shadow-sm rounded-lg transition-all"
+                    >
+                      <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                      </svg>
+                      Upload Selected to EQP ({selectedReports.length})
+                    </button>
+                  )}
+
                   <Button
                     variant="secondary"
                     onClick={() => downloadReports(selectedReports.length ? selectedReports : filteredReports)}
@@ -353,13 +473,6 @@ export default function ReportsPage() {
                     </svg>
                     {downloadBusy ? 'Preparing ZIP...' : `Download ZIP (${selectedReports.length || filteredReports.length})`}
                   </Button>
-
-                  <Link
-                    href="/eqp/upload"
-                    className="ds-button ds-button-secondary text-xs py-1.5 px-3 flex items-center gap-1.5"
-                  >
-                    <span>🚀</span> EQP Care Dispatch
-                  </Link>
 
                   {selectedReports.length > 0 && (
                     <Button variant="danger" onClick={() => openDeleteRequest(selectedReports)}>
@@ -432,13 +545,14 @@ export default function ReportsPage() {
                             >
                               PDF
                             </Button>
-                            <Link
-                              href="/eqp/upload"
-                              className="ds-button ds-button-secondary text-xs py-1 px-2.5 font-bold text-sky-700 border-sky-200 bg-sky-50 hover:bg-sky-100"
+                            <button
+                              type="button"
+                              onClick={() => openEqpUploadModal([report])}
+                              className="ds-button ds-button-secondary text-xs py-1 px-2.5 font-bold text-sky-700 border-sky-200 bg-sky-50 hover:bg-sky-100 flex items-center gap-1"
                               title="Upload directly to Komatsu Equipment Care Daily Operation (E0295)"
                             >
-                              ⬆ EQP Care
-                            </Link>
+                              <span>⬆</span> EQP Care
+                            </button>
                             <Button
                               type="button"
                               variant="ghost"
@@ -522,6 +636,142 @@ export default function ReportsPage() {
               <Button type="submit">Save Name</Button>
             </div>
           </form>
+        </div>
+      )}
+
+      {/* EQP Care Upload Confirmation & Batch Modal */}
+      {eqpUploadModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-4 backdrop-blur-sm">
+          <div className="ds-card w-full max-w-2xl overflow-hidden bg-white shadow-2xl animate-[ds-toast-in_180ms_ease]">
+            <div className="p-6 space-y-4">
+              <div className="flex items-start justify-between pb-3 border-b border-slate-200">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-sky-100 text-sky-600 text-lg font-bold">
+                    ⬆
+                  </div>
+                  <div>
+                    <h2 className="text-base font-bold text-slate-900">
+                      Upload {eqpUploadModal.reports.length === 1 ? 'Report' : `${eqpUploadModal.reports.length} Reports`} to Komatsu EQP Care
+                    </h2>
+                    <p className="text-xs text-slate-500">
+                      Direct dispatch to Equipment Care Daily Operation (E0295 / E0904).
+                    </p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => !eqpProgress.active && setEqpUploadModal(null)}
+                  disabled={eqpProgress.active}
+                  className="text-slate-400 hover:text-slate-600 font-bold"
+                >
+                  ✕
+                </button>
+              </div>
+
+              {/* Portal Session Status */}
+              <div className="p-3 rounded-lg border bg-slate-50 border-slate-200 text-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+                <div className="flex items-center gap-2">
+                  <span>{eqpConnection.connected ? '🟢' : '🟡'}</span>
+                  <span className="font-semibold text-slate-800">
+                    {eqpConnection.connected
+                      ? `Connected: ${eqpConnection.user} (DAR AL HAI - Level 40)`
+                      : 'Komatsu EQP Care session cookie required'}
+                  </span>
+                </div>
+                {!eqpConnection.connected && (
+                  <Link
+                    href="/eqp/upload"
+                    className="text-sky-600 hover:underline font-bold"
+                    target="_blank"
+                  >
+                    Configure in Studio ↗
+                  </Link>
+                )}
+              </div>
+
+              {/* Progress Bar when Active */}
+              {eqpProgress.active && (
+                <div className="p-4 bg-sky-50 border border-sky-200 rounded-lg space-y-2">
+                  <div className="flex justify-between text-xs font-bold text-sky-900">
+                    <span>Uploading reports to EQP Care Daily Operation...</span>
+                    <span>{eqpProgress.current} / {eqpProgress.total}</span>
+                  </div>
+                  <div className="w-full bg-sky-200 rounded-full h-2">
+                    <div
+                      className="bg-sky-600 h-2 rounded-full transition-all duration-300"
+                      style={{ width: `${(eqpProgress.current / (eqpProgress.total || 1)) * 100}%` }}
+                    />
+                  </div>
+                </div>
+              )}
+
+              {/* Selected Reports Table */}
+              <div className="max-h-60 overflow-y-auto border border-slate-200 rounded-lg">
+                <table className="w-full text-left text-xs">
+                  <thead className="bg-slate-100 text-slate-700 font-bold sticky top-0">
+                    <tr>
+                      <th className="p-2.5">Document File</th>
+                      <th className="p-2.5">Model</th>
+                      <th className="p-2.5">Serial #</th>
+                      <th className="p-2.5">SMR</th>
+                      <th className="p-2.5">Target Event Code</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-200 bg-white">
+                    {eqpUploadModal.reports.map((r) => {
+                      let mappedCode = 'W413';
+                      const sType = (r.service_type || r.report_type || '').toUpperCase();
+                      if (sType.includes('1ST') || sType.includes('250')) mappedCode = 'W411';
+                      else if (sType.includes('2ND') || sType.includes('500')) mappedCode = 'W412';
+                      else if (sType.includes('3RD') || sType.includes('1000')) mappedCode = 'W413';
+                      else if (sType.includes('PRE-DELIVERY') || sType.includes('PDI')) mappedCode = 'W41P';
+                      else if (sType.includes('NEW') || sType.includes('DELIVERY')) mappedCode = 'W41N';
+                      else mappedCode = 'W41X';
+
+                      return (
+                        <tr key={r.id}>
+                          <td className="p-2.5 font-semibold text-slate-900 truncate max-w-xs">{r.file_name}</td>
+                          <td className="p-2.5 text-slate-700">{r.machine_type || 'HM400'}</td>
+                          <td className="p-2.5 font-bold text-sky-800">#{r.machine_number}</td>
+                          <td className="p-2.5 text-slate-800">{r.smr || 0} hrs</td>
+                          <td className="p-2.5">
+                            <Badge tone="live">{mappedCode}</Badge>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Default Organization Specs */}
+              <div className="text-[11px] text-slate-500 flex flex-wrap gap-x-4 gap-y-1 bg-slate-50 p-2.5 rounded border border-slate-200">
+                <span><strong>Subsidiary:</strong> 9961 (KME)</span>
+                <span><strong>Distributor:</strong> 5194 (DAR AL HAI)</span>
+                <span><strong>Country:</strong> KW (KUWAIT)</span>
+                <span><strong>Site:</strong> ##1</span>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-end gap-3 border-t border-slate-200 bg-slate-50 px-6 py-3.5">
+              <Button
+                type="button"
+                variant="secondary"
+                disabled={eqpProgress.active}
+                onClick={() => setEqpUploadModal(null)}
+              >
+                Cancel
+              </Button>
+              <button
+                type="button"
+                disabled={eqpProgress.active}
+                onClick={handleExecuteEqpUpload}
+                className="ds-button bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs py-2 px-5 rounded-lg shadow-md transition-all flex items-center gap-1.5"
+              >
+                {eqpProgress.active ? '⏳ Uploading to EQP Care...' : `🚀 Upload ${eqpUploadModal.reports.length} Reports to EQP Care`}
+              </button>
+            </div>
+          </div>
         </div>
       )}
 
