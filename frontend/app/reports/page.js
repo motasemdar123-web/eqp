@@ -711,23 +711,48 @@ export default function ReportsPage() {
               </div>
 
               {/* Portal Session Status */}
-              <div className="p-3 rounded-lg border bg-slate-50 border-slate-200 text-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-                <div className="flex items-center gap-2">
-                  <span>{eqpConnection.connected ? '🟢' : '🟡'}</span>
-                  <span className="font-semibold text-slate-800">
-                    {eqpConnection.connected
-                      ? `Connected: ${eqpConnection.user} (DAR AL HAI - Level 40)`
-                      : 'Komatsu EQP Care session cookie required'}
-                  </span>
-                </div>
-                {!eqpConnection.connected && (
+              <div className="p-3.5 rounded-lg border bg-slate-50 border-slate-200 text-xs space-y-2">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+                  <div className="flex items-center gap-2">
+                    <span>{eqpConnection.connected ? '🟢' : '🟡'}</span>
+                    <span className="font-semibold text-slate-800">
+                      {eqpConnection.connected
+                        ? `Connected: ${eqpConnection.user} (DAR AL HAI - Level 40)`
+                        : (eqpConnection.message || 'Komatsu EQP Care session cookie with JSESSIONID required')}
+                    </span>
+                  </div>
                   <Link
                     href="/eqp/upload"
                     className="text-sky-600 hover:underline font-bold"
                     target="_blank"
                   >
-                    Configure in Studio ↗
+                    Open Dispatch Studio ↗
                   </Link>
+                </div>
+
+                {!eqpConnection.connected && (
+                  <form onSubmit={handleSaveEqpCookieInModal} className="pt-2 border-t border-slate-200 space-y-2">
+                    <div className="text-[11px] text-slate-600">
+                      Paste your browser session cookie or cURL command (must include <code>JSESSIONID=...</code>):
+                    </div>
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        value={cookieInput}
+                        onChange={(e) => setCookieInput(e.target.value)}
+                        placeholder="JSESSIONID=...; userId=s021895; eqpMenuCtg=E..."
+                        className="w-full text-xs font-mono rounded border border-slate-300 p-2 bg-white text-slate-900"
+                        required
+                      />
+                      <button
+                        type="submit"
+                        disabled={savingCookie}
+                        className="ds-button ds-button-primary text-xs py-1.5 px-3 whitespace-nowrap font-bold"
+                      >
+                        {savingCookie ? 'Testing...' : 'Save & Connect'}
+                      </button>
+                    </div>
+                  </form>
                 )}
               </div>
 

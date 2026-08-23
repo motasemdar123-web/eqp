@@ -132,6 +132,15 @@ async function testEqpcConnection(customCookie = null) {
     };
   }
 
+  const hasJsessionId = cookieStr.toLowerCase().includes('jsessionid');
+  if (!hasJsessionId) {
+    return {
+      connected: false,
+      status: 401,
+      message: "Session cookie is missing 'JSESSIONID'. In Edge/Chrome, press F12 -> Network tab -> copy 'Cookie' from Request Headers so JSESSIONID is included.",
+    };
+  }
+
   try {
     const defaultHeaders = {
       'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36 Edg/124.0.0.0',
@@ -152,7 +161,15 @@ async function testEqpcConnection(customCookie = null) {
       return {
         connected: false,
         status: response.status,
-        message: 'EQP Care session expired or JSESSIONID missing. Please copy fresh cookies including JSESSIONID from your browser.',
+        message: 'EQP Care session expired. Please copy a fresh cookie from your active browser session.',
+      };
+    }
+
+    if (text.includes('invalid screen transition') || text.includes('Error 500')) {
+      return {
+        connected: false,
+        status: 500,
+        message: 'Komatsu server reported invalid session state. Please refresh your browser tab on EQP Care and copy the updated Request Cookie.',
       };
     }
 
