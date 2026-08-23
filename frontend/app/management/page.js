@@ -10,9 +10,7 @@ import Toast from '../../components/ui/Toast';
 import { getManagementDashboard } from '../../lib/api';
 
 const modules = [
-  { title: 'Master Sheets Hub & Data Lake', href: '/management/sheets-hub', status: 'Live', tone: 'live', icon: 'sheets', description: 'Universal search across all 34 sheets: 6,050 SAP parts, 822 customer BP codes, tool custody, and fleet registers.' },
-  { title: 'Fleet & Wear Analytics', href: '/management/fleet-analytics', status: 'Live', tone: 'live', icon: 'analytics', description: 'Greasing matrix, D155A-6 fan pump rotations, wear lifespans, and ripper stock.' },
-  { title: 'Workshop & Fleet Command', href: '/management/workshop', status: 'Live', tone: 'live', icon: 'workshop', description: 'Service vehicles mileage, fuel ledger, workshop tools, and corporate KPI scorecards.' },
+  { title: 'Fleet & Operations Command Center', href: '/management/fleet-analytics', status: 'Live', tone: 'live', icon: 'analytics', description: 'Greasing compliance matrix, component lifecycles, service vehicles, warehouse stock, and wear benchmarks.' },
   { title: 'Technicians Management', href: '/management/technicians', status: 'Live', tone: 'live', icon: 'technicians', description: 'Technician records, shifts, regions, skills, and dispatch availability.' },
   { title: 'Scheduling', href: '/management/scheduling', status: 'Live', tone: 'live', icon: 'scheduling', description: 'Daily roster control, work windows, task groups, and technician assignment.' },
   { title: 'Daily Planner', href: '/management/daily-planner', status: 'Live', tone: 'live', icon: 'planner', description: 'Personal shift schedule with timed work orders and supervisor dispatch inbox.' },

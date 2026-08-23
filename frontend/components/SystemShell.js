@@ -8,9 +8,7 @@ import { getNotifications, markAllNotificationsRead, markNotificationRead } from
 
 const navItems = [
   { href: '/management', label: 'Dashboard', icon: 'dashboard' },
-  { href: '/management/fleet-analytics', label: 'Fleet Analytics', icon: 'analytics' },
-  { href: '/management/workshop', label: 'Workshop & Fleet', icon: 'workshop' },
-  { href: '/management/sheets-hub', label: 'Master Sheets Hub', icon: 'sheets' },
+  { href: '/management/fleet-analytics', label: 'Fleet & Operations Hub', icon: 'analytics' },
   { href: '/management/technicians', label: 'Technicians', icon: 'users' },
   { href: '/management/scheduling', label: 'Scheduling', icon: 'calendar' },
   { href: '/management/daily-planner', label: 'Daily Planner', icon: 'planner' },
@@ -147,9 +145,7 @@ function formatRoleLabel(role) {
 const COMMAND_ITEMS = [
   // Navigation
   { id: 'nav-dashboard', title: 'Management Dashboard', subtitle: 'Operations overview, KPIs, and live roster', href: '/management', category: 'Navigation', badge: 'Overview' },
-  { id: 'nav-sheets-hub', title: 'Master Sheets Hub & Data Lake', subtitle: 'Search 34 sheets, 6,050 SAP parts, 822 customers & tools', href: '/management/sheets-hub', category: 'Navigation', badge: 'Data Lake' },
-  { id: 'nav-fleet-analytics', title: 'Fleet Analytics & Component Lifecycle', subtitle: 'Greasing heatmap, fan pumps, wear lifespans & ripper stock', href: '/management/fleet-analytics', category: 'Navigation', badge: 'Fleet' },
-  { id: 'nav-workshop', title: 'Workshop, Vehicles & KPI Goals', subtitle: 'Service truck mileage, fuel allocations, tools & KPI scorecards', href: '/management/workshop', category: 'Navigation', badge: 'Workshop' },
+  { id: 'nav-fleet-analytics', title: 'Fleet & Operations Hub', subtitle: 'Greasing heatmap, fan pumps, wear lifespans, vehicle fleet & ripper stock', href: '/management/fleet-analytics', category: 'Navigation', badge: 'Fleet' },
   { id: 'nav-technicians', title: 'Technicians Management', subtitle: 'Staff records, shifts, regions, skills & dispatch', href: '/management/technicians', category: 'Navigation', badge: 'Staff' },
   { id: 'nav-scheduling', title: 'Scheduling & Work Windows', subtitle: 'Gantt timeline, work windows, shop manuals AI', href: '/management/scheduling', category: 'Navigation', badge: 'Schedule' },
   { id: 'nav-daily-planner', title: 'Daily Schedule Planner', subtitle: 'Shift task sequencing and supervisor dispatch', href: '/management/daily-planner', category: 'Navigation', badge: 'Planner' },
