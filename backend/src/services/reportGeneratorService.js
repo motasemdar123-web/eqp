@@ -1597,7 +1597,9 @@ async function generateReports(payload) {
       currentCounter += 1;
       repeatServiceCounter += isRepeatingServiceType(payload.serviceType) ? 1 : 0;
 
-      if (currentStep >= 4) {
+      // Randomized SMR increment: +1 hour every 2 to 3 reports
+      const stepThreshold = (currentCounter % 5 === 0 || currentCounter % 3 === 0) ? 2 : 3;
+      if (currentStep >= stepThreshold) {
         currentSMR += 1;
         currentStep = 0;
       }

@@ -57,7 +57,7 @@ async function rollbackReportCounters(machineId) {
 
   if (currentCounter <= 0) return;
 
-  const previousStep = currentStep > 0 ? currentStep - 1 : 3;
+  const previousStep = currentStep > 0 ? currentStep - 1 : 2;
   const previousSmr = currentStep > 0 ? currentSmr : Math.max(currentSmr - 1, 0);
 
   await machineRepository.updateCounters(machineId, {
