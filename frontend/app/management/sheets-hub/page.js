@@ -108,7 +108,7 @@ export default function MasterSheetsHubPage() {
     if (!text) return;
     navigator.clipboard.writeText(String(text));
     setCopiedText(String(text));
-    setToast({ type: 'success', message: `Copied "${text}" to clipboard` });
+    setToast({ type: 'success', message: `Copied to clipboard` });
     setTimeout(() => setCopiedText(null), 2000);
   }
 
@@ -147,15 +147,15 @@ export default function MasterSheetsHubPage() {
           <button
             onClick={exportToCsv}
             disabled={!sheetData?.records?.length}
-            className="ds-button ds-button-secondary text-xs flex items-center gap-1.5"
+            className="ds-button ds-button-secondary text-xs flex items-center gap-1.5 font-bold text-slate-800"
           >
             <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
             </svg>
             <span>Export CSV</span>
           </button>
-          <Link href="/management" className="ds-button ds-button-secondary text-xs">
-            Management Hub
+          <Link href="/management" className="ds-button ds-button-secondary text-xs font-bold text-slate-800">
+            Dashboard
           </Link>
         </div>
       }
@@ -163,53 +163,53 @@ export default function MasterSheetsHubPage() {
       <div className="space-y-6">
         {/* Executive Stat Cards */}
         <section className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="ds-card p-4 border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900/90 shadow-xs flex items-center gap-3.5">
-            <div className="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-950/50 border border-amber-200 dark:border-amber-900/50 flex items-center justify-center text-amber-600 dark:text-amber-400 font-bold text-lg">
+          <div className="rounded-xl p-4 border border-slate-200 bg-white shadow-xs flex items-center gap-3.5">
+            <div className="w-10 h-10 rounded-xl bg-amber-100 border border-amber-300 flex items-center justify-center text-amber-800 font-bold text-lg">
               34
             </div>
             <div>
-              <div className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Sheets Ingested</div>
-              <div className="text-xl font-bold text-slate-900 dark:text-white">100% Coverage</div>
+              <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Sheets Ingested</div>
+              <div className="text-xl font-bold text-slate-900">100% Coverage</div>
             </div>
           </div>
 
-          <div className="ds-card p-4 border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900/90 shadow-xs flex items-center gap-3.5">
-            <div className="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-950/50 border border-blue-200 dark:border-blue-900/50 flex items-center justify-center text-blue-600 dark:text-blue-400 font-bold text-lg">
+          <div className="rounded-xl p-4 border border-slate-200 bg-white shadow-xs flex items-center gap-3.5">
+            <div className="w-10 h-10 rounded-xl bg-blue-100 border border-blue-300 flex items-center justify-center text-blue-800 font-bold text-lg">
               9k+
             </div>
             <div>
-              <div className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Total Records</div>
-              <div className="text-xl font-bold text-slate-900 dark:text-white">9,171 Rows</div>
+              <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Total Records</div>
+              <div className="text-xl font-bold text-slate-900">9,171 Rows</div>
             </div>
           </div>
 
-          <div className="ds-card p-4 border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900/90 shadow-xs flex items-center gap-3.5">
-            <div className="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-900/50 flex items-center justify-center text-emerald-600 dark:text-emerald-400 font-bold text-lg">
+          <div className="rounded-xl p-4 border border-slate-200 bg-white shadow-xs flex items-center gap-3.5">
+            <div className="w-10 h-10 rounded-xl bg-emerald-100 border border-emerald-300 flex items-center justify-center text-emerald-800 font-bold text-lg">
               SAP
             </div>
             <div>
-              <div className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">SAP Part Catalog</div>
-              <div className="text-xl font-bold text-slate-900 dark:text-white">6,050 Parts</div>
+              <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">SAP Part Catalog</div>
+              <div className="text-xl font-bold text-slate-900">6,050 Parts</div>
             </div>
           </div>
 
-          <div className="ds-card p-4 border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900/90 shadow-xs flex items-center gap-3.5">
-            <div className="w-10 h-10 rounded-xl bg-purple-50 dark:bg-purple-950/50 border border-purple-200 dark:border-purple-900/50 flex items-center justify-center text-purple-600 dark:text-purple-400 font-bold text-lg">
+          <div className="rounded-xl p-4 border border-slate-200 bg-white shadow-xs flex items-center gap-3.5">
+            <div className="w-10 h-10 rounded-xl bg-purple-100 border border-purple-300 flex items-center justify-center text-purple-800 font-bold text-lg">
               BP
             </div>
             <div>
-              <div className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Business Partners</div>
-              <div className="text-xl font-bold text-slate-900 dark:text-white">822 Clients</div>
+              <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Business Partners</div>
+              <div className="text-xl font-bold text-slate-900">822 Clients</div>
             </div>
           </div>
         </section>
 
         {/* Quick Jump Ribbon */}
-        <section className="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 p-4 rounded-xl shadow-md border border-slate-700/60 text-white">
+        <section className="bg-slate-900 p-4 rounded-xl shadow-md border border-slate-800 text-white">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
               <div className="text-xs font-bold uppercase tracking-wider text-amber-400">⚡ Fast Lookups & Critical Datasets</div>
-              <div className="text-[11px] text-slate-300">Click any key dataset below for immediate one-click browsing:</div>
+              <div className="text-[11px] text-slate-300 font-medium">Click any key dataset below for immediate one-click browsing:</div>
             </div>
             <div className="flex flex-wrap gap-1.5">
               {[
@@ -227,10 +227,10 @@ export default function MasterSheetsHubPage() {
                     setSearchQuery('');
                     setPage(1);
                   }}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all flex items-center gap-1.5 ${
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${
                     selectedSheetId === quick.id
-                      ? 'bg-amber-400 text-slate-950 font-bold shadow-sm'
-                      : 'bg-white/10 text-slate-200 hover:bg-white/20 hover:text-white'
+                      ? 'bg-amber-400 text-slate-950 shadow-sm'
+                      : 'bg-slate-800 text-slate-100 hover:bg-slate-700'
                   }`}
                 >
                   <span>{quick.icon}</span>
@@ -242,10 +242,10 @@ export default function MasterSheetsHubPage() {
         </section>
 
         {/* Control Bar: Category Pills + Sheet Selector + Live Search */}
-        <section className="ds-card p-4 border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs space-y-4">
+        <section className="rounded-xl p-4 border border-slate-200 bg-white shadow-xs space-y-4">
           {/* Category Filter Pills */}
-          <div className="flex flex-wrap items-center gap-1.5 pb-3 border-b border-slate-100 dark:border-slate-800">
-            <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mr-2">Categories:</span>
+          <div className="flex flex-wrap items-center gap-1.5 pb-3 border-b border-slate-200">
+            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mr-2">Categories:</span>
             {CATEGORIES.map((cat) => {
               const active = selectedCategory === cat.id;
               return (
@@ -259,10 +259,10 @@ export default function MasterSheetsHubPage() {
                       setPage(1);
                     }
                   }}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
                     active
-                      ? 'bg-slate-900 text-white dark:bg-amber-500 dark:text-slate-950 shadow-xs'
-                      : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+                      ? 'bg-slate-900 text-white shadow-xs'
+                      : 'text-slate-700 bg-slate-100 hover:bg-slate-200'
                   }`}
                 >
                   <span>{cat.icon}</span>
@@ -276,7 +276,7 @@ export default function MasterSheetsHubPage() {
           <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_auto] gap-3 items-center">
             {/* Sheet Selector */}
             <div className="flex items-center gap-2">
-              <label className="text-xs font-bold text-slate-600 dark:text-slate-300 whitespace-nowrap">
+              <label className="text-xs font-bold text-slate-800 whitespace-nowrap">
                 Sheet ({filteredSheets.length}):
               </label>
               <select
@@ -286,7 +286,7 @@ export default function MasterSheetsHubPage() {
                   setSearchQuery('');
                   setPage(1);
                 }}
-                className="ds-input text-xs font-semibold py-2"
+                className="ds-input text-xs font-bold py-2 text-slate-900"
               >
                 {filteredSheets.map((s) => (
                   <option key={s.id} value={s.id}>
@@ -298,7 +298,7 @@ export default function MasterSheetsHubPage() {
 
             {/* Instant Search Bar */}
             <div className="relative min-w-[280px]">
-              <span className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-400">
+              <span className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-500">
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
@@ -308,12 +308,12 @@ export default function MasterSheetsHubPage() {
                 placeholder={`Search across ${currentSheetMeta?.sheetName || 'sheet'}...`}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="ds-input pl-9 text-xs py-2"
+                className="ds-input pl-9 text-xs py-2 text-slate-900"
               />
               {searchQuery && (
                 <button
                   onClick={() => setSearchQuery('')}
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 text-xs"
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-500 hover:text-slate-800 text-xs font-bold"
                 >
                   ✕
                 </button>
@@ -327,7 +327,7 @@ export default function MasterSheetsHubPage() {
                 setLimit(Number(e.target.value));
                 setPage(1);
               }}
-              className="ds-input text-xs py-2 w-28 font-mono"
+              className="ds-input text-xs py-2 w-28 font-mono font-bold text-slate-900"
             >
               <option value="25">25 / page</option>
               <option value="50">50 / page</option>
@@ -338,22 +338,22 @@ export default function MasterSheetsHubPage() {
         </section>
 
         {/* Data Grid Table Card */}
-        <Card className="overflow-hidden border border-slate-200/80 dark:border-slate-800 shadow-xs">
+        <div className="rounded-xl overflow-hidden border border-slate-200 bg-white shadow-xs">
           {/* Table Header Bar */}
-          <div className="p-4 border-b border-slate-200/80 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/60 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="p-4 border-b border-slate-200 bg-slate-50 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
               <div className="flex items-center gap-2">
-                <h3 className="font-bold text-sm text-slate-900 dark:text-white">
+                <h3 className="font-bold text-sm text-slate-900">
                   {sheetData?.sheetName || currentSheetMeta?.sheetName || 'Sheet Data'}
                 </h3>
-                <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+                <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-200 text-slate-800 border border-slate-300">
                   {sheetData?.category || currentSheetMeta?.category || 'Dataset'}
                 </span>
               </div>
-              <p className="text-xs text-slate-500 mt-0.5">
-                Showing <span className="font-mono font-semibold text-slate-700 dark:text-slate-300">{sheetData?.records?.length || 0}</span> of{' '}
-                <span className="font-mono font-semibold text-slate-700 dark:text-slate-300">{sheetData?.total || 0}</span> records
-                {debouncedQuery && <span> for query &ldquo;<span className="font-bold text-amber-600">{debouncedQuery}</span>&rdquo;</span>}
+              <p className="text-xs text-slate-600 mt-0.5">
+                Showing <span className="font-mono font-bold text-slate-900">{sheetData?.records?.length || 0}</span> of{' '}
+                <span className="font-mono font-bold text-slate-900">{sheetData?.total || 0}</span> records
+                {debouncedQuery && <span> for query &ldquo;<span className="font-bold text-amber-800">{debouncedQuery}</span>&rdquo;</span>}
               </p>
             </div>
 
@@ -363,17 +363,17 @@ export default function MasterSheetsHubPage() {
                 <button
                   disabled={page <= 1 || loadingData}
                   onClick={() => setPage((p) => Math.max(1, p - 1))}
-                  className="px-2.5 py-1 rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 disabled:opacity-40 hover:bg-slate-50"
+                  className="px-2.5 py-1 rounded-md border border-slate-300 bg-white text-slate-800 disabled:opacity-40 hover:bg-slate-100 font-bold"
                 >
                   ‹ Prev
                 </button>
-                <span className="px-2 text-slate-600 dark:text-slate-400 font-semibold">
+                <span className="px-2 text-slate-800 font-bold">
                   {page} / {sheetData.totalPages}
                 </span>
                 <button
                   disabled={page >= sheetData.totalPages || loadingData}
                   onClick={() => setPage((p) => Math.min(sheetData.totalPages, p + 1))}
-                  className="px-2.5 py-1 rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 disabled:opacity-40 hover:bg-slate-50"
+                  className="px-2.5 py-1 rounded-md border border-slate-300 bg-white text-slate-800 disabled:opacity-40 hover:bg-slate-100 font-bold"
                 >
                   Next ›
                 </button>
@@ -394,14 +394,14 @@ export default function MasterSheetsHubPage() {
             ) : !sheetData?.records?.length ? (
               <div className="text-center py-16 text-slate-400">
                 <div className="text-3xl mb-2">🔍</div>
-                <div className="text-sm font-bold text-slate-700 dark:text-slate-300">No matching records found</div>
+                <div className="text-sm font-bold text-slate-800">No matching records found</div>
                 <div className="text-xs text-slate-500 mt-1">Try clearing your search query or choosing another sheet.</div>
               </div>
             ) : (
               <table className="w-full text-left text-xs border-collapse min-w-[850px]">
-                <thead className="sticky top-0 bg-slate-100/95 dark:bg-slate-800/95 backdrop-blur-xs z-10">
-                  <tr className="border-b border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-bold uppercase tracking-wider text-[10px]">
-                    <th className="py-2.5 px-3 w-12 text-center text-slate-400 font-mono">#</th>
+                <thead className="sticky top-0 bg-slate-100 z-10">
+                  <tr className="border-b border-slate-200 text-slate-800 font-bold uppercase tracking-wider text-[10px]">
+                    <th className="py-2.5 px-3 w-12 text-center text-slate-600 font-mono">#</th>
                     {(sheetData.headers || []).map((header, idx) => (
                       <th
                         key={idx}
@@ -413,12 +413,12 @@ export default function MasterSheetsHubPage() {
                             setSortOrder('asc');
                           }
                         }}
-                        className="py-2.5 px-3.5 cursor-pointer hover:bg-slate-200/60 dark:hover:bg-slate-700/60 transition-all select-none whitespace-nowrap"
+                        className="py-2.5 px-3.5 cursor-pointer hover:bg-slate-200 transition-all select-none whitespace-nowrap text-slate-900"
                       >
                         <div className="flex items-center gap-1.5">
                           <span>{header}</span>
                           {sortField === header && (
-                            <span className="text-[10px] text-amber-500">
+                            <span className="text-[10px] text-amber-700">
                               {sortOrder === 'asc' ? '▲' : '▼'}
                             </span>
                           )}
@@ -427,10 +427,10 @@ export default function MasterSheetsHubPage() {
                     ))}
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-[11px] font-sans">
+                <tbody className="divide-y divide-slate-100 text-[11px] font-sans">
                   {sheetData.records.map((row, rowIdx) => (
-                    <tr key={rowIdx} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
-                      <td className="py-2.5 px-3 text-center text-slate-400 text-[10px] font-mono">
+                    <tr key={rowIdx} className="hover:bg-slate-50 transition-colors">
+                      <td className="py-2.5 px-3 text-center text-slate-500 text-[10px] font-mono font-bold">
                         {(page - 1) * limit + rowIdx + 1}
                       </td>
                       {(sheetData.headers || []).map((header, colIdx) => {
@@ -441,23 +441,23 @@ export default function MasterSheetsHubPage() {
                         return (
                           <td
                             key={colIdx}
-                            className="py-2.5 px-3.5 text-slate-800 dark:text-slate-200 whitespace-nowrap max-w-sm truncate"
+                            className="py-2.5 px-3.5 text-slate-900 whitespace-nowrap max-w-sm truncate"
                             title={!isNull ? String(cellVal) : ''}
                           >
                             {isNull ? (
-                              <span className="text-slate-300 dark:text-slate-600">-</span>
+                              <span className="text-slate-300">-</span>
                             ) : isQueryText ? (
                               <div className="flex items-center gap-1.5">
                                 <button
                                   onClick={() => copyToClipboard(cellVal)}
-                                  className="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 hover:bg-amber-100 hover:text-amber-800 text-[10px] font-mono border border-slate-200 dark:border-slate-700 transition-all"
+                                  className="px-2 py-0.5 rounded bg-slate-100 hover:bg-amber-100 hover:text-amber-900 text-[10px] font-mono border border-slate-300 transition-all text-slate-800 font-bold"
                                 >
                                   📋 Copy SQL
                                 </button>
-                                <span className="font-mono text-[10px] text-slate-500 truncate max-w-xs">{String(cellVal).slice(0, 40)}...</span>
+                                <span className="font-mono text-[10px] text-slate-600 truncate max-w-xs">{String(cellVal).slice(0, 40)}...</span>
                               </div>
                             ) : (
-                              <span className="font-mono">{String(cellVal)}</span>
+                              <span className="font-mono font-medium text-slate-900">{String(cellVal)}</span>
                             )}
                           </td>
                         );
@@ -471,18 +471,18 @@ export default function MasterSheetsHubPage() {
 
           {/* Bottom Pagination Bar */}
           {sheetData?.totalPages > 1 && (
-            <div className="p-3.5 border-t border-slate-200/80 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/40 flex items-center justify-between text-xs">
-              <span className="text-slate-500 font-medium">
-                Showing rows <span className="font-mono font-bold text-slate-700 dark:text-slate-300">{(page - 1) * limit + 1}</span> -{' '}
-                <span className="font-mono font-bold text-slate-700 dark:text-slate-300">{Math.min(page * limit, sheetData.total)}</span> of{' '}
-                <span className="font-mono font-bold text-slate-700 dark:text-slate-300">{sheetData.total}</span>
+            <div className="p-3.5 border-t border-slate-200 bg-slate-50 flex items-center justify-between text-xs">
+              <span className="text-slate-700 font-medium">
+                Showing rows <span className="font-mono font-bold text-slate-900">{(page - 1) * limit + 1}</span> -{' '}
+                <span className="font-mono font-bold text-slate-900">{Math.min(page * limit, sheetData.total)}</span> of{' '}
+                <span className="font-mono font-bold text-slate-900">{sheetData.total}</span>
               </span>
 
               <div className="flex items-center gap-1.5 font-mono">
                 <button
                   disabled={page <= 1 || loadingData}
                   onClick={() => setPage(1)}
-                  className="px-2 py-1 rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 disabled:opacity-30 hover:bg-slate-50"
+                  className="px-2 py-1 rounded border border-slate-300 bg-white text-slate-800 disabled:opacity-30 hover:bg-slate-100 font-bold"
                   title="First Page"
                 >
                   «
@@ -490,24 +490,24 @@ export default function MasterSheetsHubPage() {
                 <button
                   disabled={page <= 1 || loadingData}
                   onClick={() => setPage((p) => Math.max(1, p - 1))}
-                  className="px-3 py-1 rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 disabled:opacity-40 hover:bg-slate-50 font-sans font-semibold text-xs"
+                  className="px-3 py-1 rounded border border-slate-300 bg-white text-slate-800 disabled:opacity-40 hover:bg-slate-100 font-sans font-bold text-xs"
                 >
                   Previous
                 </button>
-                <span className="px-2 font-bold text-slate-800 dark:text-slate-200">
+                <span className="px-2 font-bold text-slate-900">
                   {page} / {sheetData.totalPages}
                 </span>
                 <button
                   disabled={page >= sheetData.totalPages || loadingData}
                   onClick={() => setPage((p) => Math.min(sheetData.totalPages, p + 1))}
-                  className="px-3 py-1 rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 disabled:opacity-40 hover:bg-slate-50 font-sans font-semibold text-xs"
+                  className="px-3 py-1 rounded border border-slate-300 bg-white text-slate-800 disabled:opacity-40 hover:bg-slate-100 font-sans font-bold text-xs"
                 >
                   Next
                 </button>
                 <button
                   disabled={page >= sheetData.totalPages || loadingData}
                   onClick={() => setPage(sheetData.totalPages)}
-                  className="px-2 py-1 rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 disabled:opacity-30 hover:bg-slate-50"
+                  className="px-2 py-1 rounded border border-slate-300 bg-white text-slate-800 disabled:opacity-30 hover:bg-slate-100 font-bold"
                   title="Last Page"
                 >
                   »
@@ -515,7 +515,7 @@ export default function MasterSheetsHubPage() {
               </div>
             </div>
           )}
-        </Card>
+        </div>
       </div>
 
       {toast && <Toast type={toast.type} message={toast.message} onClose={() => setToast(null)} />}
