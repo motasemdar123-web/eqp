@@ -244,6 +244,7 @@ async function dismissMyWorkspacePlannerTaskPush(req, res) {
 
 const komatsuInquiryService = require('../services/komatsuInquiryService');
 const komatsuEoService = require('../services/komatsuEoService');
+const komatsuEqpCareService = require('../services/komatsuEqpCareService');
 
 async function getKomatsuStatus(req, res) {
   const status = await komatsuInquiryService.testPdxConnection();
@@ -347,6 +348,64 @@ async function copyKomatsuQuotationToSo(req, res) {
   }
 }
 
+// ----------------------------------------------------
+// KOMATSU EQUIPMENT CARE (EQP CARE) CONTROLLER METHODS
+// ----------------------------------------------------
+
+async function getEqpcStatus(req, res) {
+  const status = await komatsuEqpCareService.testEqpcConnection();
+  res.json({
+    success: true,
+    ...status,
+    hasSavedCookie: Boolean(komatsuEqpCareService.loadCookie()),
+  });
+}
+
+async function saveEqpcCookie(req, res) {
+  const { cookie } = req.body || {};
+  if (!cookie) {
+    return res.status(400).json({ success: false, message: 'Cookie content is required' });
+  }
+  const saved = komatsuEqpCareService.saveCookie(cookie);
+  const status = await komatsuEqpCareService.testEqpcConnection(saved);
+  res.json({ success: true, ...status });
+}
+
+async function getEqpcEventCodes(req, res) {
+  res.json({
+    success: true,
+    eventCodes: komatsuEqpCareService.EVENT_CODES,
+  });
+}
+
+async function lookupEqpcMachine(req, res) {
+  const { model, serialNo } = req.query || {};
+  const data = await komatsuEqpCareService.lookupMachineDetails({ model, serialNo });
+  res.json({ success: true, ...data });
+}
+
+async function uploadEqpcReport(req, res) {
+  const reportData = req.body || {};
+  requireFields(reportData, ['model', 'serialNo', 'eventCode', 'serviceDate']);
+
+  const result = await komatsuEqpCareService.uploadReportToEqpCare({
+    ...reportData,
+    performedBy: req.platformUser?.fullName || req.user?.fullName || 'IBRAHIM AHMAD ALDARAWSHEH',
+  });
+
+  res.json({ success: true, ...result });
+}
+
+async function batchUploadEqpcReports(req, res) {
+  const { items } = req.body || {};
+  if (!Array.isArray(items) || items.length === 0) {
+    return res.status(400).json({ success: false, message: 'Array of report items is required' });
+  }
+
+  const result = await komatsuEqpCareService.batchUploadReports(items);
+  res.json({ success: true, ...result });
+}
+
 module.exports = {
   login,
   unifiedLogin,
@@ -402,5 +461,11 @@ module.exports = {
   searchKomatsuQuotations,
   confirmKomatsuQuotation,
   copyKomatsuQuotationToSo,
+  getEqpcStatus,
+  saveEqpcCookie,
+  getEqpcEventCodes,
+  lookupEqpcMachine,
+  uploadEqpcReport,
+  batchUploadEqpcReports,
 };
 

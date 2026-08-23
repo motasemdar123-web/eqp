@@ -152,6 +152,7 @@ const COMMAND_ITEMS = [
   { id: 'nav-parts-inquiry', title: 'Spare Parts Hub & Emergency Orders', subtitle: 'Komatsu PDX bulk stock inquiry, Emergency Orders (EO) batching, machine fleet matching', href: '/management/parts-inquiry', category: 'Navigation', badge: 'Spare Parts' },
   { id: 'nav-workspace', title: 'Engineering Whiteboard', subtitle: 'Miro-grade canvas, 5-whys, maintenance templates', href: '/workspace', category: 'Navigation', badge: 'Canvas' },
   { id: 'nav-eqp', title: 'EQP Module Hub', subtitle: 'Certified reports, machines register & lifecycle', href: '/eqp', category: 'Navigation', badge: 'EQP' },
+  { id: 'nav-eqp-upload', title: 'EQP Care Daily Operation Dispatch', subtitle: 'Automate machine report uploads to Komatsu Equipment Care E0295/E0904 portal', href: '/eqp/upload', category: 'Navigation', badge: 'EQP Care' },
   { id: 'nav-japanese', title: 'Japanese Learning Hub', subtitle: 'JLPT N5 & N4 active recall, kanji dojo & audio exams', href: '/japanese', category: 'Navigation', badge: 'Language' },
   { id: 'nav-eqp-reports', title: 'EQP PDF Archive', subtitle: 'Search, batch download & manage certified PDFs', href: '/eqp/reports', category: 'Navigation', badge: 'Archive' },
   { id: 'nav-eqp-gen', title: 'Report Builder', subtitle: 'Generate certified preventive maintenance reports', href: '/eqp/generate-reports', category: 'Navigation', badge: 'Builder' },
@@ -160,6 +161,7 @@ const COMMAND_ITEMS = [
   
   // Quick Actions
   { id: 'act-new-eo', title: 'Create Emergency Order (EO) Batch', subtitle: 'Automate multi-order dispatch for high-quantity parts', href: '/management/parts-inquiry', category: 'Quick Action', badge: 'EO Batch' },
+  { id: 'act-eqp-upload', title: 'Dispatch Report to EQP Care', subtitle: 'Upload machine report to Komatsu EQP Care Daily Operation', href: '/eqp/upload', category: 'Quick Action', badge: 'EQP Care' },
   { id: 'act-new-task', title: 'Add Daily Schedule Task', subtitle: 'Create timed task block for today', href: '/management/daily-planner', category: 'Quick Action', badge: 'Action' },
   { id: 'act-search-parts', title: 'Run Komatsu PDX Inquiry', subtitle: 'Batch inquiry for parts stock & pricing', href: '/management/parts-inquiry', category: 'Quick Action', badge: 'Action' },
   { id: 'act-japanese', title: 'Practice Japanese SRS Flashcards', subtitle: 'Open JLPT N5/N4 flashcard dojo', href: '/japanese', category: 'Quick Action', badge: 'Learn' },
@@ -519,6 +521,13 @@ export default function SystemShell({
                     onClick={() => setQuickMenuOpen(false)}
                   >
                     <span>📄</span> Draft EQP Report
+                  </Link>
+                  <Link
+                    href="/eqp/upload"
+                    className="ds-quick-menu-item"
+                    onClick={() => setQuickMenuOpen(false)}
+                  >
+                    <span>🚀</span> EQP Care Dispatch
                   </Link>
                   <Link
                     href="/management/daily-planner"

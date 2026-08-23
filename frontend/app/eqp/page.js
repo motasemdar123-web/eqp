@@ -31,6 +31,18 @@ const modules = [
     description: 'Review each machine stage, delivery milestones, service cycles, and monthly gap follow-ups.',
   },
   {
+    href: '/eqp/upload',
+    title: 'EQP Care Dispatch',
+    status: 'Live',
+    tone: 'live',
+    icon: (
+      <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+      </svg>
+    ),
+    description: 'Automate machine report uploads directly to the Komatsu Equipment Care Daily Operation (E0295/E0904) portal.',
+  },
+  {
     href: '/eqp/reports',
     title: 'PDF Archive',
     status: 'Archived',

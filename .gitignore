@@ -18,8 +18,10 @@ backend/*.png
 *.pyc
 **/browser_session/
 **/pdx_cookies.txt
+**/eqpc_cookies.txt
 **/auth_state.json
 sheet_download.xlsx
+
 
 
 

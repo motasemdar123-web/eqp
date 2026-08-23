@@ -70,5 +70,14 @@ router.get('/api/komatsu/quotations', requirePlatformAuth, asyncHandler(platform
 router.post('/api/komatsu/quotations/confirm', requirePlatformAuth, asyncHandler(platformController.confirmKomatsuQuotation));
 router.post('/api/komatsu/quotations/copy-to-so', requirePlatformAuth, asyncHandler(platformController.copyKomatsuQuotationToSo));
 
+// Komatsu Equipment Care (EQP Care) routes
+router.get('/api/komatsu/eqpc/status', requirePlatformAuth, asyncHandler(platformController.getEqpcStatus));
+router.post('/api/komatsu/eqpc/cookie', requirePlatformAuth, asyncHandler(platformController.saveEqpcCookie));
+router.get('/api/komatsu/eqpc/event-codes', requirePlatformAuth, asyncHandler(platformController.getEqpcEventCodes));
+router.get('/api/komatsu/eqpc/machine-lookup', requirePlatformAuth, asyncHandler(platformController.lookupEqpcMachine));
+router.post('/api/komatsu/eqpc/upload', requirePlatformAuth, asyncHandler(platformController.uploadEqpcReport));
+router.post('/api/komatsu/eqpc/batch-upload', requirePlatformAuth, asyncHandler(platformController.batchUploadEqpcReports));
+
 module.exports = router;
+
 

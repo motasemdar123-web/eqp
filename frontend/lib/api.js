@@ -325,6 +325,41 @@ export function getToolCustody(params = {}) {
   return request(`/api/sheets/tool-custody${query ? `?${query}` : ''}`);
 }
 
+export function getEqpcStatus() {
+  return request('/api/komatsu/eqpc/status');
+}
+
+export function saveEqpcCookie(cookie) {
+  return request('/api/komatsu/eqpc/cookie', {
+    method: 'POST',
+    body: JSON.stringify({ cookie }),
+  });
+}
+
+export function getEqpcEventCodes() {
+  return request('/api/komatsu/eqpc/event-codes');
+}
+
+export function lookupEqpcMachine(params = {}) {
+  const query = new URLSearchParams(params).toString();
+  return request(`/api/komatsu/eqpc/machine-lookup${query ? `?${query}` : ''}`);
+}
+
+export function uploadEqpcReport(payload) {
+  return request('/api/komatsu/eqpc/upload', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+}
+
+export function batchUploadEqpcReports(payload) {
+  return request('/api/komatsu/eqpc/batch-upload', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+}
+
+
 
 
 

@@ -2,6 +2,7 @@ const { Router } = require('express');
 const machineController = require('../controllers/machineController');
 const reportController = require('../controllers/reportController');
 const analyticsController = require('../controllers/analyticsController');
+const platformController = require('../controllers/platformController');
 const { asyncHandler } = require('../utils/asyncHandler');
 const { requireAuth, requireEqpAccess } = require('../middleware/authMiddleware');
 const { reportGenerationRateLimit } = require('../middleware/securityMiddleware');
@@ -17,4 +18,13 @@ router.delete('/api/eqp/reports/:id', requireAuth, requireEqpAccess, asyncHandle
 router.post('/api/eqp/generate-reports', requireAuth, requireEqpAccess, reportGenerationRateLimit, asyncHandler(reportController.generateReports));
 router.get('/api/eqp/analytics/overview', requireAuth, requireEqpAccess, asyncHandler(analyticsController.overview));
 
+// EQP Care Direct Endpoints
+router.get('/api/eqp/care/status', requireAuth, requireEqpAccess, asyncHandler(platformController.getEqpcStatus));
+router.post('/api/eqp/care/cookie', requireAuth, requireEqpAccess, asyncHandler(platformController.saveEqpcCookie));
+router.get('/api/eqp/care/event-codes', requireAuth, requireEqpAccess, asyncHandler(platformController.getEqpcEventCodes));
+router.get('/api/eqp/care/machine-lookup', requireAuth, requireEqpAccess, asyncHandler(platformController.lookupEqpcMachine));
+router.post('/api/eqp/care/upload', requireAuth, requireEqpAccess, asyncHandler(platformController.uploadEqpcReport));
+router.post('/api/eqp/care/batch-upload', requireAuth, requireEqpAccess, asyncHandler(platformController.batchUploadEqpcReports));
+
 module.exports = router;
+

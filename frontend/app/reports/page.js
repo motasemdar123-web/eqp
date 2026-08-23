@@ -354,6 +354,13 @@ export default function ReportsPage() {
                     {downloadBusy ? 'Preparing ZIP...' : `Download ZIP (${selectedReports.length || filteredReports.length})`}
                   </Button>
 
+                  <Link
+                    href="/eqp/upload"
+                    className="ds-button ds-button-secondary text-xs py-1.5 px-3 flex items-center gap-1.5"
+                  >
+                    <span>🚀</span> EQP Care Dispatch
+                  </Link>
+
                   {selectedReports.length > 0 && (
                     <Button variant="danger" onClick={() => openDeleteRequest(selectedReports)}>
                       Delete Selected
@@ -425,6 +432,13 @@ export default function ReportsPage() {
                             >
                               PDF
                             </Button>
+                            <Link
+                              href="/eqp/upload"
+                              className="ds-button ds-button-secondary text-xs py-1 px-2.5 font-bold text-sky-700 border-sky-200 bg-sky-50 hover:bg-sky-100"
+                              title="Upload directly to Komatsu Equipment Care Daily Operation (E0295)"
+                            >
+                              ⬆ EQP Care
+                            </Link>
                             <Button
                               type="button"
                               variant="ghost"
