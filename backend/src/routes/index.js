@@ -7,6 +7,7 @@ const reportRoutes = require('./reportRoutes');
 const analyticsRoutes = require('./analyticsRoutes');
 const platformRoutes = require('./platformRoutes');
 const eqpModuleRoutes = require('./eqpModuleRoutes');
+const sheetsRoutes = require('./sheetsRoutes');
 const { requireInternalApiAuth } = require('../middleware/internalApiAuthMiddleware');
 
 const router = Router();
@@ -19,5 +20,7 @@ router.use(reportRoutes);
 router.use(analyticsRoutes);
 router.use(platformRoutes);
 router.use(eqpModuleRoutes);
+router.use(sheetsRoutes);
 
 module.exports = router;
+

@@ -10,6 +10,7 @@ import Toast from '../../components/ui/Toast';
 import { getManagementDashboard } from '../../lib/api';
 
 const modules = [
+  { title: 'Master Sheets Hub & Data Lake', href: '/management/sheets-hub', status: 'Live', tone: 'live', icon: 'sheets', description: 'Universal search across all 34 sheets: 6,050 SAP parts, 822 customer BP codes, tool custody, and fleet registers.' },
   { title: 'Fleet & Wear Analytics', href: '/management/fleet-analytics', status: 'Live', tone: 'live', icon: 'analytics', description: 'Greasing matrix, D155A-6 fan pump rotations, wear lifespans, and ripper stock.' },
   { title: 'Workshop & Fleet Command', href: '/management/workshop', status: 'Live', tone: 'live', icon: 'workshop', description: 'Service vehicles mileage, fuel ledger, workshop tools, and corporate KPI scorecards.' },
   { title: 'Technicians Management', href: '/management/technicians', status: 'Live', tone: 'live', icon: 'technicians', description: 'Technician records, shifts, regions, skills, and dispatch availability.' },
@@ -21,6 +22,13 @@ const modules = [
 ];
 
 function ModuleIcon({ type }) {
+  if (type === 'sheets') {
+    return (
+      <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+      </svg>
+    );
+  }
   if (type === 'workshop') {
     return (
       <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

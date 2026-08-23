@@ -10,6 +10,7 @@ const navItems = [
   { href: '/management', label: 'Dashboard', icon: 'dashboard' },
   { href: '/management/fleet-analytics', label: 'Fleet Analytics', icon: 'analytics' },
   { href: '/management/workshop', label: 'Workshop & Fleet', icon: 'workshop' },
+  { href: '/management/sheets-hub', label: 'Master Sheets Hub', icon: 'sheets' },
   { href: '/management/technicians', label: 'Technicians', icon: 'users' },
   { href: '/management/scheduling', label: 'Scheduling', icon: 'calendar' },
   { href: '/management/daily-planner', label: 'Daily Planner', icon: 'planner' },
@@ -89,6 +90,15 @@ const iconPaths = {
       <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
     </>
   ),
+  sheets: (
+    <>
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+      <polyline points="14 2 14 8 20 8" />
+      <line x1="16" y1="13" x2="8" y2="13" />
+      <line x1="16" y1="17" x2="8" y2="17" />
+      <polyline points="10 9 9 9 8 9" />
+    </>
+  ),
   japanese: (
     <>
       <path d="M4 6h16M7 6v14M17 6v14M2 10h20M9 14h6" />
@@ -137,6 +147,7 @@ function formatRoleLabel(role) {
 const COMMAND_ITEMS = [
   // Navigation
   { id: 'nav-dashboard', title: 'Management Dashboard', subtitle: 'Operations overview, KPIs, and live roster', href: '/management', category: 'Navigation', badge: 'Overview' },
+  { id: 'nav-sheets-hub', title: 'Master Sheets Hub & Data Lake', subtitle: 'Search 34 sheets, 6,050 SAP parts, 822 customers & tools', href: '/management/sheets-hub', category: 'Navigation', badge: 'Data Lake' },
   { id: 'nav-fleet-analytics', title: 'Fleet Analytics & Component Lifecycle', subtitle: 'Greasing heatmap, fan pumps, wear lifespans & ripper stock', href: '/management/fleet-analytics', category: 'Navigation', badge: 'Fleet' },
   { id: 'nav-workshop', title: 'Workshop, Vehicles & KPI Goals', subtitle: 'Service truck mileage, fuel allocations, tools & KPI scorecards', href: '/management/workshop', category: 'Navigation', badge: 'Workshop' },
   { id: 'nav-technicians', title: 'Technicians Management', subtitle: 'Staff records, shifts, regions, skills & dispatch', href: '/management/technicians', category: 'Navigation', badge: 'Staff' },

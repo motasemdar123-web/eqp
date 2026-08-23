@@ -283,5 +283,35 @@ export function getGovernanceAnalytics() {
   return request('/api/analytics/governance');
 }
 
+export function getSheetsManifest() {
+  return request('/api/sheets/manifest');
+}
+
+export function getSheetData(sheetId, params = {}) {
+  const query = new URLSearchParams(params).toString();
+  return request(`/api/sheets/${sheetId}${query ? `?${query}` : ''}`);
+}
+
+export function searchSapQueries(params = {}) {
+  const query = new URLSearchParams(params).toString();
+  return request(`/api/sheets/sap-search${query ? `?${query}` : ''}`);
+}
+
+export function getCustomersList(params = {}) {
+  const query = new URLSearchParams(params).toString();
+  return request(`/api/sheets/customers${query ? `?${query}` : ''}`);
+}
+
+export function getPeopleDirectory(params = {}) {
+  const query = new URLSearchParams(params).toString();
+  return request(`/api/sheets/people${query ? `?${query}` : ''}`);
+}
+
+export function getToolCustody(params = {}) {
+  const query = new URLSearchParams(params).toString();
+  return request(`/api/sheets/tool-custody${query ? `?${query}` : ''}`);
+}
+
+
 
 
