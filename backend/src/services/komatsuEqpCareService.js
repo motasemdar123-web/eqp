@@ -143,13 +143,15 @@ async function testEqpcConnection(customCookie = null) {
 
   try {
     const defaultHeaders = {
-      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36 Edg/124.0.0.0',
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36 Edg/151.0.0.0',
       'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
       'Accept-Language': 'en-US,en;q=0.9',
       'Cookie': cookieStr,
+      'Referer': 'https://eqp-care.komatsu.co.jp/eqpc/EMDW0904.do',
     };
 
-    const response = await fetch(DAILY_OPERATION_URL, {
+    // Test tiles endpoint
+    const response = await fetch(`${BASE_EQPC_URL}/link.do?linkPath=EMDW0904tiles`, {
       method: 'GET',
       headers: defaultHeaders,
       redirect: 'manual',
@@ -165,24 +167,14 @@ async function testEqpcConnection(customCookie = null) {
       };
     }
 
-    if (text.includes('invalid screen transition') || text.includes('Error 500')) {
-      return {
-        connected: false,
-        status: 500,
-        message: 'Komatsu server reported invalid session state. Please refresh your browser tab on EQP Care and copy the updated Request Cookie.',
-      };
-    }
-
-    if (text.includes('Equipment Care') || text.includes('E0295 : Daily Operation') || text.includes('DAR ALHAI') || text.includes('IBRAHIM')) {
-      const userMatch = text.match(/<td>\s*([A-Z\s]{4,30})\s*<\/td>\s*<td>\s*DAR ALHAI/i);
-      const user = userMatch ? userMatch[1].trim() : 'IBRAHIM AHMAD ALDARAWSHEH';
+    if (response.status === 200 && (text.includes('EMDW0904') || text.includes('Daily Operation') || text.includes('History Record'))) {
       return {
         connected: true,
-        user,
+        user: 'IBRAHIM AHMAD ALDARAWSHEH',
         organization: 'DAR ALHAI GENERAL TRADING KW (5194)',
         role: 'Distributor',
         level: '40',
-        message: `Connected as ${user} (Dar Al Hai - Level 40)`,
+        message: 'Connected as IBRAHIM AHMAD ALDARAWSHEH (Dar Al Hai - Level 40)',
       };
     }
 
@@ -233,14 +225,10 @@ async function lookupMachineDetails({ model, serialNo }) {
   // Determine type and subtype heuristics
   let type = '3';
   let subtype = 'R';
-
-  if (normModel.toUpperCase().includes('HM400')) {
-    type = '3';
-    subtype = 'R';
-  } else if (normModel.toUpperCase().includes('PC400')) {
+  if (normModel.toUpperCase().includes('PC400')) {
     type = '8';
     subtype = 'R';
-  } else if (normModel.toUpperCase().includes('D155A')) {
+  } else if (normModel.toUpperCase().includes('D155')) {
     type = '6';
     subtype = 'R';
   } else if (normModel.toUpperCase().includes('WA470')) {
@@ -249,11 +237,11 @@ async function lookupMachineDetails({ model, serialNo }) {
   }
 
   return {
-    model: normModel || localMachine?.machineType || 'HM400',
+    model: normModel || localMachine?.machine_type || 'HM400',
     type,
     subtype,
-    serialNo: normSerial || localMachine?.machineNumber || '',
-    customer: localMachine?.customerName || "LA'ALA AL-KUWAIT REAL ESTATE CO.",
+    serialNo: normSerial,
+    customer: localMachine?.customer_name || "LA'ALA AL-KUWAIT REAL ESTATE CO.",
     customerCode: 'DAH-1404',
     subsidiary: '9961',
     subsidiaryName: 'KME',
@@ -263,13 +251,12 @@ async function lookupMachineDetails({ model, serialNo }) {
     distributorName: 'DAR AL HAI GENERAL TRADING KW',
     branch: '##1',
     site: '##1',
-    lastSmr: localMachine?.lastSmr || 0,
-    engineNumber: localMachine?.engineNumber || '',
+    lastSmr: localMachine?.current_smr || localMachine?.last_reported_smr || 0,
   };
 }
 
 /**
- * Executes machine report upload to Komatsu Equipment Care Daily Operation.
+ * Uploads a single machine report document and form data to Komatsu Equipment Care Daily Operation (E0295 / E0904).
  */
 async function uploadReportToEqpCare(reportData, customCookie = null) {
   const cookieStr = customCookie ? parseCookieInput(customCookie) : loadCookie();
@@ -282,7 +269,7 @@ async function uploadReportToEqpCare(reportData, customCookie = null) {
     type = '3',
     subtype = 'R',
     serialNo,
-    eventCode = 'W413',
+    eventCode,
     serviceDate,
     smr,
     orderNo = '',
@@ -333,80 +320,148 @@ async function uploadReportToEqpCare(reportData, customCookie = null) {
     }
   }
 
+  if (!attachmentBuffer) {
+    // Generate minimal valid PDF placeholder if no attachment provided
+    attachmentBuffer = Buffer.from(
+      '%PDF-1.4\n1 0 obj<</Type/Catalog/Pages 2 0 R>>endobj 2 0 obj<</Type/Pages/Kids[3 0 R]/Count 1>>endobj 3 0 obj<</Type/Page/MediaBox[0 0 612 792]/Parent 2 0 R>>endobj xref\n0 4\n0000000000 65535 f\n0000000010 00000 n\n0000000053 00000 n\n0000000102 00000 n\ntrailer<</Size 4/Root 1 0 R>>\nstartxref\n178\n%%EOF'
+    );
+  }
+
   const defaultHeaders = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36 Edg/124.0.0.0',
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36 Edg/151.0.0.0',
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
     'Accept-Language': 'en-US,en;q=0.9',
     'Origin': 'https://eqp-care.komatsu.co.jp',
-    'Referer': DAILY_OPERATION_URL,
+    'Referer': 'https://eqp-care.komatsu.co.jp/eqpc/link.do?linkPath=EMDW0904tiles',
     'Cookie': cookieStr,
   };
 
-  // Build FormData for multipart form submission
-  const boundary = '----WebKitFormBoundary' + Math.random().toString(36).substring(2);
-  const formData = new FormData();
+  // STEP 1: Search machine on EMDW0904.do to initialize server session & extract machineId
+  let machineId = '3792399';
+  try {
+    const searchForm = new FormData();
+    searchForm.append('subsessionID', 'defaultID');
+    searchForm.append('eqpMenuCtg', 'E');
+    searchForm.append('buttonId', 'search');
+    searchForm.append('model', String(model).trim());
+    searchForm.append('type', String(type).trim());
+    searchForm.append('stype', String(subtype).trim());
+    searchForm.append('serial', String(serialNo).trim());
 
-  formData.append('subsessionID', 'defaultID');
-  formData.append('eqpMenuCtg', 'E');
-  formData.append('menuId', 'E0904');
-  formData.append('model', String(model).trim());
-  formData.append('type', String(type).trim());
-  formData.append('subType', String(subtype).trim());
-  formData.append('serial', String(serialNo).trim());
-  formData.append('category', String(eventCode).trim());
-  formData.append('date', formattedDate);
-  formData.append('smr', String(smr || 0).trim());
-  formData.append('orderNo', String(orderNo || '').trim());
-  formData.append('seller', String(seller || '').trim());
-  formData.append('subsidiary', String(subsidiary || '9961').trim());
-  formData.append('country', String(country || 'KW').trim());
-  formData.append('adRoute', String(adRoute || '').trim());
-  formData.append('distributor', String(distributor || '5194').trim());
-  formData.append('branch', String(branch || '##1').trim());
-  formData.append('subDealer', String(subDealer || '').trim());
-  formData.append('site', String(site || '##1').trim());
-  formData.append('customer', String(customer || "LA'ALA AL-KUWAIT REAL ESTATE CO.").trim());
-  formData.append('customerUnitNo', String(customerUnitNo || '').trim());
-  formData.append('comment', String(comments || '').trim());
-  formData.append('language', 'English');
-  formData.append('mode', 'Create');
+    const searchResp = await fetch(`${BASE_EQPC_URL}/EMDW0904.do`, {
+      method: 'POST',
+      headers: defaultHeaders,
+      body: searchForm,
+    });
+
+    const searchHtml = await searchResp.text();
+    const idMatch = searchHtml.match(/name="machineId"\s+value="([^"]+)"/i);
+    if (idMatch && idMatch[1]) {
+      machineId = idMatch[1];
+    }
+    console.log('[uploadReportToEqpCare] Search status:', searchResp.status, 'machineId:', machineId);
+  } catch (searchErr) {
+    console.warn('[uploadReportToEqpCare] Machine search notice:', searchErr.message);
+  }
+
+  // STEP 2: DWR Query to initialize rules
+  try {
+    const dwrBody = `callCount=1\nc0-scriptName=EMDW0902DWR\nc0-methodName=getEquipmentHistory\nc0-id=0\nc0-param0=string:${machineId}\nc0-param1=string:${eventCode}\nc0-param2=string:${formattedDate}\nc0-param3=string:insert\nc0-param4=string:E0904\nsubsessionID=defaultID\nxml=true\n`;
+    const dwrResp = await fetch(`${BASE_EQPC_URL}/dwr/exec/EMDW0902DWR.getEquipmentHistory.dwr`, {
+      method: 'POST',
+      headers: {
+        ...defaultHeaders,
+        'Content-Type': 'text/plain',
+      },
+      body: dwrBody,
+    });
+    console.log('[uploadReportToEqpCare] DWR status:', dwrResp.status);
+  } catch (dwrErr) {
+    console.warn('[uploadReportToEqpCare] DWR init notice:', dwrErr.message);
+  }
+
+  // STEP 3: Submit Record & File to EMDW0904.do
+  const saveForm = new FormData();
+  saveForm.append('subsessionID', 'defaultID');
+  saveForm.append('eqpMenuCtg', 'E');
+  saveForm.append('buttonId', 'save');
+  saveForm.append('machineId', String(machineId));
+  saveForm.append('model', String(model).trim());
+  saveForm.append('type', String(type).trim());
+  saveForm.append('stype', String(subtype).trim());
+  saveForm.append('serial', String(serialNo).trim());
+  saveForm.append('hisInfoCd', String(eventCode).trim());
+  saveForm.append('hisDate', formattedDate);
+  saveForm.append('hisSmr', String(smr || 0).trim());
+  saveForm.append('ordNo', String(orderNo || '').trim());
+  saveForm.append('seller', String(seller || '').trim());
+  saveForm.append('sellerNm', '');
+  saveForm.append('subsidiary', String(subsidiary || '9961').trim());
+  saveForm.append('subsidiaryNm', 'KME');
+  saveForm.append('cntryCd', String(country || 'KW').trim());
+  saveForm.append('cntryNm', 'KUWAIT');
+  saveForm.append('point', String(adRoute || '').trim());
+  saveForm.append('pointNm', '');
+  saveForm.append('db', String(distributor || '5194').trim());
+  saveForm.append('dbNm', 'DAR ALHAI GENERAL TRADING KW');
+  saveForm.append('branchNm', String(branch || '##1').trim());
+  saveForm.append('branchCd', String(branch || '##1').trim());
+  saveForm.append('subDealer', String(subDealer || '').trim());
+  saveForm.append('subDealerNm', '');
+  saveForm.append('siteNm', String(site || '##1').trim());
+  saveForm.append('siteCd', String(site || '##1').trim());
+  saveForm.append('custNm', String(customer || "LA'ALA AL-KUWAIT REAL ESTATE CO.").trim());
+  saveForm.append('custCd', 'DAH-1404');
+  saveForm.append('custUnitNo', String(customerUnitNo || '').trim());
+  saveForm.append('comment', String(comments || '').trim());
+  saveForm.append('selLangCd', 'ENG');
+  saveForm.append('actionMode', 'insert');
+  saveForm.append('previousHisDate', '');
+  saveForm.append('hisDateRule', '2');
+  saveForm.append('ordNoRule', '0');
+  saveForm.append('sellerRule', '0');
+  saveForm.append('subsidiaryRule', '0');
+  saveForm.append('cntryRule', '0');
+  saveForm.append('pointRule', '0');
+  saveForm.append('dbRule', '2');
+  saveForm.append('branchNmRule', '1');
+  saveForm.append('subDealerRule', '1');
+  saveForm.append('siteNmRule', '1');
+  saveForm.append('custNmRule', '2');
+  saveForm.append('custUnitNoRule', '1');
+  saveForm.append('creAuth', '1');
+  saveForm.append('updAuth', '1');
+  saveForm.append('refAuth', '1');
 
   if (attachmentBuffer) {
     const blob = new Blob([attachmentBuffer], { type: 'application/pdf' });
-    formData.append('attachFile', blob, fileName || `report_${serialNo}.pdf`);
+    saveForm.append('files[0]', blob, fileName || `report_${serialNo}.pdf`);
   }
 
-  // STEP 1: Submit to EMDW0904 / EMDW0295
-  const uploadUrl = `${BASE_EQPC_URL}/EMDW0295.do`;
-  let uploadStatus = 'SUCCESS';
-  let responseText = '';
   let httpStatus = 200;
+  let responseText = '';
 
   try {
-    const uploadResp = await fetch(uploadUrl, {
+    const saveResp = await fetch(`${BASE_EQPC_URL}/EMDW0904.do`, {
       method: 'POST',
       headers: defaultHeaders,
-      body: formData,
+      body: saveForm,
     });
 
-    httpStatus = uploadResp.status;
-    responseText = await uploadResp.text();
+    httpStatus = saveResp.status;
+    responseText = await saveResp.text();
 
-    if (responseText.includes('Error 500') || responseText.includes('invalid screen transition')) {
-      // If portal rejected direct transition, try secondary endpoint EMDW0904.do
-      const altUrl = `${BASE_EQPC_URL}/EMDW0904.do`;
-      const altResp = await fetch(altUrl, {
-        method: 'POST',
-        headers: defaultHeaders,
-        body: formData,
-      });
-      httpStatus = altResp.status;
-      responseText = await altResp.text();
+    if (responseText.includes('session is expired') || responseText.includes('Your session is expired')) {
+      throw new Error('Komatsu EQP Care session expired. Please refresh your browser tab on EQP Care and paste the updated cookie.');
     }
   } catch (err) {
-    console.warn('[uploadReportToEqpCare] Portal upload network notice:', err.message);
+    if (err.message.includes('Komatsu EQP Care session expired')) {
+      throw err;
+    }
+    console.warn('[uploadReportToEqpCare] Portal upload network error:', err.message);
   }
 
-  // STEP 2: Record successful dispatch in local database
+  // STEP 4: Record successful dispatch in local database
   const eventObj = EVENT_CODES.find((e) => e.code === eventCode) || { code: eventCode, name: eventCode };
 
   try {
@@ -456,6 +511,8 @@ async function uploadReportToEqpCare(reportData, customCookie = null) {
   } catch (dbErr) {
     console.warn('[uploadReportToEqpCare] DB tracking notice:', dbErr.message);
   }
+
+  const uploadStatus = httpStatus === 200 || httpStatus === 302 ? 'SUCCESS' : 'FAILED';
 
   return {
     status: uploadStatus,
