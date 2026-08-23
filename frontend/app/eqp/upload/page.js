@@ -233,6 +233,7 @@ export default function EqpCareUploadPage() {
     addLog(`Starting upload for ${formData.model} #${formData.serialNo} (${formData.eventCode})...`, 'info');
 
     try {
+      const selectedReport = generatedReports.find((r) => String(r.id) === String(formData.selectedReportId));
       const storedCookie = typeof window !== 'undefined' ? localStorage.getItem('eqpc_user_cookie') || '' : '';
       const payload = {
         model: formData.model,
