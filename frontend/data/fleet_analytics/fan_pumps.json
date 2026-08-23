@@ -1,0 +1,118 @@
+{
+  "benchmarks": {
+    "standardPressurePsi": 1350,
+    "pumpPriceKd": 1300,
+    "motorPriceKd": 1400,
+    "safetyValvePsi": 50,
+    "controlValvePsi": 200
+  },
+  "rotations": [
+    {
+      "id": "rot-1",
+      "componentType": "FAN_PUMP",
+      "sourceSerial": "711",
+      "targetSerial": "714",
+      "date": "2023-08-15",
+      "condition": "711 pump → 714 Dozer",
+      "pressure": 1300,
+      "status": "OPERATIONAL"
+    },
+    {
+      "id": "rot-2",
+      "componentType": "FAN_MOTOR",
+      "sourceSerial": "680",
+      "targetSerial": "714",
+      "date": "2023-11-20",
+      "condition": "680 Motor (after polish and small bearing replacement) → 714 Dozer",
+      "pressure": 1350,
+      "status": "OPERATIONAL"
+    },
+    {
+      "id": "rot-3",
+      "componentType": "FAN_PUMP",
+      "sourceSerial": "724",
+      "targetSerial": "680",
+      "date": "2024-06-26",
+      "condition": "724 Pump → 680 Dozer (Removed in workshop)",
+      "pressure": 1300,
+      "status": "REPLACED"
+    },
+    {
+      "id": "rot-4",
+      "componentType": "FAN_PUMP",
+      "sourceSerial": "724",
+      "targetSerial": "682",
+      "date": "2024-06-27",
+      "condition": "724 Pump → 682 Dozer",
+      "pressure": 1320,
+      "status": "OPERATIONAL"
+    },
+    {
+      "id": "rot-5",
+      "componentType": "FAN_PUMP",
+      "sourceSerial": "682",
+      "targetSerial": "679",
+      "date": "2024-07-01",
+      "condition": "682 Pump (after Polish swash plate, valve plate and block) → 679 Dozer",
+      "pressure": 1380,
+      "status": "OPERATIONAL"
+    },
+    {
+      "id": "rot-6",
+      "componentType": "FAN_PUMP",
+      "sourceSerial": "679",
+      "targetSerial": "87842",
+      "date": "2024-07-07",
+      "condition": "679 Pump (after Polish swash plate, valve plate and block) → 87842 Dozer",
+      "pressure": 1400,
+      "status": "OPERATIONAL"
+    },
+    {
+      "id": "rot-7",
+      "componentType": "FAN_MOTOR",
+      "sourceSerial": "680",
+      "targetSerial": "842",
+      "date": "2024-07-11",
+      "condition": "680 Motor (after polish and small bearing replacement) → 842 Dozer",
+      "pressure": 1350,
+      "status": "OPERATIONAL"
+    },
+    {
+      "id": "rot-8",
+      "componentType": "FAN_PUMP",
+      "sourceSerial": "714",
+      "targetSerial": "724",
+      "date": "2024-08-01",
+      "condition": "714 Pump (after full overhaul) → 724 Dozer",
+      "pressure": 1400,
+      "status": "OPERATIONAL"
+    },
+    {
+      "id": "rot-9",
+      "componentType": "FAN_PUMP",
+      "sourceSerial": "680",
+      "targetSerial": "711",
+      "date": "2024-09-12",
+      "condition": "680 pump (after full overhaul) → 711 Dozer",
+      "pressure": 1400,
+      "status": "OPERATIONAL"
+    }
+  ],
+  "fleetSerials": [
+    "87677",
+    "87714",
+    "87842",
+    "87685",
+    "87679",
+    "87680",
+    "87682",
+    "87705",
+    "87724",
+    "87736",
+    "87743",
+    "88685",
+    "88687",
+    "88695",
+    "88696"
+  ]
+}

@@ -1,0 +1,663 @@
+{
+  "generatedAt": "2026-08-23T15:09:03.664808",
+  "totalSheets": 34,
+  "totalRecords": 9171,
+  "sheets": [
+    {
+      "index": 1,
+      "sheetName": "Links",
+      "id": "links",
+      "category": "General Reference",
+      "totalRows": 19,
+      "columnCount": 6,
+      "headers": [
+        "Websites",
+        "Column_2",
+        "Column_3",
+        "Column_4",
+        "Column_5",
+        "Standard Forms"
+      ],
+      "file": "links.json"
+    },
+    {
+      "index": 2,
+      "sheetName": "People",
+      "id": "people",
+      "category": "Workforce & Management",
+      "totalRows": 37,
+      "columnCount": 8,
+      "headers": [
+        "Key Personnel",
+        "Column_2",
+        "Column_3",
+        "Column_4",
+        "Column_5",
+        "Column_6",
+        "Column_7",
+        "Key Personnel"
+      ],
+      "file": "people.json"
+    },
+    {
+      "index": 3,
+      "sheetName": "Greasing - Retired",
+      "id": "greasing_-_retired",
+      "category": "Fleet & Operations",
+      "totalRows": 147,
+      "columnCount": 31,
+      "headers": [
+        "Column_1",
+        "Desire Machines (Daily Service Desire) 3 KWD * 42 Hour",
+        "Column_3",
+        "Column_4",
+        "Column_5",
+        "Column_6",
+        "Column_7",
+        "Column_8",
+        "Column_9",
+        "Column_10"
+      ],
+      "file": "greasing_-_retired.json"
+    },
+    {
+      "index": 4,
+      "sheetName": "Greasing",
+      "id": "greasing",
+      "category": "Fleet & Operations",
+      "totalRows": 131,
+      "columnCount": 27,
+      "headers": [
+        "Machine",
+        "2024-07-01T00:00:00",
+        "2024-08-01T00:00:00",
+        "2024-09-01T00:00:00",
+        "2024-10-01T00:00:00",
+        "2024-11-01T00:00:00",
+        "2024-12-01T00:00:00",
+        "2025-01-01T00:00:00",
+        "2025-02-01T00:00:00",
+        "2025-03-01T00:00:00"
+      ],
+      "file": "greasing.json"
+    },
+    {
+      "index": 5,
+      "sheetName": "FAN PUMPS D155A-6",
+      "id": "fan_pumps_d155a-6",
+      "category": "Fleet & Operations",
+      "totalRows": 134,
+      "columnCount": 49,
+      "headers": [
+        "Serial",
+        "Latest Date",
+        "Column_3",
+        "87677",
+        "Column_5",
+        "Column_6",
+        "Column_7",
+        "Column_8",
+        "Column_9",
+        "Column_10"
+      ],
+      "file": "fan_pumps_d155a-6.json"
+    },
+    {
+      "index": 6,
+      "sheetName": "Excavators follow-up ",
+      "id": "excavators_follow-up",
+      "category": "Fleet & Operations",
+      "totalRows": 14,
+      "columnCount": 45,
+      "headers": [
+        "Tour",
+        "Column_2",
+        "Column_3",
+        "Column_4",
+        "Column_5",
+        "Column_6",
+        "Column_7",
+        "Column_8",
+        "Column_9",
+        "Column_10"
+      ],
+      "file": "excavators_follow-up.json"
+    },
+    {
+      "index": 7,
+      "sheetName": "7th Follow-up",
+      "id": "7th_follow-up",
+      "category": "Fleet & Operations",
+      "totalRows": 13,
+      "columnCount": 1,
+      "headers": [
+        "7th Ring"
+      ],
+      "file": "7th_follow-up.json"
+    },
+    {
+      "index": 8,
+      "sheetName": "GET + Radiators + Air Filters",
+      "id": "get___radiators___air_filters",
+      "category": "Parts & Warehouse",
+      "totalRows": 178,
+      "columnCount": 50,
+      "headers": [
+        "Add Data",
+        "Add data to database by inserting data here then clicking Add Data arrow",
+        "Column_3",
+        "Column_4",
+        "Column_5",
+        "Column_6",
+        "Column_7",
+        "Column_8",
+        "Column_9",
+        "Column_10"
+      ],
+      "file": "get___radiators___air_filters.json"
+    },
+    {
+      "index": 9,
+      "sheetName": "Daily Table -- Faisal",
+      "id": "daily_table_--_faisal",
+      "category": "Workforce & Management",
+      "totalRows": 9,
+      "columnCount": 25,
+      "headers": [
+        "Problem",
+        "Serial Number",
+        "Tolerance",
+        "Date of problem",
+        "Status",
+        "Date of completion",
+        "Note",
+        "Column_8",
+        "Column_9",
+        "Problem"
+      ],
+      "file": "daily_table_--_faisal.json"
+    },
+    {
+      "index": 10,
+      "sheetName": "Tracker - Abdelrahman",
+      "id": "tracker_-_abdelrahman",
+      "category": "Fleet & Operations",
+      "totalRows": 175,
+      "columnCount": 8,
+      "headers": [
+        "Serial Number",
+        "Issue Reported Date",
+        "Start Date",
+        "Finish Data",
+        "Category",
+        "Work Item",
+        "Comments",
+        "Status"
+      ],
+      "file": "tracker_-_abdelrahman.json"
+    },
+    {
+      "index": 11,
+      "sheetName": "Side Quests",
+      "id": "side_quests",
+      "category": "General Reference",
+      "totalRows": 1,
+      "columnCount": 8,
+      "headers": [
+        "Serial Number",
+        "Issue Reported Date",
+        "Start Date",
+        "Finish Date",
+        "Category",
+        "Work Item",
+        "Comments",
+        "Status"
+      ],
+      "file": "side_quests.json"
+    },
+    {
+      "index": 12,
+      "sheetName": "Ripper teeth",
+      "id": "ripper_teeth",
+      "category": "Parts & Warehouse",
+      "totalRows": 324,
+      "columnCount": 10,
+      "headers": [
+        "tr",
+        "Column_2",
+        "Column_3",
+        "Column_4",
+        "Tooth ->",
+        "Hensley",
+        "Jdaemi",
+        "CAT 9W-2452",
+        "CAT 6H-5452",
+        "CAT 9W-2452 RC"
+      ],
+      "file": "ripper_teeth.json"
+    },
+    {
+      "index": 13,
+      "sheetName": "SMR",
+      "id": "smr",
+      "category": "Fleet & Operations",
+      "totalRows": 49,
+      "columnCount": 13,
+      "headers": [
+        "Lookup SMR",
+        "Select serial number and date to view SMR",
+        "Column_3",
+        "Column_4",
+        "Column_5",
+        "Column_6",
+        "SMR of All DAH Machines",
+        "Column_8",
+        "Column_9",
+        "Column_10"
+      ],
+      "file": "smr.json"
+    },
+    {
+      "index": 14,
+      "sheetName": "Bucket and Arm Bushings",
+      "id": "bucket_and_arm_bushings",
+      "category": "Parts & Warehouse",
+      "totalRows": 14,
+      "columnCount": 7,
+      "headers": [
+        "Column_1",
+        "Column_2",
+        "Column_3",
+        "Item",
+        "Quantity",
+        "Cost per unit",
+        "Total"
+      ],
+      "file": "bucket_and_arm_bushings.json"
+    },
+    {
+      "index": 15,
+      "sheetName": "Bucket teeth",
+      "id": "bucket_teeth",
+      "category": "Parts & Warehouse",
+      "totalRows": 0,
+      "columnCount": 1,
+      "headers": [
+        "Sheet has been combined with GET Sheet"
+      ],
+      "file": "bucket_teeth.json"
+    },
+    {
+      "index": 16,
+      "sheetName": "Air filter",
+      "id": "air_filter",
+      "category": "Parts & Warehouse",
+      "totalRows": 31,
+      "columnCount": 41,
+      "headers": [
+        "Add Data",
+        "Dozer, Excavator",
+        "Column_3",
+        "Column_4",
+        "Column_5",
+        "Column_6",
+        "Column_7",
+        "Column_8",
+        "Column_9",
+        "Column_10"
+      ],
+      "file": "air_filter.json"
+    },
+    {
+      "index": 17,
+      "sheetName": "Cylinders check",
+      "id": "cylinders_check",
+      "category": "Fleet & Operations",
+      "totalRows": 15,
+      "columnCount": 10,
+      "headers": [
+        "Column_1",
+        "Column 1",
+        "81818",
+        "81813",
+        "81869",
+        "81858",
+        "81865",
+        "81870",
+        "81812",
+        "81855"
+      ],
+      "file": "cylinders_check.json"
+    },
+    {
+      "index": 18,
+      "sheetName": "Spare parts check",
+      "id": "spare_parts_check",
+      "category": "Parts & Warehouse",
+      "totalRows": 11,
+      "columnCount": 1,
+      "headers": [
+        "Cylinder Seal Kits"
+      ],
+      "file": "spare_parts_check.json"
+    },
+    {
+      "index": 19,
+      "sheetName": "Workshop tools",
+      "id": "workshop_tools",
+      "category": "Workshop & Vehicles",
+      "totalRows": 15,
+      "columnCount": 45,
+      "headers": [
+        "Column_1",
+        "Air Compressors",
+        "Column_3",
+        "Column_4",
+        "Column_5",
+        "Column_6",
+        "Column_7",
+        "Column_8",
+        "Column_9",
+        "Column_10"
+      ],
+      "file": "workshop_tools.json"
+    },
+    {
+      "index": 20,
+      "sheetName": "Fuel Tracking",
+      "id": "fuel_tracking",
+      "category": "Workshop & Vehicles",
+      "totalRows": 202,
+      "columnCount": 12,
+      "headers": [
+        "I00009",
+        "Column_2",
+        "Quantity",
+        "Unit Price",
+        "Total (LC)",
+        "Column_6",
+        "Free Text",
+        "Department",
+        "Chassis Number",
+        "KM counter"
+      ],
+      "file": "fuel_tracking.json"
+    },
+    {
+      "index": 21,
+      "sheetName": "Cars maintenance",
+      "id": "cars_maintenance",
+      "category": "Workshop & Vehicles",
+      "totalRows": 7,
+      "columnCount": 32,
+      "headers": [
+        "Yellow HINO (70km/day)",
+        "Column_2",
+        "White HINO (80km/day)",
+        "Column_4",
+        "Chevrolet Truck (Old) (110.5km/day)",
+        "Column_6",
+        "Chevrolet Truck (New)",
+        "Column_8",
+        "GMC Truck (110 km/day)",
+        "Column_10"
+      ],
+      "file": "cars_maintenance.json"
+    },
+    {
+      "index": 22,
+      "sheetName": "Technicians proficiency",
+      "id": "technicians_proficiency",
+      "category": "Workforce & Management",
+      "totalRows": 22,
+      "columnCount": 11,
+      "headers": [
+        "Column_1",
+        "متابعة مهارات الفنيين",
+        "Column_3",
+        "Column_4",
+        "Column_5",
+        "Column_6",
+        "Column_7",
+        "Column_8",
+        "Column_9",
+        "Column_10"
+      ],
+      "file": "technicians_proficiency.json"
+    },
+    {
+      "index": 23,
+      "sheetName": "Technicians Tools",
+      "id": "technicians_tools",
+      "category": "Workforce & Management",
+      "totalRows": 62,
+      "columnCount": 8,
+      "headers": [
+        "Torx Key Set",
+        "T0001",
+        "Column_3",
+        "Column_4",
+        "Column_5",
+        "Column_6",
+        "Column_7",
+        "احمد جواودة"
+      ],
+      "file": "technicians_tools.json"
+    },
+    {
+      "index": 24,
+      "sheetName": "Technicians Infractions",
+      "id": "technicians_infractions",
+      "category": "Workforce & Management",
+      "totalRows": 11,
+      "columnCount": 4,
+      "headers": [
+        "Technician",
+        "Date",
+        "Type of infraction",
+        "Comments"
+      ],
+      "file": "technicians_infractions.json"
+    },
+    {
+      "index": 25,
+      "sheetName": "Diesel generator",
+      "id": "diesel_generator",
+      "category": "Workshop & Vehicles",
+      "totalRows": 4,
+      "columnCount": 8,
+      "headers": [
+        "date",
+        "Time",
+        "h",
+        "m",
+        "hours in m",
+        "h.m",
+        "days between two readings",
+        "hours of operation"
+      ],
+      "file": "diesel_generator.json"
+    },
+    {
+      "index": 26,
+      "sheetName": "EQP Care Reports",
+      "id": "eqp_care_reports",
+      "category": "General Reference",
+      "totalRows": 122,
+      "columnCount": 14,
+      "headers": [
+        "Column_1",
+        "Model(OEM)",
+        "Type(OEM)",
+        "SubType(OEM)",
+        "Serial(OEM)",
+        "Engine Serial",
+        "Plant(OEM)",
+        "Model(Catalog)",
+        "Type(Catalog)",
+        "DELIVERY"
+      ],
+      "file": "eqp_care_reports.json"
+    },
+    {
+      "index": 27,
+      "sheetName": "EQP_Care New",
+      "id": "eqp_care_new",
+      "category": "General Reference",
+      "totalRows": 256,
+      "columnCount": 44,
+      "headers": [
+        "Eng",
+        "Model",
+        "Serial",
+        "Report 40",
+        "Report 39",
+        "Report 38",
+        "Report 37",
+        "Report 36",
+        "Report 35",
+        "Report 34"
+      ],
+      "file": "eqp_care_new.json"
+    },
+    {
+      "index": 28,
+      "sheetName": "SAP Query",
+      "id": "sap_query",
+      "category": "Parts & Warehouse",
+      "totalRows": 6050,
+      "columnCount": 28,
+      "headers": [
+        "Query Wizard",
+        "Create queries to search documents in SAP",
+        "Column_3",
+        "Column_4",
+        "Column_5",
+        "Column_6",
+        "Column_7",
+        "Column_8",
+        "Column_9",
+        "Column_10"
+      ],
+      "file": "sap_query.json"
+    },
+    {
+      "index": 29,
+      "sheetName": "Target",
+      "id": "target",
+      "category": "Parts & Warehouse",
+      "totalRows": 26,
+      "columnCount": 10,
+      "headers": [
+        "Department",
+        "Column_2",
+        "Cross-functional KPI",
+        "FY26 Target",
+        "1H Target",
+        "1H Progress",
+        "Current",
+        "Completion %",
+        "PIC",
+        "Status"
+      ],
+      "file": "target.json"
+    },
+    {
+      "index": 30,
+      "sheetName": "Daily Schedule",
+      "id": "daily_schedule",
+      "category": "Workforce & Management",
+      "totalRows": 5,
+      "columnCount": 10,
+      "headers": [
+        "Column_1",
+        "Column_2",
+        "Column_3",
+        "Column_4",
+        "Column_5",
+        "Column_6",
+        "Column_7",
+        "Column_8",
+        "Column_9",
+        "2025-03-13T00:00:00"
+      ],
+      "file": "daily_schedule.json"
+    },
+    {
+      "index": 31,
+      "sheetName": "Monthly - Accumulated",
+      "id": "monthly_-_accumulated",
+      "category": "Fleet & Operations",
+      "totalRows": 64,
+      "columnCount": 25,
+      "headers": [
+        "Column_1",
+        "Column_2",
+        "Column_3",
+        "Column_4",
+        "Column_5",
+        "Column_6",
+        "Column_7",
+        "Column_8",
+        "Column_9",
+        "Column_10"
+      ],
+      "file": "monthly_-_accumulated.json"
+    },
+    {
+      "index": 32,
+      "sheetName": "Warranty",
+      "id": "warranty",
+      "category": "Workshop & Vehicles",
+      "totalRows": 42,
+      "columnCount": 11,
+      "headers": [
+        "Date",
+        "Item",
+        "Serial No",
+        "Company",
+        "Receipt No",
+        "Price",
+        "Comment",
+        "Column_8",
+        "Column_9",
+        "Serial"
+      ],
+      "file": "warranty.json"
+    },
+    {
+      "index": 33,
+      "sheetName": "Customer List",
+      "id": "customer_list",
+      "category": "Customers & BP",
+      "totalRows": 822,
+      "columnCount": 2,
+      "headers": [
+        "BP Code",
+        "BP Name"
+      ],
+      "file": "customer_list.json"
+    },
+    {
+      "index": 34,
+      "sheetName": "Sheet45",
+      "id": "sheet45",
+      "category": "General Reference",
+      "totalRows": 159,
+      "columnCount": 45,
+      "headers": [
+        "Item No.",
+        "Item Description",
+        "Quantity",
+        "Unit Price",
+        "Discount %",
+        "Tax Code",
+        "Total (LC)",
+        "UoM Code",
+        "COGS Business Unit",
+        "COGS Department"
+      ],
+      "file": "sheet45.json"
+    }
+  ]
+}

@@ -11,10 +11,15 @@ async function request(path, options = {}) {
     }
   }
 
+  const isLocalDatasetRoute = path.startsWith('/api/sheets') || path.startsWith('/api/analytics');
+  const targetUrl = (typeof window !== 'undefined' && isLocalDatasetRoute)
+    ? path
+    : `${API_BASE_URL}${path}`;
+
   let response;
 
   try {
-    response = await fetch(`${API_BASE_URL}${path}`, {
+    response = await fetch(targetUrl, {
       ...options,
       headers: {
         'Content-Type': 'application/json',
@@ -23,13 +28,21 @@ async function request(path, options = {}) {
       },
     });
   } catch {
-    throw new Error('Cannot reach backend. Check Render deployment, backend URL, and CORS settings.');
+    if (isLocalDatasetRoute && typeof window !== 'undefined') {
+      try {
+        response = await fetch(path, options);
+      } catch {
+        throw new Error('Cannot reach backend or local data service.');
+      }
+    } else {
+      throw new Error('Cannot reach backend. Check Render deployment, backend URL, and CORS settings.');
+    }
   }
 
   const data = await response.json().catch(() => ({}));
 
   if (!response.ok) {
-    if (response.status === 401 && typeof window !== 'undefined') {
+    if (response.status === 401 && typeof window !== 'undefined' && !isLocalDatasetRoute) {
       localStorage.removeItem('user');
       localStorage.removeItem('platformToken');
       localStorage.removeItem('platformUser');

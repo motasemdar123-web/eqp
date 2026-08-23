@@ -1,0 +1,84 @@
+{
+  "inspections": [
+    {
+      "serial": "81818",
+      "model": "PC350LC-8M0",
+      "bucket": false,
+      "arm": false,
+      "boom": false,
+      "smr": 6200.0,
+      "ratio": 0.0,
+      "status": "NORMAL"
+    },
+    {
+      "serial": "81813",
+      "model": "PC350LC-8M0",
+      "bucket": false,
+      "arm": false,
+      "boom": false,
+      "smr": 5947.6,
+      "ratio": 0.0,
+      "status": "NORMAL"
+    },
+    {
+      "serial": "81869",
+      "model": "PC350LC-8M0",
+      "bucket": false,
+      "arm": false,
+      "boom": false,
+      "smr": 7100.0,
+      "ratio": 0.0,
+      "status": "NORMAL"
+    },
+    {
+      "serial": "81858",
+      "model": "PC350LC-8M0",
+      "bucket": false,
+      "arm": true,
+      "boom": false,
+      "smr": 6850.2,
+      "ratio": 0.15,
+      "status": "ATTENTION"
+    },
+    {
+      "serial": "81865",
+      "model": "PC350LC-8M0",
+      "bucket": true,
+      "arm": true,
+      "boom": false,
+      "smr": 7400.5,
+      "ratio": 0.35,
+      "status": "LEAK_DETECTED"
+    },
+    {
+      "serial": "81870",
+      "model": "PC350LC-8M0",
+      "bucket": false,
+      "arm": true,
+      "boom": false,
+      "smr": 6100.0,
+      "ratio": 0.12,
+      "status": "ATTENTION"
+    }
+  ],
+  "sealKits": [
+    {
+      "cylinder": "Bucket Cylinder",
+      "partNo": "721-98-01080 (K26)",
+      "bushingPartNo": "707-52-90851",
+      "costKd": 108.4
+    },
+    {
+      "cylinder": "Arm Cylinder",
+      "partNo": "721-98-02270 (K17)",
+      "bushingPartNo": "707-52-90851",
+      "costKd": 100.3
+    },
+    {
+      "cylinder": "Boom Cylinder",
+      "partNo": "721-98-00510 (K11)",
+      "bushingPartNo": "707-52-90851",
+      "costKd": 80.94
+    }
+  ]
+}

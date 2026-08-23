@@ -1,0 +1,78 @@
+{
+  "items": [
+    {
+      "machineType": "Dozer",
+      "serial": "87682",
+      "serviceDate": "2026-07-20",
+      "smr": 19240.0,
+      "jobType": "Replacing Air Filter",
+      "comment": "Internal + External"
+    },
+    {
+      "machineType": "Data Viewer",
+      "serial": "Select a machine type, a serial number, and a job title",
+      "serviceDate": "",
+      "smr": null,
+      "jobType": "",
+      "comment": ""
+    },
+    {
+      "machineType": "Sort Table By",
+      "serial": "Date",
+      "serviceDate": "Decending",
+      "smr": null,
+      "jobType": "Maintenance",
+      "comment": "2"
+    },
+    {
+      "machineType": "Serial Number",
+      "serial": "Date",
+      "serviceDate": "SMR",
+      "smr": null,
+      "jobType": "Comment",
+      "comment": "Lifespan [Hours]"
+    },
+    {
+      "machineType": "87681",
+      "serial": "2024-12-24 00:00:00",
+      "serviceDate": "12156.4",
+      "smr": null,
+      "jobType": "Internal + External",
+      "comment": ""
+    }
+  ],
+  "airFilters": [
+    {
+      "machineType": "Viewer",
+      "serial": "Select a machine type and a serial number",
+      "date": "",
+      "smr": null,
+      "filterType": "Internal + External",
+      "lifespanHours": 500.0
+    },
+    {
+      "machineType": "Machine Type",
+      "serial": "Serial Number",
+      "date": "",
+      "smr": null,
+      "filterType": "Internal + External",
+      "lifespanHours": 500.0
+    },
+    {
+      "machineType": "Dozer",
+      "serial": "Select Machine Type",
+      "date": "",
+      "smr": null,
+      "filterType": "Internal + External",
+      "lifespanHours": 500.0
+    },
+    {
+      "machineType": "Serial Number",
+      "serial": "Date",
+      "date": "SMR",
+      "smr": null,
+      "filterType": "Comment",
+      "lifespanHours": 500.0
+    }
+  ]
+}
