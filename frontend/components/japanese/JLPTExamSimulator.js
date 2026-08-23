@@ -681,6 +681,35 @@ export default function JLPTExamSimulator({
                 </div>
               )}
 
+              {/* Reading Passage Card (Dokkai - 読解本文) */}
+              {currentQuestion.passage && (
+                <div className="p-4 sm:p-5 rounded-2xl bg-amber-50/70 border-2 border-amber-200/90 text-slate-900 shadow-xs space-y-3">
+                  <div className="flex items-center justify-between border-b border-amber-200/80 pb-2.5">
+                    <div className="flex items-center gap-2">
+                      <span className="flex h-2.5 w-2.5 rounded-full bg-amber-600 animate-pulse" />
+                      <span className="text-xs font-black uppercase tracking-wider text-amber-900">
+                        📖 読解本文 (Reading Passage)
+                      </span>
+                    </div>
+                    {currentQuestion.passageTitle && (
+                      <span className="text-xs font-bold text-amber-900 bg-amber-200/80 px-2.5 py-0.5 rounded-full border border-amber-300">
+                        {currentQuestion.passageTitle}
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="text-sm sm:text-base leading-relaxed sm:leading-loose text-slate-900 whitespace-pre-line font-medium font-sans">
+                    {currentQuestion.passage}
+                  </div>
+
+                  {currentQuestion.passageNotes && (
+                    <div className="pt-2 border-t border-amber-200/60 text-xs text-slate-600 italic">
+                      {currentQuestion.passageNotes}
+                    </div>
+                  )}
+                </div>
+              )}
+
               {/* Question Text (Only for text questions without an image) */}
               {!currentQuestion.image && (currentQuestion.question || currentQuestion.prompt) && (
                 <div className="text-lg font-bold text-slate-900 whitespace-pre-line leading-relaxed">
@@ -968,6 +997,20 @@ export default function JLPTExamSimulator({
                     alt="Illustration"
                     className="max-h-56 object-contain rounded"
                   />
+                </div>
+              )}
+
+              {/* Reading Passage in Review Mode */}
+              {q.passage && (
+                <div className="p-3.5 sm:p-4 bg-amber-50/70 border border-amber-200 rounded-xl text-xs sm:text-sm text-slate-900 space-y-2 font-sans">
+                  <div className="flex items-center justify-between border-b border-amber-200/80 pb-1.5 text-xs font-bold text-amber-900">
+                    <span>📖 読解本文 (Reading Passage)</span>
+                    {q.passageTitle && <span className="text-[11px] font-bold text-amber-800 bg-amber-100 px-2 py-0.5 rounded">{q.passageTitle}</span>}
+                  </div>
+                  <p className="whitespace-pre-line leading-relaxed">{q.passage}</p>
+                  {q.passageNotes && (
+                    <p className="pt-1 text-[11px] text-slate-500 italic">{q.passageNotes}</p>
+                  )}
                 </div>
               )}
 

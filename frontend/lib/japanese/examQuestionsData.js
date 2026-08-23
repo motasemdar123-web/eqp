@@ -738,7 +738,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "へたです"
               ],
               "correct": 0,
-              "explanation": "Expressing fond hobby:「写真をとることがすきです」."
+              "explanation": "Expressing fond hobby:「写真をとることがすきです」.",
+              "passage": "私の趣味は写真を撮ることです。去年の誕生日に、父からカメラをもらいました。\nそれから、いろいろな場所へ行って、写真を撮るのが (22) になりました。\n\n週末は、公園や山へ行きます。(23)、きれいな花や鳥の写真を撮ります。\nいつも友達と (24) 行きますが、時々一人で行くこともあります。\n\nまだあまり上手ではありませんが、写真を見るのは (25) 楽しいです。\n来月は、京都へ古いお寺の写真を撮りに (26)。",
+              "passageTitle": "Mondai 3 文章の文法：私の趣味",
+              "passageNotes": "※ 趣味（しゅみ）：hobby　※ 撮る（とる）：to take (a photo)"
             },
             {
               "id": "n5-e1-g-23",
@@ -751,7 +754,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "でも"
               ],
               "correct": 0,
-              "explanation": "Connecting sequential narrative:「そして」."
+              "explanation": "Connecting sequential narrative:「そして」.",
+              "passage": "私の趣味は写真を撮ることです。去年の誕生日に、父からカメラをもらいました。\nそれから、いろいろな場所へ行って、写真を撮るのが (22) になりました。\n\n週末は、公園や山へ行きます。(23)、きれいな花や鳥の写真を撮ります。\nいつも友達と (24) 行きますが、時々一人で行くこともあります。\n\nまだあまり上手ではありませんが、写真を見るのは (25) 楽しいです。\n来月は、京都へ古いお寺の写真を撮りに (26)。",
+              "passageTitle": "Mondai 3 文章の文法：私の趣味",
+              "passageNotes": "※ 趣味（しゅみ）：hobby　※ 撮る（とる）：to take (a photo)"
             },
             {
               "id": "n5-e1-g-24",
@@ -764,7 +770,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "すこし"
               ],
               "correct": 0,
-              "explanation": "With friends:「いっしょに」."
+              "explanation": "With friends:「いっしょに」.",
+              "passage": "私の趣味は写真を撮ることです。去年の誕生日に、父からカメラをもらいました。\nそれから、いろいろな場所へ行って、写真を撮るのが (22) になりました。\n\n週末は、公園や山へ行きます。(23)、きれいな花や鳥の写真を撮ります。\nいつも友達と (24) 行きますが、時々一人で行くこともあります。\n\nまだあまり上手ではありませんが、写真を見るのは (25) 楽しいです。\n来月は、京都へ古いお寺の写真を撮りに (26)。",
+              "passageTitle": "Mondai 3 文章の文法：私の趣味",
+              "passageNotes": "※ 趣味（しゅみ）：hobby　※ 撮る（とる）：to take (a photo)"
             },
             {
               "id": "n5-e1-g-25",
@@ -777,7 +786,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "すこしも"
               ],
               "correct": 0,
-              "explanation": "Intensifier:「とてもきれいでした」."
+              "explanation": "Intensifier:「とてもきれいでした」.",
+              "passage": "私の趣味は写真を撮ることです。去年の誕生日に、父からカメラをもらいました。\nそれから、いろいろな場所へ行って、写真を撮るのが (22) になりました。\n\n週末は、公園や山へ行きます。(23)、きれいな花や鳥の写真を撮ります。\nいつも友達と (24) 行きますが、時々一人で行くこともあります。\n\nまだあまり上手ではありませんが、写真を見るのは (25) 楽しいです。\n来月は、京都へ古いお寺の写真を撮りに (26)。",
+              "passageTitle": "Mondai 3 文章の文法：私の趣味",
+              "passageNotes": "※ 趣味（しゅみ）：hobby　※ 撮る（とる）：to take (a photo)"
             },
             {
               "id": "n5-e1-g-26",
@@ -790,7 +802,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "いかないです"
               ],
               "correct": 0,
-              "explanation": "Desire:「またいきたいです」."
+              "explanation": "Desire:「またいきたいです」.",
+              "passage": "私の趣味は写真を撮ることです。去年の誕生日に、父からカメラをもらいました。\nそれから、いろいろな場所へ行って、写真を撮るのが (22) になりました。\n\n週末は、公園や山へ行きます。(23)、きれいな花や鳥の写真を撮ります。\nいつも友達と (24) 行きますが、時々一人で行くこともあります。\n\nまだあまり上手ではありませんが、写真を見るのは (25) 楽しいです。\n来月は、京都へ古いお寺の写真を撮りに (26)。",
+              "passageTitle": "Mondai 3 文章の文法：私の趣味",
+              "passageNotes": "※ 趣味（しゅみ）：hobby　※ 撮る（とる）：to take (a photo)"
             },
             {
               "id": "n5-e1-g-27",
@@ -803,7 +818,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "9時に 講堂"
               ],
               "correct": 0,
-              "explanation": "The notice instructs students to arrive at the classroom by 8:30 AM (8時半に教室)."
+              "explanation": "The notice instructs students to arrive at the classroom by 8:30 AM (8時半に教室).",
+              "passage": "【日本語クラスのみなさんへ】\n明日の「日本文化体験ツアー」について連絡します。\n\n・集合時間：午前8時30分（時間厳守）\n・集合場所：1階の講堂（教室ではありません）\n・持ち物：筆記用具、お弁当、水筒\n\n※雨が降ってもツアーは行います。傘を持って来てください。\n\n日本語科　田中先生より",
+              "passageTitle": "Mondai 4 短文読解：先生からの連絡",
+              "passageNotes": "※ 講堂（こうどう）：auditorium　※ 筆記用具（ひっきようぐ）：stationery"
             },
             {
               "id": "n5-e1-g-28",
@@ -816,7 +834,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "体操服と水筒"
               ],
               "correct": 0,
-              "explanation": "States to bring writing tools and lunchbox (筆記用具とお弁当)."
+              "explanation": "States to bring writing tools and lunchbox (筆記用具とお弁当).",
+              "passage": "【アパートの入居者のみなさま】\nゴミの収集日についてお知らせします。\n\n・燃えるゴミ：毎週火曜日・金曜日の朝8時まで\n・プラスチック：毎週水曜日の朝8時まで\n・ビン・カン：第1・第3木曜日\n\n※前日の夜にゴミを出してはいけません。必ず当日の朝に出してください。\n\n管理事務所",
+              "passageTitle": "Mondai 4 短文読解：アパートのゴミ出しのルール",
+              "passageNotes": "※ 収集日（しゅうしゅうび）：collection day"
             },
             {
               "id": "n5-e1-g-29",
@@ -829,7 +850,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "鈴木先生"
               ],
               "correct": 0,
-              "explanation": "Signed by Tanaka-sensei."
+              "explanation": "Signed by Tanaka-sensei.",
+              "passage": "件名：土曜日の映画について\n\nマイクさん、こんにちは。\n今週の土曜日、一緒に映画を見に行きませんか。\n見たい映画は駅前のシネマで午後2時から始まります。\n午後1時30分に駅の改札口で会いましょう。\n返事を待っています。\n\nケンより",
+              "passageTitle": "Mondai 4 短文読解：友達へのメール",
+              "passageNotes": "※ 改札口（かいさつぐち）：ticket gate"
             },
             {
               "id": "n5-e1-g-30",
@@ -842,7 +866,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "買い物をしただけ"
               ],
               "correct": 0,
-              "explanation": "Visited historic temples and enjoyed matcha green tea."
+              "explanation": "Visited historic temples and enjoyed matcha green tea.",
+              "passage": "私は先月、初めて京都へ旅行に行きました。東京から新幹線で2時間半かかりました。\n\n京都には古いお寺や神社がたくさんあります。金閣寺や清水寺を見に行きました。特に清水寺から見た景色はとても美しくて、感動しました。お寺の近くの店で、抹茶と和菓子も食べました。少し苦かったですが、甘いお菓子と一緒によく合いました。\n\n京都の町は歴史があって静かで、東京とは全然違いました。今回は2日間の短い旅行でしたから、今度はもっと長く滞在して、他の古い町も訪ねてみたいです。",
+              "passageTitle": "Mondai 5 中文読解：日本での旅行",
+              "passageNotes": "※ 抹茶（まっちゃ）：green powdered tea　※ 和菓子（わがし）：Japanese sweets"
             },
             {
               "id": "n5-e1-g-31",
@@ -855,7 +882,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "食べ物の量"
               ],
               "correct": 0,
-              "explanation": "Deeply impressed by the tranquility and beauty of temple gardens."
+              "explanation": "Deeply impressed by the tranquility and beauty of temple gardens.",
+              "passage": "私は先月、初めて京都へ旅行に行きました。東京から新幹線で2時間半かかりました。\n\n京都には古いお寺や神社がたくさんあります。金閣寺や清水寺を見に行きました。特に清水寺から見た景色はとても美しくて、感動しました。お寺の近くの店で、抹茶と和菓子も食べました。少し苦かったですが、甘いお菓子と一緒によく合いました。\n\n京都の町は歴史があって静かで、東京とは全然違いました。今回は2日間の短い旅行でしたから、今度はもっと長く滞在して、他の古い町も訪ねてみたいです。",
+              "passageTitle": "Mondai 5 中文読解：日本での旅行",
+              "passageNotes": "※ 抹茶（まっちゃ）：green powdered tea　※ 和菓子（わがし）：Japanese sweets"
             },
             {
               "id": "n5-e1-g-32",
@@ -868,7 +898,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "夜だけ開いている"
               ],
               "correct": 0,
-              "explanation": "The notice clearly marks Mondays as regular closed days (休館)."
+              "explanation": "The notice clearly marks Mondays as regular closed days (休館).",
+              "passage": "┌──────────────────────────────────────────────┐\n│　　　　　　　さくら市図書館　休館日のお知らせ　　　　　　　│\n├──────────────────────────────────────────────┤\n│【開館時間】　火曜日〜土曜日：午前9:00〜午後8:00　　　　　　 │\n│　　　　　　　日曜日・祝日　：午前9:00〜午後5:00　　　　　　 │\n├──────────────────────────────────────────────┤\n│【休館日（お休み）】　　　　　　　　　　　　　　　　　　　　　│\n│・毎週月曜日（月曜日が祝日の場合は開館し、翌日火曜日が休館） │\n│・毎月第3木曜日（図書整理日）　　　　　　　　　　　　　　　 │\n│・年末年始（12月28日〜1月4日）　　　　　　　　　　　　　　　 │\n├──────────────────────────────────────────────┤\n│※本を返すだけの方は、休館日でも外の「返却ポスト」が使えます。│\n└──────────────────────────────────────────────┘",
+              "passageTitle": "Mondai 6 情報検索：図書館の休館案内",
+              "passageNotes": "※ 休館日（きゅうかんび）：closed days　※ 祝日（しゅくじつ）：national holiday"
             }
           ]
         },
@@ -2040,7 +2073,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "へたです"
               ],
               "correct": 0,
-              "explanation": "Expressing fond hobby:「写真をとることがすきです」."
+              "explanation": "Expressing fond hobby:「写真をとることがすきです」.",
+              "passage": "今度の日曜日は、留学生の友達と公園でピクニックをします。\n先週の授業のあとで、みんなで約束を (22)。\n\n日曜日の朝10時に、公園の入り口に集まります。(23)、それぞれ好きな食べ物を持って来ます。\n私はサンドイッチと果物を (24) つもりです。\n\n天気予報では、日曜日は晴れるそうですから、(25) 楽しみです。\nみんなでたくさん写真を撮って、楽しく (26)。",
+              "passageTitle": "Mondai 3 文章の文法：日曜日の予定",
+              "passageNotes": "※ 約束（やくそく）：promise/plan"
             },
             {
               "id": "n5-e2-g-23",
@@ -2053,7 +2089,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "でも"
               ],
               "correct": 0,
-              "explanation": "Connecting sequential narrative:「そして」."
+              "explanation": "Connecting sequential narrative:「そして」.",
+              "passage": "今度の日曜日は、留学生の友達と公園でピクニックをします。\n先週の授業のあとで、みんなで約束を (22)。\n\n日曜日の朝10時に、公園の入り口に集まります。(23)、それぞれ好きな食べ物を持って来ます。\n私はサンドイッチと果物を (24) つもりです。\n\n天気予報では、日曜日は晴れるそうですから、(25) 楽しみです。\nみんなでたくさん写真を撮って、楽しく (26)。",
+              "passageTitle": "Mondai 3 文章の文法：日曜日の予定",
+              "passageNotes": "※ 約束（やくそく）：promise/plan"
             },
             {
               "id": "n5-e2-g-24",
@@ -2066,7 +2105,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "すこし"
               ],
               "correct": 0,
-              "explanation": "With friends:「いっしょに」."
+              "explanation": "With friends:「いっしょに」.",
+              "passage": "今度の日曜日は、留学生の友達と公園でピクニックをします。\n先週の授業のあとで、みんなで約束を (22)。\n\n日曜日の朝10時に、公園の入り口に集まります。(23)、それぞれ好きな食べ物を持って来ます。\n私はサンドイッチと果物を (24) つもりです。\n\n天気予報では、日曜日は晴れるそうですから、(25) 楽しみです。\nみんなでたくさん写真を撮って、楽しく (26)。",
+              "passageTitle": "Mondai 3 文章の文法：日曜日の予定",
+              "passageNotes": "※ 約束（やくそく）：promise/plan"
             },
             {
               "id": "n5-e2-g-25",
@@ -2079,7 +2121,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "すこしも"
               ],
               "correct": 0,
-              "explanation": "Intensifier:「とてもきれいでした」."
+              "explanation": "Intensifier:「とてもきれいでした」.",
+              "passage": "今度の日曜日は、留学生の友達と公園でピクニックをします。\n先週の授業のあとで、みんなで約束を (22)。\n\n日曜日の朝10時に、公園の入り口に集まります。(23)、それぞれ好きな食べ物を持って来ます。\n私はサンドイッチと果物を (24) つもりです。\n\n天気予報では、日曜日は晴れるそうですから、(25) 楽しみです。\nみんなでたくさん写真を撮って、楽しく (26)。",
+              "passageTitle": "Mondai 3 文章の文法：日曜日の予定",
+              "passageNotes": "※ 約束（やくそく）：promise/plan"
             },
             {
               "id": "n5-e2-g-26",
@@ -2092,7 +2137,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "いかないです"
               ],
               "correct": 0,
-              "explanation": "Desire:「またいきたいです」."
+              "explanation": "Desire:「またいきたいです」.",
+              "passage": "今度の日曜日は、留学生の友達と公園でピクニックをします。\n先週の授業のあとで、みんなで約束を (22)。\n\n日曜日の朝10時に、公園の入り口に集まります。(23)、それぞれ好きな食べ物を持って来ます。\n私はサンドイッチと果物を (24) つもりです。\n\n天気予報では、日曜日は晴れるそうですから、(25) 楽しみです。\nみんなでたくさん写真を撮って、楽しく (26)。",
+              "passageTitle": "Mondai 3 文章の文法：日曜日の予定",
+              "passageNotes": "※ 約束（やくそく）：promise/plan"
             },
             {
               "id": "n5-e2-g-27",
@@ -2105,7 +2153,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "9時に 講堂"
               ],
               "correct": 0,
-              "explanation": "The notice instructs students to arrive at the classroom by 8:30 AM (8時半に教室)."
+              "explanation": "The notice instructs students to arrive at the classroom by 8:30 AM (8時半に教室).",
+              "passage": "【お料理教室のお知らせ】\n今月は「簡単でおいしい和食（肉じゃがとお味噌汁）」を作ります！\n\n・日時：11月20日（土）午後1:00〜午後3:30\n・場所：市民センター3階 調理室\n・参加費：1,000円（材料費を含みます）\n・持ち物：エプロン、三角巾、手拭きタオル\n\n※定員は15名です。前日までに受付窓口でお申し込みください。",
+              "passageTitle": "Mondai 4 短文読解：料理教室のお誘い",
+              "passageNotes": "※ 調理室（ちょうりしつ）：kitchen classroom"
             },
             {
               "id": "n5-e2-g-28",
@@ -2118,7 +2169,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "体操服と水筒"
               ],
               "correct": 0,
-              "explanation": "States to bring writing tools and lunchbox (筆記用具とお弁当)."
+              "explanation": "States to bring writing tools and lunchbox (筆記用具とお弁当).",
+              "passage": "【駅員からのお知らせ】\n昨日、夕方6時頃の上り電車内で、青い傘のお忘れ物がありました。\n心当たりのある方は、中央改札口の駅事務室までお越しください。\nなお、お受け取りには身分証明書（学生証や保険証）が必要です。",
+              "passageTitle": "Mondai 4 短文読解：電車の忘れ物について",
+              "passageNotes": "※ 忘れ物（わすれもの）：lost property"
             },
             {
               "id": "n5-e2-g-29",
@@ -2131,7 +2185,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "鈴木先生"
               ],
               "correct": 0,
-              "explanation": "Signed by Tanaka-sensei."
+              "explanation": "Signed by Tanaka-sensei.",
+              "passage": "【留学生会館のみなさんへ】\n今週のキッチン・シャワー室の掃除当番は【201号室〜205号室】の担当です。\n・掃除時間：土曜日 午前10:00〜\n・ゴミ捨て：分別して集積所へ\n掃除が終わったら、点検表にサインをしてください。",
+              "passageTitle": "Mondai 4 短文読解：寮の掃除当番",
+              "passageNotes": "※ 当番（とうばん）：duty/turn"
             },
             {
               "id": "n5-e2-g-30",
@@ -2144,7 +2201,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "買い物をしただけ"
               ],
               "correct": 0,
-              "explanation": "Visited historic temples and enjoyed matcha green tea."
+              "explanation": "Visited historic temples and enjoyed matcha green tea.",
+              "passage": "私の家には、白い猫が1匹います。名前は「シロ」です。3年前に道で小さかったシロを拾いました。\n\nシロはとてもおとなしくて、家族みんなに愛されています。毎朝、私が起きると足元に来て「ニャー」と鳴きます。朝ごはんを食べた後は、日当たりのいい窓のそばで昼寝をするのが好きです。\n\n時々いたずらをして母に怒られますが、すぐに甘えてくるので誰も本気で怒ることができません。シロがいると、家の中がいつも明るくて温かい気持ちになります。",
+              "passageTitle": "Mondai 5 中文読解：私の家族と猫",
+              "passageNotes": "※ 拾う（ひろう）：to pick up/adopt　※ 日当たり（ひあたり）：sunny spot"
             },
             {
               "id": "n5-e2-g-31",
@@ -2157,7 +2217,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "食べ物の量"
               ],
               "correct": 0,
-              "explanation": "Deeply impressed by the tranquility and beauty of temple gardens."
+              "explanation": "Deeply impressed by the tranquility and beauty of temple gardens.",
+              "passage": "私の家には、白い猫が1匹います。名前は「シロ」です。3年前に道で小さかったシロを拾いました。\n\nシロはとてもおとなしくて、家族みんなに愛されています。毎朝、私が起きると足元に来て「ニャー」と鳴きます。朝ごはんを食べた後は、日当たりのいい窓のそばで昼寝をするのが好きです。\n\n時々いたずらをして母に怒られますが、すぐに甘えてくるので誰も本気で怒ることができません。シロがいると、家の中がいつも明るくて温かい気持ちになります。",
+              "passageTitle": "Mondai 5 中文読解：私の家族と猫",
+              "passageNotes": "※ 拾う（ひろう）：to pick up/adopt　※ 日当たり（ひあたり）：sunny spot"
             },
             {
               "id": "n5-e2-g-32",
@@ -2170,7 +2233,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "夜だけ開いている"
               ],
               "correct": 0,
-              "explanation": "The notice clearly marks Mondays as regular closed days (休館)."
+              "explanation": "The notice clearly marks Mondays as regular closed days (休館).",
+              "passage": "┌──────────────────────────────────────────────┐\n│　　　　　　国際交流クラブ　留学生歓迎会　　　　　　　　　　│\n├──────────────────────────────────────────────┤\n│【日時】　4月25日（金） 17:30〜19:30（受付開始 17:00）　　　 │\n│【場所】　大学会館 2階 大ホール　　　　　　　　　　　　　　　 │\n├──────────────────────────────────────────────┤\n│【参加費】留学生：無料（Free） / 一般学生：500円　　　　　　　│\n│【内容】　自己紹介ゲーム、軽食・ドリンク、日本の伝統遊び　　 │\n├──────────────────────────────────────────────┤\n│※参加したい人は、4月20日までに国際課窓口で名前を書いてください。│\n└──────────────────────────────────────────────┘",
+              "passageTitle": "Mondai 6 情報検索：留学生歓迎パーティーのお知らせ",
+              "passageNotes": "※ 歓迎会（かんげいかい）：welcome party"
             }
           ]
         },
@@ -3342,7 +3408,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "へたです"
               ],
               "correct": 0,
-              "explanation": "Expressing fond hobby:「写真をとることがすきです」."
+              "explanation": "Expressing fond hobby:「写真をとることがすきです」.",
+              "passage": "私は日本に来てから、新しい自転車について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：新しい自転車",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n5-e3-g-23",
@@ -3355,7 +3424,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "でも"
               ],
               "correct": 0,
-              "explanation": "Connecting sequential narrative:「そして」."
+              "explanation": "Connecting sequential narrative:「そして」.",
+              "passage": "私は日本に来てから、新しい自転車について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：新しい自転車",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n5-e3-g-24",
@@ -3368,7 +3440,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "すこし"
               ],
               "correct": 0,
-              "explanation": "With friends:「いっしょに」."
+              "explanation": "With friends:「いっしょに」.",
+              "passage": "私は日本に来てから、新しい自転車について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：新しい自転車",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n5-e3-g-25",
@@ -3381,7 +3456,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "すこしも"
               ],
               "correct": 0,
-              "explanation": "Intensifier:「とてもきれいでした」."
+              "explanation": "Intensifier:「とてもきれいでした」.",
+              "passage": "私は日本に来てから、新しい自転車について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：新しい自転車",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n5-e3-g-26",
@@ -3394,7 +3472,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "いかないです"
               ],
               "correct": 0,
-              "explanation": "Desire:「またいきたいです」."
+              "explanation": "Desire:「またいきたいです」.",
+              "passage": "私は日本に来てから、新しい自転車について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：新しい自転車",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n5-e3-g-27",
@@ -3407,7 +3488,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "9時に 講堂"
               ],
               "correct": 0,
-              "explanation": "The notice instructs students to arrive at the classroom by 8:30 AM (8時半に教室)."
+              "explanation": "The notice instructs students to arrive at the classroom by 8:30 AM (8時半に教室).",
+              "passage": "【図書館の案内についてのお知らせ】\n利用者の皆様へご案内いたします。\n\n・受付時間：月曜日〜金曜日 午前9:00〜午後5:00\n・集合場所：1階受付カウンター前\n・必要書類：登録カード、身分証明書\n\nご不明な点がございましたら、窓口までお問い合わせください。\n\n事務局より",
+              "passageTitle": "Mondai 4 短文読解：図書館の案内",
+              "passageNotes": "※ 受付（うけつけ）：reception"
             },
             {
               "id": "n5-e3-g-28",
@@ -3420,7 +3504,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "体操服と水筒"
               ],
               "correct": 0,
-              "explanation": "States to bring writing tools and lunchbox (筆記用具とお弁当)."
+              "explanation": "States to bring writing tools and lunchbox (筆記用具とお弁当).",
+              "passage": "件名：友達の誕生日に関する確認\n\nお疲れ様です。田中です。\n明日の集合時間と場所について、再度ご連絡いたします。\n・時間：午後1時15分\n・場所：駅前ロータリー時計台の下\n遅れる場合は必ず事前に連絡をしてください。\nよろしくお願いします。",
+              "passageTitle": "Mondai 4 短文読解：友達の誕生日",
+              "passageNotes": "※ 事前（じぜん）：in advance"
             },
             {
               "id": "n5-e3-g-29",
@@ -3433,7 +3520,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "鈴木先生"
               ],
               "correct": 0,
-              "explanation": "Signed by Tanaka-sensei."
+              "explanation": "Signed by Tanaka-sensei.",
+              "passage": "【掲示板】新幹線の予約\n参加希望の方は、下記の要領でお申し込みください。\n・定員：先着20名\n・参加費：無料\n・申込締切：今週金曜日の午後5時まで\n定員になり次第締め切りますので、お早めにお願いします。",
+              "passageTitle": "Mondai 4 短文読解：新幹線の予約",
+              "passageNotes": "※ 先着（せんちゃく）：first come, first served"
             },
             {
               "id": "n5-e3-g-30",
@@ -3446,7 +3536,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "買い物をしただけ"
               ],
               "correct": 0,
-              "explanation": "Visited historic temples and enjoyed matcha green tea."
+              "explanation": "Visited historic temples and enjoyed matcha green tea.",
+              "passage": "私は先月、日本で私の国の料理を体験しました。\n\n日本に来る前は本やインターネットで知っていましたが、実際に体験してみると想像以上に素晴らしかったです。特に、周りの人たちの親切さと丁寧な対応にとても感動しました。\n\n言葉が通じない時もありましたが、身振り手振りで優しく教えてくれました。この経験を通して、日本の文化に対する興味がさらに深まりました。国に帰ったら、家族や友達にもぜひ紹介したいと思っています。",
+              "passageTitle": "Mondai 5 中文読解：私の国の料理",
+              "passageNotes": "※ 体験（たいけん）：experience　※ 丁寧（ていねい）：polite"
             },
             {
               "id": "n5-e3-g-31",
@@ -3459,7 +3552,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "食べ物の量"
               ],
               "correct": 0,
-              "explanation": "Deeply impressed by the tranquility and beauty of temple gardens."
+              "explanation": "Deeply impressed by the tranquility and beauty of temple gardens.",
+              "passage": "私は先月、日本で私の国の料理を体験しました。\n\n日本に来る前は本やインターネットで知っていましたが、実際に体験してみると想像以上に素晴らしかったです。特に、周りの人たちの親切さと丁寧な対応にとても感動しました。\n\n言葉が通じない時もありましたが、身振り手振りで優しく教えてくれました。この経験を通して、日本の文化に対する興味がさらに深まりました。国に帰ったら、家族や友達にもぜひ紹介したいと思っています。",
+              "passageTitle": "Mondai 5 中文読解：私の国の料理",
+              "passageNotes": "※ 体験（たいけん）：experience　※ 丁寧（ていねい）：polite"
             },
             {
               "id": "n5-e3-g-32",
@@ -3472,7 +3568,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "夜だけ開いている"
               ],
               "correct": 0,
-              "explanation": "The notice clearly marks Mondays as regular closed days (休館)."
+              "explanation": "The notice clearly marks Mondays as regular closed days (休館).",
+              "passage": "┌──────────────────────────────────────────────┐\n│　　　　　　　【ご案内】スーパーの特売案内　　　　　　　　　　　　│\n├──────────────────────────────────────────────┤\n│【利用時間】　平日：午前9:00〜午後8:00 / 休日：午前10:00〜午後6:00│\n│【料金】　　　大人：500円 / 学生（高校生・大学生）：300円　　 │\n├──────────────────────────────────────────────┤\n│【注意事項】　　　　　　　　　　　　　　　　　　　　　　　　　│\n│・学生割引を利用する場合は、必ず学生証を提示してください。　 │\n│・館内での飲食・喫煙は固く禁止されています。　　　　　　　　 │\n└──────────────────────────────────────────────┘",
+              "passageTitle": "Mondai 6 情報検索：スーパーの特売案内",
+              "passageNotes": "※ 提示（ていじ）：show/present　※ 禁止（きんし）：prohibited"
             }
           ]
         },
@@ -4349,7 +4448,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "へたです"
               ],
               "correct": 0,
-              "explanation": "Expressing fond hobby:「写真をとることがすきです」."
+              "explanation": "Expressing fond hobby:「写真をとることがすきです」.",
+              "passage": "私は日本に来てから、日本語の勉強について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：日本語の勉強",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n5-e4-g-23",
@@ -4362,7 +4464,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "でも"
               ],
               "correct": 0,
-              "explanation": "Connecting sequential narrative:「そして」."
+              "explanation": "Connecting sequential narrative:「そして」.",
+              "passage": "私は日本に来てから、日本語の勉強について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：日本語の勉強",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n5-e4-g-24",
@@ -4375,7 +4480,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "すこし"
               ],
               "correct": 0,
-              "explanation": "With friends:「いっしょに」."
+              "explanation": "With friends:「いっしょに」.",
+              "passage": "私は日本に来てから、日本語の勉強について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：日本語の勉強",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n5-e4-g-25",
@@ -4388,7 +4496,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "すこしも"
               ],
               "correct": 0,
-              "explanation": "Intensifier:「とてもきれいでした」."
+              "explanation": "Intensifier:「とてもきれいでした」.",
+              "passage": "私は日本に来てから、日本語の勉強について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：日本語の勉強",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n5-e4-g-26",
@@ -4401,7 +4512,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "いかないです"
               ],
               "correct": 0,
-              "explanation": "Desire:「またいきたいです」."
+              "explanation": "Desire:「またいきたいです」.",
+              "passage": "私は日本に来てから、日本語の勉強について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：日本語の勉強",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n5-e4-g-27",
@@ -4414,7 +4528,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "9時に 講堂"
               ],
               "correct": 0,
-              "explanation": "The notice instructs students to arrive at the classroom by 8:30 AM (8時半に教室)."
+              "explanation": "The notice instructs students to arrive at the classroom by 8:30 AM (8時半に教室).",
+              "passage": "【駅前のカフェについてのお知らせ】\n利用者の皆様へご案内いたします。\n\n・受付時間：月曜日〜金曜日 午前9:00〜午後5:00\n・集合場所：1階受付カウンター前\n・必要書類：登録カード、身分証明書\n\nご不明な点がございましたら、窓口までお問い合わせください。\n\n事務局より",
+              "passageTitle": "Mondai 4 短文読解：駅前のカフェ",
+              "passageNotes": "※ 受付（うけつけ）：reception"
             },
             {
               "id": "n5-e4-g-28",
@@ -4427,7 +4544,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "体操服と水筒"
               ],
               "correct": 0,
-              "explanation": "States to bring writing tools and lunchbox (筆記用具とお弁当)."
+              "explanation": "States to bring writing tools and lunchbox (筆記用具とお弁当).",
+              "passage": "件名：病院の予約に関する確認\n\nお疲れ様です。田中です。\n明日の集合時間と場所について、再度ご連絡いたします。\n・時間：午後1時15分\n・場所：駅前ロータリー時計台の下\n遅れる場合は必ず事前に連絡をしてください。\nよろしくお願いします。",
+              "passageTitle": "Mondai 4 短文読解：病院の予約",
+              "passageNotes": "※ 事前（じぜん）：in advance"
             },
             {
               "id": "n5-e4-g-29",
@@ -4440,7 +4560,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "鈴木先生"
               ],
               "correct": 0,
-              "explanation": "Signed by Tanaka-sensei."
+              "explanation": "Signed by Tanaka-sensei.",
+              "passage": "【掲示板】映画館のチケット\n参加希望の方は、下記の要領でお申し込みください。\n・定員：先着20名\n・参加費：無料\n・申込締切：今週金曜日の午後5時まで\n定員になり次第締め切りますので、お早めにお願いします。",
+              "passageTitle": "Mondai 4 短文読解：映画館のチケット",
+              "passageNotes": "※ 先着（せんちゃく）：first come, first served"
             },
             {
               "id": "n5-e4-g-30",
@@ -4453,7 +4576,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "買い物をしただけ"
               ],
               "correct": 0,
-              "explanation": "Visited historic temples and enjoyed matcha green tea."
+              "explanation": "Visited historic temples and enjoyed matcha green tea.",
+              "passage": "私は先月、日本で初めての新幹線を体験しました。\n\n日本に来る前は本やインターネットで知っていましたが、実際に体験してみると想像以上に素晴らしかったです。特に、周りの人たちの親切さと丁寧な対応にとても感動しました。\n\n言葉が通じない時もありましたが、身振り手振りで優しく教えてくれました。この経験を通して、日本の文化に対する興味がさらに深まりました。国に帰ったら、家族や友達にもぜひ紹介したいと思っています。",
+              "passageTitle": "Mondai 5 中文読解：初めての新幹線",
+              "passageNotes": "※ 体験（たいけん）：experience　※ 丁寧（ていねい）：polite"
             },
             {
               "id": "n5-e4-g-31",
@@ -4466,7 +4592,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "食べ物の量"
               ],
               "correct": 0,
-              "explanation": "Deeply impressed by the tranquility and beauty of temple gardens."
+              "explanation": "Deeply impressed by the tranquility and beauty of temple gardens.",
+              "passage": "私は先月、日本で初めての新幹線を体験しました。\n\n日本に来る前は本やインターネットで知っていましたが、実際に体験してみると想像以上に素晴らしかったです。特に、周りの人たちの親切さと丁寧な対応にとても感動しました。\n\n言葉が通じない時もありましたが、身振り手振りで優しく教えてくれました。この経験を通して、日本の文化に対する興味がさらに深まりました。国に帰ったら、家族や友達にもぜひ紹介したいと思っています。",
+              "passageTitle": "Mondai 5 中文読解：初めての新幹線",
+              "passageNotes": "※ 体験（たいけん）：experience　※ 丁寧（ていねい）：polite"
             },
             {
               "id": "n5-e4-g-32",
@@ -4479,7 +4608,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "夜だけ開いている"
               ],
               "correct": 0,
-              "explanation": "The notice clearly marks Mondays as regular closed days (休館)."
+              "explanation": "The notice clearly marks Mondays as regular closed days (休館).",
+              "passage": "┌──────────────────────────────────────────────┐\n│　　　　　　　【ご案内】スポーツセンター利用案内　　　　　　　　　　　　│\n├──────────────────────────────────────────────┤\n│【利用時間】　平日：午前9:00〜午後8:00 / 休日：午前10:00〜午後6:00│\n│【料金】　　　大人：500円 / 学生（高校生・大学生）：300円　　 │\n├──────────────────────────────────────────────┤\n│【注意事項】　　　　　　　　　　　　　　　　　　　　　　　　　│\n│・学生割引を利用する場合は、必ず学生証を提示してください。　 │\n│・館内での飲食・喫煙は固く禁止されています。　　　　　　　　 │\n└──────────────────────────────────────────────┘",
+              "passageTitle": "Mondai 6 情報検索：スポーツセンター利用案内",
+              "passageNotes": "※ 提示（ていじ）：show/present　※ 禁止（きんし）：prohibited"
             }
           ]
         },
@@ -5651,7 +5783,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "へたです"
               ],
               "correct": 0,
-              "explanation": "Expressing fond hobby:「写真をとることがすきです」."
+              "explanation": "Expressing fond hobby:「写真をとることがすきです」.",
+              "passage": "私は日本に来てから、雨の日の過ごし方について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：雨の日の過ごし方",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n5-e5-g-23",
@@ -5664,7 +5799,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "でも"
               ],
               "correct": 0,
-              "explanation": "Connecting sequential narrative:「そして」."
+              "explanation": "Connecting sequential narrative:「そして」.",
+              "passage": "私は日本に来てから、雨の日の過ごし方について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：雨の日の過ごし方",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n5-e5-g-24",
@@ -5677,7 +5815,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "すこし"
               ],
               "correct": 0,
-              "explanation": "With friends:「いっしょに」."
+              "explanation": "With friends:「いっしょに」.",
+              "passage": "私は日本に来てから、雨の日の過ごし方について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：雨の日の過ごし方",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n5-e5-g-25",
@@ -5690,7 +5831,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "すこしも"
               ],
               "correct": 0,
-              "explanation": "Intensifier:「とてもきれいでした」."
+              "explanation": "Intensifier:「とてもきれいでした」.",
+              "passage": "私は日本に来てから、雨の日の過ごし方について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：雨の日の過ごし方",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n5-e5-g-26",
@@ -5703,7 +5847,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "いかないです"
               ],
               "correct": 0,
-              "explanation": "Desire:「またいきたいです」."
+              "explanation": "Desire:「またいきたいです」.",
+              "passage": "私は日本に来てから、雨の日の過ごし方について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：雨の日の過ごし方",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n5-e5-g-27",
@@ -5716,7 +5863,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "9時に 講堂"
               ],
               "correct": 0,
-              "explanation": "The notice instructs students to arrive at the classroom by 8:30 AM (8時半に教室)."
+              "explanation": "The notice instructs students to arrive at the classroom by 8:30 AM (8時半に教室).",
+              "passage": "【スポーツ大会についてのお知らせ】\n利用者の皆様へご案内いたします。\n\n・受付時間：月曜日〜金曜日 午前9:00〜午後5:00\n・集合場所：1階受付カウンター前\n・必要書類：登録カード、身分証明書\n\nご不明な点がございましたら、窓口までお問い合わせください。\n\n事務局より",
+              "passageTitle": "Mondai 4 短文読解：スポーツ大会",
+              "passageNotes": "※ 受付（うけつけ）：reception"
             },
             {
               "id": "n5-e5-g-28",
@@ -5729,7 +5879,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "体操服と水筒"
               ],
               "correct": 0,
-              "explanation": "States to bring writing tools and lunchbox (筆記用具とお弁当)."
+              "explanation": "States to bring writing tools and lunchbox (筆記用具とお弁当).",
+              "passage": "件名：部屋の掃除に関する確認\n\nお疲れ様です。田中です。\n明日の集合時間と場所について、再度ご連絡いたします。\n・時間：午後1時15分\n・場所：駅前ロータリー時計台の下\n遅れる場合は必ず事前に連絡をしてください。\nよろしくお願いします。",
+              "passageTitle": "Mondai 4 短文読解：部屋の掃除",
+              "passageNotes": "※ 事前（じぜん）：in advance"
             },
             {
               "id": "n5-e5-g-29",
@@ -5742,7 +5895,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "鈴木先生"
               ],
               "correct": 0,
-              "explanation": "Signed by Tanaka-sensei."
+              "explanation": "Signed by Tanaka-sensei.",
+              "passage": "【掲示板】アルバイト連絡\n参加希望の方は、下記の要領でお申し込みください。\n・定員：先着20名\n・参加費：無料\n・申込締切：今週金曜日の午後5時まで\n定員になり次第締め切りますので、お早めにお願いします。",
+              "passageTitle": "Mondai 4 短文読解：アルバイト連絡",
+              "passageNotes": "※ 先着（せんちゃく）：first come, first served"
             },
             {
               "id": "n5-e5-g-30",
@@ -5755,7 +5911,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "買い物をしただけ"
               ],
               "correct": 0,
-              "explanation": "Visited historic temples and enjoyed matcha green tea."
+              "explanation": "Visited historic temples and enjoyed matcha green tea.",
+              "passage": "私は先月、日本で日本の四季と祭りを体験しました。\n\n日本に来る前は本やインターネットで知っていましたが、実際に体験してみると想像以上に素晴らしかったです。特に、周りの人たちの親切さと丁寧な対応にとても感動しました。\n\n言葉が通じない時もありましたが、身振り手振りで優しく教えてくれました。この経験を通して、日本の文化に対する興味がさらに深まりました。国に帰ったら、家族や友達にもぜひ紹介したいと思っています。",
+              "passageTitle": "Mondai 5 中文読解：日本の四季と祭り",
+              "passageNotes": "※ 体験（たいけん）：experience　※ 丁寧（ていねい）：polite"
             },
             {
               "id": "n5-e5-g-31",
@@ -5768,7 +5927,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "食べ物の量"
               ],
               "correct": 0,
-              "explanation": "Deeply impressed by the tranquility and beauty of temple gardens."
+              "explanation": "Deeply impressed by the tranquility and beauty of temple gardens.",
+              "passage": "私は先月、日本で日本の四季と祭りを体験しました。\n\n日本に来る前は本やインターネットで知っていましたが、実際に体験してみると想像以上に素晴らしかったです。特に、周りの人たちの親切さと丁寧な対応にとても感動しました。\n\n言葉が通じない時もありましたが、身振り手振りで優しく教えてくれました。この経験を通して、日本の文化に対する興味がさらに深まりました。国に帰ったら、家族や友達にもぜひ紹介したいと思っています。",
+              "passageTitle": "Mondai 5 中文読解：日本の四季と祭り",
+              "passageNotes": "※ 体験（たいけん）：experience　※ 丁寧（ていねい）：polite"
             },
             {
               "id": "n5-e5-g-32",
@@ -5781,7 +5943,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "夜だけ開いている"
               ],
               "correct": 0,
-              "explanation": "The notice clearly marks Mondays as regular closed days (休館)."
+              "explanation": "The notice clearly marks Mondays as regular closed days (休館).",
+              "passage": "┌──────────────────────────────────────────────┐\n│　　　　　　　【ご案内】病院の診療案内　　　　　　　　　　　　│\n├──────────────────────────────────────────────┤\n│【利用時間】　平日：午前9:00〜午後8:00 / 休日：午前10:00〜午後6:00│\n│【料金】　　　大人：500円 / 学生（高校生・大学生）：300円　　 │\n├──────────────────────────────────────────────┤\n│【注意事項】　　　　　　　　　　　　　　　　　　　　　　　　　│\n│・学生割引を利用する場合は、必ず学生証を提示してください。　 │\n│・館内での飲食・喫煙は固く禁止されています。　　　　　　　　 │\n└──────────────────────────────────────────────┘",
+              "passageTitle": "Mondai 6 情報検索：病院の診療案内",
+              "passageNotes": "※ 提示（ていじ）：show/present　※ 禁止（きんし）：prohibited"
             }
           ]
         },
@@ -6953,7 +7118,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "へたです"
               ],
               "correct": 0,
-              "explanation": "Expressing fond hobby:「写真をとることがすきです」."
+              "explanation": "Expressing fond hobby:「写真をとることがすきです」.",
+              "passage": "私は日本に来てから、朝の散歩について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：朝の散歩",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n5-e6-g-23",
@@ -6966,7 +7134,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "でも"
               ],
               "correct": 0,
-              "explanation": "Connecting sequential narrative:「そして」."
+              "explanation": "Connecting sequential narrative:「そして」.",
+              "passage": "私は日本に来てから、朝の散歩について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：朝の散歩",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n5-e6-g-24",
@@ -6979,7 +7150,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "すこし"
               ],
               "correct": 0,
-              "explanation": "With friends:「いっしょに」."
+              "explanation": "With friends:「いっしょに」.",
+              "passage": "私は日本に来てから、朝の散歩について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：朝の散歩",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n5-e6-g-25",
@@ -6992,7 +7166,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "すこしも"
               ],
               "correct": 0,
-              "explanation": "Intensifier:「とてもきれいでした」."
+              "explanation": "Intensifier:「とてもきれいでした」.",
+              "passage": "私は日本に来てから、朝の散歩について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：朝の散歩",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n5-e6-g-26",
@@ -7005,7 +7182,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "いかないです"
               ],
               "correct": 0,
-              "explanation": "Desire:「またいきたいです」."
+              "explanation": "Desire:「またいきたいです」.",
+              "passage": "私は日本に来てから、朝の散歩について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：朝の散歩",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n5-e6-g-27",
@@ -7018,7 +7198,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "9時に 講堂"
               ],
               "correct": 0,
-              "explanation": "The notice instructs students to arrive at the classroom by 8:30 AM (8時半に教室)."
+              "explanation": "The notice instructs students to arrive at the classroom by 8:30 AM (8時半に教室).",
+              "passage": "【美術展の案内についてのお知らせ】\n利用者の皆様へご案内いたします。\n\n・受付時間：月曜日〜金曜日 午前9:00〜午後5:00\n・集合場所：1階受付カウンター前\n・必要書類：登録カード、身分証明書\n\nご不明な点がございましたら、窓口までお問い合わせください。\n\n事務局より",
+              "passageTitle": "Mondai 4 短文読解：美術展の案内",
+              "passageNotes": "※ 受付（うけつけ）：reception"
             },
             {
               "id": "n5-e6-g-28",
@@ -7031,7 +7214,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "体操服と水筒"
               ],
               "correct": 0,
-              "explanation": "States to bring writing tools and lunchbox (筆記用具とお弁当)."
+              "explanation": "States to bring writing tools and lunchbox (筆記用具とお弁当).",
+              "passage": "件名：落とし物のお知らせに関する確認\n\nお疲れ様です。田中です。\n明日の集合時間と場所について、再度ご連絡いたします。\n・時間：午後1時15分\n・場所：駅前ロータリー時計台の下\n遅れる場合は必ず事前に連絡をしてください。\nよろしくお願いします。",
+              "passageTitle": "Mondai 4 短文読解：落とし物のお知らせ",
+              "passageNotes": "※ 事前（じぜん）：in advance"
             },
             {
               "id": "n5-e6-g-29",
@@ -7044,7 +7230,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "鈴木先生"
               ],
               "correct": 0,
-              "explanation": "Signed by Tanaka-sensei."
+              "explanation": "Signed by Tanaka-sensei.",
+              "passage": "【掲示板】バス旅行のお誘い\n参加希望の方は、下記の要領でお申し込みください。\n・定員：先着20名\n・参加費：無料\n・申込締切：今週金曜日の午後5時まで\n定員になり次第締め切りますので、お早めにお願いします。",
+              "passageTitle": "Mondai 4 短文読解：バス旅行のお誘い",
+              "passageNotes": "※ 先着（せんちゃく）：first come, first served"
             },
             {
               "id": "n5-e6-g-30",
@@ -7057,7 +7246,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "買い物をしただけ"
               ],
               "correct": 0,
-              "explanation": "Visited historic temples and enjoyed matcha green tea."
+              "explanation": "Visited historic temples and enjoyed matcha green tea.",
+              "passage": "私は先月、日本で留学生スピーチ大会を体験しました。\n\n日本に来る前は本やインターネットで知っていましたが、実際に体験してみると想像以上に素晴らしかったです。特に、周りの人たちの親切さと丁寧な対応にとても感動しました。\n\n言葉が通じない時もありましたが、身振り手振りで優しく教えてくれました。この経験を通して、日本の文化に対する興味がさらに深まりました。国に帰ったら、家族や友達にもぜひ紹介したいと思っています。",
+              "passageTitle": "Mondai 5 中文読解：留学生スピーチ大会",
+              "passageNotes": "※ 体験（たいけん）：experience　※ 丁寧（ていねい）：polite"
             },
             {
               "id": "n5-e6-g-31",
@@ -7070,7 +7262,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "食べ物の量"
               ],
               "correct": 0,
-              "explanation": "Deeply impressed by the tranquility and beauty of temple gardens."
+              "explanation": "Deeply impressed by the tranquility and beauty of temple gardens.",
+              "passage": "私は先月、日本で留学生スピーチ大会を体験しました。\n\n日本に来る前は本やインターネットで知っていましたが、実際に体験してみると想像以上に素晴らしかったです。特に、周りの人たちの親切さと丁寧な対応にとても感動しました。\n\n言葉が通じない時もありましたが、身振り手振りで優しく教えてくれました。この経験を通して、日本の文化に対する興味がさらに深まりました。国に帰ったら、家族や友達にもぜひ紹介したいと思っています。",
+              "passageTitle": "Mondai 5 中文読解：留学生スピーチ大会",
+              "passageNotes": "※ 体験（たいけん）：experience　※ 丁寧（ていねい）：polite"
             },
             {
               "id": "n5-e6-g-32",
@@ -7083,7 +7278,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "夜だけ開いている"
               ],
               "correct": 0,
-              "explanation": "The notice clearly marks Mondays as regular closed days (休館)."
+              "explanation": "The notice clearly marks Mondays as regular closed days (休館).",
+              "passage": "┌──────────────────────────────────────────────┐\n│　　　　　　　【ご案内】市民プールの休館日　　　　　　　　　　　　│\n├──────────────────────────────────────────────┤\n│【利用時間】　平日：午前9:00〜午後8:00 / 休日：午前10:00〜午後6:00│\n│【料金】　　　大人：500円 / 学生（高校生・大学生）：300円　　 │\n├──────────────────────────────────────────────┤\n│【注意事項】　　　　　　　　　　　　　　　　　　　　　　　　　│\n│・学生割引を利用する場合は、必ず学生証を提示してください。　 │\n│・館内での飲食・喫煙は固く禁止されています。　　　　　　　　 │\n└──────────────────────────────────────────────┘",
+              "passageTitle": "Mondai 6 情報検索：市民プールの休館日",
+              "passageNotes": "※ 提示（ていじ）：show/present　※ 禁止（きんし）：prohibited"
             }
           ]
         },
@@ -8255,7 +8453,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "へたです"
               ],
               "correct": 0,
-              "explanation": "Expressing fond hobby:「写真をとることがすきです」."
+              "explanation": "Expressing fond hobby:「写真をとることがすきです」.",
+              "passage": "私は日本に来てから、私の好きな季節について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：私の好きな季節",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n5-e7-g-23",
@@ -8268,7 +8469,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "でも"
               ],
               "correct": 0,
-              "explanation": "Connecting sequential narrative:「そして」."
+              "explanation": "Connecting sequential narrative:「そして」.",
+              "passage": "私は日本に来てから、私の好きな季節について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：私の好きな季節",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n5-e7-g-24",
@@ -8281,7 +8485,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "すこし"
               ],
               "correct": 0,
-              "explanation": "With friends:「いっしょに」."
+              "explanation": "With friends:「いっしょに」.",
+              "passage": "私は日本に来てから、私の好きな季節について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：私の好きな季節",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n5-e7-g-25",
@@ -8294,7 +8501,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "すこしも"
               ],
               "correct": 0,
-              "explanation": "Intensifier:「とてもきれいでした」."
+              "explanation": "Intensifier:「とてもきれいでした」.",
+              "passage": "私は日本に来てから、私の好きな季節について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：私の好きな季節",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n5-e7-g-26",
@@ -8307,7 +8517,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "いかないです"
               ],
               "correct": 0,
-              "explanation": "Desire:「またいきたいです」."
+              "explanation": "Desire:「またいきたいです」.",
+              "passage": "私は日本に来てから、私の好きな季節について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：私の好きな季節",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n5-e7-g-27",
@@ -8320,7 +8533,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "9時に 講堂"
               ],
               "correct": 0,
-              "explanation": "The notice instructs students to arrive at the classroom by 8:30 AM (8時半に教室)."
+              "explanation": "The notice instructs students to arrive at the classroom by 8:30 AM (8時半に教室).",
+              "passage": "【引っ越しの挨拶についてのお知らせ】\n利用者の皆様へご案内いたします。\n\n・受付時間：月曜日〜金曜日 午前9:00〜午後5:00\n・集合場所：1階受付カウンター前\n・必要書類：登録カード、身分証明書\n\nご不明な点がございましたら、窓口までお問い合わせください。\n\n事務局より",
+              "passageTitle": "Mondai 4 短文読解：引っ越しの挨拶",
+              "passageNotes": "※ 受付（うけつけ）：reception"
             },
             {
               "id": "n5-e7-g-28",
@@ -8333,7 +8549,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "体操服と水筒"
               ],
               "correct": 0,
-              "explanation": "States to bring writing tools and lunchbox (筆記用具とお弁当)."
+              "explanation": "States to bring writing tools and lunchbox (筆記用具とお弁当).",
+              "passage": "件名：ボランティア募集に関する確認\n\nお疲れ様です。田中です。\n明日の集合時間と場所について、再度ご連絡いたします。\n・時間：午後1時15分\n・場所：駅前ロータリー時計台の下\n遅れる場合は必ず事前に連絡をしてください。\nよろしくお願いします。",
+              "passageTitle": "Mondai 4 短文読解：ボランティア募集",
+              "passageNotes": "※ 事前（じぜん）：in advance"
             },
             {
               "id": "n5-e7-g-29",
@@ -8346,7 +8565,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "鈴木先生"
               ],
               "correct": 0,
-              "explanation": "Signed by Tanaka-sensei."
+              "explanation": "Signed by Tanaka-sensei.",
+              "passage": "【掲示板】電車の運休案内\n参加希望の方は、下記の要領でお申し込みください。\n・定員：先着20名\n・参加費：無料\n・申込締切：今週金曜日の午後5時まで\n定員になり次第締め切りますので、お早めにお願いします。",
+              "passageTitle": "Mondai 4 短文読解：電車の運休案内",
+              "passageNotes": "※ 先着（せんちゃく）：first come, first served"
             },
             {
               "id": "n5-e7-g-30",
@@ -8359,7 +8581,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "買い物をしただけ"
               ],
               "correct": 0,
-              "explanation": "Visited historic temples and enjoyed matcha green tea."
+              "explanation": "Visited historic temples and enjoyed matcha green tea.",
+              "passage": "私は先月、日本で日本のコンビニを体験しました。\n\n日本に来る前は本やインターネットで知っていましたが、実際に体験してみると想像以上に素晴らしかったです。特に、周りの人たちの親切さと丁寧な対応にとても感動しました。\n\n言葉が通じない時もありましたが、身振り手振りで優しく教えてくれました。この経験を通して、日本の文化に対する興味がさらに深まりました。国に帰ったら、家族や友達にもぜひ紹介したいと思っています。",
+              "passageTitle": "Mondai 5 中文読解：日本のコンビニ",
+              "passageNotes": "※ 体験（たいけん）：experience　※ 丁寧（ていねい）：polite"
             },
             {
               "id": "n5-e7-g-31",
@@ -8372,7 +8597,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "食べ物の量"
               ],
               "correct": 0,
-              "explanation": "Deeply impressed by the tranquility and beauty of temple gardens."
+              "explanation": "Deeply impressed by the tranquility and beauty of temple gardens.",
+              "passage": "私は先月、日本で日本のコンビニを体験しました。\n\n日本に来る前は本やインターネットで知っていましたが、実際に体験してみると想像以上に素晴らしかったです。特に、周りの人たちの親切さと丁寧な対応にとても感動しました。\n\n言葉が通じない時もありましたが、身振り手振りで優しく教えてくれました。この経験を通して、日本の文化に対する興味がさらに深まりました。国に帰ったら、家族や友達にもぜひ紹介したいと思っています。",
+              "passageTitle": "Mondai 5 中文読解：日本のコンビニ",
+              "passageNotes": "※ 体験（たいけん）：experience　※ 丁寧（ていねい）：polite"
             },
             {
               "id": "n5-e7-g-32",
@@ -8385,7 +8613,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "夜だけ開いている"
               ],
               "correct": 0,
-              "explanation": "The notice clearly marks Mondays as regular closed days (休館)."
+              "explanation": "The notice clearly marks Mondays as regular closed days (休館).",
+              "passage": "┌──────────────────────────────────────────────┐\n│　　　　　　　【ご案内】日本語能力試験受験案内　　　　　　　　　　　　│\n├──────────────────────────────────────────────┤\n│【利用時間】　平日：午前9:00〜午後8:00 / 休日：午前10:00〜午後6:00│\n│【料金】　　　大人：500円 / 学生（高校生・大学生）：300円　　 │\n├──────────────────────────────────────────────┤\n│【注意事項】　　　　　　　　　　　　　　　　　　　　　　　　　│\n│・学生割引を利用する場合は、必ず学生証を提示してください。　 │\n│・館内での飲食・喫煙は固く禁止されています。　　　　　　　　 │\n└──────────────────────────────────────────────┘",
+              "passageTitle": "Mondai 6 情報検索：日本語能力試験受験案内",
+              "passageNotes": "※ 提示（ていじ）：show/present　※ 禁止（きんし）：prohibited"
             }
           ]
         },
@@ -9557,7 +9788,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "へたです"
               ],
               "correct": 0,
-              "explanation": "Expressing fond hobby:「写真をとることがすきです」."
+              "explanation": "Expressing fond hobby:「写真をとることがすきです」.",
+              "passage": "私は日本に来てから、週末の買い物について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：週末の買い物",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n5-e8-g-23",
@@ -9570,7 +9804,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "でも"
               ],
               "correct": 0,
-              "explanation": "Connecting sequential narrative:「そして」."
+              "explanation": "Connecting sequential narrative:「そして」.",
+              "passage": "私は日本に来てから、週末の買い物について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：週末の買い物",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n5-e8-g-24",
@@ -9583,7 +9820,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "すこし"
               ],
               "correct": 0,
-              "explanation": "With friends:「いっしょに」."
+              "explanation": "With friends:「いっしょに」.",
+              "passage": "私は日本に来てから、週末の買い物について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：週末の買い物",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n5-e8-g-25",
@@ -9596,7 +9836,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "すこしも"
               ],
               "correct": 0,
-              "explanation": "Intensifier:「とてもきれいでした」."
+              "explanation": "Intensifier:「とてもきれいでした」.",
+              "passage": "私は日本に来てから、週末の買い物について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：週末の買い物",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n5-e8-g-26",
@@ -9609,7 +9852,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "いかないです"
               ],
               "correct": 0,
-              "explanation": "Desire:「またいきたいです」."
+              "explanation": "Desire:「またいきたいです」.",
+              "passage": "私は日本に来てから、週末の買い物について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：週末の買い物",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n5-e8-g-27",
@@ -9622,7 +9868,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "9時に 講堂"
               ],
               "correct": 0,
-              "explanation": "The notice instructs students to arrive at the classroom by 8:30 AM (8時半に教室)."
+              "explanation": "The notice instructs students to arrive at the classroom by 8:30 AM (8時半に教室).",
+              "passage": "【コンサートの案内についてのお知らせ】\n利用者の皆様へご案内いたします。\n\n・受付時間：月曜日〜金曜日 午前9:00〜午後5:00\n・集合場所：1階受付カウンター前\n・必要書類：登録カード、身分証明書\n\nご不明な点がございましたら、窓口までお問い合わせください。\n\n事務局より",
+              "passageTitle": "Mondai 4 短文読解：コンサートの案内",
+              "passageNotes": "※ 受付（うけつけ）：reception"
             },
             {
               "id": "n5-e8-g-28",
@@ -9635,7 +9884,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "体操服と水筒"
               ],
               "correct": 0,
-              "explanation": "States to bring writing tools and lunchbox (筆記用具とお弁当)."
+              "explanation": "States to bring writing tools and lunchbox (筆記用具とお弁当).",
+              "passage": "件名：面接の日時連絡に関する確認\n\nお疲れ様です。田中です。\n明日の集合時間と場所について、再度ご連絡いたします。\n・時間：午後1時15分\n・場所：駅前ロータリー時計台の下\n遅れる場合は必ず事前に連絡をしてください。\nよろしくお願いします。",
+              "passageTitle": "Mondai 4 短文読解：面接の日時連絡",
+              "passageNotes": "※ 事前（じぜん）：in advance"
             },
             {
               "id": "n5-e8-g-29",
@@ -9648,7 +9900,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "鈴木先生"
               ],
               "correct": 0,
-              "explanation": "Signed by Tanaka-sensei."
+              "explanation": "Signed by Tanaka-sensei.",
+              "passage": "【掲示板】荷物の再配達\n参加希望の方は、下記の要領でお申し込みください。\n・定員：先着20名\n・参加費：無料\n・申込締切：今週金曜日の午後5時まで\n定員になり次第締め切りますので、お早めにお願いします。",
+              "passageTitle": "Mondai 4 短文読解：荷物の再配達",
+              "passageNotes": "※ 先着（せんちゃく）：first come, first served"
             },
             {
               "id": "n5-e8-g-30",
@@ -9661,7 +9916,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "買い物をしただけ"
               ],
               "correct": 0,
-              "explanation": "Visited historic temples and enjoyed matcha green tea."
+              "explanation": "Visited historic temples and enjoyed matcha green tea.",
+              "passage": "私は先月、日本で工場の見学ツアーを体験しました。\n\n日本に来る前は本やインターネットで知っていましたが、実際に体験してみると想像以上に素晴らしかったです。特に、周りの人たちの親切さと丁寧な対応にとても感動しました。\n\n言葉が通じない時もありましたが、身振り手振りで優しく教えてくれました。この経験を通して、日本の文化に対する興味がさらに深まりました。国に帰ったら、家族や友達にもぜひ紹介したいと思っています。",
+              "passageTitle": "Mondai 5 中文読解：工場の見学ツアー",
+              "passageNotes": "※ 体験（たいけん）：experience　※ 丁寧（ていねい）：polite"
             },
             {
               "id": "n5-e8-g-31",
@@ -9674,7 +9932,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "食べ物の量"
               ],
               "correct": 0,
-              "explanation": "Deeply impressed by the tranquility and beauty of temple gardens."
+              "explanation": "Deeply impressed by the tranquility and beauty of temple gardens.",
+              "passage": "私は先月、日本で工場の見学ツアーを体験しました。\n\n日本に来る前は本やインターネットで知っていましたが、実際に体験してみると想像以上に素晴らしかったです。特に、周りの人たちの親切さと丁寧な対応にとても感動しました。\n\n言葉が通じない時もありましたが、身振り手振りで優しく教えてくれました。この経験を通して、日本の文化に対する興味がさらに深まりました。国に帰ったら、家族や友達にもぜひ紹介したいと思っています。",
+              "passageTitle": "Mondai 5 中文読解：工場の見学ツアー",
+              "passageNotes": "※ 体験（たいけん）：experience　※ 丁寧（ていねい）：polite"
             },
             {
               "id": "n5-e8-g-32",
@@ -9687,7 +9948,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "夜だけ開いている"
               ],
               "correct": 0,
-              "explanation": "The notice clearly marks Mondays as regular closed days (休館)."
+              "explanation": "The notice clearly marks Mondays as regular closed days (休館).",
+              "passage": "┌──────────────────────────────────────────────┐\n│　　　　　　　【ご案内】美術館特別展覧会　　　　　　　　　　　　│\n├──────────────────────────────────────────────┤\n│【利用時間】　平日：午前9:00〜午後8:00 / 休日：午前10:00〜午後6:00│\n│【料金】　　　大人：500円 / 学生（高校生・大学生）：300円　　 │\n├──────────────────────────────────────────────┤\n│【注意事項】　　　　　　　　　　　　　　　　　　　　　　　　　│\n│・学生割引を利用する場合は、必ず学生証を提示してください。　 │\n│・館内での飲食・喫煙は固く禁止されています。　　　　　　　　 │\n└──────────────────────────────────────────────┘",
+              "passageTitle": "Mondai 6 情報検索：美術館特別展覧会",
+              "passageNotes": "※ 提示（ていじ）：show/present　※ 禁止（きんし）：prohibited"
             }
           ]
         },
@@ -10859,7 +11123,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "へたです"
               ],
               "correct": 0,
-              "explanation": "Expressing fond hobby:「写真をとることがすきです」."
+              "explanation": "Expressing fond hobby:「写真をとることがすきです」.",
+              "passage": "私は日本に来てから、大学の図書館について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：大学の図書館",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n5-e9-g-23",
@@ -10872,7 +11139,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "でも"
               ],
               "correct": 0,
-              "explanation": "Connecting sequential narrative:「そして」."
+              "explanation": "Connecting sequential narrative:「そして」.",
+              "passage": "私は日本に来てから、大学の図書館について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：大学の図書館",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n5-e9-g-24",
@@ -10885,7 +11155,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "すこし"
               ],
               "correct": 0,
-              "explanation": "With friends:「いっしょに」."
+              "explanation": "With friends:「いっしょに」.",
+              "passage": "私は日本に来てから、大学の図書館について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：大学の図書館",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n5-e9-g-25",
@@ -10898,7 +11171,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "すこしも"
               ],
               "correct": 0,
-              "explanation": "Intensifier:「とてもきれいでした」."
+              "explanation": "Intensifier:「とてもきれいでした」.",
+              "passage": "私は日本に来てから、大学の図書館について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：大学の図書館",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n5-e9-g-26",
@@ -10911,7 +11187,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "いかないです"
               ],
               "correct": 0,
-              "explanation": "Desire:「またいきたいです」."
+              "explanation": "Desire:「またいきたいです」.",
+              "passage": "私は日本に来てから、大学の図書館について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：大学の図書館",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n5-e9-g-27",
@@ -10924,7 +11203,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "9時に 講堂"
               ],
               "correct": 0,
-              "explanation": "The notice instructs students to arrive at the classroom by 8:30 AM (8時半に教室)."
+              "explanation": "The notice instructs students to arrive at the classroom by 8:30 AM (8時半に教室).",
+              "passage": "【学園祭のお知らせについてのお知らせ】\n利用者の皆様へご案内いたします。\n\n・受付時間：月曜日〜金曜日 午前9:00〜午後5:00\n・集合場所：1階受付カウンター前\n・必要書類：登録カード、身分証明書\n\nご不明な点がございましたら、窓口までお問い合わせください。\n\n事務局より",
+              "passageTitle": "Mondai 4 短文読解：学園祭のお知らせ",
+              "passageNotes": "※ 受付（うけつけ）：reception"
             },
             {
               "id": "n5-e9-g-28",
@@ -10937,7 +11219,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "体操服と水筒"
               ],
               "correct": 0,
-              "explanation": "States to bring writing tools and lunchbox (筆記用具とお弁当)."
+              "explanation": "States to bring writing tools and lunchbox (筆記用具とお弁当).",
+              "passage": "件名：宿題の提出についてに関する確認\n\nお疲れ様です。田中です。\n明日の集合時間と場所について、再度ご連絡いたします。\n・時間：午後1時15分\n・場所：駅前ロータリー時計台の下\n遅れる場合は必ず事前に連絡をしてください。\nよろしくお願いします。",
+              "passageTitle": "Mondai 4 短文読解：宿題の提出について",
+              "passageNotes": "※ 事前（じぜん）：in advance"
             },
             {
               "id": "n5-e9-g-29",
@@ -10950,7 +11235,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "鈴木先生"
               ],
               "correct": 0,
-              "explanation": "Signed by Tanaka-sensei."
+              "explanation": "Signed by Tanaka-sensei.",
+              "passage": "【掲示板】寮のルール変更\n参加希望の方は、下記の要領でお申し込みください。\n・定員：先着20名\n・参加費：無料\n・申込締切：今週金曜日の午後5時まで\n定員になり次第締め切りますので、お早めにお願いします。",
+              "passageTitle": "Mondai 4 短文読解：寮のルール変更",
+              "passageNotes": "※ 先着（せんちゃく）：first come, first served"
             },
             {
               "id": "n5-e9-g-30",
@@ -10963,7 +11251,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "買い物をしただけ"
               ],
               "correct": 0,
-              "explanation": "Visited historic temples and enjoyed matcha green tea."
+              "explanation": "Visited historic temples and enjoyed matcha green tea.",
+              "passage": "私は先月、日本で日本の温泉体験を体験しました。\n\n日本に来る前は本やインターネットで知っていましたが、実際に体験してみると想像以上に素晴らしかったです。特に、周りの人たちの親切さと丁寧な対応にとても感動しました。\n\n言葉が通じない時もありましたが、身振り手振りで優しく教えてくれました。この経験を通して、日本の文化に対する興味がさらに深まりました。国に帰ったら、家族や友達にもぜひ紹介したいと思っています。",
+              "passageTitle": "Mondai 5 中文読解：日本の温泉体験",
+              "passageNotes": "※ 体験（たいけん）：experience　※ 丁寧（ていねい）：polite"
             },
             {
               "id": "n5-e9-g-31",
@@ -10976,7 +11267,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "食べ物の量"
               ],
               "correct": 0,
-              "explanation": "Deeply impressed by the tranquility and beauty of temple gardens."
+              "explanation": "Deeply impressed by the tranquility and beauty of temple gardens.",
+              "passage": "私は先月、日本で日本の温泉体験を体験しました。\n\n日本に来る前は本やインターネットで知っていましたが、実際に体験してみると想像以上に素晴らしかったです。特に、周りの人たちの親切さと丁寧な対応にとても感動しました。\n\n言葉が通じない時もありましたが、身振り手振りで優しく教えてくれました。この経験を通して、日本の文化に対する興味がさらに深まりました。国に帰ったら、家族や友達にもぜひ紹介したいと思っています。",
+              "passageTitle": "Mondai 5 中文読解：日本の温泉体験",
+              "passageNotes": "※ 体験（たいけん）：experience　※ 丁寧（ていねい）：polite"
             },
             {
               "id": "n5-e9-g-32",
@@ -10989,7 +11283,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "夜だけ開いている"
               ],
               "correct": 0,
-              "explanation": "The notice clearly marks Mondays as regular closed days (休館)."
+              "explanation": "The notice clearly marks Mondays as regular closed days (休館).",
+              "passage": "┌──────────────────────────────────────────────┐\n│　　　　　　　【ご案内】バス時刻表と運賃　　　　　　　　　　　　│\n├──────────────────────────────────────────────┤\n│【利用時間】　平日：午前9:00〜午後8:00 / 休日：午前10:00〜午後6:00│\n│【料金】　　　大人：500円 / 学生（高校生・大学生）：300円　　 │\n├──────────────────────────────────────────────┤\n│【注意事項】　　　　　　　　　　　　　　　　　　　　　　　　　│\n│・学生割引を利用する場合は、必ず学生証を提示してください。　 │\n│・館内での飲食・喫煙は固く禁止されています。　　　　　　　　 │\n└──────────────────────────────────────────────┘",
+              "passageTitle": "Mondai 6 情報検索：バス時刻表と運賃",
+              "passageNotes": "※ 提示（ていじ）：show/present　※ 禁止（きんし）：prohibited"
             }
           ]
         },
@@ -12161,7 +12458,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "へたです"
               ],
               "correct": 0,
-              "explanation": "Expressing fond hobby:「写真をとることがすきです」."
+              "explanation": "Expressing fond hobby:「写真をとることがすきです」.",
+              "passage": "私は日本に来てから、留学生の友達について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：留学生の友達",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n5-e10-g-23",
@@ -12174,7 +12474,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "でも"
               ],
               "correct": 0,
-              "explanation": "Connecting sequential narrative:「そして」."
+              "explanation": "Connecting sequential narrative:「そして」.",
+              "passage": "私は日本に来てから、留学生の友達について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：留学生の友達",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n5-e10-g-24",
@@ -12187,7 +12490,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "すこし"
               ],
               "correct": 0,
-              "explanation": "With friends:「いっしょに」."
+              "explanation": "With friends:「いっしょに」.",
+              "passage": "私は日本に来てから、留学生の友達について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：留学生の友達",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n5-e10-g-25",
@@ -12200,7 +12506,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "すこしも"
               ],
               "correct": 0,
-              "explanation": "Intensifier:「とてもきれいでした」."
+              "explanation": "Intensifier:「とてもきれいでした」.",
+              "passage": "私は日本に来てから、留学生の友達について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：留学生の友達",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n5-e10-g-26",
@@ -12213,7 +12522,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "いかないです"
               ],
               "correct": 0,
-              "explanation": "Desire:「またいきたいです」."
+              "explanation": "Desire:「またいきたいです」.",
+              "passage": "私は日本に来てから、留学生の友達について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：留学生の友達",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n5-e10-g-27",
@@ -12226,7 +12538,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "9時に 講堂"
               ],
               "correct": 0,
-              "explanation": "The notice instructs students to arrive at the classroom by 8:30 AM (8時半に教室)."
+              "explanation": "The notice instructs students to arrive at the classroom by 8:30 AM (8時半に教室).",
+              "passage": "【送別会のお知らせについてのお知らせ】\n利用者の皆様へご案内いたします。\n\n・受付時間：月曜日〜金曜日 午前9:00〜午後5:00\n・集合場所：1階受付カウンター前\n・必要書類：登録カード、身分証明書\n\nご不明な点がございましたら、窓口までお問い合わせください。\n\n事務局より",
+              "passageTitle": "Mondai 4 短文読解：送別会のお知らせ",
+              "passageNotes": "※ 受付（うけつけ）：reception"
             },
             {
               "id": "n5-e10-g-28",
@@ -12239,7 +12554,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "体操服と水筒"
               ],
               "correct": 0,
-              "explanation": "States to bring writing tools and lunchbox (筆記用具とお弁当)."
+              "explanation": "States to bring writing tools and lunchbox (筆記用具とお弁当).",
+              "passage": "件名：健康診断の案内に関する確認\n\nお疲れ様です。田中です。\n明日の集合時間と場所について、再度ご連絡いたします。\n・時間：午後1時15分\n・場所：駅前ロータリー時計台の下\n遅れる場合は必ず事前に連絡をしてください。\nよろしくお願いします。",
+              "passageTitle": "Mondai 4 短文読解：健康診断の案内",
+              "passageNotes": "※ 事前（じぜん）：in advance"
             },
             {
               "id": "n5-e10-g-29",
@@ -12252,7 +12570,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "鈴木先生"
               ],
               "correct": 0,
-              "explanation": "Signed by Tanaka-sensei."
+              "explanation": "Signed by Tanaka-sensei.",
+              "passage": "【掲示板】旅行の持ち物リスト\n参加希望の方は、下記の要領でお申し込みください。\n・定員：先着20名\n・参加費：無料\n・申込締切：今週金曜日の午後5時まで\n定員になり次第締め切りますので、お早めにお願いします。",
+              "passageTitle": "Mondai 4 短文読解：旅行の持ち物リスト",
+              "passageNotes": "※ 先着（せんちゃく）：first come, first served"
             },
             {
               "id": "n5-e10-g-30",
@@ -12265,7 +12586,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "買い物をしただけ"
               ],
               "correct": 0,
-              "explanation": "Visited historic temples and enjoyed matcha green tea."
+              "explanation": "Visited historic temples and enjoyed matcha green tea.",
+              "passage": "私は先月、日本で日本のお弁当文化を体験しました。\n\n日本に来る前は本やインターネットで知っていましたが、実際に体験してみると想像以上に素晴らしかったです。特に、周りの人たちの親切さと丁寧な対応にとても感動しました。\n\n言葉が通じない時もありましたが、身振り手振りで優しく教えてくれました。この経験を通して、日本の文化に対する興味がさらに深まりました。国に帰ったら、家族や友達にもぜひ紹介したいと思っています。",
+              "passageTitle": "Mondai 5 中文読解：日本のお弁当文化",
+              "passageNotes": "※ 体験（たいけん）：experience　※ 丁寧（ていねい）：polite"
             },
             {
               "id": "n5-e10-g-31",
@@ -12278,7 +12602,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "食べ物の量"
               ],
               "correct": 0,
-              "explanation": "Deeply impressed by the tranquility and beauty of temple gardens."
+              "explanation": "Deeply impressed by the tranquility and beauty of temple gardens.",
+              "passage": "私は先月、日本で日本のお弁当文化を体験しました。\n\n日本に来る前は本やインターネットで知っていましたが、実際に体験してみると想像以上に素晴らしかったです。特に、周りの人たちの親切さと丁寧な対応にとても感動しました。\n\n言葉が通じない時もありましたが、身振り手振りで優しく教えてくれました。この経験を通して、日本の文化に対する興味がさらに深まりました。国に帰ったら、家族や友達にもぜひ紹介したいと思っています。",
+              "passageTitle": "Mondai 5 中文読解：日本のお弁当文化",
+              "passageNotes": "※ 体験（たいけん）：experience　※ 丁寧（ていねい）：polite"
             },
             {
               "id": "n5-e10-g-32",
@@ -12291,7 +12618,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "夜だけ開いている"
               ],
               "correct": 0,
-              "explanation": "The notice clearly marks Mondays as regular closed days (休館)."
+              "explanation": "The notice clearly marks Mondays as regular closed days (休館).",
+              "passage": "┌──────────────────────────────────────────────┐\n│　　　　　　　【ご案内】市民センターイベント案内　　　　　　　　　　　　│\n├──────────────────────────────────────────────┤\n│【利用時間】　平日：午前9:00〜午後8:00 / 休日：午前10:00〜午後6:00│\n│【料金】　　　大人：500円 / 学生（高校生・大学生）：300円　　 │\n├──────────────────────────────────────────────┤\n│【注意事項】　　　　　　　　　　　　　　　　　　　　　　　　　│\n│・学生割引を利用する場合は、必ず学生証を提示してください。　 │\n│・館内での飲食・喫煙は固く禁止されています。　　　　　　　　 │\n└──────────────────────────────────────────────┘",
+              "passageTitle": "Mondai 6 情報検索：市民センターイベント案内",
+              "passageNotes": "※ 提示（ていじ）：show/present　※ 禁止（きんし）：prohibited"
             }
           ]
         },
@@ -13478,7 +13808,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "はいる"
               ],
               "correct": 2,
-              "explanation": "Connecting action with te-form:「はいって」."
+              "explanation": "Connecting action with te-form:「はいって」.",
+              "passage": "私の趣味は写真を撮ることです。去年の誕生日に、父からカメラをもらいました。\nそれから、いろいろな場所へ行って、写真を撮るのが (22) になりました。\n\n週末は、公園や山へ行きます。(23)、きれいな花や鳥の写真を撮ります。\nいつも友達と (24) 行きますが、時々一人で行くこともあります。\n\nまだあまり上手ではありませんが、写真を見るのは (25) 楽しいです。\n来月は、京都へ古いお寺の写真を撮りに (26)。",
+              "passageTitle": "Mondai 3 文章の文法：私の趣味",
+              "passageNotes": "※ 趣味（しゅみ）：hobby　※ 撮る（とる）：to take (a photo)"
             },
             {
               "id": "n4-e1-g-22",
@@ -13491,7 +13824,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "すこしも"
               ],
               "correct": 0,
-              "explanation": "Positive evaluation:「とても」."
+              "explanation": "Positive evaluation:「とても」.",
+              "passage": "私の趣味は写真を撮ることです。去年の誕生日に、父からカメラをもらいました。\nそれから、いろいろな場所へ行って、写真を撮るのが (22) になりました。\n\n週末は、公園や山へ行きます。(23)、きれいな花や鳥の写真を撮ります。\nいつも友達と (24) 行きますが、時々一人で行くこともあります。\n\nまだあまり上手ではありませんが、写真を見るのは (25) 楽しいです。\n来月は、京都へ古いお寺の写真を撮りに (26)。",
+              "passageTitle": "Mondai 3 文章の文法：私の趣味",
+              "passageNotes": "※ 趣味（しゅみ）：hobby　※ 撮る（とる）：to take (a photo)"
             },
             {
               "id": "n4-e1-g-23",
@@ -13504,7 +13840,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "それから"
               ],
               "correct": 0,
-              "explanation": "Adding related points:「それに」."
+              "explanation": "Adding related points:「それに」.",
+              "passage": "私の趣味は写真を撮ることです。去年の誕生日に、父からカメラをもらいました。\nそれから、いろいろな場所へ行って、写真を撮るのが (22) になりました。\n\n週末は、公園や山へ行きます。(23)、きれいな花や鳥の写真を撮ります。\nいつも友達と (24) 行きますが、時々一人で行くこともあります。\n\nまだあまり上手ではありませんが、写真を見るのは (25) 楽しいです。\n来月は、京都へ古いお寺の写真を撮りに (26)。",
+              "passageTitle": "Mondai 3 文章の文法：私の趣味",
+              "passageNotes": "※ 趣味（しゅみ）：hobby　※ 撮る（とる）：to take (a photo)"
             },
             {
               "id": "n4-e1-g-24",
@@ -13517,7 +13856,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "いってみた"
               ],
               "correct": 0,
-              "explanation": "Desire:「いってみたい」."
+              "explanation": "Desire:「いってみたい」.",
+              "passage": "私の趣味は写真を撮ることです。去年の誕生日に、父からカメラをもらいました。\nそれから、いろいろな場所へ行って、写真を撮るのが (22) になりました。\n\n週末は、公園や山へ行きます。(23)、きれいな花や鳥の写真を撮ります。\nいつも友達と (24) 行きますが、時々一人で行くこともあります。\n\nまだあまり上手ではありませんが、写真を見るのは (25) 楽しいです。\n来月は、京都へ古いお寺の写真を撮りに (26)。",
+              "passageTitle": "Mondai 3 文章の文法：私の趣味",
+              "passageNotes": "※ 趣味（しゅみ）：hobby　※ 撮る（とる）：to take (a photo)"
             },
             {
               "id": "n4-e1-g-25",
@@ -13530,7 +13872,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "おもわない"
               ],
               "correct": 0,
-              "explanation": "Present conjecture:「おもいます」."
+              "explanation": "Present conjecture:「おもいます」.",
+              "passage": "私の趣味は写真を撮ることです。去年の誕生日に、父からカメラをもらいました。\nそれから、いろいろな場所へ行って、写真を撮るのが (22) になりました。\n\n週末は、公園や山へ行きます。(23)、きれいな花や鳥の写真を撮ります。\nいつも友達と (24) 行きますが、時々一人で行くこともあります。\n\nまだあまり上手ではありませんが、写真を見るのは (25) 楽しいです。\n来月は、京都へ古いお寺の写真を撮りに (26)。",
+              "passageTitle": "Mondai 3 文章の文法：私の趣味",
+              "passageNotes": "※ 趣味（しゅみ）：hobby　※ 撮る（とる）：to take (a photo)"
             },
             {
               "id": "n4-e1-g-26",
@@ -13543,7 +13888,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "毎月第1土曜日"
               ],
               "correct": 0,
-              "explanation": "Held every Saturday at 10:00 AM."
+              "explanation": "Held every Saturday at 10:00 AM.",
+              "passage": "【日本語クラスのみなさんへ】\n明日の「日本文化体験ツアー」について連絡します。\n\n・集合時間：午前8時30分（時間厳守）\n・集合場所：1階の講堂（教室ではありません）\n・持ち物：筆記用具、お弁当、水筒\n\n※雨が降ってもツアーは行います。傘を持って来てください。\n\n日本語科　田中先生より",
+              "passageTitle": "Mondai 4 短文読解：先生からの連絡",
+              "passageNotes": "※ 講堂（こうどう）：auditorium　※ 筆記用具（ひっきようぐ）：stationery"
             },
             {
               "id": "n4-e1-g-27",
@@ -13556,7 +13904,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "年間 5,000円"
               ],
               "correct": 0,
-              "explanation": "Fee is 500 yen per session."
+              "explanation": "Fee is 500 yen per session.",
+              "passage": "【アパートの入居者のみなさま】\nゴミの収集日についてお知らせします。\n\n・燃えるゴミ：毎週火曜日・金曜日の朝8時まで\n・プラスチック：毎週水曜日の朝8時まで\n・ビン・カン：第1・第3木曜日\n\n※前日の夜にゴミを出してはいけません。必ず当日の朝に出してください。\n\n管理事務所",
+              "passageTitle": "Mondai 4 短文読解：アパートのゴミ出しのルール",
+              "passageNotes": "※ 収集日（しゅうしゅうび）：collection day"
             },
             {
               "id": "n4-e1-g-28",
@@ -13569,7 +13920,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "辞書"
               ],
               "correct": 0,
-              "explanation": "Bring writing utensils and notebook."
+              "explanation": "Bring writing utensils and notebook.",
+              "passage": "件名：土曜日の映画について\n\nマイクさん、こんにちは。\n今週の土曜日、一緒に映画を見に行きませんか。\n見たい映画は駅前のシネマで午後2時から始まります。\n午後1時30分に駅の改札口で会いましょう。\n返事を待っています。\n\nケンより",
+              "passageTitle": "Mondai 4 短文読解：友達へのメール",
+              "passageNotes": "※ 改札口（かいさつぐち）：ticket gate"
             },
             {
               "id": "n4-e1-g-29",
@@ -13582,7 +13936,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "市役所で 申し込む"
               ],
               "correct": 0,
-              "explanation": "Pre-registration by email by the previous day."
+              "explanation": "Pre-registration by email by the previous day.",
+              "passage": "【日本語クラスのみなさんへ】\n明日の「日本文化体験ツアー」について連絡します。\n\n・集合時間：午前8時30分（時間厳守）\n・集合場所：1階の講堂（教室ではありません）\n・持ち物：筆記用具、お弁当、水筒\n\n※雨が降ってもツアーは行います。傘を持って来てください。\n\n日本語科　田中先生より",
+              "passageTitle": "Mondai 4 短文読解：先生からの連絡",
+              "passageNotes": "※ 講堂（こうどう）：auditorium　※ 筆記用具（ひっきようぐ）：stationery"
             },
             {
               "id": "n4-e1-g-30",
@@ -13595,7 +13952,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "友達を作るため"
               ],
               "correct": 0,
-              "explanation": "To learn real-life Japanese communication and customer service manners."
+              "explanation": "To learn real-life Japanese communication and customer service manners.",
+              "passage": "私は先月、初めて京都へ旅行に行きました。東京から新幹線で2時間半かかりました。\n\n京都には古いお寺や神社がたくさんあります。金閣寺や清水寺を見に行きました。特に清水寺から見た景色はとても美しくて、感動しました。お寺の近くの店で、抹茶と和菓子も食べました。少し苦かったですが、甘いお菓子と一緒によく合いました。\n\n京都の町は歴史があって静かで、東京とは全然違いました。今回は2日間の短い旅行でしたから、今度はもっと長く滞在して、他の古い町も訪ねてみたいです。",
+              "passageTitle": "Mondai 5 中文読解：日本での旅行",
+              "passageNotes": "※ 抹茶（まっちゃ）：green powdered tea　※ 和菓子（わがし）：Japanese sweets"
             },
             {
               "id": "n4-e1-g-31",
@@ -13608,7 +13968,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "朝早く起きること"
               ],
               "correct": 0,
-              "explanation": "Struggled most with keigo honorifics and fast native speech."
+              "explanation": "Struggled most with keigo honorifics and fast native speech.",
+              "passage": "私は先月、初めて京都へ旅行に行きました。東京から新幹線で2時間半かかりました。\n\n京都には古いお寺や神社がたくさんあります。金閣寺や清水寺を見に行きました。特に清水寺から見た景色はとても美しくて、感動しました。お寺の近くの店で、抹茶と和菓子も食べました。少し苦かったですが、甘いお菓子と一緒によく合いました。\n\n京都の町は歴史があって静かで、東京とは全然違いました。今回は2日間の短い旅行でしたから、今度はもっと長く滞在して、他の古い町も訪ねてみたいです。",
+              "passageTitle": "Mondai 5 中文読解：日本での旅行",
+              "passageNotes": "※ 抹茶（まっちゃ）：green powdered tea　※ 和菓子（わがし）：Japanese sweets"
             },
             {
               "id": "n4-e1-g-32",
@@ -13621,7 +13984,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "英語が話せたから"
               ],
               "correct": 0,
-              "explanation": "Praised for consistently greeting customers with a bright smile."
+              "explanation": "Praised for consistently greeting customers with a bright smile.",
+              "passage": "私は先月、初めて京都へ旅行に行きました。東京から新幹線で2時間半かかりました。\n\n京都には古いお寺や神社がたくさんあります。金閣寺や清水寺を見に行きました。特に清水寺から見た景色はとても美しくて、感動しました。お寺の近くの店で、抹茶と和菓子も食べました。少し苦かったですが、甘いお菓子と一緒によく合いました。\n\n京都の町は歴史があって静かで、東京とは全然違いました。今回は2日間の短い旅行でしたから、今度はもっと長く滞在して、他の古い町も訪ねてみたいです。",
+              "passageTitle": "Mondai 5 中文読解：日本での旅行",
+              "passageNotes": "※ 抹茶（まっちゃ）：green powdered tea　※ 和菓子（わがし）：Japanese sweets"
             },
             {
               "id": "n4-e1-g-33",
@@ -13634,7 +14000,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "将来カフェを開きたいと思った"
               ],
               "correct": 0,
-              "explanation": "Gained conversational confidence and appreciated human connections."
+              "explanation": "Gained conversational confidence and appreciated human connections.",
+              "passage": "私は先月、初めて京都へ旅行に行きました。東京から新幹線で2時間半かかりました。\n\n京都には古いお寺や神社がたくさんあります。金閣寺や清水寺を見に行きました。特に清水寺から見た景色はとても美しくて、感動しました。お寺の近くの店で、抹茶と和菓子も食べました。少し苦かったですが、甘いお菓子と一緒によく合いました。\n\n京都の町は歴史があって静かで、東京とは全然違いました。今回は2日間の短い旅行でしたから、今度はもっと長く滞在して、他の古い町も訪ねてみたいです。",
+              "passageTitle": "Mondai 5 中文読解：日本での旅行",
+              "passageNotes": "※ 抹茶（まっちゃ）：green powdered tea　※ 和菓子（わがし）：Japanese sweets"
             },
             {
               "id": "n4-e1-g-34",
@@ -13647,7 +14016,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "無料"
               ],
               "correct": 0,
-              "explanation": "Adult pool admission is listed as 400 yen."
+              "explanation": "Adult pool admission is listed as 400 yen.",
+              "passage": "┌──────────────────────────────────────────────┐\n│　　　　　　　さくら市図書館　休館日のお知らせ　　　　　　　│\n├──────────────────────────────────────────────┤\n│【開館時間】　火曜日〜土曜日：午前9:00〜午後8:00　　　　　　 │\n│　　　　　　　日曜日・祝日　：午前9:00〜午後5:00　　　　　　 │\n├──────────────────────────────────────────────┤\n│【休館日（お休み）】　　　　　　　　　　　　　　　　　　　　　│\n│・毎週月曜日（月曜日が祝日の場合は開館し、翌日火曜日が休館） │\n│・毎月第3木曜日（図書整理日）　　　　　　　　　　　　　　　 │\n│・年末年始（12月28日〜1月4日）　　　　　　　　　　　　　　　 │\n├──────────────────────────────────────────────┤\n│※本を返すだけの方は、休館日でも外の「返却ポスト」が使えます。│\n└──────────────────────────────────────────────┘",
+              "passageTitle": "Mondai 6 情報検索：図書館の休館案内",
+              "passageNotes": "※ 休館日（きゅうかんび）：closed days　※ 祝日（しゅくじつ）：national holiday"
             },
             {
               "id": "n4-e1-g-35",
@@ -13660,7 +14032,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "会員証"
               ],
               "correct": 0,
-              "explanation": "Indoor athletic shoes (室内用運動靴) are strictly required."
+              "explanation": "Indoor athletic shoes (室内用運動靴) are strictly required.",
+              "passage": "┌──────────────────────────────────────────────┐\n│　　　　　　　さくら市図書館　休館日のお知らせ　　　　　　　│\n├──────────────────────────────────────────────┤\n│【開館時間】　火曜日〜土曜日：午前9:00〜午後8:00　　　　　　 │\n│　　　　　　　日曜日・祝日　：午前9:00〜午後5:00　　　　　　 │\n├──────────────────────────────────────────────┤\n│【休館日（お休み）】　　　　　　　　　　　　　　　　　　　　　│\n│・毎週月曜日（月曜日が祝日の場合は開館し、翌日火曜日が休館） │\n│・毎月第3木曜日（図書整理日）　　　　　　　　　　　　　　　 │\n│・年末年始（12月28日〜1月4日）　　　　　　　　　　　　　　　 │\n├──────────────────────────────────────────────┤\n│※本を返すだけの方は、休館日でも外の「返却ポスト」が使えます。│\n└──────────────────────────────────────────────┘",
+              "passageTitle": "Mondai 6 情報検索：図書館の休館案内",
+              "passageNotes": "※ 休館日（きゅうかんび）：closed days　※ 祝日（しゅくじつ）：national holiday"
             }
           ]
         },
@@ -14843,7 +15218,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "はいる"
               ],
               "correct": 2,
-              "explanation": "Connecting action with te-form:「はいって」."
+              "explanation": "Connecting action with te-form:「はいって」.",
+              "passage": "今度の日曜日は、留学生の友達と公園でピクニックをします。\n先週の授業のあとで、みんなで約束を (22)。\n\n日曜日の朝10時に、公園の入り口に集まります。(23)、それぞれ好きな食べ物を持って来ます。\n私はサンドイッチと果物を (24) つもりです。\n\n天気予報では、日曜日は晴れるそうですから、(25) 楽しみです。\nみんなでたくさん写真を撮って、楽しく (26)。",
+              "passageTitle": "Mondai 3 文章の文法：日曜日の予定",
+              "passageNotes": "※ 約束（やくそく）：promise/plan"
             },
             {
               "id": "n4-e2-g-22",
@@ -14856,7 +15234,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "すこしも"
               ],
               "correct": 0,
-              "explanation": "Positive evaluation:「とても」."
+              "explanation": "Positive evaluation:「とても」.",
+              "passage": "今度の日曜日は、留学生の友達と公園でピクニックをします。\n先週の授業のあとで、みんなで約束を (22)。\n\n日曜日の朝10時に、公園の入り口に集まります。(23)、それぞれ好きな食べ物を持って来ます。\n私はサンドイッチと果物を (24) つもりです。\n\n天気予報では、日曜日は晴れるそうですから、(25) 楽しみです。\nみんなでたくさん写真を撮って、楽しく (26)。",
+              "passageTitle": "Mondai 3 文章の文法：日曜日の予定",
+              "passageNotes": "※ 約束（やくそく）：promise/plan"
             },
             {
               "id": "n4-e2-g-23",
@@ -14869,7 +15250,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "それから"
               ],
               "correct": 0,
-              "explanation": "Adding related points:「それに」."
+              "explanation": "Adding related points:「それに」.",
+              "passage": "今度の日曜日は、留学生の友達と公園でピクニックをします。\n先週の授業のあとで、みんなで約束を (22)。\n\n日曜日の朝10時に、公園の入り口に集まります。(23)、それぞれ好きな食べ物を持って来ます。\n私はサンドイッチと果物を (24) つもりです。\n\n天気予報では、日曜日は晴れるそうですから、(25) 楽しみです。\nみんなでたくさん写真を撮って、楽しく (26)。",
+              "passageTitle": "Mondai 3 文章の文法：日曜日の予定",
+              "passageNotes": "※ 約束（やくそく）：promise/plan"
             },
             {
               "id": "n4-e2-g-24",
@@ -14882,7 +15266,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "いってみた"
               ],
               "correct": 0,
-              "explanation": "Desire:「いってみたい」."
+              "explanation": "Desire:「いってみたい」.",
+              "passage": "今度の日曜日は、留学生の友達と公園でピクニックをします。\n先週の授業のあとで、みんなで約束を (22)。\n\n日曜日の朝10時に、公園の入り口に集まります。(23)、それぞれ好きな食べ物を持って来ます。\n私はサンドイッチと果物を (24) つもりです。\n\n天気予報では、日曜日は晴れるそうですから、(25) 楽しみです。\nみんなでたくさん写真を撮って、楽しく (26)。",
+              "passageTitle": "Mondai 3 文章の文法：日曜日の予定",
+              "passageNotes": "※ 約束（やくそく）：promise/plan"
             },
             {
               "id": "n4-e2-g-25",
@@ -14895,7 +15282,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "おもわない"
               ],
               "correct": 0,
-              "explanation": "Present conjecture:「おもいます」."
+              "explanation": "Present conjecture:「おもいます」.",
+              "passage": "今度の日曜日は、留学生の友達と公園でピクニックをします。\n先週の授業のあとで、みんなで約束を (22)。\n\n日曜日の朝10時に、公園の入り口に集まります。(23)、それぞれ好きな食べ物を持って来ます。\n私はサンドイッチと果物を (24) つもりです。\n\n天気予報では、日曜日は晴れるそうですから、(25) 楽しみです。\nみんなでたくさん写真を撮って、楽しく (26)。",
+              "passageTitle": "Mondai 3 文章の文法：日曜日の予定",
+              "passageNotes": "※ 約束（やくそく）：promise/plan"
             },
             {
               "id": "n4-e2-g-26",
@@ -14908,7 +15298,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "毎月第1土曜日"
               ],
               "correct": 0,
-              "explanation": "Held every Saturday at 10:00 AM."
+              "explanation": "Held every Saturday at 10:00 AM.",
+              "passage": "【お料理教室のお知らせ】\n今月は「簡単でおいしい和食（肉じゃがとお味噌汁）」を作ります！\n\n・日時：11月20日（土）午後1:00〜午後3:30\n・場所：市民センター3階 調理室\n・参加費：1,000円（材料費を含みます）\n・持ち物：エプロン、三角巾、手拭きタオル\n\n※定員は15名です。前日までに受付窓口でお申し込みください。",
+              "passageTitle": "Mondai 4 短文読解：料理教室のお誘い",
+              "passageNotes": "※ 調理室（ちょうりしつ）：kitchen classroom"
             },
             {
               "id": "n4-e2-g-27",
@@ -14921,7 +15314,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "年間 5,000円"
               ],
               "correct": 0,
-              "explanation": "Fee is 500 yen per session."
+              "explanation": "Fee is 500 yen per session.",
+              "passage": "【駅員からのお知らせ】\n昨日、夕方6時頃の上り電車内で、青い傘のお忘れ物がありました。\n心当たりのある方は、中央改札口の駅事務室までお越しください。\nなお、お受け取りには身分証明書（学生証や保険証）が必要です。",
+              "passageTitle": "Mondai 4 短文読解：電車の忘れ物について",
+              "passageNotes": "※ 忘れ物（わすれもの）：lost property"
             },
             {
               "id": "n4-e2-g-28",
@@ -14934,7 +15330,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "辞書"
               ],
               "correct": 0,
-              "explanation": "Bring writing utensils and notebook."
+              "explanation": "Bring writing utensils and notebook.",
+              "passage": "【留学生会館のみなさんへ】\n今週のキッチン・シャワー室の掃除当番は【201号室〜205号室】の担当です。\n・掃除時間：土曜日 午前10:00〜\n・ゴミ捨て：分別して集積所へ\n掃除が終わったら、点検表にサインをしてください。",
+              "passageTitle": "Mondai 4 短文読解：寮の掃除当番",
+              "passageNotes": "※ 当番（とうばん）：duty/turn"
             },
             {
               "id": "n4-e2-g-29",
@@ -14947,7 +15346,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "市役所で 申し込む"
               ],
               "correct": 0,
-              "explanation": "Pre-registration by email by the previous day."
+              "explanation": "Pre-registration by email by the previous day.",
+              "passage": "【お料理教室のお知らせ】\n今月は「簡単でおいしい和食（肉じゃがとお味噌汁）」を作ります！\n\n・日時：11月20日（土）午後1:00〜午後3:30\n・場所：市民センター3階 調理室\n・参加費：1,000円（材料費を含みます）\n・持ち物：エプロン、三角巾、手拭きタオル\n\n※定員は15名です。前日までに受付窓口でお申し込みください。",
+              "passageTitle": "Mondai 4 短文読解：料理教室のお誘い",
+              "passageNotes": "※ 調理室（ちょうりしつ）：kitchen classroom"
             },
             {
               "id": "n4-e2-g-30",
@@ -14960,7 +15362,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "友達を作るため"
               ],
               "correct": 0,
-              "explanation": "To learn real-life Japanese communication and customer service manners."
+              "explanation": "To learn real-life Japanese communication and customer service manners.",
+              "passage": "私の家には、白い猫が1匹います。名前は「シロ」です。3年前に道で小さかったシロを拾いました。\n\nシロはとてもおとなしくて、家族みんなに愛されています。毎朝、私が起きると足元に来て「ニャー」と鳴きます。朝ごはんを食べた後は、日当たりのいい窓のそばで昼寝をするのが好きです。\n\n時々いたずらをして母に怒られますが、すぐに甘えてくるので誰も本気で怒ることができません。シロがいると、家の中がいつも明るくて温かい気持ちになります。",
+              "passageTitle": "Mondai 5 中文読解：私の家族と猫",
+              "passageNotes": "※ 拾う（ひろう）：to pick up/adopt　※ 日当たり（ひあたり）：sunny spot"
             },
             {
               "id": "n4-e2-g-31",
@@ -14973,7 +15378,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "朝早く起きること"
               ],
               "correct": 0,
-              "explanation": "Struggled most with keigo honorifics and fast native speech."
+              "explanation": "Struggled most with keigo honorifics and fast native speech.",
+              "passage": "私の家には、白い猫が1匹います。名前は「シロ」です。3年前に道で小さかったシロを拾いました。\n\nシロはとてもおとなしくて、家族みんなに愛されています。毎朝、私が起きると足元に来て「ニャー」と鳴きます。朝ごはんを食べた後は、日当たりのいい窓のそばで昼寝をするのが好きです。\n\n時々いたずらをして母に怒られますが、すぐに甘えてくるので誰も本気で怒ることができません。シロがいると、家の中がいつも明るくて温かい気持ちになります。",
+              "passageTitle": "Mondai 5 中文読解：私の家族と猫",
+              "passageNotes": "※ 拾う（ひろう）：to pick up/adopt　※ 日当たり（ひあたり）：sunny spot"
             },
             {
               "id": "n4-e2-g-32",
@@ -14986,7 +15394,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "英語が話せたから"
               ],
               "correct": 0,
-              "explanation": "Praised for consistently greeting customers with a bright smile."
+              "explanation": "Praised for consistently greeting customers with a bright smile.",
+              "passage": "私の家には、白い猫が1匹います。名前は「シロ」です。3年前に道で小さかったシロを拾いました。\n\nシロはとてもおとなしくて、家族みんなに愛されています。毎朝、私が起きると足元に来て「ニャー」と鳴きます。朝ごはんを食べた後は、日当たりのいい窓のそばで昼寝をするのが好きです。\n\n時々いたずらをして母に怒られますが、すぐに甘えてくるので誰も本気で怒ることができません。シロがいると、家の中がいつも明るくて温かい気持ちになります。",
+              "passageTitle": "Mondai 5 中文読解：私の家族と猫",
+              "passageNotes": "※ 拾う（ひろう）：to pick up/adopt　※ 日当たり（ひあたり）：sunny spot"
             },
             {
               "id": "n4-e2-g-33",
@@ -14999,7 +15410,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "将来カフェを開きたいと思った"
               ],
               "correct": 0,
-              "explanation": "Gained conversational confidence and appreciated human connections."
+              "explanation": "Gained conversational confidence and appreciated human connections.",
+              "passage": "私の家には、白い猫が1匹います。名前は「シロ」です。3年前に道で小さかったシロを拾いました。\n\nシロはとてもおとなしくて、家族みんなに愛されています。毎朝、私が起きると足元に来て「ニャー」と鳴きます。朝ごはんを食べた後は、日当たりのいい窓のそばで昼寝をするのが好きです。\n\n時々いたずらをして母に怒られますが、すぐに甘えてくるので誰も本気で怒ることができません。シロがいると、家の中がいつも明るくて温かい気持ちになります。",
+              "passageTitle": "Mondai 5 中文読解：私の家族と猫",
+              "passageNotes": "※ 拾う（ひろう）：to pick up/adopt　※ 日当たり（ひあたり）：sunny spot"
             },
             {
               "id": "n4-e2-g-34",
@@ -15012,7 +15426,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "無料"
               ],
               "correct": 0,
-              "explanation": "Adult pool admission is listed as 400 yen."
+              "explanation": "Adult pool admission is listed as 400 yen.",
+              "passage": "┌──────────────────────────────────────────────┐\n│　　　　　　国際交流クラブ　留学生歓迎会　　　　　　　　　　│\n├──────────────────────────────────────────────┤\n│【日時】　4月25日（金） 17:30〜19:30（受付開始 17:00）　　　 │\n│【場所】　大学会館 2階 大ホール　　　　　　　　　　　　　　　 │\n├──────────────────────────────────────────────┤\n│【参加費】留学生：無料（Free） / 一般学生：500円　　　　　　　│\n│【内容】　自己紹介ゲーム、軽食・ドリンク、日本の伝統遊び　　 │\n├──────────────────────────────────────────────┤\n│※参加したい人は、4月20日までに国際課窓口で名前を書いてください。│\n└──────────────────────────────────────────────┘",
+              "passageTitle": "Mondai 6 情報検索：留学生歓迎パーティーのお知らせ",
+              "passageNotes": "※ 歓迎会（かんげいかい）：welcome party"
             },
             {
               "id": "n4-e2-g-35",
@@ -15025,7 +15442,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "会員証"
               ],
               "correct": 0,
-              "explanation": "Indoor athletic shoes (室内用運動靴) are strictly required."
+              "explanation": "Indoor athletic shoes (室内用運動靴) are strictly required.",
+              "passage": "┌──────────────────────────────────────────────┐\n│　　　　　　国際交流クラブ　留学生歓迎会　　　　　　　　　　│\n├──────────────────────────────────────────────┤\n│【日時】　4月25日（金） 17:30〜19:30（受付開始 17:00）　　　 │\n│【場所】　大学会館 2階 大ホール　　　　　　　　　　　　　　　 │\n├──────────────────────────────────────────────┤\n│【参加費】留学生：無料（Free） / 一般学生：500円　　　　　　　│\n│【内容】　自己紹介ゲーム、軽食・ドリンク、日本の伝統遊び　　 │\n├──────────────────────────────────────────────┤\n│※参加したい人は、4月20日までに国際課窓口で名前を書いてください。│\n└──────────────────────────────────────────────┘",
+              "passageTitle": "Mondai 6 情報検索：留学生歓迎パーティーのお知らせ",
+              "passageNotes": "※ 歓迎会（かんげいかい）：welcome party"
             }
           ]
         },
@@ -16208,7 +16628,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "はいる"
               ],
               "correct": 2,
-              "explanation": "Connecting action with te-form:「はいって」."
+              "explanation": "Connecting action with te-form:「はいって」.",
+              "passage": "私は日本に来てから、新しい自転車について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：新しい自転車",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n4-e3-g-22",
@@ -16221,7 +16644,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "すこしも"
               ],
               "correct": 0,
-              "explanation": "Positive evaluation:「とても」."
+              "explanation": "Positive evaluation:「とても」.",
+              "passage": "私は日本に来てから、新しい自転車について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：新しい自転車",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n4-e3-g-23",
@@ -16234,7 +16660,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "それから"
               ],
               "correct": 0,
-              "explanation": "Adding related points:「それに」."
+              "explanation": "Adding related points:「それに」.",
+              "passage": "私は日本に来てから、新しい自転車について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：新しい自転車",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n4-e3-g-24",
@@ -16247,7 +16676,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "いってみた"
               ],
               "correct": 0,
-              "explanation": "Desire:「いってみたい」."
+              "explanation": "Desire:「いってみたい」.",
+              "passage": "私は日本に来てから、新しい自転車について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：新しい自転車",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n4-e3-g-25",
@@ -16260,7 +16692,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "おもわない"
               ],
               "correct": 0,
-              "explanation": "Present conjecture:「おもいます」."
+              "explanation": "Present conjecture:「おもいます」.",
+              "passage": "私は日本に来てから、新しい自転車について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：新しい自転車",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n4-e3-g-26",
@@ -16273,7 +16708,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "毎月第1土曜日"
               ],
               "correct": 0,
-              "explanation": "Held every Saturday at 10:00 AM."
+              "explanation": "Held every Saturday at 10:00 AM.",
+              "passage": "【図書館の案内についてのお知らせ】\n利用者の皆様へご案内いたします。\n\n・受付時間：月曜日〜金曜日 午前9:00〜午後5:00\n・集合場所：1階受付カウンター前\n・必要書類：登録カード、身分証明書\n\nご不明な点がございましたら、窓口までお問い合わせください。\n\n事務局より",
+              "passageTitle": "Mondai 4 短文読解：図書館の案内",
+              "passageNotes": "※ 受付（うけつけ）：reception"
             },
             {
               "id": "n4-e3-g-27",
@@ -16286,7 +16724,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "年間 5,000円"
               ],
               "correct": 0,
-              "explanation": "Fee is 500 yen per session."
+              "explanation": "Fee is 500 yen per session.",
+              "passage": "件名：友達の誕生日に関する確認\n\nお疲れ様です。田中です。\n明日の集合時間と場所について、再度ご連絡いたします。\n・時間：午後1時15分\n・場所：駅前ロータリー時計台の下\n遅れる場合は必ず事前に連絡をしてください。\nよろしくお願いします。",
+              "passageTitle": "Mondai 4 短文読解：友達の誕生日",
+              "passageNotes": "※ 事前（じぜん）：in advance"
             },
             {
               "id": "n4-e3-g-28",
@@ -16299,7 +16740,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "辞書"
               ],
               "correct": 0,
-              "explanation": "Bring writing utensils and notebook."
+              "explanation": "Bring writing utensils and notebook.",
+              "passage": "【掲示板】新幹線の予約\n参加希望の方は、下記の要領でお申し込みください。\n・定員：先着20名\n・参加費：無料\n・申込締切：今週金曜日の午後5時まで\n定員になり次第締め切りますので、お早めにお願いします。",
+              "passageTitle": "Mondai 4 短文読解：新幹線の予約",
+              "passageNotes": "※ 先着（せんちゃく）：first come, first served"
             },
             {
               "id": "n4-e3-g-29",
@@ -16312,7 +16756,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "市役所で 申し込む"
               ],
               "correct": 0,
-              "explanation": "Pre-registration by email by the previous day."
+              "explanation": "Pre-registration by email by the previous day.",
+              "passage": "【図書館の案内についてのお知らせ】\n利用者の皆様へご案内いたします。\n\n・受付時間：月曜日〜金曜日 午前9:00〜午後5:00\n・集合場所：1階受付カウンター前\n・必要書類：登録カード、身分証明書\n\nご不明な点がございましたら、窓口までお問い合わせください。\n\n事務局より",
+              "passageTitle": "Mondai 4 短文読解：図書館の案内",
+              "passageNotes": "※ 受付（うけつけ）：reception"
             },
             {
               "id": "n4-e3-g-30",
@@ -16325,7 +16772,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "友達を作るため"
               ],
               "correct": 0,
-              "explanation": "To learn real-life Japanese communication and customer service manners."
+              "explanation": "To learn real-life Japanese communication and customer service manners.",
+              "passage": "私は先月、日本で私の国の料理を体験しました。\n\n日本に来る前は本やインターネットで知っていましたが、実際に体験してみると想像以上に素晴らしかったです。特に、周りの人たちの親切さと丁寧な対応にとても感動しました。\n\n言葉が通じない時もありましたが、身振り手振りで優しく教えてくれました。この経験を通して、日本の文化に対する興味がさらに深まりました。国に帰ったら、家族や友達にもぜひ紹介したいと思っています。",
+              "passageTitle": "Mondai 5 中文読解：私の国の料理",
+              "passageNotes": "※ 体験（たいけん）：experience　※ 丁寧（ていねい）：polite"
             },
             {
               "id": "n4-e3-g-31",
@@ -16338,7 +16788,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "朝早く起きること"
               ],
               "correct": 0,
-              "explanation": "Struggled most with keigo honorifics and fast native speech."
+              "explanation": "Struggled most with keigo honorifics and fast native speech.",
+              "passage": "私は先月、日本で私の国の料理を体験しました。\n\n日本に来る前は本やインターネットで知っていましたが、実際に体験してみると想像以上に素晴らしかったです。特に、周りの人たちの親切さと丁寧な対応にとても感動しました。\n\n言葉が通じない時もありましたが、身振り手振りで優しく教えてくれました。この経験を通して、日本の文化に対する興味がさらに深まりました。国に帰ったら、家族や友達にもぜひ紹介したいと思っています。",
+              "passageTitle": "Mondai 5 中文読解：私の国の料理",
+              "passageNotes": "※ 体験（たいけん）：experience　※ 丁寧（ていねい）：polite"
             },
             {
               "id": "n4-e3-g-32",
@@ -16351,7 +16804,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "英語が話せたから"
               ],
               "correct": 0,
-              "explanation": "Praised for consistently greeting customers with a bright smile."
+              "explanation": "Praised for consistently greeting customers with a bright smile.",
+              "passage": "私は先月、日本で私の国の料理を体験しました。\n\n日本に来る前は本やインターネットで知っていましたが、実際に体験してみると想像以上に素晴らしかったです。特に、周りの人たちの親切さと丁寧な対応にとても感動しました。\n\n言葉が通じない時もありましたが、身振り手振りで優しく教えてくれました。この経験を通して、日本の文化に対する興味がさらに深まりました。国に帰ったら、家族や友達にもぜひ紹介したいと思っています。",
+              "passageTitle": "Mondai 5 中文読解：私の国の料理",
+              "passageNotes": "※ 体験（たいけん）：experience　※ 丁寧（ていねい）：polite"
             },
             {
               "id": "n4-e3-g-33",
@@ -16364,7 +16820,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "将来カフェを開きたいと思った"
               ],
               "correct": 0,
-              "explanation": "Gained conversational confidence and appreciated human connections."
+              "explanation": "Gained conversational confidence and appreciated human connections.",
+              "passage": "私は先月、日本で私の国の料理を体験しました。\n\n日本に来る前は本やインターネットで知っていましたが、実際に体験してみると想像以上に素晴らしかったです。特に、周りの人たちの親切さと丁寧な対応にとても感動しました。\n\n言葉が通じない時もありましたが、身振り手振りで優しく教えてくれました。この経験を通して、日本の文化に対する興味がさらに深まりました。国に帰ったら、家族や友達にもぜひ紹介したいと思っています。",
+              "passageTitle": "Mondai 5 中文読解：私の国の料理",
+              "passageNotes": "※ 体験（たいけん）：experience　※ 丁寧（ていねい）：polite"
             },
             {
               "id": "n4-e3-g-34",
@@ -16377,7 +16836,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "無料"
               ],
               "correct": 0,
-              "explanation": "Adult pool admission is listed as 400 yen."
+              "explanation": "Adult pool admission is listed as 400 yen.",
+              "passage": "┌──────────────────────────────────────────────┐\n│　　　　　　　【ご案内】スーパーの特売案内　　　　　　　　　　　　│\n├──────────────────────────────────────────────┤\n│【利用時間】　平日：午前9:00〜午後8:00 / 休日：午前10:00〜午後6:00│\n│【料金】　　　大人：500円 / 学生（高校生・大学生）：300円　　 │\n├──────────────────────────────────────────────┤\n│【注意事項】　　　　　　　　　　　　　　　　　　　　　　　　　│\n│・学生割引を利用する場合は、必ず学生証を提示してください。　 │\n│・館内での飲食・喫煙は固く禁止されています。　　　　　　　　 │\n└──────────────────────────────────────────────┘",
+              "passageTitle": "Mondai 6 情報検索：スーパーの特売案内",
+              "passageNotes": "※ 提示（ていじ）：show/present　※ 禁止（きんし）：prohibited"
             },
             {
               "id": "n4-e3-g-35",
@@ -16390,7 +16852,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "会員証"
               ],
               "correct": 0,
-              "explanation": "Indoor athletic shoes (室内用運動靴) are strictly required."
+              "explanation": "Indoor athletic shoes (室内用運動靴) are strictly required.",
+              "passage": "┌──────────────────────────────────────────────┐\n│　　　　　　　【ご案内】スーパーの特売案内　　　　　　　　　　　　│\n├──────────────────────────────────────────────┤\n│【利用時間】　平日：午前9:00〜午後8:00 / 休日：午前10:00〜午後6:00│\n│【料金】　　　大人：500円 / 学生（高校生・大学生）：300円　　 │\n├──────────────────────────────────────────────┤\n│【注意事項】　　　　　　　　　　　　　　　　　　　　　　　　　│\n│・学生割引を利用する場合は、必ず学生証を提示してください。　 │\n│・館内での飲食・喫煙は固く禁止されています。　　　　　　　　 │\n└──────────────────────────────────────────────┘",
+              "passageTitle": "Mondai 6 情報検索：スーパーの特売案内",
+              "passageNotes": "※ 提示（ていじ）：show/present　※ 禁止（きんし）：prohibited"
             }
           ]
         },
@@ -17573,7 +18038,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "はいる"
               ],
               "correct": 2,
-              "explanation": "Connecting action with te-form:「はいって」."
+              "explanation": "Connecting action with te-form:「はいって」.",
+              "passage": "私は日本に来てから、日本語の勉強について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：日本語の勉強",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n4-e4-g-22",
@@ -17586,7 +18054,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "すこしも"
               ],
               "correct": 0,
-              "explanation": "Positive evaluation:「とても」."
+              "explanation": "Positive evaluation:「とても」.",
+              "passage": "私は日本に来てから、日本語の勉強について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：日本語の勉強",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n4-e4-g-23",
@@ -17599,7 +18070,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "それから"
               ],
               "correct": 0,
-              "explanation": "Adding related points:「それに」."
+              "explanation": "Adding related points:「それに」.",
+              "passage": "私は日本に来てから、日本語の勉強について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：日本語の勉強",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n4-e4-g-24",
@@ -17612,7 +18086,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "いってみた"
               ],
               "correct": 0,
-              "explanation": "Desire:「いってみたい」."
+              "explanation": "Desire:「いってみたい」.",
+              "passage": "私は日本に来てから、日本語の勉強について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：日本語の勉強",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n4-e4-g-25",
@@ -17625,7 +18102,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "おもわない"
               ],
               "correct": 0,
-              "explanation": "Present conjecture:「おもいます」."
+              "explanation": "Present conjecture:「おもいます」.",
+              "passage": "私は日本に来てから、日本語の勉強について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：日本語の勉強",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n4-e4-g-26",
@@ -17638,7 +18118,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "毎月第1土曜日"
               ],
               "correct": 0,
-              "explanation": "Held every Saturday at 10:00 AM."
+              "explanation": "Held every Saturday at 10:00 AM.",
+              "passage": "【駅前のカフェについてのお知らせ】\n利用者の皆様へご案内いたします。\n\n・受付時間：月曜日〜金曜日 午前9:00〜午後5:00\n・集合場所：1階受付カウンター前\n・必要書類：登録カード、身分証明書\n\nご不明な点がございましたら、窓口までお問い合わせください。\n\n事務局より",
+              "passageTitle": "Mondai 4 短文読解：駅前のカフェ",
+              "passageNotes": "※ 受付（うけつけ）：reception"
             },
             {
               "id": "n4-e4-g-27",
@@ -17651,7 +18134,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "年間 5,000円"
               ],
               "correct": 0,
-              "explanation": "Fee is 500 yen per session."
+              "explanation": "Fee is 500 yen per session.",
+              "passage": "件名：病院の予約に関する確認\n\nお疲れ様です。田中です。\n明日の集合時間と場所について、再度ご連絡いたします。\n・時間：午後1時15分\n・場所：駅前ロータリー時計台の下\n遅れる場合は必ず事前に連絡をしてください。\nよろしくお願いします。",
+              "passageTitle": "Mondai 4 短文読解：病院の予約",
+              "passageNotes": "※ 事前（じぜん）：in advance"
             },
             {
               "id": "n4-e4-g-28",
@@ -17664,7 +18150,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "辞書"
               ],
               "correct": 0,
-              "explanation": "Bring writing utensils and notebook."
+              "explanation": "Bring writing utensils and notebook.",
+              "passage": "【掲示板】映画館のチケット\n参加希望の方は、下記の要領でお申し込みください。\n・定員：先着20名\n・参加費：無料\n・申込締切：今週金曜日の午後5時まで\n定員になり次第締め切りますので、お早めにお願いします。",
+              "passageTitle": "Mondai 4 短文読解：映画館のチケット",
+              "passageNotes": "※ 先着（せんちゃく）：first come, first served"
             },
             {
               "id": "n4-e4-g-29",
@@ -17677,7 +18166,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "市役所で 申し込む"
               ],
               "correct": 0,
-              "explanation": "Pre-registration by email by the previous day."
+              "explanation": "Pre-registration by email by the previous day.",
+              "passage": "【駅前のカフェについてのお知らせ】\n利用者の皆様へご案内いたします。\n\n・受付時間：月曜日〜金曜日 午前9:00〜午後5:00\n・集合場所：1階受付カウンター前\n・必要書類：登録カード、身分証明書\n\nご不明な点がございましたら、窓口までお問い合わせください。\n\n事務局より",
+              "passageTitle": "Mondai 4 短文読解：駅前のカフェ",
+              "passageNotes": "※ 受付（うけつけ）：reception"
             },
             {
               "id": "n4-e4-g-30",
@@ -17690,7 +18182,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "友達を作るため"
               ],
               "correct": 0,
-              "explanation": "To learn real-life Japanese communication and customer service manners."
+              "explanation": "To learn real-life Japanese communication and customer service manners.",
+              "passage": "私は先月、日本で初めての新幹線を体験しました。\n\n日本に来る前は本やインターネットで知っていましたが、実際に体験してみると想像以上に素晴らしかったです。特に、周りの人たちの親切さと丁寧な対応にとても感動しました。\n\n言葉が通じない時もありましたが、身振り手振りで優しく教えてくれました。この経験を通して、日本の文化に対する興味がさらに深まりました。国に帰ったら、家族や友達にもぜひ紹介したいと思っています。",
+              "passageTitle": "Mondai 5 中文読解：初めての新幹線",
+              "passageNotes": "※ 体験（たいけん）：experience　※ 丁寧（ていねい）：polite"
             },
             {
               "id": "n4-e4-g-31",
@@ -17703,7 +18198,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "朝早く起きること"
               ],
               "correct": 0,
-              "explanation": "Struggled most with keigo honorifics and fast native speech."
+              "explanation": "Struggled most with keigo honorifics and fast native speech.",
+              "passage": "私は先月、日本で初めての新幹線を体験しました。\n\n日本に来る前は本やインターネットで知っていましたが、実際に体験してみると想像以上に素晴らしかったです。特に、周りの人たちの親切さと丁寧な対応にとても感動しました。\n\n言葉が通じない時もありましたが、身振り手振りで優しく教えてくれました。この経験を通して、日本の文化に対する興味がさらに深まりました。国に帰ったら、家族や友達にもぜひ紹介したいと思っています。",
+              "passageTitle": "Mondai 5 中文読解：初めての新幹線",
+              "passageNotes": "※ 体験（たいけん）：experience　※ 丁寧（ていねい）：polite"
             },
             {
               "id": "n4-e4-g-32",
@@ -17716,7 +18214,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "英語が話せたから"
               ],
               "correct": 0,
-              "explanation": "Praised for consistently greeting customers with a bright smile."
+              "explanation": "Praised for consistently greeting customers with a bright smile.",
+              "passage": "私は先月、日本で初めての新幹線を体験しました。\n\n日本に来る前は本やインターネットで知っていましたが、実際に体験してみると想像以上に素晴らしかったです。特に、周りの人たちの親切さと丁寧な対応にとても感動しました。\n\n言葉が通じない時もありましたが、身振り手振りで優しく教えてくれました。この経験を通して、日本の文化に対する興味がさらに深まりました。国に帰ったら、家族や友達にもぜひ紹介したいと思っています。",
+              "passageTitle": "Mondai 5 中文読解：初めての新幹線",
+              "passageNotes": "※ 体験（たいけん）：experience　※ 丁寧（ていねい）：polite"
             },
             {
               "id": "n4-e4-g-33",
@@ -17729,7 +18230,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "将来カフェを開きたいと思った"
               ],
               "correct": 0,
-              "explanation": "Gained conversational confidence and appreciated human connections."
+              "explanation": "Gained conversational confidence and appreciated human connections.",
+              "passage": "私は先月、日本で初めての新幹線を体験しました。\n\n日本に来る前は本やインターネットで知っていましたが、実際に体験してみると想像以上に素晴らしかったです。特に、周りの人たちの親切さと丁寧な対応にとても感動しました。\n\n言葉が通じない時もありましたが、身振り手振りで優しく教えてくれました。この経験を通して、日本の文化に対する興味がさらに深まりました。国に帰ったら、家族や友達にもぜひ紹介したいと思っています。",
+              "passageTitle": "Mondai 5 中文読解：初めての新幹線",
+              "passageNotes": "※ 体験（たいけん）：experience　※ 丁寧（ていねい）：polite"
             },
             {
               "id": "n4-e4-g-34",
@@ -17742,7 +18246,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "無料"
               ],
               "correct": 0,
-              "explanation": "Adult pool admission is listed as 400 yen."
+              "explanation": "Adult pool admission is listed as 400 yen.",
+              "passage": "┌──────────────────────────────────────────────┐\n│　　　　　　　【ご案内】スポーツセンター利用案内　　　　　　　　　　　　│\n├──────────────────────────────────────────────┤\n│【利用時間】　平日：午前9:00〜午後8:00 / 休日：午前10:00〜午後6:00│\n│【料金】　　　大人：500円 / 学生（高校生・大学生）：300円　　 │\n├──────────────────────────────────────────────┤\n│【注意事項】　　　　　　　　　　　　　　　　　　　　　　　　　│\n│・学生割引を利用する場合は、必ず学生証を提示してください。　 │\n│・館内での飲食・喫煙は固く禁止されています。　　　　　　　　 │\n└──────────────────────────────────────────────┘",
+              "passageTitle": "Mondai 6 情報検索：スポーツセンター利用案内",
+              "passageNotes": "※ 提示（ていじ）：show/present　※ 禁止（きんし）：prohibited"
             },
             {
               "id": "n4-e4-g-35",
@@ -17755,7 +18262,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "会員証"
               ],
               "correct": 0,
-              "explanation": "Indoor athletic shoes (室内用運動靴) are strictly required."
+              "explanation": "Indoor athletic shoes (室内用運動靴) are strictly required.",
+              "passage": "┌──────────────────────────────────────────────┐\n│　　　　　　　【ご案内】スポーツセンター利用案内　　　　　　　　　　　　│\n├──────────────────────────────────────────────┤\n│【利用時間】　平日：午前9:00〜午後8:00 / 休日：午前10:00〜午後6:00│\n│【料金】　　　大人：500円 / 学生（高校生・大学生）：300円　　 │\n├──────────────────────────────────────────────┤\n│【注意事項】　　　　　　　　　　　　　　　　　　　　　　　　　│\n│・学生割引を利用する場合は、必ず学生証を提示してください。　 │\n│・館内での飲食・喫煙は固く禁止されています。　　　　　　　　 │\n└──────────────────────────────────────────────┘",
+              "passageTitle": "Mondai 6 情報検索：スポーツセンター利用案内",
+              "passageNotes": "※ 提示（ていじ）：show/present　※ 禁止（きんし）：prohibited"
             }
           ]
         },
@@ -18938,7 +19448,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "はいる"
               ],
               "correct": 2,
-              "explanation": "Connecting action with te-form:「はいって」."
+              "explanation": "Connecting action with te-form:「はいって」.",
+              "passage": "私は日本に来てから、雨の日の過ごし方について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：雨の日の過ごし方",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n4-e5-g-22",
@@ -18951,7 +19464,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "すこしも"
               ],
               "correct": 0,
-              "explanation": "Positive evaluation:「とても」."
+              "explanation": "Positive evaluation:「とても」.",
+              "passage": "私は日本に来てから、雨の日の過ごし方について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：雨の日の過ごし方",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n4-e5-g-23",
@@ -18964,7 +19480,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "それから"
               ],
               "correct": 0,
-              "explanation": "Adding related points:「それに」."
+              "explanation": "Adding related points:「それに」.",
+              "passage": "私は日本に来てから、雨の日の過ごし方について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：雨の日の過ごし方",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n4-e5-g-24",
@@ -18977,7 +19496,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "いってみた"
               ],
               "correct": 0,
-              "explanation": "Desire:「いってみたい」."
+              "explanation": "Desire:「いってみたい」.",
+              "passage": "私は日本に来てから、雨の日の過ごし方について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：雨の日の過ごし方",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n4-e5-g-25",
@@ -18990,7 +19512,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "おもわない"
               ],
               "correct": 0,
-              "explanation": "Present conjecture:「おもいます」."
+              "explanation": "Present conjecture:「おもいます」.",
+              "passage": "私は日本に来てから、雨の日の過ごし方について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：雨の日の過ごし方",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n4-e5-g-26",
@@ -19003,7 +19528,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "毎月第1土曜日"
               ],
               "correct": 0,
-              "explanation": "Held every Saturday at 10:00 AM."
+              "explanation": "Held every Saturday at 10:00 AM.",
+              "passage": "【スポーツ大会についてのお知らせ】\n利用者の皆様へご案内いたします。\n\n・受付時間：月曜日〜金曜日 午前9:00〜午後5:00\n・集合場所：1階受付カウンター前\n・必要書類：登録カード、身分証明書\n\nご不明な点がございましたら、窓口までお問い合わせください。\n\n事務局より",
+              "passageTitle": "Mondai 4 短文読解：スポーツ大会",
+              "passageNotes": "※ 受付（うけつけ）：reception"
             },
             {
               "id": "n4-e5-g-27",
@@ -19016,7 +19544,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "年間 5,000円"
               ],
               "correct": 0,
-              "explanation": "Fee is 500 yen per session."
+              "explanation": "Fee is 500 yen per session.",
+              "passage": "件名：部屋の掃除に関する確認\n\nお疲れ様です。田中です。\n明日の集合時間と場所について、再度ご連絡いたします。\n・時間：午後1時15分\n・場所：駅前ロータリー時計台の下\n遅れる場合は必ず事前に連絡をしてください。\nよろしくお願いします。",
+              "passageTitle": "Mondai 4 短文読解：部屋の掃除",
+              "passageNotes": "※ 事前（じぜん）：in advance"
             },
             {
               "id": "n4-e5-g-28",
@@ -19029,7 +19560,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "辞書"
               ],
               "correct": 0,
-              "explanation": "Bring writing utensils and notebook."
+              "explanation": "Bring writing utensils and notebook.",
+              "passage": "【掲示板】アルバイト連絡\n参加希望の方は、下記の要領でお申し込みください。\n・定員：先着20名\n・参加費：無料\n・申込締切：今週金曜日の午後5時まで\n定員になり次第締め切りますので、お早めにお願いします。",
+              "passageTitle": "Mondai 4 短文読解：アルバイト連絡",
+              "passageNotes": "※ 先着（せんちゃく）：first come, first served"
             },
             {
               "id": "n4-e5-g-29",
@@ -19042,7 +19576,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "市役所で 申し込む"
               ],
               "correct": 0,
-              "explanation": "Pre-registration by email by the previous day."
+              "explanation": "Pre-registration by email by the previous day.",
+              "passage": "【スポーツ大会についてのお知らせ】\n利用者の皆様へご案内いたします。\n\n・受付時間：月曜日〜金曜日 午前9:00〜午後5:00\n・集合場所：1階受付カウンター前\n・必要書類：登録カード、身分証明書\n\nご不明な点がございましたら、窓口までお問い合わせください。\n\n事務局より",
+              "passageTitle": "Mondai 4 短文読解：スポーツ大会",
+              "passageNotes": "※ 受付（うけつけ）：reception"
             },
             {
               "id": "n4-e5-g-30",
@@ -19055,7 +19592,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "友達を作るため"
               ],
               "correct": 0,
-              "explanation": "To learn real-life Japanese communication and customer service manners."
+              "explanation": "To learn real-life Japanese communication and customer service manners.",
+              "passage": "私は先月、日本で日本の四季と祭りを体験しました。\n\n日本に来る前は本やインターネットで知っていましたが、実際に体験してみると想像以上に素晴らしかったです。特に、周りの人たちの親切さと丁寧な対応にとても感動しました。\n\n言葉が通じない時もありましたが、身振り手振りで優しく教えてくれました。この経験を通して、日本の文化に対する興味がさらに深まりました。国に帰ったら、家族や友達にもぜひ紹介したいと思っています。",
+              "passageTitle": "Mondai 5 中文読解：日本の四季と祭り",
+              "passageNotes": "※ 体験（たいけん）：experience　※ 丁寧（ていねい）：polite"
             },
             {
               "id": "n4-e5-g-31",
@@ -19068,7 +19608,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "朝早く起きること"
               ],
               "correct": 0,
-              "explanation": "Struggled most with keigo honorifics and fast native speech."
+              "explanation": "Struggled most with keigo honorifics and fast native speech.",
+              "passage": "私は先月、日本で日本の四季と祭りを体験しました。\n\n日本に来る前は本やインターネットで知っていましたが、実際に体験してみると想像以上に素晴らしかったです。特に、周りの人たちの親切さと丁寧な対応にとても感動しました。\n\n言葉が通じない時もありましたが、身振り手振りで優しく教えてくれました。この経験を通して、日本の文化に対する興味がさらに深まりました。国に帰ったら、家族や友達にもぜひ紹介したいと思っています。",
+              "passageTitle": "Mondai 5 中文読解：日本の四季と祭り",
+              "passageNotes": "※ 体験（たいけん）：experience　※ 丁寧（ていねい）：polite"
             },
             {
               "id": "n4-e5-g-32",
@@ -19081,7 +19624,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "英語が話せたから"
               ],
               "correct": 0,
-              "explanation": "Praised for consistently greeting customers with a bright smile."
+              "explanation": "Praised for consistently greeting customers with a bright smile.",
+              "passage": "私は先月、日本で日本の四季と祭りを体験しました。\n\n日本に来る前は本やインターネットで知っていましたが、実際に体験してみると想像以上に素晴らしかったです。特に、周りの人たちの親切さと丁寧な対応にとても感動しました。\n\n言葉が通じない時もありましたが、身振り手振りで優しく教えてくれました。この経験を通して、日本の文化に対する興味がさらに深まりました。国に帰ったら、家族や友達にもぜひ紹介したいと思っています。",
+              "passageTitle": "Mondai 5 中文読解：日本の四季と祭り",
+              "passageNotes": "※ 体験（たいけん）：experience　※ 丁寧（ていねい）：polite"
             },
             {
               "id": "n4-e5-g-33",
@@ -19094,7 +19640,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "将来カフェを開きたいと思った"
               ],
               "correct": 0,
-              "explanation": "Gained conversational confidence and appreciated human connections."
+              "explanation": "Gained conversational confidence and appreciated human connections.",
+              "passage": "私は先月、日本で日本の四季と祭りを体験しました。\n\n日本に来る前は本やインターネットで知っていましたが、実際に体験してみると想像以上に素晴らしかったです。特に、周りの人たちの親切さと丁寧な対応にとても感動しました。\n\n言葉が通じない時もありましたが、身振り手振りで優しく教えてくれました。この経験を通して、日本の文化に対する興味がさらに深まりました。国に帰ったら、家族や友達にもぜひ紹介したいと思っています。",
+              "passageTitle": "Mondai 5 中文読解：日本の四季と祭り",
+              "passageNotes": "※ 体験（たいけん）：experience　※ 丁寧（ていねい）：polite"
             },
             {
               "id": "n4-e5-g-34",
@@ -19107,7 +19656,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "無料"
               ],
               "correct": 0,
-              "explanation": "Adult pool admission is listed as 400 yen."
+              "explanation": "Adult pool admission is listed as 400 yen.",
+              "passage": "┌──────────────────────────────────────────────┐\n│　　　　　　　【ご案内】病院の診療案内　　　　　　　　　　　　│\n├──────────────────────────────────────────────┤\n│【利用時間】　平日：午前9:00〜午後8:00 / 休日：午前10:00〜午後6:00│\n│【料金】　　　大人：500円 / 学生（高校生・大学生）：300円　　 │\n├──────────────────────────────────────────────┤\n│【注意事項】　　　　　　　　　　　　　　　　　　　　　　　　　│\n│・学生割引を利用する場合は、必ず学生証を提示してください。　 │\n│・館内での飲食・喫煙は固く禁止されています。　　　　　　　　 │\n└──────────────────────────────────────────────┘",
+              "passageTitle": "Mondai 6 情報検索：病院の診療案内",
+              "passageNotes": "※ 提示（ていじ）：show/present　※ 禁止（きんし）：prohibited"
             },
             {
               "id": "n4-e5-g-35",
@@ -19120,7 +19672,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "会員証"
               ],
               "correct": 0,
-              "explanation": "Indoor athletic shoes (室内用運動靴) are strictly required."
+              "explanation": "Indoor athletic shoes (室内用運動靴) are strictly required.",
+              "passage": "┌──────────────────────────────────────────────┐\n│　　　　　　　【ご案内】病院の診療案内　　　　　　　　　　　　│\n├──────────────────────────────────────────────┤\n│【利用時間】　平日：午前9:00〜午後8:00 / 休日：午前10:00〜午後6:00│\n│【料金】　　　大人：500円 / 学生（高校生・大学生）：300円　　 │\n├──────────────────────────────────────────────┤\n│【注意事項】　　　　　　　　　　　　　　　　　　　　　　　　　│\n│・学生割引を利用する場合は、必ず学生証を提示してください。　 │\n│・館内での飲食・喫煙は固く禁止されています。　　　　　　　　 │\n└──────────────────────────────────────────────┘",
+              "passageTitle": "Mondai 6 情報検索：病院の診療案内",
+              "passageNotes": "※ 提示（ていじ）：show/present　※ 禁止（きんし）：prohibited"
             }
           ]
         },
@@ -20303,7 +20858,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "はいる"
               ],
               "correct": 2,
-              "explanation": "Connecting action with te-form:「はいって」."
+              "explanation": "Connecting action with te-form:「はいって」.",
+              "passage": "私は日本に来てから、朝の散歩について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：朝の散歩",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n4-e6-g-22",
@@ -20316,7 +20874,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "すこしも"
               ],
               "correct": 0,
-              "explanation": "Positive evaluation:「とても」."
+              "explanation": "Positive evaluation:「とても」.",
+              "passage": "私は日本に来てから、朝の散歩について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：朝の散歩",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n4-e6-g-23",
@@ -20329,7 +20890,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "それから"
               ],
               "correct": 0,
-              "explanation": "Adding related points:「それに」."
+              "explanation": "Adding related points:「それに」.",
+              "passage": "私は日本に来てから、朝の散歩について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：朝の散歩",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n4-e6-g-24",
@@ -20342,7 +20906,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "いってみた"
               ],
               "correct": 0,
-              "explanation": "Desire:「いってみたい」."
+              "explanation": "Desire:「いってみたい」.",
+              "passage": "私は日本に来てから、朝の散歩について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：朝の散歩",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n4-e6-g-25",
@@ -20355,7 +20922,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "おもわない"
               ],
               "correct": 0,
-              "explanation": "Present conjecture:「おもいます」."
+              "explanation": "Present conjecture:「おもいます」.",
+              "passage": "私は日本に来てから、朝の散歩について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：朝の散歩",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n4-e6-g-26",
@@ -20368,7 +20938,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "毎月第1土曜日"
               ],
               "correct": 0,
-              "explanation": "Held every Saturday at 10:00 AM."
+              "explanation": "Held every Saturday at 10:00 AM.",
+              "passage": "【美術展の案内についてのお知らせ】\n利用者の皆様へご案内いたします。\n\n・受付時間：月曜日〜金曜日 午前9:00〜午後5:00\n・集合場所：1階受付カウンター前\n・必要書類：登録カード、身分証明書\n\nご不明な点がございましたら、窓口までお問い合わせください。\n\n事務局より",
+              "passageTitle": "Mondai 4 短文読解：美術展の案内",
+              "passageNotes": "※ 受付（うけつけ）：reception"
             },
             {
               "id": "n4-e6-g-27",
@@ -20381,7 +20954,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "年間 5,000円"
               ],
               "correct": 0,
-              "explanation": "Fee is 500 yen per session."
+              "explanation": "Fee is 500 yen per session.",
+              "passage": "件名：落とし物のお知らせに関する確認\n\nお疲れ様です。田中です。\n明日の集合時間と場所について、再度ご連絡いたします。\n・時間：午後1時15分\n・場所：駅前ロータリー時計台の下\n遅れる場合は必ず事前に連絡をしてください。\nよろしくお願いします。",
+              "passageTitle": "Mondai 4 短文読解：落とし物のお知らせ",
+              "passageNotes": "※ 事前（じぜん）：in advance"
             },
             {
               "id": "n4-e6-g-28",
@@ -20394,7 +20970,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "辞書"
               ],
               "correct": 0,
-              "explanation": "Bring writing utensils and notebook."
+              "explanation": "Bring writing utensils and notebook.",
+              "passage": "【掲示板】バス旅行のお誘い\n参加希望の方は、下記の要領でお申し込みください。\n・定員：先着20名\n・参加費：無料\n・申込締切：今週金曜日の午後5時まで\n定員になり次第締め切りますので、お早めにお願いします。",
+              "passageTitle": "Mondai 4 短文読解：バス旅行のお誘い",
+              "passageNotes": "※ 先着（せんちゃく）：first come, first served"
             },
             {
               "id": "n4-e6-g-29",
@@ -20407,7 +20986,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "市役所で 申し込む"
               ],
               "correct": 0,
-              "explanation": "Pre-registration by email by the previous day."
+              "explanation": "Pre-registration by email by the previous day.",
+              "passage": "【美術展の案内についてのお知らせ】\n利用者の皆様へご案内いたします。\n\n・受付時間：月曜日〜金曜日 午前9:00〜午後5:00\n・集合場所：1階受付カウンター前\n・必要書類：登録カード、身分証明書\n\nご不明な点がございましたら、窓口までお問い合わせください。\n\n事務局より",
+              "passageTitle": "Mondai 4 短文読解：美術展の案内",
+              "passageNotes": "※ 受付（うけつけ）：reception"
             },
             {
               "id": "n4-e6-g-30",
@@ -20420,7 +21002,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "友達を作るため"
               ],
               "correct": 0,
-              "explanation": "To learn real-life Japanese communication and customer service manners."
+              "explanation": "To learn real-life Japanese communication and customer service manners.",
+              "passage": "私は先月、日本で留学生スピーチ大会を体験しました。\n\n日本に来る前は本やインターネットで知っていましたが、実際に体験してみると想像以上に素晴らしかったです。特に、周りの人たちの親切さと丁寧な対応にとても感動しました。\n\n言葉が通じない時もありましたが、身振り手振りで優しく教えてくれました。この経験を通して、日本の文化に対する興味がさらに深まりました。国に帰ったら、家族や友達にもぜひ紹介したいと思っています。",
+              "passageTitle": "Mondai 5 中文読解：留学生スピーチ大会",
+              "passageNotes": "※ 体験（たいけん）：experience　※ 丁寧（ていねい）：polite"
             },
             {
               "id": "n4-e6-g-31",
@@ -20433,7 +21018,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "朝早く起きること"
               ],
               "correct": 0,
-              "explanation": "Struggled most with keigo honorifics and fast native speech."
+              "explanation": "Struggled most with keigo honorifics and fast native speech.",
+              "passage": "私は先月、日本で留学生スピーチ大会を体験しました。\n\n日本に来る前は本やインターネットで知っていましたが、実際に体験してみると想像以上に素晴らしかったです。特に、周りの人たちの親切さと丁寧な対応にとても感動しました。\n\n言葉が通じない時もありましたが、身振り手振りで優しく教えてくれました。この経験を通して、日本の文化に対する興味がさらに深まりました。国に帰ったら、家族や友達にもぜひ紹介したいと思っています。",
+              "passageTitle": "Mondai 5 中文読解：留学生スピーチ大会",
+              "passageNotes": "※ 体験（たいけん）：experience　※ 丁寧（ていねい）：polite"
             },
             {
               "id": "n4-e6-g-32",
@@ -20446,7 +21034,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "英語が話せたから"
               ],
               "correct": 0,
-              "explanation": "Praised for consistently greeting customers with a bright smile."
+              "explanation": "Praised for consistently greeting customers with a bright smile.",
+              "passage": "私は先月、日本で留学生スピーチ大会を体験しました。\n\n日本に来る前は本やインターネットで知っていましたが、実際に体験してみると想像以上に素晴らしかったです。特に、周りの人たちの親切さと丁寧な対応にとても感動しました。\n\n言葉が通じない時もありましたが、身振り手振りで優しく教えてくれました。この経験を通して、日本の文化に対する興味がさらに深まりました。国に帰ったら、家族や友達にもぜひ紹介したいと思っています。",
+              "passageTitle": "Mondai 5 中文読解：留学生スピーチ大会",
+              "passageNotes": "※ 体験（たいけん）：experience　※ 丁寧（ていねい）：polite"
             },
             {
               "id": "n4-e6-g-33",
@@ -20459,7 +21050,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "将来カフェを開きたいと思った"
               ],
               "correct": 0,
-              "explanation": "Gained conversational confidence and appreciated human connections."
+              "explanation": "Gained conversational confidence and appreciated human connections.",
+              "passage": "私は先月、日本で留学生スピーチ大会を体験しました。\n\n日本に来る前は本やインターネットで知っていましたが、実際に体験してみると想像以上に素晴らしかったです。特に、周りの人たちの親切さと丁寧な対応にとても感動しました。\n\n言葉が通じない時もありましたが、身振り手振りで優しく教えてくれました。この経験を通して、日本の文化に対する興味がさらに深まりました。国に帰ったら、家族や友達にもぜひ紹介したいと思っています。",
+              "passageTitle": "Mondai 5 中文読解：留学生スピーチ大会",
+              "passageNotes": "※ 体験（たいけん）：experience　※ 丁寧（ていねい）：polite"
             },
             {
               "id": "n4-e6-g-34",
@@ -20472,7 +21066,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "無料"
               ],
               "correct": 0,
-              "explanation": "Adult pool admission is listed as 400 yen."
+              "explanation": "Adult pool admission is listed as 400 yen.",
+              "passage": "┌──────────────────────────────────────────────┐\n│　　　　　　　【ご案内】市民プールの休館日　　　　　　　　　　　　│\n├──────────────────────────────────────────────┤\n│【利用時間】　平日：午前9:00〜午後8:00 / 休日：午前10:00〜午後6:00│\n│【料金】　　　大人：500円 / 学生（高校生・大学生）：300円　　 │\n├──────────────────────────────────────────────┤\n│【注意事項】　　　　　　　　　　　　　　　　　　　　　　　　　│\n│・学生割引を利用する場合は、必ず学生証を提示してください。　 │\n│・館内での飲食・喫煙は固く禁止されています。　　　　　　　　 │\n└──────────────────────────────────────────────┘",
+              "passageTitle": "Mondai 6 情報検索：市民プールの休館日",
+              "passageNotes": "※ 提示（ていじ）：show/present　※ 禁止（きんし）：prohibited"
             },
             {
               "id": "n4-e6-g-35",
@@ -20485,7 +21082,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "会員証"
               ],
               "correct": 0,
-              "explanation": "Indoor athletic shoes (室内用運動靴) are strictly required."
+              "explanation": "Indoor athletic shoes (室内用運動靴) are strictly required.",
+              "passage": "┌──────────────────────────────────────────────┐\n│　　　　　　　【ご案内】市民プールの休館日　　　　　　　　　　　　│\n├──────────────────────────────────────────────┤\n│【利用時間】　平日：午前9:00〜午後8:00 / 休日：午前10:00〜午後6:00│\n│【料金】　　　大人：500円 / 学生（高校生・大学生）：300円　　 │\n├──────────────────────────────────────────────┤\n│【注意事項】　　　　　　　　　　　　　　　　　　　　　　　　　│\n│・学生割引を利用する場合は、必ず学生証を提示してください。　 │\n│・館内での飲食・喫煙は固く禁止されています。　　　　　　　　 │\n└──────────────────────────────────────────────┘",
+              "passageTitle": "Mondai 6 情報検索：市民プールの休館日",
+              "passageNotes": "※ 提示（ていじ）：show/present　※ 禁止（きんし）：prohibited"
             }
           ]
         },
@@ -21668,7 +22268,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "はいる"
               ],
               "correct": 2,
-              "explanation": "Connecting action with te-form:「はいって」."
+              "explanation": "Connecting action with te-form:「はいって」.",
+              "passage": "私は日本に来てから、私の好きな季節について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：私の好きな季節",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n4-e7-g-22",
@@ -21681,7 +22284,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "すこしも"
               ],
               "correct": 0,
-              "explanation": "Positive evaluation:「とても」."
+              "explanation": "Positive evaluation:「とても」.",
+              "passage": "私は日本に来てから、私の好きな季節について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：私の好きな季節",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n4-e7-g-23",
@@ -21694,7 +22300,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "それから"
               ],
               "correct": 0,
-              "explanation": "Adding related points:「それに」."
+              "explanation": "Adding related points:「それに」.",
+              "passage": "私は日本に来てから、私の好きな季節について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：私の好きな季節",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n4-e7-g-24",
@@ -21707,7 +22316,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "いってみた"
               ],
               "correct": 0,
-              "explanation": "Desire:「いってみたい」."
+              "explanation": "Desire:「いってみたい」.",
+              "passage": "私は日本に来てから、私の好きな季節について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：私の好きな季節",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n4-e7-g-25",
@@ -21720,7 +22332,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "おもわない"
               ],
               "correct": 0,
-              "explanation": "Present conjecture:「おもいます」."
+              "explanation": "Present conjecture:「おもいます」.",
+              "passage": "私は日本に来てから、私の好きな季節について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：私の好きな季節",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n4-e7-g-26",
@@ -21733,7 +22348,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "毎月第1土曜日"
               ],
               "correct": 0,
-              "explanation": "Held every Saturday at 10:00 AM."
+              "explanation": "Held every Saturday at 10:00 AM.",
+              "passage": "【引っ越しの挨拶についてのお知らせ】\n利用者の皆様へご案内いたします。\n\n・受付時間：月曜日〜金曜日 午前9:00〜午後5:00\n・集合場所：1階受付カウンター前\n・必要書類：登録カード、身分証明書\n\nご不明な点がございましたら、窓口までお問い合わせください。\n\n事務局より",
+              "passageTitle": "Mondai 4 短文読解：引っ越しの挨拶",
+              "passageNotes": "※ 受付（うけつけ）：reception"
             },
             {
               "id": "n4-e7-g-27",
@@ -21746,7 +22364,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "年間 5,000円"
               ],
               "correct": 0,
-              "explanation": "Fee is 500 yen per session."
+              "explanation": "Fee is 500 yen per session.",
+              "passage": "件名：ボランティア募集に関する確認\n\nお疲れ様です。田中です。\n明日の集合時間と場所について、再度ご連絡いたします。\n・時間：午後1時15分\n・場所：駅前ロータリー時計台の下\n遅れる場合は必ず事前に連絡をしてください。\nよろしくお願いします。",
+              "passageTitle": "Mondai 4 短文読解：ボランティア募集",
+              "passageNotes": "※ 事前（じぜん）：in advance"
             },
             {
               "id": "n4-e7-g-28",
@@ -21759,7 +22380,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "辞書"
               ],
               "correct": 0,
-              "explanation": "Bring writing utensils and notebook."
+              "explanation": "Bring writing utensils and notebook.",
+              "passage": "【掲示板】電車の運休案内\n参加希望の方は、下記の要領でお申し込みください。\n・定員：先着20名\n・参加費：無料\n・申込締切：今週金曜日の午後5時まで\n定員になり次第締め切りますので、お早めにお願いします。",
+              "passageTitle": "Mondai 4 短文読解：電車の運休案内",
+              "passageNotes": "※ 先着（せんちゃく）：first come, first served"
             },
             {
               "id": "n4-e7-g-29",
@@ -21772,7 +22396,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "市役所で 申し込む"
               ],
               "correct": 0,
-              "explanation": "Pre-registration by email by the previous day."
+              "explanation": "Pre-registration by email by the previous day.",
+              "passage": "【引っ越しの挨拶についてのお知らせ】\n利用者の皆様へご案内いたします。\n\n・受付時間：月曜日〜金曜日 午前9:00〜午後5:00\n・集合場所：1階受付カウンター前\n・必要書類：登録カード、身分証明書\n\nご不明な点がございましたら、窓口までお問い合わせください。\n\n事務局より",
+              "passageTitle": "Mondai 4 短文読解：引っ越しの挨拶",
+              "passageNotes": "※ 受付（うけつけ）：reception"
             },
             {
               "id": "n4-e7-g-30",
@@ -21785,7 +22412,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "友達を作るため"
               ],
               "correct": 0,
-              "explanation": "To learn real-life Japanese communication and customer service manners."
+              "explanation": "To learn real-life Japanese communication and customer service manners.",
+              "passage": "私は先月、日本で日本のコンビニを体験しました。\n\n日本に来る前は本やインターネットで知っていましたが、実際に体験してみると想像以上に素晴らしかったです。特に、周りの人たちの親切さと丁寧な対応にとても感動しました。\n\n言葉が通じない時もありましたが、身振り手振りで優しく教えてくれました。この経験を通して、日本の文化に対する興味がさらに深まりました。国に帰ったら、家族や友達にもぜひ紹介したいと思っています。",
+              "passageTitle": "Mondai 5 中文読解：日本のコンビニ",
+              "passageNotes": "※ 体験（たいけん）：experience　※ 丁寧（ていねい）：polite"
             },
             {
               "id": "n4-e7-g-31",
@@ -21798,7 +22428,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "朝早く起きること"
               ],
               "correct": 0,
-              "explanation": "Struggled most with keigo honorifics and fast native speech."
+              "explanation": "Struggled most with keigo honorifics and fast native speech.",
+              "passage": "私は先月、日本で日本のコンビニを体験しました。\n\n日本に来る前は本やインターネットで知っていましたが、実際に体験してみると想像以上に素晴らしかったです。特に、周りの人たちの親切さと丁寧な対応にとても感動しました。\n\n言葉が通じない時もありましたが、身振り手振りで優しく教えてくれました。この経験を通して、日本の文化に対する興味がさらに深まりました。国に帰ったら、家族や友達にもぜひ紹介したいと思っています。",
+              "passageTitle": "Mondai 5 中文読解：日本のコンビニ",
+              "passageNotes": "※ 体験（たいけん）：experience　※ 丁寧（ていねい）：polite"
             },
             {
               "id": "n4-e7-g-32",
@@ -21811,7 +22444,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "英語が話せたから"
               ],
               "correct": 0,
-              "explanation": "Praised for consistently greeting customers with a bright smile."
+              "explanation": "Praised for consistently greeting customers with a bright smile.",
+              "passage": "私は先月、日本で日本のコンビニを体験しました。\n\n日本に来る前は本やインターネットで知っていましたが、実際に体験してみると想像以上に素晴らしかったです。特に、周りの人たちの親切さと丁寧な対応にとても感動しました。\n\n言葉が通じない時もありましたが、身振り手振りで優しく教えてくれました。この経験を通して、日本の文化に対する興味がさらに深まりました。国に帰ったら、家族や友達にもぜひ紹介したいと思っています。",
+              "passageTitle": "Mondai 5 中文読解：日本のコンビニ",
+              "passageNotes": "※ 体験（たいけん）：experience　※ 丁寧（ていねい）：polite"
             },
             {
               "id": "n4-e7-g-33",
@@ -21824,7 +22460,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "将来カフェを開きたいと思った"
               ],
               "correct": 0,
-              "explanation": "Gained conversational confidence and appreciated human connections."
+              "explanation": "Gained conversational confidence and appreciated human connections.",
+              "passage": "私は先月、日本で日本のコンビニを体験しました。\n\n日本に来る前は本やインターネットで知っていましたが、実際に体験してみると想像以上に素晴らしかったです。特に、周りの人たちの親切さと丁寧な対応にとても感動しました。\n\n言葉が通じない時もありましたが、身振り手振りで優しく教えてくれました。この経験を通して、日本の文化に対する興味がさらに深まりました。国に帰ったら、家族や友達にもぜひ紹介したいと思っています。",
+              "passageTitle": "Mondai 5 中文読解：日本のコンビニ",
+              "passageNotes": "※ 体験（たいけん）：experience　※ 丁寧（ていねい）：polite"
             },
             {
               "id": "n4-e7-g-34",
@@ -21837,7 +22476,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "無料"
               ],
               "correct": 0,
-              "explanation": "Adult pool admission is listed as 400 yen."
+              "explanation": "Adult pool admission is listed as 400 yen.",
+              "passage": "┌──────────────────────────────────────────────┐\n│　　　　　　　【ご案内】日本語能力試験受験案内　　　　　　　　　　　　│\n├──────────────────────────────────────────────┤\n│【利用時間】　平日：午前9:00〜午後8:00 / 休日：午前10:00〜午後6:00│\n│【料金】　　　大人：500円 / 学生（高校生・大学生）：300円　　 │\n├──────────────────────────────────────────────┤\n│【注意事項】　　　　　　　　　　　　　　　　　　　　　　　　　│\n│・学生割引を利用する場合は、必ず学生証を提示してください。　 │\n│・館内での飲食・喫煙は固く禁止されています。　　　　　　　　 │\n└──────────────────────────────────────────────┘",
+              "passageTitle": "Mondai 6 情報検索：日本語能力試験受験案内",
+              "passageNotes": "※ 提示（ていじ）：show/present　※ 禁止（きんし）：prohibited"
             },
             {
               "id": "n4-e7-g-35",
@@ -21850,7 +22492,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "会員証"
               ],
               "correct": 0,
-              "explanation": "Indoor athletic shoes (室内用運動靴) are strictly required."
+              "explanation": "Indoor athletic shoes (室内用運動靴) are strictly required.",
+              "passage": "┌──────────────────────────────────────────────┐\n│　　　　　　　【ご案内】日本語能力試験受験案内　　　　　　　　　　　　│\n├──────────────────────────────────────────────┤\n│【利用時間】　平日：午前9:00〜午後8:00 / 休日：午前10:00〜午後6:00│\n│【料金】　　　大人：500円 / 学生（高校生・大学生）：300円　　 │\n├──────────────────────────────────────────────┤\n│【注意事項】　　　　　　　　　　　　　　　　　　　　　　　　　│\n│・学生割引を利用する場合は、必ず学生証を提示してください。　 │\n│・館内での飲食・喫煙は固く禁止されています。　　　　　　　　 │\n└──────────────────────────────────────────────┘",
+              "passageTitle": "Mondai 6 情報検索：日本語能力試験受験案内",
+              "passageNotes": "※ 提示（ていじ）：show/present　※ 禁止（きんし）：prohibited"
             }
           ]
         },
@@ -23033,7 +23678,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "はいる"
               ],
               "correct": 2,
-              "explanation": "Connecting action with te-form:「はいって」."
+              "explanation": "Connecting action with te-form:「はいって」.",
+              "passage": "私は日本に来てから、週末の買い物について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：週末の買い物",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n4-e8-g-22",
@@ -23046,7 +23694,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "すこしも"
               ],
               "correct": 0,
-              "explanation": "Positive evaluation:「とても」."
+              "explanation": "Positive evaluation:「とても」.",
+              "passage": "私は日本に来てから、週末の買い物について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：週末の買い物",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n4-e8-g-23",
@@ -23059,7 +23710,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "それから"
               ],
               "correct": 0,
-              "explanation": "Adding related points:「それに」."
+              "explanation": "Adding related points:「それに」.",
+              "passage": "私は日本に来てから、週末の買い物について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：週末の買い物",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n4-e8-g-24",
@@ -23072,7 +23726,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "いってみた"
               ],
               "correct": 0,
-              "explanation": "Desire:「いってみたい」."
+              "explanation": "Desire:「いってみたい」.",
+              "passage": "私は日本に来てから、週末の買い物について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：週末の買い物",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n4-e8-g-25",
@@ -23085,7 +23742,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "おもわない"
               ],
               "correct": 0,
-              "explanation": "Present conjecture:「おもいます」."
+              "explanation": "Present conjecture:「おもいます」.",
+              "passage": "私は日本に来てから、週末の買い物について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：週末の買い物",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n4-e8-g-26",
@@ -23098,7 +23758,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "毎月第1土曜日"
               ],
               "correct": 0,
-              "explanation": "Held every Saturday at 10:00 AM."
+              "explanation": "Held every Saturday at 10:00 AM.",
+              "passage": "【コンサートの案内についてのお知らせ】\n利用者の皆様へご案内いたします。\n\n・受付時間：月曜日〜金曜日 午前9:00〜午後5:00\n・集合場所：1階受付カウンター前\n・必要書類：登録カード、身分証明書\n\nご不明な点がございましたら、窓口までお問い合わせください。\n\n事務局より",
+              "passageTitle": "Mondai 4 短文読解：コンサートの案内",
+              "passageNotes": "※ 受付（うけつけ）：reception"
             },
             {
               "id": "n4-e8-g-27",
@@ -23111,7 +23774,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "年間 5,000円"
               ],
               "correct": 0,
-              "explanation": "Fee is 500 yen per session."
+              "explanation": "Fee is 500 yen per session.",
+              "passage": "件名：面接の日時連絡に関する確認\n\nお疲れ様です。田中です。\n明日の集合時間と場所について、再度ご連絡いたします。\n・時間：午後1時15分\n・場所：駅前ロータリー時計台の下\n遅れる場合は必ず事前に連絡をしてください。\nよろしくお願いします。",
+              "passageTitle": "Mondai 4 短文読解：面接の日時連絡",
+              "passageNotes": "※ 事前（じぜん）：in advance"
             },
             {
               "id": "n4-e8-g-28",
@@ -23124,7 +23790,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "辞書"
               ],
               "correct": 0,
-              "explanation": "Bring writing utensils and notebook."
+              "explanation": "Bring writing utensils and notebook.",
+              "passage": "【掲示板】荷物の再配達\n参加希望の方は、下記の要領でお申し込みください。\n・定員：先着20名\n・参加費：無料\n・申込締切：今週金曜日の午後5時まで\n定員になり次第締め切りますので、お早めにお願いします。",
+              "passageTitle": "Mondai 4 短文読解：荷物の再配達",
+              "passageNotes": "※ 先着（せんちゃく）：first come, first served"
             },
             {
               "id": "n4-e8-g-29",
@@ -23137,7 +23806,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "市役所で 申し込む"
               ],
               "correct": 0,
-              "explanation": "Pre-registration by email by the previous day."
+              "explanation": "Pre-registration by email by the previous day.",
+              "passage": "【コンサートの案内についてのお知らせ】\n利用者の皆様へご案内いたします。\n\n・受付時間：月曜日〜金曜日 午前9:00〜午後5:00\n・集合場所：1階受付カウンター前\n・必要書類：登録カード、身分証明書\n\nご不明な点がございましたら、窓口までお問い合わせください。\n\n事務局より",
+              "passageTitle": "Mondai 4 短文読解：コンサートの案内",
+              "passageNotes": "※ 受付（うけつけ）：reception"
             },
             {
               "id": "n4-e8-g-30",
@@ -23150,7 +23822,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "友達を作るため"
               ],
               "correct": 0,
-              "explanation": "To learn real-life Japanese communication and customer service manners."
+              "explanation": "To learn real-life Japanese communication and customer service manners.",
+              "passage": "私は先月、日本で工場の見学ツアーを体験しました。\n\n日本に来る前は本やインターネットで知っていましたが、実際に体験してみると想像以上に素晴らしかったです。特に、周りの人たちの親切さと丁寧な対応にとても感動しました。\n\n言葉が通じない時もありましたが、身振り手振りで優しく教えてくれました。この経験を通して、日本の文化に対する興味がさらに深まりました。国に帰ったら、家族や友達にもぜひ紹介したいと思っています。",
+              "passageTitle": "Mondai 5 中文読解：工場の見学ツアー",
+              "passageNotes": "※ 体験（たいけん）：experience　※ 丁寧（ていねい）：polite"
             },
             {
               "id": "n4-e8-g-31",
@@ -23163,7 +23838,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "朝早く起きること"
               ],
               "correct": 0,
-              "explanation": "Struggled most with keigo honorifics and fast native speech."
+              "explanation": "Struggled most with keigo honorifics and fast native speech.",
+              "passage": "私は先月、日本で工場の見学ツアーを体験しました。\n\n日本に来る前は本やインターネットで知っていましたが、実際に体験してみると想像以上に素晴らしかったです。特に、周りの人たちの親切さと丁寧な対応にとても感動しました。\n\n言葉が通じない時もありましたが、身振り手振りで優しく教えてくれました。この経験を通して、日本の文化に対する興味がさらに深まりました。国に帰ったら、家族や友達にもぜひ紹介したいと思っています。",
+              "passageTitle": "Mondai 5 中文読解：工場の見学ツアー",
+              "passageNotes": "※ 体験（たいけん）：experience　※ 丁寧（ていねい）：polite"
             },
             {
               "id": "n4-e8-g-32",
@@ -23176,7 +23854,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "英語が話せたから"
               ],
               "correct": 0,
-              "explanation": "Praised for consistently greeting customers with a bright smile."
+              "explanation": "Praised for consistently greeting customers with a bright smile.",
+              "passage": "私は先月、日本で工場の見学ツアーを体験しました。\n\n日本に来る前は本やインターネットで知っていましたが、実際に体験してみると想像以上に素晴らしかったです。特に、周りの人たちの親切さと丁寧な対応にとても感動しました。\n\n言葉が通じない時もありましたが、身振り手振りで優しく教えてくれました。この経験を通して、日本の文化に対する興味がさらに深まりました。国に帰ったら、家族や友達にもぜひ紹介したいと思っています。",
+              "passageTitle": "Mondai 5 中文読解：工場の見学ツアー",
+              "passageNotes": "※ 体験（たいけん）：experience　※ 丁寧（ていねい）：polite"
             },
             {
               "id": "n4-e8-g-33",
@@ -23189,7 +23870,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "将来カフェを開きたいと思った"
               ],
               "correct": 0,
-              "explanation": "Gained conversational confidence and appreciated human connections."
+              "explanation": "Gained conversational confidence and appreciated human connections.",
+              "passage": "私は先月、日本で工場の見学ツアーを体験しました。\n\n日本に来る前は本やインターネットで知っていましたが、実際に体験してみると想像以上に素晴らしかったです。特に、周りの人たちの親切さと丁寧な対応にとても感動しました。\n\n言葉が通じない時もありましたが、身振り手振りで優しく教えてくれました。この経験を通して、日本の文化に対する興味がさらに深まりました。国に帰ったら、家族や友達にもぜひ紹介したいと思っています。",
+              "passageTitle": "Mondai 5 中文読解：工場の見学ツアー",
+              "passageNotes": "※ 体験（たいけん）：experience　※ 丁寧（ていねい）：polite"
             },
             {
               "id": "n4-e8-g-34",
@@ -23202,7 +23886,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "無料"
               ],
               "correct": 0,
-              "explanation": "Adult pool admission is listed as 400 yen."
+              "explanation": "Adult pool admission is listed as 400 yen.",
+              "passage": "┌──────────────────────────────────────────────┐\n│　　　　　　　【ご案内】美術館特別展覧会　　　　　　　　　　　　│\n├──────────────────────────────────────────────┤\n│【利用時間】　平日：午前9:00〜午後8:00 / 休日：午前10:00〜午後6:00│\n│【料金】　　　大人：500円 / 学生（高校生・大学生）：300円　　 │\n├──────────────────────────────────────────────┤\n│【注意事項】　　　　　　　　　　　　　　　　　　　　　　　　　│\n│・学生割引を利用する場合は、必ず学生証を提示してください。　 │\n│・館内での飲食・喫煙は固く禁止されています。　　　　　　　　 │\n└──────────────────────────────────────────────┘",
+              "passageTitle": "Mondai 6 情報検索：美術館特別展覧会",
+              "passageNotes": "※ 提示（ていじ）：show/present　※ 禁止（きんし）：prohibited"
             },
             {
               "id": "n4-e8-g-35",
@@ -23215,7 +23902,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "会員証"
               ],
               "correct": 0,
-              "explanation": "Indoor athletic shoes (室内用運動靴) are strictly required."
+              "explanation": "Indoor athletic shoes (室内用運動靴) are strictly required.",
+              "passage": "┌──────────────────────────────────────────────┐\n│　　　　　　　【ご案内】美術館特別展覧会　　　　　　　　　　　　│\n├──────────────────────────────────────────────┤\n│【利用時間】　平日：午前9:00〜午後8:00 / 休日：午前10:00〜午後6:00│\n│【料金】　　　大人：500円 / 学生（高校生・大学生）：300円　　 │\n├──────────────────────────────────────────────┤\n│【注意事項】　　　　　　　　　　　　　　　　　　　　　　　　　│\n│・学生割引を利用する場合は、必ず学生証を提示してください。　 │\n│・館内での飲食・喫煙は固く禁止されています。　　　　　　　　 │\n└──────────────────────────────────────────────┘",
+              "passageTitle": "Mondai 6 情報検索：美術館特別展覧会",
+              "passageNotes": "※ 提示（ていじ）：show/present　※ 禁止（きんし）：prohibited"
             }
           ]
         },
@@ -24398,7 +25088,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "はいる"
               ],
               "correct": 2,
-              "explanation": "Connecting action with te-form:「はいって」."
+              "explanation": "Connecting action with te-form:「はいって」.",
+              "passage": "私は日本に来てから、大学の図書館について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：大学の図書館",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n4-e9-g-22",
@@ -24411,7 +25104,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "すこしも"
               ],
               "correct": 0,
-              "explanation": "Positive evaluation:「とても」."
+              "explanation": "Positive evaluation:「とても」.",
+              "passage": "私は日本に来てから、大学の図書館について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：大学の図書館",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n4-e9-g-23",
@@ -24424,7 +25120,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "それから"
               ],
               "correct": 0,
-              "explanation": "Adding related points:「それに」."
+              "explanation": "Adding related points:「それに」.",
+              "passage": "私は日本に来てから、大学の図書館について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：大学の図書館",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n4-e9-g-24",
@@ -24437,7 +25136,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "いってみた"
               ],
               "correct": 0,
-              "explanation": "Desire:「いってみたい」."
+              "explanation": "Desire:「いってみたい」.",
+              "passage": "私は日本に来てから、大学の図書館について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：大学の図書館",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n4-e9-g-25",
@@ -24450,7 +25152,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "おもわない"
               ],
               "correct": 0,
-              "explanation": "Present conjecture:「おもいます」."
+              "explanation": "Present conjecture:「おもいます」.",
+              "passage": "私は日本に来てから、大学の図書館について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：大学の図書館",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n4-e9-g-26",
@@ -24463,7 +25168,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "毎月第1土曜日"
               ],
               "correct": 0,
-              "explanation": "Held every Saturday at 10:00 AM."
+              "explanation": "Held every Saturday at 10:00 AM.",
+              "passage": "【学園祭のお知らせについてのお知らせ】\n利用者の皆様へご案内いたします。\n\n・受付時間：月曜日〜金曜日 午前9:00〜午後5:00\n・集合場所：1階受付カウンター前\n・必要書類：登録カード、身分証明書\n\nご不明な点がございましたら、窓口までお問い合わせください。\n\n事務局より",
+              "passageTitle": "Mondai 4 短文読解：学園祭のお知らせ",
+              "passageNotes": "※ 受付（うけつけ）：reception"
             },
             {
               "id": "n4-e9-g-27",
@@ -24476,7 +25184,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "年間 5,000円"
               ],
               "correct": 0,
-              "explanation": "Fee is 500 yen per session."
+              "explanation": "Fee is 500 yen per session.",
+              "passage": "件名：宿題の提出についてに関する確認\n\nお疲れ様です。田中です。\n明日の集合時間と場所について、再度ご連絡いたします。\n・時間：午後1時15分\n・場所：駅前ロータリー時計台の下\n遅れる場合は必ず事前に連絡をしてください。\nよろしくお願いします。",
+              "passageTitle": "Mondai 4 短文読解：宿題の提出について",
+              "passageNotes": "※ 事前（じぜん）：in advance"
             },
             {
               "id": "n4-e9-g-28",
@@ -24489,7 +25200,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "辞書"
               ],
               "correct": 0,
-              "explanation": "Bring writing utensils and notebook."
+              "explanation": "Bring writing utensils and notebook.",
+              "passage": "【掲示板】寮のルール変更\n参加希望の方は、下記の要領でお申し込みください。\n・定員：先着20名\n・参加費：無料\n・申込締切：今週金曜日の午後5時まで\n定員になり次第締め切りますので、お早めにお願いします。",
+              "passageTitle": "Mondai 4 短文読解：寮のルール変更",
+              "passageNotes": "※ 先着（せんちゃく）：first come, first served"
             },
             {
               "id": "n4-e9-g-29",
@@ -24502,7 +25216,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "市役所で 申し込む"
               ],
               "correct": 0,
-              "explanation": "Pre-registration by email by the previous day."
+              "explanation": "Pre-registration by email by the previous day.",
+              "passage": "【学園祭のお知らせについてのお知らせ】\n利用者の皆様へご案内いたします。\n\n・受付時間：月曜日〜金曜日 午前9:00〜午後5:00\n・集合場所：1階受付カウンター前\n・必要書類：登録カード、身分証明書\n\nご不明な点がございましたら、窓口までお問い合わせください。\n\n事務局より",
+              "passageTitle": "Mondai 4 短文読解：学園祭のお知らせ",
+              "passageNotes": "※ 受付（うけつけ）：reception"
             },
             {
               "id": "n4-e9-g-30",
@@ -24515,7 +25232,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "友達を作るため"
               ],
               "correct": 0,
-              "explanation": "To learn real-life Japanese communication and customer service manners."
+              "explanation": "To learn real-life Japanese communication and customer service manners.",
+              "passage": "私は先月、日本で日本の温泉体験を体験しました。\n\n日本に来る前は本やインターネットで知っていましたが、実際に体験してみると想像以上に素晴らしかったです。特に、周りの人たちの親切さと丁寧な対応にとても感動しました。\n\n言葉が通じない時もありましたが、身振り手振りで優しく教えてくれました。この経験を通して、日本の文化に対する興味がさらに深まりました。国に帰ったら、家族や友達にもぜひ紹介したいと思っています。",
+              "passageTitle": "Mondai 5 中文読解：日本の温泉体験",
+              "passageNotes": "※ 体験（たいけん）：experience　※ 丁寧（ていねい）：polite"
             },
             {
               "id": "n4-e9-g-31",
@@ -24528,7 +25248,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "朝早く起きること"
               ],
               "correct": 0,
-              "explanation": "Struggled most with keigo honorifics and fast native speech."
+              "explanation": "Struggled most with keigo honorifics and fast native speech.",
+              "passage": "私は先月、日本で日本の温泉体験を体験しました。\n\n日本に来る前は本やインターネットで知っていましたが、実際に体験してみると想像以上に素晴らしかったです。特に、周りの人たちの親切さと丁寧な対応にとても感動しました。\n\n言葉が通じない時もありましたが、身振り手振りで優しく教えてくれました。この経験を通して、日本の文化に対する興味がさらに深まりました。国に帰ったら、家族や友達にもぜひ紹介したいと思っています。",
+              "passageTitle": "Mondai 5 中文読解：日本の温泉体験",
+              "passageNotes": "※ 体験（たいけん）：experience　※ 丁寧（ていねい）：polite"
             },
             {
               "id": "n4-e9-g-32",
@@ -24541,7 +25264,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "英語が話せたから"
               ],
               "correct": 0,
-              "explanation": "Praised for consistently greeting customers with a bright smile."
+              "explanation": "Praised for consistently greeting customers with a bright smile.",
+              "passage": "私は先月、日本で日本の温泉体験を体験しました。\n\n日本に来る前は本やインターネットで知っていましたが、実際に体験してみると想像以上に素晴らしかったです。特に、周りの人たちの親切さと丁寧な対応にとても感動しました。\n\n言葉が通じない時もありましたが、身振り手振りで優しく教えてくれました。この経験を通して、日本の文化に対する興味がさらに深まりました。国に帰ったら、家族や友達にもぜひ紹介したいと思っています。",
+              "passageTitle": "Mondai 5 中文読解：日本の温泉体験",
+              "passageNotes": "※ 体験（たいけん）：experience　※ 丁寧（ていねい）：polite"
             },
             {
               "id": "n4-e9-g-33",
@@ -24554,7 +25280,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "将来カフェを開きたいと思った"
               ],
               "correct": 0,
-              "explanation": "Gained conversational confidence and appreciated human connections."
+              "explanation": "Gained conversational confidence and appreciated human connections.",
+              "passage": "私は先月、日本で日本の温泉体験を体験しました。\n\n日本に来る前は本やインターネットで知っていましたが、実際に体験してみると想像以上に素晴らしかったです。特に、周りの人たちの親切さと丁寧な対応にとても感動しました。\n\n言葉が通じない時もありましたが、身振り手振りで優しく教えてくれました。この経験を通して、日本の文化に対する興味がさらに深まりました。国に帰ったら、家族や友達にもぜひ紹介したいと思っています。",
+              "passageTitle": "Mondai 5 中文読解：日本の温泉体験",
+              "passageNotes": "※ 体験（たいけん）：experience　※ 丁寧（ていねい）：polite"
             },
             {
               "id": "n4-e9-g-34",
@@ -24567,7 +25296,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "無料"
               ],
               "correct": 0,
-              "explanation": "Adult pool admission is listed as 400 yen."
+              "explanation": "Adult pool admission is listed as 400 yen.",
+              "passage": "┌──────────────────────────────────────────────┐\n│　　　　　　　【ご案内】バス時刻表と運賃　　　　　　　　　　　　│\n├──────────────────────────────────────────────┤\n│【利用時間】　平日：午前9:00〜午後8:00 / 休日：午前10:00〜午後6:00│\n│【料金】　　　大人：500円 / 学生（高校生・大学生）：300円　　 │\n├──────────────────────────────────────────────┤\n│【注意事項】　　　　　　　　　　　　　　　　　　　　　　　　　│\n│・学生割引を利用する場合は、必ず学生証を提示してください。　 │\n│・館内での飲食・喫煙は固く禁止されています。　　　　　　　　 │\n└──────────────────────────────────────────────┘",
+              "passageTitle": "Mondai 6 情報検索：バス時刻表と運賃",
+              "passageNotes": "※ 提示（ていじ）：show/present　※ 禁止（きんし）：prohibited"
             },
             {
               "id": "n4-e9-g-35",
@@ -24580,7 +25312,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "会員証"
               ],
               "correct": 0,
-              "explanation": "Indoor athletic shoes (室内用運動靴) are strictly required."
+              "explanation": "Indoor athletic shoes (室内用運動靴) are strictly required.",
+              "passage": "┌──────────────────────────────────────────────┐\n│　　　　　　　【ご案内】バス時刻表と運賃　　　　　　　　　　　　│\n├──────────────────────────────────────────────┤\n│【利用時間】　平日：午前9:00〜午後8:00 / 休日：午前10:00〜午後6:00│\n│【料金】　　　大人：500円 / 学生（高校生・大学生）：300円　　 │\n├──────────────────────────────────────────────┤\n│【注意事項】　　　　　　　　　　　　　　　　　　　　　　　　　│\n│・学生割引を利用する場合は、必ず学生証を提示してください。　 │\n│・館内での飲食・喫煙は固く禁止されています。　　　　　　　　 │\n└──────────────────────────────────────────────┘",
+              "passageTitle": "Mondai 6 情報検索：バス時刻表と運賃",
+              "passageNotes": "※ 提示（ていじ）：show/present　※ 禁止（きんし）：prohibited"
             }
           ]
         },
@@ -25763,7 +26498,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "はいる"
               ],
               "correct": 2,
-              "explanation": "Connecting action with te-form:「はいって」."
+              "explanation": "Connecting action with te-form:「はいって」.",
+              "passage": "私は日本に来てから、留学生の友達について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：留学生の友達",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n4-e10-g-22",
@@ -25776,7 +26514,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "すこしも"
               ],
               "correct": 0,
-              "explanation": "Positive evaluation:「とても」."
+              "explanation": "Positive evaluation:「とても」.",
+              "passage": "私は日本に来てから、留学生の友達について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：留学生の友達",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n4-e10-g-23",
@@ -25789,7 +26530,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "それから"
               ],
               "correct": 0,
-              "explanation": "Adding related points:「それに」."
+              "explanation": "Adding related points:「それに」.",
+              "passage": "私は日本に来てから、留学生の友達について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：留学生の友達",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n4-e10-g-24",
@@ -25802,7 +26546,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "いってみた"
               ],
               "correct": 0,
-              "explanation": "Desire:「いってみたい」."
+              "explanation": "Desire:「いってみたい」.",
+              "passage": "私は日本に来てから、留学生の友達について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：留学生の友達",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n4-e10-g-25",
@@ -25815,7 +26562,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "おもわない"
               ],
               "correct": 0,
-              "explanation": "Present conjecture:「おもいます」."
+              "explanation": "Present conjecture:「おもいます」.",
+              "passage": "私は日本に来てから、留学生の友達について色々と考えるようになりました。\n毎日の生活の中で、新しい発見が (22) あります。\n\n朝起きてから夜寝るまで、日本語を (23) 機会がたくさんあります。\n最初は話すのが恥ずかしかったですが、最近は少しずつ (24) なってきました。\n\n分からない言葉があったら、すぐに辞書で (25) ようにしています。\nこれからも日本の文化をもっと深く (26) と思っています。",
+              "passageTitle": "Mondai 3 文章の文法：留学生の友達",
+              "passageNotes": "※ 発見（はっけん）：discovery　※ 機会（きかい）：opportunity"
             },
             {
               "id": "n4-e10-g-26",
@@ -25828,7 +26578,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "毎月第1土曜日"
               ],
               "correct": 0,
-              "explanation": "Held every Saturday at 10:00 AM."
+              "explanation": "Held every Saturday at 10:00 AM.",
+              "passage": "【送別会のお知らせについてのお知らせ】\n利用者の皆様へご案内いたします。\n\n・受付時間：月曜日〜金曜日 午前9:00〜午後5:00\n・集合場所：1階受付カウンター前\n・必要書類：登録カード、身分証明書\n\nご不明な点がございましたら、窓口までお問い合わせください。\n\n事務局より",
+              "passageTitle": "Mondai 4 短文読解：送別会のお知らせ",
+              "passageNotes": "※ 受付（うけつけ）：reception"
             },
             {
               "id": "n4-e10-g-27",
@@ -25841,7 +26594,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "年間 5,000円"
               ],
               "correct": 0,
-              "explanation": "Fee is 500 yen per session."
+              "explanation": "Fee is 500 yen per session.",
+              "passage": "件名：健康診断の案内に関する確認\n\nお疲れ様です。田中です。\n明日の集合時間と場所について、再度ご連絡いたします。\n・時間：午後1時15分\n・場所：駅前ロータリー時計台の下\n遅れる場合は必ず事前に連絡をしてください。\nよろしくお願いします。",
+              "passageTitle": "Mondai 4 短文読解：健康診断の案内",
+              "passageNotes": "※ 事前（じぜん）：in advance"
             },
             {
               "id": "n4-e10-g-28",
@@ -25854,7 +26610,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "辞書"
               ],
               "correct": 0,
-              "explanation": "Bring writing utensils and notebook."
+              "explanation": "Bring writing utensils and notebook.",
+              "passage": "【掲示板】旅行の持ち物リスト\n参加希望の方は、下記の要領でお申し込みください。\n・定員：先着20名\n・参加費：無料\n・申込締切：今週金曜日の午後5時まで\n定員になり次第締め切りますので、お早めにお願いします。",
+              "passageTitle": "Mondai 4 短文読解：旅行の持ち物リスト",
+              "passageNotes": "※ 先着（せんちゃく）：first come, first served"
             },
             {
               "id": "n4-e10-g-29",
@@ -25867,7 +26626,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "市役所で 申し込む"
               ],
               "correct": 0,
-              "explanation": "Pre-registration by email by the previous day."
+              "explanation": "Pre-registration by email by the previous day.",
+              "passage": "【送別会のお知らせについてのお知らせ】\n利用者の皆様へご案内いたします。\n\n・受付時間：月曜日〜金曜日 午前9:00〜午後5:00\n・集合場所：1階受付カウンター前\n・必要書類：登録カード、身分証明書\n\nご不明な点がございましたら、窓口までお問い合わせください。\n\n事務局より",
+              "passageTitle": "Mondai 4 短文読解：送別会のお知らせ",
+              "passageNotes": "※ 受付（うけつけ）：reception"
             },
             {
               "id": "n4-e10-g-30",
@@ -25880,7 +26642,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "友達を作るため"
               ],
               "correct": 0,
-              "explanation": "To learn real-life Japanese communication and customer service manners."
+              "explanation": "To learn real-life Japanese communication and customer service manners.",
+              "passage": "私は先月、日本で日本のお弁当文化を体験しました。\n\n日本に来る前は本やインターネットで知っていましたが、実際に体験してみると想像以上に素晴らしかったです。特に、周りの人たちの親切さと丁寧な対応にとても感動しました。\n\n言葉が通じない時もありましたが、身振り手振りで優しく教えてくれました。この経験を通して、日本の文化に対する興味がさらに深まりました。国に帰ったら、家族や友達にもぜひ紹介したいと思っています。",
+              "passageTitle": "Mondai 5 中文読解：日本のお弁当文化",
+              "passageNotes": "※ 体験（たいけん）：experience　※ 丁寧（ていねい）：polite"
             },
             {
               "id": "n4-e10-g-31",
@@ -25893,7 +26658,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "朝早く起きること"
               ],
               "correct": 0,
-              "explanation": "Struggled most with keigo honorifics and fast native speech."
+              "explanation": "Struggled most with keigo honorifics and fast native speech.",
+              "passage": "私は先月、日本で日本のお弁当文化を体験しました。\n\n日本に来る前は本やインターネットで知っていましたが、実際に体験してみると想像以上に素晴らしかったです。特に、周りの人たちの親切さと丁寧な対応にとても感動しました。\n\n言葉が通じない時もありましたが、身振り手振りで優しく教えてくれました。この経験を通して、日本の文化に対する興味がさらに深まりました。国に帰ったら、家族や友達にもぜひ紹介したいと思っています。",
+              "passageTitle": "Mondai 5 中文読解：日本のお弁当文化",
+              "passageNotes": "※ 体験（たいけん）：experience　※ 丁寧（ていねい）：polite"
             },
             {
               "id": "n4-e10-g-32",
@@ -25906,7 +26674,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "英語が話せたから"
               ],
               "correct": 0,
-              "explanation": "Praised for consistently greeting customers with a bright smile."
+              "explanation": "Praised for consistently greeting customers with a bright smile.",
+              "passage": "私は先月、日本で日本のお弁当文化を体験しました。\n\n日本に来る前は本やインターネットで知っていましたが、実際に体験してみると想像以上に素晴らしかったです。特に、周りの人たちの親切さと丁寧な対応にとても感動しました。\n\n言葉が通じない時もありましたが、身振り手振りで優しく教えてくれました。この経験を通して、日本の文化に対する興味がさらに深まりました。国に帰ったら、家族や友達にもぜひ紹介したいと思っています。",
+              "passageTitle": "Mondai 5 中文読解：日本のお弁当文化",
+              "passageNotes": "※ 体験（たいけん）：experience　※ 丁寧（ていねい）：polite"
             },
             {
               "id": "n4-e10-g-33",
@@ -25919,7 +26690,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "将来カフェを開きたいと思った"
               ],
               "correct": 0,
-              "explanation": "Gained conversational confidence and appreciated human connections."
+              "explanation": "Gained conversational confidence and appreciated human connections.",
+              "passage": "私は先月、日本で日本のお弁当文化を体験しました。\n\n日本に来る前は本やインターネットで知っていましたが、実際に体験してみると想像以上に素晴らしかったです。特に、周りの人たちの親切さと丁寧な対応にとても感動しました。\n\n言葉が通じない時もありましたが、身振り手振りで優しく教えてくれました。この経験を通して、日本の文化に対する興味がさらに深まりました。国に帰ったら、家族や友達にもぜひ紹介したいと思っています。",
+              "passageTitle": "Mondai 5 中文読解：日本のお弁当文化",
+              "passageNotes": "※ 体験（たいけん）：experience　※ 丁寧（ていねい）：polite"
             },
             {
               "id": "n4-e10-g-34",
@@ -25932,7 +26706,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "無料"
               ],
               "correct": 0,
-              "explanation": "Adult pool admission is listed as 400 yen."
+              "explanation": "Adult pool admission is listed as 400 yen.",
+              "passage": "┌──────────────────────────────────────────────┐\n│　　　　　　　【ご案内】市民センターイベント案内　　　　　　　　　　　　│\n├──────────────────────────────────────────────┤\n│【利用時間】　平日：午前9:00〜午後8:00 / 休日：午前10:00〜午後6:00│\n│【料金】　　　大人：500円 / 学生（高校生・大学生）：300円　　 │\n├──────────────────────────────────────────────┤\n│【注意事項】　　　　　　　　　　　　　　　　　　　　　　　　　│\n│・学生割引を利用する場合は、必ず学生証を提示してください。　 │\n│・館内での飲食・喫煙は固く禁止されています。　　　　　　　　 │\n└──────────────────────────────────────────────┘",
+              "passageTitle": "Mondai 6 情報検索：市民センターイベント案内",
+              "passageNotes": "※ 提示（ていじ）：show/present　※ 禁止（きんし）：prohibited"
             },
             {
               "id": "n4-e10-g-35",
@@ -25945,7 +26722,10 @@ export const EXAM_PAPERS_CATALOG = {
                 "会員証"
               ],
               "correct": 0,
-              "explanation": "Indoor athletic shoes (室内用運動靴) are strictly required."
+              "explanation": "Indoor athletic shoes (室内用運動靴) are strictly required.",
+              "passage": "┌──────────────────────────────────────────────┐\n│　　　　　　　【ご案内】市民センターイベント案内　　　　　　　　　　　　│\n├──────────────────────────────────────────────┤\n│【利用時間】　平日：午前9:00〜午後8:00 / 休日：午前10:00〜午後6:00│\n│【料金】　　　大人：500円 / 学生（高校生・大学生）：300円　　 │\n├──────────────────────────────────────────────┤\n│【注意事項】　　　　　　　　　　　　　　　　　　　　　　　　　│\n│・学生割引を利用する場合は、必ず学生証を提示してください。　 │\n│・館内での飲食・喫煙は固く禁止されています。　　　　　　　　 │\n└──────────────────────────────────────────────┘",
+              "passageTitle": "Mondai 6 情報検索：市民センターイベント案内",
+              "passageNotes": "※ 提示（ていじ）：show/present　※ 禁止（きんし）：prohibited"
             }
           ]
         },
