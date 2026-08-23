@@ -2,6 +2,7 @@ const crypto = require('crypto');
 const fs = require('fs/promises');
 const fsSync = require('fs');
 const path = require('path');
+const bcrypt = require('bcryptjs');
 const OpenAI = require('openai');
 const { getPrisma } = require('../config/prisma');
 const { env } = require('../config/env');
@@ -287,10 +288,6 @@ async function buildPlatformAuthResult(prisma, user, preferredModule, authType =
   };
 }
 
-async function login() {
-  throw new ApiError(410, 'Microsoft authentication is required.');
-}
-
 function resolvePlatformRedirect(roles, permissions, preferredModule) {
   if (preferredModule === 'technician' || roles.includes('TECHNICIAN')) {
     return '/technician';
@@ -320,8 +317,37 @@ function resolvePlatformRedirect(roles, permissions, preferredModule) {
   return '/management';
 }
 
-async function unifiedLogin() {
-  throw new ApiError(410, 'Microsoft authentication is required.');
+async function unifiedLogin(payload = {}) {
+  const prisma = requirePrisma();
+  const email = String(payload.email || '').trim().toLowerCase();
+  const password = String(payload.password || '').trim();
+
+  if (!email || !password) {
+    throw new ApiError(400, 'Email and password are required.');
+  }
+
+  const user = await prisma.user.findUnique({
+    where: { email },
+  });
+
+  if (!user || user.status !== 'ACTIVE') {
+    throw new ApiError(401, 'Invalid email or user account is not active.');
+  }
+
+  let isValidPassword = false;
+  if (user.passwordHash && !user.passwordHash.startsWith('MICROSOFT_SSO_ONLY:')) {
+    isValidPassword = await bcrypt.compare(password, user.passwordHash).catch(() => false);
+  }
+
+  if (!isValidPassword) {
+    throw new ApiError(401, 'Invalid email or password.');
+  }
+
+  return buildPlatformAuthResult(prisma, user, payload.preferredModule || 'auto', 'DIRECT');
+}
+
+async function login(payload) {
+  return unifiedLogin(payload);
 }
 
 async function technicianLogin(payload) {

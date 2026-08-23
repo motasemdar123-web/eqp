@@ -113,6 +113,7 @@ function formatRoleLabel(role) {
     TECHNICIAN: 'Technician',
     FIELD_TECHNICIAN: 'Technician',
     MAINTENANCE_SUPERVISOR: 'Service Engineer',
+    WAREHOUSE_OFFICER: 'Spare Parts Officer',
   };
 
   return labels[role] || String(role || '').replace(/_/g, ' ').toLowerCase().replace(/\b\w/g, (letter) => letter.toUpperCase());

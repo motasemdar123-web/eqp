@@ -63,6 +63,13 @@ export function completeMicrosoftLogin(code) {
   });
 }
 
+export function directLogin(payload) {
+  return request('/api/auth/unified-login', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+}
+
 export function getMachines() {
   return request('/machines');
 }

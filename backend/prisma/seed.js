@@ -12,7 +12,7 @@ const rolePermissions = {
   TECHNICIAN: [],
   FIELD_TECHNICIAN: ['SCHEDULE_MANAGE'],
   CALL_CENTER: [],
-  WAREHOUSE_OFFICER: [],
+  WAREHOUSE_OFFICER: ['REPORTS_READ'],
   FINANCE: ['REPORTS_READ'],
   CLIENT: [],
   SYSTEM_ADMIN: ['USERS_MANAGE', 'SYSTEM_CONFIGURE'],
@@ -172,6 +172,14 @@ async function main() {
     passwordHash,
   });
   await ensureUserRole(manager.id, roles.OPERATIONS_MANAGER.id);
+
+  const sparePartsUser = await upsertSeedUser({
+    email: 'mohammad.qraein@daralhai.com',
+    fullName: 'Mohammad Qraein',
+    passwordHash,
+    locale: 'en',
+  });
+  await ensureUserRole(sparePartsUser.id, roles.WAREHOUSE_OFFICER.id);
 
   const engineerSeeds = [
     { email: 'motasem.ghanem@daralhai.com', fullName: 'Motasem Ghanem' },
