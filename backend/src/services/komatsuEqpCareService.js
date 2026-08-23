@@ -440,6 +440,8 @@ async function uploadReportToEqpCare(reportData, customCookie = null) {
 
   let httpStatus = 200;
   let responseText = '';
+  let uploadSuccess = false;
+  let komatsuMessage = '';
 
   try {
     const saveResp = await fetch(`${BASE_EQPC_URL}/EMDW0904.do`, {
@@ -454,14 +456,49 @@ async function uploadReportToEqpCare(reportData, customCookie = null) {
     if (responseText.includes('session is expired') || responseText.includes('Your session is expired')) {
       throw new Error('Komatsu EQP Care session expired. Please refresh your browser tab on EQP Care and paste the updated cookie.');
     }
-  } catch (err) {
-    if (err.message.includes('Komatsu EQP Care session expired')) {
-      throw err;
+
+    if (responseText.includes('error.do')) {
+      try {
+        const errRes = await fetch(`${BASE_EQPC_URL}/error.do?subsessionID=defaultID`, {
+          headers: defaultHeaders,
+        });
+        const errText = await errRes.text();
+        const errMsgMatch = errText.match(/<textarea[^>]*>([\s\S]*?)<\/textarea>/i);
+        const rawMsg = errMsgMatch ? errMsgMatch[1].trim() : '';
+        if (rawMsg.includes('SQLCODE=-803') || rawMsg.includes('23505')) {
+          throw new Error(`A record for ${eventCode} already exists for machine #${serialNo} on Komatsu EQP Care (Duplicate Key). Please use W41X (Extra PM) for subsequent services.`);
+        }
+        if (rawMsg) {
+          throw new Error(`Komatsu portal error: ${rawMsg}`);
+        }
+      } catch (errCheck) {
+        if (errCheck.message.includes('already exists') || errCheck.message.includes('Komatsu portal error')) {
+          throw errCheck;
+        }
+      }
+      throw new Error('Komatsu portal rejected the record submission (redirected to error.do).');
     }
-    console.warn('[uploadReportToEqpCare] Portal upload network error:', err.message);
+
+    // Inspect popupMessage for validation failures or success
+    const popupMatch = responseText.match(/Common\.popupMessage\("([^"]*)"\)/);
+    const popupText = popupMatch ? popupMatch[1].replace(/\\r\\n/g, ' ').trim() : '';
+
+    if (popupText) {
+      if (popupText.toLowerCase().includes('succeeded') || popupText.toLowerCase().includes('success')) {
+        uploadSuccess = true;
+        komatsuMessage = popupText.replace(/^\*\s*/, '');
+      } else {
+        throw new Error(`Komatsu validation rejection: ${popupText.replace(/^\*\s*/, '')}`);
+      }
+    } else if (httpStatus === 200) {
+      uploadSuccess = true;
+      komatsuMessage = 'Uploaded successfully';
+    }
+  } catch (err) {
+    throw err;
   }
 
-  // STEP 4: Record successful dispatch in local database
+  // STEP 4: Record successful dispatch in local database ONLY if genuinely succeeded
   const eventObj = EVENT_CODES.find((e) => e.code === eventCode) || { code: eventCode, name: eventCode };
 
   try {
@@ -512,10 +549,8 @@ async function uploadReportToEqpCare(reportData, customCookie = null) {
     console.warn('[uploadReportToEqpCare] DB tracking notice:', dbErr.message);
   }
 
-  const uploadStatus = httpStatus === 200 || httpStatus === 302 ? 'SUCCESS' : 'FAILED';
-
   return {
-    status: uploadStatus,
+    status: 'SUCCESS',
     httpStatus,
     model,
     type,
@@ -529,7 +564,7 @@ async function uploadReportToEqpCare(reportData, customCookie = null) {
     distributor: `${distributor} (DAR AL HAI)`,
     fileName,
     uploadedAt: new Date().toISOString(),
-    message: `Successfully uploaded ${model} #${serialNo} (${eventObj.name}) to Komatsu EQP Care.`,
+    message: komatsuMessage || `Successfully uploaded ${model} #${serialNo} (${eventObj.name}) to Komatsu EQP Care.`,
   };
 }
 
@@ -538,40 +573,44 @@ async function uploadReportToEqpCare(reportData, customCookie = null) {
  */
 async function batchUploadReports(items = [], customCookie = null) {
   const cookieStr = customCookie ? parseCookieInput(customCookie) : loadCookie();
-  if (!cookieStr) {
-    throw new Error('No Komatsu Equipment Care session cookie configured.');
+  if (!items || !Array.isArray(items) || items.length === 0) {
+    return {
+      total: 0,
+      successful: 0,
+      failed: 0,
+      results: [],
+      errors: [],
+    };
   }
 
   const results = [];
   const errors = [];
+  let successful = 0;
+  let failed = 0;
 
-  for (let i = 0; i < items.length; i++) {
-    const item = items[i];
+  for (const item of items) {
     try {
       const res = await uploadReportToEqpCare(item, cookieStr);
-      results.push({
-        index: i + 1,
-        success: true,
-        ...res,
-      });
-
-      // Small delay between uploads to respect portal rate limits
-      await new Promise((resolve) => setTimeout(resolve, 450));
+      results.push(res);
+      successful++;
     } catch (err) {
-      errors.push({
-        index: i + 1,
-        success: false,
-        model: item.model,
-        serialNo: item.serialNo,
+      failed++;
+      const errObj = {
+        status: 'FAILED',
+        serialNo: item.serialNo || item.machine_number || '',
+        model: item.model || '',
         error: err.message,
-      });
+        message: `Failed to upload #${item.serialNo || 'unknown'}: ${err.message}`,
+      };
+      results.push(errObj);
+      errors.push(errObj);
     }
   }
 
   return {
     total: items.length,
-    successful: results.length,
-    failed: errors.length,
+    successful,
+    failed,
     results,
     errors,
   };

@@ -286,10 +286,23 @@ export default function ReportsPage() {
     try {
       setToast({ type: 'info', message: `🚀 Dispatched ${count} reports to Komatsu Equipment Care Daily Operation...` });
       const res = await batchUploadEqpcReports({ items: batchItems });
-      setToast({
-        type: 'success',
-        message: `✅ Automated Upload Finished: ${res.successful || 0} of ${count} reports successfully uploaded to Komatsu EQP Care!`,
-      });
+      if (res.failed > 0 && res.successful === 0) {
+        const firstErr = res.results?.find((r) => r.status === 'FAILED')?.error || 'Upload failed.';
+        setToast({
+          type: 'error',
+          message: `❌ Komatsu EQP Care Upload Failed: ${firstErr}`,
+        });
+      } else if (res.failed > 0) {
+        setToast({
+          type: 'warning',
+          message: `⚠️ Partial Upload: ${res.successful} succeeded, ${res.failed} failed on Komatsu EQP Care.`,
+        });
+      } else {
+        setToast({
+          type: 'success',
+          message: `✅ All ${res.successful || count} reports successfully uploaded & saved to Komatsu EQP Care!`,
+        });
+      }
       setSelectedReportIds([]);
       await loadReports();
     } catch (err) {
