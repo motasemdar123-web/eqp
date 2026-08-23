@@ -10,6 +10,8 @@ import Toast from '../../components/ui/Toast';
 import { getManagementDashboard } from '../../lib/api';
 
 const modules = [
+  { title: 'Fleet & Wear Analytics', href: '/management/fleet-analytics', status: 'Live', tone: 'live', icon: 'analytics', description: 'Greasing matrix, D155A-6 fan pump rotations, wear lifespans, and ripper stock.' },
+  { title: 'Workshop & Fleet Command', href: '/management/workshop', status: 'Live', tone: 'live', icon: 'workshop', description: 'Service vehicles mileage, fuel ledger, workshop tools, and corporate KPI scorecards.' },
   { title: 'Technicians Management', href: '/management/technicians', status: 'Live', tone: 'live', icon: 'technicians', description: 'Technician records, shifts, regions, skills, and dispatch availability.' },
   { title: 'Scheduling', href: '/management/scheduling', status: 'Live', tone: 'live', icon: 'scheduling', description: 'Daily roster control, work windows, task groups, and technician assignment.' },
   { title: 'Daily Planner', href: '/management/daily-planner', status: 'Live', tone: 'live', icon: 'planner', description: 'Personal shift schedule with timed work orders and supervisor dispatch inbox.' },
@@ -19,6 +21,20 @@ const modules = [
 ];
 
 function ModuleIcon({ type }) {
+  if (type === 'workshop') {
+    return (
+      <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
+      </svg>
+    );
+  }
+  if (type === 'analytics') {
+    return (
+      <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+      </svg>
+    );
+  }
   if (type === 'technicians') {
     return (
       <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

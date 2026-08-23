@@ -251,3 +251,37 @@ export function copyKomatsuQuotationToSo(payload) {
   });
 }
 
+export function getFleetSummary() {
+  return request('/api/analytics/fleet-summary');
+}
+
+export function getGreasingAnalytics() {
+  return request('/api/analytics/greasing');
+}
+
+export function getComponentRotations() {
+  return request('/api/analytics/component-rotations');
+}
+
+export function getWearLifespan() {
+  return request('/api/analytics/wear-lifespan');
+}
+
+export function getRipperTeeth() {
+  return request('/api/analytics/ripper-teeth');
+}
+
+export function getCylinderAnalytics() {
+  return request('/api/analytics/cylinders');
+}
+
+export function getWorkshopAnalytics() {
+  return request('/api/analytics/workshop');
+}
+
+export function getGovernanceAnalytics() {
+  return request('/api/analytics/governance');
+}
+
+
+

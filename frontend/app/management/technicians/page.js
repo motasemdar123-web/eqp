@@ -8,7 +8,7 @@ import Button from '../../../components/ui/Button';
 import EmptyState from '../../../components/ui/EmptyState';
 import Skeleton from '../../../components/ui/Skeleton';
 import Toast from '../../../components/ui/Toast';
-import { createTechnician, deleteTechnician, getShifts, getTechnicians, updateTechnician } from '../../../lib/api';
+import { createTechnician, deleteTechnician, getShifts, getTechnicians, updateTechnician, getGovernanceAnalytics } from '../../../lib/api';
 import { getStoredPlatformSession } from '../../../lib/auth';
 
 const emptyForm = {
@@ -71,17 +71,23 @@ export default function TechniciansManagementPage() {
   const [availabilityFilter, setAvailabilityFilter] = useState('ALL');
   const [searchTerm, setSearchTerm] = useState('');
 
+  // Sub-tabs
+  const [activeTab, setActiveTab] = useState('roster'); // 'roster' | 'skills' | 'infractions'
+  const [governanceData, setGovernanceData] = useState({ technicianSkills: [], technicianInfractions: [] });
+
   async function loadData() {
     if (!token) return;
 
     try {
       setLoading(true);
-      const [techniciansResponse, shiftsResponse] = await Promise.all([
+      const [techniciansResponse, shiftsResponse, govResponse] = await Promise.all([
         getTechnicians(),
         getShifts(),
+        getGovernanceAnalytics().catch(() => ({ data: {} })),
       ]);
       setTechnicians(techniciansResponse.technicians || []);
       setShifts(shiftsResponse.shifts || []);
+      setGovernanceData(govResponse.data || { technicianSkills: [], technicianInfractions: [] });
     } catch (loadError) {
       setToast({ type: 'error', message: loadError.message || 'Failed to load technicians.' });
     } finally {
@@ -295,7 +301,49 @@ export default function TechniciansManagementPage() {
           </article>
         </section>
 
-        {/* Main Grid: Technicians Table & Form Drawer */}
+        {/* Sub-tabs Selector */}
+        <section className="bg-white dark:bg-slate-900 p-1.5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-xs">
+          <div className="flex flex-wrap gap-1">
+            <button
+              onClick={() => setActiveTab('roster')}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold transition-all ${
+                activeTab === 'roster'
+                  ? 'bg-amber-500 text-slate-950 shadow-xs font-bold'
+                  : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+              }`}
+            >
+              <span>👥</span>
+              <span>Roster & Profiles</span>
+            </button>
+
+            <button
+              onClick={() => setActiveTab('skills')}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold transition-all ${
+                activeTab === 'skills'
+                  ? 'bg-amber-500 text-slate-950 shadow-xs font-bold'
+                  : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+              }`}
+            >
+              <span>🎓</span>
+              <span>Skills Matrix (Proficiency)</span>
+            </button>
+
+            <button
+              onClick={() => setActiveTab('infractions')}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold transition-all ${
+                activeTab === 'infractions'
+                  ? 'bg-amber-500 text-slate-950 shadow-xs font-bold'
+                  : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+              }`}
+            >
+              <span>⚠️</span>
+              <span>Quality & Disciplinary Log</span>
+            </button>
+          </div>
+        </section>
+
+        {/* TAB 1: ROSTER & PROFILES */}
+        {activeTab === 'roster' && (
         <section className="grid gap-6 xl:grid-cols-[1fr_400px]">
           {/* Technicians Table Card */}
           <Card className="overflow-hidden">
@@ -567,9 +615,132 @@ export default function TechniciansManagementPage() {
             </form>
           </Card>
         </section>
+        )}
+
+        {/* TAB 2: SKILLS & PROFICIENCY MATRIX */}
+        {activeTab === 'skills' && (
+          <Card className="p-6">
+            <div className="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="text-xl">🎓</span>
+                  <h2 className="text-lg font-bold text-slate-900 dark:text-white">Technicians Skills & Proficiency Matrix</h2>
+                  <Badge tone="live">Certified Matrix</Badge>
+                </div>
+                <p className="text-xs text-slate-500 mt-1">
+                  Track technical competencies, equipment operational authorizations, and tool proficiencies.
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-4 overflow-x-auto">
+              <table className="w-full text-left text-xs border-collapse min-w-[850px]">
+                <thead>
+                  <tr className="bg-slate-50 dark:bg-slate-800/60 text-slate-600 dark:text-slate-300 font-semibold border-b border-slate-200 dark:border-slate-700">
+                    <th className="py-2.5 px-3">Technician</th>
+                    <th className="py-2.5 px-2 text-center">Crane</th>
+                    <th className="py-2.5 px-2 text-center">Pumps</th>
+                    <th className="py-2.5 px-2 text-center">Charger</th>
+                    <th className="py-2.5 px-2 text-center">Compressor</th>
+                    <th className="py-2.5 px-2 text-center">Generator</th>
+                    <th className="py-2.5 px-2 text-center">Grinder</th>
+                    <th className="py-2.5 px-2 text-center">Hydraulic Press</th>
+                    <th className="py-2.5 px-2 text-center">Driller</th>
+                    <th className="py-2.5 px-2 text-center">Oxy-Acetylene</th>
+                    <th className="py-2.5 px-3 text-right">Certified</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 dark:divide-slate-800 font-mono">
+                  {(governanceData.technicianSkills || []).map((t, idx) => (
+                    <tr key={idx} className="hover:bg-slate-50/70 dark:hover:bg-slate-800/40">
+                      <td className="py-2.5 px-3 font-sans font-bold text-slate-900 dark:text-white">
+                        {t.technicianName}
+                      </td>
+                      {['Crane Training', 'Pumps operation', 'Battery charger', 'Compressor', 'Generator', 'Grinder', 'Hydraulic Press', 'Driller', 'Oxy-Acetylene cutting'].map((skillKey) => {
+                        const hasSkill = t.skills?.[skillKey];
+                        return (
+                          <td key={skillKey} className="py-2.5 px-2 text-center">
+                            {hasSkill ? (
+                              <span className="inline-block w-5 h-5 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 font-bold text-xs leading-5">
+                                ✓
+                              </span>
+                            ) : (
+                              <span className="inline-block w-5 h-5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-400 text-xs leading-5">
+                                -
+                              </span>
+                            )}
+                          </td>
+                        );
+                      })}
+                      <td className="py-2.5 px-3 text-right">
+                        <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-amber-100 dark:bg-amber-950 text-amber-700 dark:text-amber-400">
+                          {t.certifiedCount} / 9
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </Card>
+        )}
+
+        {/* TAB 3: DISCIPLINARY & QUALITY LOG */}
+        {activeTab === 'infractions' && (
+          <Card className="p-6">
+            <div className="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="text-xl">⚠️</span>
+                  <h2 className="text-lg font-bold text-slate-900 dark:text-white">Quality, Safety & Disciplinary Infraction Log</h2>
+                  <Badge tone="live">Supervision Audit</Badge>
+                </div>
+                <p className="text-xs text-slate-500 mt-1">
+                  Incident documentation, workshop policy compliance, and supervisor corrective notices.
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-4 overflow-x-auto">
+              <table className="w-full text-left text-xs border-collapse">
+                <thead>
+                  <tr className="bg-slate-50 dark:bg-slate-800/60 text-slate-600 dark:text-slate-300 font-semibold border-b border-slate-200 dark:border-slate-700">
+                    <th className="py-2.5 px-3">Date</th>
+                    <th className="py-2.5 px-3">Technician</th>
+                    <th className="py-2.5 px-3">Infraction Category</th>
+                    <th className="py-2.5 px-3">Supervisor Notes & Remarks</th>
+                    <th className="py-2.5 px-3 text-right">Severity</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+                  {(governanceData.technicianInfractions || []).map((inf, idx) => (
+                    <tr key={idx} className="hover:bg-slate-50/70 dark:hover:bg-slate-800/40">
+                      <td className="py-2.5 px-3 font-mono text-slate-500">{inf.date}</td>
+                      <td className="py-2.5 px-3 font-bold text-slate-900 dark:text-white">{inf.technicianName}</td>
+                      <td className="py-2.5 px-3 text-amber-600 dark:text-amber-400 font-semibold">{inf.type}</td>
+                      <td className="py-2.5 px-3 text-slate-600 dark:text-slate-300 max-w-md">{inf.comments}</td>
+                      <td className="py-2.5 px-3 text-right">
+                        <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                          inf.severity === 'HIGH'
+                            ? 'bg-rose-100 text-rose-700'
+                            : inf.severity === 'MEDIUM'
+                            ? 'bg-amber-100 text-amber-700'
+                            : 'bg-slate-100 text-slate-700'
+                        }`}>
+                          {inf.severity}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </Card>
+        )}
       </div>
 
       <Toast message={toast?.message} type={toast?.type} onClose={() => setToast(null)} />
+
     </SystemShell>
   );
 }

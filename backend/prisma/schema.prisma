@@ -478,3 +478,116 @@ model EqpReportComment {
   @@index([machineModel, documentType, serviceStage, isActive])
   @@map("eqp_report_comments")
 }
+
+model FleetGreasingLog {
+  id            String    @id @default(uuid())
+  machineSerial String    @map("machine_serial")
+  machineType   String?   @map("machine_type")
+  category      String?   @map("category")
+  monthYear     String    @map("month_year")
+  siteLocation  String?   @map("site_location")
+  status        String    @default("ACTIVE")
+  notes         String?
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  @@unique([machineSerial, monthYear])
+  @@index([machineSerial])
+  @@index([monthYear])
+  @@index([siteLocation])
+  @@map("fleet_greasing_logs")
+}
+
+model FleetBushingCost {
+  id          String   @id @default(uuid())
+  itemNo      String?  @map("item_no")
+  partNumber  String   @map("part_number")
+  description String
+  location    String
+  quantity    Float    @default(1)
+  costPerUnit Float    @default(0) @map("cost_per_unit")
+  totalCost   Float    @default(0) @map("total_cost")
+  currency    String   @default("KWD")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@index([partNumber])
+  @@map("fleet_bushing_costs")
+}
+
+model FleetComponentRotation {
+  id              String    @id @default(uuid())
+  componentType   String    @map("component_type")
+  machineModel    String    @default("D155A-6") @map("machine_model")
+  sourceSerial    String?   @map("source_serial")
+  targetSerial    String    @map("target_serial")
+  eventDate       DateTime? @map("event_date") @db.Date
+  conditionNotes  String?   @map("condition_notes")
+  pressureRating  Float?    @map("pressure_rating")
+  safetyValvePsi  Float?    @map("safety_valve_psi")
+  controlValvePsi Float?    @map("control_valve_psi")
+  status          String    @default("ACTIVE")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  @@index([targetSerial])
+  @@index([componentType])
+  @@map("fleet_component_rotations")
+}
+
+model FleetWearItem {
+  id              String    @id @default(uuid())
+  machineType     String?   @map("machine_type")
+  machineSerial   String    @map("machine_serial")
+  category        String    @map("category")
+  filterSubtype   String?   @map("filter_subtype")
+  serviceDate     DateTime? @map("service_date") @db.Date
+  smrInstalled    Float?    @map("smr_installed")
+  lifespanHours   Float?    @map("lifespan_hours")
+  costKd          Float?    @map("cost_kd")
+  comment         String?
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  @@index([machineSerial])
+  @@index([category])
+  @@map("fleet_wear_items")
+}
+
+model FleetRipperInventory {
+  id              String    @id @default(uuid())
+  toothType       String    @map("tooth_type")
+  stockQuantity   Int       @default(0) @map("stock_quantity")
+  machineSerial   String?   @map("machine_serial")
+  replacementDate DateTime? @map("replacement_date") @db.Date
+  smr             Float?
+  pinType         String?   @map("pin_type")
+  location        String?
+  costKd          Float?    @map("cost_kd")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  @@index([toothType])
+  @@index([machineSerial])
+  @@map("fleet_ripper_inventories")
+}
+
+model FleetCylinderInspection {
+  id             String    @id @default(uuid())
+  machineSerial  String    @map("machine_serial")
+  machineModel   String?   @default("PC350LC-8M0") @map("machine_model")
+  bucketCylinder Boolean   @default(false) @map("bucket_cylinder")
+  armCylinder    Boolean   @default(false) @map("arm_cylinder")
+  boomCylinder   Boolean   @default(false) @map("boom_cylinder")
+  smr            Float?
+  ratio          Float?
+  sealKitPartNo  String?   @map("seal_kit_part_no")
+  bushingPartNo  String?   @map("bushing_part_no")
+  costKd         Float?    @map("cost_kd")
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+
+  @@index([machineSerial])
+  @@map("fleet_cylinder_inspections")
+}
+

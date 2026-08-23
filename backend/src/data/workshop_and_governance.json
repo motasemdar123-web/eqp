@@ -1,0 +1,2409 @@
+{
+  "vehicles": [
+    {
+      "carName": "Yellow HINO",
+      "refNo": "YH202501",
+      "rateKmPerDay": 70.0,
+      "lastServiceKm": 113743.0,
+      "lastServiceDate": "2026-02-08",
+      "currentKm": 113743.0,
+      "currentDate": "2026-02-08",
+      "nextServiceKm": 118743.0,
+      "nextServiceDate": "2026-04-20",
+      "status": "OPERATIONAL",
+      "serviceIntervalKm": 5000
+    },
+    {
+      "carName": "White HINO",
+      "refNo": "WH202501",
+      "rateKmPerDay": 80.0,
+      "lastServiceKm": 193735.0,
+      "lastServiceDate": "2025-09-27",
+      "currentKm": 193735.0,
+      "currentDate": "2025-09-27",
+      "nextServiceKm": 198735.0,
+      "nextServiceDate": "2025-11-29",
+      "status": "SERVICE_DUE",
+      "serviceIntervalKm": 5000
+    },
+    {
+      "carName": "Chevrolet Truck (Old)",
+      "refNo": "CHO202501",
+      "rateKmPerDay": 110.5,
+      "lastServiceKm": 228900.0,
+      "lastServiceDate": "2025-06-16",
+      "currentKm": 228900.0,
+      "currentDate": "2025-06-16",
+      "nextServiceKm": 233900.0,
+      "nextServiceDate": "2025-07-31",
+      "status": "OPERATIONAL",
+      "serviceIntervalKm": 5000
+    },
+    {
+      "carName": "Chevrolet Truck (New)",
+      "refNo": "CHN202501",
+      "rateKmPerDay": 95.0,
+      "lastServiceKm": 64200.0,
+      "lastServiceDate": "2025-10-10",
+      "currentKm": 64200.0,
+      "currentDate": "2025-10-10",
+      "nextServiceKm": 69200.0,
+      "nextServiceDate": "2025-12-01",
+      "status": "OPERATIONAL",
+      "serviceIntervalKm": 5000
+    },
+    {
+      "carName": "GMC Truck",
+      "refNo": "GMC202501",
+      "rateKmPerDay": 110.0,
+      "lastServiceKm": 148500.0,
+      "lastServiceDate": "2025-11-05",
+      "currentKm": 148500.0,
+      "currentDate": "2025-11-05",
+      "nextServiceKm": 153500.0,
+      "nextServiceDate": "2025-12-20",
+      "status": "OPERATIONAL",
+      "serviceIntervalKm": 5000
+    }
+  ],
+  "fuelLogs": [
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "13-8-2024 ---- 4984 // 410794"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "14-8-2024 ---- 5233.4 // 412053"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "16-8-2024 ---- 5587.8 // 015717"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "17-8-2024 ---- 5951.7 // 415010"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "-"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "19-8-2024 ---- 6436.1 // 417567"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "20-8-2024 ---- 6663.1 // 418720"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "23-8-2024 ---- 7324.8 // 420072 + 020539"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "25-8-2024 ---- 7631.3 // 960509"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "27-8-2024 ---- 263557 // 118793"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "29-8-2024 ---- 264280 // 126875"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "31-8-2024 ---- 264669 // 133197"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "1-9-2024 ---- 265056 // 138723"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "3-9-2024 ---- 265400 // 144566"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "5-9-2024 ---- 265716 // 437150"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "8-9-2024 ---- 266075 // 162974"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "10-9-2024 ---- 266358 // 170665"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "12-9-2024 ---- 266685 // 179328"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "14-9-2024 ---- 267033 // 186498"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "17-9-2024 ---- 267360 // 198446"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "18-9-2024 ---- 267653 // 453835"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "20-9-2024 ---- 268035 // 211968"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "22-9-2024 ---- 268390 // 219054"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "23-9-2024 ---- 268691 // 224504"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "25-9-2024 ---               //232185"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "27-9-2024 ---- 269422 // 240523"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "29-9-2024 ---- 269779 // 248298"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "1-10-2024  ---               //144151"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "3-10-2024 ---- 270529 // 266762"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "5-10-2024 ---- 270940 // 273830"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "7-10-2024 ---- 271358 // 478482"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "9-10-2024 ----271728 // 290610"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "10-10-2024 -- 272144 //296580"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "12-10-2024 -- 272609 //303592"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "14-10-2024 -- 272979 //312754"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "16-10-2024 --  273267 // 322883"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "18-10-2024 --                //065047"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "20-10-2024 --  274124 //338874"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "22-10-2024  -- 274503 // 500366"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "24-10-2024  --  274967 // 503326"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "28-10-2024   --  275355 // 372856"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "29-10-2024   --  275800 // 379381"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "1-11-2024      --  276232  // 1-pump : 7"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "2-11-2024     --    276819    // 1-pump : 5"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "5-11-2024     --    277082  // 1-pump : 13"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "7-11-2024   ---     277527 // 1866444"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "11-11-2024  ---    277951 // 432307"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "13-11-2024  ---    278393  // 442832"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "15-11-2024   ---   278885 // 451754"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "18-11-2024   ----  279297 // 465259"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "21-11-2024   ---    279716 // 478925"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "24-11-2024   ----   280167 // 490301"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "26-11-2024   ----    280595 // 500094"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "29-11-2024    ----    280975 // 559851"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "3-12-2024      -----    281409 // 520328"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "7-12-2024     -----  281869 // 548146"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "10-12-2024   ----    282323 // 561792"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "13-12-2024  -----     282821 // 1-pump : 7"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "15-12-2024   -----    283278 // 582917"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "17-12-2024  -----     283731 // 593317"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "19-12-2024  ----       284144 // 602326"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "22-12-2024  -----       284572 // 604153"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "25-12-2024  -----        285035 // 628697"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "28-12-2024 ------       285515 // 641344"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "31-12-2024  ------       285880 // 654703"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "4-1-2025  ----------      286290 //  669490"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "7-1-2025 ---------         286692 // 684023"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "10-1-2025 -------          287114 // 697421"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "12-1-2025 ---------       287464 // 643239"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "15-1-2025 ---------        287844 // 719489"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "18-1-2025 ---------         288322 // 653718"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "21-1-2025 ----------         288776 // 742522"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "23-1-2025  -------------      289151 // 665202"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "26-1-2025  ------------        289689 // 765413"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "29-1-2025  ----------           290186 // 676702"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "1-2-2025      ---       290638 // 789939"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "5-2-2025       ---     291106 // 806556"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "8-2-2025       ---     291576 // 820253"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "11-2-2025     ---      292027 // 832397"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "14-2-2025     ---     292497 // 1 - Pump : 7"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "16-2-2025      ---    292978 // 710787"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "20-2-2025     ----     293459 // 869682"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "23-2-2025     ----      293959 // 724882"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "27-2-2025      ----      294462 // 900907"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "4-3-2025        -----   295003 // 920600"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "7-3-2025        -----  295520 // 1 - Pump : 17"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "11-7-2025       -----   297144 // 1 - Pump : 7"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "13-7-2025       -----    297586 // 006733"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "18-7-2025        -----    297995 // 439921"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "21-7-2025        ------   298459 // 450517"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "24-7-2025  ---- 298971 // 459951"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "26-7-2025  ----  299406 // 468466"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "28-7-2025  ----  299958 // 038424"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "1-8-2025  ----  300403 // 489388"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "3-8-2025  ----  300828 // 498390"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "6-8-2025 ---- 301271 // 509126"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "10-8-2025 ---- 301697 // 522783"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "12-8-2025 ---- 302173 // 070758"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "14-8-2025 ---- 302638 // 074956"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "16-8-2025 ---- 303097 // 545934"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "18-8-2025 ---- 303613 // 552871"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "20-8-2025 ---- 304158 // 561138"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "23-8-2025 ---- 304626 // 571164"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "24-8-2025 ---- 305197 // 097194"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "26-8-2025 ---- 305735 // 100475"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "28-8-2025 ---- 306287 // 105353"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "30-8-2025 ---- 306822 // 109544"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "1-9-2025 ----- 307350 // 114565"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "3-9-2025 ---- 307875 // 615876"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "6-9-2025 ---- 308463 // 126512"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "8-9-2025 ---- 309012 // 634696"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "10-9-2025 ---- 309583 // 136128"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "13-9-2025 ---- 310112 // 651995"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "15-9-2025 ---- 310612 // 661785"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "17-9-2025 ---- 311136 // 669828"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "20-9-2025 ---- 311644 // 682571"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "23-9-2025 ---- 312137 // 696692"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "25-9-2025 ---- 312690 // 705052"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "28-9-2025 ---- 313165 // 716759"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "2-10-2025 ---- 313643 // 733133"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "6-10-2025 ----  314105 // 750778"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "10-10-2025 ---- 314562 // 185076"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "14-10-2025 ---- 315042 // 785819"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "18-10-2025 ---- 315514 // 802074"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "23-10-2025 ---- 316028 // 822558"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "25-10-2025 ---- 316571 // 829775"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "28-10-2025 ---- 317079 // 245342"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "30-10-2025 ---- 317569 // 853413"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "2-11-2025 ---- 318104 // 256730"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "4-11-2025 ---- 318605 // 261267"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "7-11-2025 ---- 319149 // 886140"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "9-11-2025 ---- 319684 // 1 - Pump : 13"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "13-11-2025 ---- 320216 // 914670"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "19-11-2025 ---- 320659 // 938709"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "22-11-2025 ---- 321156 // 951353"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "25-11-2025 ---- 321622 // 965535"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "29-11-2025 ---- 322173 // 982522"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "2-12-2025 ---- 322674 // 996561"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "5-12-2025 ---- 323150 // 247895"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "10-12-2025 ---- 323632 // 031557"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "12-12-2025 ---- 324102 // 042262"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "16-12-2025 ---- 324542 // 058210"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "19-12-2025 ---- 325042 // 072687"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "23-12-2025 ---- 325495 // 090656"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "27-12-2025 ---- 326008 // 109317"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "29-12-2025 ---- 326559 // 119044"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "3-1-2026 ---- 327049 // 398168"
+    },
+    {
+      "itemCode": "I00009",
+      "quantity": 1.0,
+      "unitPrice": 1.0,
+      "totalCostKd": 1.0,
+      "note": "",
+      "department": "Leasing",
+      "chassis": "9-1-2026 ---- 327549 // 168187"
+    }
+  ],
+  "generatorReadings": [
+    {
+      "date": "2025-01-08",
+      "time": "10:19:00",
+      "hours": 17759.0,
+      "minutes": 17.0,
+      "totalHours": 17759.28,
+      "daysSinceLast": null
+    },
+    {
+      "date": "2025-01-12",
+      "time": "11:33:00",
+      "hours": 17788.0,
+      "minutes": 6.0,
+      "totalHours": 17788.1,
+      "daysSinceLast": 4.051388889
+    },
+    {
+      "date": "2025-01-16",
+      "time": "09:47:00",
+      "hours": 17824.0,
+      "minutes": 16.0,
+      "totalHours": 17824.27,
+      "daysSinceLast": 3.926388889
+    },
+    {
+      "date": "2025-02-04",
+      "time": "10:57:00",
+      "hours": 17997.0,
+      "minutes": 13.0,
+      "totalHours": 17997.22,
+      "daysSinceLast": 19.04861111
+    }
+  ],
+  "workshopTools": [
+    {
+      "name": "Compressor 1",
+      "type": "Air Compressor",
+      "power": "7.5 hp",
+      "capacity": "500L",
+      "drive": "Diesel Driven",
+      "status": "OPERATIONAL"
+    },
+    {
+      "name": "Compressor 2",
+      "type": "Air Compressor",
+      "power": "7.5 hp",
+      "capacity": "500L",
+      "drive": "Electrically Driven",
+      "status": "OPERATIONAL"
+    },
+    {
+      "name": "Compressor 3",
+      "type": "Air Compressor",
+      "power": "4.5 hp",
+      "capacity": "200L",
+      "drive": "Diesel Driven",
+      "status": "MAINTENANCE"
+    },
+    {
+      "name": "Compressor 4",
+      "type": "Air Compressor",
+      "power": "4.5 hp",
+      "capacity": "200L",
+      "drive": "Diesel Driven",
+      "status": "OPERATIONAL"
+    },
+    {
+      "name": "Compressor 5",
+      "type": "Air Compressor",
+      "power": "3.0 hp",
+      "capacity": "150L",
+      "drive": "Electrically Driven",
+      "status": "OPERATIONAL"
+    },
+    {
+      "name": "Compressor 6",
+      "type": "Air Compressor",
+      "power": "3.0 hp",
+      "capacity": "100L",
+      "drive": "Benzine Driven",
+      "status": "OPERATIONAL"
+    },
+    {
+      "name": "W-Pump 1",
+      "type": "Water Pump",
+      "power": "5.5 hp",
+      "capacity": "3 inch",
+      "drive": "Diesel Driven",
+      "status": "OPERATIONAL"
+    },
+    {
+      "name": "Welding Machine 1",
+      "type": "Welder",
+      "power": "400 Amp",
+      "capacity": "Heavy Duty",
+      "drive": "Electrically Driven",
+      "status": "OPERATIONAL"
+    },
+    {
+      "name": "Welding Machine 2",
+      "type": "Welder",
+      "power": "300 Amp",
+      "capacity": "Standard",
+      "drive": "Diesel Driven",
+      "status": "OPERATIONAL"
+    }
+  ],
+  "technicianSkills": [
+    {
+      "technicianName": "ابو طلال",
+      "skills": {
+        "Crane Training": true,
+        "Pumps operation": true,
+        "Battery charger": true,
+        "Compressor": true,
+        "Generator": true,
+        "Grinder": true,
+        "Hydraulic Press": false,
+        "Driller": false,
+        "Oxy-Acetylene cutting": false
+      },
+      "certifiedCount": 6
+    },
+    {
+      "technicianName": "ابو عزوز",
+      "skills": {
+        "Crane Training": true,
+        "Pumps operation": true,
+        "Battery charger": true,
+        "Compressor": true,
+        "Generator": false,
+        "Grinder": true,
+        "Hydraulic Press": true,
+        "Driller": false,
+        "Oxy-Acetylene cutting": false
+      },
+      "certifiedCount": 6
+    },
+    {
+      "technicianName": "معتز",
+      "skills": {
+        "Crane Training": true,
+        "Pumps operation": true,
+        "Battery charger": false,
+        "Compressor": true,
+        "Generator": true,
+        "Grinder": true,
+        "Hydraulic Press": true,
+        "Driller": true,
+        "Oxy-Acetylene cutting": false
+      },
+      "certifiedCount": 7
+    },
+    {
+      "technicianName": "سيد",
+      "skills": {
+        "Crane Training": true,
+        "Pumps operation": true,
+        "Battery charger": true,
+        "Compressor": true,
+        "Generator": true,
+        "Grinder": true,
+        "Hydraulic Press": true,
+        "Driller": true,
+        "Oxy-Acetylene cutting": false
+      },
+      "certifiedCount": 8
+    },
+    {
+      "technicianName": "صبري",
+      "skills": {
+        "Crane Training": true,
+        "Pumps operation": true,
+        "Battery charger": true,
+        "Compressor": true,
+        "Generator": true,
+        "Grinder": false,
+        "Hydraulic Press": true,
+        "Driller": false,
+        "Oxy-Acetylene cutting": true
+      },
+      "certifiedCount": 7
+    },
+    {
+      "technicianName": "ابراهيم",
+      "skills": {
+        "Crane Training": true,
+        "Pumps operation": true,
+        "Battery charger": false,
+        "Compressor": true,
+        "Generator": true,
+        "Grinder": false,
+        "Hydraulic Press": true,
+        "Driller": false,
+        "Oxy-Acetylene cutting": false
+      },
+      "certifiedCount": 5
+    },
+    {
+      "technicianName": "احمد",
+      "skills": {
+        "Crane Training": true,
+        "Pumps operation": true,
+        "Battery charger": false,
+        "Compressor": true,
+        "Generator": true,
+        "Grinder": true,
+        "Hydraulic Press": true,
+        "Driller": true,
+        "Oxy-Acetylene cutting": false
+      },
+      "certifiedCount": 7
+    },
+    {
+      "technicianName": "سمير",
+      "skills": {
+        "Crane Training": true,
+        "Pumps operation": true,
+        "Battery charger": true,
+        "Compressor": true,
+        "Generator": false,
+        "Grinder": true,
+        "Hydraulic Press": true,
+        "Driller": false,
+        "Oxy-Acetylene cutting": false
+      },
+      "certifiedCount": 6
+    },
+    {
+      "technicianName": "ابو احمد",
+      "skills": {
+        "Crane Training": true,
+        "Pumps operation": true,
+        "Battery charger": false,
+        "Compressor": true,
+        "Generator": false,
+        "Grinder": true,
+        "Hydraulic Press": true,
+        "Driller": false,
+        "Oxy-Acetylene cutting": false
+      },
+      "certifiedCount": 5
+    },
+    {
+      "technicianName": "مهارات الفنيين",
+      "skills": {
+        "Crane Training": true,
+        "Pumps operation": true,
+        "Battery charger": true,
+        "Compressor": true,
+        "Generator": true,
+        "Grinder": true,
+        "Hydraulic Press": true,
+        "Driller": true,
+        "Oxy-Acetylene cutting": true
+      },
+      "certifiedCount": 9
+    },
+    {
+      "technicianName": "ابو طلال",
+      "skills": {
+        "Crane Training": true,
+        "Pumps operation": false,
+        "Battery charger": true,
+        "Compressor": true,
+        "Generator": false,
+        "Grinder": false,
+        "Hydraulic Press": true,
+        "Driller": true,
+        "Oxy-Acetylene cutting": true
+      },
+      "certifiedCount": 6
+    }
+  ],
+  "technicianInfractions": [
+    {
+      "technicianName": "Ahmad Jawawdeh",
+      "date": "2025-07-25",
+      "type": "Negligence in work performance",
+      "comments": "مخالفة التعليمات الخطية بمتابعة نظافة وترتيب الورشة بدون مبرر او رجوع للمهندس المسؤول",
+      "severity": "MEDIUM"
+    },
+    {
+      "technicianName": "Ahmad Jawawdeh",
+      "date": "2025-08-11",
+      "type": "Negligence in work performance",
+      "comments": "عدم الاتزام بالعمل المطلوب دون التبليغ: لم يتم اخذ كونترولر تييف حفارة 824 دون تبليغ المهندس",
+      "severity": "MEDIUM"
+    },
+    {
+      "technicianName": "Yasin Salameh",
+      "date": "2025-08-11",
+      "type": "Negligence in work performance",
+      "comments": "عدم الاتزام بالعمل المطلوب دون التبليغ: لم يتم اخذ كونترولر تييف حفارة 824 دون تبليغ المهندس",
+      "severity": "MEDIUM"
+    },
+    {
+      "technicianName": "Motazz Lutfi",
+      "date": "2025-08-28",
+      "type": "Negligence in work performance",
+      "comments": "مخالفة التعليمات الخطية بمتابعة نظافة وترتيب الورشة بدون مبرر او رجوع للمهندس المسؤول",
+      "severity": "MEDIUM"
+    },
+    {
+      "technicianName": "Ahmad Jawawdeh",
+      "date": "2025-08-28",
+      "type": "Negligence in work performance",
+      "comments": "مخالفة التعليمات الخطية بمتابعة نظافة وترتيب الورشة بدون مبرر او رجوع للمهندس المسؤول",
+      "severity": "MEDIUM"
+    },
+    {
+      "technicianName": "Ahmad Jawawdeh",
+      "date": "2025-11-27",
+      "type": "Negligence in work performance",
+      "comments": "مخالفة التعليمات ورفض الذهاب لتبديل طرمبة بلدوزر 736 بحجة \"الشباب كلها بدلت طرمبة\" \"الشباب طلعت 10مرات\"",
+      "severity": "MEDIUM"
+    },
+    {
+      "technicianName": "Ashraf",
+      "date": "2025-12-10",
+      "type": "Negligence in work performance",
+      "comments": "خالفة التعليمات وعدم اخذ العدة اللازمة لشد براغي بلاطات بلدوزر 679 بحجة عدم توفر الدريل الكبير دون ابلاغ المهندس المسؤول",
+      "severity": "MEDIUM"
+    },
+    {
+      "technicianName": "Abu Talal",
+      "date": "2025-12-10",
+      "type": "Negligence in work performance",
+      "comments": "خالفة التعليمات وعدم اخذ العدة اللازمة لشد براغي بلاطات بلدوزر 679 بحجة عدم توفر الدريل الكبير دون ابلاغ المهندس المسؤول",
+      "severity": "MEDIUM"
+    },
+    {
+      "technicianName": "Taha Asyouti",
+      "date": "2025-12-23",
+      "type": "Negligence in work performance",
+      "comments": "لم يقم باي من المهام المطلوبة منه لذلك اليوم وعدم الصدق عند ما تم سؤاله",
+      "severity": "MEDIUM"
+    },
+    {
+      "technicianName": "Motazz Lutfi",
+      "date": "2026-01-19",
+      "type": "Violation of company law and policy",
+      "comments": "التدخين في الشركة وترك اعقاب السجائر على الارض",
+      "severity": "LOW"
+    },
+    {
+      "technicianName": "Ali Sabry",
+      "date": "2026-07-19",
+      "type": "Violation of company law and policy",
+      "comments": "تاخير عن الدوام مما ادى الى تأخير في العمل، وتمديده للاوفر تايم",
+      "severity": "LOW"
+    }
+  ],
+  "kpiTargets": [
+    {
+      "department": "Overall",
+      "kpiName": "Safety Meeting Participation (100%)",
+      "fy26Target": 6.0,
+      "h1Target": 3.0,
+      "h1Progress": 2.0,
+      "current": 4.0,
+      "completionRate": 66.7,
+      "pic": "Eng. Abdalrahamn"
+    },
+    {
+      "department": "Overall",
+      "kpiName": "DOD Points (applicable in 2nd half only)",
+      "fy26Target": 0.66,
+      "h1Target": 0.0,
+      "h1Progress": 0.0,
+      "current": 0.0,
+      "completionRate": 0.0,
+      "pic": "Eng. Abdelrahman"
+    },
+    {
+      "department": "Overall",
+      "kpiName": "Monthly Reports (100%)",
+      "fy26Target": 1.0,
+      "h1Target": 0.5,
+      "h1Progress": 0.47,
+      "current": 0.0,
+      "completionRate": 0.0,
+      "pic": "All"
+    },
+    {
+      "department": "Equipment",
+      "kpiName": "Market Share (Jan-Dec Total)",
+      "fy26Target": 0.43,
+      "h1Target": 0.22,
+      "h1Progress": 0.0,
+      "current": 0.0,
+      "completionRate": 0.0,
+      "pic": "Eng. Mutasem"
+    },
+    {
+      "department": "Equipment",
+      "kpiName": "Market Coverage (Deal Participation ratio)",
+      "fy26Target": 0.8,
+      "h1Target": 0.4,
+      "h1Progress": 0.83,
+      "current": 0.0,
+      "completionRate": 0.0,
+      "pic": "Eng. Abdelrahman"
+    },
+    {
+      "department": "Equipment",
+      "kpiName": "PO from Non-Komatsu Customer",
+      "fy26Target": 6.0,
+      "h1Target": 3.0,
+      "h1Progress": 0.0,
+      "current": 0.0,
+      "completionRate": 0.0,
+      "pic": "Eng. Abdelrahman"
+    },
+    {
+      "department": "Equipment",
+      "kpiName": "In-house Finance Ratio",
+      "fy26Target": 0.8,
+      "h1Target": 0.4,
+      "h1Progress": 0.0,
+      "current": 0.0,
+      "completionRate": 0.0,
+      "pic": "Eng. Abdelrahman"
+    },
+    {
+      "department": "After-market",
+      "kpiName": "Growth of Parts market share",
+      "fy26Target": 533.0,
+      "h1Target": 266.5,
+      "h1Progress": 359.0,
+      "current": 550.0,
+      "completionRate": 103.2,
+      "pic": "Eng. Faisal"
+    },
+    {
+      "department": "After-market",
+      "kpiName": "Hansei monthly report",
+      "fy26Target": 1.0,
+      "h1Target": 0.5,
+      "h1Progress": 0.5,
+      "current": 0.0,
+      "completionRate": 100.0,
+      "pic": "Eng. Abdelrahman"
+    },
+    {
+      "department": "After-market",
+      "kpiName": "K-Prime conversion",
+      "fy26Target": 2.0,
+      "h1Target": 1.0,
+      "h1Progress": 1.0,
+      "current": 3.0,
+      "completionRate": 150.0,
+      "pic": "Eng. Abdelrahman"
+    },
+    {
+      "department": "After-market",
+      "kpiName": "UMS coverage%",
+      "fy26Target": 2.0,
+      "h1Target": 1.0,
+      "h1Progress": 8.0,
+      "current": 8.0,
+      "completionRate": 400.0,
+      "pic": "Eng. Abdelrahman"
+    },
+    {
+      "department": "Service",
+      "kpiName": "Service contract",
+      "fy26Target": 4.0,
+      "h1Target": 2.0,
+      "h1Progress": 2.0,
+      "current": 0.0,
+      "completionRate": 0.0,
+      "pic": "Eng.Abdalrahman"
+    },
+    {
+      "department": "Service",
+      "kpiName": "Customer Satisfaction (WO)",
+      "fy26Target": 28.0,
+      "h1Target": 14.0,
+      "h1Progress": 12.0,
+      "current": 26.0,
+      "completionRate": 92.9,
+      "pic": "Eng. Abdelrahman"
+    },
+    {
+      "department": "Service",
+      "kpiName": "Machine Touch Ratio (KME selected machines)",
+      "fy26Target": 11.0,
+      "h1Target": 5.5,
+      "h1Progress": 7.0,
+      "current": 10.0,
+      "completionRate": 90.9,
+      "pic": "Eng. Abdelrahman"
+    },
+    {
+      "department": "Service",
+      "kpiName": "SMR updated ratio (10 years pop)",
+      "fy26Target": 302.0,
+      "h1Target": 151.0,
+      "h1Progress": 274.0,
+      "current": 292.0,
+      "completionRate": 96.7,
+      "pic": "Eng. Abdelrahman"
+    },
+    {
+      "department": "Training",
+      "kpiName": "LMS utilization",
+      "fy26Target": 0.5,
+      "h1Target": 0.25,
+      "h1Progress": 0.76,
+      "current": 0.0,
+      "completionRate": 0.0,
+      "pic": "HR"
+    },
+    {
+      "department": "Training",
+      "kpiName": "Inhouse training",
+      "fy26Target": 10.0,
+      "h1Target": 5.0,
+      "h1Progress": 6.0,
+      "current": 0.0,
+      "completionRate": 0.0,
+      "pic": "Eng. Abdelrahman"
+    },
+    {
+      "department": "Training",
+      "kpiName": "Training for customer",
+      "fy26Target": 10.0,
+      "h1Target": 5.0,
+      "h1Progress": 5.0,
+      "current": 0.0,
+      "completionRate": 0.0,
+      "pic": "Eng. Abdelrahman"
+    }
+  ],
+  "warranties": [
+    {
+      "purchaseDate": "2025-03-04",
+      "itemDescription": "Gales Battery 12V 200AH-N200MF Gales",
+      "batteryOrPartSerial": "24BA20053448",
+      "supplierCompany": "Al Hassani Auto Parts",
+      "receiptNo": "4032510",
+      "priceKd": 32.0,
+      "machineSerial": "",
+      "comment": "16 KD discount total",
+      "warrantyPeriodMonths": 12,
+      "status": "ACTIVE"
+    },
+    {
+      "purchaseDate": "2025-03-04",
+      "itemDescription": "Gales Battery 12V 200AH-N200MF Gales",
+      "batteryOrPartSerial": "24BA20053450",
+      "supplierCompany": "Al Hassani Auto Parts",
+      "receiptNo": "4032510",
+      "priceKd": 32.0,
+      "machineSerial": "",
+      "comment": "16 KD discount total",
+      "warrantyPeriodMonths": 12,
+      "status": "ACTIVE"
+    },
+    {
+      "purchaseDate": "2025-03-17",
+      "itemDescription": "AUTORON 12V-NS70MF AR",
+      "batteryOrPartSerial": "KPEX241130K309D0536",
+      "supplierCompany": "Al Hassani Auto Parts",
+      "receiptNo": "17032506",
+      "priceKd": 17.0,
+      "machineSerial": "",
+      "comment": "للرافعة الشوكية",
+      "warrantyPeriodMonths": 12,
+      "status": "ACTIVE"
+    },
+    {
+      "purchaseDate": "2025-03-17",
+      "itemDescription": "AUTORON 12V-NS70MF AR",
+      "batteryOrPartSerial": "KPEX241130K309D0548",
+      "supplierCompany": "Al Hassani Auto Parts",
+      "receiptNo": "17032506",
+      "priceKd": 17.0,
+      "machineSerial": "",
+      "comment": "للرافعة الشوكية",
+      "warrantyPeriodMonths": 12,
+      "status": "ACTIVE"
+    },
+    {
+      "purchaseDate": "2025-04-26",
+      "itemDescription": "Gales Battery 12V 200AH-N200MF Gales",
+      "batteryOrPartSerial": "missing",
+      "supplierCompany": "Al Hassani Auto Parts",
+      "receiptNo": "26042515",
+      "priceKd": 40.0,
+      "machineSerial": "",
+      "comment": "87724.0",
+      "warrantyPeriodMonths": 12,
+      "status": "ACTIVE"
+    },
+    {
+      "purchaseDate": "2025-04-26",
+      "itemDescription": "Gales Battery 12V 200AH-N200MF Gales",
+      "batteryOrPartSerial": "missing",
+      "supplierCompany": "Al Hassani Auto Parts",
+      "receiptNo": "26042515",
+      "priceKd": 40.0,
+      "machineSerial": "",
+      "comment": "87724.0",
+      "warrantyPeriodMonths": 12,
+      "status": "ACTIVE"
+    },
+    {
+      "purchaseDate": "2025-06-21",
+      "itemDescription": "Gales Battery 12V 150AH-N150MF Gales",
+      "batteryOrPartSerial": "25BA00065310",
+      "supplierCompany": "Al Hassani Auto Parts",
+      "receiptNo": "21062524",
+      "priceKd": 30.0,
+      "machineSerial": "",
+      "comment": "81869.0",
+      "warrantyPeriodMonths": 12,
+      "status": "ACTIVE"
+    },
+    {
+      "purchaseDate": "2025-06-21",
+      "itemDescription": "Gales Battery 12V 150AH-N150MF Gales",
+      "batteryOrPartSerial": "25BA00065578",
+      "supplierCompany": "Al Hassani Auto Parts",
+      "receiptNo": "21062524",
+      "priceKd": 30.0,
+      "machineSerial": "",
+      "comment": "81869.0",
+      "warrantyPeriodMonths": 12,
+      "status": "ACTIVE"
+    },
+    {
+      "purchaseDate": "2025-06-21",
+      "itemDescription": "Gales Battery 12V 150AH-N150MF Gales",
+      "batteryOrPartSerial": "25BA00065582",
+      "supplierCompany": "Al Hassani Auto Parts",
+      "receiptNo": "21062524",
+      "priceKd": 30.0,
+      "machineSerial": "",
+      "comment": "81858.0",
+      "warrantyPeriodMonths": 12,
+      "status": "ACTIVE"
+    },
+    {
+      "purchaseDate": "2025-06-21",
+      "itemDescription": "Gales Battery 12V 150AH-N150MF Gales",
+      "batteryOrPartSerial": "25BA00065576",
+      "supplierCompany": "Al Hassani Auto Parts",
+      "receiptNo": "21062524",
+      "priceKd": 30.0,
+      "machineSerial": "",
+      "comment": "81858.0",
+      "warrantyPeriodMonths": 12,
+      "status": "ACTIVE"
+    },
+    {
+      "purchaseDate": "2025-06-28",
+      "itemDescription": "Gales Battery 12V 150AH-N150MF Gales",
+      "batteryOrPartSerial": "25BA00065662",
+      "supplierCompany": "Al Hassani Auto Parts",
+      "receiptNo": "28062511",
+      "priceKd": 30.0,
+      "machineSerial": "",
+      "comment": "81813.0",
+      "warrantyPeriodMonths": 12,
+      "status": "ACTIVE"
+    },
+    {
+      "purchaseDate": "2025-06-28",
+      "itemDescription": "Gales Battery 12V 150AH-N150MF Gales",
+      "batteryOrPartSerial": "25BA00065665",
+      "supplierCompany": "Al Hassani Auto Parts",
+      "receiptNo": "28062511",
+      "priceKd": 30.0,
+      "machineSerial": "",
+      "comment": "81813.0",
+      "warrantyPeriodMonths": 12,
+      "status": "ACTIVE"
+    },
+    {
+      "purchaseDate": "2025-06-29",
+      "itemDescription": "Gales Battery 12V 200AH-N200MF Gales",
+      "batteryOrPartSerial": "25BA00095407",
+      "supplierCompany": "Al Hassani Auto Parts",
+      "receiptNo": "29062513",
+      "priceKd": 40.0,
+      "machineSerial": "",
+      "comment": "-",
+      "warrantyPeriodMonths": 12,
+      "status": "ACTIVE"
+    },
+    {
+      "purchaseDate": "2025-06-29",
+      "itemDescription": "Gales Battery 12V 200AH-N200MF Gales",
+      "batteryOrPartSerial": "25BA00095535",
+      "supplierCompany": "Al Hassani Auto Parts",
+      "receiptNo": "29062513",
+      "priceKd": 40.0,
+      "machineSerial": "",
+      "comment": "-",
+      "warrantyPeriodMonths": 12,
+      "status": "ACTIVE"
+    },
+    {
+      "purchaseDate": "2025-07-08",
+      "itemDescription": "Deltaa 80D26L",
+      "batteryOrPartSerial": "MK1210BE0306F1198",
+      "supplierCompany": "Nazma Al-Salam",
+      "receiptNo": "1676",
+      "priceKd": 25.0,
+      "machineSerial": "",
+      "comment": "-",
+      "warrantyPeriodMonths": 12,
+      "status": "ACTIVE"
+    },
+    {
+      "purchaseDate": "2025-07-21",
+      "itemDescription": "Gales Battery 12V 150AH-N150MF Gales",
+      "batteryOrPartSerial": "25BA00102518",
+      "supplierCompany": "Al Hassani Auto Parts",
+      "receiptNo": "21072513",
+      "priceKd": 30.0,
+      "machineSerial": "",
+      "comment": "81812.0",
+      "warrantyPeriodMonths": 12,
+      "status": "ACTIVE"
+    },
+    {
+      "purchaseDate": "2025-07-21",
+      "itemDescription": "Gales Battery 12V 150AH-N150MF Gales",
+      "batteryOrPartSerial": "24BA20069241",
+      "supplierCompany": "Al Hassani Auto Parts",
+      "receiptNo": "21072513",
+      "priceKd": 30.0,
+      "machineSerial": "",
+      "comment": "81812.0",
+      "warrantyPeriodMonths": 12,
+      "status": "ACTIVE"
+    },
+    {
+      "purchaseDate": "2025-07-31",
+      "itemDescription": "Gales Battery 12V 150AH-N150MF Gales",
+      "batteryOrPartSerial": "25BA00065348",
+      "supplierCompany": "Al Hassani Auto Parts",
+      "receiptNo": "31072520",
+      "priceKd": 32.5,
+      "machineSerial": "",
+      "comment": "+ Import changes",
+      "warrantyPeriodMonths": 12,
+      "status": "ACTIVE"
+    },
+    {
+      "purchaseDate": "2025-07-31",
+      "itemDescription": "Gales Battery 12V 150AH-N150MF Gales",
+      "batteryOrPartSerial": "25BA00065355",
+      "supplierCompany": "Al Hassani Auto Parts",
+      "receiptNo": "31072520",
+      "priceKd": 32.5,
+      "machineSerial": "",
+      "comment": "+ Import changes",
+      "warrantyPeriodMonths": 12,
+      "status": "ACTIVE"
+    },
+    {
+      "purchaseDate": "2025-08-05",
+      "itemDescription": "Gales Battery 12V 200AH-N200MF Gales",
+      "batteryOrPartSerial": "25BA00095368",
+      "supplierCompany": "Al Hassani Auto Parts",
+      "receiptNo": "5082523",
+      "priceKd": 40.0,
+      "machineSerial": "",
+      "comment": "87842.0",
+      "warrantyPeriodMonths": 12,
+      "status": "ACTIVE"
+    },
+    {
+      "purchaseDate": "2025-08-05",
+      "itemDescription": "Gales Battery 12V 200AH-N200MF Gales",
+      "batteryOrPartSerial": "25BA00095347",
+      "supplierCompany": "Al Hassani Auto Parts",
+      "receiptNo": "5082523",
+      "priceKd": 40.0,
+      "machineSerial": "",
+      "comment": "87842.0",
+      "warrantyPeriodMonths": 12,
+      "status": "ACTIVE"
+    },
+    {
+      "purchaseDate": "2025-08-05",
+      "itemDescription": "Gales Battery 12V 150AH-N150MF Gales",
+      "batteryOrPartSerial": "25BA00105532",
+      "supplierCompany": "Al Hassani Auto Parts",
+      "receiptNo": "5082523",
+      "priceKd": 30.0,
+      "machineSerial": "",
+      "comment": "81818.0",
+      "warrantyPeriodMonths": 12,
+      "status": "ACTIVE"
+    },
+    {
+      "purchaseDate": "2025-08-05",
+      "itemDescription": "Gales Battery 12V 150AH-N150MF Gales",
+      "batteryOrPartSerial": "25BA00102453",
+      "supplierCompany": "Al Hassani Auto Parts",
+      "receiptNo": "5082523",
+      "priceKd": 30.0,
+      "machineSerial": "",
+      "comment": "81818.0",
+      "warrantyPeriodMonths": 12,
+      "status": "ACTIVE"
+    },
+    {
+      "purchaseDate": "2025-09-03",
+      "itemDescription": "Gales Battery 12V 200AH-N200MF Gales",
+      "batteryOrPartSerial": "25BA00095401",
+      "supplierCompany": "Al -Maimoon Parts Co.",
+      "receiptNo": "1712",
+      "priceKd": 42.0,
+      "machineSerial": "",
+      "comment": "87736.0",
+      "warrantyPeriodMonths": 12,
+      "status": "ACTIVE"
+    },
+    {
+      "purchaseDate": "2025-09-03",
+      "itemDescription": "Gales Battery 12V 200AH-N200MF Gales",
+      "batteryOrPartSerial": "25BA00095401",
+      "supplierCompany": "Al -Maimoon Parts Co.",
+      "receiptNo": "1712",
+      "priceKd": 42.0,
+      "machineSerial": "",
+      "comment": "87736.0",
+      "warrantyPeriodMonths": 12,
+      "status": "ACTIVE"
+    },
+    {
+      "purchaseDate": "2025-10-22",
+      "itemDescription": "New Earth 12V 200AH-N200MF NE",
+      "batteryOrPartSerial": "MK433JKW250614J0017",
+      "supplierCompany": "Al Hassani Auto Parts",
+      "receiptNo": "22102502",
+      "priceKd": 40.0,
+      "machineSerial": "",
+      "comment": "87714.0",
+      "warrantyPeriodMonths": 12,
+      "status": "ACTIVE"
+    },
+    {
+      "purchaseDate": "2025-10-22",
+      "itemDescription": "New Earth 12V 200AH-N200MF NE",
+      "batteryOrPartSerial": "MK433JKW250614J0020",
+      "supplierCompany": "Al Hassani Auto Parts",
+      "receiptNo": "22102502",
+      "priceKd": 40.0,
+      "machineSerial": "",
+      "comment": "87714.0",
+      "warrantyPeriodMonths": 12,
+      "status": "ACTIVE"
+    },
+    {
+      "purchaseDate": "2025-11-12",
+      "itemDescription": "New Earth 12V 150AH-N150MF NE",
+      "batteryOrPartSerial": "25073800",
+      "supplierCompany": "Al Hassani Auto Parts",
+      "receiptNo": "12112501",
+      "priceKd": 31.0,
+      "machineSerial": "",
+      "comment": "81859.0",
+      "warrantyPeriodMonths": 12,
+      "status": "ACTIVE"
+    },
+    {
+      "purchaseDate": "2025-11-12",
+      "itemDescription": "New Earth 12V 150AH-N150MF NE",
+      "batteryOrPartSerial": "25073800",
+      "supplierCompany": "Al Hassani Auto Parts",
+      "receiptNo": "12112501",
+      "priceKd": 31.0,
+      "machineSerial": "",
+      "comment": "81859.0",
+      "warrantyPeriodMonths": 12,
+      "status": "ACTIVE"
+    },
+    {
+      "purchaseDate": "2025-11-25",
+      "itemDescription": "SBK-N120MF SBK Battery 12V 120AH",
+      "batteryOrPartSerial": "250803SBK1114781",
+      "supplierCompany": "Al Hassani Auto Parts",
+      "receiptNo": "25112510",
+      "priceKd": 30.0,
+      "machineSerial": "",
+      "comment": "Roof generator",
+      "warrantyPeriodMonths": 12,
+      "status": "ACTIVE"
+    },
+    {
+      "purchaseDate": "2026-01-19",
+      "itemDescription": "JPC -N120MF JPC Battery 12V",
+      "batteryOrPartSerial": "MK419JYM251023I0057",
+      "supplierCompany": "Al Hassani Auto Parts",
+      "receiptNo": "19012621",
+      "priceKd": 30.0,
+      "machineSerial": "",
+      "comment": "81652.0",
+      "warrantyPeriodMonths": 12,
+      "status": "ACTIVE"
+    },
+    {
+      "purchaseDate": "2026-01-19",
+      "itemDescription": "JPC -N120MF JPC Battery 12V",
+      "batteryOrPartSerial": "MK419JYM251023I0050",
+      "supplierCompany": "Al Hassani Auto Parts",
+      "receiptNo": "19012621",
+      "priceKd": 30.0,
+      "machineSerial": "",
+      "comment": "81652.0",
+      "warrantyPeriodMonths": 12,
+      "status": "ACTIVE"
+    },
+    {
+      "purchaseDate": "2026-03-03",
+      "itemDescription": "AMDIN80L-EFB AMARON BATTERY 80Ah",
+      "batteryOrPartSerial": "ABD3838Z411674",
+      "supplierCompany": "Bandira Auto Spare Parts Center Co",
+      "receiptNo": "137756",
+      "priceKd": 40.0,
+      "machineSerial": "",
+      "comment": "Asyouti Pickup",
+      "warrantyPeriodMonths": 12,
+      "status": "ACTIVE"
+    },
+    {
+      "purchaseDate": "2026-04-12",
+      "itemDescription": "Gales Battery 12V 150AH",
+      "batteryOrPartSerial": "AKLCH054A1385",
+      "supplierCompany": "Al Hassani Auto Parts",
+      "receiptNo": "12042602",
+      "priceKd": 34.0,
+      "machineSerial": "",
+      "comment": "81850.0",
+      "warrantyPeriodMonths": 12,
+      "status": "ACTIVE"
+    },
+    {
+      "purchaseDate": "2026-04-12",
+      "itemDescription": "Gales Battery 12V 150AH",
+      "batteryOrPartSerial": "AKLCH054A1392",
+      "supplierCompany": "Al Hassani Auto Parts",
+      "receiptNo": "12042602",
+      "priceKd": 34.0,
+      "machineSerial": "",
+      "comment": "81850.0",
+      "warrantyPeriodMonths": 12,
+      "status": "ACTIVE"
+    },
+    {
+      "purchaseDate": "2026-07-17",
+      "itemDescription": "AutoPRO EFB70-BH 70Ah",
+      "batteryOrPartSerial": "A2K5G064448 2K54",
+      "supplierCompany": "Zaeem Al-Jahra Auto",
+      "receiptNo": "3106",
+      "priceKd": 20.0,
+      "machineSerial": "",
+      "comment": "Hilux Pickup",
+      "warrantyPeriodMonths": 12,
+      "status": "ACTIVE"
+    },
+    {
+      "purchaseDate": "2026-08-01",
+      "itemDescription": "Gales Battery 12V 150AH N150MF",
+      "batteryOrPartSerial": "AKLCH054B08966",
+      "supplierCompany": "Al Hassani Auto Parts",
+      "receiptNo": "1082610",
+      "priceKd": 35.0,
+      "machineSerial": "",
+      "comment": "81868.0",
+      "warrantyPeriodMonths": 12,
+      "status": "ACTIVE"
+    },
+    {
+      "purchaseDate": "2026-08-01",
+      "itemDescription": "Gales Battery 12V 150AH N150MF",
+      "batteryOrPartSerial": "AKLCH054B09106",
+      "supplierCompany": "Al Hassani Auto Parts",
+      "receiptNo": "1082610",
+      "priceKd": 35.0,
+      "machineSerial": "",
+      "comment": "81868.0",
+      "warrantyPeriodMonths": 12,
+      "status": "ACTIVE"
+    },
+    {
+      "purchaseDate": "2026-08-09",
+      "itemDescription": "TG1340 750R16 122/118L",
+      "batteryOrPartSerial": "Blackhawk TT BAR67",
+      "supplierCompany": "Abdulhadi AlMailem",
+      "receiptNo": "1201042603451",
+      "priceKd": 90.0,
+      "machineSerial": "",
+      "comment": "White Heno 2 tires",
+      "warrantyPeriodMonths": 12,
+      "status": "ACTIVE"
+    }
+  ]
+}

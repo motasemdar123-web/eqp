@@ -8,6 +8,8 @@ import { getNotifications, markAllNotificationsRead, markNotificationRead } from
 
 const navItems = [
   { href: '/management', label: 'Dashboard', icon: 'dashboard' },
+  { href: '/management/fleet-analytics', label: 'Fleet Analytics', icon: 'analytics' },
+  { href: '/management/workshop', label: 'Workshop & Fleet', icon: 'workshop' },
   { href: '/management/technicians', label: 'Technicians', icon: 'users' },
   { href: '/management/scheduling', label: 'Scheduling', icon: 'calendar' },
   { href: '/management/daily-planner', label: 'Daily Planner', icon: 'planner' },
@@ -74,6 +76,19 @@ const iconPaths = {
       <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
     </>
   ),
+  analytics: (
+    <>
+      <line x1="18" y1="20" x2="18" y2="10" />
+      <line x1="12" y1="20" x2="12" y2="4" />
+      <line x1="6" y1="20" x2="6" y2="14" />
+      <line x1="3" y1="20" x2="21" y2="20" />
+    </>
+  ),
+  workshop: (
+    <>
+      <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
+    </>
+  ),
   japanese: (
     <>
       <path d="M4 6h16M7 6v14M17 6v14M2 10h20M9 14h6" />
@@ -122,6 +137,8 @@ function formatRoleLabel(role) {
 const COMMAND_ITEMS = [
   // Navigation
   { id: 'nav-dashboard', title: 'Management Dashboard', subtitle: 'Operations overview, KPIs, and live roster', href: '/management', category: 'Navigation', badge: 'Overview' },
+  { id: 'nav-fleet-analytics', title: 'Fleet Analytics & Component Lifecycle', subtitle: 'Greasing heatmap, fan pumps, wear lifespans & ripper stock', href: '/management/fleet-analytics', category: 'Navigation', badge: 'Fleet' },
+  { id: 'nav-workshop', title: 'Workshop, Vehicles & KPI Goals', subtitle: 'Service truck mileage, fuel allocations, tools & KPI scorecards', href: '/management/workshop', category: 'Navigation', badge: 'Workshop' },
   { id: 'nav-technicians', title: 'Technicians Management', subtitle: 'Staff records, shifts, regions, skills & dispatch', href: '/management/technicians', category: 'Navigation', badge: 'Staff' },
   { id: 'nav-scheduling', title: 'Scheduling & Work Windows', subtitle: 'Gantt timeline, work windows, shop manuals AI', href: '/management/scheduling', category: 'Navigation', badge: 'Schedule' },
   { id: 'nav-daily-planner', title: 'Daily Schedule Planner', subtitle: 'Shift task sequencing and supervisor dispatch', href: '/management/daily-planner', category: 'Navigation', badge: 'Planner' },

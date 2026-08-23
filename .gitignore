@@ -19,5 +19,7 @@ backend/*.png
 **/browser_session/
 **/pdx_cookies.txt
 **/auth_state.json
+sheet_download.xlsx
+
 
 

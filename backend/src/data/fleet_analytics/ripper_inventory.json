@@ -1,0 +1,605 @@
+{
+  "stock": {
+    "Hensley": 114,
+    "Jdaemi": 24,
+    "CAT 9W-2452": 18,
+    "CAT 6H-5452": 12,
+    "CAT 9W-2452 RC": 8
+  },
+  "log": [
+    {
+      "serial": "87682",
+      "date": "2025-11-12",
+      "smr": 18559.9,
+      "toothType": "CAT 9W-2452",
+      "pinType": "Komatsu",
+      "location": "",
+      "costKd": 45.0
+    },
+    {
+      "serial": "87743 - Spare",
+      "date": "2025-11-05",
+      "smr": null,
+      "toothType": "CAT 9W-2452",
+      "pinType": "Komatsu",
+      "location": "17.25",
+      "costKd": 45.0
+    },
+    {
+      "serial": "87743",
+      "date": "2025-11-04",
+      "smr": 10550.5,
+      "toothType": "CAT 9W-2452",
+      "pinType": "Komatsu",
+      "location": "17.25",
+      "costKd": 45.0
+    },
+    {
+      "serial": "87705",
+      "date": "2025-11-04",
+      "smr": 13095.8,
+      "toothType": "CAT 9W-2452",
+      "pinType": "Komatsu",
+      "location": "17.25",
+      "costKd": 45.0
+    },
+    {
+      "serial": "87705 - Spare",
+      "date": "2025-10-26",
+      "smr": null,
+      "toothType": "CAT 9W-2452",
+      "pinType": "Komatsu",
+      "location": "17.25",
+      "costKd": 45.0
+    },
+    {
+      "serial": "Tare (0)",
+      "date": "2025-10-09",
+      "smr": null,
+      "toothType": "CAT 9W-2452",
+      "pinType": "Standard",
+      "location": "16",
+      "costKd": 45.0
+    },
+    {
+      "serial": "87682 - Spare",
+      "date": "2025-10-07",
+      "smr": null,
+      "toothType": "CAT 9W-2452",
+      "pinType": "Komatsu",
+      "location": "17.25",
+      "costKd": 45.0
+    },
+    {
+      "serial": "87682",
+      "date": "2025-10-07",
+      "smr": 18433.3,
+      "toothType": "CAT 9W-2452",
+      "pinType": "Komatsu",
+      "location": "17.25",
+      "costKd": 126.6
+    },
+    {
+      "serial": "87705",
+      "date": "2025-10-01",
+      "smr": 13000.2,
+      "toothType": "CAT 9W-2452",
+      "pinType": "Komatsu",
+      "location": "17.25",
+      "costKd": 95.6
+    },
+    {
+      "serial": "87705",
+      "date": "2025-09-22",
+      "smr": 12926.6,
+      "toothType": "CAT 9W-2452",
+      "pinType": "No pin change",
+      "location": "16",
+      "costKd": 73.6
+    },
+    {
+      "serial": "87705",
+      "date": "2025-09-13",
+      "smr": 12843.2,
+      "toothType": "CAT 9W-2452",
+      "pinType": "No pin change",
+      "location": "16",
+      "costKd": 83.4
+    },
+    {
+      "serial": "87705",
+      "date": "2025-09-06",
+      "smr": 12795.6,
+      "toothType": "CAT 9W-2452",
+      "pinType": "Standard",
+      "location": "16",
+      "costKd": 47.6
+    },
+    {
+      "serial": "87705",
+      "date": "2025-08-24",
+      "smr": 12702.5,
+      "toothType": "CAT 9W-2452",
+      "pinType": "Komatsu",
+      "location": "17.25",
+      "costKd": 93.1
+    },
+    {
+      "serial": "87705",
+      "date": "2025-07-20",
+      "smr": 12550.8,
+      "toothType": "CAT 9W-2452 - Used",
+      "pinType": "Komatsu",
+      "location": "1.25",
+      "costKd": 151.7
+    },
+    {
+      "serial": "87822",
+      "date": "2025-07-20",
+      "smr": 9599.6,
+      "toothType": "CAT 9W-2452",
+      "pinType": "No pin change",
+      "location": "16",
+      "costKd": 45.0
+    },
+    {
+      "serial": "87822",
+      "date": "2025-07-10",
+      "smr": 9536.5,
+      "toothType": "CAT 9W-2452",
+      "pinType": "No pin change",
+      "location": "16",
+      "costKd": 63.1
+    },
+    {
+      "serial": "87705 - Spare",
+      "date": "2025-07-10",
+      "smr": 12498.3,
+      "toothType": "CAT 9W-2452 - Used",
+      "pinType": "Standard",
+      "location": "",
+      "costKd": 45.0
+    },
+    {
+      "serial": "87705",
+      "date": "2025-07-10",
+      "smr": 12498.3,
+      "toothType": "CAT 9W-2452",
+      "pinType": "Komatsu",
+      "location": "17.25",
+      "costKd": 52.5
+    },
+    {
+      "serial": "87705",
+      "date": "2025-06-28",
+      "smr": 12403.0,
+      "toothType": "CAT 9W-2452",
+      "pinType": "Komatsu",
+      "location": "17.25",
+      "costKd": 95.3
+    },
+    {
+      "serial": "87822",
+      "date": "2025-06-26",
+      "smr": 9440.4,
+      "toothType": "CAT 9W-2452",
+      "pinType": "Komatsu",
+      "location": "17.25",
+      "costKd": 96.1
+    },
+    {
+      "serial": "87822",
+      "date": "2025-06-21",
+      "smr": 9399.4,
+      "toothType": "CAT 9W-2452",
+      "pinType": "Komatsu",
+      "location": "17.25",
+      "costKd": 41.0
+    },
+    {
+      "serial": "87705",
+      "date": "2025-06-19",
+      "smr": 12331.4,
+      "toothType": "CAT 9W-2452",
+      "pinType": "No pin change",
+      "location": "16",
+      "costKd": 71.6
+    },
+    {
+      "serial": "87822",
+      "date": "2025-06-10",
+      "smr": 9326.0,
+      "toothType": "CAT 9W-2452",
+      "pinType": "No pin change",
+      "location": "16",
+      "costKd": 73.4
+    },
+    {
+      "serial": "87705",
+      "date": "2025-06-04",
+      "smr": 12232.7,
+      "toothType": "CAT 9W-2452",
+      "pinType": "No pin change",
+      "location": "16",
+      "costKd": 98.7
+    },
+    {
+      "serial": "87822",
+      "date": "2025-06-01",
+      "smr": 9273.1,
+      "toothType": "CAT 9W-2452",
+      "pinType": "No pin change",
+      "location": "16",
+      "costKd": 52.9
+    },
+    {
+      "serial": "87705",
+      "date": "2025-05-26",
+      "smr": 12168.1,
+      "toothType": "CAT 9W-2452",
+      "pinType": "Komatsu",
+      "location": "17.25",
+      "costKd": 64.6
+    },
+    {
+      "serial": "87822",
+      "date": "2025-05-22",
+      "smr": 9211.0,
+      "toothType": "CAT 9W-2452",
+      "pinType": "Komatsu",
+      "location": "17.25",
+      "costKd": 62.1
+    },
+    {
+      "serial": "87705",
+      "date": "2025-05-18",
+      "smr": 12109.4,
+      "toothType": "CAT 9W-2452",
+      "pinType": "Komatsu",
+      "location": "17.25",
+      "costKd": 58.7
+    },
+    {
+      "serial": "87677",
+      "date": "2025-05-14",
+      "smr": null,
+      "toothType": "CAT 9W-2452",
+      "pinType": "Komatsu",
+      "location": "17.25",
+      "costKd": 45.0
+    },
+    {
+      "serial": "Tare (0)",
+      "date": "2025-05-14",
+      "smr": null,
+      "toothType": "CAT 9W-2452",
+      "pinType": "Standard",
+      "location": "16",
+      "costKd": 45.0
+    },
+    {
+      "serial": "87822",
+      "date": "2025-05-14",
+      "smr": 9155.0,
+      "toothType": "CAT 9W-2452",
+      "pinType": "No pin change",
+      "location": "16",
+      "costKd": 56.0
+    },
+    {
+      "serial": "87705",
+      "date": "2025-05-13",
+      "smr": 12070.2,
+      "toothType": "CAT 9W-2452",
+      "pinType": "Komatsu",
+      "location": "17.25",
+      "costKd": 39.2
+    },
+    {
+      "serial": "87705",
+      "date": "2025-05-05",
+      "smr": 12002.7,
+      "toothType": "CAT 9W-2452",
+      "pinType": "Komatsu",
+      "location": "17.25",
+      "costKd": 67.5
+    },
+    {
+      "serial": "87822",
+      "date": "2025-05-04",
+      "smr": 9083.4,
+      "toothType": "CAT 9W-2452",
+      "pinType": "Komatsu",
+      "location": "17.25",
+      "costKd": 71.6
+    },
+    {
+      "serial": "87677",
+      "date": "2025-05-04",
+      "smr": 11054.4,
+      "toothType": "CAT 9W-2452",
+      "pinType": "Komatsu",
+      "location": "17.25",
+      "costKd": 87.6
+    },
+    {
+      "serial": "87822",
+      "date": "2025-04-24",
+      "smr": 9017.2,
+      "toothType": "CAT 9W-2452",
+      "pinType": "Komatsu",
+      "location": "17.25",
+      "costKd": 66.2
+    },
+    {
+      "serial": "87724",
+      "date": "2025-04-23",
+      "smr": 7367.1,
+      "toothType": "No tooth change",
+      "pinType": "Komatsu",
+      "location": "1.25",
+      "costKd": 45.0
+    },
+    {
+      "serial": "87724",
+      "date": "2025-04-22",
+      "smr": 7347.6,
+      "toothType": "CAT 9W-2452",
+      "pinType": "Komatsu",
+      "location": "17.25",
+      "costKd": 45.0
+    },
+    {
+      "serial": "87677",
+      "date": "2025-04-21",
+      "smr": 10947.1,
+      "toothType": "CAT 9W-2452",
+      "pinType": "Komatsu",
+      "location": "17.25",
+      "costKd": 107.3
+    },
+    {
+      "serial": "87705",
+      "date": "2025-04-17",
+      "smr": 11885.9,
+      "toothType": "CAT 9W-2452",
+      "pinType": "Komatsu",
+      "location": "17.25",
+      "costKd": 116.8
+    },
+    {
+      "serial": "87789",
+      "date": "2025-04-16",
+      "smr": 7490.4,
+      "toothType": "CAT 9W-2452",
+      "pinType": "Komatsu",
+      "location": "17.25",
+      "costKd": 45.0
+    },
+    {
+      "serial": "87724",
+      "date": "2025-04-14",
+      "smr": 7295.4,
+      "toothType": "CAT 9W-2452",
+      "pinType": "Komatsu",
+      "location": "17.25",
+      "costKd": 52.2
+    },
+    {
+      "serial": "87677",
+      "date": "2025-04-14",
+      "smr": 10888.4,
+      "toothType": "CAT 9W-2452",
+      "pinType": "Komatsu",
+      "location": "17.25",
+      "costKd": 58.7
+    },
+    {
+      "serial": "87822",
+      "date": "2025-04-10",
+      "smr": 8920.7,
+      "toothType": "CAT 9W-2452",
+      "pinType": "Komatsu",
+      "location": "17.25",
+      "costKd": 96.5
+    },
+    {
+      "serial": "87724",
+      "date": "2025-04-05",
+      "smr": 7214.0,
+      "toothType": "CAT 9W-2452",
+      "pinType": "Komatsu",
+      "location": "17.25",
+      "costKd": 81.4
+    },
+    {
+      "serial": "87705",
+      "date": "2025-04-05",
+      "smr": 11781.0,
+      "toothType": "CAT 9W-2452",
+      "pinType": "Komatsu",
+      "location": "17.25",
+      "costKd": 104.9
+    },
+    {
+      "serial": "87822",
+      "date": "2025-04-03",
+      "smr": 8872.3,
+      "toothType": "CAT 9W-2452",
+      "pinType": "Komatsu",
+      "location": "17.25",
+      "costKd": 48.4
+    },
+    {
+      "serial": "87677",
+      "date": "2025-04-02",
+      "smr": 10788.0,
+      "toothType": "CAT 9W-2452",
+      "pinType": "Komatsu",
+      "location": "17.25",
+      "costKd": 100.4
+    },
+    {
+      "serial": "87789",
+      "date": "2025-03-29",
+      "smr": 7384.6,
+      "toothType": "No tooth change",
+      "pinType": "Komatsu",
+      "location": "1.25",
+      "costKd": 45.0
+    },
+    {
+      "serial": "87789",
+      "date": "2025-03-27",
+      "smr": 7375.0,
+      "toothType": "CAT 9W-2452",
+      "pinType": "Komatsu",
+      "location": "17.25",
+      "costKd": 115.4
+    },
+    {
+      "serial": "87724",
+      "date": "2025-03-23",
+      "smr": 7137.8,
+      "toothType": "CAT 9W-2452",
+      "pinType": "Komatsu",
+      "location": "17.25",
+      "costKd": 76.2
+    },
+    {
+      "serial": "Tare (0)",
+      "date": "",
+      "smr": null,
+      "toothType": "CAT 9W-2452",
+      "pinType": "Standard",
+      "location": "",
+      "costKd": 45.0
+    },
+    {
+      "serial": "87705",
+      "date": "2025-03-20",
+      "smr": 11690.0,
+      "toothType": "CAT 9W-2452",
+      "pinType": "Komatsu",
+      "location": "17.25",
+      "costKd": 91.0
+    },
+    {
+      "serial": "87677",
+      "date": "2025-03-19",
+      "smr": 10709.6,
+      "toothType": "CAT 9W-2452",
+      "pinType": "Komatsu",
+      "location": "17.25",
+      "costKd": 78.4
+    },
+    {
+      "serial": "87789",
+      "date": "2025-03-11",
+      "smr": 7263.0,
+      "toothType": "CAT 9W-2452",
+      "pinType": "Komatsu",
+      "location": "17.25",
+      "costKd": 112.0
+    },
+    {
+      "serial": "87724",
+      "date": "2025-03-09",
+      "smr": 7044.6,
+      "toothType": "CAT 9W-2452",
+      "pinType": "Komatsu",
+      "location": "17.25",
+      "costKd": 93.2
+    },
+    {
+      "serial": "87677",
+      "date": "2025-03-06",
+      "smr": 10614.0,
+      "toothType": "CAT 9W-2452",
+      "pinType": "Komatsu",
+      "location": "17.25",
+      "costKd": 95.6
+    },
+    {
+      "serial": "87724",
+      "date": "2025-03-04",
+      "smr": 7010.5,
+      "toothType": "CAT 9W-2452",
+      "pinType": "Komatsu",
+      "location": "17.25",
+      "costKd": 34.1
+    },
+    {
+      "serial": "87705",
+      "date": "2025-03-03",
+      "smr": 11607.0,
+      "toothType": "CAT 9W-2452",
+      "pinType": "Komatsu",
+      "location": "17.25",
+      "costKd": 83.0
+    },
+    {
+      "serial": "87822",
+      "date": "2025-03-02",
+      "smr": 8738.0,
+      "toothType": "CAT 9W-2452",
+      "pinType": "Komatsu",
+      "location": "17.25",
+      "costKd": 134.3
+    },
+    {
+      "serial": "87789",
+      "date": "2025-03-01",
+      "smr": 7176.0,
+      "toothType": "CAT 9W-2452",
+      "pinType": "Komatsu",
+      "location": "17.25",
+      "costKd": 87.0
+    },
+    {
+      "serial": "87705",
+      "date": "2025-02-24",
+      "smr": 11571.7,
+      "toothType": "CAT 9W-2452",
+      "pinType": "Komatsu",
+      "location": "17.25",
+      "costKd": 35.3
+    },
+    {
+      "serial": "87822",
+      "date": "2025-02-23",
+      "smr": 8703.9,
+      "toothType": "CAT 9W-2452",
+      "pinType": "No pin change",
+      "location": "16",
+      "costKd": 34.1
+    },
+    {
+      "serial": "87724",
+      "date": "2025-02-20",
+      "smr": 6937.4,
+      "toothType": "CAT 9W-2452",
+      "pinType": "Komatsu",
+      "location": "17.25",
+      "costKd": 73.1
+    },
+    {
+      "serial": "87705",
+      "date": "2025-02-18",
+      "smr": 11512.9,
+      "toothType": "No tooth change",
+      "pinType": "Komatsu",
+      "location": "1.25",
+      "costKd": 45.0
+    },
+    {
+      "serial": "87705",
+      "date": "2025-02-18",
+      "smr": 11512.9,
+      "toothType": "No tooth change",
+      "pinType": "Komatsu",
+      "location": "1.25",
+      "costKd": 45.0
+    }
+  ]
+}
