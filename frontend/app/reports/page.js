@@ -706,14 +706,15 @@ export default function ReportsPage() {
               )}
 
               {/* Selected Reports Table */}
-              <div className="max-h-60 overflow-y-auto border border-slate-200 rounded-lg">
+              <div className="max-h-64 overflow-y-auto border border-slate-200 rounded-lg">
                 <table className="w-full text-left text-xs">
                   <thead className="bg-slate-100 text-slate-700 font-bold sticky top-0">
                     <tr>
                       <th className="p-2.5">Document File</th>
-                      <th className="p-2.5">Model</th>
-                      <th className="p-2.5">Serial #</th>
-                      <th className="p-2.5">SMR</th>
+                      <th className="p-2.5">Machine</th>
+                      <th className="p-2.5">Service Date</th>
+                      <th className="p-2.5">SMR (Hours)</th>
+                      <th className="p-2.5">Service Type</th>
                       <th className="p-2.5">Target Event Code</th>
                     </tr>
                   </thead>
@@ -724,16 +725,29 @@ export default function ReportsPage() {
                       if (sType.includes('1ST') || sType.includes('250')) mappedCode = 'W411';
                       else if (sType.includes('2ND') || sType.includes('500')) mappedCode = 'W412';
                       else if (sType.includes('3RD') || sType.includes('1000')) mappedCode = 'W413';
+                      else if (sType.includes('4TH') || sType.includes('2000')) mappedCode = 'W41X';
                       else if (sType.includes('PRE-DELIVERY') || sType.includes('PDI')) mappedCode = 'W41P';
                       else if (sType.includes('NEW') || sType.includes('DELIVERY')) mappedCode = 'W41N';
                       else mappedCode = 'W41X';
 
+                      const displayDate = r.service_date
+                        ? new Date(r.service_date).toLocaleDateString()
+                        : r.created_at
+                        ? new Date(r.created_at).toLocaleDateString()
+                        : new Date().toLocaleDateString();
+
                       return (
-                        <tr key={r.id}>
-                          <td className="p-2.5 font-semibold text-slate-900 truncate max-w-xs">{r.file_name}</td>
-                          <td className="p-2.5 text-slate-700">{r.machine_type || 'HM400'}</td>
-                          <td className="p-2.5 font-bold text-sky-800">#{r.machine_number}</td>
-                          <td className="p-2.5 text-slate-800">{r.smr || 0} hrs</td>
+                        <tr key={r.id} className="hover:bg-slate-50">
+                          <td className="p-2.5 font-semibold text-slate-900 truncate max-w-[180px]" title={r.file_name}>
+                            {r.file_name}
+                          </td>
+                          <td className="p-2.5 text-slate-800">
+                            <span className="font-semibold">{r.machine_type || 'HM400'}</span>{' '}
+                            <span className="font-bold text-sky-800">#{r.machine_number}</span>
+                          </td>
+                          <td className="p-2.5 text-slate-600 font-medium">{displayDate}</td>
+                          <td className="p-2.5 font-bold text-slate-900">{r.smr || 0} hrs</td>
+                          <td className="p-2.5 text-slate-600 truncate max-w-[120px]">{r.service_type || r.report_type || 'Scheduled PM'}</td>
                           <td className="p-2.5">
                             <Badge tone="live">{mappedCode}</Badge>
                           </td>
