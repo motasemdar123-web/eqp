@@ -429,21 +429,18 @@ export default function JapaneseLearningHub() {
           )}
         </div>
 
-        {/* Active Sub-Module View */}
-        {renderActiveToolContent()}
+        {/* Active Sub-Module View (Single Persistent Mount with Zen Focus Mode Wrapper) */}
+        <ZenFocusModeOverlay
+          isOpen={isFocusMode}
+          onClose={() => setIsFocusMode(false)}
+          level={level}
+          activeTab={activeTab}
+          onSelectTab={(newTab) => setActiveTab(newTab)}
+          onToast={showToast}
+        >
+          {renderActiveToolContent()}
+        </ZenFocusModeOverlay>
       </div>
-
-      {/* Zen Focus Mode Fullscreen Overlay */}
-      <ZenFocusModeOverlay
-        isOpen={isFocusMode}
-        onClose={() => setIsFocusMode(false)}
-        level={level}
-        activeTab={activeTab}
-        onSelectTab={(newTab) => setActiveTab(newTab)}
-        onToast={showToast}
-      >
-        {renderActiveToolContent()}
-      </ZenFocusModeOverlay>
 
       <Toast message={toast?.message} type={toast?.type} onClose={() => setToast(null)} />
 
