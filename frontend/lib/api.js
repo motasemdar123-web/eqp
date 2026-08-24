@@ -359,34 +359,78 @@ export function batchUploadEqpcReports(payload) {
   });
 }
 
-export function getComments(params = {}) {
+export async function getComments(params = {}) {
   const query = new URLSearchParams(params).toString();
-  return request(`/api/eqp/comments${query ? `?${query}` : ''}`);
+  try {
+    return await request(`/api/eqp/comments${query ? `?${query}` : ''}`);
+  } catch (err) {
+    if (err.message && (err.message.includes('Route not found') || err.message.includes('404'))) {
+      return await request(`/comments${query ? `?${query}` : ''}`);
+    }
+    throw err;
+  }
 }
 
-export function getComment(id) {
-  return request(`/api/eqp/comments/${id}`);
+export async function getComment(id) {
+  try {
+    return await request(`/api/eqp/comments/${id}`);
+  } catch (err) {
+    if (err.message && (err.message.includes('Route not found') || err.message.includes('404'))) {
+      return await request(`/comments/${id}`);
+    }
+    throw err;
+  }
 }
 
-export function createComment(payload) {
-  return request('/api/eqp/comments', {
-    method: 'POST',
-    body: JSON.stringify(payload),
-  });
+export async function createComment(payload) {
+  try {
+    return await request('/api/eqp/comments', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+  } catch (err) {
+    if (err.message && (err.message.includes('Route not found') || err.message.includes('404'))) {
+      return await request('/comments', {
+        method: 'POST',
+        body: JSON.stringify(payload),
+      });
+    }
+    throw err;
+  }
 }
 
-export function updateComment(id, payload) {
-  return request(`/api/eqp/comments/${id}`, {
-    method: 'PUT',
-    body: JSON.stringify(payload),
-  });
+export async function updateComment(id, payload) {
+  try {
+    return await request(`/api/eqp/comments/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(payload),
+    });
+  } catch (err) {
+    if (err.message && (err.message.includes('Route not found') || err.message.includes('404'))) {
+      return await request(`/comments/${id}`, {
+        method: 'PUT',
+        body: JSON.stringify(payload),
+      });
+    }
+    throw err;
+  }
 }
 
-export function deleteComment(id) {
-  return request(`/api/eqp/comments/${id}`, {
-    method: 'DELETE',
-  });
+export async function deleteComment(id) {
+  try {
+    return await request(`/api/eqp/comments/${id}`, {
+      method: 'DELETE',
+    });
+  } catch (err) {
+    if (err.message && (err.message.includes('Route not found') || err.message.includes('404'))) {
+      return await request(`/comments/${id}`, {
+        method: 'DELETE',
+      });
+    }
+    throw err;
+  }
 }
+
 
 
 
