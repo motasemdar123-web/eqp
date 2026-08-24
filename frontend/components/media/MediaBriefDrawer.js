@@ -3,11 +3,11 @@
 import React, { useState } from 'react';
 import Badge from '../ui/Badge';
 import Button from '../ui/Button';
-import { FORMAT_TYPES, GOAL_TYPES, PIPELINE_STAGES, MEDIA_PLATFORMS } from '../../lib/mediaContentData';
+import { FORMAT_TYPES, GOAL_TYPES, PIPELINE_STAGES, MEDIA_PLATFORMS, CONTENT_PILLARS } from '../../lib/mediaContentData';
 import PlatformPostSimulator from './PlatformPostSimulator';
 
 export default function MediaBriefDrawer({ concept, onClose, onUpdateStatus, onEdit }) {
-  const [activeTab, setActiveTab] = useState('brief'); // 'brief' | 'captions' | 'storyboard' | 'simulator'
+  const [activeTab, setActiveTab] = useState('script'); // 'script' | 'storyboard' | 'broll' | 'tov' | 'captions' | 'simulator'
   const [copiedSection, setCopiedSection] = useState(null);
 
   if (!concept) return null;
@@ -15,6 +15,7 @@ export default function MediaBriefDrawer({ concept, onClose, onUpdateStatus, onE
   const formatMeta = FORMAT_TYPES.find((f) => f.id === concept.format) || FORMAT_TYPES[0];
   const goalMeta = GOAL_TYPES.find((g) => g.id === concept.goal) || GOAL_TYPES[0];
   const stageMeta = PIPELINE_STAGES.find((s) => s.id === concept.status) || PIPELINE_STAGES[0];
+  const pillarMeta = CONTENT_PILLARS.find((p) => p.id === concept.pillar) || CONTENT_PILLARS[0];
 
   const handleCopy = (text, sectionName) => {
     navigator.clipboard.writeText(text);
@@ -24,7 +25,7 @@ export default function MediaBriefDrawer({ concept, onClose, onUpdateStatus, onE
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-5">
-      <div className="relative bg-white rounded-2xl shadow-2xl max-w-4xl w-full border border-slate-200 overflow-hidden flex flex-col max-h-[92vh]">
+      <div className="relative bg-white rounded-2xl shadow-2xl max-w-5xl w-full border border-slate-200 overflow-hidden flex flex-col max-h-[94vh]">
         {/* Drawer Header */}
         <div className="bg-slate-900 text-white p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-800">
           <div className="flex items-start gap-3.5">
@@ -32,18 +33,21 @@ export default function MediaBriefDrawer({ concept, onClose, onUpdateStatus, onE
               #{concept.conceptNumber}
             </div>
             <div>
-              <div className="flex flex-wrap items-center gap-2 mb-1">
-                <span className={`px-2 py-0.5 rounded-md text-[11px] font-bold ${formatMeta.color} border`}>
+              <div className="flex flex-wrap items-center gap-1.5 mb-1">
+                <span className="px-2 py-0.5 rounded-md bg-slate-800 text-slate-300 text-[10px] font-bold">
+                  {concept.week || 'Week 1'} • {concept.day || 'Sunday'}
+                </span>
+                <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold ${formatMeta.color} border`}>
                   {formatMeta.icon} {formatMeta.label}
                 </span>
-                <span className={`px-2 py-0.5 rounded-md text-[11px] font-bold ${goalMeta.color} border`}>
-                  {goalMeta.label}
+                <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold ${pillarMeta.color} border`}>
+                  {pillarMeta.label}
                 </span>
                 <Badge tone={stageMeta.badgeTone}>
                   {stageMeta.icon} {stageMeta.label}
                 </Badge>
               </div>
-              <h2 className="text-lg font-bold text-white tracking-tight">{concept.title}</h2>
+              <h2 className="text-base sm:text-lg font-bold text-white tracking-tight">{concept.title}</h2>
             </div>
           </div>
 
@@ -81,15 +85,17 @@ export default function MediaBriefDrawer({ concept, onClose, onUpdateStatus, onE
 
         {/* Tab Navigation Strip */}
         <div className="flex items-center gap-2 border-b border-slate-200 bg-slate-50 px-5 py-2 overflow-x-auto">
-          <button
-            type="button"
-            onClick={() => setActiveTab('brief')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all whitespace-nowrap ${
-              activeTab === 'brief' ? 'bg-slate-900 text-white shadow-xs' : 'text-slate-600 hover:bg-slate-200'
-            }`}
-          >
-            🎬 Shoot & Production Brief
-          </button>
+          {concept.scenes?.length > 0 && (
+            <button
+              type="button"
+              onClick={() => setActiveTab('script')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all whitespace-nowrap ${
+                activeTab === 'script' ? 'bg-slate-900 text-white shadow-xs' : 'text-slate-600 hover:bg-slate-200'
+              }`}
+            >
+              🎬 Scene-by-Scene Script ({concept.scenes.length} Scenes)
+            </button>
+          )}
 
           {concept.format === 'carousel' && (
             <button
@@ -102,6 +108,26 @@ export default function MediaBriefDrawer({ concept, onClose, onUpdateStatus, onE
               📑 Carousel Storyboard ({concept.slides?.length || 0} Slides)
             </button>
           )}
+
+          <button
+            type="button"
+            onClick={() => setActiveTab('broll')}
+            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all whitespace-nowrap ${
+              activeTab === 'broll' ? 'bg-slate-900 text-white shadow-xs' : 'text-slate-600 hover:bg-slate-200'
+            }`}
+          >
+            🎥 B-Roll & Production Notes
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setActiveTab('tov')}
+            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all whitespace-nowrap ${
+              activeTab === 'tov' ? 'bg-slate-900 text-white shadow-xs' : 'text-slate-600 hover:bg-slate-200'
+            }`}
+          >
+            🎯 TOV & Target Audience
+          </button>
 
           <button
             type="button"
@@ -120,94 +146,105 @@ export default function MediaBriefDrawer({ concept, onClose, onUpdateStatus, onE
               activeTab === 'simulator' ? 'bg-amber-500 text-slate-950 shadow-xs' : 'text-slate-600 hover:bg-slate-200'
             }`}
           >
-            📱 Live Platform Simulator
+            📱 Multi-Channel Simulator
           </button>
         </div>
 
         {/* Drawer Body Content */}
         <div className="p-6 overflow-y-auto space-y-6 flex-1">
-          {/* TAB 1: PRODUCTION BRIEF */}
-          {activeTab === 'brief' && (
+          {/* TAB 1: SCENE-BY-SCENE DIRECTOR'S SCRIPT */}
+          {activeTab === 'script' && concept.scenes?.length > 0 && (
             <div className="space-y-6">
-              {/* Target Platforms Strip */}
-              <div className="flex flex-wrap items-center justify-between gap-3 bg-slate-50 border border-slate-200 rounded-xl p-3.5">
-                <div className="flex items-center gap-2">
-                  <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Target Channels:</span>
-                  <div className="flex gap-1.5">
-                    {concept.platforms.map((pid) => {
-                      const p = MEDIA_PLATFORMS.find((pl) => pl.id === pid);
-                      return (
-                        <span key={pid} className="px-2 py-0.5 rounded-md bg-white border border-slate-200 text-slate-800 text-xs font-bold shadow-2xs">
-                          {p?.icon} {p?.label}
-                        </span>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-2">
-                  <span className="text-xs font-bold text-slate-500">Planned Date:</span>
-                  <span className="font-mono text-xs font-bold bg-amber-50 text-amber-900 border border-amber-200 px-2 py-0.5 rounded-md">
-                    {concept.publishDate || 'August / September'}
+              {/* 3-Second Hook Banner */}
+              <div className="border border-amber-300 bg-amber-50/70 rounded-xl p-4 space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-extrabold uppercase tracking-wider text-amber-900">
+                    ⚡ The 3-Second Director Hook (0:00 - 0:03)
                   </span>
+                  <button
+                    type="button"
+                    onClick={() => handleCopy(concept.hook?.spokenEn || concept.hook, 'hook')}
+                    className="text-xs font-bold text-amber-800 hover:underline"
+                  >
+                    {copiedSection === 'hook' ? '✓ Copied' : '📋 Copy Hook'}
+                  </button>
                 </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1">
+                  <div className="bg-white/80 p-2.5 rounded-lg border border-amber-200 text-xs">
+                    <span className="font-bold text-slate-500 block text-[10px] uppercase">Spoken Voiceover (EN):</span>
+                    <p className="font-extrabold text-slate-900 mt-0.5 italic">
+                      "{concept.hook?.spokenEn || concept.hook}"
+                    </p>
+                  </div>
+                  <div className="bg-white/80 p-2.5 rounded-lg border border-amber-200 text-xs" dir="rtl">
+                    <span className="font-bold text-slate-500 block text-[10px] uppercase text-right">النص الصوتي (عربي):</span>
+                    <p className="font-extrabold text-slate-900 mt-0.5 italic text-right">
+                      "{concept.hook?.spokenAr || 'صُنعت لتقهر أصعب تضاريس الصحراء في الكويت..'}"
+                    </p>
+                  </div>
+                </div>
+
+                {concept.hook?.visualHook && (
+                  <div className="text-[11px] text-amber-950 font-medium pt-1">
+                    <span className="font-bold">🎬 Visual Hook Action:</span> {concept.hook.visualHook}
+                  </div>
+                )}
               </div>
 
-              {/* Hook & Concept Overview */}
-              <div className="space-y-3">
-                <div className="border border-amber-200 bg-amber-50/50 rounded-xl p-4">
-                  <div className="flex items-center justify-between mb-1.5">
-                    <span className="text-xs font-bold uppercase tracking-wider text-amber-800">
-                      ⚡ The 3-Second Hook / Opening Line
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => handleCopy(concept.hook, 'hook')}
-                      className="text-[11px] font-bold text-amber-700 hover:underline"
-                    >
-                      {copiedSection === 'hook' ? '✓ Copied' : 'Copy Hook'}
-                    </button>
-                  </div>
-                  <p className="text-sm font-extrabold text-slate-900 italic">
-                    "{concept.hook}"
-                  </p>
+              {/* Scene Breakdown Table */}
+              <div className="border border-slate-200 rounded-xl overflow-hidden shadow-2xs">
+                <div className="bg-slate-900 text-white p-3 flex items-center justify-between text-xs font-bold">
+                  <span>Director's Scene-by-Scene Shot List</span>
+                  <span className="text-slate-400 font-normal">Pacing: 25-30 Seconds Total</span>
                 </div>
+                <div className="divide-y divide-slate-200">
+                  {concept.scenes.map((scene) => (
+                    <div key={scene.sceneNo} className="p-4 bg-white hover:bg-slate-50/60 transition-colors space-y-3">
+                      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-2">
+                        <div className="flex items-center gap-2">
+                          <span className="w-6 h-6 rounded-full bg-slate-900 text-white font-extrabold text-xs flex items-center justify-center">
+                            {scene.sceneNo}
+                          </span>
+                          <span className="font-mono text-xs font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
+                            ⏱️ {scene.time}
+                          </span>
+                        </div>
+                        <span className="text-[11px] font-semibold text-slate-500">
+                          {scene.sfxMusic}
+                        </span>
+                      </div>
 
-                <div>
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Concept Summary & Angle</h4>
-                  <p className="text-xs text-slate-700 leading-relaxed bg-slate-50 p-3 rounded-lg border border-slate-200">
-                    {concept.summary}
-                  </p>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                        {/* Visual & Talent Action */}
+                        <div className="space-y-1.5">
+                          <div>
+                            <span className="font-bold text-slate-700 uppercase text-[10px] block">🎥 Camera Shot & Framing:</span>
+                            <p className="text-slate-800 mt-0.5">{scene.visual}</p>
+                          </div>
+                          <div>
+                            <span className="font-bold text-slate-700 uppercase text-[10px] block">👷 Talent / Machine Action:</span>
+                            <p className="text-slate-600 mt-0.5">{scene.talentAction}</p>
+                          </div>
+                        </div>
+
+                        {/* Audio & On-Screen Graphic */}
+                        <div className="space-y-1.5 bg-slate-50/80 p-3 rounded-lg border border-slate-200/80">
+                          <div>
+                            <span className="font-bold text-sky-800 uppercase text-[10px] block">🎙️ Voiceover Script (EN / AR):</span>
+                            <p className="text-slate-900 font-semibold mt-0.5">{scene.audioVoiceoverEn}</p>
+                            <p className="text-slate-800 font-semibold mt-0.5 text-right" dir="rtl">{scene.audioVoiceoverAr}</p>
+                          </div>
+                          <div className="pt-1 border-t border-slate-200">
+                            <span className="font-bold text-amber-800 uppercase text-[10px] block">📺 On-Screen Graphic Text:</span>
+                            <p className="font-mono text-[11px] text-slate-900 font-bold">{scene.onScreenTextEn}</p>
+                            <p className="font-mono text-[11px] text-slate-900 font-bold text-right" dir="rtl">{scene.onScreenTextAr}</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              </div>
-
-              {/* Visual Direction & Camera Notes */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="border border-slate-200 rounded-xl p-4 bg-white shadow-2xs space-y-2">
-                  <div className="flex items-center gap-2">
-                    <span className="text-lg">🎥</span>
-                    <h4 className="text-xs font-bold uppercase tracking-wider text-slate-800">Visual Direction & Framing</h4>
-                  </div>
-                  <p className="text-xs text-slate-600 leading-relaxed">
-                    {concept.visualDirection}
-                  </p>
-                </div>
-
-                <div className="border border-slate-200 rounded-xl p-4 bg-white shadow-2xs space-y-2">
-                  <div className="flex items-center gap-2">
-                    <span className="text-lg">🎵</span>
-                    <h4 className="text-xs font-bold uppercase tracking-wider text-slate-800">Audio, Voiceover & B-Roll</h4>
-                  </div>
-                  <p className="text-xs text-slate-600 leading-relaxed">
-                    {concept.audioBroll}
-                  </p>
-                </div>
-              </div>
-
-              {/* Call To Action */}
-              <div className="border border-slate-200 rounded-xl p-4 bg-slate-50">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Call to Action (CTA) Objective</h4>
-                <p className="text-xs font-semibold text-slate-900">{concept.ctaText}</p>
               </div>
             </div>
           )}
@@ -217,7 +254,7 @@ export default function MediaBriefDrawer({ concept, onClose, onUpdateStatus, onE
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="text-sm font-bold text-slate-900">5-Slide Carousel Storyboard</h3>
+                  <h3 className="text-sm font-bold text-slate-900">5-Slide Carousel Deck Storyboard</h3>
                   <p className="text-xs text-slate-500">Structured swipe deck layout for educational and case study posts</p>
                 </div>
                 <Badge tone="yellow">{concept.slides.length} Slides</Badge>
@@ -247,7 +284,82 @@ export default function MediaBriefDrawer({ concept, onClose, onUpdateStatus, onE
             </div>
           )}
 
-          {/* TAB 3: CAPTIONS & HASHTAGS */}
+          {/* TAB 3: B-ROLL & PRODUCTION NOTES */}
+          {activeTab === 'broll' && (
+            <div className="space-y-5">
+              {/* B-Roll Shot Checklist */}
+              <div className="border border-slate-200 rounded-xl p-5 bg-white shadow-2xs space-y-3">
+                <div className="flex items-center gap-2 border-b pb-2">
+                  <span className="text-lg">🎥</span>
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-slate-900">
+                    Camera Crew B-Roll Shot Checklist
+                  </h4>
+                </div>
+                <div className="space-y-2">
+                  {concept.brollChecklist?.map((shot, idx) => (
+                    <div key={idx} className="flex items-start gap-2.5 text-xs text-slate-700 bg-slate-50 p-2.5 rounded-lg border border-slate-200">
+                      <span className="text-emerald-600 font-bold shrink-0">✓</span>
+                      <span>{shot}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Post-Production & Color Grading Notes */}
+              <div className="border border-slate-200 rounded-xl p-5 bg-white shadow-2xs space-y-2">
+                <div className="flex items-center gap-2 border-b pb-2">
+                  <span className="text-lg">🎨</span>
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-slate-900">
+                    Post-Production, Color Grade & Export Specs
+                  </h4>
+                </div>
+                <p className="text-xs text-slate-700 leading-relaxed bg-slate-50 p-3 rounded-lg border border-slate-200">
+                  {concept.postProductionNotes || 'Export in 9:16 vertical video at 4K 60fps for Reels and 16:9 4K for LinkedIn/YouTube. Maintain true Komatsu yellow (#FFD100) and Dar Al Hay deep navy tones.'}
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 4: TONE OF VOICE & AUDIENCE */}
+          {activeTab === 'tov' && (
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="border border-slate-200 rounded-xl p-4 bg-white shadow-2xs space-y-2">
+                  <span className="text-xs font-bold uppercase tracking-wider text-slate-500 block">
+                    🎯 Target Audience Persona
+                  </span>
+                  <p className="text-xs font-bold text-slate-900">{concept.targetAudience}</p>
+                </div>
+
+                <div className="border border-slate-200 rounded-xl p-4 bg-white shadow-2xs space-y-2">
+                  <span className="text-xs font-bold uppercase tracking-wider text-slate-500 block">
+                    🗣️ Specific Tone of Voice (TOV)
+                  </span>
+                  <p className="text-xs font-bold text-slate-900">{concept.tov}</p>
+                </div>
+              </div>
+
+              <div className="border border-slate-200 rounded-xl p-4 bg-slate-50 space-y-2">
+                <h4 className="text-xs font-bold uppercase tracking-wider text-slate-700">Brand TOV Checklist for this Piece:</h4>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-slate-600">
+                  <div className="flex items-center gap-2">
+                    <span className="text-emerald-600">✓</span> Authoritative engineering terminology
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-emerald-600">✓</span> Focus on uptime, heat resilience, and ROI
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-emerald-600">✓</span> Natural bilingual phrasing for Kuwait market
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-emerald-600">✓</span> Direct contact CTA with WhatsApp/showroom info
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 5: CAPTIONS & HASHTAGS */}
           {activeTab === 'captions' && (
             <div className="space-y-5">
               {/* English Caption Box */}
@@ -312,7 +424,7 @@ export default function MediaBriefDrawer({ concept, onClose, onUpdateStatus, onE
             </div>
           )}
 
-          {/* TAB 4: LIVE SIMULATOR */}
+          {/* TAB 6: LIVE SIMULATOR */}
           {activeTab === 'simulator' && (
             <PlatformPostSimulator concept={concept} />
           )}
@@ -328,9 +440,9 @@ export default function MediaBriefDrawer({ concept, onClose, onUpdateStatus, onE
             <Button
               type="button"
               variant="secondary"
-              onClick={() => handleCopy(`${concept.title}\n\nHOOK:\n${concept.hook}\n\nCAPTION (EN):\n${concept.captionEn}\n\nCAPTION (AR):\n${concept.captionAr}\n\nHASHTAGS:\n${concept.hashtags}`, 'all')}
+              onClick={() => handleCopy(JSON.stringify(concept, null, 2), 'json')}
             >
-              {copiedSection === 'all' ? '✓ Full Brief Copied' : '📋 Copy All Brief Data'}
+              {copiedSection === 'json' ? '✓ Data Copied' : '📋 Copy Full JSON'}
             </Button>
           </div>
         </div>
