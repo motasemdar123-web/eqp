@@ -92,19 +92,23 @@ describe('report service type handling', () => {
     expect(getLifecycleReportCount('9720', 'W41X')).toBe(5);
   });
 
-  it('continues repeating report counters from lifecycle plus generated reports', async () => {
-    jest
-      .spyOn(reportRepository, 'countByMachineAndReportType')
-      .mockResolvedValueOnce(2);
-
-    await expect(getInitialRepeatingReportCounter({
+  it('continues repeating report counters from persistent machine report_counter or lifecycle', () => {
+    expect(getInitialRepeatingReportCounter({
       machine: {
         id: 16,
         machine_number: '88767',
+        report_counter: 18,
       },
       reportType: 'W41X',
-    })).resolves.toBe(18);
+    })).toBe(18);
 
-    reportRepository.countByMachineAndReportType.mockRestore();
+    expect(getInitialRepeatingReportCounter({
+      machine: {
+        id: 16,
+        machine_number: '88767',
+        report_counter: 0,
+      },
+      reportType: 'W41X',
+    })).toBe(16);
   });
 });

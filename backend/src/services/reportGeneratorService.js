@@ -745,15 +745,10 @@ function buildReportFileName({ machineModel, machineNumber, reportType, serviceT
   return `${parts.join(' ')}.pdf`;
 }
 
-async function getInitialRepeatingReportCounter({ machine, reportType }) {
+function getInitialRepeatingReportCounter({ machine, reportType }) {
   const lifecycleCount = getLifecycleReportCount(machine.machine_number, reportType);
-  const generatedCount = await reportRepository.countByMachineAndReportType({
-    machineId: machine.id,
-    machineNumber: machine.machine_number,
-    reportType,
-  });
-
-  return lifecycleCount + generatedCount;
+  const storedCounter = Number(machine?.report_counter) || 0;
+  return Math.max(storedCounter, lifecycleCount);
 }
 
 async function getCommentPicker(pickerCache, machineModel, serviceType) {
@@ -1585,17 +1580,14 @@ async function generateReports(payload) {
 
     let currentSMR = Number(machine.last_smr);
     let currentStep = Number(machine.smr_step);
-    let currentCounter = Number(machine.report_counter);
-    let repeatServiceCounter = isRepeatingServiceType(payload.serviceType)
-      ? await getInitialRepeatingReportCounter({ machine, reportType: effectiveReportType })
-      : 0;
+    const initialCounter = getInitialRepeatingReportCounter({ machine, reportType: effectiveReportType });
+    let currentCounter = Math.max(Number(machine.report_counter) || 0, initialCounter);
 
     for (const serviceDate of payload.reportDates) {
       const safeDate = serviceDate.replace(/-/g, '');
 
       currentStep += 1;
       currentCounter += 1;
-      repeatServiceCounter += isRepeatingServiceType(payload.serviceType) ? 1 : 0;
 
       // Randomized SMR increment: +1 hour every 2 to 3 reports
       const stepThreshold = (currentCounter % 5 === 0 || currentCounter % 3 === 0) ? 2 : 3;
@@ -1648,7 +1640,7 @@ async function generateReports(payload) {
         machineNumber: machine.machine_number,
         reportType: effectiveReportType,
         serviceType: payload.serviceType,
-        reportCounter: repeatServiceCounter,
+        reportCounter: isRepeatingServiceType(payload.serviceType) ? currentCounter : null,
       });
       prepareFilledWorkbookForPdfExport(workbook, sheet);
       const workbookBuffer = await workbook.xlsx.writeBuffer();
