@@ -1,6 +1,7 @@
 const { Router } = require('express');
 const machineController = require('../controllers/machineController');
 const reportController = require('../controllers/reportController');
+const commentController = require('../controllers/commentController');
 const analyticsController = require('../controllers/analyticsController');
 const platformController = require('../controllers/platformController');
 const { asyncHandler } = require('../utils/asyncHandler');
@@ -17,6 +18,13 @@ router.put('/api/eqp/reports/:id', requireAuth, requireEqpAccess, asyncHandler(r
 router.delete('/api/eqp/reports/:id', requireAuth, requireEqpAccess, asyncHandler(reportController.deleteReport));
 router.post('/api/eqp/generate-reports', requireAuth, requireEqpAccess, reportGenerationRateLimit, asyncHandler(reportController.generateReports));
 router.get('/api/eqp/analytics/overview', requireAuth, requireEqpAccess, asyncHandler(analyticsController.overview));
+
+// EQP Report Comments Endpoints
+router.get('/api/eqp/comments', requireAuth, requireEqpAccess, asyncHandler(commentController.listComments));
+router.get('/api/eqp/comments/:id', requireAuth, requireEqpAccess, asyncHandler(commentController.getCommentById));
+router.post('/api/eqp/comments', requireAuth, requireEqpAccess, asyncHandler(commentController.createComment));
+router.put('/api/eqp/comments/:id', requireAuth, requireEqpAccess, asyncHandler(commentController.updateComment));
+router.delete('/api/eqp/comments/:id', requireAuth, requireEqpAccess, asyncHandler(commentController.deleteComment));
 
 // EQP Care Direct Endpoints
 router.get('/api/eqp/care/status', requireAuth, requireEqpAccess, asyncHandler(platformController.getEqpcStatus));

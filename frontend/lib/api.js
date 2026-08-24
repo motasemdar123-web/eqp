@@ -359,6 +359,36 @@ export function batchUploadEqpcReports(payload) {
   });
 }
 
+export function getComments(params = {}) {
+  const query = new URLSearchParams(params).toString();
+  return request(`/api/eqp/comments${query ? `?${query}` : ''}`);
+}
+
+export function getComment(id) {
+  return request(`/api/eqp/comments/${id}`);
+}
+
+export function createComment(payload) {
+  return request('/api/eqp/comments', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+}
+
+export function updateComment(id, payload) {
+  return request(`/api/eqp/comments/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify(payload),
+  });
+}
+
+export function deleteComment(id) {
+  return request(`/api/eqp/comments/${id}`, {
+    method: 'DELETE',
+  });
+}
+
+
 
 
 

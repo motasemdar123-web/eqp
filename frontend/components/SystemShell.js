@@ -156,6 +156,7 @@ const COMMAND_ITEMS = [
   { id: 'nav-japanese', title: 'Japanese Learning Hub', subtitle: 'JLPT N5 & N4 active recall, kanji dojo & audio exams', href: '/japanese', category: 'Navigation', badge: 'Language' },
   { id: 'nav-eqp-reports', title: 'EQP PDF Archive', subtitle: 'Search, batch download & manage certified PDFs', href: '/eqp/reports', category: 'Navigation', badge: 'Archive' },
   { id: 'nav-eqp-gen', title: 'Report Builder', subtitle: 'Generate certified preventive maintenance reports', href: '/eqp/generate-reports', category: 'Navigation', badge: 'Builder' },
+  { id: 'nav-eqp-comments', title: 'EQP Comments Pool', subtitle: 'Manage certified inspection comment phrases for report generator', href: '/eqp/comments', category: 'Navigation', badge: 'Comments' },
   { id: 'nav-eqp-machines', title: 'Machines Register', subtitle: 'Fleet counter progression, SMR & report readiness', href: '/eqp/machines', category: 'Navigation', badge: 'Fleet' },
   { id: 'nav-technician-app', title: 'Field Technician Mobile App', subtitle: 'Voice transcription, audio tasks, weather advice', href: '/technician', category: 'Navigation', badge: 'Mobile' },
   
@@ -528,6 +529,13 @@ export default function SystemShell({
                     onClick={() => setQuickMenuOpen(false)}
                   >
                     <span>🚀</span> EQP Care Dispatch
+                  </Link>
+                  <Link
+                    href="/eqp/comments"
+                    className="ds-quick-menu-item"
+                    onClick={() => setQuickMenuOpen(false)}
+                  >
+                    <span>💬</span> Report Comments Pool
                   </Link>
                   <Link
                     href="/management/daily-planner"

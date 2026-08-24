@@ -17,17 +17,25 @@ export default function AppShell({ activePage, onNavigate, onLogout, userCode, c
       onLogout={onLogout}
       userLabel={userCode ? `User ${userCode}` : undefined}
       actions={(
-        <div className="ds-tab-list">
-          {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              type="button"
-              onClick={() => onNavigate(tab.id)}
-              className={`ds-tab ${activePage === tab.id ? 'ds-tab-active' : ''}`}
-            >
-              {tab.label}
-            </button>
-          ))}
+        <div className="flex items-center gap-2">
+          <div className="ds-tab-list">
+            {tabs.map((tab) => (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => onNavigate(tab.id)}
+                className={`ds-tab ${activePage === tab.id ? 'ds-tab-active' : ''}`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+          <a
+            href="/eqp/comments"
+            className="rounded-md border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-semibold text-slate-700 shadow-xs hover:bg-slate-50 flex items-center gap-1"
+          >
+            <span>💬</span> Comments Pool
+          </a>
         </div>
       )}
     >
