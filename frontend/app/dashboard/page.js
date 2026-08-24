@@ -15,6 +15,8 @@ import Toast from '../../components/ui/Toast';
 import { getStoredUser, clearStoredUser, getMatchingEngineerName } from '../../lib/auth';
 import { generateReports, getMachineHistory, getMachines, getReportProfile } from '../../lib/api';
 import { MACHINE_MODELS, REPORT_TYPES, SERVICE_TYPES, getRequiredReportType } from '../../lib/reportOptions';
+import MachineTimelineModal from '../../components/eqp/MachineTimelineModal';
+import { FleetModelBarChart } from '../../components/eqp/EqpCharts';
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -33,7 +35,7 @@ export default function DashboardPage() {
   const userCode = reportProfile?.reportMaker?.userNumber || user?.userNumber || '';
   const [machineModel, setMachineModel] = useState('AUTO');
   const [reportType, setReportType] = useState('W30');
-  const [serviceType, setServiceType] = useState('1st Service');
+  const [serviceType, setServiceType] = useState('Add Service');
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState('ALL');
   const [filterEngineer, setFilterEngineer] = useState('ALL');
@@ -41,6 +43,8 @@ export default function DashboardPage() {
   const [sortConfig, setSortConfig] = useState({ key: 'machine_number', direction: 'asc' });
   const [toast, setToast] = useState(null);
   const [generationSummary, setGenerationSummary] = useState(null);
+  const [timelineMachine, setTimelineMachine] = useState(null);
+
   const requiredReportType = getRequiredReportType(serviceType);
   const effectiveReportType = requiredReportType || reportType;
 
@@ -93,7 +97,7 @@ export default function DashboardPage() {
   );
 
   const engineers = useMemo(
-    () => [...new Set(machines.map((machine) => machine.responsible_engineer).filter(Boolean))],
+    () => [...new Set(machines.map((machine) => machine.responsible_engineer).filter(Boolean))].sort(),
     [machines]
   );
 
@@ -150,13 +154,11 @@ export default function DashboardPage() {
       router.push('/eqp/reports');
       return;
     }
-
     setActivePage(page);
   }
 
   function changeServiceType(nextServiceType) {
     setServiceType(nextServiceType);
-
     const nextRequiredReportType = getRequiredReportType(nextServiceType);
     if (nextRequiredReportType) {
       setReportType(nextRequiredReportType);
@@ -173,7 +175,6 @@ export default function DashboardPage() {
       if (previous.includes(machineId)) {
         return previous.filter((id) => id !== machineId);
       }
-
       return [...previous, machineId];
     });
   }
@@ -187,7 +188,6 @@ export default function DashboardPage() {
       setSelectedMachines((previous) => previous.filter((id) => !filteredIds.includes(id)));
       return;
     }
-
     setSelectedMachines((previous) => [...new Set([...previous, ...filteredIds])]);
   }
 
@@ -227,7 +227,6 @@ export default function DashboardPage() {
     }
 
     const count = Number(reportCount);
-
     if (!Number.isInteger(count) || count <= 0 || count > 12) {
       setError('Reports count must be between 1 and 12');
       setToast({ type: 'error', message: 'Reports count must be between 1 and 12.' });
@@ -322,12 +321,14 @@ export default function DashboardPage() {
             fleetInsights={fleetInsights}
             generationSummary={generationSummary}
             reportProfile={reportProfile}
+            onInspectMachine={setTimelineMachine}
           />
         ) : (
           <MachineHistory history={machineHistory} />
         )}
       </div>
 
+      {/* Report Dates Modal */}
       {showDatesModal && (
         <DatesModal
           dates={reportDates}
@@ -335,6 +336,19 @@ export default function DashboardPage() {
           onCancel={() => setShowDatesModal(false)}
           onSubmit={submitMultipleReports}
           disabled={isGenerating}
+        />
+      )}
+
+      {/* Machine Timeline Modal Drilldown */}
+      {timelineMachine && (
+        <MachineTimelineModal
+          machine={timelineMachine}
+          onClose={() => setTimelineMachine(null)}
+          onSelectForReport={(m) => {
+            if (!selectedMachines.includes(m.id)) {
+              setSelectedMachines((prev) => [...prev, m.id]);
+            }
+          }}
         />
       )}
 
@@ -356,299 +370,373 @@ function DashboardContent(props) {
     ? [props.requiredReportType]
     : REPORT_TYPES.filter((type) => type !== 'W41X');
 
+  const popularServices = [
+    { label: 'Add Service', code: 'W41X', tag: 'Extra PM' },
+    { label: 'Storage Service', code: 'W30', tag: 'Monthly' },
+    { label: '1st Service', code: 'W411', tag: '250h' },
+    { label: '2nd Service', code: 'W412', tag: '500h' },
+    { label: '3rd Service', code: 'W413', tag: '1000h' },
+    { label: 'Pre Delivery', code: 'W41P', tag: 'PDI' },
+  ];
+
   return (
     <div className="space-y-6">
-      {/* KPI Metrics */}
-      <div className="ds-kpi-grid">
-        <article className="ds-kpi-card">
-          <div className="ds-icon-tile">
-            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-            </svg>
-          </div>
-          <div className="ds-kpi-content">
-            <div className="ds-kpi-head">
-              <p className="ds-kpi-label">Fleet Size</p>
-              <Badge tone="active">Active</Badge>
+      {/* Visual Service Preset Selector Panel */}
+      <Card className="p-5 border-amber-500/20 bg-gradient-to-r from-amber-50/40 via-white to-amber-50/20">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 border-b border-slate-200/80 pb-4">
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="px-2 py-0.5 rounded-md bg-amber-500 text-white font-extrabold text-xs">STEP 1</span>
+              <h2 className="text-base font-bold text-slate-900">Service Interval & Report Presets</h2>
             </div>
-            <p className="ds-kpi-main">{props.machines.length}</p>
-            <p className="ds-kpi-descriptor">Available Assets</p>
-          </div>
-        </article>
-
-        <article className="ds-kpi-card">
-          <div className="ds-icon-tile ds-icon-tile-accent">
-            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
-            </svg>
-          </div>
-          <div className="ds-kpi-content">
-            <div className="ds-kpi-head">
-              <p className="ds-kpi-label">Average SMR</p>
-              <Badge tone="live">Live</Badge>
-            </div>
-            <p className="ds-kpi-main">{props.fleetInsights.averageSmr}</p>
-            <p className="ds-kpi-descriptor">Fleet Hours</p>
-          </div>
-        </article>
-
-        <article className="ds-kpi-card">
-          <div className="ds-icon-tile">
-            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
-            </svg>
-          </div>
-          <div className="ds-kpi-content">
-            <div className="ds-kpi-head">
-              <p className="ds-kpi-label">Machine Types</p>
-              <Badge tone="ready">Ready</Badge>
-            </div>
-            <p className="ds-kpi-main">{props.fleetInsights.activeTypes}</p>
-            <p className="ds-kpi-descriptor">Supported Models</p>
-          </div>
-        </article>
-      </div>
-
-      {/* Main Grid: Form Left, Table Right */}
-      <div className="grid gap-6 lg:grid-cols-[380px_1fr]">
-        <Card className="p-6 h-fit space-y-5">
-          <div className="pb-3 border-b border-slate-100">
-            <p className="text-xs font-bold uppercase tracking-wider text-amber-600">EQP Configuration</p>
-            <h2 className="mt-1 text-xl font-bold text-slate-900">Generate PDF Reports</h2>
-            <p className="mt-1 text-xs text-slate-500">Create finalized preventive maintenance PDFs from EQP master workbooks.</p>
+            <p className="text-xs text-slate-500 mt-1">Select the target preventive maintenance cycle to automatically resolve report templates</p>
           </div>
 
-          {/* Signature Alert */}
-          <div className={`ds-alert ${props.reportProfile?.signatureAvailable ? 'ds-alert-success' : 'ds-alert-error'}`}>
-            <div className="flex items-center justify-between gap-3 w-full">
-              <div className="min-w-0">
-                <p className="text-xs font-bold uppercase text-slate-500">Certified Maker</p>
-                <p className="font-bold text-sm text-slate-900 truncate">
-                  {props.reportProfile?.reportMaker?.fullName || 'Checking signature...'}
-                </p>
-              </div>
-              <Badge tone={props.reportProfile?.signatureAvailable ? 'active' : 'critical'}>
-                {props.reportProfile?.signatureAvailable ? 'Signed' : 'No Signature'}
-              </Badge>
-            </div>
-          </div>
-
-          <Field label="Machine Model Format">
-            <select
-              value={props.machineModel}
-              onChange={(event) => props.setMachineModel(event.target.value)}
-              className="ds-input"
-            >
-              {MACHINE_MODELS.map((model) => (
-                <option key={model.value} value={model.value}>{model.label}</option>
-              ))}
-            </select>
-          </Field>
-
-          <Field label="Service Interval Type">
-            <select
-              value={props.serviceType}
-              onChange={(event) => props.setServiceType(event.target.value)}
-              className="ds-input"
-            >
-              {SERVICE_TYPES.map((type) => (
-                <option key={type}>{type}</option>
-              ))}
-            </select>
-          </Field>
-
-          <Field label="Report Code Variant">
-            <select
-              value={props.reportType}
-              onChange={(event) => props.setReportType(event.target.value)}
-              disabled={Boolean(props.requiredReportType)}
-              className="ds-input"
-            >
-              {reportTypes.map((type) => (
-                <option key={type}>{type}</option>
-              ))}
-            </select>
-          </Field>
-
-          <Field label="Number of Service Runs (1–12)">
-            <input
-              type="number"
-              min="1"
-              max="12"
-              placeholder="1"
-              value={props.reportCount}
-              onChange={(event) => props.setReportCount(event.target.value)}
-              className="ds-input"
-            />
-          </Field>
-
-          <Button
-            onClick={props.openDatesModal}
-            disabled={props.loading || !props.reportProfile?.signatureAvailable}
-            fullWidth
-            className="mt-2"
-          >
-            Configure Report Dates & Run
-          </Button>
-
-          {props.generationSummary && (
-            <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-4 text-xs">
-              <p className="font-bold text-emerald-800">
-                ✓ {props.generationSummary.generatedFiles.length} Reports Generated
-              </p>
-              <p className="mt-0.5 text-emerald-700">
-                Processed for {props.generationSummary.totalMachines} machines by {props.generationSummary.reportMaker?.fullName}.
+          {/* Maker & Signature Status */}
+          <div className="flex items-center gap-3 bg-white px-3.5 py-1.5 rounded-xl border border-slate-200 shadow-2xs">
+            <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+            <div className="text-left">
+              <p className="text-[10px] uppercase font-bold text-slate-400">Certified Inspector</p>
+              <p className="text-xs font-bold text-slate-800 truncate">
+                {props.reportProfile?.reportMaker?.fullName || 'Active Engineer'}
               </p>
             </div>
-          )}
-        </Card>
+            <Badge tone={props.reportProfile?.signatureAvailable ? 'ready' : 'critical'}>
+              {props.reportProfile?.signatureAvailable ? 'Signed' : 'No Signature'}
+            </Badge>
+          </div>
+        </div>
 
-        {/* Fleet Machines Table Card */}
-        <Card className="overflow-hidden">
-          <div className="border-b border-slate-200 p-5 bg-slate-50/60">
-            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-              <div>
-                <h2 className="text-lg font-bold text-slate-900">Fleet Equipment Selection</h2>
-                <p className="text-xs text-slate-500">Select machines to include in this report generation run</p>
-              </div>
-              <Badge tone={props.selectedMachines.length > 0 ? 'yellow' : 'neutral'}>
-                {props.selectedMachines.length} Selected
-              </Badge>
-            </div>
+        {/* Service Type Pills */}
+        <div className="mt-4 space-y-3">
+          <div className="flex items-center justify-between text-xs font-semibold text-slate-600">
+            <span>Choose Service Stage:</span>
+            <span className="text-[11px] text-amber-700 font-mono font-bold">Effective Code: {props.reportType}</span>
+          </div>
 
-            <div className="mt-4 grid gap-2.5 sm:grid-cols-[1.4fr_1fr_1fr_auto]">
-              <input
-                type="text"
-                placeholder="Search machine, type, or engine..."
-                value={props.searchTerm}
-                onChange={(event) => props.setSearchTerm(event.target.value)}
-                className="ds-input"
-              />
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
+            {popularServices.map((srv) => {
+              const isSelected = props.serviceType.toLowerCase() === srv.label.toLowerCase();
+              return (
+                <button
+                  key={srv.label}
+                  type="button"
+                  onClick={() => props.setServiceType(srv.label)}
+                  className={`p-2.5 rounded-xl border text-left transition-all ${
+                    isSelected
+                      ? 'bg-amber-500 border-amber-600 text-slate-950 shadow-sm ring-2 ring-amber-500/20'
+                      : 'bg-white border-slate-200 hover:border-slate-300 text-slate-700 hover:bg-slate-50'
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <span className={`text-[10px] font-mono font-bold px-1.5 py-0.2 rounded ${isSelected ? 'bg-black/15 text-slate-950' : 'bg-slate-100 text-slate-600'}`}>
+                      {srv.code}
+                    </span>
+                    <span className="text-[9px] text-slate-400 font-semibold">{srv.tag}</span>
+                  </div>
+                  <p className={`text-xs font-bold mt-1.5 truncate ${isSelected ? 'text-slate-950' : 'text-slate-800'}`}>
+                    {srv.label}
+                  </p>
+                </button>
+              );
+            })}
+          </div>
 
+          {/* Model Format & Run Count Bar */}
+          <div className="pt-2 grid grid-cols-1 sm:grid-cols-3 gap-3 border-t border-slate-100">
+            <div>
+              <label className="text-[11px] font-bold text-slate-600 mb-1 block">Machine Model Format</label>
               <select
-                value={props.filterType}
-                onChange={(event) => props.setFilterType(event.target.value)}
-                className="ds-input"
+                value={props.machineModel}
+                onChange={(event) => props.setMachineModel(event.target.value)}
+                className="ds-input text-xs"
               >
-                <option value="ALL">All Types</option>
-                {props.machineTypes.map((type) => (
+                {MACHINE_MODELS.map((model) => (
+                  <option key={model.value} value={model.value}>{model.label}</option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="text-[11px] font-bold text-slate-600 mb-1 block">Report Code Variant</label>
+              <select
+                value={props.reportType}
+                onChange={(event) => props.setReportType(event.target.value)}
+                disabled={Boolean(props.requiredReportType)}
+                className="ds-input text-xs"
+              >
+                {reportTypes.map((type) => (
                   <option key={type}>{type}</option>
                 ))}
               </select>
-
-              <select
-                value={props.filterEngineer}
-                onChange={(event) => props.setFilterEngineer(event.target.value)}
-                className="ds-input"
-              >
-                <option value="ALL">All Engineers</option>
-                {props.engineers.map((engineer) => (
-                  <option key={engineer}>{engineer}</option>
-                ))}
-              </select>
-
-              <label className="ds-check-row border border-slate-200 bg-white px-3 py-1.5 rounded-[6px]">
-                <input
-                  type="checkbox"
-                  checked={props.showOnlySelected}
-                  onChange={() => props.setShowOnlySelected(!props.showOnlySelected)}
-                />
-                <span className="text-xs font-semibold text-slate-700">Selected Only</span>
-              </label>
             </div>
 
-            <div className="mt-3 flex items-center justify-between text-xs text-slate-500 pt-2 border-t border-slate-200/60">
-              <span>Showing {props.filteredMachines.length} of {props.machines.length} fleet machines</span>
+            <div>
+              <label className="text-[11px] font-bold text-slate-600 mb-1 block">Number of Service Runs (1–12)</label>
+              <input
+                type="number"
+                min="1"
+                max="12"
+                value={props.reportCount}
+                onChange={(event) => props.setReportCount(event.target.value)}
+                className="ds-input text-xs"
+              />
+            </div>
+          </div>
+        </div>
+      </Card>
+
+      {/* Fleet Equipment Selection Card */}
+      <Card className="overflow-hidden">
+        {/* Step 2 Header */}
+        <div className="border-b border-slate-200 p-5 bg-slate-50/70 space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <div>
               <div className="flex items-center gap-2">
-                <Button variant="ghost" size="sm" onClick={props.resetFilters}>Reset</Button>
-                {props.selectedMachines.length > 0 && (
-                  <Button variant="secondary" size="sm" onClick={props.clearSelection}>Clear Selection</Button>
-                )}
+                <span className="px-2 py-0.5 rounded-md bg-slate-900 text-white font-extrabold text-xs">STEP 2</span>
+                <h2 className="text-base font-bold text-slate-900">Fleet Equipment Selection</h2>
               </div>
+              <p className="text-xs text-slate-500 mt-0.5">Select machines to batch process for this inspection run</p>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <Badge tone={props.selectedMachines.length > 0 ? 'yellow' : 'neutral'}>
+                {props.selectedMachines.length} Selected
+              </Badge>
+              {props.selectedMachines.length > 0 && (
+                <Button variant="secondary" size="sm" onClick={props.clearSelection}>
+                  Clear
+                </Button>
+              )}
             </div>
           </div>
 
-          {props.loading ? (
-            <div className="grid gap-3 p-6">
-              <Skeleton className="h-12 rounded-lg" />
-              <Skeleton className="h-12 rounded-lg" />
-              <Skeleton className="h-12 rounded-lg" />
-            </div>
-          ) : props.filteredMachines.length === 0 ? (
-            <div className="p-8">
-              <EmptyState title="No fleet machines match filters" description="Try clearing filters or search query." />
-            </div>
-          ) : (
-            <MachinesTable
-              machines={props.filteredMachines}
-              selectedMachines={props.selectedMachines}
-              toggleMachine={props.toggleMachine}
-              toggleSelectAll={props.toggleSelectAll}
-              sortConfig={props.sortConfig}
-              changeSort={props.changeSort}
+          {/* Engineer Tabs Strip */}
+          <div className="flex flex-wrap items-center gap-1.5 pt-1 border-t border-slate-200/60">
+            <span className="text-xs font-bold text-slate-500 mr-1">Engineer Fleet:</span>
+            <button
+              type="button"
+              onClick={() => props.setFilterEngineer('ALL')}
+              className={`px-3 py-1 rounded-lg text-xs font-bold transition-all ${
+                props.filterEngineer === 'ALL'
+                  ? 'bg-slate-900 text-white shadow-xs'
+                  : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-100'
+              }`}
+            >
+              All Engineers ({props.machines.length})
+            </button>
+
+            {props.engineers.map((eng) => {
+              const count = props.machines.filter((m) => m.responsible_engineer === eng).length;
+              const isSelected = props.filterEngineer === eng;
+              return (
+                <button
+                  key={eng}
+                  type="button"
+                  onClick={() => props.setFilterEngineer(eng)}
+                  className={`px-3 py-1 rounded-lg text-xs font-bold transition-all border ${
+                    isSelected
+                      ? 'bg-amber-600 border-amber-600 text-white shadow-xs'
+                      : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-100'
+                  }`}
+                >
+                  {eng} ({count})
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Search & Model Filters Bar */}
+          <div className="grid gap-2.5 sm:grid-cols-[1.5fr_1fr_auto_auto]">
+            <input
+              type="text"
+              placeholder="Search machine serial, customer, or location..."
+              value={props.searchTerm}
+              onChange={(event) => props.setSearchTerm(event.target.value)}
+              className="ds-input text-xs"
             />
-          )}
-        </Card>
-      </div>
-    </div>
-  );
-}
 
-function MachinesTable({ machines, selectedMachines, toggleMachine, toggleSelectAll, sortConfig, changeSort }) {
-  const visibleIds = machines.map((machine) => machine.id);
-  const allVisibleSelected = visibleIds.length > 0 && visibleIds.every((id) => selectedMachines.includes(id));
+            <select
+              value={props.filterType}
+              onChange={(event) => props.setFilterType(event.target.value)}
+              className="ds-input text-xs"
+            >
+              <option value="ALL">All Machine Models</option>
+              {props.machineTypes.map((type) => (
+                <option key={type}>{type}</option>
+              ))}
+            </select>
 
-  return (
-    <div className="ds-table-wrap">
-      <table className="ds-table">
-        <thead>
-          <tr>
-            <th className="w-10">
+            <Button
+              type="button"
+              variant="secondary"
+              size="sm"
+              onClick={props.toggleSelectAll}
+              className="whitespace-nowrap"
+            >
+              Select All Filtered ({props.filteredMachines.length})
+            </Button>
+
+            <label className="ds-check-row border border-slate-200 bg-white px-3 py-1.5 rounded-[6px] cursor-pointer">
               <input
                 type="checkbox"
-                checked={allVisibleSelected}
-                onChange={toggleSelectAll}
-                className="rounded accent-amber-500"
+                checked={props.showOnlySelected}
+                onChange={() => props.setShowOnlySelected(!props.showOnlySelected)}
               />
-            </th>
-            <SortableHeader label="Machine" column="machine_number" sortConfig={sortConfig} onSort={changeSort} />
-            <SortableHeader label="Type" column="machine_type" sortConfig={sortConfig} onSort={changeSort} />
-            <SortableHeader label="Customer" column="customer_name" sortConfig={sortConfig} onSort={changeSort} />
-            <SortableHeader label="Location" column="location" sortConfig={sortConfig} onSort={changeSort} />
-            <SortableHeader label="Engine No." column="engine_number" sortConfig={sortConfig} onSort={changeSort} />
-            <SortableHeader label="SMR Hours" column="last_smr" sortConfig={sortConfig} onSort={changeSort} />
-            <SortableHeader label="Step" column="smr_step" sortConfig={sortConfig} onSort={changeSort} />
-          </tr>
-        </thead>
-        <tbody>
-          {machines.map((machine) => {
-            const isSelected = selectedMachines.includes(machine.id);
-            return (
-              <tr
-                key={machine.id}
-                onClick={() => toggleMachine(machine.id)}
-                className={`cursor-pointer ${isSelected ? '!bg-amber-50/60' : ''}`}
-              >
-                <td onClick={(e) => e.stopPropagation()}>
-                  <input
-                    type="checkbox"
-                    checked={isSelected}
-                    onChange={() => toggleMachine(machine.id)}
-                    className="rounded accent-amber-500"
-                  />
-                </td>
-                <td className="font-bold text-slate-900">{machine.machine_number}</td>
-                <td className="text-slate-700 font-medium">{machine.machine_type}</td>
-                <td className="text-slate-600 max-w-[200px] truncate">{machine.customer_name || '-'}</td>
-                <td className="text-slate-600">{machine.location || '-'}</td>
-                <td className="font-mono text-xs text-slate-500">{machine.engine_number}</td>
-                <td className="font-semibold text-slate-900">{machine.last_smr}</td>
-                <td className="text-slate-600">{machine.smr_step}</td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+              <span className="text-xs font-semibold text-slate-700">Selected Only</span>
+            </label>
+          </div>
+        </div>
+
+        {/* Machines Table */}
+        {props.loading ? (
+          <div className="grid gap-3 p-6">
+            <Skeleton className="h-12 rounded-lg" />
+            <Skeleton className="h-12 rounded-lg" />
+            <Skeleton className="h-12 rounded-lg" />
+          </div>
+        ) : props.filteredMachines.length === 0 ? (
+          <div className="p-8">
+            <EmptyState title="No fleet machines match filters" description="Try clearing filters or search query." />
+          </div>
+        ) : (
+          <div className="ds-table-wrap">
+            <table className="ds-table">
+              <thead>
+                <tr>
+                  <th className="w-10">
+                    <input
+                      type="checkbox"
+                      checked={
+                        props.filteredMachines.length > 0 &&
+                        props.filteredMachines.every((m) => props.selectedMachines.includes(m.id))
+                      }
+                      onChange={props.toggleSelectAll}
+                      className="rounded accent-amber-500"
+                    />
+                  </th>
+                  <SortableHeader label="Machine ID" column="machine_number" sortConfig={props.sortConfig} onSort={props.changeSort} />
+                  <SortableHeader label="Model" column="machine_type" sortConfig={props.sortConfig} onSort={props.changeSort} />
+                  <SortableHeader label="Operating SMR" column="last_smr" sortConfig={props.sortConfig} onSort={props.changeSort} />
+                  <th>Next File Suffix</th>
+                  <SortableHeader label="Engineer Lead" column="responsible_engineer" sortConfig={props.sortConfig} onSort={props.changeSort} />
+                  <SortableHeader label="Site Location" column="location" sortConfig={props.sortConfig} onSort={props.changeSort} />
+                  <th className="text-right">Timeline</th>
+                </tr>
+              </thead>
+              <tbody>
+                {props.filteredMachines.map((machine) => {
+                  const isSelected = props.selectedMachines.includes(machine.id);
+                  const counter = Number(machine.report_counter || 0);
+                  const nextSuffix = props.serviceType.toLowerCase().includes('add')
+                    ? `Ex_${counter + 1}`
+                    : `${props.reportType}-${counter + 1}`;
+
+                  return (
+                    <tr
+                      key={machine.id}
+                      onClick={() => props.toggleMachine(machine.id)}
+                      className={`cursor-pointer transition-colors ${isSelected ? '!bg-amber-50/70 font-semibold' : 'hover:bg-slate-50/60'}`}
+                    >
+                      <td onClick={(e) => e.stopPropagation()}>
+                        <input
+                          type="checkbox"
+                          checked={isSelected}
+                          onChange={() => props.toggleMachine(machine.id)}
+                          className="rounded accent-amber-500"
+                        />
+                      </td>
+                      <td className="font-extrabold text-slate-900">{machine.machine_number}</td>
+                      <td>
+                        <span className="font-bold text-xs px-2 py-0.5 rounded-md bg-slate-100 text-slate-800">
+                          {machine.machine_type}
+                        </span>
+                      </td>
+                      <td>
+                        <span className="font-bold text-xs px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200">
+                          {machine.last_smr} hrs
+                        </span>
+                      </td>
+                      <td>
+                        <span className="font-mono text-xs font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
+                          {nextSuffix}
+                        </span>
+                      </td>
+                      <td className="text-xs text-slate-600">{machine.responsible_engineer || '—'}</td>
+                      <td className="text-xs text-slate-500 truncate max-w-[160px]">{machine.location || '—'}</td>
+                      <td className="text-right" onClick={(e) => e.stopPropagation()}>
+                        <button
+                          type="button"
+                          onClick={() => props.onInspectMachine(machine)}
+                          className="px-2.5 py-1 rounded-md text-[11px] font-bold bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors"
+                        >
+                          🔍 History
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        {/* Sticky Action Footer */}
+        <div className="p-4 bg-slate-900 text-white flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-lg bg-amber-500 text-slate-950 flex items-center justify-center font-extrabold text-base">
+              ⚡
+            </div>
+            <div>
+              <p className="text-xs font-bold text-white">
+                {props.selectedMachines.length} Machine{props.selectedMachines.length === 1 ? '' : 's'} Selected
+              </p>
+              <p className="text-[11px] text-slate-400">
+                Target: <span className="text-amber-400 font-semibold">{props.serviceType} ({props.reportType})</span> • Ready for compilation
+              </p>
+            </div>
+          </div>
+
+          <Button
+            type="button"
+            variant="primary"
+            onClick={props.openDatesModal}
+            disabled={props.loading || props.selectedMachines.length === 0 || !props.reportProfile?.signatureAvailable}
+            className="!bg-amber-500 hover:!bg-amber-400 !text-slate-950 !font-bold"
+          >
+            Configure Dates & Run Reports ({props.selectedMachines.length}) →
+          </Button>
+        </div>
+      </Card>
+
+      {/* Generation Summary Success Card */}
+      {props.generationSummary && (
+        <Card className="p-5 border-emerald-300 bg-emerald-50/80">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold text-lg">
+                ✓
+              </div>
+              <div>
+                <h4 className="text-sm font-bold text-emerald-900">
+                  Successfully Generated {props.generationSummary.generatedFiles.length} Reports
+                </h4>
+                <p className="text-xs text-emerald-700 mt-0.5">
+                  Processed for {props.generationSummary.totalMachines} machines by {props.generationSummary.reportMaker?.fullName}.
+                </p>
+              </div>
+            </div>
+
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={() => router.push('/eqp/reports')}
+            >
+              View in PDF Archive →
+            </Button>
+          </div>
+        </Card>
+      )}
     </div>
   );
 }

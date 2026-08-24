@@ -1,10 +1,12 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
+import Link from 'next/link';
 import SystemShell from '../../../components/SystemShell';
 import Card from '../../../components/ui/Card';
 import Badge from '../../../components/ui/Badge';
 import EmptyState from '../../../components/ui/EmptyState';
+import Button from '../../../components/ui/Button';
 import { getMachines, getReports } from '../../../lib/api';
 import { getStoredPlatformSession, getStoredUser, getMatchingEngineerName } from '../../../lib/auth';
 import {
@@ -12,6 +14,7 @@ import {
   formatLifecycleDate,
   formatLifecycleMonth,
 } from '../../../lib/eqpLifecycleData';
+import { LifecycleMilestoneProgressBar } from '../../../components/eqp/EqpCharts';
 
 const DISMISSED_MONTHLY_GAPS_KEY = 'eqp.dismissedMonthlyGaps';
 
@@ -22,7 +25,7 @@ export default function EqpLifecyclePage() {
   const [filterEngineer, setFilterEngineer] = useState('ALL');
   const [selectedMachineNumber, setSelectedMachineNumber] = useState('');
   const [dismissedGapKeys, setDismissedGapKeys] = useState([]);
-  const [monthlyListOpen, setMonthlyListOpen] = useState(false);
+  const [monthlyListOpen, setMonthlyListOpen] = useState(true);
   const [dismissedListOpen, setDismissedListOpen] = useState(false);
   const [generatedReports, setGeneratedReports] = useState([]);
   const [machinesList, setMachinesList] = useState([]);
@@ -133,15 +136,22 @@ export default function EqpLifecyclePage() {
   );
 
   const stats = useMemo(() => {
-    const addCycle = machines.filter((machine) => machine.workingStatus === 'not_working').length;
-    const secondDone = machines.filter((machine) => machine.latestReportCode === 'W412').length;
+    const total = machines.length || 1;
+    const pdiDone = machines.filter((m) => m.preDeliveryDate).length;
+    const delDone = machines.filter((m) => m.deliveryDate).length;
+    const s1Done = machines.filter((m) => m.firstServiceDate).length;
+    const s2Done = machines.filter((m) => m.secondServiceDate).length;
+    const s3Done = machines.filter((m) => m.thirdServiceDate).length;
     const monthlyGaps = machines.reduce((total, machine) => total + machine.activeMonthlyGaps.length, 0);
     const dismissedMonthlyGaps = machines.reduce((total, machine) => total + machine.dismissedMonthlyGaps.length, 0);
 
     return {
       total: machines.length,
-      addCycle,
-      secondDone,
+      pdiDone,
+      delDone,
+      s1Done,
+      s2Done,
+      s3Done,
       monthlyGaps,
       dismissedMonthlyGaps,
     };
@@ -159,125 +169,131 @@ export default function EqpLifecyclePage() {
   return (
     <SystemShell
       activePath="/eqp/lifecycle"
-      eyebrow="EQP Module"
-      title="Machine Lifecycle Tracker"
-      description="Factory delivery milestones, service interval progression, and monthly gap verification for each EQP asset."
+      eyebrow="Komatsu EQP Platform"
+      title="Machine Lifecycle & Service Tracker"
+      description="Interactive milestone timeline, service stage progression, and monthly gap verification across the fleet."
       actions={
         <div className="flex items-center gap-2">
           <Badge tone={generatedReports.length > 0 ? 'ready' : 'neutral'}>
-            {loadingReports ? 'Syncing...' : `⚡ ${generatedReports.length} Generated Reports Synced`}
+            {loadingReports ? 'Syncing...' : `⚡ ${generatedReports.length} Reports Synced`}
           </Badge>
-          <button
+          <Button
             type="button"
+            variant="secondary"
             onClick={loadReportsData}
             disabled={loadingReports}
-            className="rounded-md border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-sm hover:bg-slate-50 disabled:opacity-50"
           >
             {loadingReports ? 'Refreshing...' : '🔄 Refresh Lifecycle'}
-          </button>
+          </Button>
         </div>
       }
     >
       <div className="space-y-6">
-        {/* KPI Metrics */}
-        <section className="ds-kpi-grid">
-          <article className="ds-kpi-card">
-            <div className="ds-icon-tile">
-              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-              </svg>
+        {/* Fleet Milestone Funnel Bar */}
+        <Card className="p-5 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-white border-slate-700">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b border-slate-700/80 pb-3 mb-4">
+            <div>
+              <h3 className="text-sm font-bold text-white uppercase tracking-wider">Fleet Factory Milestone Progression</h3>
+              <p className="text-xs text-slate-400">Completion rate of standard Komatsu lifecycle intervals across {stats.total} units</p>
             </div>
-            <div className="ds-kpi-content">
-              <div className="ds-kpi-head">
-                <p className="ds-kpi-label">Tracked Fleet</p>
-                <Badge tone="live">Live</Badge>
-              </div>
-              <p className="ds-kpi-main">{stats.total}</p>
-              <p className="ds-kpi-descriptor">Lifecycle Units</p>
-            </div>
-          </article>
+            <Badge tone="live">Continuous Monitoring</Badge>
+          </div>
 
-          <article className="ds-kpi-card">
-            <div className="ds-icon-tile ds-icon-tile-accent">
-              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-              </svg>
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 text-center">
+            <div className="bg-slate-800/80 rounded-xl p-3 border border-slate-700">
+              <p className="text-[10px] font-bold uppercase text-slate-400">Pre-Delivery (PDI)</p>
+              <p className="text-xl font-extrabold text-amber-400 mt-1">{stats.pdiDone}</p>
+              <p className="text-[10px] text-slate-400 mt-0.5">{Math.round((stats.pdiDone / (stats.total || 1)) * 100)}% Verified</p>
             </div>
-            <div className="ds-kpi-content">
-              <div className="ds-kpi-head">
-                <p className="ds-kpi-label">Not Working</p>
-                <Badge tone="warning">Storage</Badge>
-              </div>
-              <p className="ds-kpi-main">{stats.addCycle}</p>
-              <p className="ds-kpi-descriptor">Cycle Follow-up</p>
+            <div className="bg-slate-800/80 rounded-xl p-3 border border-slate-700">
+              <p className="text-[10px] font-bold uppercase text-slate-400">Delivery New</p>
+              <p className="text-xl font-extrabold text-sky-400 mt-1">{stats.delDone}</p>
+              <p className="text-[10px] text-slate-400 mt-0.5">{Math.round((stats.delDone / (stats.total || 1)) * 100)}% Delivered</p>
             </div>
-          </article>
+            <div className="bg-slate-800/80 rounded-xl p-3 border border-slate-700">
+              <p className="text-[10px] font-bold uppercase text-slate-400">1st Service (250h)</p>
+              <p className="text-xl font-extrabold text-emerald-400 mt-1">{stats.s1Done}</p>
+              <p className="text-[10px] text-slate-400 mt-0.5">{Math.round((stats.s1Done / (stats.total || 1)) * 100)}% Done</p>
+            </div>
+            <div className="bg-slate-800/80 rounded-xl p-3 border border-slate-700">
+              <p className="text-[10px] font-bold uppercase text-slate-400">2nd Service (500h)</p>
+              <p className="text-xl font-extrabold text-indigo-400 mt-1">{stats.s2Done}</p>
+              <p className="text-[10px] text-slate-400 mt-0.5">{Math.round((stats.s2Done / (stats.total || 1)) * 100)}% Done</p>
+            </div>
+            <div className="bg-slate-800/80 rounded-xl p-3 border border-slate-700 col-span-2 sm:col-span-1">
+              <p className="text-[10px] font-bold uppercase text-slate-400">Monthly Gaps</p>
+              <p className={`text-xl font-extrabold mt-1 ${stats.monthlyGaps > 0 ? 'text-rose-400' : 'text-emerald-400'}`}>
+                {stats.monthlyGaps}
+              </p>
+              <p className="text-[10px] text-slate-400 mt-0.5">{stats.monthlyGaps > 0 ? 'Action Needed' : 'All Clear'}</p>
+            </div>
+          </div>
+        </Card>
 
-          <article className="ds-kpi-card">
-            <div className="ds-icon-tile">
-              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </div>
-            <div className="ds-kpi-content">
-              <div className="ds-kpi-head">
-                <p className="ds-kpi-label">2nd Service Done</p>
-                <Badge tone="ready">Ready</Badge>
-              </div>
-              <p className="ds-kpi-main">{stats.secondDone}</p>
-              <p className="ds-kpi-descriptor">Awaiting 3rd Run</p>
-            </div>
-          </article>
-
-          <article className="ds-kpi-card">
-            <div className="ds-icon-tile ds-icon-tile-accent">
-              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </div>
-            <div className="ds-kpi-content">
-              <div className="ds-kpi-head">
-                <p className="ds-kpi-label">Monthly Gaps</p>
-                <Badge tone={stats.monthlyGaps > 0 ? 'warning' : 'ready'}>
-                  {stats.monthlyGaps > 0 ? 'Review' : 'Clear'}
-                </Badge>
-              </div>
-              <p className="ds-kpi-main">{stats.monthlyGaps}</p>
-              <p className="ds-kpi-descriptor">{stats.dismissedMonthlyGaps} Dismissed</p>
-            </div>
-          </article>
-        </section>
-
-        {/* Main Grid: Machine List & Detail Timeline Card */}
-        <section className="grid gap-6 xl:grid-cols-[minmax(0,1.2fr)_minmax(380px,0.8fr)]">
+        {/* Main Grid: Machine List & Interactive Detail Timeline Card */}
+        <section className="grid gap-6 xl:grid-cols-[minmax(0,1.2fr)_minmax(420px,0.8fr)]">
           {/* Table Card */}
           <Card className="overflow-hidden">
-            <div className="border-b border-slate-200 p-5 bg-slate-50/60">
-              <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-4">
+            <div className="border-b border-slate-200 p-5 bg-slate-50/70 space-y-3">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                <div>
+                  <h3 className="text-base font-bold text-slate-900">Tracked Fleet Assets</h3>
+                  <p className="text-xs text-slate-500">Click any machine to inspect its visual milestone timeline</p>
+                </div>
+                <Badge tone="neutral">{filteredMachines.length} Units</Badge>
+              </div>
+
+              {/* Engineer Tabs */}
+              <div className="flex flex-wrap items-center gap-1.5 pt-1 border-t border-slate-200/60">
+                <span className="text-xs font-bold text-slate-500 mr-1">Engineer:</span>
+                <button
+                  type="button"
+                  onClick={() => setFilterEngineer('ALL')}
+                  className={`px-3 py-1 rounded-lg text-xs font-bold transition-all ${
+                    filterEngineer === 'ALL'
+                      ? 'bg-slate-900 text-white shadow-xs'
+                      : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-100'
+                  }`}
+                >
+                  All ({machines.length})
+                </button>
+
+                {engineerOptions.map((eng) => {
+                  const count = machines.filter((m) => m.responsibleEngineer === eng).length;
+                  const isSelected = filterEngineer === eng;
+                  return (
+                    <button
+                      key={eng}
+                      type="button"
+                      onClick={() => setFilterEngineer(eng)}
+                      className={`px-3 py-1 rounded-lg text-xs font-bold transition-all border ${
+                        isSelected
+                          ? 'bg-amber-600 border-amber-600 text-white shadow-xs'
+                          : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-100'
+                      }`}
+                    >
+                      {eng} ({count})
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Filter Row */}
+              <div className="grid gap-2 sm:grid-cols-[1.5fr_1fr_1fr]">
                 <input
                   type="text"
                   placeholder="Search machine ID or model..."
                   value={searchTerm}
                   onChange={(event) => setSearchTerm(event.target.value)}
-                  className="ds-input"
+                  className="ds-input text-xs"
                 />
-                <select
-                  value={filterEngineer}
-                  onChange={(event) => setFilterEngineer(event.target.value)}
-                  className="ds-input"
-                >
-                  <option value="ALL">All Engineers</option>
-                  {engineerOptions.map((eng) => (
-                    <option key={eng} value={eng}>{eng}</option>
-                  ))}
-                </select>
-                <select value={modelFilter} onChange={(event) => setModelFilter(event.target.value)} className="ds-input">
+                <select value={modelFilter} onChange={(event) => setModelFilter(event.target.value)} className="ds-input text-xs">
                   <option value="ALL">All Models</option>
                   {modelOptions.map((model) => (
                     <option key={model} value={model}>{model}</option>
                   ))}
                 </select>
-                <select value={statusFilter} onChange={(event) => setStatusFilter(event.target.value)} className="ds-input">
+                <select value={statusFilter} onChange={(event) => setStatusFilter(event.target.value)} className="ds-input text-xs">
                   <option value="ALL">All Statuses</option>
                   <option value="Follow-up Required">Follow-up Required</option>
                   <option value="Lifecycle Current">Lifecycle Current</option>
@@ -308,11 +324,15 @@ export default function EqpLifecyclePage() {
                       return (
                         <tr
                           key={machine.machineNumber}
-                          className={`cursor-pointer ${isSelected ? '!bg-amber-50/60 font-semibold' : ''}`}
+                          className={`cursor-pointer transition-colors ${isSelected ? '!bg-amber-50/70 font-semibold' : 'hover:bg-slate-50/60'}`}
                           onClick={() => setSelectedMachineNumber(machine.machineNumber)}
                         >
                           <td className="font-bold text-slate-900">{machine.machineNumber}</td>
-                          <td className="text-slate-700">{machine.model}</td>
+                          <td className="text-slate-700">
+                            <span className="px-2 py-0.5 rounded-md bg-slate-100 text-slate-800 text-xs font-semibold">
+                              {machine.model}
+                            </span>
+                          </td>
                           <td>
                             <span className="font-semibold text-slate-800">{machine.latestReportType}</span>
                             <span className="block text-[0.6875rem] font-mono text-slate-400">{formatLifecycleDate(machine.latestReportDate)}</span>
@@ -331,55 +351,65 @@ export default function EqpLifecyclePage() {
             )}
           </Card>
 
-          {/* Selected Machine Detail Card */}
-          {selectedMachine && (
+          {/* Selected Machine Interactive Detail Timeline Card */}
+          {selectedMachine ? (
             <Card className="p-6 h-fit space-y-5">
               <div className="flex items-start justify-between gap-4 pb-4 border-b border-slate-100">
-                <div>
-                  <p className="text-xs font-bold uppercase tracking-wider text-amber-600">Selected Machine</p>
-                  <h2 className="mt-1 text-2xl font-bold text-slate-900">{selectedMachine.machineNumber}</h2>
-                  <p className="text-xs font-semibold text-slate-500">{selectedMachine.model}</p>
+                <div className="flex items-center gap-3">
+                  <div className="w-11 h-11 rounded-xl bg-amber-500/10 text-amber-700 flex items-center justify-center font-extrabold text-base border border-amber-500/20">
+                    🚜
+                  </div>
+                  <div>
+                    <h2 className="text-xl font-bold text-slate-900">{selectedMachine.model} #{selectedMachine.machineNumber}</h2>
+                    <p className="text-xs text-slate-500">
+                      Lead: <span className="font-semibold text-slate-800">{selectedMachine.responsibleEngineer || 'Service Engineer'}</span>
+                    </p>
+                  </div>
                 </div>
                 <Badge tone={selectedMachine.statusTone}>{selectedMachine.latestReportCode}</Badge>
               </div>
 
-              {/* Next Action Box */}
-              <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
-                <p className="text-xs font-bold uppercase tracking-wider text-slate-500">Recommended Action</p>
-                <p className="mt-1.5 text-xs text-slate-800 font-medium leading-relaxed">{selectedMachine.nextAction}</p>
+              {/* Visual Lifecycle Milestone Stepper */}
+              <div>
+                <p className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Standard Lifecycle Stepper</p>
+                <div className="bg-slate-50 rounded-xl p-3 border border-slate-200">
+                  <LifecycleMilestoneProgressBar milestones={selectedMachine.milestones} />
+                </div>
               </div>
 
-              {/* Missing Reports Alerts */}
-              {selectedMachine.missingReports.length > 0 && (
-                <div className="rounded-lg border border-amber-200 bg-amber-50 p-4">
-                  <p className="text-xs font-bold uppercase text-amber-800">Missing Lifecycle Reports</p>
-                  <div className="mt-2 flex flex-wrap gap-1.5">
-                    {selectedMachine.missingReports.map((report) => (
-                      <Badge key={report} tone="warning">{report}</Badge>
-                    ))}
-                  </div>
+              {/* Recommended Next Action */}
+              <div className="rounded-xl border border-amber-200 bg-amber-50/60 p-4">
+                <div className="flex items-center justify-between mb-1">
+                  <p className="text-xs font-bold uppercase tracking-wider text-amber-800">Recommended Next Step</p>
+                  <Link
+                    href="/eqp/generate-reports"
+                    className="text-[11px] font-bold text-amber-700 hover:underline"
+                  >
+                    Open Builder →
+                  </Link>
                 </div>
-              )}
+                <p className="text-xs text-slate-800 font-medium leading-relaxed">{selectedMachine.nextAction}</p>
+              </div>
 
               {/* Monthly Gaps Drawer */}
               {selectedMachine.hasMonthlyGap && (
-                <div className="rounded-lg border border-amber-200 bg-amber-50/80 p-4">
+                <div className="rounded-xl border border-rose-200 bg-rose-50/70 p-4">
                   <button
                     type="button"
                     onClick={() => setMonthlyListOpen((isOpen) => !isOpen)}
                     className="flex w-full items-center justify-between text-left"
                   >
-                    <span className="text-xs font-bold uppercase text-amber-800">
+                    <span className="text-xs font-bold uppercase text-rose-800">
                       Missing Monthly Reports ({selectedMachine.activeMonthlyGaps.length})
                     </span>
-                    <span className="text-xs font-bold text-amber-700 hover:underline">
+                    <span className="text-xs font-bold text-rose-700 hover:underline">
                       {monthlyListOpen ? 'Hide' : 'Show'}
                     </span>
                   </button>
                   {monthlyListOpen && (
                     <div className="mt-3 space-y-2">
                       {selectedMachine.activeMonthlyGaps.map((gap) => (
-                        <div key={`${gap.code}-${gap.month}`} className="flex items-center justify-between rounded bg-white p-2.5 text-xs border border-amber-200">
+                        <div key={`${gap.code}-${gap.month}`} className="flex items-center justify-between rounded-lg bg-white p-2.5 text-xs border border-rose-200 shadow-2xs">
                           <div>
                             <span className="font-bold text-slate-900">{gap.type}</span>
                             <span className="ml-2 font-mono text-slate-500">{gap.code} ({formatLifecycleMonth(gap.month)})</span>
@@ -387,7 +417,7 @@ export default function EqpLifecyclePage() {
                           <button
                             type="button"
                             onClick={() => handleDismissMonthlyGap(selectedMachine.machineNumber, gap)}
-                            className="rounded bg-amber-100 px-2 py-1 text-[0.6875rem] font-bold text-amber-900 hover:bg-amber-200 transition"
+                            className="rounded-md bg-rose-100 px-2.5 py-1 text-[11px] font-bold text-rose-900 hover:bg-rose-200 transition"
                           >
                             Dismiss
                           </button>
@@ -400,14 +430,14 @@ export default function EqpLifecyclePage() {
 
               {/* Dismissed Monthly Reports */}
               {selectedMachine.dismissedMonthlyGaps.length > 0 && (
-                <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
+                <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
                   <button
                     type="button"
                     onClick={() => setDismissedListOpen((isOpen) => !isOpen)}
                     className="flex w-full items-center justify-between text-left"
                   >
                     <span className="text-xs font-bold uppercase text-slate-500">
-                      Dismissed Gaps ({selectedMachine.dismissedMonthlyGaps.length})
+                      Dismissed Monthly Gaps ({selectedMachine.dismissedMonthlyGaps.length})
                     </span>
                     <span className="text-xs font-bold text-slate-600 hover:underline">
                       {dismissedListOpen ? 'Hide' : 'Show'}
@@ -424,7 +454,7 @@ export default function EqpLifecyclePage() {
                           <button
                             type="button"
                             onClick={() => handleRestoreMonthlyGap(selectedMachine.machineNumber, gap)}
-                            className="rounded bg-slate-100 px-2 py-1 text-[0.6875rem] font-bold text-slate-700 hover:bg-slate-200 transition"
+                            className="rounded bg-slate-100 px-2.5 py-1 text-[11px] font-bold text-slate-700 hover:bg-slate-200 transition"
                           >
                             Restore
                           </button>
@@ -435,17 +465,20 @@ export default function EqpLifecyclePage() {
                 </div>
               )}
 
-              {/* Timeline Items */}
+              {/* Chronological Timeline Feed */}
               <div>
-                <p className="text-xs font-bold uppercase text-slate-500 mb-3">Service Timeline Milestones</p>
-                <div className="space-y-2">
+                <p className="text-xs font-bold uppercase text-slate-500 mb-3">Service Events Timeline</p>
+                <div className="relative pl-5 space-y-2.5 before:absolute before:left-2 before:top-2 before:bottom-2 before:w-0.5 before:bg-slate-200 max-h-64 overflow-y-auto pr-1">
                   {selectedTimelineItems.map((milestone) => (
-                    <div key={milestone.id} className="flex items-center justify-between rounded-lg border border-slate-200 p-3 bg-white text-xs">
+                    <div key={milestone.id} className="relative group flex items-center justify-between rounded-lg border border-slate-200 p-2.5 bg-white text-xs shadow-2xs">
+                      <span className="absolute -left-5 top-3 w-2 h-2 rounded-full bg-slate-400 group-hover:bg-amber-500 ring-4 ring-white" />
                       <div>
                         <p className="font-bold text-slate-900">{milestone.label}</p>
-                        <p className="font-mono text-slate-400 text-[0.6875rem]">{milestone.code}</p>
+                        <p className="font-mono text-slate-400 text-[10px]">{milestone.code}</p>
                       </div>
-                      <span className="font-semibold text-slate-700">{formatLifecycleDate(milestone.date)}</span>
+                      <span className="font-semibold text-slate-700 font-mono text-[11px]">
+                        {formatLifecycleDate(milestone.date)}
+                      </span>
                     </div>
                   ))}
                 </div>
@@ -453,15 +486,19 @@ export default function EqpLifecyclePage() {
 
               {/* Summary Stats */}
               <div className="grid grid-cols-2 gap-3 pt-2 border-t border-slate-100 text-center">
-                <div className="p-3 bg-slate-50 rounded-lg border border-slate-100">
-                  <p className="text-[0.6875rem] font-bold uppercase text-slate-400">Total Services</p>
-                  <p className="text-lg font-bold text-slate-900 mt-0.5">{selectedMachine.addServiceCount}</p>
+                <div className="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                  <p className="text-[11px] font-bold uppercase text-slate-400">Total Add Services</p>
+                  <p className="text-xl font-extrabold text-slate-900 mt-0.5">{selectedMachine.addServiceCount}</p>
                 </div>
-                <div className="p-3 bg-slate-50 rounded-lg border border-slate-100">
-                  <p className="text-[0.6875rem] font-bold uppercase text-slate-400">Latest SMR</p>
-                  <p className="text-lg font-bold text-slate-900 mt-0.5">{selectedMachine.latestSmr ?? '-'}</p>
+                <div className="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                  <p className="text-[11px] font-bold uppercase text-slate-400">Current SMR</p>
+                  <p className="text-xl font-extrabold text-slate-900 mt-0.5">{selectedMachine.latestSmr ?? '-'}</p>
                 </div>
               </div>
+            </Card>
+          ) : (
+            <Card className="p-8 text-center">
+              <EmptyState title="No machine selected" description="Select a machine from the left table to view timeline details." />
             </Card>
           )}
         </section>

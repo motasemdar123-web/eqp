@@ -24,6 +24,8 @@ export default function ReportsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
+  const [filterModel, setFilterModel] = useState('ALL');
+  const [viewMode, setViewMode] = useState('table'); // 'table' | 'timeline'
   const [sortConfig, setSortConfig] = useState({ key: 'created_at', direction: 'desc' });
   const [toast, setToast] = useState(null);
   const [deleteRequest, setDeleteRequest] = useState(null);
@@ -33,12 +35,11 @@ export default function ReportsPage() {
   const [downloadBusy, setDownloadBusy] = useState(false);
 
   // EQP Care Upload States
-  const [eqpUploadModal, setEqpUploadModal] = useState(null); // { reports: [] }
+  const [eqpUploadModal, setEqpUploadModal] = useState(null);
   const [eqpConnection, setEqpConnection] = useState({ checked: false, connected: false, user: '', message: '' });
   const [eqpProgress, setEqpProgress] = useState({ active: false, current: 0, total: 0 });
   const [cookieInput, setCookieInput] = useState('');
   const [savingCookie, setSavingCookie] = useState(false);
-
 
   useEffect(() => {
     const platformSession = getStoredPlatformSession();
@@ -67,17 +68,24 @@ export default function ReportsPage() {
     }
   }
 
+  const modelOptions = useMemo(() => {
+    return [...new Set(reports.map((r) => r.machine_type || r.machine?.machineType).filter(Boolean))].sort();
+  }, [reports]);
+
   const filteredReports = useMemo(() => {
     const normalizedSearch = searchTerm.trim().toLowerCase();
     const filtered = reports.filter((report) => {
-      if (!normalizedSearch) return true;
-
-      return (
+      const matchesSearch =
+        !normalizedSearch ||
         report.file_name?.toLowerCase().includes(normalizedSearch) ||
         report.report_no?.toLowerCase().includes(normalizedSearch) ||
         report.machine_number?.toString().toLowerCase().includes(normalizedSearch) ||
-        report.machine_type?.toLowerCase().includes(normalizedSearch)
-      );
+        report.machine_type?.toLowerCase().includes(normalizedSearch);
+
+      const mType = report.machine_type || report.machine?.machineType || '';
+      const matchesModel = filterModel === 'ALL' || mType === filterModel;
+
+      return matchesSearch && matchesModel;
     });
 
     return [...filtered].sort((a, b) => {
@@ -94,7 +102,7 @@ export default function ReportsPage() {
         ? String(aValue).localeCompare(String(bValue), undefined, { numeric: true })
         : String(bValue).localeCompare(String(aValue), undefined, { numeric: true });
     });
-  }, [reports, searchTerm, sortConfig]);
+  }, [reports, searchTerm, filterModel, sortConfig]);
 
   const archiveStats = useMemo(() => {
     const lastReport = reports[0]?.created_at ? new Date(reports[0].created_at).toLocaleDateString() : 'No reports';
@@ -160,43 +168,50 @@ export default function ReportsPage() {
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      link.download = safeZipFileName(report.file_name, `report-${report.id}.pdf`);
+      link.download = report.file_name || 'report.pdf';
       document.body.appendChild(link);
       link.click();
-      link.remove();
-      setTimeout(() => URL.revokeObjectURL(url), 1000);
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
     } catch (downloadError) {
-      setToast({ type: 'error', message: downloadError.message || 'Download failed.' });
+      setToast({ type: 'error', message: downloadError.message || 'Failed to download report.' });
     }
   }
 
   async function downloadReports(targetReports) {
-    if (!targetReports.length) return;
+    if (!targetReports || targetReports.length === 0) return;
     setDownloadBusy(true);
-    try {
-      const zip = new JSZip();
-      const folder = zip.folder('Dar_Al_Hai_EQP_Reports');
 
-      for (const report of targetReports) {
+    try {
+      if (targetReports.length === 1) {
+        await downloadSingleReport(targetReports[0]);
+        return;
+      }
+
+      const zip = new JSZip();
+      const folder = zip.folder('komatsu-eqp-reports');
+
+      for (let index = 0; index < targetReports.length; index += 1) {
+        const report = targetReports[index];
         const response = await fetch(report.file_url);
-        if (response.ok) {
-          const blob = await response.blob();
-          folder.file(safeZipFileName(report.file_name, `report-${report.id}.pdf`), blob);
-        }
+        if (!response.ok) throw new Error(`Could not download ${report.file_name}`);
+        const blob = await response.blob();
+        const baseName = safeZipFileName(report.file_name, `report-${index + 1}.pdf`);
+        folder.file(baseName, blob);
       }
 
       const content = await zip.generateAsync({ type: 'blob' });
       const url = URL.createObjectURL(content);
       const link = document.createElement('a');
       link.href = url;
-      link.download = `Dar_Al_Hai_Reports_${new Date().toISOString().slice(0, 10)}.zip`;
+      link.download = `komatsu-eqp-reports-${new Date().toISOString().slice(0, 10)}.zip`;
       document.body.appendChild(link);
       link.click();
-      link.remove();
-      setTimeout(() => URL.revokeObjectURL(url), 1000);
-      setToast({ type: 'success', message: `Downloaded ${targetReports.length} reports in ZIP archive.` });
-    } catch (zipError) {
-      setToast({ type: 'error', message: zipError.message || 'Failed to create ZIP.' });
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      setToast({ type: 'success', message: `Downloaded ${targetReports.length} reports as ZIP archive.` });
+    } catch (error) {
+      setToast({ type: 'error', message: error.message || 'Failed to export reports ZIP.' });
     } finally {
       setDownloadBusy(false);
     }
@@ -251,10 +266,10 @@ export default function ReportsPage() {
   async function handleAutoUploadToEqp(targetReports) {
     if (!targetReports || targetReports.length === 0) return;
     const count = targetReports.length;
-    setEqpProgress({ active: true, current: 0, total: count, statusText: `Starting automated upload of ${count} reports to EQP Care...` });
+    setEqpProgress({ active: true, current: 0, total: count });
 
     const batchItems = targetReports.map((r) => {
-      let mappedCode = 'W413';
+      let mappedCode = 'W41X';
       const sType = (r.service_type || r.report_type || '').toUpperCase();
       if (sType.includes('1ST') || sType.includes('250')) mappedCode = 'W411';
       else if (sType.includes('2ND') || sType.includes('500')) mappedCode = 'W412';
@@ -284,7 +299,7 @@ export default function ReportsPage() {
     });
 
     try {
-      setToast({ type: 'info', message: `🚀 Dispatched ${count} reports to Komatsu Equipment Care Daily Operation...` });
+      setToast({ type: 'info', message: `🚀 Dispatched ${count} reports to Komatsu Equipment Care...` });
       const storedCookie = typeof window !== 'undefined' ? localStorage.getItem('eqpc_user_cookie') || '' : '';
       const res = await batchUploadEqpcReports({ items: batchItems, cookie: storedCookie });
       if (res.failed > 0 && res.successful === 0) {
@@ -301,72 +316,25 @@ export default function ReportsPage() {
       } else {
         setToast({
           type: 'success',
-          message: `✅ All ${res.successful || count} reports successfully uploaded & saved to Komatsu EQP Care!`,
+          message: `🎉 All ${res.successful} reports uploaded to Komatsu Equipment Care Daily Operation successfully!`,
         });
       }
-      setSelectedReportIds([]);
-      await loadReports();
     } catch (err) {
-      setToast({ type: 'error', message: err.message || 'Automated EQP Care upload encountered an issue.' });
-    } finally {
-      setEqpProgress({ active: false, current: 0, total: 0, statusText: '' });
-    }
-  }
-
-  async function openEqpUploadModal(targetReports) {
-    if (!targetReports || targetReports.length === 0) return;
-    setEqpUploadModal({ reports: targetReports });
-    try {
-      const res = await getEqpcStatus();
-      setEqpConnection({
-        checked: true,
-        connected: Boolean(res.connected),
-        user: res.user || 'IBRAHIM AHMAD ALDARAWSHEH',
-        message: res.message || '',
+      setToast({
+        type: 'error',
+        message: `Upload error: ${err.message || 'Could not connect to EQP Care service.'}`,
       });
-    } catch {
-      setEqpConnection({ checked: true, connected: false, user: '', message: 'Session cookie required' });
-    }
-  }
-
-  async function handleSaveEqpCookieInModal(e) {
-    e.preventDefault();
-    if (!cookieInput.trim()) return;
-    setSavingCookie(true);
-    try {
-      const cleanCookie = cookieInput.trim();
-      const res = await saveEqpcCookie(cleanCookie);
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('eqpc_user_cookie', res.cleanCookie || cleanCookie);
-      }
-      setEqpConnection({
-        checked: true,
-        connected: Boolean(res.connected),
-        user: res.user || 'IBRAHIM AHMAD ALDARAWSHEH',
-        message: res.message || 'Session saved',
-      });
-      setToast({ type: 'success', message: 'EQP Care session updated successfully!' });
-      setCookieInput('');
-    } catch (err) {
-      setToast({ type: 'error', message: err.message || 'Failed to update cookie' });
     } finally {
-      setSavingCookie(false);
+      setEqpProgress({ active: false, current: 0, total: 0 });
     }
-  }
-
-  async function handleExecuteEqpUpload() {
-    if (!eqpUploadModal?.reports?.length) return;
-    const targetReports = eqpUploadModal.reports;
-    setEqpUploadModal(null);
-    await handleAutoUploadToEqp(targetReports);
   }
 
   return (
     <SystemShell
       activePath="/eqp/reports"
-      eyebrow="EQP Module"
-      title="PDF Reports Archive"
-      description="Permanent archive of certified preventive maintenance PDF reports with sequential indexing and batch export."
+      eyebrow="Komatsu EQP Platform"
+      title="PDF Reports Archive & Vault"
+      description="Permanent archive of certified preventive maintenance PDF reports with sequential indexing and batch ZIP export."
       actions={
         <div className="flex items-center gap-2">
           <Link
@@ -442,7 +410,7 @@ export default function ReportsPage() {
           </div>
         )}
 
-        {/* Reports Archive Card */}
+        {/* Reports Archive Main Card */}
         {loading ? (
           <Card className="p-8">
             <div className="space-y-3">
@@ -457,7 +425,8 @@ export default function ReportsPage() {
           </Card>
         ) : (
           <Card className="overflow-hidden">
-            <div className="border-b border-slate-200 p-5 bg-slate-50/60">
+            <div className="border-b border-slate-200 p-5 bg-slate-50/70 space-y-3">
+              {/* Top Controls Row */}
               <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
                 <div className="relative flex-1 max-w-md">
                   <span className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-400">
@@ -470,35 +439,53 @@ export default function ReportsPage() {
                     placeholder="Search by file name, machine, or report no..."
                     value={searchTerm}
                     onChange={(event) => setSearchTerm(event.target.value)}
-                    className="ds-input pl-9"
+                    className="ds-input pl-9 text-xs"
                   />
                 </div>
 
                 <div className="flex flex-wrap items-center gap-2">
+                  {/* View Mode Toggle */}
+                  <div className="flex items-center bg-slate-200/80 p-0.5 rounded-lg border border-slate-300">
+                    <button
+                      type="button"
+                      onClick={() => setViewMode('table')}
+                      className={`px-2.5 py-1 text-xs font-bold rounded-md transition-all ${
+                        viewMode === 'table' ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-600 hover:text-slate-900'
+                      }`}
+                    >
+                      📊 Table
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setViewMode('timeline')}
+                      className={`px-2.5 py-1 text-xs font-bold rounded-md transition-all ${
+                        viewMode === 'timeline' ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-600 hover:text-slate-900'
+                      }`}
+                    >
+                      📅 Timeline
+                    </button>
+                  </div>
+
                   <Badge tone="neutral">{filteredReports.length} Visible</Badge>
                   {selectedReportIds.length > 0 && (
                     <Badge tone="yellow">{selectedReportIds.length} Selected</Badge>
                   )}
 
-                  {/* Primary 1-Click Automated Upload Selected Button */}
+                  {/* Auto-Upload to EQP */}
                   {selectedReports.length > 0 && (
                     <button
                       type="button"
                       disabled={eqpProgress.active}
                       onClick={() => handleAutoUploadToEqp(selectedReports)}
-                      className="ds-button bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs py-2 px-3.5 flex items-center gap-1.5 shadow-sm rounded-lg transition-all"
-                      title="1-Click automated dispatch of all selected reports to Komatsu Equipment Care"
+                      className="ds-button bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs py-1.5 px-3 flex items-center gap-1.5 shadow-sm rounded-lg transition-all"
                     >
                       {eqpProgress.active ? (
                         <>
-                          <span className="animate-spin">⏳</span> Uploading ({selectedReports.length})...
+                          <span className="animate-spin">⏳</span> Uploading...
                         </>
                       ) : (
                         <>
-                          <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                          </svg>
-                          ⚡ Auto-Upload to EQP ({selectedReports.length})
+                          <span>⚡</span> Auto-Upload ({selectedReports.length})
                         </>
                       )}
                     </button>
@@ -506,137 +493,219 @@ export default function ReportsPage() {
 
                   <Button
                     variant="secondary"
+                    size="sm"
                     onClick={() => downloadReports(selectedReports.length ? selectedReports : filteredReports)}
                     disabled={filteredReports.length === 0 || downloadBusy}
                   >
-                    <svg className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                    </svg>
                     {downloadBusy ? 'Preparing ZIP...' : `Download ZIP (${selectedReports.length || filteredReports.length})`}
                   </Button>
 
                   {selectedReports.length > 0 && (
-                    <Button variant="danger" onClick={() => openDeleteRequest(selectedReports)}>
+                    <Button variant="danger" size="sm" onClick={() => openDeleteRequest(selectedReports)}>
                       Delete Selected
                     </Button>
                   )}
                 </div>
               </div>
+
+              {/* Model Filter Pills */}
+              <div className="flex flex-wrap items-center gap-1.5 pt-1 border-t border-slate-200/60">
+                <span className="text-xs font-bold text-slate-500 mr-1">Model Family:</span>
+                <button
+                  type="button"
+                  onClick={() => setFilterModel('ALL')}
+                  className={`px-2.5 py-0.5 rounded-lg text-xs font-bold transition-all ${
+                    filterModel === 'ALL'
+                      ? 'bg-slate-900 text-white shadow-xs'
+                      : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-100'
+                  }`}
+                >
+                  All Models ({reports.length})
+                </button>
+
+                {modelOptions.map((model) => {
+                  const count = reports.filter((r) => (r.machine_type || r.machine?.machineType) === model).length;
+                  const isSelected = filterModel === model;
+                  return (
+                    <button
+                      key={model}
+                      type="button"
+                      onClick={() => setFilterModel(model)}
+                      className={`px-2.5 py-0.5 rounded-lg text-xs font-bold transition-all border ${
+                        isSelected
+                          ? 'bg-amber-600 border-amber-600 text-white shadow-xs'
+                          : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-100'
+                      }`}
+                    >
+                      {model} ({count})
+                    </button>
+                  );
+                })}
+              </div>
             </div>
 
-            {/* In-Page Automated Upload Progress Banner */}
-            {eqpProgress.active && (
-              <div className="p-3.5 bg-gradient-to-r from-sky-50 to-blue-50 border-b border-sky-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-                <div className="flex items-center gap-3">
-                  <span className="text-2xl animate-bounce">🚀</span>
-                  <div>
-                    <h4 className="text-xs font-bold text-sky-900 flex items-center gap-2">
-                      <span>Automated Komatsu EQP Care Dispatch In Progress</span>
-                      <Badge tone="live">Processing</Badge>
-                    </h4>
-                    <p className="text-[11px] text-sky-700">
-                      Reading SMR, service dates, event codes & dispatching PDF documents to Daily Operation (E0295)...
-                    </p>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            <div className="ds-table-wrap">
-              <table className="ds-table">
-                <thead>
-                  <tr>
-                    <th className="w-10">
-                      <input
-                        type="checkbox"
-                        checked={allVisibleSelected}
-                        onChange={toggleVisibleSelection}
-                        className="rounded accent-amber-500"
-                        aria-label="Select all visible reports"
-                      />
-                    </th>
-                    <SortableHeader label="Report Document" column="file_name" sortConfig={sortConfig} onSort={changeSort} />
-                    <SortableHeader label="Machine Asset" column="machine_number" sortConfig={sortConfig} onSort={changeSort} />
-                    <SortableHeader label="Service Code" column="service_type" sortConfig={sortConfig} onSort={changeSort} />
-                    <SortableHeader label="Date Generated" column="created_at" sortConfig={sortConfig} onSort={changeSort} />
-                    <th className="text-right">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
+            {/* View Mode: Timeline View */}
+            {viewMode === 'timeline' ? (
+              <div className="p-6 space-y-6">
+                <div className="relative pl-6 space-y-4 before:absolute before:left-2.5 before:top-2 before:bottom-2 before:w-0.5 before:bg-slate-200">
                   {filteredReports.map((report) => {
                     const isSelected = selectedReportIds.includes(String(report.id));
                     return (
-                      <tr key={report.id} className={isSelected ? '!bg-amber-50/60' : ''}>
-                        <td>
-                          <input
-                            type="checkbox"
-                            checked={isSelected}
-                            onChange={() => toggleReportSelection(report.id)}
-                            className="rounded accent-amber-500"
-                            aria-label={`Select ${report.file_name}`}
-                          />
-                        </td>
-                        <td>
-                          <p className="font-bold text-slate-900 leading-snug">{report.file_name}</p>
-                          {report.report_no && (
-                            <span className="font-mono text-xs text-amber-700 bg-amber-50 px-1.5 py-0.2 rounded border border-amber-200/60 inline-block mt-0.5">
-                              {report.report_no}
-                            </span>
-                          )}
-                        </td>
-                        <td>
-                          <span className="font-semibold text-slate-800">{report.machine_type}</span>{' '}
-                          <span className="text-slate-600 font-medium">#{report.machine_number}</span>
-                        </td>
-                        <td>
-                          <Badge tone="yellow">{report.service_type || 'EQP'}</Badge>
-                        </td>
-                        <td className="text-xs text-slate-500">
-                          {new Date(report.created_at).toLocaleString()}
-                        </td>
-                        <td className="text-right">
-                          <div className="inline-flex items-center gap-1.5">
-                            <Button
-                              type="button"
-                              variant="secondary"
-                              size="sm"
-                              onClick={() => downloadSingleReport(report)}
-                            >
-                              PDF
-                            </Button>
-                            <button
-                              type="button"
-                              disabled={eqpProgress.active}
-                              onClick={() => handleAutoUploadToEqp([report])}
-                              className="ds-button ds-button-secondary text-xs py-1 px-2.5 font-bold text-sky-700 border-sky-200 bg-sky-50 hover:bg-sky-100 flex items-center gap-1"
-                              title="1-Click Auto Upload this report to Komatsu Equipment Care Daily Operation"
-                            >
-                              <span>⚡</span> Auto EQP
-                            </button>
-                            <Button
-                              type="button"
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => openRename(report)}
-                            >
-                              Rename
-                            </Button>
-                            <Button
-                              type="button"
-                              variant="danger"
-                              size="sm"
-                              onClick={() => openDeleteRequest([report])}
-                            >
-                              Delete
-                            </Button>
+                      <div key={report.id} className="relative group">
+                        <span className="absolute -left-6 top-3 w-3 h-3 rounded-full bg-amber-500 ring-4 ring-white border border-amber-600" />
+                        <div className={`p-4 rounded-xl border transition-all ${
+                          isSelected ? 'bg-amber-50/70 border-amber-300 ring-2 ring-amber-500/20' : 'bg-white border-slate-200 hover:border-slate-300 shadow-2xs'
+                        }`}>
+                          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                            <div className="flex items-center gap-3">
+                              <input
+                                type="checkbox"
+                                checked={isSelected}
+                                onChange={() => toggleReportSelection(report.id)}
+                                className="rounded accent-amber-500"
+                              />
+                              <div>
+                                <h4 className="text-sm font-bold text-slate-900">{report.file_name}</h4>
+                                <p className="text-xs text-slate-500 mt-0.5">
+                                  {report.machine_type} #{report.machine_number} • SMR: <span className="font-bold text-slate-700">{report.smr || '—'} hrs</span> • Stage: <span className="font-semibold text-amber-700">{report.service_type || 'PM'}</span>
+                                </p>
+                              </div>
+                            </div>
+
+                            <div className="flex items-center gap-2 shrink-0">
+                              <span className="text-[11px] font-mono text-slate-400">
+                                {new Date(report.created_at).toLocaleString()}
+                              </span>
+                              <Button
+                                type="button"
+                                variant="secondary"
+                                size="sm"
+                                onClick={() => downloadSingleReport(report)}
+                              >
+                                View PDF
+                              </Button>
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => openRename(report)}
+                              >
+                                Rename
+                              </Button>
+                              <Button
+                                type="button"
+                                variant="danger"
+                                size="sm"
+                                onClick={() => openDeleteRequest([report])}
+                              >
+                                Delete
+                              </Button>
+                            </div>
                           </div>
-                        </td>
-                      </tr>
+                        </div>
+                      </div>
                     );
                   })}
-                </tbody>
-              </table>
-            </div>
+                </div>
+              </div>
+            ) : (
+              /* View Mode: Table View */
+              <div className="ds-table-wrap">
+                <table className="ds-table">
+                  <thead>
+                    <tr>
+                      <th className="w-10">
+                        <input
+                          type="checkbox"
+                          checked={allVisibleSelected}
+                          onChange={toggleVisibleSelection}
+                          className="rounded accent-amber-500"
+                          aria-label="Select all visible reports"
+                        />
+                      </th>
+                      <SortableHeader label="Report Document" column="file_name" sortConfig={sortConfig} onSort={changeSort} />
+                      <SortableHeader label="Machine Asset" column="machine_number" sortConfig={sortConfig} onSort={changeSort} />
+                      <SortableHeader label="Service Code" column="service_type" sortConfig={sortConfig} onSort={changeSort} />
+                      <SortableHeader label="Date Generated" column="created_at" sortConfig={sortConfig} onSort={changeSort} />
+                      <th className="text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredReports.map((report) => {
+                      const isSelected = selectedReportIds.includes(String(report.id));
+                      return (
+                        <tr key={report.id} className={isSelected ? '!bg-amber-50/60' : ''}>
+                          <td>
+                            <input
+                              type="checkbox"
+                              checked={isSelected}
+                              onChange={() => toggleReportSelection(report.id)}
+                              className="rounded accent-amber-500"
+                              aria-label={`Select ${report.file_name}`}
+                            />
+                          </td>
+                          <td>
+                            <p className="font-bold text-slate-900 leading-snug">{report.file_name}</p>
+                            {report.report_no && (
+                              <span className="font-mono text-xs text-amber-700 bg-amber-50 px-1.5 py-0.2 rounded border border-amber-200/60 inline-block mt-0.5">
+                                {report.report_no}
+                              </span>
+                            )}
+                          </td>
+                          <td>
+                            <span className="font-semibold text-slate-800">{report.machine_type}</span>{' '}
+                            <span className="text-slate-600 font-medium">#{report.machine_number}</span>
+                          </td>
+                          <td>
+                            <Badge tone="yellow">{report.service_type || 'EQP'}</Badge>
+                          </td>
+                          <td className="text-xs text-slate-500">
+                            {new Date(report.created_at).toLocaleString()}
+                          </td>
+                          <td className="text-right">
+                            <div className="inline-flex items-center gap-1.5">
+                              <Button
+                                type="button"
+                                variant="secondary"
+                                size="sm"
+                                onClick={() => downloadSingleReport(report)}
+                              >
+                                PDF
+                              </Button>
+                              <button
+                                type="button"
+                                disabled={eqpProgress.active}
+                                onClick={() => handleAutoUploadToEqp([report])}
+                                className="ds-button ds-button-secondary text-xs py-1 px-2.5 font-bold text-sky-700 border-sky-200 bg-sky-50 hover:bg-sky-100 flex items-center gap-1"
+                                title="1-Click Auto Upload this report to Komatsu Equipment Care Daily Operation"
+                              >
+                                <span>⚡</span> Auto EQP
+                              </button>
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => openRename(report)}
+                              >
+                                Rename
+                              </Button>
+                              <Button
+                                type="button"
+                                variant="danger"
+                                size="sm"
+                                onClick={() => openDeleteRequest([report])}
+                              >
+                                Delete
+                              </Button>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </Card>
         )}
       </div>
@@ -657,7 +726,7 @@ export default function ReportsPage() {
                     Delete {deleteRequest.reports.length === 1 ? 'Report' : `${deleteRequest.reports.length} Reports`}?
                   </h2>
                   <p className="mt-1 text-xs text-slate-500 leading-relaxed">
-                    This will permanently remove the PDF document from the Supabase bucket and database records.
+                    This will permanently remove the PDF document from the database and storage records.
                   </p>
                 </div>
               </div>
@@ -686,7 +755,7 @@ export default function ReportsPage() {
               <input
                 value={renameValue}
                 onChange={(event) => setRenameValue(event.target.value)}
-                className="ds-input mt-4"
+                className="ds-input mt-4 text-xs"
                 autoFocus
                 required
               />
@@ -698,183 +767,6 @@ export default function ReportsPage() {
           </form>
         </div>
       )}
-
-      {/* EQP Care Upload Confirmation & Batch Modal */}
-      {eqpUploadModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-4 backdrop-blur-sm">
-          <div className="ds-card w-full max-w-2xl overflow-hidden bg-white shadow-2xl animate-[ds-toast-in_180ms_ease]">
-            <div className="p-6 space-y-4">
-              <div className="flex items-start justify-between pb-3 border-b border-slate-200">
-                <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-sky-100 text-sky-600 text-lg font-bold">
-                    ⬆
-                  </div>
-                  <div>
-                    <h2 className="text-base font-bold text-slate-900">
-                      Upload {eqpUploadModal.reports.length === 1 ? 'Report' : `${eqpUploadModal.reports.length} Reports`} to Komatsu EQP Care
-                    </h2>
-                    <p className="text-xs text-slate-500">
-                      Direct dispatch to Equipment Care Daily Operation (E0295 / E0904).
-                    </p>
-                  </div>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => !eqpProgress.active && setEqpUploadModal(null)}
-                  disabled={eqpProgress.active}
-                  className="text-slate-400 hover:text-slate-600 font-bold"
-                >
-                  ✕
-                </button>
-              </div>
-
-              {/* Portal Session Status */}
-              <div className="p-3.5 rounded-lg border bg-slate-50 border-slate-200 text-xs space-y-2">
-                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-                  <div className="flex items-center gap-2">
-                    <span>{eqpConnection.connected ? '🟢' : '🟡'}</span>
-                    <span className="font-semibold text-slate-800">
-                      {eqpConnection.connected
-                        ? `Connected: ${eqpConnection.user} (DAR AL HAI - Level 40)`
-                        : (eqpConnection.message || 'Komatsu EQP Care session cookie with JSESSIONID required')}
-                    </span>
-                  </div>
-                  <Link
-                    href="/eqp/upload"
-                    className="text-sky-600 hover:underline font-bold"
-                    target="_blank"
-                  >
-                    Open Dispatch Studio ↗
-                  </Link>
-                </div>
-
-                {!eqpConnection.connected && (
-                  <form onSubmit={handleSaveEqpCookieInModal} className="pt-2 border-t border-slate-200 space-y-2">
-                    <div className="text-[11px] text-slate-600">
-                      Paste your browser session cookie or cURL command (must include <code>JSESSIONID=...</code>):
-                    </div>
-                    <div className="flex gap-2">
-                      <input
-                        type="text"
-                        value={cookieInput}
-                        onChange={(e) => setCookieInput(e.target.value)}
-                        placeholder="JSESSIONID=...; userId=s021895; eqpMenuCtg=E..."
-                        className="w-full text-xs font-mono rounded border border-slate-300 p-2 bg-white text-slate-900"
-                        required
-                      />
-                      <button
-                        type="submit"
-                        disabled={savingCookie}
-                        className="ds-button ds-button-primary text-xs py-1.5 px-3 whitespace-nowrap font-bold"
-                      >
-                        {savingCookie ? 'Testing...' : 'Save & Connect'}
-                      </button>
-                    </div>
-                  </form>
-                )}
-              </div>
-
-              {/* Progress Bar when Active */}
-              {eqpProgress.active && (
-                <div className="p-4 bg-sky-50 border border-sky-200 rounded-lg space-y-2">
-                  <div className="flex justify-between text-xs font-bold text-sky-900">
-                    <span>Uploading reports to EQP Care Daily Operation...</span>
-                    <span>{eqpProgress.current} / {eqpProgress.total}</span>
-                  </div>
-                  <div className="w-full bg-sky-200 rounded-full h-2">
-                    <div
-                      className="bg-sky-600 h-2 rounded-full transition-all duration-300"
-                      style={{ width: `${(eqpProgress.current / (eqpProgress.total || 1)) * 100}%` }}
-                    />
-                  </div>
-                </div>
-              )}
-
-              {/* Selected Reports Table */}
-              <div className="max-h-64 overflow-y-auto border border-slate-200 rounded-lg">
-                <table className="w-full text-left text-xs">
-                  <thead className="bg-slate-100 text-slate-700 font-bold sticky top-0">
-                    <tr>
-                      <th className="p-2.5">Document File</th>
-                      <th className="p-2.5">Machine</th>
-                      <th className="p-2.5">Service Date</th>
-                      <th className="p-2.5">SMR (Hours)</th>
-                      <th className="p-2.5">Service Type</th>
-                      <th className="p-2.5">Target Event Code</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-200 bg-white">
-                    {eqpUploadModal.reports.map((r) => {
-                      let mappedCode = 'W413';
-                      const sType = (r.service_type || r.report_type || '').toUpperCase();
-                      if (sType.includes('1ST') || sType.includes('250')) mappedCode = 'W411';
-                      else if (sType.includes('2ND') || sType.includes('500')) mappedCode = 'W412';
-                      else if (sType.includes('3RD') || sType.includes('1000')) mappedCode = 'W413';
-                      else if (sType.includes('4TH') || sType.includes('2000')) mappedCode = 'W41X';
-                      else if (sType.includes('PRE-DELIVERY') || sType.includes('PDI')) mappedCode = 'W41P';
-                      else if (sType.includes('NEW') || sType.includes('DELIVERY')) mappedCode = 'W41N';
-                      else mappedCode = 'W41X';
-
-                      const displayDate = r.service_date
-                        ? new Date(r.service_date).toLocaleDateString()
-                        : r.created_at
-                        ? new Date(r.created_at).toLocaleDateString()
-                        : new Date().toLocaleDateString();
-
-                      return (
-                        <tr key={r.id} className="hover:bg-slate-50">
-                          <td className="p-2.5 font-semibold text-slate-900 truncate max-w-[180px]" title={r.file_name}>
-                            {r.file_name}
-                          </td>
-                          <td className="p-2.5 text-slate-800">
-                            <span className="font-semibold">{r.machine_type || 'HM400'}</span>{' '}
-                            <span className="font-bold text-sky-800">#{r.machine_number}</span>
-                          </td>
-                          <td className="p-2.5 text-slate-600 font-medium">{displayDate}</td>
-                          <td className="p-2.5 font-bold text-slate-900">{r.smr || 0} hrs</td>
-                          <td className="p-2.5 text-slate-600 truncate max-w-[120px]">{r.service_type || r.report_type || 'Scheduled PM'}</td>
-                          <td className="p-2.5">
-                            <Badge tone="live">{mappedCode}</Badge>
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-
-              {/* Default Organization Specs */}
-              <div className="text-[11px] text-slate-500 flex flex-wrap gap-x-4 gap-y-1 bg-slate-50 p-2.5 rounded border border-slate-200">
-                <span><strong>Subsidiary:</strong> 9961 (KME)</span>
-                <span><strong>Distributor:</strong> 5194 (DAR AL HAI)</span>
-                <span><strong>Country:</strong> KW (KUWAIT)</span>
-                <span><strong>Site:</strong> ##1</span>
-              </div>
-            </div>
-
-            <div className="flex items-center justify-end gap-3 border-t border-slate-200 bg-slate-50 px-6 py-3.5">
-              <Button
-                type="button"
-                variant="secondary"
-                disabled={eqpProgress.active}
-                onClick={() => setEqpUploadModal(null)}
-              >
-                Cancel
-              </Button>
-              <button
-                type="button"
-                disabled={eqpProgress.active}
-                onClick={handleExecuteEqpUpload}
-                className="ds-button bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs py-2 px-5 rounded-lg shadow-md transition-all flex items-center gap-1.5"
-              >
-                {eqpProgress.active ? '⏳ Uploading to EQP Care...' : `🚀 Upload ${eqpUploadModal.reports.length} Reports to EQP Care`}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      <Toast message={toast?.message} type={toast?.type} onClose={() => setToast(null)} />
     </SystemShell>
   );
 }

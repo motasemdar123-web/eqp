@@ -9,6 +9,8 @@ import EmptyState from '../../../components/ui/EmptyState';
 import Skeleton from '../../../components/ui/Skeleton';
 import { getMachineHistory, getMachines } from '../../../lib/api';
 import { getStoredPlatformSession, getStoredUser, getMatchingEngineerName } from '../../../lib/auth';
+import { FleetModelBarChart } from '../../../components/eqp/EqpCharts';
+import MachineTimelineModal from '../../../components/eqp/MachineTimelineModal';
 
 export default function MachinesPage() {
   const [machines, setMachines] = useState([]);
@@ -18,6 +20,7 @@ export default function MachinesPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [machineType, setMachineType] = useState('ALL');
   const [filterEngineer, setFilterEngineer] = useState('ALL');
+  const [timelineMachine, setTimelineMachine] = useState(null);
 
   async function loadData() {
     try {
@@ -108,15 +111,15 @@ export default function MachinesPage() {
   return (
     <SystemShell
       activePath="/eqp/machines"
-      eyebrow="EQP Module"
-      title="Machine Register"
-      description="Real-time machinery register, SMR hour meters, engine numbers, and service interval steps."
+      eyebrow="Komatsu EQP Platform"
+      title="Fleet Machinery Register"
+      description="Asset database, SMR operating hour meters, engine serials, sequential counters, and service histories."
       actions={
         <Button type="button" variant="secondary" onClick={loadData} disabled={loading}>
           <svg className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
           </svg>
-          Refresh
+          Refresh Fleet
         </Button>
       }
     >
@@ -127,7 +130,7 @@ export default function MachinesPage() {
           </div>
         )}
 
-        {/* KPI Metrics */}
+        {/* Fleet KPI Metrics */}
         <section className="ds-kpi-grid">
           <article className="ds-kpi-card">
             <div className="ds-icon-tile">
@@ -172,7 +175,7 @@ export default function MachinesPage() {
                 <p className="ds-kpi-label">Average SMR</p>
                 <Badge tone="live">Live</Badge>
               </div>
-              <p className="ds-kpi-main">{stats.averageSmr}</p>
+              <p className="ds-kpi-main">{stats.averageSmr} hrs</p>
               <p className="ds-kpi-descriptor">Operating Hours</p>
             </div>
           </article>
@@ -194,10 +197,66 @@ export default function MachinesPage() {
           </article>
         </section>
 
+        {/* Visual Model Distribution Filter */}
+        <Card className="p-4 bg-slate-50/50">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-xs font-bold text-slate-700 uppercase tracking-wider">Fleet Model Distribution Filter</span>
+            <span className="text-xs text-slate-400">Click model to isolate</span>
+          </div>
+          <FleetModelBarChart
+            machines={machines}
+            selectedModel={machineType}
+            onSelectModel={setMachineType}
+          />
+        </Card>
+
         {/* Machines Table Card */}
         <Card className="overflow-hidden">
-          <div className="border-b border-slate-200 p-5 bg-slate-50/60">
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="border-b border-slate-200 p-5 bg-slate-50/70 space-y-3">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+              <div>
+                <h3 className="text-base font-bold text-slate-900">Registered Machine Units</h3>
+                <p className="text-xs text-slate-500">Full specification, operating hour meters, and service counters</p>
+              </div>
+              <Badge tone="neutral">{filteredMachines.length} Units Listed</Badge>
+            </div>
+
+            {/* Engineer Filter Tabs */}
+            <div className="flex flex-wrap items-center gap-1.5 pt-1 border-t border-slate-200/60">
+              <span className="text-xs font-bold text-slate-500 mr-1">Engineer Lead:</span>
+              <button
+                type="button"
+                onClick={() => setFilterEngineer('ALL')}
+                className={`px-3 py-1 rounded-lg text-xs font-bold transition-all ${
+                  filterEngineer === 'ALL'
+                    ? 'bg-slate-900 text-white shadow-xs'
+                    : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-100'
+                }`}
+              >
+                All ({machines.length})
+              </button>
+
+              {engineers.map((eng) => {
+                const count = machines.filter((m) => m.responsible_engineer === eng).length;
+                const isSelected = filterEngineer === eng;
+                return (
+                  <button
+                    key={eng}
+                    type="button"
+                    onClick={() => setFilterEngineer(eng)}
+                    className={`px-3 py-1 rounded-lg text-xs font-bold transition-all border ${
+                      isSelected
+                        ? 'bg-amber-600 border-amber-600 text-white shadow-xs'
+                        : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-100'
+                    }`}
+                  >
+                    {eng} ({count})
+                  </button>
+                );
+              })}
+            </div>
+
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between pt-1">
               <div className="relative flex-1 max-w-md">
                 <span className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-400">
                   <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -206,37 +265,22 @@ export default function MachinesPage() {
                 </span>
                 <input
                   type="text"
-                  placeholder="Search machines, serials, customer, or engineer..."
+                  placeholder="Search machine number, serials, customer, or site..."
                   value={searchTerm}
                   onChange={(event) => setSearchTerm(event.target.value)}
-                  className="ds-input pl-9"
+                  className="ds-input pl-9 text-xs"
                 />
               </div>
 
-              <div className="flex flex-wrap items-center gap-3">
-                <select
-                  value={filterEngineer}
-                  onChange={(event) => setFilterEngineer(event.target.value)}
-                  className="ds-input min-w-[170px]"
-                >
-                  <option value="ALL">All Engineers</option>
-                  {engineers.map((eng) => (
-                    <option key={eng} value={eng}>
-                      {eng}
-                    </option>
-                  ))}
-                </select>
-
+              <div className="flex items-center gap-2">
                 <select
                   value={machineType}
                   onChange={(event) => setMachineType(event.target.value)}
-                  className="ds-input min-w-[160px]"
+                  className="ds-input text-xs min-w-[150px]"
                 >
-                  <option value="ALL">All Machine Types</option>
+                  <option value="ALL">All Models</option>
                   {types.map((type) => <option key={type}>{type}</option>)}
                 </select>
-
-                <Badge tone="neutral">{filteredMachines.length} Units</Badge>
               </div>
             </div>
           </div>
@@ -258,43 +302,67 @@ export default function MachinesPage() {
                   <tr>
                     <th>Machine ID</th>
                     <th>Model Family</th>
+                    <th>Operating SMR</th>
+                    <th>Last Counter</th>
+                    <th>Engine Serial</th>
+                    <th>Assigned Lead</th>
+                    <th>Location / Plant</th>
                     <th>Customer</th>
-                    <th>Location</th>
-                    <th>Engine Number</th>
-                    <th>SMR Hours</th>
-                    <th>Current Step</th>
-                    <th>Engineer</th>
+                    <th className="text-right">Timeline</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredMachines.map((machine) => (
-                    <tr key={machine.id}>
-                      <td className="font-bold text-slate-900">{machine.machine_number}</td>
-                      <td className="font-medium text-slate-700">{machine.machine_type}</td>
-                      <td className="text-slate-600 max-w-[200px] truncate">{machine.customer_name || '-'}</td>
-                      <td className="text-slate-600">{machine.location || '-'}</td>
-                      <td className="font-mono text-xs text-slate-500">{machine.engine_number}</td>
-                      <td className="font-semibold text-slate-900">{machine.last_smr}</td>
-                      <td>
-                        <span className="inline-block rounded bg-amber-50 px-2 py-0.5 text-xs font-semibold text-amber-800 border border-amber-200/60">
-                          {machine.smr_step}
-                        </span>
-                      </td>
-                      <td className="text-slate-600 font-medium">{machine.responsible_engineer || '-'}</td>
-                    </tr>
-                  ))}
+                  {filteredMachines.map((machine) => {
+                    const counter = Number(machine.report_counter || 0);
+
+                    return (
+                      <tr key={machine.id} className="hover:bg-slate-50/70 transition-colors">
+                        <td className="font-extrabold text-slate-900">{machine.machine_number}</td>
+                        <td>
+                          <span className="font-bold text-xs px-2 py-0.5 rounded-md bg-slate-100 text-slate-800">
+                            {machine.machine_type}
+                          </span>
+                        </td>
+                        <td>
+                          <span className="font-bold text-xs px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200">
+                            {machine.last_smr} hrs
+                          </span>
+                        </td>
+                        <td>
+                          <span className="font-mono text-xs font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
+                            Ex_{counter + 1}
+                          </span>
+                        </td>
+                        <td className="font-mono text-xs text-slate-500">{machine.engine_number || '—'}</td>
+                        <td className="text-xs font-semibold text-slate-800">{machine.responsible_engineer || '—'}</td>
+                        <td className="text-xs text-slate-600">{machine.location || '—'}</td>
+                        <td className="text-xs text-slate-500 max-w-[180px] truncate">{machine.customer_name || '—'}</td>
+                        <td className="text-right">
+                          <button
+                            type="button"
+                            onClick={() => setTimelineMachine(machine)}
+                            className="px-2.5 py-1 rounded-md text-[11px] font-bold bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors"
+                          >
+                            🔍 History
+                          </button>
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
           )}
         </Card>
-
-        {/* Recent Activity Footnote Card */}
-        <div className="flex items-center justify-between rounded-xl border border-slate-200 bg-white px-5 py-3.5 shadow-sm text-xs text-slate-600">
-          <span className="font-medium">Latest EQP Cycle Activity: <strong className="text-slate-900">{stats.latestActivity}</strong></span>
-          <span className="text-slate-400">Total Fleet Tracking Active</span>
-        </div>
       </div>
+
+      {/* Machine Timeline Modal */}
+      {timelineMachine && (
+        <MachineTimelineModal
+          machine={timelineMachine}
+          onClose={() => setTimelineMachine(null)}
+        />
+      )}
     </SystemShell>
   );
 }

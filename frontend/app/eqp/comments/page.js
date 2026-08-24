@@ -6,6 +6,7 @@ import SystemShell from '../../../components/SystemShell';
 import Card from '../../../components/ui/Card';
 import Badge from '../../../components/ui/Badge';
 import EmptyState from '../../../components/ui/EmptyState';
+import Button from '../../../components/ui/Button';
 import {
   getComments,
   createComment,
@@ -138,11 +139,11 @@ export default function EqpCommentsPage() {
         prev.map((c) => (c.id === comment.id ? res.comment : c))
       );
       showToast(
-        `Comment marked as ${nextActive ? 'Active' : 'Inactive'}.`,
+        `Comment ${nextActive ? 'activated' : 'deactivated'} successfully.`,
         'success'
       );
     } catch (err) {
-      showToast(err.message || 'Failed to update status.', 'error');
+      showToast(err.message || 'Failed to toggle comment status.', 'error');
     }
   };
 
@@ -151,74 +152,69 @@ export default function EqpCommentsPage() {
       await deleteComment(id);
       setComments((prev) => prev.filter((c) => c.id !== id));
       setDeleteConfirmId(null);
-      showToast('Comment deleted successfully.', 'success');
+      showToast('Comment deleted from pool.', 'success');
     } catch (err) {
       showToast(err.message || 'Failed to delete comment.', 'error');
     }
   };
 
-  // Filtered list
+  const uniqueModels = useMemo(() => {
+    const list = [...new Set(comments.map((c) => c.machine_model).filter(Boolean))];
+    return ['ALL', ...list];
+  }, [comments]);
+
   const filteredComments = useMemo(() => {
-    const query = searchQuery.trim().toLowerCase();
     return comments.filter((c) => {
       const matchSearch =
-        !query ||
-        c.comment_text?.toLowerCase().includes(query) ||
-        c.machine_model?.toLowerCase().includes(query) ||
-        c.service_stage?.toLowerCase().includes(query);
+        !searchQuery ||
+        c.comment_text?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        c.machine_model?.toLowerCase().includes(searchQuery.toLowerCase());
 
       const matchModel = modelFilter === 'ALL' || c.machine_model === modelFilter;
-      let matchStage = stageFilter === 'ALL' || c.service_stage === stageFilter;
-      if (stageFilter === 'storage_service' || stageFilter === 'extra_service') {
-        matchStage = c.service_stage === 'storage_service' || c.service_stage === 'extra_service';
-      } else if (stageFilter === 'pre_delivery' || stageFilter === 'pdi_delivery') {
-        matchStage = c.service_stage === 'pre_delivery' || c.service_stage === 'pdi_delivery';
-      }
-
+      const matchStage = stageFilter === 'ALL' || c.service_stage === stageFilter;
       const matchStatus =
-        statusFilter === 'ALL' ||
-        (statusFilter === 'ACTIVE' && c.is_active) ||
-        (statusFilter === 'INACTIVE' && !c.is_active);
+        statusFilter === 'ALL'
+          ? true
+          : statusFilter === 'ACTIVE'
+          ? c.is_active === true
+          : c.is_active === false;
 
       return matchSearch && matchModel && matchStage && matchStatus;
     });
   }, [comments, searchQuery, modelFilter, stageFilter, statusFilter]);
 
-  // KPI Stats
   const stats = useMemo(() => {
     const total = comments.length;
     const active = comments.filter((c) => c.is_active).length;
     const hm400 = comments.filter((c) => c.machine_model === 'HM400').length;
     const pc400 = comments.filter((c) => c.machine_model === 'PC400').length;
-    return { total, active, hm400, pc400 };
-  }, [comments]);
+    const d155a = comments.filter((c) => c.machine_model === 'D155A').length;
 
-  const uniqueModels = useMemo(() => {
-    const set = new Set(comments.map((c) => c.machine_model).filter(Boolean));
-    return ['ALL', ...Array.from(set).sort()];
+    return { total, active, hm400, pc400, d155a };
   }, [comments]);
 
   return (
     <SystemShell
       activePath="/eqp/comments"
-      eyebrow="EQP Module"
-      title="Report Comments Pool"
-      description="Manage the certified inspection comment templates picked during automated report generation."
+      eyebrow="Komatsu EQP Platform"
+      title="Inspection Comments Pool"
+      description="Manage certified inspection remarks and weighted commentary pools picked during automated report generation."
       actions={
         <div className="flex items-center gap-2">
           <Link
             href="/eqp/generate-reports"
-            className="rounded-md border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-xs hover:bg-slate-50"
+            className="ds-button ds-button-secondary text-xs py-1.5 px-3 font-semibold"
           >
             📄 Report Builder
           </Link>
-          <button
+          <Button
             type="button"
+            variant="primary"
             onClick={openAddModal}
-            className="rounded-md bg-sky-600 px-3 py-1.5 text-xs font-semibold text-white shadow-xs hover:bg-sky-500 flex items-center gap-1"
+            className="!bg-amber-500 hover:!bg-amber-400 !text-slate-950 !font-bold"
           >
-            <span>+</span> Add Comment
-          </button>
+            + Add Remark
+          </Button>
         </div>
       }
     >
@@ -226,7 +222,7 @@ export default function EqpCommentsPage() {
         {/* Toast Alert */}
         {toast && (
           <div
-            className={`fixed top-4 right-4 z-50 rounded-lg p-4 shadow-lg text-sm font-medium flex items-center gap-2 transition-all ${
+            className={`fixed top-4 right-4 z-50 rounded-lg p-4 shadow-lg text-xs font-semibold flex items-center gap-2 transition-all ${
               toast.tone === 'success'
                 ? 'bg-emerald-50 text-emerald-800 border border-emerald-200'
                 : 'bg-rose-50 text-rose-800 border border-rose-200'
@@ -251,7 +247,7 @@ export default function EqpCommentsPage() {
                 <Badge tone="neutral">All</Badge>
               </div>
               <p className="ds-kpi-main">{stats.total}</p>
-              <p className="ds-kpi-descriptor">Registered Comments</p>
+              <p className="ds-kpi-descriptor">Certified Remarks</p>
             </div>
           </article>
 
@@ -279,11 +275,11 @@ export default function EqpCommentsPage() {
             </div>
             <div className="ds-kpi-content">
               <div className="ds-kpi-head">
-                <p className="ds-kpi-label">HM400 Fleet</p>
+                <p className="ds-kpi-label">HM400 Trucks</p>
                 <Badge tone="live">HM400</Badge>
               </div>
               <p className="ds-kpi-main">{stats.hm400}</p>
-              <p className="ds-kpi-descriptor">Articulated Dump</p>
+              <p className="ds-kpi-descriptor">Inspection Pool</p>
             </div>
           </article>
 
@@ -295,216 +291,156 @@ export default function EqpCommentsPage() {
             </div>
             <div className="ds-kpi-content">
               <div className="ds-kpi-head">
-                <p className="ds-kpi-label">PC400 Fleet</p>
+                <p className="ds-kpi-label">PC400 Excavators</p>
                 <Badge tone="active">PC400</Badge>
               </div>
               <p className="ds-kpi-main">{stats.pc400}</p>
-              <p className="ds-kpi-descriptor">Excavators</p>
+              <p className="ds-kpi-descriptor">Inspection Pool</p>
             </div>
           </article>
         </section>
 
-        {/* Filter Controls */}
-        <Card className="p-4">
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">Search Keywords</label>
+        {/* Filter Controls Card */}
+        <Card className="overflow-hidden">
+          <div className="border-b border-slate-200 p-5 bg-slate-50/70 space-y-3">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+              <div>
+                <h3 className="text-base font-bold text-slate-900">Certified Inspection Remarks Pool</h3>
+                <p className="text-xs text-slate-500">Remarks are randomized and weighted during automated report generation</p>
+              </div>
+              <Badge tone="neutral">{filteredComments.length} Visible</Badge>
+            </div>
+
+            {/* Model Filter Pills */}
+            <div className="flex flex-wrap items-center gap-1.5 pt-1 border-t border-slate-200/60">
+              <span className="text-xs font-bold text-slate-500 mr-1">Machine Model:</span>
+              {uniqueModels.map((m) => {
+                const isSelected = modelFilter === m;
+                const count = m === 'ALL' ? comments.length : comments.filter((c) => c.machine_model === m).length;
+                return (
+                  <button
+                    key={m}
+                    type="button"
+                    onClick={() => setModelFilter(m)}
+                    className={`px-3 py-1 rounded-lg text-xs font-bold transition-all border ${
+                      isSelected
+                        ? 'bg-amber-600 border-amber-600 text-white shadow-xs'
+                        : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-100'
+                    }`}
+                  >
+                    {m === 'ALL' ? 'All Models' : m} ({count})
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Filter Input Row */}
+            <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-3">
               <input
                 type="text"
-                placeholder="Search comment text..."
+                placeholder="Search remark keywords..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full rounded-md border border-slate-300 px-3 py-1.5 text-xs text-slate-900 focus:border-sky-500 focus:outline-none"
+                className="ds-input text-xs"
               />
-            </div>
 
-            <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">Machine Model</label>
-              <select
-                value={modelFilter}
-                onChange={(e) => setModelFilter(e.target.value)}
-                className="w-full rounded-md border border-slate-300 px-3 py-1.5 text-xs text-slate-900 focus:border-sky-500 focus:outline-none"
-              >
-                {uniqueModels.map((m) => (
-                  <option key={m} value={m}>
-                    {m === 'ALL' ? 'All Models' : m}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">Service Stage</label>
               <select
                 value={stageFilter}
                 onChange={(e) => setStageFilter(e.target.value)}
-                className="w-full rounded-md border border-slate-300 px-3 py-1.5 text-xs text-slate-900 focus:border-sky-500 focus:outline-none"
+                className="ds-input text-xs"
               >
-                <option value="ALL">All Stages</option>
+                <option value="ALL">All Service Stages</option>
                 {SERVICE_STAGE_OPTIONS.map((opt) => (
                   <option key={opt.value} value={opt.value}>
                     {opt.label}
                   </option>
                 ))}
               </select>
-            </div>
 
-            <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">Status</label>
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="w-full rounded-md border border-slate-300 px-3 py-1.5 text-xs text-slate-900 focus:border-sky-500 focus:outline-none"
+                className="ds-input text-xs"
               >
                 <option value="ALL">All Statuses</option>
                 <option value="ACTIVE">Active in Rotation</option>
-                <option value="INACTIVE">Inactive / Disabled</option>
+                <option value="INACTIVE">Deactivated</option>
               </select>
             </div>
           </div>
-        </Card>
 
-        {/* Comments Table */}
-        <Card className="overflow-hidden">
-          <div className="flex items-center justify-between border-b border-slate-200 px-4 py-3 bg-slate-50">
-            <div>
-              <h3 className="text-xs font-bold uppercase tracking-wider text-slate-700">
-                Registered Comments ({filteredComments.length})
-              </h3>
-              <p className="text-[11px] text-slate-500">
-                Randomly selected during maintenance report generation based on model and stage.
-              </p>
-            </div>
-            <button
-              type="button"
-              onClick={loadData}
-              disabled={loading}
-              className="text-xs text-sky-600 hover:text-sky-800 font-semibold"
-            >
-              {loading ? 'Refreshing...' : '🔄 Reload'}
-            </button>
-          </div>
-
+          {/* Comments List */}
           {loading ? (
-            <div className="py-12 text-center text-xs text-slate-500">
-              Loading comments pool...
-            </div>
-          ) : error ? (
-            <div className="py-8 text-center text-xs text-rose-600">
-              {error}
-            </div>
+            <div className="p-8 text-center text-xs text-slate-500">Loading comments pool...</div>
           ) : filteredComments.length === 0 ? (
-            <EmptyState
-              title="No comments found"
-              description="Try adjusting your filters or click Add Comment to register a new phrase."
-              action={
-                <button
-                  type="button"
-                  onClick={openAddModal}
-                  className="rounded-md bg-sky-600 px-3 py-1.5 text-xs font-semibold text-white shadow-xs hover:bg-sky-500"
-                >
-                  + Add First Comment
-                </button>
-              }
-            />
+            <div className="p-8">
+              <EmptyState title="No comments match filters" description="Try clearing filters or search query." />
+            </div>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-slate-200 text-left text-xs">
-                <thead className="bg-slate-50 text-slate-600 font-semibold">
+            <div className="ds-table-wrap">
+              <table className="ds-table">
+                <thead>
                   <tr>
-                    <th className="py-3 px-4 w-16">ID</th>
-                    <th className="py-3 px-4 w-24">Model</th>
-                    <th className="py-3 px-4 w-36">Service Stage</th>
-                    <th className="py-3 px-4">Comment Text</th>
-                    <th className="py-3 px-4 w-20 text-center">Weight</th>
-                    <th className="py-3 px-4 w-24 text-center">Status</th>
-                    <th className="py-3 px-4 w-28 text-right">Actions</th>
+                    <th>Model</th>
+                    <th>Service Stage</th>
+                    <th>Inspection Remark Text</th>
+                    <th>Weight</th>
+                    <th>Status</th>
+                    <th className="text-right">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100 bg-white">
-                  {filteredComments.map((c) => (
-                    <tr
-                      key={c.id}
-                      className={`hover:bg-slate-50 transition-colors ${
-                        !c.is_active ? 'opacity-60 bg-slate-50/50' : ''
-                      }`}
-                    >
-                      <td className="py-3 px-4 font-mono text-slate-400">#{c.id}</td>
-                      <td className="py-3 px-4">
-                        <Badge tone={c.machine_model === 'HM400' ? 'live' : 'active'}>
-                          {c.machine_model}
-                        </Badge>
-                      </td>
-                      <td className="py-3 px-4 font-medium text-slate-700">
-                        {c.service_stage === 'scheduled_service' && 'Scheduled PM'}
-                        {(c.service_stage === 'storage_service' || c.service_stage === 'extra_service') && 'Extra / Storage PM (W41X/W30)'}
-                        {(c.service_stage === 'pre_delivery' || c.service_stage === 'pdi_delivery') && 'Pre-Delivery (PDI)'}
-                        {c.service_stage === 'delivery' && 'Delivery (W41N)'}
-                        {!['scheduled_service', 'extra_service', 'pdi_delivery', 'storage_service', 'pre_delivery', 'delivery'].includes(c.service_stage) &&
-                          c.service_stage}
-                      </td>
-                      <td className="py-3 px-4 text-slate-800 font-normal leading-relaxed">
-                        {c.comment_text}
-                      </td>
-                      <td className="py-3 px-4 text-center">
-                        <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-slate-100 text-slate-700">
-                          x{c.frequency || 1}
+                <tbody>
+                  {filteredComments.map((comment) => (
+                    <tr key={comment.id} className="hover:bg-slate-50/70 transition-colors">
+                      <td>
+                        <span className="font-bold text-xs px-2 py-0.5 rounded-md bg-slate-100 text-slate-800">
+                          {comment.machine_model}
                         </span>
                       </td>
-                      <td className="py-3 px-4 text-center">
+                      <td>
+                        <span className="text-xs font-medium text-slate-600">
+                          {SERVICE_STAGE_OPTIONS.find((s) => s.value === comment.service_stage)?.label || comment.service_stage}
+                        </span>
+                      </td>
+                      <td className="max-w-md">
+                        <p className="text-xs font-semibold text-slate-900 leading-relaxed">
+                          {comment.comment_text}
+                        </p>
+                      </td>
+                      <td>
+                        <span className="font-mono text-xs font-bold bg-amber-50 text-amber-800 px-2 py-0.5 rounded border border-amber-200">
+                          ×{comment.frequency || 1}
+                        </span>
+                      </td>
+                      <td>
                         <button
                           type="button"
-                          onClick={() => handleToggleActive(c)}
-                          title="Click to toggle active status"
-                          className="focus:outline-none"
+                          onClick={() => handleToggleActive(comment)}
+                          className="cursor-pointer"
                         >
-                          <Badge tone={c.is_active ? 'ready' : 'archived'}>
-                            {c.is_active ? 'Active' : 'Disabled'}
+                          <Badge tone={comment.is_active ? 'ready' : 'archived'}>
+                            {comment.is_active ? 'Active' : 'Disabled'}
                           </Badge>
                         </button>
                       </td>
-                      <td className="py-3 px-4 text-right">
-                        <div className="flex items-center justify-end gap-1.5">
-                          <button
+                      <td className="text-right">
+                        <div className="inline-flex items-center gap-1">
+                          <Button
                             type="button"
-                            onClick={() => openEditModal(c)}
-                            className="rounded p-1 text-slate-500 hover:text-sky-600 hover:bg-sky-50"
-                            title="Edit Comment"
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => openEditModal(comment)}
                           >
-                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                            </svg>
-                          </button>
-
-                          {deleteConfirmId === c.id ? (
-                            <div className="flex items-center gap-1">
-                              <button
-                                type="button"
-                                onClick={() => handleDelete(c.id)}
-                                className="text-[10px] bg-rose-600 text-white px-2 py-0.5 rounded font-bold hover:bg-rose-700"
-                              >
-                                Delete
-                              </button>
-                              <button
-                                type="button"
-                                onClick={() => setDeleteConfirmId(null)}
-                                className="text-[10px] bg-slate-200 text-slate-700 px-1.5 py-0.5 rounded hover:bg-slate-300"
-                              >
-                                ✕
-                              </button>
-                            </div>
-                          ) : (
-                            <button
-                              type="button"
-                              onClick={() => setDeleteConfirmId(c.id)}
-                              className="rounded p-1 text-slate-400 hover:text-rose-600 hover:bg-rose-50"
-                              title="Delete Comment"
-                            >
-                              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                              </svg>
-                            </button>
-                          )}
+                            Edit
+                          </Button>
+                          <Button
+                            type="button"
+                            variant="danger"
+                            size="sm"
+                            onClick={() => handleDelete(comment.id)}
+                          >
+                            Delete
+                          </Button>
                         </div>
                       </td>
                     </tr>
@@ -514,143 +450,90 @@ export default function EqpCommentsPage() {
             </div>
           )}
         </Card>
+      </div>
 
-        {/* Add / Edit Modal */}
-        {isModalOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-4">
-            <div className="w-full max-w-lg rounded-xl bg-white p-6 shadow-2xl space-y-4">
-              <div className="flex items-center justify-between border-b border-slate-200 pb-3">
-                <h3 className="text-sm font-bold text-slate-900">
-                  {editingComment ? 'Edit Report Comment' : 'Add New Report Comment'}
-                </h3>
-                <button
-                  type="button"
-                  onClick={() => setIsModalOpen(false)}
-                  className="text-slate-400 hover:text-slate-600 font-bold"
-                >
-                  ✕
-                </button>
-              </div>
+      {/* Edit/Add Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-4 backdrop-blur-xs">
+          <form onSubmit={handleSave} className="bg-white rounded-2xl shadow-2xl max-w-lg w-full border border-slate-200 overflow-hidden">
+            <div className="p-5 bg-slate-900 text-white flex items-center justify-between">
+              <h3 className="text-base font-bold">{editingComment ? 'Edit Inspection Remark' : 'Add Inspection Remark'}</h3>
+              <button
+                type="button"
+                onClick={() => setIsModalOpen(false)}
+                className="text-slate-400 hover:text-white"
+              >
+                ✕
+              </button>
+            </div>
 
-              <form onSubmit={handleSave} className="space-y-4">
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-xs font-semibold text-slate-700 mb-1">
-                      Machine Model
-                    </label>
-                    <select
-                      value={formData.machine_model}
-                      onChange={(e) => setFormData({ ...formData, machine_model: e.target.value })}
-                      className="w-full rounded-md border border-slate-300 px-3 py-1.5 text-xs text-slate-900 focus:border-sky-500 focus:outline-none"
-                    >
-                      <option value="HM400">HM400</option>
-                      <option value="PC400">PC400</option>
-                      <option value="D155A">D155A</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-semibold text-slate-700 mb-1">
-                      Service Stage
-                    </label>
-                    <select
-                      value={formData.service_stage}
-                      onChange={(e) => setFormData({ ...formData, service_stage: e.target.value })}
-                      className="w-full rounded-md border border-slate-300 px-3 py-1.5 text-xs text-slate-900 focus:border-sky-500 focus:outline-none"
-                    >
-                      {SERVICE_STAGE_OPTIONS.map((opt) => (
-                        <option key={opt.value} value={opt.value}>
-                          {opt.label}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-xs font-semibold text-slate-700 mb-1">
-                      Document Type
-                    </label>
-                    <select
-                      value={formData.document_type}
-                      onChange={(e) => setFormData({ ...formData, document_type: e.target.value })}
-                      className="w-full rounded-md border border-slate-300 px-3 py-1.5 text-xs text-slate-900 focus:border-sky-500 focus:outline-none"
-                    >
-                      {DOCUMENT_TYPE_OPTIONS.map((opt) => (
-                        <option key={opt.value} value={opt.value}>
-                          {opt.label}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-semibold text-slate-700 mb-1">
-                      Selection Weight (Frequency)
-                    </label>
-                    <input
-                      type="number"
-                      min="1"
-                      max="20"
-                      value={formData.frequency}
-                      onChange={(e) => setFormData({ ...formData, frequency: parseInt(e.target.value, 10) || 1 })}
-                      className="w-full rounded-md border border-slate-300 px-3 py-1.5 text-xs text-slate-900 focus:border-sky-500 focus:outline-none"
-                    />
-                  </div>
+            <div className="p-6 space-y-4">
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="text-xs font-bold text-slate-700 mb-1 block">Machine Model</label>
+                  <select
+                    value={formData.machine_model}
+                    onChange={(e) => setFormData({ ...formData, machine_model: e.target.value })}
+                    className="ds-input text-xs"
+                  >
+                    <option value="HM400">HM400 (Dump Truck)</option>
+                    <option value="PC400">PC400 (Excavator)</option>
+                    <option value="D155A">D155A (Bulldozer)</option>
+                  </select>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
-                    Comment Text (English)
-                  </label>
-                  <textarea
-                    rows={4}
-                    required
-                    placeholder="Enter full inspection or maintenance comment..."
-                    value={formData.comment_text}
-                    onChange={(e) => setFormData({ ...formData, comment_text: e.target.value })}
-                    className="w-full rounded-md border border-slate-300 p-2.5 text-xs text-slate-900 focus:border-sky-500 focus:outline-none leading-relaxed"
-                  />
-                  <p className="text-[11px] text-slate-400 mt-1">
-                    This exact phrase will be placed into cell comments of generated Excel & PDF reports.
-                  </p>
-                </div>
-
-                <div className="flex items-center gap-2 pt-1">
+                  <label className="text-xs font-bold text-slate-700 mb-1 block">Frequency Weight</label>
                   <input
-                    type="checkbox"
-                    id="isActiveCheck"
-                    checked={formData.is_active}
-                    onChange={(e) => setFormData({ ...formData, is_active: e.target.checked })}
-                    className="rounded border-slate-300 text-sky-600 focus:ring-sky-500 h-4 w-4"
+                    type="number"
+                    min="1"
+                    max="10"
+                    value={formData.frequency}
+                    onChange={(e) => setFormData({ ...formData, frequency: parseInt(e.target.value, 10) || 1 })}
+                    className="ds-input text-xs"
                   />
-                  <label htmlFor="isActiveCheck" className="text-xs font-medium text-slate-700">
-                    Active in random generation pool
-                  </label>
                 </div>
+              </div>
 
-                <div className="flex items-center justify-end gap-2 border-t border-slate-200 pt-3">
-                  <button
-                    type="button"
-                    onClick={() => setIsModalOpen(false)}
-                    className="rounded-md border border-slate-300 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    disabled={submitting}
-                    className="rounded-md bg-sky-600 px-4 py-1.5 text-xs font-semibold text-white shadow-xs hover:bg-sky-500 disabled:opacity-50"
-                  >
-                    {submitting ? 'Saving...' : editingComment ? 'Save Changes' : 'Create Comment'}
-                  </button>
-                </div>
-              </form>
+              <div>
+                <label className="text-xs font-bold text-slate-700 mb-1 block">Service Stage</label>
+                <select
+                  value={formData.service_stage}
+                  onChange={(e) => setFormData({ ...formData, service_stage: e.target.value })}
+                  className="ds-input text-xs"
+                >
+                  {SERVICE_STAGE_OPTIONS.map((opt) => (
+                    <option key={opt.value} value={opt.value}>
+                      {opt.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="text-xs font-bold text-slate-700 mb-1 block">Inspection Remark Text</label>
+                <textarea
+                  rows={4}
+                  value={formData.comment_text}
+                  onChange={(e) => setFormData({ ...formData, comment_text: e.target.value })}
+                  className="ds-input text-xs"
+                  placeholder="Enter certified maintenance inspection commentary..."
+                  required
+                />
+              </div>
             </div>
-          </div>
-        )}
-      </div>
+
+            <div className="p-4 bg-slate-50 border-t border-slate-200 flex items-center justify-end gap-2">
+              <Button type="button" variant="secondary" onClick={() => setIsModalOpen(false)}>
+                Cancel
+              </Button>
+              <Button type="submit" variant="primary" disabled={submitting}>
+                {submitting ? 'Saving...' : 'Save Remark'}
+              </Button>
+            </div>
+          </form>
+        </div>
+      )}
     </SystemShell>
   );
 }
