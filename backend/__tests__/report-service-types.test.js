@@ -87,9 +87,9 @@ describe('report service type handling', () => {
 
   it('reads W30 and W41X counters from the imported lifecycle baseline', () => {
     expect(getLifecycleReportCount('88767', 'W30')).toBe(9);
-    expect(getLifecycleReportCount('88767', 'W41X')).toBe(16);
+    expect(getLifecycleReportCount('88767', 'W41X')).toBe(22);
     expect(getLifecycleReportCount('9720', 'W30')).toBe(7);
-    expect(getLifecycleReportCount('9720', 'W41X')).toBe(5);
+    expect(getLifecycleReportCount('9720', 'W41X')).toBe(6);
   });
 
   it('continues repeating report counters from persistent machine report_counter or lifecycle', () => {
@@ -97,10 +97,10 @@ describe('report service type handling', () => {
       machine: {
         id: 16,
         machine_number: '88767',
-        report_counter: 18,
+        report_counter: 25,
       },
       reportType: 'W41X',
-    })).toBe(18);
+    })).toBe(25);
 
     expect(getInitialRepeatingReportCounter({
       machine: {
@@ -109,6 +109,6 @@ describe('report service type handling', () => {
         report_counter: 0,
       },
       reportType: 'W41X',
-    })).toBe(16);
+    })).toBe(22);
   });
 });
