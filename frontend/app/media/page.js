@@ -128,6 +128,18 @@ export default function MediaCornerPage() {
     setIsNewMonthModalOpen(false);
   };
 
+  // Delete a concept from current campaign
+  const handleDeleteConcept = (conceptId) => {
+    if (!window.confirm('Delete this content package from the campaign?')) return;
+    const updatedConcepts = currentConcepts.filter((c) => c.id !== conceptId);
+    const updatedCampaign = { ...activeCampaign, concepts: updatedConcepts };
+    const updatedCampaigns = { ...campaigns, [selectedMonthId]: updatedCampaign };
+    saveCampaigns(updatedCampaigns);
+    if (selectedConceptId === conceptId) {
+      setSelectedConceptId(updatedConcepts[0]?.id || null);
+    }
+  };
+
   // Trigger from Step 2 directly to Step 3
   const handleSelectConceptToScript = (concept) => {
     setSelectedConceptId(concept.id);

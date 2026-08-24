@@ -126,7 +126,7 @@ export default function PlatformPostSimulator({ concept }) {
                       {concept.title}
                     </h4>
                     <p className="text-[11px] text-neutral-300 italic max-w-xs mx-auto">
-                      "{concept.hook}"
+                      "{typeof concept.hook === 'string' ? concept.hook : concept.hook?.spokenEn || ''}"
                     </p>
                   </div>
                 )}
@@ -211,7 +211,7 @@ export default function PlatformPostSimulator({ concept }) {
 
             {/* Post Text */}
             <div className="p-3.5 text-xs text-slate-800 leading-relaxed" dir={activeLang === 'ar' ? 'rtl' : 'ltr'}>
-              <p className="font-bold text-slate-900 mb-1">{concept.hook}</p>
+              <p className="font-bold text-slate-900 mb-1">{typeof concept.hook === 'string' ? concept.hook : concept.hook?.spokenEn || ''}</p>
               <p className="whitespace-pre-line text-slate-700">{caption}</p>
               <p className="mt-2 text-blue-700 font-semibold">{concept.hashtags}</p>
             </div>
