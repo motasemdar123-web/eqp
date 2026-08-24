@@ -10,6 +10,7 @@ export default function Step2ContentSchedule({
   campaign,
   onSelectConceptToScript,
   onAddNewConcept,
+  onDeleteConcept,
   onPrevStep,
   onNextStep,
 }) {
@@ -33,7 +34,7 @@ export default function Step2ContentSchedule({
           </span>
           <h2 className="text-xl font-black text-slate-900 mt-1">4-Week Content Plan & Publishing Schedule</h2>
           <p className="text-xs text-slate-500">
-            Cadence: 3 Posts / Week (Sundays, Tuesdays & Thursdays). Click any card to open its Director's Script.
+            Cadence: 3 Posts / Week (Sundays, Tuesdays & Thursdays). Click any card to edit its script, or delete unwanted posts.
           </p>
         </div>
 
@@ -93,16 +94,30 @@ export default function Step2ContentSchedule({
                     <div
                       key={concept.id}
                       onClick={() => onSelectConceptToScript(concept)}
-                      className="p-4 bg-white rounded-xl border border-slate-200 hover:border-amber-400 hover:shadow-md transition-all cursor-pointer space-y-3 group"
+                      className="p-4 bg-white rounded-xl border border-slate-200 hover:border-amber-400 hover:shadow-md transition-all cursor-pointer space-y-3 group relative"
                     >
-                      {/* Top Day & Format Badges */}
+                      {/* Top Day & Format Badges + Delete Button */}
                       <div className="flex items-center justify-between gap-1 text-[10px]">
-                        <span className="font-bold text-slate-700 bg-slate-100 px-2 py-0.5 rounded">
-                          {concept.day || 'Release'}
-                        </span>
-                        <span className={`px-2 py-0.5 rounded font-bold ${formatMeta.color} border`}>
-                          {formatMeta.icon} {formatMeta.label}
-                        </span>
+                        <div className="flex items-center gap-1.5">
+                          <span className="font-bold text-slate-700 bg-slate-100 px-2 py-0.5 rounded">
+                            {concept.day || 'Release'}
+                          </span>
+                          <span className={`px-2 py-0.5 rounded font-bold ${formatMeta.color} border`}>
+                            {formatMeta.icon} {formatMeta.label}
+                          </span>
+                        </div>
+
+                        <button
+                          type="button"
+                          title="Delete this post from calendar"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onDeleteConcept && onDeleteConcept(concept.id);
+                          }}
+                          className="text-slate-400 hover:text-red-600 p-1 hover:bg-red-50 rounded-md transition-colors text-xs font-bold"
+                        >
+                          ✕
+                        </button>
                       </div>
 
                       {/* Title & Hook */}

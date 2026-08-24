@@ -172,6 +172,7 @@ export default function MediaCornerPage() {
             campaign={activeCampaign}
             onSelectConceptToScript={handleSelectConceptToScript}
             onAddNewConcept={handleOpenAddConceptModal}
+            onDeleteConcept={handleDeleteConcept}
             onPrevStep={() => setCurrentStep(1)}
             onNextStep={() => setCurrentStep(3)}
           />
@@ -184,6 +185,7 @@ export default function MediaCornerPage() {
             selectedConceptId={selectedConceptId}
             onSelectConcept={setSelectedConceptId}
             onSaveConceptScript={handleSaveConcept}
+            onDeleteConcept={handleDeleteConcept}
             onPrevStep={() => setCurrentStep(2)}
             onNextStep={() => setCurrentStep(4)}
             onJumpToCallSheet={() => setCurrentStep(5)}

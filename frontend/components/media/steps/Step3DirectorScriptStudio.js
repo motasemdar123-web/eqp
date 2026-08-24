@@ -11,6 +11,7 @@ export default function Step3DirectorScriptStudio({
   selectedConceptId,
   onSelectConcept,
   onSaveConceptScript,
+  onDeleteConcept,
   onPrevStep,
   onNextStep,
   onJumpToCallSheet,
@@ -184,6 +185,15 @@ export default function Step3DirectorScriptStudio({
               <span className="text-xs text-slate-500 font-mono">
                 📅 {scriptData.publishDate} ({scriptData.day})
               </span>
+              <button
+                type="button"
+                onClick={() => {
+                  if (onDeleteConcept) onDeleteConcept(scriptData.id);
+                }}
+                className="text-xs text-red-600 hover:text-red-700 hover:bg-red-50 font-bold px-2 py-0.5 rounded ml-auto transition-colors"
+              >
+                🗑️ Delete Post
+              </button>
             </div>
 
             <input
