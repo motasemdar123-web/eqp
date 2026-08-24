@@ -81,9 +81,46 @@ Object.assign(OBSERVED_REPORTS, {
   88685: [['W41X', '2025-12-15'], ['W41X', '2025-11-03'], ['W41X', '2025-10-01'], ['W41X', '2025-09-05'], ['W41X', '2025-08-10'], ['W41X', '2025-07-03'], ['W41X', '2025-06-01'], ['W41X', '2025-04-25'], ['W41X', '2025-03-20'], ['W41X', '2025-02-15'], ['W41X', '2025-01-11'], ['W41X', '2024-12-10'], ['W41X', '2024-11-13'], ['W41X', '2024-10-15'], ['W41X', '2024-09-10'], ['W41X', '2024-08-12'], ['W41X', '2024-07-14'], ['W41X', '2024-06-17'], ['W41X', '2024-05-15'], ['W41X', '2024-04-08'], ['W41X', '2024-03-10'], ['W41X', '2024-02-08'], ['W41X', '2024-01-07'], ['W41X', '2023-12-04'], ['W41X', '2023-11-02'], ['W41X', '2023-10-02'], ['W41X', '2023-08-30'], ['W413', '2023-07-27'], ['W412', '2023-06-22'], ['W411', '2023-05-20'], ['W41N', '2023-02-05'], ['W41P', '2023-02-04'], ['W30', '2023-01-05']],
 });
 
-export const EQP_LIFECYCLE_RECORDS = BASE_LIFECYCLE_ROWS.map((row) => buildLifecycleRecord(row));
+export function getReportTypeLabel(code) {
+  switch (code) {
+    case 'W41P': return 'Pre-delivery (PDI)';
+    case 'W41N': return 'New Delivery';
+    case 'W411': return '1st Service';
+    case 'W412': return '2nd Service';
+    case 'W413': return '3rd Service';
+    case 'W30': return 'Storage';
+    case 'W51D': return 'Condition Report';
+    case 'W41X':
+    default:
+      return 'Add. Service';
+  }
+}
 
-function buildLifecycleRecord([
+export function mapReportToEventCode(report) {
+  const code = (report.report_type || '').trim().toUpperCase();
+  if (['W41P', 'W41N', 'W411', 'W412', 'W413', 'W41X', 'W30', 'W51D', 'W70', 'W70F'].includes(code)) {
+    return code;
+  }
+  const sType = (report.service_type || report.report_type || '').toUpperCase();
+  if (sType.includes('PRE-DELIVERY') || sType.includes('PDI')) return 'W41P';
+  if (sType.includes('NEW') || sType.includes('DELIVERY')) return 'W41N';
+  if (sType.includes('1ST') || sType.includes('250')) return 'W411';
+  if (sType.includes('2ND') || sType.includes('500')) return 'W412';
+  if (sType.includes('3RD') || sType.includes('1000')) return 'W413';
+  if (sType.includes('STORAGE')) return 'W30';
+  if (sType.includes('CONDITION')) return 'W51D';
+  return 'W41X';
+}
+
+function getEarliestDateByCode(observedReports, code) {
+  const matching = observedReports
+    .filter(([reportCode]) => reportCode === code)
+    .map(([, date]) => date)
+    .sort();
+  return matching[0] || null;
+}
+
+export function buildLifecycleRecordFromProps({
   machineNumber,
   model,
   preDeliveryDate,
@@ -96,8 +133,8 @@ function buildLifecycleRecord([
   latestReportType,
   latestSmr,
   addServiceCount,
-]) {
-  const observedReports = OBSERVED_REPORTS[machineNumber] || [];
+  observedReports = [],
+}) {
   const workingStatus = 'not_working';
   const storageGaps = findStorageGaps(observedReports, deliveryDate);
   const addServiceGaps = findAddServiceGaps({
@@ -152,6 +189,133 @@ function buildLifecycleRecord([
     serviceModeLabel: inAddServiceCycle ? 'Not working' : 'Working',
   };
 }
+
+export function buildDynamicLifecycleRecords(generatedReports = [], machinesList = []) {
+  const reportsByMachine = new Map();
+  for (const r of generatedReports) {
+    const mNum = String(r.machine_number || r.machine?.machineNumber || r.machine?.machine_number || '').trim();
+    if (!mNum) continue;
+    if (!reportsByMachine.has(mNum)) reportsByMachine.set(mNum, []);
+    reportsByMachine.get(mNum).push(r);
+  }
+
+  const machineNumbers = new Set(BASE_LIFECYCLE_ROWS.map(([num]) => String(num)));
+  for (const mNum of reportsByMachine.keys()) {
+    machineNumbers.add(mNum);
+  }
+  for (const m of machinesList) {
+    const mNum = String(m.machine_number || m.machineNumber || '').trim();
+    if (mNum) machineNumbers.add(mNum);
+  }
+
+  const records = [];
+
+  for (const machineNumber of machineNumbers) {
+    const baseRow = BASE_LIFECYCLE_ROWS.find(([num]) => String(num) === machineNumber);
+    const machineObj = machinesList.find((m) => String(m.machine_number || m.machineNumber) === machineNumber);
+    const genReports = reportsByMachine.get(machineNumber) || [];
+
+    const model = baseRow ? baseRow[1] : (machineObj?.machine_type || machineObj?.machineType || 'HM400');
+    
+    // Combine baseline observed reports with generated reports
+    const baseObserved = OBSERVED_REPORTS[machineNumber] ? [...OBSERVED_REPORTS[machineNumber]] : [];
+    const observedSet = new Set(baseObserved.map(([code, date]) => `${code}_${date}`));
+
+    for (const gr of genReports) {
+      const code = mapReportToEventCode(gr);
+      const rawDate = gr.service_date || gr.created_at;
+      if (!rawDate) continue;
+      const date = String(rawDate).slice(0, 10);
+      const key = `${code}_${date}`;
+      if (!observedSet.has(key)) {
+        observedSet.add(key);
+        baseObserved.push([code, date]);
+      }
+    }
+
+    // Sort observed reports chronologically descending (latest first)
+    baseObserved.sort((a, b) => b[1].localeCompare(a[1]));
+
+    const preDeliveryDate = baseRow?.[2] || getEarliestDateByCode(baseObserved, 'W41P');
+    const deliveryDate = baseRow?.[3] || getEarliestDateByCode(baseObserved, 'W41N');
+    const firstServiceDate = baseRow?.[4] || getEarliestDateByCode(baseObserved, 'W411');
+    const secondServiceDate = baseRow?.[5] || getEarliestDateByCode(baseObserved, 'W412');
+    const thirdServiceDate = baseRow?.[6] || getEarliestDateByCode(baseObserved, 'W413');
+
+    let latestReportDate = baseRow?.[7] || null;
+    let latestReportCode = baseRow?.[8] || 'W41X';
+    let latestReportType = baseRow?.[9] || 'Add. Service';
+    let latestSmr = baseRow?.[10] ?? (machineObj?.last_smr ? Number(machineObj.last_smr) : null);
+
+    if (baseObserved.length > 0) {
+      const [newestCode, newestDate] = baseObserved[0];
+      if (!latestReportDate || newestDate >= latestReportDate) {
+        latestReportDate = newestDate;
+        latestReportCode = newestCode;
+        latestReportType = getReportTypeLabel(newestCode);
+      }
+    }
+
+    for (const gr of genReports) {
+      if (gr.smr && Number(gr.smr) > (latestSmr || 0)) {
+        latestSmr = Number(gr.smr);
+      }
+    }
+
+    const addServiceCount = baseObserved.filter(([c]) => ['W41X', 'W30', 'W51D'].includes(c)).length;
+
+    const record = buildLifecycleRecordFromProps({
+      machineNumber,
+      model,
+      preDeliveryDate,
+      deliveryDate,
+      firstServiceDate,
+      secondServiceDate,
+      thirdServiceDate,
+      latestReportDate,
+      latestReportCode,
+      latestReportType,
+      latestSmr,
+      addServiceCount,
+      observedReports: baseObserved,
+    });
+
+    records.push(record);
+  }
+
+  return records;
+}
+
+export const EQP_LIFECYCLE_RECORDS = BASE_LIFECYCLE_ROWS.map(([
+  machineNumber,
+  model,
+  preDeliveryDate,
+  deliveryDate,
+  firstServiceDate,
+  secondServiceDate,
+  thirdServiceDate,
+  latestReportDate,
+  latestReportCode,
+  latestReportType,
+  latestSmr,
+  addServiceCount,
+]) =>
+  buildLifecycleRecordFromProps({
+    machineNumber,
+    model,
+    preDeliveryDate,
+    deliveryDate,
+    firstServiceDate,
+    secondServiceDate,
+    thirdServiceDate,
+    latestReportDate,
+    latestReportCode,
+    latestReportType,
+    latestSmr,
+    addServiceCount,
+    observedReports: OBSERVED_REPORTS[machineNumber] || [],
+  })
+);
 
 function findStorageGaps(observedReports, deliveryDate) {
   const storageDates = getDatesByCode(observedReports, 'W30');

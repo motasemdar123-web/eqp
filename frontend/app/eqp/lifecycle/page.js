@@ -5,7 +5,12 @@ import SystemShell from '../../../components/SystemShell';
 import Card from '../../../components/ui/Card';
 import Badge from '../../../components/ui/Badge';
 import EmptyState from '../../../components/ui/EmptyState';
-import { EQP_LIFECYCLE_RECORDS, formatLifecycleDate, formatLifecycleMonth } from '../../../lib/eqpLifecycleData';
+import { getReports } from '../../../lib/api';
+import {
+  buildDynamicLifecycleRecords,
+  formatLifecycleDate,
+  formatLifecycleMonth,
+} from '../../../lib/eqpLifecycleData';
 
 const DISMISSED_MONTHLY_GAPS_KEY = 'eqp.dismissedMonthlyGaps';
 
@@ -13,10 +18,12 @@ export default function EqpLifecyclePage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [modelFilter, setModelFilter] = useState('ALL');
   const [statusFilter, setStatusFilter] = useState('ALL');
-  const [selectedMachineNumber, setSelectedMachineNumber] = useState(EQP_LIFECYCLE_RECORDS[0]?.machineNumber || '');
+  const [selectedMachineNumber, setSelectedMachineNumber] = useState('');
   const [dismissedGapKeys, setDismissedGapKeys] = useState([]);
   const [monthlyListOpen, setMonthlyListOpen] = useState(false);
   const [dismissedListOpen, setDismissedListOpen] = useState(false);
+  const [generatedReports, setGeneratedReports] = useState([]);
+  const [loadingReports, setLoadingReports] = useState(false);
 
   useEffect(() => {
     const timerId = window.setTimeout(() => {
@@ -28,13 +35,31 @@ export default function EqpLifecyclePage() {
       }
     }, 0);
 
+    loadReportsData();
+
     return () => window.clearTimeout(timerId);
   }, []);
 
+  async function loadReportsData() {
+    try {
+      setLoadingReports(true);
+      const res = await getReports();
+      setGeneratedReports(res || []);
+    } catch {
+      // Non-fatal, baseline will be used
+    } finally {
+      setLoadingReports(false);
+    }
+  }
+
   const dismissedGapKeySet = useMemo(() => new Set(dismissedGapKeys), [dismissedGapKeys]);
 
+  const dynamicRecords = useMemo(() => {
+    return buildDynamicLifecycleRecords(generatedReports, []);
+  }, [generatedReports]);
+
   const machines = useMemo(() => {
-    return EQP_LIFECYCLE_RECORDS.map((machine) => {
+    return dynamicRecords.map((machine) => {
       const activeMonthlyGaps = machine.monthlyGaps.filter((gap) => !dismissedGapKeySet.has(getMonthlyGapKey(machine.machineNumber, gap)));
       const dismissedMonthlyGaps = machine.monthlyGaps.filter((gap) => dismissedGapKeySet.has(getMonthlyGapKey(machine.machineNumber, gap)));
       const hasMonthlyGap = activeMonthlyGaps.length > 0;
@@ -50,7 +75,7 @@ export default function EqpLifecyclePage() {
         nextAction: buildNextAction(machine.missingReports, activeMonthlyGaps),
       };
     });
-  }, [dismissedGapKeySet]);
+  }, [dynamicRecords, dismissedGapKeySet]);
 
   const persistDismissedKeys = (keys) => {
     setDismissedGapKeys(keys);
@@ -115,6 +140,21 @@ export default function EqpLifecyclePage() {
       eyebrow="EQP Module"
       title="Machine Lifecycle Tracker"
       description="Factory delivery milestones, service interval progression, and monthly gap verification for each EQP asset."
+      actions={
+        <div className="flex items-center gap-2">
+          <Badge tone={generatedReports.length > 0 ? 'ready' : 'neutral'}>
+            {loadingReports ? 'Syncing...' : `⚡ ${generatedReports.length} Generated Reports Synced`}
+          </Badge>
+          <button
+            type="button"
+            onClick={loadReportsData}
+            disabled={loadingReports}
+            className="rounded-md border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-sm hover:bg-slate-50 disabled:opacity-50"
+          >
+            {loadingReports ? 'Refreshing...' : '🔄 Refresh Lifecycle'}
+          </button>
+        </div>
+      }
     >
       <div className="space-y-6">
         {/* KPI Metrics */}
