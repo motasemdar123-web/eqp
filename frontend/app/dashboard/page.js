@@ -12,7 +12,7 @@ import Field from '../../components/ui/Field';
 import Badge from '../../components/ui/Badge';
 import Skeleton from '../../components/ui/Skeleton';
 import Toast from '../../components/ui/Toast';
-import { getStoredUser, clearStoredUser } from '../../lib/auth';
+import { getStoredUser, clearStoredUser, getMatchingEngineerName } from '../../lib/auth';
 import { generateReports, getMachineHistory, getMachines, getReportProfile } from '../../lib/api';
 import { MACHINE_MODELS, REPORT_TYPES, SERVICE_TYPES, getRequiredReportType } from '../../lib/reportOptions';
 
@@ -55,15 +55,23 @@ export default function DashboardPage() {
         getReportProfile(),
       ]);
 
-      setMachines(machinesResponse.machines || []);
+      const loadedMachines = machinesResponse.machines || [];
+      setMachines(loadedMachines);
       setMachineHistory(historyResponse.history || []);
       setReportProfile(profileResponse);
+
+      // Auto-filter by logged-in engineer by default on initial load
+      const engList = [...new Set(loadedMachines.map((m) => m.responsible_engineer).filter(Boolean))];
+      const matchedEng = getMatchingEngineerName(profileResponse?.reportMaker || user, engList);
+      if (matchedEng !== 'ALL') {
+        setFilterEngineer((prev) => (prev === 'ALL' ? matchedEng : prev));
+      }
     } catch (loadError) {
       setError(loadError.message || 'Failed to load dashboard data');
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     if (!user?.sessionToken) {

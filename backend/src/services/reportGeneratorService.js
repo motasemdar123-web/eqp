@@ -600,7 +600,8 @@ function normalizeTemplateModel(value) {
   if (normalized === 'AUTO') return 'AUTO';
   if (normalized.startsWith('HM400')) return 'HM400';
   if (normalized.startsWith('D155')) return 'D155A';
-  if (normalized.startsWith('PC400')) return 'PC400';
+  if (normalized.startsWith('PC400') || normalized.startsWith('PC500')) return 'PC400';
+  if (normalized.startsWith('WA600')) return 'HM400';
 
   return null;
 }
@@ -622,7 +623,8 @@ function detectMachineTemplateModel(machine) {
 
   if (normalized.includes('HM400')) return 'HM400';
   if (normalized.includes('D155')) return 'D155A';
-  if (normalized.includes('PC400')) return 'PC400';
+  if (normalized.includes('PC400') || normalized.includes('PC500')) return 'PC400';
+  if (normalized.includes('WA600')) return 'HM400';
 
   return null;
 }

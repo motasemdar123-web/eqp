@@ -8,7 +8,7 @@ import Button from '../../../components/ui/Button';
 import EmptyState from '../../../components/ui/EmptyState';
 import Skeleton from '../../../components/ui/Skeleton';
 import { getMachineHistory, getMachines } from '../../../lib/api';
-import { getStoredPlatformSession, getStoredUser } from '../../../lib/auth';
+import { getStoredPlatformSession, getStoredUser, getMatchingEngineerName } from '../../../lib/auth';
 
 export default function MachinesPage() {
   const [machines, setMachines] = useState([]);
@@ -17,17 +17,29 @@ export default function MachinesPage() {
   const [error, setError] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [machineType, setMachineType] = useState('ALL');
+  const [filterEngineer, setFilterEngineer] = useState('ALL');
 
   async function loadData() {
     try {
       setLoading(true);
       setError('');
+      const session = getStoredPlatformSession();
+      const user = getStoredUser();
+      const currentUser = session?.user || user;
+
       const [machinesResponse, historyResponse] = await Promise.all([
         getMachines(),
         getMachineHistory(),
       ]);
-      setMachines(machinesResponse.machines || []);
+      const loaded = machinesResponse.machines || [];
+      setMachines(loaded);
       setHistory(historyResponse.history || []);
+
+      const engList = [...new Set(loaded.map((m) => m.responsible_engineer).filter(Boolean))];
+      const matched = getMatchingEngineerName(currentUser, engList);
+      if (matched !== 'ALL') {
+        setFilterEngineer((prev) => (prev === 'ALL' ? matched : prev));
+      }
     } catch (loadError) {
       setError(loadError.message || 'Failed to load machines.');
     } finally {
@@ -53,11 +65,18 @@ export default function MachinesPage() {
     [machines]
   );
 
+  const engineers = useMemo(
+    () => [...new Set(machines.map((machine) => machine.responsible_engineer).filter(Boolean))].sort(),
+    [machines]
+  );
+
   const filteredMachines = useMemo(() => {
     const query = searchTerm.trim().toLowerCase();
 
     return machines.filter((machine) => {
       const matchesType = machineType === 'ALL' || machine.machine_type === machineType;
+      const matchesEngineer =
+        filterEngineer === 'ALL' || machine.responsible_engineer === filterEngineer;
       const matchesSearch =
         !query ||
         machine.machine_number?.toString().toLowerCase().includes(query) ||
@@ -67,9 +86,9 @@ export default function MachinesPage() {
         machine.customer_name?.toString().toLowerCase().includes(query) ||
         machine.location?.toString().toLowerCase().includes(query);
 
-      return matchesType && matchesSearch;
+      return matchesType && matchesEngineer && matchesSearch;
     });
-  }, [machines, machineType, searchTerm]);
+  }, [machines, machineType, filterEngineer, searchTerm]);
 
   const stats = useMemo(() => {
     const averageSmr = machines.length
@@ -194,7 +213,20 @@ export default function MachinesPage() {
                 />
               </div>
 
-              <div className="flex items-center gap-3">
+              <div className="flex flex-wrap items-center gap-3">
+                <select
+                  value={filterEngineer}
+                  onChange={(event) => setFilterEngineer(event.target.value)}
+                  className="ds-input min-w-[170px]"
+                >
+                  <option value="ALL">All Engineers</option>
+                  {engineers.map((eng) => (
+                    <option key={eng} value={eng}>
+                      {eng}
+                    </option>
+                  ))}
+                </select>
+
                 <select
                   value={machineType}
                   onChange={(event) => setMachineType(event.target.value)}

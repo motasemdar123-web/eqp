@@ -5,7 +5,8 @@ import SystemShell from '../../../components/SystemShell';
 import Card from '../../../components/ui/Card';
 import Badge from '../../../components/ui/Badge';
 import EmptyState from '../../../components/ui/EmptyState';
-import { getReports } from '../../../lib/api';
+import { getMachines, getReports } from '../../../lib/api';
+import { getStoredPlatformSession, getStoredUser, getMatchingEngineerName } from '../../../lib/auth';
 import {
   buildDynamicLifecycleRecords,
   formatLifecycleDate,
@@ -18,11 +19,13 @@ export default function EqpLifecyclePage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [modelFilter, setModelFilter] = useState('ALL');
   const [statusFilter, setStatusFilter] = useState('ALL');
+  const [filterEngineer, setFilterEngineer] = useState('ALL');
   const [selectedMachineNumber, setSelectedMachineNumber] = useState('');
   const [dismissedGapKeys, setDismissedGapKeys] = useState([]);
   const [monthlyListOpen, setMonthlyListOpen] = useState(false);
   const [dismissedListOpen, setDismissedListOpen] = useState(false);
   const [generatedReports, setGeneratedReports] = useState([]);
+  const [machinesList, setMachinesList] = useState([]);
   const [loadingReports, setLoadingReports] = useState(false);
 
   useEffect(() => {
@@ -43,8 +46,22 @@ export default function EqpLifecyclePage() {
   async function loadReportsData() {
     try {
       setLoadingReports(true);
-      const res = await getReports();
-      setGeneratedReports(res || []);
+      const [reportsRes, machinesRes] = await Promise.all([
+        getReports().catch(() => []),
+        getMachines().catch(() => ({ machines: [] })),
+      ]);
+      setGeneratedReports(reportsRes || []);
+      const mList = machinesRes?.machines || [];
+      setMachinesList(mList);
+
+      const session = getStoredPlatformSession();
+      const user = getStoredUser();
+      const currentUser = session?.user || user;
+      const engList = [...new Set(mList.map((m) => m.responsible_engineer).filter(Boolean))];
+      const matched = getMatchingEngineerName(currentUser, engList);
+      if (matched !== 'ALL') {
+        setFilterEngineer((prev) => (prev === 'ALL' ? matched : prev));
+      }
     } catch {
       // Non-fatal, baseline will be used
     } finally {
@@ -55,8 +72,8 @@ export default function EqpLifecyclePage() {
   const dismissedGapKeySet = useMemo(() => new Set(dismissedGapKeys), [dismissedGapKeys]);
 
   const dynamicRecords = useMemo(() => {
-    return buildDynamicLifecycleRecords(generatedReports, []);
-  }, [generatedReports]);
+    return buildDynamicLifecycleRecords(generatedReports, machinesList);
+  }, [generatedReports, machinesList]);
 
   const machines = useMemo(() => {
     return dynamicRecords.map((machine) => {
@@ -93,17 +110,22 @@ export default function EqpLifecyclePage() {
     persistDismissedKeys(dismissedGapKeys.filter((dismissedKey) => dismissedKey !== key));
   };
 
+  const engineerOptions = useMemo(() => {
+    return [...new Set(machines.map((machine) => machine.responsibleEngineer).filter(Boolean))].sort();
+  }, [machines]);
+
   const filteredMachines = useMemo(() => {
     const query = searchTerm.trim().toLowerCase();
 
     return machines.filter((machine) => {
       const matchesSearch = !query || machine.machineNumber.includes(query) || machine.model.toLowerCase().includes(query);
       const matchesModel = modelFilter === 'ALL' || machine.model === modelFilter;
+      const matchesEngineer = filterEngineer === 'ALL' || machine.responsibleEngineer === filterEngineer;
       const matchesStatus = statusFilter === 'ALL' || machine.status === statusFilter;
 
-      return matchesSearch && matchesModel && matchesStatus;
+      return matchesSearch && matchesModel && matchesEngineer && matchesStatus;
     });
-  }, [machines, modelFilter, searchTerm, statusFilter]);
+  }, [machines, modelFilter, filterEngineer, searchTerm, statusFilter]);
 
   const selectedMachine = useMemo(
     () => machines.find((machine) => machine.machineNumber === selectedMachineNumber) || filteredMachines[0],
@@ -231,7 +253,7 @@ export default function EqpLifecyclePage() {
           {/* Table Card */}
           <Card className="overflow-hidden">
             <div className="border-b border-slate-200 p-5 bg-slate-50/60">
-              <div className="grid gap-3 sm:grid-cols-[1.4fr_1fr_1fr]">
+              <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-4">
                 <input
                   type="text"
                   placeholder="Search machine ID or model..."
@@ -239,6 +261,16 @@ export default function EqpLifecyclePage() {
                   onChange={(event) => setSearchTerm(event.target.value)}
                   className="ds-input"
                 />
+                <select
+                  value={filterEngineer}
+                  onChange={(event) => setFilterEngineer(event.target.value)}
+                  className="ds-input"
+                >
+                  <option value="ALL">All Engineers</option>
+                  {engineerOptions.map((eng) => (
+                    <option key={eng} value={eng}>{eng}</option>
+                  ))}
+                </select>
                 <select value={modelFilter} onChange={(event) => setModelFilter(event.target.value)} className="ds-input">
                   <option value="ALL">All Models</option>
                   {modelOptions.map((model) => (
