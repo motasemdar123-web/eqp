@@ -15,9 +15,9 @@ import {
 
 const SERVICE_STAGE_OPTIONS = [
   { value: 'scheduled_service', label: 'Scheduled Service (Periodic PM)' },
-  { value: 'extra_service', label: 'Extra Service (W41X)' },
-  { value: 'pdi_delivery', label: 'PDI & Delivery (W41P / W41N)' },
-  { value: 'storage_service', label: 'Storage Operation (W30)' },
+  { value: 'storage_service', label: 'Extra Service & Storage (W41X / W30)' },
+  { value: 'pre_delivery', label: 'Pre-Delivery Inspection (PDI / W41P)' },
+  { value: 'delivery', label: 'New / Used Machine Delivery (W41N / W41U)' },
 ];
 
 const DOCUMENT_TYPE_OPTIONS = [
@@ -168,7 +168,13 @@ export default function EqpCommentsPage() {
         c.service_stage?.toLowerCase().includes(query);
 
       const matchModel = modelFilter === 'ALL' || c.machine_model === modelFilter;
-      const matchStage = stageFilter === 'ALL' || c.service_stage === stageFilter;
+      let matchStage = stageFilter === 'ALL' || c.service_stage === stageFilter;
+      if (stageFilter === 'storage_service' || stageFilter === 'extra_service') {
+        matchStage = c.service_stage === 'storage_service' || c.service_stage === 'extra_service';
+      } else if (stageFilter === 'pre_delivery' || stageFilter === 'pdi_delivery') {
+        matchStage = c.service_stage === 'pre_delivery' || c.service_stage === 'pdi_delivery';
+      }
+
       const matchStatus =
         statusFilter === 'ALL' ||
         (statusFilter === 'ACTIVE' && c.is_active) ||
@@ -431,10 +437,10 @@ export default function EqpCommentsPage() {
                       </td>
                       <td className="py-3 px-4 font-medium text-slate-700">
                         {c.service_stage === 'scheduled_service' && 'Scheduled PM'}
-                        {c.service_stage === 'extra_service' && 'Extra PM (W41X)'}
-                        {c.service_stage === 'pdi_delivery' && 'PDI / Delivery'}
-                        {c.service_stage === 'storage_service' && 'Storage (W30)'}
-                        {!['scheduled_service', 'extra_service', 'pdi_delivery', 'storage_service'].includes(c.service_stage) &&
+                        {(c.service_stage === 'storage_service' || c.service_stage === 'extra_service') && 'Extra / Storage PM (W41X/W30)'}
+                        {(c.service_stage === 'pre_delivery' || c.service_stage === 'pdi_delivery') && 'Pre-Delivery (PDI)'}
+                        {c.service_stage === 'delivery' && 'Delivery (W41N)'}
+                        {!['scheduled_service', 'extra_service', 'pdi_delivery', 'storage_service', 'pre_delivery', 'delivery'].includes(c.service_stage) &&
                           c.service_stage}
                       </td>
                       <td className="py-3 px-4 text-slate-800 font-normal leading-relaxed">

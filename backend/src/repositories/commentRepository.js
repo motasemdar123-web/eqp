@@ -17,8 +17,14 @@ async function findAll(filters = {}) {
   }
 
   if (filters.serviceStage && filters.serviceStage !== 'ALL') {
-    params.push(filters.serviceStage);
-    conditions.push(`service_stage = $${params.length}`);
+    if (filters.serviceStage === 'storage_service' || filters.serviceStage === 'extra_service') {
+      conditions.push(`service_stage IN ('storage_service', 'extra_service')`);
+    } else if (filters.serviceStage === 'pre_delivery' || filters.serviceStage === 'pdi_delivery') {
+      conditions.push(`service_stage IN ('pre_delivery', 'pdi_delivery')`);
+    } else {
+      params.push(filters.serviceStage);
+      conditions.push(`service_stage = $${params.length}`);
+    }
   }
 
   if (filters.isActive !== undefined && filters.isActive !== null && filters.isActive !== 'ALL') {
@@ -66,17 +72,26 @@ async function findForReport({ machineModel, documentType, serviceStage }) {
     return findAll();
   }
 
+  const isStorageOrExtra = serviceStage === 'storage_service' || serviceStage === 'extra_service';
+  const stageCondition = isStorageOrExtra
+    ? `service_stage IN ('storage_service', 'extra_service')`
+    : `service_stage = $3`;
+
+  const queryParams = isStorageOrExtra
+    ? [machineModel, documentType]
+    : [machineModel, documentType, serviceStage];
+
   const result = await db.query(
     `
       SELECT *
       FROM ${table}
       WHERE machine_model = $1
         AND document_type = $2
-        AND service_stage = $3
+        AND ${stageCondition}
         AND is_active = true
       ORDER BY id
     `,
-    [machineModel, documentType, serviceStage]
+    queryParams
   );
 
   return result.rows;
