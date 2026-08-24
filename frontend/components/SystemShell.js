@@ -15,6 +15,7 @@ const navItems = [
   { href: '/management/parts-inquiry', label: 'Spare Parts', icon: 'parts' },
   { href: '/workspace', label: 'Workspace', icon: 'workspace' },
   { href: '/eqp', label: 'EQP Module', icon: 'hub' },
+  { href: '/media', label: 'Media Corner', icon: 'media' },
   { href: '/japanese', label: 'Japanese Corner', icon: 'japanese' },
 ];
 
@@ -102,6 +103,12 @@ const iconPaths = {
       <path d="M4 6h16M7 6v14M17 6v14M2 10h20M9 14h6" />
     </>
   ),
+  media: (
+    <>
+      <polygon points="23 7 16 12 23 17 23 7" />
+      <rect x="1" y="5" width="15" height="14" rx="2" ry="2" />
+    </>
+  ),
   mobile: (
     <>
       <rect x="5" y="2" width="14" height="20" rx="2" ry="2" />
@@ -152,6 +159,7 @@ const COMMAND_ITEMS = [
   { id: 'nav-parts-inquiry', title: 'Spare Parts Hub & Emergency Orders', subtitle: 'Komatsu PDX bulk stock inquiry, Emergency Orders (EO) batching, machine fleet matching', href: '/management/parts-inquiry', category: 'Navigation', badge: 'Spare Parts' },
   { id: 'nav-workspace', title: 'Engineering Whiteboard', subtitle: 'Miro-grade canvas, 5-whys, maintenance templates', href: '/workspace', category: 'Navigation', badge: 'Canvas' },
   { id: 'nav-eqp', title: 'EQP Module Hub', subtitle: 'Certified reports, machines register & lifecycle', href: '/eqp', category: 'Navigation', badge: 'EQP' },
+  { id: 'nav-media', title: 'Media Corner & Social Studio', subtitle: 'Plan social media campaigns, production briefs, and previews for FB, IG & LinkedIn', href: '/media', category: 'Navigation', badge: 'Creative' },
   { id: 'nav-eqp-upload', title: 'EQP Care Daily Operation Dispatch', subtitle: 'Automate machine report uploads to Komatsu Equipment Care E0295/E0904 portal', href: '/eqp/upload', category: 'Navigation', badge: 'EQP Care' },
   { id: 'nav-japanese', title: 'Japanese Learning Hub', subtitle: 'JLPT N5 & N4 active recall, kanji dojo & audio exams', href: '/japanese', category: 'Navigation', badge: 'Language' },
   { id: 'nav-eqp-reports', title: 'EQP PDF Archive', subtitle: 'Search, batch download & manage certified PDFs', href: '/eqp/reports', category: 'Navigation', badge: 'Archive' },
