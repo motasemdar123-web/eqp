@@ -368,20 +368,31 @@ async function uploadReportToEqpCare(reportData, customCookie = null) {
     'Cookie': cookieStr,
   };
 
-  // STEP 1: Establish clean EMDW0904 tile session on Komatsu portal
-  let machineId = '3792399';
+  // STEP 1: Search the specific machine on Komatsu EQP Care to resolve its unique machineId
+  let machineId = '';
   try {
-    const tileResp = await fetch(`${BASE_EQPC_URL}/link.do?linkPath=EMDW0904tiles`, {
-      method: 'GET',
+    const searchForm = new FormData();
+    searchForm.append('subsessionID', 'defaultID');
+    searchForm.append('eqpMenuCtg', 'E');
+    searchForm.append('buttonId', 'search');
+    searchForm.append('model', String(model).trim());
+    searchForm.append('type', String(type).trim());
+    searchForm.append('stype', String(subtype).trim());
+    searchForm.append('serial', String(serialNo).trim());
+
+    const searchResp = await fetch(`${BASE_EQPC_URL}/EMDW0904.do`, {
+      method: 'POST',
       headers: defaultHeaders,
+      body: searchForm,
     });
-    const tileHtml = await tileResp.text();
-    const idMatch = tileHtml.match(/name="machineId"\s+value="([^"]+)"/i);
+
+    const searchHtml = await searchResp.text();
+    const idMatch = searchHtml.match(/name="machineId"\s+value="([^"]+)"/i);
     if (idMatch && idMatch[1]) {
       machineId = idMatch[1];
     }
-  } catch (tileErr) {
-    console.warn('[uploadReportToEqpCare] Tile session notice:', tileErr.message);
+  } catch (searchErr) {
+    console.warn('[uploadReportToEqpCare] Machine search notice:', searchErr.message);
   }
 
   // STEP 2: DWR Query to initialize rules
