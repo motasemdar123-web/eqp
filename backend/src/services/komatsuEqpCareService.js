@@ -521,9 +521,10 @@ async function uploadReportToEqpCare(reportData, customCookie = null) {
       } else {
         throw new Error(`Komatsu validation rejection: ${popupText.replace(/^\*\s*/, '')}`);
       }
-    } else if (httpStatus === 200) {
-      uploadSuccess = true;
-      komatsuMessage = 'Uploaded successfully';
+    } else if (responseText.includes('error.do') || responseText.includes('Your session')) {
+      throw new Error('Komatsu EQP Care session expired. Please refresh your browser tab on EQP Care and paste your updated session cookie.');
+    } else {
+      throw new Error('Komatsu portal did not confirm save. Please check your machine details or refresh your session.');
     }
   } catch (err) {
     throw err;
