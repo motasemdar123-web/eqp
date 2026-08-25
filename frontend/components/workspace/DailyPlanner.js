@@ -240,11 +240,12 @@ export default function DailyPlanner() {
           <Card className="p-5 border-amber-300 bg-amber-50/60 space-y-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <span className="text-amber-600 font-bold text-sm">📥 Dispatched Tasks from Supervisor</span>
-                <Badge tone="warning">{incomingTasks.length} Action Needed</Badge>
+                <span className="text-amber-800 font-semibold text-sm">Dispatched Tasks from Supervisor</span>
+                <Badge tone="warning" size="sm">{incomingTasks.length} Action Needed</Badge>
               </div>
               <p className="text-xs text-amber-800">Click accept to schedule these into your day.</p>
             </div>
+
             <div className="grid gap-3 md:grid-cols-2">
               {incomingTasks.map((inbox) => (
                 <div key={inbox.id} className="p-3 bg-white border border-amber-200 rounded-lg flex items-center justify-between gap-3 shadow-xs">
@@ -393,12 +394,13 @@ export default function DailyPlanner() {
                           </span>
                         </div>
                         <div className="flex items-center gap-3 text-[11px] text-slate-500 mt-1 font-mono">
-                          <span>⏱ Target: <strong>{task.dueTime}</strong></span>
-                          <span>⏳ Duration: <strong>{task.expectedDuration} mins</strong></span>
+                          <span>Target: <strong>{task.dueTime}</strong></span>
+                          <span>Duration: <strong>{task.expectedDuration} mins</strong></span>
                           {task.assignedEngineer && task.assignedEngineer !== 'Self' && (
-                            <span className="text-blue-600 font-sans">👤 {task.assignedEngineer}</span>
+                            <span className="text-slate-700 font-sans">{task.assignedEngineer}</span>
                           )}
                         </div>
+
                       </div>
                     </div>
 

@@ -262,10 +262,11 @@ export default function EngineeringWorkspace() {
       actions={
         <div className="flex items-center gap-2">
           <Link href="/management/daily-planner" className="ds-button ds-button-secondary ds-button-small">
-            📅 Open Daily Planner
+            Open Daily Planner
           </Link>
         </div>
       }
+
     >
       <Toast message={toast} type="info" onClose={() => setToast('')} />
       <section className="eng-workspace-shell">
@@ -1005,8 +1006,9 @@ function CreativeCanvas({ onToast, onConvertToTask }) {
                         updateObject(object.id, { votes: (object.votes || 0) + 1 });
                       }}
                     >
-                      👍 {object.votes || 0}
+                      +{object.votes || 0}
                     </button>
+
                   </div>
                   <textarea
                     className="eng-sticky-textarea"
@@ -1171,7 +1173,7 @@ function CreativeCanvas({ onToast, onConvertToTask }) {
               className="eng-context-btn eng-context-btn-primary"
               onClick={() => onConvertToTask({ title: selectedObject.text, dueTime: selectedObject.metadata?.due || '10:00' })}
             >
-              📅 Convert to Task
+              Convert to Task
             </button>
           )}
           <button

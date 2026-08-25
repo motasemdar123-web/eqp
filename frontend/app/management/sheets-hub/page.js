@@ -10,14 +10,15 @@ import Toast from '../../../components/ui/Toast';
 import { getSheetsManifest, getSheetData } from '../../../lib/api';
 
 const CATEGORIES = [
-  { id: 'ALL', label: 'All 34 Sheets', count: 34, icon: '📂' },
-  { id: 'Parts & Warehouse', label: 'Parts & SAP', count: 7, icon: '📦' },
-  { id: 'Fleet & Operations', label: 'Fleet & Operations', count: 12, icon: '🚜' },
-  { id: 'Workshop & Vehicles', label: 'Workshop & Fleet', count: 5, icon: '🚗' },
-  { id: 'Workforce & Management', label: 'Workforce & KPIs', count: 6, icon: '👥' },
-  { id: 'Customers & BP', label: 'Customers & BP', count: 1, icon: '🏢' },
-  { id: 'General Reference', label: 'Reference & Links', count: 3, icon: '🔗' },
+  { id: 'ALL', label: 'All 34 Sheets', count: 34 },
+  { id: 'Parts & Warehouse', label: 'Parts & SAP', count: 7 },
+  { id: 'Fleet & Operations', label: 'Fleet & Operations', count: 12 },
+  { id: 'Workshop & Vehicles', label: 'Workshop & Fleet', count: 5 },
+  { id: 'Workforce & Management', label: 'Workforce & KPIs', count: 6 },
+  { id: 'Customers & BP', label: 'Customers & BP', count: 1 },
+  { id: 'General Reference', label: 'Reference & Links', count: 3 },
 ];
+
 
 export default function MasterSheetsHubPage() {
   const [manifest, setManifest] = useState(null);
@@ -259,15 +260,15 @@ export default function MasterSheetsHubPage() {
                       setPage(1);
                     }
                   }}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                     active
-                      ? 'bg-slate-900 text-white shadow-xs'
+                      ? 'bg-slate-900 text-white shadow-2xs'
                       : 'text-slate-700 bg-slate-100 hover:bg-slate-200'
                   }`}
                 >
-                  <span>{cat.icon}</span>
                   <span>{cat.label}</span>
                 </button>
+
               );
             })}
           </div>

@@ -10,11 +10,12 @@ import Toast from '../../../components/ui/Toast';
 import { getFleetSummary, getWorkshopAnalytics, getGovernanceAnalytics } from '../../../lib/api';
 
 const TABS = [
-  { id: 'greasing', label: 'Greasing Matrix & Site Fleet', icon: '🛢️', subtitle: '123-machine monthly compliance & site deployment' },
-  { id: 'components', label: 'Component Lifecycle & Rotations', icon: '🔄', subtitle: 'D155A-6 fan pumps & excavator cylinder health' },
-  { id: 'wear_stock', label: 'Wear Lifespans & Ripper Stock', icon: '📊', subtitle: 'Air filter benchmarks & warehouse teeth inventory' },
-  { id: 'workshop', label: 'Service Trucks, Fuel & KPIs', icon: '🚗', subtitle: '5,000 km PM countdowns, fuel logs & corporate targets' },
+  { id: 'greasing', label: 'Greasing Matrix & Site Fleet', subtitle: '123-machine monthly compliance & site deployment' },
+  { id: 'components', label: 'Component Lifecycle & Rotations', subtitle: 'D155A-6 fan pumps & excavator cylinder health' },
+  { id: 'wear_stock', label: 'Wear Lifespans & Ripper Stock', subtitle: 'Air filter benchmarks & warehouse teeth inventory' },
+  { id: 'workshop', label: 'Service Trucks, Fuel & KPIs', subtitle: '5,000 km PM countdowns, fuel logs & corporate targets' },
 ];
+
 
 const SITE_THEMES = {
   desire: { bg: 'bg-sky-100', text: 'text-sky-900', border: 'border-sky-300', dot: 'bg-sky-600' },

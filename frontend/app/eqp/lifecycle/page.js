@@ -15,6 +15,7 @@ import {
   formatLifecycleMonth,
 } from '../../../lib/eqpLifecycleData';
 import { LifecycleMilestoneProgressBar } from '../../../components/eqp/EqpCharts';
+import EqpNav from '../../../components/eqp/EqpNav';
 
 const DISMISSED_MONTHLY_GAPS_KEY = 'eqp.dismissedMonthlyGaps';
 
@@ -174,30 +175,34 @@ export default function EqpLifecyclePage() {
       description="Interactive milestone timeline, service stage progression, and monthly gap verification across the fleet."
       actions={
         <div className="flex items-center gap-2">
-          <Badge tone={generatedReports.length > 0 ? 'ready' : 'neutral'}>
-            {loadingReports ? 'Syncing...' : `⚡ ${generatedReports.length} Reports Synced`}
+          <Badge tone={generatedReports.length > 0 ? 'ready' : 'neutral'} size="sm">
+            {loadingReports ? 'Syncing...' : `${generatedReports.length} Reports Synced`}
           </Badge>
           <Button
             type="button"
             variant="secondary"
+            size="sm"
             onClick={loadReportsData}
             disabled={loadingReports}
           >
-            {loadingReports ? 'Refreshing...' : '🔄 Refresh Lifecycle'}
+            {loadingReports ? 'Refreshing...' : 'Refresh Lifecycle'}
           </Button>
         </div>
       }
     >
-      <div className="space-y-6">
+      <div className="space-y-5">
+        <EqpNav />
+
         {/* Fleet Milestone Funnel Bar */}
-        <Card className="p-5 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-white border-slate-700">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b border-slate-700/80 pb-3 mb-4">
+        <Card className="p-4 bg-slate-900 text-white border-slate-800">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b border-slate-800 pb-3 mb-3">
             <div>
-              <h3 className="text-sm font-bold text-white uppercase tracking-wider">Fleet Factory Milestone Progression</h3>
-              <p className="text-xs text-slate-400">Completion rate of standard Komatsu lifecycle intervals across {stats.total} units</p>
+              <h3 className="text-xs font-semibold text-white uppercase tracking-wider">Fleet Factory Milestone Progression</h3>
+              <p className="text-[11px] text-slate-400">Completion rate of standard Komatsu lifecycle intervals across {stats.total} units</p>
             </div>
-            <Badge tone="live">Continuous Monitoring</Badge>
+            <Badge tone="live" size="sm">Active Tracking</Badge>
           </div>
+
 
           <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 text-center">
             <div className="bg-slate-800/80 rounded-xl p-3 border border-slate-700">

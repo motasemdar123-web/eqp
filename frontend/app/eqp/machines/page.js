@@ -11,6 +11,7 @@ import { getMachineHistory, getMachines } from '../../../lib/api';
 import { getStoredPlatformSession, getStoredUser, getMatchingEngineerName } from '../../../lib/auth';
 import { FleetModelBarChart } from '../../../components/eqp/EqpCharts';
 import MachineTimelineModal from '../../../components/eqp/MachineTimelineModal';
+import EqpNav from '../../../components/eqp/EqpNav';
 
 export default function MachinesPage() {
   const [machines, setMachines] = useState([]);
@@ -123,12 +124,15 @@ export default function MachinesPage() {
         </Button>
       }
     >
-      <div className="space-y-6">
+      <div className="space-y-5">
+        <EqpNav />
+
         {error && (
           <div className="ds-alert ds-alert-error">
             <span>{error}</span>
           </div>
         )}
+
 
         {/* Fleet KPI Metrics */}
         <section className="ds-kpi-grid">

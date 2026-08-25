@@ -10,6 +10,7 @@ import { getMachines, getReports } from '../../lib/api';
 import { getStoredPlatformSession, getStoredUser } from '../../lib/auth';
 import { FleetModelBarChart, EngineerFleetDonutChart, SmrDistributionChart } from '../../components/eqp/EqpCharts';
 import MachineTimelineModal from '../../components/eqp/MachineTimelineModal';
+import EqpNav from '../../components/eqp/EqpNav';
 
 const modules = [
   {
@@ -145,67 +146,69 @@ export default function EqpModulePage() {
       title="Equipment Preventive Maintenance Hub"
       description="Command center for preventive maintenance reporting, lifecycle tracking, fleet health analytics, and automated EQP Care dispatch."
     >
-      <div className="space-y-8">
+      <div className="space-y-5">
+        <EqpNav />
+
         {/* KPI Header Bar */}
-        <section className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          <Card className="p-4 bg-gradient-to-br from-amber-500/10 via-amber-500/5 to-transparent border-amber-500/20">
+        <section className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+          <Card className="p-3.5 border-slate-200/80">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-amber-800 uppercase tracking-wider">Tracked Fleet</span>
-              <Badge tone="live">100% Synced</Badge>
+              <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Tracked Fleet</span>
+              <Badge tone="live" size="sm">Synced</Badge>
             </div>
-            <p className="text-3xl font-extrabold text-slate-900 mt-2">{loading ? '...' : stats.totalMachines}</p>
-            <p className="text-xs text-slate-500 mt-1">Active Heavy Machines</p>
+            <p className="text-xl font-semibold font-mono text-slate-900 mt-1">{loading ? '...' : stats.totalMachines}</p>
+            <p className="text-[11px] text-slate-500 mt-0.5">Active Heavy Machines</p>
           </Card>
 
-          <Card className="p-4 bg-gradient-to-br from-sky-500/10 via-sky-500/5 to-transparent border-sky-500/20">
+          <Card className="p-3.5 border-slate-200/80">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-sky-800 uppercase tracking-wider">Field Engineers</span>
-              <Badge tone="info">Assigned</Badge>
+              <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Field Engineers</span>
+              <Badge tone="info" size="sm">Assigned</Badge>
             </div>
-            <p className="text-3xl font-extrabold text-slate-900 mt-2">{loading ? '...' : stats.activeEngineers}</p>
-            <p className="text-xs text-slate-500 mt-1">Motasem, Faisal, Abdelrahman</p>
+            <p className="text-xl font-semibold font-mono text-slate-900 mt-1">{loading ? '...' : stats.activeEngineers}</p>
+            <p className="text-[11px] text-slate-500 mt-0.5">Lead Service Engineers</p>
           </Card>
 
-          <Card className="p-4 bg-gradient-to-br from-emerald-500/10 via-emerald-500/5 to-transparent border-emerald-500/20">
+          <Card className="p-3.5 border-slate-200/80">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-emerald-800 uppercase tracking-wider">Average Fleet SMR</span>
-              <Badge tone="ready">Optimal</Badge>
+              <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Average Fleet SMR</span>
+              <Badge tone="ready" size="sm">Optimal</Badge>
             </div>
-            <p className="text-3xl font-extrabold text-slate-900 mt-2">{loading ? '...' : `${stats.avgSmr} hrs`}</p>
-            <p className="text-xs text-slate-500 mt-1">Operating Hour Average</p>
+            <p className="text-xl font-semibold font-mono text-slate-900 mt-1">{loading ? '...' : `${stats.avgSmr} hrs`}</p>
+            <p className="text-[11px] text-slate-500 mt-0.5">Operating Hour Average</p>
           </Card>
 
-          <Card className="p-4 bg-gradient-to-br from-indigo-500/10 via-indigo-500/5 to-transparent border-indigo-500/20">
+          <Card className="p-3.5 border-slate-200/80">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-indigo-800 uppercase tracking-wider">Generated Archive</span>
-              <Badge tone="archived">PDF Vault</Badge>
+              <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Generated Archive</span>
+              <Badge tone="neutral" size="sm">Preserved</Badge>
             </div>
-            <p className="text-3xl font-extrabold text-slate-900 mt-2">{loading ? '...' : stats.totalReports}</p>
-            <p className="text-xs text-slate-500 mt-1">Verified Inspection Documents</p>
+            <p className="text-xl font-semibold font-mono text-slate-900 mt-1">{loading ? '...' : stats.totalReports}</p>
+            <p className="text-[11px] text-slate-500 mt-0.5">Verified PDF Reports</p>
           </Card>
         </section>
 
         {/* Fleet Distribution & Visual Charts Panel */}
-        <section className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <section className="grid grid-cols-1 lg:grid-cols-3 gap-5">
           {/* Model Distribution & Engineer Splits */}
-          <Card className="lg:col-span-2 p-5 space-y-5">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b border-slate-100 pb-3">
+          <Card className="lg:col-span-2 p-4 space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b border-slate-100 pb-2.5">
               <div>
-                <h3 className="text-base font-bold text-slate-900">Fleet Models & Engineer Allocation</h3>
-                <p className="text-xs text-slate-500">Breakdown of machine models across field service leads</p>
+                <h3 className="text-sm font-semibold text-slate-900 tracking-tight">Fleet Models & Engineer Allocation</h3>
+                <p className="text-[11px] text-slate-500">Breakdown of machine models across field service leads</p>
               </div>
-              <Badge tone="neutral">{machines.length} Total Units</Badge>
+              <Badge tone="neutral" size="sm">{machines.length} Units</Badge>
             </div>
 
             {loading ? (
-              <Skeleton className="h-40 rounded-xl" />
+              <Skeleton className="h-40 rounded-lg" />
             ) : (
-              <div className="space-y-5">
+              <div className="space-y-4">
                 {/* Fleet Model Breakdown */}
                 <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs font-bold text-slate-600 uppercase tracking-wider">Model Family Breakdown</span>
-                    <span className="text-[11px] text-slate-400">Click to inspect</span>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <span className="text-[11px] font-semibold text-slate-600 uppercase tracking-wider">Model Family Breakdown</span>
+                    <span className="text-[10px] text-slate-400">Click to inspect</span>
                   </div>
                   <FleetModelBarChart
                     machines={machines}
@@ -214,11 +217,11 @@ export default function EqpModulePage() {
                   />
                 </div>
 
-                {/* Engineer Allocation Cards */}
+                {/* Engineer Allocation */}
                 <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs font-bold text-slate-600 uppercase tracking-wider">Assigned Engineer Fleets</span>
-                    <span className="text-[11px] text-slate-400">Balanced coverage</span>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <span className="text-[11px] font-semibold text-slate-600 uppercase tracking-wider">Assigned Engineer Fleets</span>
+                    <span className="text-[10px] text-slate-400">Coverage</span>
                   </div>
                   <EngineerFleetDonutChart
                     machines={machines}
@@ -231,32 +234,29 @@ export default function EqpModulePage() {
           </Card>
 
           {/* SMR Health & Quick Action Panel */}
-          <Card className="p-5 flex flex-col justify-between space-y-5">
+          <Card className="p-4 flex flex-col justify-between space-y-4">
             <div>
-              <div className="border-b border-slate-100 pb-3 mb-4">
-                <h3 className="text-base font-bold text-slate-900">Fleet SMR Hour Distribution</h3>
-                <p className="text-xs text-slate-500">Service hour ranges across active units</p>
+              <div className="border-b border-slate-100 pb-2.5 mb-3">
+                <h3 className="text-sm font-semibold text-slate-900 tracking-tight">Fleet SMR Hour Distribution</h3>
+                <p className="text-[11px] text-slate-500">Service hour ranges across active units</p>
               </div>
 
               {loading ? (
-                <Skeleton className="h-32 rounded-xl" />
+                <Skeleton className="h-32 rounded-lg" />
               ) : (
                 <SmrDistributionChart machines={machines} />
               )}
             </div>
 
-            {/* Quick Fast-Action Launch Banner */}
-            <div className="bg-slate-900 text-white rounded-xl p-4 space-y-3">
-              <div className="flex items-center gap-2.5">
-                <span className="text-xl">⚡</span>
-                <div>
-                  <h4 className="text-sm font-bold text-white">Fast Report Generation</h4>
-                  <p className="text-[11px] text-slate-400">Generate 1-click PM reports for your fleet</p>
-                </div>
+            {/* Fast Report Action Banner */}
+            <div className="bg-slate-900 text-white rounded-lg p-3.5 space-y-2.5">
+              <div>
+                <h4 className="text-xs font-semibold text-white">Batch PM Report Generation</h4>
+                <p className="text-[11px] text-slate-400">Generate certified inspection PDFs for your fleet</p>
               </div>
               <Link
                 href="/eqp/generate-reports"
-                className="block w-full py-2 text-center text-xs font-bold rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 transition-colors shadow-sm"
+                className="block w-full py-1.5 text-center text-xs font-semibold rounded-md bg-amber-500 hover:bg-amber-400 text-slate-950 transition-colors shadow-2xs"
               >
                 Open Report Builder →
               </Link>
@@ -264,33 +264,34 @@ export default function EqpModulePage() {
           </Card>
         </section>
 
+
         {/* EQP Module Tiles */}
-        <section className="space-y-4">
+        <section className="space-y-3">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-lg font-bold text-slate-900 tracking-tight">EQP Functional Modules</h3>
-              <p className="text-xs text-slate-500">Access specialized tools for reporting, lifecycle auditing, and EQP Care syncing</p>
+              <h3 className="text-sm font-semibold text-slate-900 tracking-tight">EQP Functional Modules</h3>
+              <p className="text-[11px] text-slate-500">Access tools for reporting, lifecycle auditing, and EQP Care syncing</p>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
             {modules.map((module) => (
               <Link key={module.title} href={module.href} className="group block">
-                <Card className={`h-full p-5 border transition-all duration-200 hover:shadow-md hover:border-slate-300 hover:-translate-y-0.5 bg-gradient-to-br ${module.color}`}>
+                <Card className="h-full p-4 border border-slate-200/80 hover:border-slate-300 hover:shadow-2xs transition-all bg-white">
                   <div className="flex items-start justify-between gap-3">
-                    <div className="flex items-center gap-3.5">
-                      <div className={`p-2.5 rounded-xl shadow-xs ${module.iconColor}`}>
+                    <div className="flex items-center gap-3">
+                      <div className={`p-2 rounded-md ${module.iconColor}`}>
                         {module.icon}
                       </div>
                       <div>
-                        <h4 className="text-base font-bold text-slate-900 group-hover:text-amber-600 transition-colors">
+                        <h4 className="text-xs font-semibold text-slate-900 group-hover:text-amber-700 transition-colors">
                           {module.title}
                         </h4>
-                        <Badge tone={module.tone}>{module.status}</Badge>
+                        <Badge tone={module.tone} size="sm">{module.status}</Badge>
                       </div>
                     </div>
                   </div>
-                  <p className="text-xs text-slate-600 leading-relaxed mt-3.5">
+                  <p className="text-[11px] text-slate-500 leading-relaxed mt-2.5">
                     {module.description}
                   </p>
                 </Card>
@@ -300,6 +301,7 @@ export default function EqpModulePage() {
         </section>
 
         {/* Recent Reports Timeline Feed */}
+
         {recentReports.length > 0 && (
           <section className="space-y-4">
             <div className="flex items-center justify-between">

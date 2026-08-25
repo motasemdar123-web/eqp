@@ -169,6 +169,7 @@ export default function TechnicianAppPage() {
   const [transcribingKey, setTranscribingKey] = useState('');
   const [message, setMessage] = useState('');
   const [online, setOnline] = useState(true);
+  const [highContrast, setHighContrast] = useState(false);
   const mediaRecorderRef = useRef(null);
   const recordingChunksRef = useRef([]);
   const recordingMetaRef = useRef(null);
@@ -622,7 +623,7 @@ export default function TechnicianAppPage() {
   }
 
   return (
-    <main dir="rtl" className="tech-app">
+    <main dir="rtl" className={highContrast ? 'tech-app tech-high-contrast' : 'tech-app'}>
       <header className="tech-app-header">
         <div className="tech-app-header-inner">
           <div className="tech-identity">
@@ -633,6 +634,13 @@ export default function TechnicianAppPage() {
             </div>
           </div>
           <div className="tech-header-actions">
+            <button
+              type="button"
+              onClick={() => setHighContrast((prev) => !prev)}
+              className="px-2.5 py-1 text-xs rounded border border-slate-300 bg-white text-slate-800 font-medium hover:bg-slate-50 cursor-pointer"
+            >
+              {highContrast ? 'الوضع القياسي' : 'وضع الشمس'}
+            </button>
             <span className={online ? 'tech-connectivity tech-online' : 'tech-connectivity tech-offline'}>
               {online ? 'متصل' : 'بدون اتصال'}
             </span>
@@ -640,6 +648,7 @@ export default function TechnicianAppPage() {
           </div>
         </div>
       </header>
+
 
       <section className="tech-app-content">
         {!selectedTask && (

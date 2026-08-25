@@ -7,6 +7,7 @@ import Card from '../../../components/ui/Card';
 import Badge from '../../../components/ui/Badge';
 import EmptyState from '../../../components/ui/EmptyState';
 import Button from '../../../components/ui/Button';
+import EqpNav from '../../../components/eqp/EqpNav';
 import {
   getComments,
   createComment,
@@ -205,33 +206,35 @@ export default function EqpCommentsPage() {
             href="/eqp/generate-reports"
             className="ds-button ds-button-secondary text-xs py-1.5 px-3 font-semibold"
           >
-            📄 Report Builder
+            Report Builder
           </Link>
           <Button
             type="button"
             variant="primary"
             onClick={openAddModal}
-            className="!bg-amber-500 hover:!bg-amber-400 !text-slate-950 !font-bold"
+            size="sm"
           >
             + Add Remark
           </Button>
         </div>
       }
     >
-      <div className="space-y-6">
+      <div className="space-y-5">
+        <EqpNav />
+
         {/* Toast Alert */}
         {toast && (
           <div
-            className={`fixed top-4 right-4 z-50 rounded-lg p-4 shadow-lg text-xs font-semibold flex items-center gap-2 transition-all ${
+            className={`fixed top-4 right-4 z-50 rounded-lg p-3.5 shadow-lg text-xs font-semibold flex items-center gap-2 transition-all ${
               toast.tone === 'success'
                 ? 'bg-emerald-50 text-emerald-800 border border-emerald-200'
                 : 'bg-rose-50 text-rose-800 border border-rose-200'
             }`}
           >
-            <span>{toast.tone === 'success' ? '✅' : '❌'}</span>
             <span>{toast.message}</span>
           </div>
         )}
+
 
         {/* KPI Grid */}
         <section className="ds-kpi-grid">
@@ -455,7 +458,8 @@ export default function EqpCommentsPage() {
       {/* Edit/Add Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-4 backdrop-blur-xs">
-          <form onSubmit={handleSave} className="bg-white rounded-2xl shadow-2xl max-w-lg w-full border border-slate-200 overflow-hidden">
+          <form onSubmit={handleSave} className="bg-white rounded-xl shadow-2xl max-w-lg w-full border border-slate-200 overflow-hidden">
+
             <div className="p-5 bg-slate-900 text-white flex items-center justify-between">
               <h3 className="text-base font-bold">{editingComment ? 'Edit Inspection Remark' : 'Add Inspection Remark'}</h3>
               <button

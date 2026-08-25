@@ -1,20 +1,37 @@
 'use client';
 
-import React from 'react';
+import React, { createContext, useContext } from 'react';
 
-export function Table({ children, className = '', ...props }) {
+const TableContext = createContext({ density: 'standard' });
+
+export function Table({
+  children,
+  className = '',
+  containerClassName = '',
+  density = 'standard', // 'compact' | 'standard' | 'comfortable'
+  ...props
+}) {
   return (
-    <div className="w-full overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-xs">
-      <table className={`w-full caption-bottom text-xs text-left ${className}`} {...props}>
-        {children}
-      </table>
-    </div>
+    <TableContext.Provider value={{ density }}>
+      <div className={`w-full overflow-x-auto rounded-lg border border-slate-200/80 bg-white shadow-2xs ${containerClassName}`}>
+        <table className={`w-full caption-bottom text-xs sm:text-sm text-left ${className}`} {...props}>
+          {children}
+        </table>
+      </div>
+    </TableContext.Provider>
   );
 }
 
-export function TableHeader({ children, className = '', ...props }) {
+export function TableHeader({ children, className = '', sticky = false, ...props }) {
+  const stickyStyle = sticky
+    ? 'sticky top-0 z-10 bg-slate-50/95 backdrop-blur-xs shadow-[0_1px_0_0_rgba(226,232,240,1)]'
+    : 'bg-slate-50/90';
+
   return (
-    <thead className={`bg-slate-900 text-white text-[11px] uppercase tracking-wider font-bold ${className}`} {...props}>
+    <thead
+      className={`text-slate-600 text-[11px] uppercase tracking-wider font-semibold border-b border-slate-200 ${stickyStyle} ${className}`}
+      {...props}
+    >
       {children}
     </thead>
   );
@@ -28,10 +45,19 @@ export function TableBody({ children, className = '', ...props }) {
   );
 }
 
-export function TableRow({ children, className = '', isClickable = false, ...props }) {
+export function TableRow({
+  children,
+  className = '',
+  isClickable = false,
+  isSelected = false,
+  ...props
+}) {
+  const selectedStyle = isSelected ? 'bg-amber-50/50' : '';
+  const clickableStyle = isClickable ? 'cursor-pointer hover:bg-slate-50/90' : 'hover:bg-slate-50/60';
+
   return (
     <tr
-      className={`transition-colors hover:bg-slate-50/80 ${isClickable ? 'cursor-pointer' : ''} ${className}`}
+      className={`transition-colors ${selectedStyle} ${clickableStyle} ${className}`}
       {...props}
     >
       {children}
@@ -39,17 +65,63 @@ export function TableRow({ children, className = '', isClickable = false, ...pro
   );
 }
 
-export function TableHead({ children, className = '', ...props }) {
+export function TableHead({
+  children,
+  className = '',
+  isNumeric = false,
+  sortDirection = null, // 'asc' | 'desc' | null
+  onSort = null,
+  ...props
+}) {
+  const { density } = useContext(TableContext);
+
+  const heightStyles = {
+    compact: 'h-8 px-3 py-1 text-[10px]',
+    standard: 'h-9 px-3.5 py-1.5 text-[11px]',
+    comfortable: 'h-11 px-4 py-2.5 text-xs',
+  };
+
+  const sortableStyle = onSort ? 'cursor-pointer select-none hover:text-slate-900' : '';
+
   return (
-    <th className={`h-10 px-4 text-left align-middle font-bold text-white whitespace-nowrap ${className}`} {...props}>
-      {children}
+    <th
+      aria-sort={
+        sortDirection ? (sortDirection === 'asc' ? 'ascending' : 'descending') : undefined
+      }
+      onClick={onSort}
+      className={`align-middle font-semibold text-slate-600 whitespace-nowrap ${heightStyles[density] || heightStyles.standard} ${
+        isNumeric ? 'text-right' : 'text-left'
+      } ${sortableStyle} ${className}`}
+      {...props}
+    >
+      <div className={`inline-flex items-center gap-1 ${isNumeric ? 'justify-end' : 'justify-start'}`}>
+        <span>{children}</span>
+        {sortDirection && (
+          <span className="text-[10px] text-slate-400 font-mono">
+            {sortDirection === 'asc' ? '▲' : '▼'}
+          </span>
+        )}
+      </div>
     </th>
   );
 }
 
-export function TableCell({ children, className = '', ...props }) {
+export function TableCell({ children, className = '', isNumeric = false, ...props }) {
+  const { density } = useContext(TableContext);
+
+  const paddingStyles = {
+    compact: 'px-3 py-1.5 text-xs',
+    standard: 'px-3.5 py-2.5 text-xs sm:text-sm',
+    comfortable: 'px-4 py-3.5 text-sm',
+  };
+
   return (
-    <td className={`p-4 align-middle text-slate-800 leading-normal ${className}`} {...props}>
+    <td
+      className={`align-middle text-slate-800 leading-normal ${paddingStyles[density] || paddingStyles.standard} ${
+        isNumeric ? 'text-right font-mono tabular-nums' : ''
+      } ${className}`}
+      {...props}
+    >
       {children}
     </td>
   );

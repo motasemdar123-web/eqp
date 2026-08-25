@@ -10,12 +10,13 @@ import Toast from '../../../components/ui/Toast';
 import { getWorkshopAnalytics, getGovernanceAnalytics } from '../../../lib/api';
 
 const TABS = [
-  { id: 'vehicles', label: 'Service Vehicles Fleet', icon: '🚗', desc: '5,000 km PM schedules, daily usage rates & maintenance countdowns' },
-  { id: 'fuel', label: 'Fuel Logs & Department Ledger', icon: '⛽', desc: 'Transaction logs, quantities, unit prices & department cost allocations' },
-  { id: 'equipment', label: 'Generator & Workshop Tools', icon: '⚡', desc: 'Diesel generator runtime hour meter & heavy workshop tools master' },
-  { id: 'warranty', label: 'Battery & Parts Warranty', icon: '🛡️', desc: 'Heavy equipment battery serials, supplier invoices & warranty terms' },
-  { id: 'targets', label: 'Corporate KPI Scorecards', icon: '🎯', desc: 'FY26 cross-functional targets, 1H progress & PIC milestones' },
+  { id: 'vehicles', label: 'Service Vehicles Fleet', desc: '5,000 km PM schedules, daily usage rates & maintenance countdowns' },
+  { id: 'fuel', label: 'Fuel Logs & Department Ledger', desc: 'Transaction logs, quantities, unit prices & department cost allocations' },
+  { id: 'equipment', label: 'Generator & Workshop Tools', desc: 'Diesel generator runtime hour meter & heavy workshop tools master' },
+  { id: 'warranty', label: 'Battery & Parts Warranty', desc: 'Heavy equipment battery serials, supplier invoices & warranty terms' },
+  { id: 'targets', label: 'Corporate KPI Scorecards', desc: 'FY26 cross-functional targets, 1H progress & PIC milestones' },
 ];
+
 
 export default function WorkshopAndGovernancePage() {
   const [activeTab, setActiveTab] = useState('vehicles');

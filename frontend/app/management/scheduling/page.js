@@ -1,17 +1,29 @@
-﻿'use client';
+'use client';
 
 /* eslint-disable @next/next/no-img-element */
 
 import { useEffect, useMemo, useState } from 'react';
 import SystemShell from '../../../components/SystemShell';
-import Card from '../../../components/ui/Card';
+import Card, { CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '../../../components/ui/Card';
 import Badge from '../../../components/ui/Badge';
 import Button from '../../../components/ui/Button';
+import Input, { Textarea, Select, Label } from '../../../components/ui/Input';
+import Field from '../../../components/ui/Field';
+import PageHeader from '../../../components/ui/PageHeader';
+import SectionHeader from '../../../components/ui/SectionHeader';
+import MetricCard from '../../../components/ui/MetricCard';
+import EmptyState from '../../../components/ui/EmptyState';
+import Toast from '../../../components/ui/Toast';
+import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '../../../components/ui/Table';
 import { getMicrosoftLoginUrl } from '../../../lib/api';
 import { getTaskDisplayStatus } from '../../../lib/taskDisplay';
 
 const API_BASE = process.env.NEXT_PUBLIC_BACKEND_URL || process.env.NEXT_PUBLIC_API_BASE_URL || 'https://eqp-1.onrender.com';
 const APP_TIME_ZONE = 'Asia/Riyadh';
+
+const TIMELINE_START_HOUR = 6; // 06:00
+const TIMELINE_END_HOUR = 20;   // 20:00
+const TIMELINE_TOTAL_HOURS = TIMELINE_END_HOUR - TIMELINE_START_HOUR; // 14 hours
 
 const emptyBoard = {
   kpis: {},
@@ -50,8 +62,8 @@ function formatDate(value) {
   return new Date(value).toISOString().slice(0, 10);
 }
 
-function formatDayLabel(value) {
-  return new Intl.DateTimeFormat('en', {
+function formatDayHeader(value) {
+  return new Intl.DateTimeFormat('en-US', {
     weekday: 'short',
     month: 'short',
     day: 'numeric',
@@ -91,7 +103,6 @@ function normalizeChecklistForSave(checklist) {
 
 function isTechnicianSchedulable(technician) {
   if (!technician?.isAvailable) return false;
-
   const scheduleStatus = technician.schedules?.[0]?.status;
   return !scheduleStatus || ['PLANNED', 'CONFIRMED', 'ON_DUTY'].includes(scheduleStatus);
 }
@@ -103,9 +114,9 @@ function emptyTaskForm(workDate = today()) {
     task: '',
     description: '',
     checklist: [{ id: 'point-1', text: '', required: true }],
-    machineModel: '',
+    machineModel: 'PC400-8R',
     manualAdvice: null,
-    location: '',
+    location: 'Desire Site',
     startsAt: '08:00',
     endsAt: '16:00',
     notes: '',
@@ -113,7 +124,24 @@ function emptyTaskForm(workDate = today()) {
   };
 }
 
-export default function SchedulingPage() {
+function parseTimeToMinutes(timeStr) {
+  if (!timeStr) return 480; // 08:00 default
+  const parts = String(timeStr).split(':');
+  const h = parseInt(parts[0], 10) || 0;
+  const m = parseInt(parts[1], 10) || 0;
+  return h * 60 + m;
+}
+
+function statusTone(status) {
+  const normalized = String(status || '').toLowerCase();
+  if (normalized.includes('complete') || normalized.includes('done')) return 'completed';
+  if (normalized.includes('cancel') || normalized.includes('critical') || normalized.includes('overdue')) return 'critical';
+  if (normalized.includes('plan') || normalized.includes('pending') || normalized.includes('progress')) return 'pending';
+  if (normalized.includes('confirm') || normalized.includes('active') || normalized.includes('live')) return 'active';
+  return 'neutral';
+}
+
+export default function DispatchAndSchedulingPage() {
   const initialToday = useMemo(() => today(), []);
   const [token, setToken] = useState('');
   const [date, setDate] = useState(initialToday);
@@ -121,10 +149,18 @@ export default function SchedulingPage() {
   const [historyTo, setHistoryTo] = useState(initialToday);
   const [board, setBoard] = useState(emptyBoard);
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState('');
+  const [toast, setToast] = useState(null);
+  const [viewTab, setViewTab] = useState('timeline'); // 'timeline' | 'table' | 'manuals'
+
+  // Task Drawer & Editing
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [editingTaskId, setEditingTaskId] = useState('');
   const [taskForm, setTaskForm] = useState(() => emptyTaskForm(initialToday));
+  const [techSearch, setTechSearch] = useState('');
   const [viewingTask, setViewingTask] = useState(null);
+
+
+  // Shop Manuals state
   const [manualUpload, setManualUpload] = useState({
     machineModel: '',
     title: '',
@@ -138,80 +174,71 @@ export default function SchedulingPage() {
   const [manualBusy, setManualBusy] = useState(false);
   const [manualAssistant, setManualAssistant] = useState(emptyManualAssistant);
 
-  const headers = useMemo(() => ({
-    'Content-Type': 'application/json',
-    Authorization: `Bearer ${token}`,
-  }), [token]);
+  const headers = useMemo(
+    () => ({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    }),
+    [token]
+  );
 
   async function request(path, options = {}) {
     const isFormData = typeof FormData !== 'undefined' && options.body instanceof FormData;
     const response = await fetch(`${API_BASE}${path}`, {
       ...options,
       headers: {
-        ...(isFormData ? { Authorization: headers.Authorization } : headers),
+        ...(isFormData ? {} : headers),
         ...(options.headers || {}),
+        Authorization: `Bearer ${token}`,
       },
     });
+
     const data = await response.json().catch(() => ({}));
     if (!response.ok) {
-      throw new Error(data.message || data.error || 'Request failed');
+      throw new Error(data.message || data.error || 'Scheduling request failed');
     }
     return data;
-  }
-
-  async function loadBoard(nextDate = date, nextFrom = historyFrom, nextTo = historyTo) {
-    if (!token) return;
-    setLoading(true);
-    setMessage('');
-    try {
-      const params = new URLSearchParams({
-        date: nextDate,
-        historyFrom: nextFrom,
-        historyTo: nextTo,
-      });
-      const data = await request(`/api/scheduling/board?${params.toString()}`);
-      const nextBoard = data.board || emptyBoard;
-      if ((nextBoard.technicians || []).length === 0) {
-        const technicianData = await request('/api/technicians');
-        nextBoard.technicians = technicianData.technicians || [];
-        nextBoard.kpis = {
-          ...(nextBoard.kpis || {}),
-          technicians: nextBoard.technicians.length,
-        };
-      }
-      setBoard(nextBoard);
-      setDate(nextDate);
-      setHistoryFrom(nextFrom);
-      setHistoryTo(nextTo);
-      setTaskForm((current) => ({ ...current, workDate: nextDate }));
-    } catch (error) {
-      setMessage(error.message);
-    } finally {
-      setLoading(false);
-    }
   }
 
   function signInWithMicrosoft() {
     window.location.href = getMicrosoftLoginUrl('/management/scheduling');
   }
 
-  function addTechnician(technicianId) {
-    setTaskForm((current) => {
-      if (current.technicianIds.includes(technicianId)) return current;
-      return {
-        ...current,
-        technicianIds: [...current.technicianIds, technicianId],
-      };
-    });
-  }
+  async function loadBoard(selectedDate = date, from = historyFrom, to = historyTo) {
+    if (!token) return;
+    setLoading(true);
+    try {
+      const params = new URLSearchParams({
+        date: selectedDate,
+        historyFrom: from,
+        historyTo: to,
+      });
 
-  function removeTechnician(technicianId) {
-    setTaskForm((current) => {
-      return {
-        ...current,
-        technicianIds: current.technicianIds.filter((id) => id !== technicianId),
-      };
-    });
+      const data = await request(`/api/scheduling/board?${params.toString()}`);
+      let technicians = data.board?.technicians || [];
+      if (!technicians.length) {
+        try {
+          const technicianData = await request('/api/technicians');
+          technicians = technicianData.technicians || [];
+        } catch {
+          // ignore fallback error
+        }
+      }
+
+      setBoard({
+        kpis: data.board?.kpis || {},
+        technicians,
+        tasks: data.board?.tasks || [],
+        history: data.board?.history || { tasks: [] },
+      });
+      setDate(selectedDate);
+      setHistoryFrom(from);
+      setHistoryTo(to);
+    } catch (error) {
+      setToast({ type: 'error', message: error.message || 'Failed to load scheduling board.' });
+    } finally {
+      setLoading(false);
+    }
   }
 
   async function loadManuals() {
@@ -219,428 +246,8 @@ export default function SchedulingPage() {
     try {
       const data = await request('/api/shop-manuals');
       setManuals(data.manuals || []);
-    } catch (error) {
-      setMessage(error.message);
-    }
-  }
-
-  function updateChecklistItem(index, patch) {
-    setTaskForm((current) => ({
-      ...current,
-      checklist: (current.checklist || [newChecklistItem(0)]).map((item, itemIndex) => (
-        itemIndex === index ? { ...item, ...patch } : item
-      )),
-    }));
-  }
-
-  function addChecklistItem() {
-    setTaskForm((current) => ({
-      ...current,
-      checklist: [
-        ...(current.checklist || []),
-        newChecklistItem((current.checklist || []).length),
-      ],
-    }));
-  }
-
-  function removeChecklistItem(index) {
-    setTaskForm((current) => {
-      const nextItems = (current.checklist || []).filter((_, itemIndex) => itemIndex !== index);
-      return {
-        ...current,
-        checklist: nextItems.length ? nextItems : [newChecklistItem(0)],
-      };
-    });
-  }
-
-  function resetTaskForm(workDate = date) {
-    setEditingTaskId('');
-    setTaskForm(emptyTaskForm(workDate));
-    setManualAssistant(emptyManualAssistant);
-  }
-
-  function editTask(task) {
-    setEditingTaskId(task.id);
-    setManualAssistant(emptyManualAssistant);
-    setTaskForm({
-      technicianIds: (task.technicians || []).map((technician) => technician.id),
-      workDate: formatDate(task.workDate),
-      task: task.task || '',
-      description: task.description || '',
-      checklist: normalizeChecklistForForm(task.checklist),
-      machineModel: task.machineModel || '',
-      manualAdvice: task.manualAdvice || null,
-      location: task.location || '',
-      startsAt: task.startsAt || '08:00',
-      endsAt: task.endsAt || '16:00',
-      notes: task.notes || '',
-      status: task.status || 'CONFIRMED',
-    });
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-
-  async function deleteTask(task) {
-    const confirmed = window.confirm(`Delete "${task.task}" from ${formatDate(task.workDate)}?`);
-    if (!confirmed) return;
-
-    setLoading(true);
-    setMessage('');
-    try {
-      await request(`/api/scheduling/tasks/${task.id}`, { method: 'DELETE' });
-      setMessage('Daily schedule task deleted');
-      if (editingTaskId === task.id) resetTaskForm(date);
-      await loadBoard(date, historyFrom, historyTo);
-    } catch (error) {
-      setMessage(error.message);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  async function saveDailyTask(event) {
-    event.preventDefault();
-    setLoading(true);
-    setMessage('');
-    try {
-      const payload = {
-        ...taskForm,
-        checklist: normalizeChecklistForSave(taskForm.checklist),
-      };
-      await request(editingTaskId ? `/api/scheduling/tasks/${editingTaskId}` : '/api/scheduling/tasks', {
-        method: editingTaskId ? 'PATCH' : 'POST',
-        body: JSON.stringify(payload),
-      });
-      setMessage(editingTaskId ? 'Daily schedule task updated' : 'Daily schedule task saved');
-      resetTaskForm(taskForm.workDate);
-      await loadBoard(taskForm.workDate, historyFrom, historyTo);
-    } catch (error) {
-      setMessage(error.message);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  function handleManualFile(file) {
-    if (!file) return;
-    setManualUpload((current) => ({
-      ...current,
-      title: current.title || file.name.replace(/\.pdf$/i, ''),
-      file,
-    }));
-  }
-
-  async function uploadManual() {
-    setManualBusy(true);
-    setMessage('');
-    try {
-      const form = new FormData();
-      form.set('machineModel', manualUpload.machineModel);
-      form.set('title', manualUpload.title);
-      form.set('manualType', manualUpload.manualType);
-      form.set('serialRange', manualUpload.serialRange);
-      form.set('revision', manualUpload.revision);
-      form.set('language', manualUpload.language);
-      form.set('manual', manualUpload.file);
-
-      await request('/api/shop-manuals/openai-upload', {
-        method: 'POST',
-        headers: {},
-        body: form,
-      });
-      setMessage('Shop manual uploaded to OpenAI. Press Refresh Manuals until OpenAI status becomes COMPLETED.');
-      setManualUpload({
-        machineModel: manualUpload.machineModel,
-        title: '',
-        manualType: manualUpload.manualType,
-        serialRange: '',
-        revision: '',
-        language: manualUpload.language,
-        file: null,
-      });
-      await loadManuals();
-    } catch (error) {
-      setMessage(error.message);
-    } finally {
-      setManualBusy(false);
-    }
-  }
-
-  async function deleteManual(manual) {
-    const confirmed = window.confirm(`Delete "${manual.title}" and its indexes?`);
-    if (!confirmed) return;
-
-    setManualBusy(true);
-    setMessage('');
-    try {
-      await request(`/api/shop-manuals/${manual.id}`, { method: 'DELETE' });
-      setMessage('Shop manual and indexes deleted');
-      await loadManuals();
-    } catch (error) {
-      setMessage(error.message);
-    } finally {
-      setManualBusy(false);
-    }
-  }
-
-  function applyManualAdviceToChecklist(advice) {
-    const procedure = normalizeChecklistForForm(advice?.procedureSummary || []);
-    if (!procedure.length) {
-      setMessage('No procedure steps were found to apply as work points.');
-      return;
-    }
-
-    setTaskForm((current) => ({
-      ...current,
-      checklist: procedure,
-    }));
-    setMessage('Manual procedure applied to the work points. Review before saving.');
-  }
-
-  async function runManualTaskHelper() {
-    setManualBusy(true);
-    setMessage('');
-    setManualAssistant({
-      ...emptyManualAssistant,
-      phase: 'generating',
-    });
-    try {
-      const payload = {
-        machineModel: taskForm.machineModel,
-        task: taskForm.task,
-        description: taskForm.description,
-        notes: taskForm.notes,
-      };
-      let data;
-      try {
-        data = await request('/api/scheduling/task-helper', {
-          method: 'POST',
-          body: JSON.stringify(payload),
-        });
-      } catch (helperError) {
-        if (!/route not found|not found|cannot post/i.test(helperError.message || '')) {
-          throw helperError;
-        }
-
-        const optionsData = await request('/api/shop-manuals/suggest-options', {
-          method: 'POST',
-          body: JSON.stringify(payload),
-        });
-        const options = optionsData.options || [];
-        const selectedManualCandidateIds = options[0]?.id ? [options[0].id] : [];
-        const toolsData = selectedManualCandidateIds.length
-          ? await request('/api/shop-manuals/suggest-tools', {
-            method: 'POST',
-            body: JSON.stringify({
-              ...payload,
-              selectedManualCandidateIds,
-              manualOptions: options,
-              interpretedTask: optionsData.interpretedTask,
-              interpretationNotes: optionsData.interpretationNotes,
-              searchPhrases: optionsData.searchPhrases,
-            }),
-          })
-          : {
-            suggestion: {
-              requiredTools: [],
-              ppe: [],
-              consumables: [],
-              warnings: ['No close indexed section was found. Refine the task wording or upload a more specific manual.'],
-              procedureSummary: [],
-              sources: [],
-              confidence: 'low',
-              generatedBy: optionsData.generatedBy || 'manual-search',
-              interpretedTask: optionsData.interpretedTask || payload.task,
-              interpretationNotes: optionsData.interpretationNotes || [],
-              searchPhrases: optionsData.searchPhrases || [],
-              alternatives: options,
-              evidence: {},
-            },
-          };
-
-        data = {
-          ...optionsData,
-          options,
-          selectedManualCandidateIds,
-          suggestion: {
-            ...toolsData.suggestion,
-            interpretationNotes: [
-              'Used compatibility mode because the backend task-helper route is not deployed yet.',
-              ...(toolsData.suggestion?.interpretationNotes || []),
-            ],
-          },
-        };
-      }
-      const options = data.options || [];
-      const selectedIds = data.selectedManualCandidateIds || (options[0]?.id ? [options[0].id] : []);
-      setManualAssistant({
-        phase: 'done',
-        options,
-        selectedIds,
-        context: {
-          interpretedTask: data.suggestion?.interpretedTask,
-          interpretationNotes: data.suggestion?.interpretationNotes || [],
-          searchPhrases: data.suggestion?.searchPhrases || [],
-          confidence: data.suggestion?.confidence,
-          generatedBy: data.suggestion?.generatedBy,
-        },
-        error: '',
-      });
-      setTaskForm((current) => ({ ...current, manualAdvice: data.suggestion }));
-      setMessage('AI task helper generated suggested task elements from the uploaded shop manual library.');
-    } catch (error) {
-      setMessage(error.message);
-      setManualAssistant({
-        ...emptyManualAssistant,
-        phase: 'idle',
-        error: error.message,
-      });
-    } finally {
-      setManualBusy(false);
-    }
-  }
-
-  async function findManualOptions() {
-    setManualBusy(true);
-    setMessage('');
-    setManualAssistant({
-      ...emptyManualAssistant,
-      phase: 'searching',
-    });
-    try {
-      const data = await request('/api/shop-manuals/suggest-options', {
-        method: 'POST',
-        body: JSON.stringify({
-          machineModel: taskForm.machineModel,
-          task: taskForm.task,
-          description: taskForm.description,
-          notes: taskForm.notes,
-        }),
-      });
-      const options = data.options || [];
-      setManualAssistant({
-        phase: 'options',
-        options,
-        selectedIds: options[0]?.id ? [options[0].id] : [],
-        context: {
-          interpretedTask: data.interpretedTask,
-          interpretationNotes: data.interpretationNotes || [],
-          searchPhrases: data.searchPhrases || [],
-          confidence: data.confidence,
-          generatedBy: data.generatedBy,
-        },
-        error: options.length ? '' : 'No close manual matches were found. Refine the task wording or upload a more specific manual.',
-      });
-      if (!options.length) {
-        setMessage('No close manual matches were found. Refine the task wording or upload a more specific manual.');
-      }
-    } catch (error) {
-      setMessage(error.message);
-      setManualAssistant({
-        ...emptyManualAssistant,
-        phase: 'idle',
-        error: error.message,
-      });
-    } finally {
-      setManualBusy(false);
-    }
-  }
-
-  async function generateManualAdvice() {
-    if (manualAssistant.selectedIds.length === 0) {
-      setMessage('Choose the closest manual section before generating suggestions.');
-      return;
-    }
-
-    setManualBusy(true);
-    setMessage('');
-    setManualAssistant((current) => ({
-      ...current,
-      phase: 'generating',
-      error: '',
-    }));
-    try {
-      const data = await request('/api/shop-manuals/suggest-tools', {
-        method: 'POST',
-        body: JSON.stringify({
-          machineModel: taskForm.machineModel,
-          task: taskForm.task,
-          description: taskForm.description,
-          notes: taskForm.notes,
-          selectedManualCandidateIds: manualAssistant.selectedIds,
-          manualOptions: manualAssistant.options,
-          interpretedTask: manualAssistant.context?.interpretedTask,
-          interpretationNotes: manualAssistant.context?.interpretationNotes,
-          searchPhrases: manualAssistant.context?.searchPhrases,
-        }),
-      });
-      setTaskForm((current) => ({ ...current, manualAdvice: data.suggestion }));
-      setManualAssistant((current) => ({
-        ...current,
-        phase: 'done',
-      }));
-      setMessage('Manual suggestions generated from the selected manual section. Review them before saving the task.');
-    } catch (error) {
-      setMessage(error.message);
-      setManualAssistant((current) => ({
-        ...current,
-        phase: 'options',
-        error: error.message,
-      }));
-    } finally {
-      setManualBusy(false);
-    }
-  }
-
-  async function openManualSource(source, mode = 'open') {
-    const pageUrl = source?.pagePdfUrl
-      || (source?.manualId && source?.page ? `/api/shop-manuals/${source.manualId}/pages/${source.page}/pdf` : '');
-    const manualUrl = source?.manualPdfUrl
-      || (source?.manualId ? `/api/shop-manuals/${source.manualId}/file` : '');
-    const requestUrl = mode === 'manual' && manualUrl ? manualUrl : pageUrl;
-    if (!requestUrl) {
-      setMessage('No manual file or page link is available for this source.');
-      return;
-    }
-
-    try {
-      let response = await fetch(`${API_BASE}${requestUrl}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      let openMode = mode;
-      if (!response.ok && mode === 'manual' && requestUrl !== pageUrl) {
-        response = await fetch(`${API_BASE}${pageUrl}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        openMode = 'open';
-      }
-      if (!response.ok) {
-        const data = await response.json().catch(() => ({}));
-        throw new Error(data.message || data.error || 'Could not open manual page.');
-      }
-
-      const blob = await response.blob();
-      const blobUrl = URL.createObjectURL(blob);
-      const fileName = `${source.manual || source.machineModel || 'shop-manual'}${openMode === 'manual' ? '' : `-p${source.page || 'page'}`}.pdf`
-        .replace(/[^a-z0-9._-]+/gi, '-');
-
-      if (openMode === 'download') {
-        const link = document.createElement('a');
-        link.href = blobUrl;
-        link.download = fileName;
-        document.body.appendChild(link);
-        link.click();
-        link.remove();
-      } else {
-        window.open(openMode === 'manual' && source.page ? `${blobUrl}#page=${source.page}` : blobUrl, '_blank', 'noopener,noreferrer');
-      }
-
-      setTimeout(() => URL.revokeObjectURL(blobUrl), 60000);
-    } catch (error) {
-      setMessage(error.message);
+    } catch {
+      // Non-blocking
     }
   }
 
@@ -658,992 +265,836 @@ export default function SchedulingPage() {
       loadManuals();
     }, 0);
     return () => clearTimeout(timer);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
+
+  function openCreateDrawer(techId = null, startTime = '08:00') {
+    setEditingTaskId('');
+    const form = emptyTaskForm(date);
+    if (techId) {
+      form.technicianIds = [techId];
+    }
+    form.startsAt = startTime;
+    setTaskForm(form);
+    setManualAssistant(emptyManualAssistant);
+    setIsDrawerOpen(true);
+  }
+
+  function openEditDrawer(task) {
+    setEditingTaskId(task.id);
+    setTaskForm({
+      technicianIds: (task.technicians || []).map((t) => t.id),
+      workDate: formatDate(task.workDate),
+      task: task.task || '',
+      description: task.description || '',
+      checklist: normalizeChecklistForForm(task.checklist),
+      machineModel: task.machineModel || '',
+      manualAdvice: task.manualAdvice || null,
+      location: task.location || '',
+      startsAt: task.startsAt || '08:00',
+      endsAt: task.endsAt || '16:00',
+      notes: task.notes || '',
+      status: task.status || 'CONFIRMED',
+    });
+    setManualAssistant(emptyManualAssistant);
+    setIsDrawerOpen(true);
+  }
+
+  async function saveDailyTask(event) {
+    event.preventDefault();
+    if (!taskForm.task.trim()) {
+      setToast({ type: 'error', message: 'Please specify a work order name.' });
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const payload = {
+        ...taskForm,
+        checklist: normalizeChecklistForSave(taskForm.checklist),
+      };
+      await request(editingTaskId ? `/api/scheduling/tasks/${editingTaskId}` : '/api/scheduling/tasks', {
+        method: editingTaskId ? 'PATCH' : 'POST',
+        body: JSON.stringify(payload),
+      });
+
+      setToast({
+        type: 'success',
+        message: editingTaskId ? 'Work order updated successfully.' : 'Work order scheduled successfully.',
+      });
+      setIsDrawerOpen(false);
+      await loadBoard(taskForm.workDate, historyFrom, historyTo);
+    } catch (error) {
+      setToast({ type: 'error', message: error.message || 'Failed to save work order.' });
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function deleteTask(task) {
+    const confirmed = window.confirm(`Delete "${task.task}" from ${formatDate(task.workDate)}?`);
+    if (!confirmed) return;
+
+    setLoading(true);
+    try {
+      await request(`/api/scheduling/tasks/${task.id}`, { method: 'DELETE' });
+      setToast({ type: 'info', message: 'Work order removed.' });
+      if (editingTaskId === task.id) setIsDrawerOpen(false);
+      await loadBoard(date, historyFrom, historyTo);
+    } catch (error) {
+      setToast({ type: 'error', message: error.message || 'Failed to delete task.' });
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  // Checklist Helpers
+  function addChecklistPoint() {
+    setTaskForm((curr) => ({
+      ...curr,
+      checklist: [...curr.checklist, newChecklistItem(curr.checklist.length)],
+    }));
+  }
+
+  function updateChecklistPoint(index, field, value) {
+    setTaskForm((curr) => ({
+      ...curr,
+      checklist: curr.checklist.map((item, idx) => (idx === index ? { ...item, [field]: value } : item)),
+    }));
+  }
+
+  function removeChecklistPoint(index) {
+    setTaskForm((curr) => ({
+      ...curr,
+      checklist: curr.checklist.filter((_, idx) => idx !== index),
+    }));
+  }
+
+  // AI Task Helper
+  async function runManualTaskHelper() {
+    if (!taskForm.task.trim()) {
+      setToast({ type: 'error', message: 'Enter a task title to search manuals.' });
+      return;
+    }
+
+    setManualBusy(true);
+    try {
+      const payload = {
+        machineModel: taskForm.machineModel,
+        task: taskForm.task,
+        description: taskForm.description,
+        notes: taskForm.notes,
+      };
+
+      const optionsData = await request('/api/shop-manuals/suggest-options', {
+        method: 'POST',
+        body: JSON.stringify(payload),
+      }).catch(() => ({ options: [] }));
+
+      const options = optionsData.options || [];
+      if (options.length > 0) {
+        const toolsData = await request('/api/shop-manuals/suggest-tools', {
+          method: 'POST',
+          body: JSON.stringify({
+            ...payload,
+            selectedManualCandidateIds: [options[0].id],
+            manualOptions: options,
+          }),
+        }).catch(() => null);
+
+        if (toolsData?.suggestion?.procedureSummary?.length) {
+          setTaskForm((curr) => ({
+            ...curr,
+            checklist: normalizeChecklistForForm(toolsData.suggestion.procedureSummary),
+            manualAdvice: toolsData.suggestion,
+          }));
+          setToast({ type: 'success', message: 'Applied AI manual steps to checklist.' });
+        } else {
+          setToast({ type: 'info', message: 'No exact procedure steps found in indexed manuals.' });
+        }
+      } else {
+        setToast({ type: 'info', message: 'No matching shop manual found for this machine model.' });
+      }
+    } catch (err) {
+      setToast({ type: 'error', message: err.message || 'AI manual assistance failed.' });
+    } finally {
+      setManualBusy(false);
+    }
+  }
 
   const technicians = board.technicians || [];
   const tasks = board.tasks || [];
   const historyTasks = board.history?.tasks || [];
-  const dayWindow = Array.from({ length: 11 }, (_, index) => addDays(date, index - 5));
-  const assignedTechnicianIds = new Set(
-    tasks
-      .filter((task) => task.id !== editingTaskId)
-      .flatMap((task) => (task.technicians || []).map((technician) => technician.id)),
-  );
-  const selectedTechnicians = technicians.filter((technician) => taskForm.technicianIds.includes(technician.id));
-  const availableTechnicians = technicians.filter((technician) => (
-    isTechnicianSchedulable(technician) &&
-    !assignedTechnicianIds.has(technician.id) &&
-    !taskForm.technicianIds.includes(technician.id)
-  ));
+
+  // Computed timeline metrics
+  const assignedTechIds = new Set(tasks.flatMap((t) => (t.technicians || []).map((tech) => tech.id)));
 
   return (
     <SystemShell
       activePath="/management/scheduling"
-      eyebrow="Operations Control"
-      title="Scheduling"
-      description="Build daily technician groups, assign tasks, and review schedule history."
-      actions={(
-        <>
-          <input
-            type="date"
-            value={date}
-            onChange={(event) => loadBoard(event.target.value, historyFrom, historyTo)}
-            className="ds-input min-h-0 h-10 text-sm font-semibold"
-          />
-          <Button type="button" variant="secondary" onClick={() => loadBoard(date, historyFrom, historyTo)} disabled={!token || loading}>
-            Refresh
-          </Button>
-        </>
-      )}
+      title="Dispatch & Scheduling"
+      description="24-hour visual technician timeline, work order dispatch, and Komatsu shop manual guidance."
     >
-      <section className="grid gap-5">
-        {!token && (
-          <Card className="p-5">
-            <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-              <p className="text-sm font-semibold text-zinc-700">Sign in with your Microsoft account to manage scheduling.</p>
-              <Button type="button" onClick={signInWithMicrosoft}>Continue with Microsoft</Button>
-            </div>
-          </Card>
-        )}
-
-        {message && (
-          <div className="ds-alert">
-            {message}
-          </div>
-        )}
-
-        <div className="ds-kpi-grid">
-          {[
-            { label: 'Technicians', value: board.kpis?.technicians || 0, code: 'TM', unit: 'Registered', detail: 'Roster capacity', badge: 'Live', tone: 'live' },
-            { label: 'Daily Tasks', value: board.kpis?.dailyTasks || 0, code: 'DT', unit: 'Scheduled', detail: 'Tasks today', badge: 'Active', tone: 'active' },
-            { label: 'Assigned', value: board.kpis?.scheduledTechnicians || 0, code: 'AS', unit: 'Today', detail: 'Technicians assigned', badge: 'Ready', tone: 'ready' },
-            { label: 'Available', value: board.kpis?.availableTechnicians || 0, code: 'AV', unit: 'Open capacity', detail: 'Ready for dispatch', badge: 'Ready', tone: 'ready' },
-          ].map((item, index) => (
-            <article key={item.label} className="ds-kpi-card">
-              <div className={`ds-icon-tile ${index % 2 ? 'ds-icon-tile-accent' : ''}`}>{item.code}</div>
-              <div className="ds-kpi-content">
-                <div className="ds-kpi-head">
-                  <p className="ds-kpi-label">{item.label}</p>
-                  <Badge tone={item.tone}>{item.badge}</Badge>
-                </div>
-                <div>
-                  <p className="ds-kpi-main">{item.value}</p>
-                  <p className="ds-kpi-descriptor">{item.unit}</p>
-                  <p className="ds-kpi-secondary">{item.detail}</p>
-                </div>
-              </div>
-            </article>
-          ))}
-        </div>
-
-        <div className="grid gap-5">
-          <Card className="p-5">
-            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-              <h2 className="text-xl font-black text-[var(--color-ink)]">{editingTaskId ? 'Edit Daily Schedule Task' : 'Add Daily Schedule Task'}</h2>
-              {editingTaskId && (
-                <Button type="button" variant="secondary" onClick={() => resetTaskForm(date)}>
-                  Cancel Edit
-                </Button>
-              )}
-            </div>
-            <form onSubmit={saveDailyTask} className="mt-4 grid gap-3">
-              <div className="grid gap-3 md:grid-cols-2">
-                <input type="date" className="ds-input" value={taskForm.workDate} onChange={(event) => loadBoard(event.target.value, historyFrom, historyTo)} />
-                <input className="ds-input" placeholder="Location" value={taskForm.location} onChange={(event) => setTaskForm((current) => ({ ...current, location: event.target.value }))} />
-              </div>
-              <div className="grid gap-3 md:grid-cols-[1fr_auto]">
-                <input className="ds-input uppercase" placeholder="Machine model, e.g. D155A-6" value={taskForm.machineModel} onChange={(event) => setTaskForm((current) => ({ ...current, machineModel: event.target.value.toUpperCase() }))} />
-                <div className="flex flex-wrap gap-2">
-                  <Button type="button" onClick={runManualTaskHelper} disabled={manualBusy || !taskForm.machineModel || !taskForm.task}>
-                    AI Task Helper
-                  </Button>
-                  <Button type="button" variant="secondary" onClick={findManualOptions} disabled={manualBusy || !taskForm.machineModel || !taskForm.task}>
-                    Choose Section
-                  </Button>
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-3">
-                <input type="time" className="ds-input" value={taskForm.startsAt} onChange={(event) => setTaskForm((current) => ({ ...current, startsAt: event.target.value }))} />
-                <input type="time" className="ds-input" value={taskForm.endsAt} onChange={(event) => setTaskForm((current) => ({ ...current, endsAt: event.target.value }))} />
-              </div>
-              <input className="ds-input" placeholder="Task" value={taskForm.task} onChange={(event) => setTaskForm((current) => ({ ...current, task: event.target.value }))} />
-              <textarea rows={3} className="ds-input py-2" placeholder="Description" value={taskForm.description} onChange={(event) => setTaskForm((current) => ({ ...current, description: event.target.value }))} />
-              <div className="rounded-md border border-zinc-200 bg-zinc-50 p-3">
-                <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                  <div>
-                    <p className="text-sm font-bold text-zinc-950">Work points</p>
-                    <p className="mt-1 text-xs font-semibold text-zinc-500">Add the exact checklist the technician must complete and document.</p>
-                  </div>
-                  <Button type="button" variant="secondary" onClick={addChecklistItem}>
-                    Add point
-                  </Button>
-                </div>
-                <div className="mt-3 grid gap-2">
-                  {(taskForm.checklist || []).map((item, index) => (
-                    <div key={item.id || index} className="grid gap-2 rounded-md border border-zinc-200 bg-white p-3 md:grid-cols-[auto_1fr_auto_auto] md:items-center">
-                      <span className="grid h-8 w-8 place-items-center rounded-md bg-[var(--color-brand-soft)] text-sm font-black text-[var(--color-brand)]">
-                        {index + 1}
-                      </span>
-                      <input
-                        className="ds-input min-h-0 h-10 text-sm"
-                        placeholder="Point details, e.g. Inspect hydraulic hoses for leakage"
-                        value={item.text}
-                        onChange={(event) => updateChecklistItem(index, { text: event.target.value })}
-                      />
-                      <label className="flex items-center gap-2 text-xs font-bold text-zinc-600">
-                        <input
-                          type="checkbox"
-                          checked={item.required !== false}
-                          onChange={(event) => updateChecklistItem(index, { required: event.target.checked })}
-                        />
-                        Required
-                      </label>
-                      <Button type="button" variant="secondary" onClick={() => removeChecklistItem(index)}>
-                        Remove
-                      </Button>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <ManualOptionChooser
-                state={manualAssistant}
-                busy={manualBusy}
-                onSelect={(id) => setManualAssistant((current) => ({ ...current, selectedIds: [id] }))}
-                onGenerate={generateManualAdvice}
-                onRestart={findManualOptions}
-              />
-              {taskForm.manualAdvice && (
-                <ManualAdvicePanel
-                  advice={taskForm.manualAdvice}
-                  onApplyChecklist={() => applyManualAdviceToChecklist(taskForm.manualAdvice)}
-                  onClear={() => setTaskForm((current) => ({ ...current, manualAdvice: null }))}
-                  onOpenSource={openManualSource}
-                />
-              )}
-              <div className="rounded-md border border-zinc-200 bg-zinc-50 p-3">
-                <p className="text-sm font-bold text-zinc-950">Technicians</p>
-                {technicians.length === 0 && (
-                  <p className="mt-3 rounded-xl border border-[var(--color-border)] bg-[var(--color-warning-soft)] px-3 py-2 text-sm font-semibold text-[var(--color-warning)]">
-                    No technicians found. Add technicians in Technicians Management or run the seed script on the backend.
-                  </p>
-                )}
-                {selectedTechnicians.length > 0 && (
-                  <div className="mt-3 rounded-md border border-zinc-200 bg-white p-3">
-                    <p className="text-xs font-bold uppercase tracking-[0.12em] text-zinc-500">Selected</p>
-                    <div className="mt-2 flex flex-wrap gap-2">
-                      {selectedTechnicians.map((technician) => (
-                        <button
-                          key={technician.id}
-                          type="button"
-                          onClick={() => removeTechnician(technician.id)}
-                          className="ds-button ds-button-secondary ds-button-small"
-                        >
-                          {technicianName(technician)} x
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
-                <div className="mt-3 rounded-md border border-zinc-200 bg-white p-3">
-                  <p className="text-xs font-bold uppercase tracking-[0.12em] text-zinc-500">Available for {taskForm.workDate}</p>
-                  {availableTechnicians.length === 0 ? (
-                    <p className="mt-2 text-sm font-semibold text-zinc-500">
-                      All technicians are already selected or assigned for this day.
-                    </p>
-                  ) : (
-                    <div className="mt-2 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-                      {availableTechnicians.map((technician) => (
-                        <button
-                          key={technician.id}
-                          type="button"
-                          onClick={() => addTechnician(technician.id)}
-                          className="flex items-center justify-between gap-3 rounded-xl border border-[var(--color-border)] px-3 py-2 text-left text-sm font-semibold text-[var(--color-ink-soft)] hover:border-[var(--color-accent)] hover:bg-[var(--color-brand-soft)]"
-                        >
-                          <span>
-                            {technicianName(technician)}
-                            {technician.employeeCode && <span className="ml-2 font-mono text-xs text-zinc-400">{technician.employeeCode}</span>}
-                          </span>
-                          <span className="text-lg font-black text-zinc-950">+</span>
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </div>
-              <textarea rows={2} className="ds-input py-2" placeholder="Notes" value={taskForm.notes} onChange={(event) => setTaskForm((current) => ({ ...current, notes: event.target.value }))} />
-              <Button type="submit" disabled={!token || loading || taskForm.technicianIds.length === 0}>
-                {editingTaskId ? 'Update Daily Task' : 'Save Daily Task'}
-              </Button>
-            </form>
-          </Card>
-
-          <Card className="p-5">
-            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-              <div>
-                <h2 className="text-xl font-black text-[var(--color-ink)]">Shop Manual Library</h2>
-                <p className="mt-1 text-sm font-semibold text-zinc-600">Upload manuals directly to OpenAI File Search to avoid Render memory limits.</p>
-              </div>
-              <Button type="button" variant="secondary" onClick={loadManuals} disabled={manualBusy || !token}>
-                Refresh Manuals
-              </Button>
-            </div>
-            <div className="mt-4 grid gap-3 md:grid-cols-2">
-              <input className="ds-input uppercase" placeholder="Machine model" value={manualUpload.machineModel} onChange={(event) => setManualUpload((current) => ({ ...current, machineModel: event.target.value.toUpperCase() }))} />
-              <input className="ds-input" placeholder="Manual title" value={manualUpload.title} onChange={(event) => setManualUpload((current) => ({ ...current, title: event.target.value }))} />
-              <select className="ds-input" value={manualUpload.manualType} onChange={(event) => setManualUpload((current) => ({ ...current, manualType: event.target.value }))}>
-                <option>Disassembly and Assembly</option>
-                <option>Testing and Adjusting</option>
-                <option>Operation and Maintenance</option>
-                <option>Shop Manual</option>
-                <option>Parts Manual</option>
-                <option>Troubleshooting</option>
-              </select>
-              <input className="ds-input" placeholder="Serial range, e.g. SN 85001-UP" value={manualUpload.serialRange} onChange={(event) => setManualUpload((current) => ({ ...current, serialRange: event.target.value }))} />
-              <input className="ds-input" placeholder="Revision / manual code" value={manualUpload.revision} onChange={(event) => setManualUpload((current) => ({ ...current, revision: event.target.value }))} />
-              <select className="ds-input" value={manualUpload.language} onChange={(event) => setManualUpload((current) => ({ ...current, language: event.target.value }))}>
-                <option value="en">English</option>
-                <option value="ja">Japanese</option>
-                <option value="ar">Arabic</option>
-                <option value="mixed">Mixed</option>
-              </select>
-              <input type="file" accept="application/pdf" className="rounded-md border border-[var(--color-border-strong)] bg-white p-3 text-sm md:col-span-2" onChange={(event) => handleManualFile(event.target.files?.[0])} />
-            </div>
-            <Button type="button" className="mt-3" onClick={uploadManual} disabled={manualBusy || !manualUpload.machineModel || !manualUpload.title || !manualUpload.file}>
-              {manualBusy ? 'Uploading to OpenAI...' : 'Upload to OpenAI'}
-            </Button>
-            <ManualLibrary manuals={manuals} onOpenManual={openManualSource} onDeleteManual={deleteManual} busy={manualBusy} />
-          </Card>
-        </div>
-
-        <Card className="overflow-hidden">
-          <div className="border-b border-zinc-100 px-5 py-4">
-            <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-              <h2 className="text-xl font-black text-[var(--color-ink)]">Daily Schedule</h2>
-              <div className="flex items-center gap-2">
-                <Button type="button" variant="secondary" onClick={() => loadBoard(addDays(date, -1), historyFrom, historyTo)} disabled={!token || loading}>
-                  Previous
-                </Button>
-                <Button type="button" variant="secondary" onClick={() => loadBoard(addDays(date, 1), historyFrom, historyTo)} disabled={!token || loading}>
-                  Next
-                </Button>
-              </div>
-            </div>
-            <div className="mt-4 overflow-x-auto pb-2">
-              <div className="flex min-w-max gap-2">
-                {dayWindow.map((day) => (
-                  <button
-                    key={day}
-                    type="button"
-                    onClick={() => loadBoard(day, historyFrom, historyTo)}
-                    className={`min-w-32 rounded-md border px-4 py-3 text-left text-sm font-bold ${
-                      day === date
-                        ? 'border-[var(--color-brand)] bg-[var(--color-brand)] text-white'
-                        : 'border-[var(--color-border)] bg-white text-[var(--color-ink-soft)] hover:border-[var(--color-accent)] hover:bg-[var(--color-brand-soft)]'
-                    }`}
-                  >
-                    <span className="block">{formatDayLabel(day)}</span>
-                    <span className={`mt-1 block font-mono text-xs ${day === date ? 'text-zinc-300' : 'text-zinc-400'}`}>{day}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-          <ScheduleTable tasks={tasks} emptyText="No tasks scheduled for this day." onView={setViewingTask} onEdit={editTask} onDelete={deleteTask} />
-        </Card>
-
-        <Card className="overflow-hidden">
-          <div className="flex flex-col gap-4 border-b border-zinc-100 px-5 py-4 lg:flex-row lg:items-center lg:justify-between">
-            <h2 className="text-xl font-black text-[var(--color-ink)]">Schedule History</h2>
-            <div className="flex flex-wrap items-center gap-2">
-              <input type="date" className="ds-input min-h-0 h-10 text-sm" value={historyFrom} onChange={(event) => setHistoryFrom(event.target.value)} />
-              <input type="date" className="ds-input min-h-0 h-10 text-sm" value={historyTo} onChange={(event) => setHistoryTo(event.target.value)} />
-              <Button type="button" variant="secondary" onClick={() => loadBoard(date, historyFrom, historyTo)} disabled={!token || loading}>Search</Button>
-            </div>
-          </div>
-          <ScheduleTable tasks={historyTasks} showDate emptyText="No schedule history found for this range." onView={setViewingTask} />
-        </Card>
-      </section>
-      {viewingTask && (
-        <ScheduleSlotModal task={viewingTask} onClose={() => setViewingTask(null)} onOpenManualSource={openManualSource} />
-      )}
-      <ManualProgressOverlay phase={manualAssistant.phase} visible={manualBusy && ['searching', 'generating'].includes(manualAssistant.phase)} />
-    </SystemShell>
-  );
-}
-
-function ScheduleTable({ tasks, showDate = false, emptyText, onView, onEdit, onDelete }) {
-  const hasActions = Boolean(onView || onEdit || onDelete);
-
-  return (
-    <div className="overflow-x-auto">
-      <table className="ds-table min-w-[980px]">
-        <thead>
-          <tr>
-            {showDate && <th className="px-5 py-4 text-left">Date</th>}
-            <th className="px-5 py-4 text-left">Time</th>
-            <th className="px-5 py-4 text-left">Task</th>
-            <th className="px-5 py-4 text-left">Technicians</th>
-            <th className="px-5 py-4 text-left">Equipment</th>
-            <th className="px-5 py-4 text-left">Location</th>
-            <th className="px-5 py-4 text-left">Status</th>
-            {hasActions && <th className="px-5 py-4 text-left">Actions</th>}
-          </tr>
-        </thead>
-        <tbody>
-          {tasks.length === 0 && (
-            <tr>
-              <td colSpan={(showDate ? 7 : 6) + (hasActions ? 1 : 0)} className="px-5 py-8 text-center text-sm font-semibold text-zinc-500">{emptyText}</td>
-            </tr>
-          )}
-          {tasks.map((task) => {
-            const status = getTaskDisplayStatus(task, 'en');
-            return (
-            <tr key={task.id} className="border-t border-zinc-100 align-top">
-              {showDate && <td className="px-5 py-4 text-sm font-semibold text-zinc-700">{formatDate(task.workDate)}</td>}
-              <td className="px-5 py-4 text-sm font-semibold text-zinc-700">{task.startsAt} - {task.endsAt}</td>
-                <td className="px-5 py-4">
-                {onView ? (
-                  <button
-                    type="button"
-                    onClick={() => onView(task)}
-                    className="text-left font-bold text-[var(--color-ink)] underline-offset-4 hover:text-[var(--color-brand)] hover:underline"
-                  >
-                    {task.task}
-                  </button>
-                ) : (
-                  <p className="font-bold text-zinc-950">{task.task}</p>
-                )}
-                <p className="mt-1 max-w-md text-sm leading-6 text-zinc-600">{task.description || '-'}</p>
-              </td>
-              <td className="px-5 py-4">
-                <div className="flex flex-wrap gap-1.5">
-                  {(task.technicians || []).map((technician) => (
-                    <Badge key={technician.id} tone="neutral">{technicianName(technician)}</Badge>
-                  ))}
-                  {(task.technicians || []).length === 0 && <span className="text-sm text-zinc-400">-</span>}
-                </div>
-              </td>
-              <td className="px-5 py-4 text-sm text-zinc-600">{task.machineModel || '-'}</td>
-              <td className="px-5 py-4 text-sm text-zinc-600">{task.location || '-'}</td>
-              <td className="px-5 py-4"><Badge tone={status.tone}>{status.label}</Badge></td>
-              {hasActions && (
-                <td className="px-5 py-4">
-                  <div className="flex flex-wrap gap-2">
-                    {onView && (
-                      <button type="button" onClick={() => onView(task)} className="ds-button ds-button-secondary ds-button-small">
-                        Details
-                      </button>
-                    )}
-                    {onEdit && (
-                      <button type="button" onClick={() => onEdit(task)} className="ds-button ds-button-secondary ds-button-small">
-                        Edit
-                      </button>
-                    )}
-                    {onDelete && (
-                      <button type="button" onClick={() => onDelete(task)} className="ds-button ds-button-danger ds-button-small">
-                        Delete
-                      </button>
-                    )}
-                  </div>
-                </td>
-              )}
-            </tr>
-          );})}
-        </tbody>
-      </table>
-    </div>
-  );
-}
-
-function ManualOptionChooser({ state, busy, onSelect, onGenerate, onRestart }) {
-  if (!['options', 'generating', 'done'].includes(state.phase) && !state.error) return null;
-
-  return (
-    <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-muted)] p-4">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-        <div>
-          <p className="text-sm font-black text-[var(--color-ink)]">Manual Match Confirmation</p>
-          <p className="mt-1 text-sm font-semibold text-[var(--color-ink-soft)]">
-            Choose the closest manual section first. Suggestions will be generated only from your selected section.
-          </p>
-          {state.context?.interpretedTask && (
-            <p className="mt-2 text-sm font-bold text-[var(--color-ink-soft)]">Interpreted as: {state.context.interpretedTask}</p>
-          )}
-        </div>
-        <Button type="button" variant="secondary" onClick={onRestart} disabled={busy}>
-          Search Again
-        </Button>
-      </div>
-
-      {state.error && (
-        <div className="mt-3 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm font-bold text-red-700">
-          {state.error}
-        </div>
-      )}
-
-      {state.options.length > 0 && (
-        <div className="mt-4 grid gap-2">
-          {state.options.map((option, index) => {
-            const selected = state.selectedIds.includes(option.id);
-            return (
+      {/* Page Header */}
+      <PageHeader
+        breadcrumbs={[
+          { label: 'Operations', href: '/management' },
+          { label: 'Dispatch & Scheduling' },
+        ]}
+        title="Technician Dispatch Board"
+        badge={<Badge tone="active" dot>Live Timeline</Badge>}
+        description="Assign daily preventive maintenance and breakdown work orders across technicians and active job sites."
+        actions={
+          <div className="flex items-center gap-2">
+            <div className="flex items-center bg-slate-100 p-0.5 rounded-md text-xs">
               <button
-                key={option.id || `${option.title}-${index}`}
                 type="button"
-                onClick={() => onSelect(option.id)}
-                className={`group relative overflow-hidden rounded-md border px-4 py-3 text-left transition duration-200 ${
-                  selected
-                    ? 'border-[var(--color-accent)] bg-white shadow-sm ring-2 ring-[var(--ring)]'
-                    : 'border-[var(--color-border)] bg-white/80 hover:border-[var(--color-accent)] hover:bg-white'
-                }`}
+                onClick={() => loadBoard(addDays(date, -1))}
+                className="px-2 py-1 hover:bg-white rounded transition-colors text-slate-700 cursor-pointer"
+                title="Previous Day"
               >
-                {selected && <span className="absolute inset-y-0 left-0 w-1 animate-pulse bg-[var(--color-accent)]" />}
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <p className="text-sm font-black text-[var(--color-ink)]">{option.title || 'Untitled section'}</p>
-                    <p className="mt-1 text-xs font-semibold text-[var(--color-muted)]">
-                      {option.manual || 'Manual'}{option.page ? ` - p.${option.page}` : ''}{option.sourceType ? ` - ${option.sourceType}` : ''}
-                    </p>
-                    {option.reason && <p className="mt-2 text-sm font-semibold leading-6 text-[var(--color-ink-soft)]">{option.reason}</p>}
-                  </div>
-                  <span className={`shrink-0 rounded-md px-2.5 py-1 text-xs font-black ${selected ? 'bg-[var(--color-accent)] text-[var(--color-navy)]' : 'bg-[var(--color-surface-muted)] text-[var(--color-muted)]'}`}>
-                    {selected ? 'Selected' : option.confidence || 'Option'}
-                  </span>
-                </div>
+                ◀
               </button>
-            );
-          })}
+              <button
+                type="button"
+                onClick={() => loadBoard(today())}
+                className="px-2.5 py-1 hover:bg-white rounded font-medium transition-colors text-slate-800 cursor-pointer"
+              >
+                Today
+              </button>
+              <button
+                type="button"
+                onClick={() => loadBoard(addDays(date, 1))}
+                className="px-2 py-1 hover:bg-white rounded transition-colors text-slate-700 cursor-pointer"
+                title="Next Day"
+              >
+                ▶
+              </button>
+            </div>
+
+            <input
+              type="date"
+              value={date}
+              onChange={(e) => loadBoard(e.target.value)}
+              className="h-8 px-2.5 rounded-md border border-slate-300 text-xs font-mono bg-white text-slate-800 shadow-2xs focus:outline-none focus:ring-2 focus:ring-slate-900/15 cursor-pointer"
+            />
+
+            <Button
+              variant="primary"
+              size="sm"
+              onClick={() => openCreateDrawer()}
+            >
+              <svg className="h-3.5 w-3.5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+              </svg>
+              Create Job
+            </Button>
+          </div>
+        }
+      />
+
+      {/* KPI Overview Bar */}
+      <section aria-label="Dispatch Summary">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <MetricCard
+            label="Total Technicians"
+            value={technicians.length}
+            unit="Staff"
+            subtext="Registered roster"
+            status="Roster"
+            statusTone="neutral"
+          />
+          <MetricCard
+            label="On-Duty Dispatch"
+            value={assignedTechIds.size}
+            unit="Assigned"
+            subtext={`${technicians.length - assignedTechIds.size} available`}
+            status="Active"
+            statusTone="active"
+          />
+          <MetricCard
+            label="Daily Work Orders"
+            value={tasks.length}
+            unit="Scheduled"
+            subtext={`On ${formatDayHeader(date)}`}
+            status="Today"
+            statusTone="pending"
+          />
+          <MetricCard
+            label="Shop Manuals"
+            value={manuals.length}
+            unit="Indexed"
+            subtext="AI Assistant ready"
+            status="Ready"
+            statusTone="info"
+          />
         </div>
-      )}
+      </section>
 
-      {state.options.length > 0 && (
-        <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-xs font-semibold text-[var(--color-muted)]">
-            This confirmation step improves accuracy by anchoring the advice to a specific manual section.
-          </p>
-          <Button type="button" onClick={onGenerate} disabled={busy || state.selectedIds.length === 0}>
-            Generate From Selected Section
-          </Button>
+      {/* View Switcher Tabs */}
+      <div className="flex items-center justify-between border-b border-slate-200/80 pb-2">
+        <div className="flex items-center gap-1.5 bg-slate-100 p-1 rounded-md text-xs font-medium">
+          <button
+            type="button"
+            onClick={() => setViewTab('timeline')}
+            className={`px-3 py-1.5 rounded transition-all cursor-pointer ${viewTab === 'timeline' ? 'bg-white text-slate-900 shadow-2xs font-semibold' : 'text-slate-600 hover:text-slate-900'}`}
+          >
+            📊 Visual Timeline Board
+          </button>
+          <button
+            type="button"
+            onClick={() => setViewTab('table')}
+            className={`px-3 py-1.5 rounded transition-all cursor-pointer ${viewTab === 'table' ? 'bg-white text-slate-900 shadow-2xs font-semibold' : 'text-slate-600 hover:text-slate-900'}`}
+          >
+            📋 Work Orders List ({tasks.length})
+          </button>
+          <button
+            type="button"
+            onClick={() => setViewTab('manuals')}
+            className={`px-3 py-1.5 rounded transition-all cursor-pointer ${viewTab === 'manuals' ? 'bg-white text-slate-900 shadow-2xs font-semibold' : 'text-slate-600 hover:text-slate-900'}`}
+          >
+            📖 Shop Manuals Library ({manuals.length})
+          </button>
         </div>
-      )}
-    </div>
-  );
-}
 
-function manualIndexTone(status) {
-  if (['COMPLETED', 'IN_PROGRESS', 'PENDING'].includes(String(status || '').toUpperCase())) return 'green';
-  if (['FAILED'].includes(String(status || '').toUpperCase())) return 'red';
-  return 'neutral';
-}
-
-function ManualLibrary({ manuals, onOpenManual, onDeleteManual, busy }) {
-  const grouped = manuals.reduce((groups, manual) => {
-    const key = manual.machineModel || 'UNKNOWN';
-    return {
-      ...groups,
-      [key]: [...(groups[key] || []), manual],
-    };
-  }, {});
-
-  return (
-    <div className="mt-5 rounded-md border border-zinc-200 bg-zinc-50 p-3">
-      <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
-        <p className="text-sm font-black text-zinc-950">Indexed manuals</p>
-        <span className="text-xs font-bold uppercase tracking-[0.12em] text-zinc-500">{manuals.length} uploaded</span>
+        <div className="text-xs text-slate-500 font-medium">
+          Showing: <span className="text-slate-900 font-semibold">{formatDayHeader(date)}</span>
+        </div>
       </div>
-      {manuals.length === 0 ? (
-        <p className="mt-3 rounded-md border border-dashed border-zinc-300 bg-white px-3 py-4 text-sm font-semibold text-zinc-500">
-          No uploaded manuals yet. Upload a PDF with a machine model so the helper can search it.
-        </p>
-      ) : (
-        <div className="mt-3 grid gap-3">
-          {Object.entries(grouped).map(([machineModel, entries]) => (
-            <div key={machineModel} className="rounded-md border border-zinc-200 bg-white p-3">
-              <div className="flex items-center justify-between gap-3">
-                <p className="font-mono text-sm font-black text-zinc-950">{machineModel}</p>
-                <div className="flex flex-wrap items-center justify-end gap-2">
-                  <Badge tone="info">{entries.reduce((total, manual) => total + Number(manual.chunkCount || 0), 0)} local chunks</Badge>
-                  {entries.some((manual) => manual.aiSearchReady) && <Badge tone="green">AI Search ready</Badge>}
+
+      {/* VIEW 1: Interactive 24-Hour Visual Dispatch Timeline */}
+      {viewTab === 'timeline' && (
+        <Card className="overflow-hidden border border-slate-200/80">
+          <div className="p-4 bg-slate-50/70 border-b border-slate-200 flex items-center justify-between">
+            <div>
+              <h3 className="text-sm font-semibold text-slate-900">Shift Timeline Schedule</h3>
+              <p className="text-xs text-slate-500">Click any empty time slot on a technician row to quickly create a job assignment</p>
+            </div>
+            <div className="flex items-center gap-3 text-xs text-slate-600">
+              <span className="flex items-center gap-1"><span className="h-2 w-2 rounded-full bg-emerald-500" /> Completed</span>
+              <span className="flex items-center gap-1"><span className="h-2 w-2 rounded-full bg-amber-500" /> Active / Confirmed</span>
+              <span className="flex items-center gap-1"><span className="h-2 w-2 rounded-full bg-red-500" /> Urgent / Critical</span>
+            </div>
+          </div>
+
+          <div className="overflow-x-auto">
+            <div className="min-w-[840px]">
+              {/* Timeline Header Ruler */}
+              <div className="grid grid-cols-[220px_1fr] border-b border-slate-200 bg-slate-100/70 text-[11px] font-mono text-slate-500 font-medium select-none">
+                <div className="p-2.5 pl-4 border-r border-slate-200">Technician</div>
+                <div className="grid grid-cols-7 divide-x divide-slate-200 text-center py-2">
+                  <div>06:00</div>
+                  <div>08:00</div>
+                  <div>10:00</div>
+                  <div>12:00</div>
+                  <div>14:00</div>
+                  <div>16:00</div>
+                  <div>18:00</div>
                 </div>
               </div>
-              <div className="mt-2 grid gap-2">
-                {entries.map((manual) => (
-                  <div key={manual.id} className="grid gap-2 rounded-md border border-zinc-100 bg-zinc-50 p-3 md:grid-cols-[1fr_auto] md:items-center">
-                    <div>
-                      <p className="text-sm font-bold text-zinc-900">{manual.title}</p>
-                      <p className="mt-1 text-xs font-semibold text-zinc-500">
-                        {[manual.manualType, manual.serialRange, manual.revision, manual.language].filter(Boolean).join(' / ') || 'Manual metadata pending'}
-                      </p>
-                      <p className="mt-1 text-xs font-semibold text-zinc-500">
-                        {manual.fileName || manual.sourceType || 'Manual'} / {manual.chunkCount || 0} local chunks
-                        {manual.originalAvailable ? ' / original PDF available' : ' / stored in OpenAI'}
-                      </p>
-                      <div className="mt-2 flex flex-wrap gap-1.5">
-                        <Badge tone={manualIndexTone(manual.openaiIndexStatus)}>
-                          OpenAI: {manual.openaiIndexStatus || 'LOCAL_ONLY'}
-                        </Badge>
-                        {manual.openaiLastError && <Badge tone="red">Index warning</Badge>}
-                      </div>
-                    </div>
-                    <div className="flex flex-wrap gap-2 md:justify-end">
-                      <Button
-                        type="button"
-                        variant="secondary"
-                        size="sm"
-                        onClick={() => onOpenManual({
-                          manualId: manual.id,
-                          manual: manual.title,
-                          machineModel: manual.machineModel,
-                          manualPdfUrl: `/api/shop-manuals/${manual.id}/file`,
-                        }, 'manual')}
-                        disabled={!manual.originalAvailable}
-                      >
-                        Open PDF
-                      </Button>
-                      <Button
-                        type="button"
-                        variant="danger"
-                        size="sm"
-                        onClick={() => onDeleteManual(manual)}
-                        disabled={busy}
-                      >
-                        Delete
-                      </Button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}
 
-function ManualProgressOverlay({ phase, visible }) {
-  if (!visible) return null;
+              {/* Technician Timeline Rows */}
+              <div className="divide-y divide-slate-100">
+                {technicians.length === 0 ? (
+                  <div className="p-12 text-center text-xs text-slate-500">No technicians registered.</div>
+                ) : (
+                  technicians.map((tech) => {
+                    const techTasks = tasks.filter((t) =>
+                      (t.technicians || []).some((tt) => tt.id === tech.id)
+                    );
+                    const isAvailable = isTechnicianSchedulable(tech);
 
-  const steps = [
-    {
-      id: 'searching',
-      title: 'Matching manual sections',
-      description: 'Reading index headings and ranking possible maintenance sections.',
-    },
-    {
-      id: 'generating',
-      title: 'Generating verified suggestions',
-      description: 'Building a selected-section PDF and extracting a structured answer from it.',
-    },
-  ];
-  const activeIndex = Math.max(0, steps.findIndex((step) => step.id === phase));
-
-  return (
-    <div className="fixed inset-0 z-50 grid place-items-center bg-[rgba(7,27,51,0.62)] px-4 backdrop-blur-sm">
-      <div className="ds-card w-full max-w-md p-6 shadow-[var(--shadow-overlay)]">
-        <div className="mx-auto grid h-14 w-14 place-items-center rounded-full border-4 border-[var(--color-accent-soft)] border-t-[var(--color-accent)]">
-          <div className="h-7 w-7 animate-spin rounded-full border-4 border-[var(--color-border)] border-t-[var(--color-navy)]" />
-        </div>
-        <p className="mt-5 text-center text-lg font-black text-[var(--color-ink)]">{steps[activeIndex]?.title || 'Working'}</p>
-        <p className="mt-2 text-center text-sm font-semibold leading-6 text-[var(--color-muted)]">{steps[activeIndex]?.description}</p>
-        <div className="mt-5 grid gap-3">
-          {steps.map((step, index) => {
-            const active = index === activeIndex;
-            const done = index < activeIndex;
-            return (
-              <div key={step.id} className="flex items-center gap-3">
-                <span className={`grid h-8 w-8 place-items-center rounded-full text-xs font-black ${
-                  done ? 'bg-[var(--color-success)] text-white' : active ? 'animate-pulse bg-[var(--color-accent)] text-[var(--color-navy)]' : 'bg-[var(--color-surface-muted)] text-[var(--color-muted)]'
-                }`}
-                >
-                  {index + 1}
-                </span>
-                <div>
-                  <p className={`text-sm font-black ${active || done ? 'text-[var(--color-ink)]' : 'text-[var(--color-muted)]'}`}>{step.title}</p>
-                  <p className="text-xs font-semibold text-[var(--color-muted)]">{done ? 'Complete' : active ? 'In progress' : 'Waiting'}</p>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function ManualAdvicePanel({ advice, onApplyChecklist, onClear, onOpenSource }) {
-  const sections = [
-    ['Tools', advice.requiredTools],
-    ['PPE', advice.ppe],
-    ['Consumables', advice.consumables],
-    ['Warnings', advice.warnings],
-    ['Procedure', advice.procedureSummary],
-  ];
-  const alternatives = advice.alternatives || advice.manualAlternatives || [];
-  const evidenceItems = Object.entries(advice.evidence || {})
-    .flatMap(([category, items]) => (items || []).map((item) => ({
-      category,
-      text: item.text,
-      source: item.source,
-    })))
-    .filter((item) => item.text && item.source)
-    .slice(0, 8);
-
-  return (
-    <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-muted)] p-4">
-      <div className="flex items-start justify-between gap-3">
-        <div>
-          <p className="text-sm font-black text-[var(--color-ink)]">Manual Suggestions</p>
-          <p className="mt-1 text-xs font-semibold text-zinc-600">Confidence: {advice.confidence || 'unknown'} · Source: {advice.generatedBy || 'manual search'}</p>
-          {advice.interpretedTask && (
-            <p className="mt-2 text-sm font-bold text-zinc-800">Interpreted as: {advice.interpretedTask}</p>
-          )}
-          {advice.matchedSectionTitle ? (
-            <div className="mt-2 text-sm font-semibold text-zinc-700">
-              <span className="font-black text-zinc-900">Matched section:</span> {advice.matchedSectionTitle}
-            </div>
-          ) : (advice.selectedManualTitles || []).length > 0 && (
-            <div className="mt-2 text-sm font-semibold text-zinc-700">
-              <span className="font-black text-zinc-900">Manual match:</span>{' '}
-              {advice.selectedManualTitles.map((item) => `${item.title || 'Untitled'}${item.page ? ` (p.${item.page})` : ''}`).join(', ')}
-            </div>
-          )}
-          {alternatives.length > 1 && (
-            <div className="mt-2 text-sm font-semibold text-zinc-700">
-              <span className="font-black text-zinc-900">Alternatives:</span>{' '}
-              {alternatives.slice(1, 5).map((item) => `${item.title || 'Untitled'}${item.page ? ` (p.${item.page})` : ''}${item.confidence ? ` - ${item.confidence}` : ''}`).join(', ')}
-            </div>
-          )}
-        </div>
-        <div className="flex flex-wrap gap-2">
-          {onApplyChecklist && (
-            <button type="button" onClick={onApplyChecklist} className="ds-button ds-button-secondary ds-button-small">
-              Apply procedure
-            </button>
-          )}
-          {onClear && (
-            <button type="button" onClick={onClear} className="ds-button ds-button-secondary ds-button-small">
-              Clear
-            </button>
-          )}
-        </div>
-      </div>
-      <div className="mt-3 grid gap-3 md:grid-cols-2">
-        {sections.map(([label, values]) => (
-          <div key={label} className="rounded-md bg-white p-3">
-            <p className="text-xs font-bold uppercase tracking-[0.12em] text-zinc-500">{label}</p>
-            {(values || []).length === 0 ? (
-              <p className="mt-2 text-sm text-zinc-500">-</p>
-            ) : (
-              <ul className="mt-2 grid gap-1 text-sm font-semibold text-zinc-700">
-                {values.map((value) => <li key={value}>- {value}</li>)}
-              </ul>
-            )}
-          </div>
-        ))}
-      </div>
-      {(advice.interpretationNotes || []).length > 0 && (
-        <div className="mt-3 rounded-md bg-white p-3">
-          <p className="text-xs font-bold uppercase tracking-[0.12em] text-zinc-500">Interpretation Notes</p>
-          <ul className="mt-2 grid gap-1 text-sm font-semibold text-zinc-700">
-            {advice.interpretationNotes.map((note) => <li key={note}>- {note}</li>)}
-          </ul>
-        </div>
-      )}
-      {(advice.sources || []).length > 0 && (
-        <div className="mt-3 rounded-md bg-white p-3">
-          <p className="text-xs font-bold uppercase tracking-[0.12em] text-zinc-500">Sources</p>
-          <div className="mt-2 grid gap-2">
-            {advice.sources.map((source, index) => (
-              <ManualSourceRow
-                key={`${source.manualId || source.manual || 'manual'}-${source.page || index}-${source.section || index}`}
-                source={source}
-                onOpenSource={onOpenSource}
-              />
-            ))}
-          </div>
-        </div>
-      )}
-      {evidenceItems.length > 0 && (
-        <div className="mt-3 rounded-md bg-white p-3">
-          <p className="text-xs font-bold uppercase tracking-[0.12em] text-zinc-500">Evidence</p>
-          <ul className="mt-2 grid gap-2 text-sm font-semibold text-zinc-700">
-            {evidenceItems.map((item) => (
-              <li key={`${item.category}-${item.text}`}>
-                <span className="font-black text-zinc-900">{item.category}:</span> {item.text}
-                <span className="block text-xs font-semibold text-zinc-500">
-                  {item.source.manual || item.source.machineModel || 'Manual'}
-                  {item.source.page ? ` p.${item.source.page}` : ''}
-                  {item.source.section ? ` - ${item.source.section}` : ''}
-                  {item.source.excerpt ? ` - "${item.source.excerpt}"` : ''}
-                </span>
-                {item.source.pagePdfUrl && onOpenSource && (
-                  <button
-                    type="button"
-                    onClick={() => onOpenSource(item.source, 'open')}
-                    className="ds-button ds-button-secondary ds-button-small mt-1"
-                  >
-                    Open page
-                  </button>
-                )}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-    </div>
-  );
-}
-
-function ManualSourceRow({ source, onOpenSource }) {
-  const label = `${source.manual || source.machineModel || 'Manual'}${source.matchedSectionTitle || source.section ? ` - ${source.matchedSectionTitle || source.section}` : ''} p.${source.page || '-'}`;
-  const canOpen = Boolean(onOpenSource && (source.pagePdfUrl || (source.manualId && source.page)));
-
-  return (
-    <div className="flex flex-col gap-2 rounded-md border border-zinc-100 bg-zinc-50 px-3 py-2 sm:flex-row sm:items-center sm:justify-between">
-      <p className="text-sm font-semibold text-zinc-700">{label}</p>
-      {canOpen && (
-        <div className="flex shrink-0 gap-2">
-          <button
-            type="button"
-            onClick={() => onOpenSource(source, 'open')}
-            className="ds-button ds-button-secondary ds-button-small"
-          >
-            Open page
-          </button>
-          <button
-            type="button"
-            onClick={() => onOpenSource(source, 'manual')}
-            className="ds-button ds-button-secondary ds-button-small"
-          >
-            Open manual
-          </button>
-          <button
-            type="button"
-            onClick={() => onOpenSource(source, 'download')}
-            className="ds-button ds-button-ghost ds-button-small"
-          >
-            Download
-          </button>
-        </div>
-      )}
-    </div>
-  );
-}
-
-function formatDateTime(value) {
-  if (!value) return '-';
-  return new Intl.DateTimeFormat('en', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  }).format(new Date(value));
-}
-
-function ScheduleSlotModal({ task, onClose, onOpenManualSource }) {
-  const photos = Array.isArray(task.photos) ? task.photos : [];
-  const [previewPhoto, setPreviewPhoto] = useState(null);
-  const status = getTaskDisplayStatus(task, 'en');
-  const checklist = Array.isArray(task.checklist) ? task.checklist : [];
-  const checklistReports = Array.isArray(task.checklistReports) ? task.checklistReports : [];
-  const hasCompletion = task.status === 'COMPLETED' || task.summary || task.completedAt || photos.length > 0 || checklistReports.length > 0;
-
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[rgba(7,27,51,0.62)] p-4 backdrop-blur-sm">
-      <div className="ds-card max-h-[90vh] w-full max-w-4xl overflow-y-auto shadow-[var(--shadow-overlay)]">
-        <div className="sticky top-0 z-10 flex items-start justify-between gap-4 border-b border-zinc-100 bg-white px-5 py-4">
-          <div>
-            <p className="text-xs font-bold uppercase tracking-[0.14em] text-zinc-500">Schedule Slot</p>
-            <h3 className="mt-1 text-2xl font-black text-zinc-950">{task.task || 'Scheduled task'}</h3>
-          </div>
-          <button
-            type="button"
-            onClick={onClose}
-            className="ds-button ds-button-secondary ds-button-small"
-          >
-            Close
-          </button>
-        </div>
-
-        <div className="grid gap-5 p-5">
-          <div className="grid gap-3 md:grid-cols-4">
-            <SlotDetail label="Date" value={formatDate(task.workDate)} />
-            <SlotDetail label="Time" value={`${task.startsAt || '-'} - ${task.endsAt || '-'}`} />
-            <SlotDetail label="Location" value={task.location || '-'} />
-            <div className="rounded-md border border-zinc-200 bg-zinc-50 p-3">
-              <p className="text-xs font-bold uppercase tracking-[0.12em] text-zinc-500">Status</p>
-              <div className="mt-2">
-                <Badge tone={status.tone}>{status.label}</Badge>
-              </div>
-            </div>
-          </div>
-
-          <div className="grid gap-3 md:grid-cols-2">
-            <div className="rounded-md border border-zinc-200 p-4">
-              <p className="text-sm font-black text-zinc-950">Description</p>
-              <p className="mt-2 whitespace-pre-wrap text-sm leading-6 text-zinc-700">{task.description || '-'}</p>
-            </div>
-            <div className="rounded-md border border-zinc-200 p-4">
-              <p className="text-sm font-black text-zinc-950">Technicians</p>
-              <div className="mt-3 flex flex-wrap gap-2">
-                {(task.technicians || []).length === 0 && <p className="text-sm text-zinc-500">No technicians assigned.</p>}
-                {(task.technicians || []).map((technician) => (
-                  <Badge key={technician.id} tone="neutral">{technicianName(technician)}</Badge>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          <div className="rounded-md border border-zinc-200 p-4">
-            <p className="text-sm font-black text-zinc-950">Task Notes</p>
-            <p className="mt-2 whitespace-pre-wrap text-sm leading-6 text-zinc-700">{task.notes || '-'}</p>
-          </div>
-
-          {checklist.length > 0 && (
-            <div className="rounded-md border border-zinc-200 p-4">
-              <p className="text-sm font-black text-zinc-950">Work Points</p>
-              <div className="mt-3 grid gap-2">
-                {checklist.map((item, index) => {
-                  const report = checklistReports.find((entry) => entry.id === item.id);
-                  return (
-                    <div key={item.id || index} className="rounded-md border border-zinc-100 bg-zinc-50 p-3">
-                      <div className="flex items-start justify-between gap-3">
-                        <p className="text-sm font-bold text-zinc-900">{index + 1}. {item.text}</p>
-                        {report?.done && <Badge tone="completed">Done</Badge>}
-                      </div>
-                      {report?.notes && <p className="mt-2 whitespace-pre-wrap text-sm leading-6 text-zinc-700">{report.notes}</p>}
-                      {Array.isArray(report?.photos) && report.photos.length > 0 && (
-                        <div className="mt-3 grid gap-2 sm:grid-cols-3">
-                          {report.photos.map((photo, photoIndex) => (
-                            <PhotoThumbnail
-                              key={`${photo.fileName || 'point-photo'}-${photoIndex}`}
-                              photo={photo}
-                              fallbackName={`Point photo ${photoIndex + 1}`}
-                              className="h-32"
-                              onOpen={() => setPreviewPhoto({ ...photo, fallbackName: `Point photo ${photoIndex + 1}` })}
-                            />
-                          ))}
+                    return (
+                      <div key={tech.id} className="grid grid-cols-[220px_1fr] min-h-[52px] group hover:bg-slate-50/50 transition-colors">
+                        {/* Technician Profile Card Column */}
+                        <div className="p-2.5 pl-4 border-r border-slate-200 flex items-center justify-between gap-2">
+                          <div className="min-w-0">
+                            <p className="text-xs font-semibold text-slate-900 truncate">
+                              {technicianName(tech)}
+                            </p>
+                            <div className="flex items-center gap-1 text-[10px] text-slate-500">
+                              <span>{tech.employeeCode || 'TECH'}</span>
+                              <span>•</span>
+                              <span className="truncate">{tech.region || 'Kuwait Central'}</span>
+                            </div>
+                          </div>
+                          <Badge tone={isAvailable ? 'active' : 'neutral'} className="text-[9px] px-1.5 py-0">
+                            {isAvailable ? 'Ready' : 'Off'}
+                          </Badge>
                         </div>
-                      )}
-                    </div>
-                  );
-                })}
+
+                        {/* Interactive Timeline Track */}
+                        <div
+                          className="relative flex items-center p-1 cursor-crosshair"
+                          onClick={(e) => {
+                            if (e.target === e.currentTarget) {
+                              openCreateDrawer(tech.id, '08:00');
+                            }
+                          }}
+                          title="Click to schedule job for this technician"
+                        >
+                          {/* Grid Background Lines */}
+                          <div className="absolute inset-0 grid grid-cols-7 divide-x divide-slate-100 pointer-events-none" />
+
+                          {/* Work Order Blocks */}
+                          {techTasks.map((t) => {
+                            const startMin = parseTimeToMinutes(t.startsAt);
+                            const endMin = parseTimeToMinutes(t.endsAt);
+                            const windowStart = TIMELINE_START_HOUR * 60;
+                            const windowEnd = TIMELINE_END_HOUR * 60;
+                            const totalMins = windowEnd - windowStart;
+
+                            const leftPct = Math.max(0, Math.min(100, ((startMin - windowStart) / totalMins) * 100));
+                            const rightPct = Math.max(0, Math.min(100, ((endMin - windowStart) / totalMins) * 100));
+                            const widthPct = Math.max(8, rightPct - leftPct);
+
+                            const tone = statusTone(t.status);
+                            const bgStyle =
+                              tone === 'completed'
+                                ? 'bg-emerald-50 border-emerald-300 text-emerald-900'
+                                : tone === 'critical'
+                                ? 'bg-red-50 border-red-300 text-red-900'
+                                : 'bg-amber-50 border-amber-300 text-amber-950';
+
+                            return (
+                              <div
+                                key={t.id}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  openEditDrawer(t);
+                                }}
+                                className={`absolute h-9 rounded-md border shadow-2xs px-2 py-1 flex items-center justify-between text-xs font-medium cursor-pointer transition-all hover:scale-[1.01] hover:shadow-xs z-10 ${bgStyle}`}
+                                style={{ left: `${leftPct}%`, width: `${widthPct}%` }}
+                                title={`${t.task} (${t.startsAt} - ${t.endsAt})`}
+                              >
+                                <div className="min-w-0 flex-1 truncate pr-1">
+                                  <span className="font-semibold">{t.task}</span>
+                                  {t.machineModel && (
+                                    <span className="opacity-75 ml-1 text-[10px]">• {t.machineModel}</span>
+                                  )}
+                                </div>
+                                <span className="text-[10px] font-mono opacity-80 shrink-0">
+                                  {t.startsAt}
+                                </span>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    );
+                  })
+                )}
               </div>
             </div>
-          )}
+          </div>
+        </Card>
+      )}
 
-          {task.manualAdvice && <ManualAdvicePanel advice={task.manualAdvice} onOpenSource={onOpenManualSource} />}
+      {/* VIEW 2: Work Orders Table List */}
+      {viewTab === 'table' && (
+        <Card className="overflow-hidden border border-slate-200/80">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Work Order & Machine</TableHead>
+                <TableHead>Assigned Techs</TableHead>
+                <TableHead>Site / Location</TableHead>
+                <TableHead>Time Window</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {tasks.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={6} className="py-12 text-center text-xs text-slate-500">
+                    No work orders scheduled for this date. Click &quot;Create Job&quot; to assign one.
+                  </TableCell>
+                </TableRow>
+              ) : (
+                tasks.map((task) => (
+                  <TableRow key={task.id} isClickable onClick={() => openEditDrawer(task)}>
+                    <TableCell>
+                      <p className="font-semibold text-slate-900">{task.task}</p>
+                      <p className="text-xs text-slate-500">{task.machineModel || 'General Machinery'}</p>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex flex-wrap gap-1">
+                        {(task.technicians || []).map((tech) => (
+                          <Badge key={tech.id} tone="neutral" className="text-[10px]">
+                            {technicianName(tech)}
+                          </Badge>
+                        ))}
+                        {(!task.technicians || task.technicians.length === 0) && (
+                          <span className="text-xs text-slate-400">Unassigned</span>
+                        )}
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-slate-600 text-xs">{task.location || 'Central Site'}</TableCell>
+                    <TableCell className="font-mono text-xs text-slate-700">
+                      {task.startsAt} - {task.endsAt}
+                    </TableCell>
+                    <TableCell>
+                      <Badge tone={statusTone(task.status)}>{task.status}</Badge>
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <div className="flex items-center justify-end gap-1.5" onClick={(e) => e.stopPropagation()}>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => openEditDrawer(task)}
+                        >
+                          Edit
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                          onClick={() => deleteTask(task)}
+                        >
+                          Delete
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
+            </TableBody>
+          </Table>
+        </Card>
+      )}
 
-          <div className="rounded-md border border-zinc-200 bg-zinc-50 p-4">
-            <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
-              <p className="text-sm font-black text-zinc-950">Technician Completion</p>
-              <p className="text-xs font-semibold text-zinc-500">Completed: {formatDateTime(task.completedAt)}</p>
+      {/* VIEW 3: Komatsu Shop Manuals Library */}
+      {viewTab === 'manuals' && (
+        <div className="space-y-4">
+          <SectionHeader
+            title="Komatsu Shop Manuals Master Library"
+            description="Official OEM shop manuals and disassembly guides parsed by AI Assistant"
+            actions={
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={loadManuals}
+                disabled={manualBusy}
+              >
+                Refresh Index
+              </Button>
+            }
+          />
+
+          <Card>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Model / Title</TableHead>
+                  <TableHead>Manual Type</TableHead>
+                  <TableHead>Serial Range</TableHead>
+                  <TableHead>Language</TableHead>
+                  <TableHead>Indexed Status</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {manuals.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={5} className="py-8 text-center text-xs text-slate-500">
+                      No manuals uploaded yet.
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  manuals.map((m) => (
+                    <TableRow key={m.id}>
+                      <TableCell className="font-semibold text-slate-900">
+                        {m.title || m.machineModel}
+                      </TableCell>
+                      <TableCell className="text-xs text-slate-600">{m.manualType || 'Shop Manual'}</TableCell>
+                      <TableCell className="text-xs font-mono text-slate-600">{m.serialRange || 'All Serials'}</TableCell>
+                      <TableCell className="text-xs uppercase text-slate-500">{m.language || 'EN'}</TableCell>
+                      <TableCell>
+                        <Badge tone="ready">Indexed (AI Ready)</Badge>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </Card>
+        </div>
+      )}
+
+      {/* Slide-over Drawer for Creating / Editing Work Orders */}
+      {isDrawerOpen && (
+        <div className="fixed inset-0 z-50 overflow-hidden bg-slate-950/40 backdrop-blur-xs flex justify-end animate-[ds-toast-in_140ms_ease]">
+          <div
+            className="w-full max-w-xl bg-white shadow-2xl flex flex-col h-full border-l border-slate-200"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Drawer Header */}
+            <div className="p-4 sm:p-5 border-b border-slate-200 bg-slate-50/70 flex items-center justify-between">
+              <div>
+                <h3 className="text-base font-semibold text-slate-900 tracking-tight">
+                  {editingTaskId ? 'Edit Work Order' : 'Create New Work Order'}
+                </h3>
+                <p className="text-xs text-slate-500">
+                  {formatDayHeader(taskForm.workDate || date)} • Assign technicians and inspection points
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsDrawerOpen(false)}
+                className="p-1.5 rounded-md text-slate-400 hover:text-slate-700 hover:bg-slate-200/60 transition-colors cursor-pointer"
+                aria-label="Close drawer"
+              >
+                ✕
+              </button>
             </div>
-            {hasCompletion ? (
-              <div className="mt-3 grid gap-4">
-                <div className="rounded-md border border-zinc-200 bg-white p-3">
-                  <p className="text-xs font-bold uppercase tracking-[0.12em] text-zinc-500">Summary</p>
-                  <p className="mt-2 whitespace-pre-wrap text-sm leading-6 text-zinc-700">{task.summary || '-'}</p>
+
+            {/* Drawer Form Body */}
+            <form onSubmit={saveDailyTask} className="p-4 sm:p-6 overflow-y-auto space-y-5 flex-1 text-xs sm:text-sm">
+              {/* 1. Machinery & Task Identity */}
+              <div className="space-y-3 pb-4 border-b border-slate-100">
+                <p className="text-xs font-semibold text-slate-900 uppercase tracking-wider">1. Work Order Details</p>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <Field label="Machine Model" required>
+                    <Select
+                      value={taskForm.machineModel}
+                      onChange={(e) => setTaskForm({ ...taskForm, machineModel: e.target.value })}
+                    >
+                      <option value="PC400-8R">Komatsu PC400-8R Excavator</option>
+                      <option value="PC400LC-8R">Komatsu PC400LC-8R</option>
+                      <option value="HM400-3R">Komatsu HM400-3R Articulated Truck</option>
+                      <option value="D155A-6R">Komatsu D155A-6R Bulldozer</option>
+                      <option value="WA470-6R">Komatsu WA470-6R Wheel Loader</option>
+                      <option value="GD655-5">Komatsu GD655-5 Motor Grader</option>
+                    </Select>
+                  </Field>
+
+                  <Field label="Location / Job Site" required>
+                    <Input
+                      value={taskForm.location}
+                      onChange={(e) => setTaskForm({ ...taskForm, location: e.target.value })}
+                      placeholder="e.g. Desire Site, Sabah Al-Ahmad"
+                    />
+                  </Field>
                 </div>
-                <div>
-                  <p className="text-xs font-bold uppercase tracking-[0.12em] text-zinc-500">Photos</p>
-                  {photos.length === 0 ? (
-                    <p className="mt-2 text-sm font-semibold text-zinc-500">No photos uploaded.</p>
-                  ) : (
-                    <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                      {photos.map((photo, index) => (
-                        <PhotoThumbnail
-                          key={`${photo.fileName || 'photo'}-${index}`}
-                          photo={photo}
-                          fallbackName={`Photo ${index + 1}`}
-                          className="h-44"
-                          showName
-                          onOpen={() => setPreviewPhoto({ ...photo, fallbackName: `Photo ${index + 1}` })}
-                        />
-                      ))}
-                    </div>
+
+                <Field label="Task Name / Operation" required>
+                  <div className="flex gap-2">
+                    <Input
+                      value={taskForm.task}
+                      onChange={(e) => setTaskForm({ ...taskForm, task: e.target.value })}
+                      placeholder="e.g. 500h Periodic PM & Fan Pump Teardown"
+                      className="flex-1"
+                    />
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      size="sm"
+                      onClick={runManualTaskHelper}
+                      disabled={manualBusy}
+                      title="Auto-suggest steps from Komatsu Shop Manual"
+                    >
+                      {manualBusy ? 'Parsing...' : 'Manual Guide'}
+                    </Button>
+                  </div>
+                </Field>
+
+                <Field label="Scope Description">
+                  <Textarea
+                    rows={2}
+                    value={taskForm.description}
+                    onChange={(e) => setTaskForm({ ...taskForm, description: e.target.value })}
+                    placeholder="Brief scope description or safety warnings..."
+                  />
+                </Field>
+              </div>
+
+              {/* 2. Schedule & Time Window with Shift Presets */}
+              <div className="space-y-3 pb-4 border-b border-slate-100">
+                <div className="flex items-center justify-between">
+                  <p className="text-xs font-semibold text-slate-900 uppercase tracking-wider">2. Time Window & Status</p>
+                  <div className="flex items-center gap-1">
+                    <button
+                      type="button"
+                      onClick={() => setTaskForm({ ...taskForm, startsAt: '08:00', endsAt: '16:00' })}
+                      className="px-2 py-0.5 rounded bg-slate-100 hover:bg-slate-200 text-[10px] font-medium text-slate-700 cursor-pointer"
+                    >
+                      Morning (08-16)
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setTaskForm({ ...taskForm, startsAt: '16:00', endsAt: '00:00' })}
+                      className="px-2 py-0.5 rounded bg-slate-100 hover:bg-slate-200 text-[10px] font-medium text-slate-700 cursor-pointer"
+                    >
+                      Evening (16-00)
+                    </button>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-3 gap-2">
+                  <Field label="Work Date" required>
+                    <Input
+                      type="date"
+                      value={taskForm.workDate}
+                      onChange={(e) => setTaskForm({ ...taskForm, workDate: e.target.value })}
+                    />
+                  </Field>
+                  <Field label="Start Time" required>
+                    <Input
+                      type="time"
+                      value={taskForm.startsAt}
+                      onChange={(e) => setTaskForm({ ...taskForm, startsAt: e.target.value })}
+                    />
+                  </Field>
+                  <Field label="End Time" required>
+                    <Input
+                      type="time"
+                      value={taskForm.endsAt}
+                      onChange={(e) => setTaskForm({ ...taskForm, endsAt: e.target.value })}
+                    />
+                  </Field>
+                </div>
+
+                <Field label="Status">
+                  <Select
+                    value={taskForm.status}
+                    onChange={(e) => setTaskForm({ ...taskForm, status: e.target.value })}
+                  >
+                    <option value="CONFIRMED">CONFIRMED (Ready)</option>
+                    <option value="PLANNED">PLANNED (Pending)</option>
+                    <option value="ON_DUTY">ON_DUTY (In Progress)</option>
+                    <option value="COMPLETED">COMPLETED (Done)</option>
+                  </Select>
+                </Field>
+              </div>
+
+              {/* 3. Assigned Technicians */}
+              <div className="space-y-2.5 pb-4 border-b border-slate-100">
+                <div className="flex items-center justify-between">
+                  <p className="text-xs font-semibold text-slate-900 uppercase tracking-wider">
+                    3. Assigned Technicians ({taskForm.technicianIds.length} selected)
+                  </p>
+                  {taskForm.technicianIds.length > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => setTaskForm({ ...taskForm, technicianIds: [] })}
+                      className="text-[10px] text-slate-500 hover:text-slate-800 cursor-pointer"
+                    >
+                      Clear
+                    </button>
                   )}
                 </div>
+
+                <Input
+                  value={techSearch}
+                  onChange={(e) => setTechSearch(e.target.value)}
+                  placeholder="Filter technician by name or code..."
+                  className="text-xs py-1.5"
+                />
+
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5 max-h-32 overflow-y-auto p-1 bg-slate-50 rounded-md border border-slate-200/80">
+                  {technicians
+                    .filter((t) => {
+                      if (!techSearch.trim()) return true;
+                      const name = technicianName(t).toLowerCase();
+                      const code = (t.employeeCode || '').toLowerCase();
+                      const q = techSearch.trim().toLowerCase();
+                      return name.includes(q) || code.includes(q);
+                    })
+                    .map((t) => {
+                      const isSelected = taskForm.technicianIds.includes(t.id);
+                      return (
+                        <button
+                          key={t.id}
+                          type="button"
+                          onClick={() => {
+                            setTaskForm((curr) => ({
+                              ...curr,
+                              technicianIds: isSelected
+                                ? curr.technicianIds.filter((id) => id !== t.id)
+                                : [...curr.technicianIds, t.id],
+                            }));
+                          }}
+                          className={`p-1.5 rounded text-left flex items-center justify-between transition-all cursor-pointer text-xs ${
+                            isSelected
+                              ? 'bg-amber-100 text-amber-950 font-semibold border border-amber-300'
+                              : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-100'
+                          }`}
+                        >
+                          <span className="truncate">{technicianName(t)}</span>
+                          {isSelected && <span className="text-amber-700 ml-1">✓</span>}
+                        </button>
+                      );
+                    })}
+                </div>
               </div>
-            ) : (
-              <p className="mt-3 rounded-xl border border-[var(--color-border)] bg-[var(--color-warning-soft)] px-3 py-2 text-sm font-semibold text-[var(--color-warning)]">
-                No technician completion has been submitted for this slot yet.
-              </p>
-            )}
+
+
+              {/* 4. Inspection Checklist Points */}
+              <div className="space-y-3 pb-4 border-b border-slate-100">
+                <div className="flex items-center justify-between">
+                  <p className="text-xs font-semibold text-slate-900 uppercase tracking-wider">4. Work Points Checklist</p>
+                  <Button type="button" variant="ghost" size="sm" onClick={addChecklistPoint}>
+                    + Add Point
+                  </Button>
+                </div>
+
+                <div className="space-y-2">
+                  {taskForm.checklist.map((item, idx) => (
+                    <div key={item.id || idx} className="flex items-center gap-2">
+                      <span className="text-[11px] font-mono text-slate-400 w-4">{idx + 1}.</span>
+                      <Input
+                        value={item.text}
+                        onChange={(e) => updateChecklistPoint(idx, 'text', e.target.value)}
+                        placeholder={`Checklist item ${idx + 1}...`}
+                        className="flex-1"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => removeChecklistPoint(idx)}
+                        className="p-1 text-slate-400 hover:text-red-600 transition-colors"
+                        title="Remove point"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* 5. Notes */}
+              <Field label="Supervisor Dispatch Notes">
+                <Textarea
+                  rows={2}
+                  value={taskForm.notes}
+                  onChange={(e) => setTaskForm({ ...taskForm, notes: e.target.value })}
+                  placeholder="Special instructions, required PPE, or access clearance..."
+                />
+              </Field>
+
+            </form>
+
+            {/* Sticky Drawer Footer */}
+            <div className="p-4 bg-slate-50 border-t border-slate-200 flex items-center justify-between">
+              <Button
+                variant="secondary"
+                onClick={() => setIsDrawerOpen(false)}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="primary"
+                onClick={saveDailyTask}
+                disabled={loading}
+              >
+                {loading ? 'Saving...' : editingTaskId ? 'Update Work Order' : 'Schedule Work Order'}
+              </Button>
+            </div>
           </div>
         </div>
-      </div>
-      {previewPhoto && (
-        <PhotoPreviewModal
-          photo={previewPhoto}
-          onClose={() => setPreviewPhoto(null)}
-        />
       )}
-    </div>
-  );
-}
 
-function PhotoThumbnail({ photo, fallbackName, className = 'h-32', showName = false, onOpen }) {
-  const label = photo.fileName || fallbackName;
-
-  return (
-    <button
-      type="button"
-      onClick={onOpen}
-      className="overflow-hidden rounded-md border border-zinc-200 bg-white text-left transition hover:border-[var(--color-brand)] hover:shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-brand)]"
-    >
-      <img src={photo.dataUrl} alt={label} className={`${className} w-full object-cover`} />
-      {showName && (
-        <span className="block truncate px-3 py-2 text-xs font-semibold text-zinc-600">
-          {label}
-        </span>
-      )}
-    </button>
-  );
-}
-
-function PhotoPreviewModal({ photo, onClose }) {
-  const label = photo.fileName || photo.fallbackName || 'Technician photo';
-
-  function downloadPhoto() {
-    if (!photo.dataUrl) return;
-    const link = document.createElement('a');
-    link.href = photo.dataUrl;
-    link.download = label.replace(/[^a-z0-9._-]+/gi, '-') || 'technician-photo.jpg';
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-  }
-
-  return (
-    <div className="fixed inset-0 z-[70] flex items-center justify-center bg-[rgba(7,27,51,0.78)] p-4 backdrop-blur-sm">
-      <div className="flex max-h-[92vh] w-full max-w-5xl flex-col overflow-hidden rounded-md bg-white shadow-[var(--shadow-overlay)]">
-        <div className="flex items-center justify-between gap-3 border-b border-zinc-100 px-4 py-3">
-          <p className="truncate text-sm font-black text-zinc-950">{label}</p>
-          <div className="flex shrink-0 gap-2">
-            <button type="button" onClick={downloadPhoto} className="ds-button ds-button-primary ds-button-small">
-              Download
-            </button>
-            <button type="button" onClick={onClose} className="ds-button ds-button-secondary ds-button-small">
-              Close
-            </button>
-          </div>
-        </div>
-        <div className="min-h-0 overflow-auto bg-zinc-950 p-3">
-          <img src={photo.dataUrl} alt={label} className="mx-auto max-h-[78vh] max-w-full object-contain" />
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function SlotDetail({ label, value }) {
-  return (
-    <div className="rounded-md border border-zinc-200 bg-zinc-50 p-3">
-      <p className="text-xs font-bold uppercase tracking-[0.12em] text-zinc-500">{label}</p>
-      <p className="mt-2 text-sm font-bold text-zinc-900">{value}</p>
-    </div>
+      <Toast message={toast?.message} type={toast?.type} onClose={() => setToast(null)} />
+    </SystemShell>
   );
 }

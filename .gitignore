@@ -21,6 +21,8 @@ backend/*.png
 **/eqpc_cookies.txt
 **/auth_state.json
 sheet_download.xlsx
+scratch/
+
 
 
 

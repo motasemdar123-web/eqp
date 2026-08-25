@@ -28,16 +28,17 @@ export default function MachineTimelineModal({ machine, onClose, onSelectForRepo
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-      <div className="relative bg-white rounded-2xl shadow-2xl max-w-2xl w-full border border-slate-200 overflow-hidden flex flex-col max-h-[90vh]">
+      <div className="relative bg-white rounded-xl shadow-2xl max-w-2xl w-full border border-slate-200 overflow-hidden flex flex-col max-h-[90vh]">
         {/* Modal Header */}
         <div className="bg-slate-900 text-white p-5 flex items-start justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-amber-400 font-extrabold text-lg">
-              🚜
+            <div className="w-10 h-10 rounded-lg bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-amber-400 font-bold text-xs font-mono">
+              EQP
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h3 className="text-xl font-bold text-white tracking-tight">{model} #{serial}</h3>
+                <h3 className="text-base font-semibold text-white tracking-tight">{model} #{serial}</h3>
+
                 <Badge tone="live">Active Unit</Badge>
               </div>
               <p className="text-xs text-slate-400 mt-0.5">

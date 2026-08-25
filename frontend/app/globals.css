@@ -76,16 +76,17 @@
   --leading-body: 1.55;
 
   /* Layout & Radii */
-  --radius-card: 10px;
-  --radius-panel: 12px;
   --radius-control: 6px;
+  --radius-card: 8px;
+  --radius-panel: 8px;
+  --radius-dialog: 10px;
 
   /* Elevation */
-  --shadow-card: 0 1px 3px 0 rgba(15, 23, 42, 0.05), 0 1px 2px -1px rgba(15, 23, 42, 0.05);
-  --shadow-card-hover: 0 10px 15px -3px rgba(15, 23, 42, 0.08), 0 4px 6px -4px rgba(15, 23, 42, 0.04);
-  --shadow-control: 0 1px 2px 0 rgba(15, 23, 42, 0.05);
-  --shadow-overlay: 0 20px 25px -5px rgba(15, 23, 42, 0.12), 0 8px 10px -6px rgba(15, 23, 42, 0.06);
-  --ring: rgba(245, 158, 11, 0.25);
+  --shadow-card: 0 1px 2px 0 rgba(15, 23, 42, 0.04), 0 1px 1px 0 rgba(15, 23, 42, 0.02);
+  --shadow-card-hover: 0 4px 6px -1px rgba(15, 23, 42, 0.06), 0 2px 4px -2px rgba(15, 23, 42, 0.04);
+  --shadow-control: 0 1px 2px 0 rgba(15, 23, 42, 0.04);
+  --shadow-overlay: 0 16px 24px -4px rgba(15, 23, 42, 0.12), 0 6px 12px -4px rgba(15, 23, 42, 0.06);
+  --ring: rgba(15, 23, 42, 0.15);
 }
 
 @theme inline {
@@ -111,7 +112,7 @@ body {
   font-family: var(--font-system);
   font-size: var(--text-md);
   line-height: var(--leading-body);
-  font-weight: 450;
+  font-weight: 400;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
 }
@@ -119,7 +120,7 @@ body {
 h1, h2, h3, h4, h5, h6 {
   color: var(--color-ink);
   font-family: var(--font-system);
-  font-weight: 700;
+  font-weight: 600;
   line-height: var(--leading-title);
   letter-spacing: -0.015em;
 }
@@ -136,6 +137,7 @@ button:disabled {
   cursor: not-allowed;
   opacity: 0.55;
 }
+
 
 ::selection {
   background: var(--color-brand-soft);
@@ -3102,4 +3104,41 @@ button:disabled {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
 }
+
+/* ==========================================================================
+   Outdoor / High-Contrast Mode for Field Technician Mobile App
+   ========================================================================== */
+.tech-high-contrast {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+}
+
+.tech-high-contrast .tech-topbar,
+.tech-high-contrast .tech-day-panel,
+.tech-high-contrast .tech-task-card,
+.tech-high-contrast .tech-audio-card,
+.tech-high-contrast .tech-work-point,
+.tech-high-contrast .tech-detail-hero {
+  background-color: #121212 !important;
+  border-color: #ffffff !important;
+  color: #ffffff !important;
+}
+
+.tech-high-contrast .tech-task-card h3,
+.tech-high-contrast .tech-detail-hero h2,
+.tech-high-contrast .tech-work-point p,
+.tech-high-contrast .tech-section-head h2 {
+  color: #ffffff !important;
+  font-weight: 700 !important;
+}
+
+.tech-high-contrast .tech-note-input,
+.tech-high-contrast input,
+.tech-high-contrast select,
+.tech-high-contrast textarea {
+  background-color: #000000 !important;
+  border-color: #ffffff !important;
+  color: #ffffff !important;
+}
+
 

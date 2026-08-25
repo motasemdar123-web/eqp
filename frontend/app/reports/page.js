@@ -13,6 +13,7 @@ import {
 } from '../../lib/api';
 import { getStoredPlatformSession, getStoredUser } from '../../lib/auth';
 import SystemShell from '../../components/SystemShell';
+import EqpNav from '../../components/eqp/EqpNav';
 import Button from '../../components/ui/Button';
 import Card from '../../components/ui/Card';
 import EmptyState from '../../components/ui/EmptyState';
@@ -341,7 +342,7 @@ export default function ReportsPage() {
             href="/eqp/upload"
             className="ds-button ds-button-secondary text-xs py-1.5 px-3 flex items-center gap-1.5 font-semibold"
           >
-            <span>🚀</span> EQP Care Studio
+            EQP Care Studio
           </Link>
           <Button type="button" variant="secondary" onClick={loadReports}>
             <svg className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -352,7 +353,9 @@ export default function ReportsPage() {
         </div>
       }
     >
-      <div className="space-y-6">
+      <div className="space-y-5">
+        <EqpNav />
+
         {/* KPI Metrics */}
         <section className="ds-kpi-grid">
           <article className="ds-kpi-card">
