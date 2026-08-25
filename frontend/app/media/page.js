@@ -12,8 +12,8 @@ import Step5VideographerCallSheet from '../../components/media/steps/Step5Videog
 import NewMonthModal from '../../components/media/NewMonthModal';
 import NewConceptModal from '../../components/media/NewConceptModal';
 
-const CAMPAIGNS_STORAGE_KEY = 'daralhay.social_media_campaigns_v3';
-const ACTIVE_MONTH_STORAGE_KEY = 'daralhay.social_media_active_month_v3';
+const CAMPAIGNS_STORAGE_KEY = 'daralhay.social_media_campaigns_v4';
+const ACTIVE_MONTH_STORAGE_KEY = 'daralhay.social_media_active_month_v4';
 
 export default function MediaCornerPage() {
   const [campaigns, setCampaigns] = useState({});
@@ -57,6 +57,15 @@ export default function MediaCornerPage() {
   const saveCampaigns = (newCampaigns) => {
     setCampaigns(newCampaigns);
     localStorage.setItem(CAMPAIGNS_STORAGE_KEY, JSON.stringify(newCampaigns));
+  };
+
+  const handleResetCampaign = () => {
+    if (!window.confirm('Reset all campaigns to master template (12 posts/month)?')) return;
+    setCampaigns(INITIAL_MONTHLY_CAMPAIGNS);
+    localStorage.setItem(CAMPAIGNS_STORAGE_KEY, JSON.stringify(INITIAL_MONTHLY_CAMPAIGNS));
+    setSelectedMonthId('2026-08');
+    setSelectedConceptId(null);
+    setCurrentStep(1);
   };
 
   const handleSelectMonth = (monthId) => {
@@ -167,6 +176,7 @@ export default function MediaCornerPage() {
           selectedMonthId={selectedMonthId}
           onSelectMonth={handleSelectMonth}
           onOpenNewMonthModal={() => setIsNewMonthModalOpen(true)}
+          onResetCampaign={handleResetCampaign}
         />
 
         {/* STEP 1: MONTH SETUP */}

@@ -10,6 +10,7 @@ export default function CampaignWizardStepper({
   selectedMonthId,
   onSelectMonth,
   onOpenNewMonthModal,
+  onResetCampaign,
 }) {
   const steps = [
     { id: 1, label: '1. Month Setup', icon: '🎯', desc: 'Theme & Goals' },
@@ -64,10 +65,21 @@ export default function CampaignWizardStepper({
             <button
               type="button"
               onClick={onOpenNewMonthModal}
-              className="px-2.5 py-1 rounded-xl text-xs font-bold bg-amber-500/15 border border-amber-500/30 text-amber-400 hover:bg-amber-500/25 hover:text-amber-300 transition-all"
+              className="px-2.5 py-1 rounded-xl text-xs font-bold bg-amber-400 text-slate-950 hover:bg-amber-300 transition-all shadow-sm"
             >
               + New Month
             </button>
+
+            {onResetCampaign && (
+              <button
+                type="button"
+                onClick={onResetCampaign}
+                title="Reload full 12-post master campaign template"
+                className="px-2.5 py-1 rounded-xl text-xs font-semibold bg-slate-800/80 border border-slate-700 text-slate-300 hover:text-white hover:bg-slate-700 transition-all"
+              >
+                ↺ Reset
+              </button>
+            )}
           </div>
         </div>
       </div>
