@@ -28,6 +28,12 @@ const navigationSections = [
     ],
   },
   {
+    title: 'Media & Creative',
+    items: [
+      { href: '/media', label: 'Media Corner', icon: 'media' },
+    ],
+  },
+  {
     title: 'Administration',
     items: [
       { href: '/management/technicians', label: 'Staff & Technicians', icon: 'users' },
@@ -42,11 +48,11 @@ const navigationSections = [
       { href: '/management/workshop', label: 'Workshop Operations', icon: 'workshop' },
       { href: '/management/sheets-hub', label: 'Master Sheets Database', icon: 'sheets' },
       { href: '/workspace', label: 'Engineering Canvas', icon: 'workspace' },
-      { href: '/media', label: 'Media Studio', icon: 'media' },
       { href: '/japanese', label: 'Japanese Learning Hub', icon: 'japanese' },
     ],
   },
 ];
+
 
 
 const iconPaths = {
@@ -225,8 +231,9 @@ const COMMAND_ITEMS = [
   { id: 'nav-technicians', title: 'Technicians Management', subtitle: 'Staff records, shifts, regions & skills', href: '/management/technicians', category: 'Navigation', badge: 'Staff' },
   { id: 'nav-technician-app', title: 'Field Technician Mobile App', subtitle: 'Arabic mobile execution, checklists & evidence', href: '/technician', category: 'Navigation', badge: 'Field' },
   { id: 'nav-workspace', title: 'Engineering Canvas', subtitle: 'Miro-grade whiteboard & failure root-cause analysis', href: '/workspace', category: 'Labs', badge: 'Labs' },
-  { id: 'nav-media', title: 'Media Studio', subtitle: 'Social campaign scripts, briefs & production wizard', href: '/media', category: 'Labs', badge: 'Labs' },
+  { id: 'nav-media', title: 'Media Corner', subtitle: 'Campaign scripts, monthly calendar, director studio & videographer sheets', href: '/media', category: 'Navigation', badge: 'Media' },
   { id: 'nav-japanese', title: 'Japanese Learning Hub', subtitle: 'JLPT N5/N4 flashcard dojo & technical terminology', href: '/japanese', category: 'Labs', badge: 'Labs' },
+
 ];
 
 export default function SystemShell({

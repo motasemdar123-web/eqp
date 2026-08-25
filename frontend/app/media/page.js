@@ -163,10 +163,11 @@ export default function MediaCornerPage() {
   return (
     <SystemShell
       activePath="/media"
-      eyebrow="Dar Al Hay Media & Creative"
-      title="Campaign Studio & Videographer Hand-Off"
+      eyebrow="Creative & Communications"
+      title="Media Corner"
       description="5-step guided wizard: set monthly strategy, organize weekly releases, write director scripts, and export call sheets for your videographer."
     >
+
       <div className="space-y-6 max-w-7xl mx-auto pb-12">
         {/* Stepper Header with Month Selector */}
         <CampaignWizardStepper
