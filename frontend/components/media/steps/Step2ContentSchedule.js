@@ -1,9 +1,12 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
+
 import Badge from '../../ui/Badge';
 import Button from '../../ui/Button';
+import StatusIndicator from '../../ui/StatusIndicator';
 import { FORMAT_TYPES, CONTENT_PILLARS, MEDIA_PLATFORMS, PIPELINE_STAGES } from '../../../lib/mediaMonthlyData';
+
 
 export default function Step2ContentSchedule({
   campaign,
@@ -121,19 +124,19 @@ export default function Step2ContentSchedule({
 
       {/* MODE 1: 4-WEEK BOARD VIEW */}
       {viewMode === 'board' && (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 items-start">
           {weeks.map((week) => (
             <div
               key={week.name}
-              className="border border-slate-200 rounded-2xl bg-slate-50/50 overflow-hidden flex flex-col shadow-xs"
+              className="border border-slate-200 rounded-xl bg-slate-50/50 overflow-hidden flex flex-col shadow-2xs"
             >
               {/* Clean, High-Contrast Week Header */}
-              <div className="bg-slate-900 text-white p-3.5 flex items-center justify-between border-b border-slate-800">
+              <div className="bg-slate-900 text-white px-3.5 py-2.5 flex items-center justify-between border-b border-slate-800">
                 <div>
-                  <h3 className="text-xs font-black tracking-wide uppercase text-white">{week.name}</h3>
+                  <h3 className="text-xs font-bold tracking-wide uppercase text-white">{week.name}</h3>
                   <p className="text-[10px] text-slate-400">Scheduled Releases</p>
                 </div>
-                <span className="font-mono text-xs font-bold bg-slate-800 text-amber-300 px-2.5 py-0.5 rounded-lg border border-slate-700">
+                <span className="font-mono text-xs font-semibold bg-slate-800 text-amber-400 px-2 py-0.5 rounded border border-slate-700">
                   {week.items.length} {week.items.length === 1 ? 'Post' : 'Posts'}
                 </span>
               </div>
@@ -141,14 +144,14 @@ export default function Step2ContentSchedule({
               {/* Week Posts Container */}
               <div className="p-3 space-y-3 flex-1 overflow-y-auto max-h-[640px]">
                 {week.items.length === 0 ? (
-                  <div className="p-6 text-center text-xs text-slate-400 border border-dashed border-slate-300 rounded-xl bg-white space-y-2">
+                  <div className="p-6 text-center text-xs text-slate-400 border border-dashed border-slate-300 rounded-lg bg-white space-y-2">
                     <p>No posts planned for {week.name}.</p>
                     <button
                       type="button"
                       onClick={() => onAddNewConcept && onAddNewConcept({ week: week.name })}
-                      className="text-xs font-bold text-amber-700 hover:underline inline-block bg-amber-50 px-3 py-1 rounded-lg border border-amber-200"
+                      className="text-xs font-semibold text-amber-700 hover:underline inline-block bg-amber-50 px-2.5 py-1 rounded border border-amber-200 cursor-pointer"
                     >
-                      + Add Post to {week.name}
+                      + Add Post
                     </button>
                   </div>
                 ) : (
@@ -163,68 +166,88 @@ export default function Step2ContentSchedule({
                       <div
                         key={concept.id}
                         onClick={() => onSelectConceptToScript(concept)}
-                        className="p-4 bg-white rounded-xl border border-slate-200 hover:border-amber-400 hover:shadow-md transition-all cursor-pointer space-y-3 group relative"
+                        className="p-3.5 bg-white rounded-lg border border-slate-200 hover:border-slate-400 hover:shadow-xs transition-all cursor-pointer space-y-2.5 group shadow-2xs relative"
                       >
-                        {/* Top Meta: Day Pill, Format Pill & Delete */}
-                        <div className="flex items-center justify-between gap-1 text-[10px]">
-                          <div className="flex items-center gap-1.5">
-                            <span className="font-bold text-slate-700 bg-slate-100 px-2 py-0.5 rounded">
+                        {/* Top Meta: Day + Post # on Left, Format Pill + Delete on Right */}
+                        <div className="flex items-center justify-between gap-2">
+                          <div className="flex items-center gap-1.5 min-w-0">
+                            <span className="text-[11px] font-semibold text-slate-700 bg-slate-100 px-2 py-0.5 rounded">
                               {concept.day || 'Release'}
                             </span>
-                            <span className={`px-2 py-0.5 rounded font-bold ${formatMeta.color} border`}>
-                              {formatMeta.icon} {formatMeta.label}
+                            <span className="text-[10px] font-mono text-slate-400">
+                              #{String(concept.conceptNumber || 1).padStart(2, '0')}
                             </span>
                           </div>
 
-                          <button
-                            type="button"
-                            title="Delete this post from calendar"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              onDeleteConcept && onDeleteConcept(concept.id);
-                            }}
-                            className="text-slate-400 hover:text-red-600 p-1 hover:bg-red-50 rounded-md transition-colors text-xs font-bold"
-                          >
-                            ✕
-                          </button>
+                          <div className="flex items-center gap-1 shrink-0">
+                            <span className={`text-[10px] font-semibold px-2 py-0.5 rounded border ${formatMeta.color} whitespace-nowrap`}>
+                              {formatMeta.shortLabel || formatMeta.label}
+                            </span>
+                            <button
+                              type="button"
+                              title="Delete post"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                onDeleteConcept && onDeleteConcept(concept.id);
+                              }}
+                              className="text-slate-400 hover:text-red-600 p-0.5 rounded hover:bg-red-50 transition-colors text-xs font-bold cursor-pointer"
+                            >
+                              ✕
+                            </button>
+                          </div>
                         </div>
 
                         {/* Title & Hook */}
                         <div>
-                          <h4 className="text-xs font-bold text-slate-900 group-hover:text-amber-700 transition-colors leading-snug">
+                          <h4 className="text-xs font-bold text-slate-900 group-hover:text-amber-700 transition-colors leading-snug line-clamp-2">
                             {concept.title}
                           </h4>
                           {hookSnippet && (
                             <p className="text-[11px] text-slate-500 italic mt-1 line-clamp-2 leading-relaxed">
-                              "{hookSnippet}"
+                              &ldquo;{hookSnippet}&rdquo;
                             </p>
                           )}
                         </div>
 
-                        {/* Pillar Chip & Status Badge */}
-                        <div className="flex items-center justify-between gap-1">
-                          <span className={`px-2 py-0.5 rounded text-[9px] font-bold ${pillarMeta.color} border inline-block`}>
-                            {pillarMeta.label}
+                        {/* Metadata Row: Pillar on Left, Status Dot on Right */}
+                        <div className="flex items-center justify-between gap-2 pt-1 border-t border-slate-100 text-[10px]">
+                          <span
+                            className="font-semibold text-slate-600 bg-slate-50 border border-slate-200 px-1.5 py-0.5 rounded truncate max-w-[130px]"
+                            title={pillarMeta.label}
+                          >
+                            {pillarMeta.shortLabel || pillarMeta.label}
                           </span>
-                          <Badge tone={stageMeta.badgeTone}>
-                            {stageMeta.label}
-                          </Badge>
+                          <StatusIndicator
+                            tone={
+                              concept.status === 'ready' || concept.status === 'published'
+                                ? 'ready'
+                                : concept.status === 'scripted' || concept.status === 'production'
+                                ? 'pending'
+                                : 'neutral'
+                            }
+                            label={stageMeta.shortLabel || stageMeta.label}
+                            size="sm"
+                          />
                         </div>
 
-                        {/* Bottom Footer: Channels & Script Action */}
-                        <div className="flex items-center justify-between pt-2 border-t border-slate-100 text-[10px]">
+                        {/* Footer Row: Channels & Script CTA */}
+                        <div className="flex items-center justify-between pt-1.5 border-t border-slate-100 text-[10px]">
                           <div className="flex items-center gap-1">
-                            {concept.platforms?.map((pid) => (
-                              <span key={pid} className="text-xs" title={pid}>
-                                {MEDIA_PLATFORMS.find((pl) => pl.id === pid)?.icon}
-                              </span>
-                            ))}
+                            {concept.platforms?.map((pid) => {
+                              const pl = MEDIA_PLATFORMS.find((p) => p.id === pid);
+                              return (
+                                <span
+                                  key={pid}
+                                  className="font-mono font-bold text-[9px] px-1 py-0.5 bg-slate-100 text-slate-600 rounded border border-slate-200/80"
+                                >
+                                  {pl?.code || pid.slice(0, 2).toUpperCase()}
+                                </span>
+                              );
+                            })}
                           </div>
 
-                          <span className={`font-bold flex items-center gap-1 ${
-                            isScripted ? 'text-emerald-700' : 'text-amber-700'
-                          }`}>
-                            {isScripted ? '✓ Scripted' : '⚡ Script'} →
+                          <span className="font-semibold text-xs text-slate-600 group-hover:text-amber-700 transition-colors">
+                            {isScripted ? 'Script Studio →' : '+ Draft Script →'}
                           </span>
                         </div>
                       </div>
@@ -239,7 +262,7 @@ export default function Step2ContentSchedule({
 
       {/* MODE 2: EDITORIAL LIST VIEW (TABLE) */}
       {viewMode === 'list' && (
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
+        <div className="bg-white rounded-xl border border-slate-200 shadow-2xs overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
               <thead className="bg-slate-900 text-white text-[11px] uppercase tracking-wider">
@@ -267,8 +290,8 @@ export default function Step2ContentSchedule({
                       onClick={() => onSelectConceptToScript(concept)}
                       className="hover:bg-slate-50 cursor-pointer transition-colors"
                     >
-                      <td className="p-3 text-center font-bold text-slate-900">
-                        <span className="w-6 h-6 rounded-md bg-slate-100 inline-flex items-center justify-center">
+                      <td className="p-3 text-center font-mono font-bold text-slate-900">
+                        <span className="w-6 h-6 rounded bg-slate-100 inline-flex items-center justify-center text-xs">
                           {concept.conceptNumber}
                         </span>
                       </td>
@@ -280,33 +303,47 @@ export default function Step2ContentSchedule({
                         <p className="font-bold text-slate-900 text-xs">{concept.title}</p>
                         {hookSnippet && (
                           <p className="text-[11px] text-slate-500 italic line-clamp-1 mt-0.5">
-                            "{hookSnippet}"
+                            &ldquo;{hookSnippet}&rdquo;
                           </p>
                         )}
                       </td>
                       <td className="p-3 whitespace-nowrap">
-                        <span className={`px-2 py-0.5 rounded font-bold ${formatMeta.color} border text-[11px]`}>
-                          {formatMeta.icon} {formatMeta.label}
+                        <span className={`px-2 py-0.5 rounded font-semibold ${formatMeta.color} border text-[11px]`}>
+                          {formatMeta.shortLabel || formatMeta.label}
                         </span>
                       </td>
                       <td className="p-3 whitespace-nowrap">
-                        <span className={`px-2 py-0.5 rounded font-bold ${pillarMeta.color} border text-[10px]`}>
-                          {pillarMeta.label}
+                        <span className="px-2 py-0.5 rounded font-semibold bg-slate-50 text-slate-700 border border-slate-200 text-[11px]">
+                          {pillarMeta.shortLabel || pillarMeta.label}
                         </span>
                       </td>
                       <td className="p-3 whitespace-nowrap">
                         <div className="flex items-center gap-1">
-                          {concept.platforms?.map((pid) => (
-                            <span key={pid} className="text-xs" title={pid}>
-                              {MEDIA_PLATFORMS.find((pl) => pl.id === pid)?.icon}
-                            </span>
-                          ))}
+                          {concept.platforms?.map((pid) => {
+                            const pl = MEDIA_PLATFORMS.find((p) => p.id === pid);
+                            return (
+                              <span
+                                key={pid}
+                                className="font-mono font-bold text-[9px] px-1 py-0.5 bg-slate-100 text-slate-600 rounded border border-slate-200/80"
+                              >
+                                {pl?.code || pid.slice(0, 2).toUpperCase()}
+                              </span>
+                            );
+                          })}
                         </div>
                       </td>
                       <td className="p-3 whitespace-nowrap">
-                        <Badge tone={stageMeta.badgeTone}>
-                          {stageMeta.label}
-                        </Badge>
+                        <StatusIndicator
+                          tone={
+                            concept.status === 'ready' || concept.status === 'published'
+                              ? 'ready'
+                              : concept.status === 'scripted' || concept.status === 'production'
+                              ? 'pending'
+                              : 'neutral'
+                          }
+                          label={stageMeta.shortLabel || stageMeta.label}
+                          size="sm"
+                        />
                       </td>
                       <td className="p-3 text-right whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
                         <div className="flex items-center justify-end gap-1.5">
@@ -315,7 +352,7 @@ export default function Step2ContentSchedule({
                             variant="secondary"
                             size="sm"
                             onClick={() => onSelectConceptToScript(concept)}
-                            className="text-xs !bg-slate-100 font-bold"
+                            className="text-xs !bg-slate-100 font-semibold"
                           >
                             Script →
                           </Button>
@@ -338,6 +375,7 @@ export default function Step2ContentSchedule({
           </div>
         </div>
       )}
+
 
       {/* Navigation Footer */}
       <div className="flex items-center justify-between pt-4 border-t border-slate-200">

@@ -112,10 +112,10 @@ export default function Step3DirectorScriptStudio({
       {/* Step Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-slate-200 pb-4">
         <div>
-          <span className="text-[10px] font-black uppercase tracking-widest text-amber-600 bg-amber-50 border border-amber-200 px-2.5 py-0.5 rounded-full">
+          <span className="text-[10px] font-bold uppercase tracking-wider text-amber-700 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded">
             Step 3 of 5
           </span>
-          <h2 className="text-xl font-black text-slate-900 mt-1">Director's Script & Scene Studio</h2>
+          <h2 className="text-lg font-bold text-slate-900 mt-1">Director&apos;s Script & Scene Studio</h2>
           <p className="text-xs text-slate-500">
             Script the 3-second hook, timecoded shot breakdown, and B-roll checklist for your videographer.
           </p>
@@ -127,9 +127,9 @@ export default function Step3DirectorScriptStudio({
             variant="secondary"
             size="sm"
             onClick={onJumpToCallSheet}
-            className="text-xs font-bold !bg-white hover:!bg-slate-50 border border-slate-200"
+            className="text-xs font-semibold !bg-white hover:!bg-slate-50 border border-slate-200"
           >
-            📄 Jump to Call Sheet →
+            Jump to Call Sheet →
           </Button>
         </div>
       </div>
@@ -139,8 +139,8 @@ export default function Step3DirectorScriptStudio({
         {/* Left Sidebar: Concept Selector + Script Progress Ring */}
         <div className="lg:col-span-4 space-y-4">
           {/* Progress Card */}
-          <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs flex items-center gap-3.5">
-            <svg width="48" height="48" viewBox="0 0 48 48" className="shrink-0">
+          <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs flex items-center gap-3.5">
+            <svg width="44" height="44" viewBox="0 0 48 48" className="shrink-0">
               <circle cx="24" cy="24" r="20" fill="none" stroke="#f1f5f9" strokeWidth="4" />
               <circle
                 cx="24" cy="24" r="20"
@@ -150,7 +150,7 @@ export default function Step3DirectorScriptStudio({
                 strokeLinecap="round"
                 transform="rotate(-90 24 24)"
               />
-              <text x="24" y="28" textAnchor="middle" className="fill-slate-900 text-xs font-black">{scriptingProgress.pct}%</text>
+              <text x="24" y="28" textAnchor="middle" className="fill-slate-900 text-xs font-bold">{scriptingProgress.pct}%</text>
             </svg>
             <div>
               <p className="text-xs font-bold text-slate-900">Scripting Progress</p>
@@ -159,13 +159,13 @@ export default function Step3DirectorScriptStudio({
           </div>
 
           {/* Concepts List */}
-          <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs max-h-[620px] overflow-y-auto space-y-2">
+          <div className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-2xs max-h-[620px] overflow-y-auto space-y-2">
             <div className="flex items-center justify-between pb-2 border-b border-slate-100">
               <span className="text-xs font-bold text-slate-700 uppercase tracking-wider">Posts in {campaign.monthName}</span>
               <Badge tone="neutral">{concepts.length}</Badge>
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-1.5">
               {concepts.map((c) => {
                 const isSelected = c.id === scriptData.id;
                 const fMeta = FORMAT_TYPES.find((f) => f.id === c.format) || FORMAT_TYPES[0];
@@ -175,26 +175,26 @@ export default function Step3DirectorScriptStudio({
                   <div
                     key={c.id}
                     onClick={() => onSelectConcept(c.id)}
-                    className={`p-3 rounded-xl border transition-all cursor-pointer space-y-1.5 ${
+                    className={`p-2.5 rounded-lg border transition-all cursor-pointer space-y-1 ${
                       isSelected
-                        ? 'bg-slate-900 text-white border-slate-900 shadow-sm'
+                        ? 'bg-slate-900 text-white border-slate-900 shadow-xs'
                         : 'bg-slate-50 border-slate-200 text-slate-800 hover:bg-slate-100'
                     }`}
                   >
                     <div className="flex items-center justify-between text-[10px]">
-                      <span className="font-bold opacity-80">{c.week} • {c.day}</span>
+                      <span className="font-semibold opacity-80">{c.week} • {c.day}</span>
                       <div className="flex items-center gap-1.5">
                         {isScripted && (
                           <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${isSelected ? 'bg-emerald-400' : 'bg-emerald-500'}`} />
                         )}
-                        <span className={`px-1.5 py-0.2 rounded font-bold ${isSelected ? 'bg-slate-800 text-amber-300' : fMeta.color}`}>
-                          {fMeta.label}
+                        <span className={`px-1.5 py-0.5 rounded font-semibold text-[10px] whitespace-nowrap ${isSelected ? 'bg-slate-800 text-amber-300' : fMeta.color}`}>
+                          {fMeta.shortLabel || fMeta.label}
                         </span>
                       </div>
                     </div>
                     <h4 className="text-xs font-bold leading-snug line-clamp-1">{c.title}</h4>
-                    <div className="flex items-center justify-between text-[10px] pt-1 opacity-75">
-                      <span>#{c.conceptNumber}</span>
+                    <div className="flex items-center justify-between text-[10px] pt-0.5 opacity-75">
+                      <span className="font-mono">#{c.conceptNumber}</span>
                       <span>{isScripted ? `${c.scenes?.length || c.slides?.length} scenes` : 'Pending'}</span>
                     </div>
                   </div>
@@ -203,6 +203,7 @@ export default function Step3DirectorScriptStudio({
             </div>
           </div>
         </div>
+
 
         {/* Right Main Stage: The Director's Scripting Form */}
         <div className="lg:col-span-8 space-y-5 bg-white p-6 rounded-2xl border border-slate-200 shadow-xs">

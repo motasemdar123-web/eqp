@@ -1,17 +1,17 @@
 export const CONTENT_PILLARS = [
-  { id: 'pillar_authority', label: 'Brand Authority & Japanese Heritage', color: 'bg-sky-50 text-sky-800 border-sky-200', tagColor: 'sky', targetPct: 20, desc: 'Highlighting Komatsu Japanese precision, Dar Al Hay partnership, and Kuwait infrastructure leadership.' },
-  { id: 'pillar_engineering', label: 'Technical & Product Specs', color: 'bg-indigo-50 text-indigo-800 border-indigo-200', tagColor: 'indigo', targetPct: 25, desc: 'Deep-dive machine walkthroughs, specs, KOMTRAX telematics, and heavy-duty desert cooling systems.' },
-  { id: 'pillar_workshop', label: 'Workshop BTS & Overhauls', color: 'bg-amber-50 text-amber-800 border-amber-200', tagColor: 'amber', targetPct: 20, desc: 'Certified engineers, engine overhauls, diagnostic testing, and parts warehouse inventory in Shuwaikh.' },
-  { id: 'pillar_projects', label: 'Kuwait Jobsites & Case Studies', color: 'bg-emerald-50 text-emerald-800 border-emerald-200', tagColor: 'emerald', targetPct: 20, desc: 'Real-world machinery performance at Sabah Al-Ahmad Sea City, desert earthworks, and highway projects.' },
-  { id: 'pillar_leadgen', label: 'After-Sales & Spare Parts', color: 'bg-rose-50 text-rose-800 border-rose-200', tagColor: 'rose', targetPct: 15, desc: 'Emergency field service, genuine parts direct delivery, EQP maintenance contracts, and machine sales.' },
+  { id: 'pillar_authority', label: 'Brand Authority & Japanese Heritage', shortLabel: 'Brand Heritage', color: 'bg-sky-50 text-sky-800 border-sky-200', tagColor: 'sky', targetPct: 20, desc: 'Highlighting Komatsu Japanese precision, Dar Al Hay partnership, and Kuwait infrastructure leadership.' },
+  { id: 'pillar_engineering', label: 'Technical & Product Specs', shortLabel: 'Tech Specs', color: 'bg-indigo-50 text-indigo-800 border-indigo-200', tagColor: 'indigo', targetPct: 25, desc: 'Deep-dive machine walkthroughs, specs, KOMTRAX telematics, and heavy-duty desert cooling systems.' },
+  { id: 'pillar_workshop', label: 'Workshop BTS & Overhauls', shortLabel: 'Workshop BTS', color: 'bg-amber-50 text-amber-800 border-amber-200', tagColor: 'amber', targetPct: 20, desc: 'Certified engineers, engine overhauls, diagnostic testing, and parts warehouse inventory in Shuwaikh.' },
+  { id: 'pillar_projects', label: 'Kuwait Jobsites & Case Studies', shortLabel: 'Jobsites', color: 'bg-emerald-50 text-emerald-800 border-emerald-200', tagColor: 'emerald', targetPct: 20, desc: 'Real-world machinery performance at Sabah Al-Ahmad Sea City, desert earthworks, and highway projects.' },
+  { id: 'pillar_leadgen', label: 'After-Sales & Spare Parts', shortLabel: 'After-Sales', color: 'bg-rose-50 text-rose-800 border-rose-200', tagColor: 'rose', targetPct: 15, desc: 'Emergency field service, genuine parts direct delivery, EQP maintenance contracts, and machine sales.' },
 ];
 
 export const FORMAT_TYPES = [
-  { id: 'reel', label: 'Reels / Motion Video', icon: '🎬', tag: 'Motion Video', color: 'bg-purple-50 text-purple-800 border-purple-200' },
-  { id: 'carousel', label: 'Carousels (Multi-Slide)', icon: '📑', tag: 'Swipe Deck', color: 'bg-indigo-50 text-indigo-800 border-indigo-200' },
-  { id: 'photography', label: 'Hero Photography', icon: '📸', tag: 'Photo Showcase', color: 'bg-emerald-50 text-emerald-800 border-emerald-200' },
-  { id: 'designed_post', label: 'Technical Infographic', icon: '🎨', tag: 'Graphic / Data', color: 'bg-amber-50 text-amber-800 border-amber-200' },
-  { id: 'cta_post', label: 'Conversion / Inquiry', icon: '🎯', tag: 'Direct Offer', color: 'bg-rose-50 text-rose-800 border-rose-200' },
+  { id: 'reel', label: 'Reels / Motion Video', shortLabel: 'Reel', tag: 'Motion Video', color: 'bg-purple-50 text-purple-800 border-purple-200' },
+  { id: 'carousel', label: 'Carousels (Multi-Slide)', shortLabel: 'Carousel', tag: 'Swipe Deck', color: 'bg-indigo-50 text-indigo-800 border-indigo-200' },
+  { id: 'photography', label: 'Hero Photography', shortLabel: 'Photo', tag: 'Photo Showcase', color: 'bg-emerald-50 text-emerald-800 border-emerald-200' },
+  { id: 'designed_post', label: 'Technical Infographic', shortLabel: 'Infographic', tag: 'Graphic / Data', color: 'bg-amber-50 text-amber-800 border-amber-200' },
+  { id: 'cta_post', label: 'Conversion / Inquiry', shortLabel: 'Inquiry', tag: 'Direct Offer', color: 'bg-rose-50 text-rose-800 border-rose-200' },
 ];
 
 export const GOAL_TYPES = [
@@ -24,19 +24,20 @@ export const GOAL_TYPES = [
 ];
 
 export const PIPELINE_STAGES = [
-  { id: 'idea', label: 'Concept Draft', icon: '💡', badgeTone: 'neutral' },
-  { id: 'scripted', label: 'Scripted & Briefed', icon: '📝', badgeTone: 'info' },
-  { id: 'production', label: 'Filming / Designing', icon: '🎬', badgeTone: 'warning' },
-  { id: 'review', label: 'Under Review', icon: '👀', badgeTone: 'yellow' },
-  { id: 'ready', label: 'Ready to Publish', icon: '🚀', badgeTone: 'active' },
-  { id: 'published', label: 'Published', icon: '✅', badgeTone: 'ready' },
+  { id: 'idea', label: 'Concept Draft', shortLabel: 'Draft', badgeTone: 'neutral' },
+  { id: 'scripted', label: 'Scripted & Briefed', shortLabel: 'Scripted', badgeTone: 'info' },
+  { id: 'production', label: 'Filming / Designing', shortLabel: 'Filming', badgeTone: 'warning' },
+  { id: 'review', label: 'Under Review', shortLabel: 'Review', badgeTone: 'yellow' },
+  { id: 'ready', label: 'Ready to Publish', shortLabel: 'Ready', badgeTone: 'ready' },
+  { id: 'published', label: 'Published', shortLabel: 'Published', badgeTone: 'ready' },
 ];
 
 export const MEDIA_PLATFORMS = [
-  { id: 'instagram', label: 'Instagram', icon: '📸', badgeTone: 'active', handle: '@daralhay_komatsu' },
-  { id: 'linkedin', label: 'LinkedIn', icon: '💼', badgeTone: 'info', handle: 'Dar Al Hay Commercial Co.' },
-  { id: 'facebook', label: 'Facebook', icon: '👥', badgeTone: 'ready', handle: 'Dar Al Hay - Komatsu Kuwait' },
+  { id: 'instagram', label: 'Instagram', code: 'IG', badgeTone: 'active', handle: '@daralhay_komatsu' },
+  { id: 'linkedin', label: 'LinkedIn', code: 'LI', badgeTone: 'info', handle: 'Dar Al Hay Commercial Co.' },
+  { id: 'facebook', label: 'Facebook', code: 'FB', badgeTone: 'ready', handle: 'Dar Al Hay - Komatsu Kuwait' },
 ];
+
 
 export const TOV_GUIDELINES = {
   overall: {
