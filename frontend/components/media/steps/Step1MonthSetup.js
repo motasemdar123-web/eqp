@@ -7,22 +7,21 @@ import Button from '../../ui/Button';
 
 /* ── Donut chart constants ─────────────────────────────────────── */
 const PILLARS = [
-  { label: 'Brand Authority', pct: 20, color: '#0ea5e9' },   // sky-500
-  { label: 'Tech & Specs',    pct: 30, color: '#6366f1' },   // indigo-500
-  { label: 'Workshop BTS',    pct: 20, color: '#f59e0b' },   // amber-500
-  { label: 'Kuwait Projects', pct: 15, color: '#10b981' },   // emerald-500
-  { label: 'Lead Gen',        pct: 15, color: '#f43f5e' },   // rose-500
+  { id: 'pillar_authority', label: 'Brand Authority', pct: 20, color: '#0ea5e9', bg: 'bg-sky-500' },
+  { id: 'pillar_engineering', label: 'Tech & Product Specs', pct: 30, color: '#6366f1', bg: 'bg-indigo-500' },
+  { id: 'pillar_workshop', label: 'Workshop BTS & Overhauls', pct: 20, color: '#f59e0b', bg: 'bg-amber-500' },
+  { id: 'pillar_projects', label: 'Kuwait Jobsites', pct: 15, color: '#10b981', bg: 'bg-emerald-500' },
+  { id: 'pillar_leadgen', label: 'After-Sales & Parts', pct: 15, color: '#f43f5e', bg: 'bg-rose-500' },
 ];
 
-const DONUT_RADIUS = 54;
+const DONUT_RADIUS = 50;
 const DONUT_CIRCUMFERENCE = 2 * Math.PI * DONUT_RADIUS;
 
-/** Build stroke-dasharray / dashoffset arcs for each pillar. */
 function buildArcs() {
   let accumulated = 0;
   return PILLARS.map((p) => {
     const dash = (p.pct / 100) * DONUT_CIRCUMFERENCE;
-    const gap  = DONUT_CIRCUMFERENCE - dash;
+    const gap = DONUT_CIRCUMFERENCE - dash;
     const offset = -accumulated * (DONUT_CIRCUMFERENCE / 100);
     accumulated += p.pct;
     return { ...p, dash, gap, offset };
@@ -30,12 +29,6 @@ function buildArcs() {
 }
 const ARCS = buildArcs();
 
-/* ── Tailwind color‐class map (for dots / cards) ──────────────── */
-const TW_BG = [
-  'bg-sky-500', 'bg-indigo-500', 'bg-amber-500', 'bg-emerald-500', 'bg-rose-500',
-];
-
-/* ── Component ────────────────────────────────────────────────── */
 export default function Step1MonthSetup({ campaign, onUpdateCampaign, onNextStep }) {
   const [formData, setFormData] = useState({
     themeTitle: campaign.themeTitle || '',
@@ -47,57 +40,72 @@ export default function Step1MonthSetup({ campaign, onUpdateCampaign, onNextStep
     onUpdateCampaign(formData);
   };
 
-  /* ── Derived quick‑stats ──────────────────────────────────── */
   const concepts = campaign.concepts ?? [];
 
   const stats = useMemo(() => {
     const totalPosts = concepts.length;
-    const reels      = concepts.filter((c) => c.format === 'reel').length;
-    const carousels  = concepts.filter((c) => c.format === 'carousel').length;
-    const scripted   = concepts.filter(
+    const reels = concepts.filter((c) => c.format === 'reel').length;
+    const carousels = concepts.filter((c) => c.format === 'carousel').length;
+    const scripted = concepts.filter(
       (c) => (c.scenes?.length > 0) || (c.slides?.length > 0),
     ).length;
     return { totalPosts, reels, carousels, scripted };
   }, [concepts]);
 
-  const STAT_CARDS = [
-    { label: 'Total Releases', value: stats.totalPosts, tag: 'Monthly Total' },
-    { label: 'Short-Form Reels', value: stats.reels, tag: 'Video Format' },
-    { label: 'Technical Carousels', value: stats.carousels, tag: 'Slide Format' },
-    { label: 'Director Scripted', value: stats.scripted, tag: 'Production Ready' },
-  ];
-
   return (
     <div className="space-y-6 max-w-4xl mx-auto animate-[ds-toast-in_180ms_ease]">
       {/* Step Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b border-slate-200 pb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b border-slate-200 pb-3.5">
         <div>
-          <span className="text-[10px] font-bold uppercase tracking-wider text-amber-700 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded">
-            Step 1 of 5
-          </span>
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-amber-700 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded">
+              Step 1 of 5
+            </span>
+            <span className="text-xs font-mono font-medium text-slate-500">
+              {campaign.monthName}
+            </span>
+          </div>
           <h2 className="text-lg font-bold text-slate-900 mt-1">Monthly Campaign Theme & Strategy</h2>
-          <p className="text-xs text-slate-500">Define the overarching market narrative and target KPIs for {campaign.monthName}</p>
+          <p className="text-xs text-slate-500">Define the overarching market narrative, target KPIs, and content pillar balance for {campaign.monthName}.</p>
         </div>
 
         <Badge tone="active">{campaign.monthName}</Badge>
       </div>
 
-      {/* Quick-Stat Metric Cards */}
+      {/* Quick-Stat Metric Strip */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        {STAT_CARDS.map((s) => (
-          <div
-            key={s.label}
-            className="p-3.5 bg-white rounded-lg border border-slate-200 shadow-2xs space-y-1"
-          >
-            <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-400 block">{s.tag}</span>
-            <span className="text-2xl font-bold font-mono text-slate-900 leading-none block">{s.value}</span>
-            <span className="text-xs font-medium text-slate-600 block">{s.label}</span>
-          </div>
-        ))}
+        <div className="p-3 bg-white rounded-lg border border-slate-200 shadow-2xs">
+          <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-400 block">Monthly Total</span>
+          <span className="text-xl font-bold font-mono text-slate-900 mt-0.5 block">{stats.totalPosts}</span>
+          <span className="text-[11px] font-medium text-slate-600">Total Releases</span>
+        </div>
+
+        <div className="p-3 bg-white rounded-lg border border-slate-200 shadow-2xs">
+          <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-400 block">Video Format</span>
+          <span className="text-xl font-bold font-mono text-slate-900 mt-0.5 block">{stats.reels}</span>
+          <span className="text-[11px] font-medium text-slate-600">Short-Form Reels</span>
+        </div>
+
+        <div className="p-3 bg-white rounded-lg border border-slate-200 shadow-2xs">
+          <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-400 block">Slide Format</span>
+          <span className="text-xl font-bold font-mono text-slate-900 mt-0.5 block">{stats.carousels}</span>
+          <span className="text-[11px] font-medium text-slate-600">Technical Carousels</span>
+        </div>
+
+        <div className="p-3 bg-white rounded-lg border border-slate-200 shadow-2xs">
+          <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-400 block">Production Ready</span>
+          <span className="text-xl font-bold font-mono text-emerald-700 mt-0.5 block">{stats.scripted}</span>
+          <span className="text-[11px] font-medium text-slate-600">Director Scripted</span>
+        </div>
       </div>
 
-      {/* Main Setup Card */}
-      <Card className="p-6 space-y-5 bg-white">
+      {/* Section 1: Campaign Narrative & Goals Card */}
+      <Card className="p-5 space-y-4 bg-white border border-slate-200 shadow-2xs">
+        <div className="border-b border-slate-100 pb-2.5">
+          <h3 className="text-sm font-bold text-slate-900">Campaign Messaging & Goals</h3>
+          <p className="text-xs text-slate-500">Core market positioning unifying all reels, carousels, and case studies this month.</p>
+        </div>
+
         {/* Campaign Theme Title */}
         <div>
           <label className="text-xs font-semibold text-slate-900 mb-1.5 block">
@@ -111,7 +119,6 @@ export default function Step1MonthSetup({ campaign, onUpdateCampaign, onNextStep
             placeholder="e.g. Extreme Desert Heat Resilience & 50°C+ Summer Operations"
             className="ds-input text-xs sm:text-sm font-semibold text-slate-900"
           />
-          <p className="text-[11px] text-slate-500 mt-1">The primary theme unifying all reels, carousels, and case studies this month.</p>
         </div>
 
         {/* Strategic Narrative / Objective */}
@@ -120,7 +127,7 @@ export default function Step1MonthSetup({ campaign, onUpdateCampaign, onNextStep
             Campaign Narrative & Customer Objective
           </label>
           <textarea
-            rows={3}
+            rows={2}
             value={formData.strategicGoal}
             onChange={(e) => setFormData({ ...formData, strategicGoal: e.target.value })}
             onBlur={handleSave}
@@ -143,73 +150,74 @@ export default function Step1MonthSetup({ campaign, onUpdateCampaign, onNextStep
             className="ds-input text-xs font-mono font-semibold"
           />
         </div>
+      </Card>
 
+      {/* Section 2: Content Pillar Distribution Card */}
+      <Card className="p-5 space-y-4 bg-white border border-slate-200 shadow-2xs">
+        <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
+          <div>
+            <h3 className="text-sm font-bold text-slate-900">Recommended Content Pillar Balance</h3>
+            <p className="text-xs text-slate-500">Target allocation vs actual posts scheduled across strategic pillars.</p>
+          </div>
+          <span className="text-[11px] font-semibold text-slate-500">100% Balanced Strategy</span>
+        </div>
 
-        {/* ── Content Pillar Distribution — donut + legend ──── */}
-        <div className="pt-3 border-t border-slate-100 space-y-3">
-          <div className="flex items-center justify-between text-xs">
-            <span className="font-bold text-slate-700 uppercase text-[11px]">Recommended Content Pillar Balance</span>
-            <span className="text-[10px] text-slate-400">100% Balanced Strategy</span>
+        <div className="flex flex-col sm:flex-row items-center gap-6 pt-1">
+          {/* SVG Donut Chart */}
+          <div className="shrink-0 relative w-32 h-32">
+            <svg viewBox="0 0 130 130" className="w-full h-full -rotate-90">
+              {/* Background ring */}
+              <circle cx="65" cy="65" r={DONUT_RADIUS} fill="none" stroke="#f1f5f9" strokeWidth="12" />
+              {/* Pillar arcs */}
+              {ARCS.map((arc, i) => (
+                <circle
+                  key={i}
+                  cx="65"
+                  cy="65"
+                  r={DONUT_RADIUS}
+                  fill="none"
+                  stroke={arc.color}
+                  strokeWidth="12"
+                  strokeLinecap="round"
+                  strokeDasharray={`${arc.dash} ${arc.gap}`}
+                  strokeDashoffset={arc.offset}
+                  className="transition-all duration-500 ease-out"
+                />
+              ))}
+            </svg>
+            {/* Centre label */}
+            <div className="absolute inset-0 flex flex-col items-center justify-center">
+              <span className="text-lg font-bold font-mono text-slate-900 leading-none">5</span>
+              <span className="text-[10px] font-semibold text-slate-400">Pillars</span>
+            </div>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center gap-6">
-            {/* SVG Donut Chart */}
-            <div className="shrink-0 relative w-36 h-36">
-              <svg viewBox="0 0 140 140" className="w-full h-full -rotate-90">
-                {/* Background ring */}
-                <circle cx="70" cy="70" r={DONUT_RADIUS} fill="none" stroke="#f1f5f9" strokeWidth="14" />
-                {/* Pillar arcs */}
-                {ARCS.map((arc, i) => (
-                  <circle
-                    key={i}
-                    cx="70"
-                    cy="70"
-                    r={DONUT_RADIUS}
-                    fill="none"
-                    stroke={arc.color}
-                    strokeWidth="14"
-                    strokeLinecap="round"
-                    strokeDasharray={`${arc.dash} ${arc.gap}`}
-                    strokeDashoffset={arc.offset}
-                    className="transition-all duration-700 ease-out"
-                  />
-                ))}
-              </svg>
-              {/* Centre label */}
-              <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <span className="text-lg font-black text-slate-900 leading-none">5</span>
-                <span className="text-[10px] font-semibold text-slate-400">Pillars</span>
-              </div>
-            </div>
-
-            {/* Legend + mini bar */}
-            <div className="flex-1 w-full space-y-2">
-              {/* Stacked bar (original style preserved) */}
-              <div className="h-3 w-full bg-slate-100 rounded-full overflow-hidden flex shadow-inner">
-                <div style={{ width: '20%' }} className="bg-sky-500" title="Brand Authority (20%)" />
-                <div style={{ width: '30%' }} className="bg-indigo-500" title="Technical Specs (30%)" />
-                <div style={{ width: '20%' }} className="bg-amber-500" title="Workshop BTS (20%)" />
-                <div style={{ width: '15%' }} className="bg-emerald-500" title="Kuwait Projects (15%)" />
-                <div style={{ width: '15%' }} className="bg-rose-500" title="Lead Gen (15%)" />
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1.5 pt-1 text-[11px] font-semibold text-slate-600">
-                {PILLARS.map((p, i) => (
-                  <div key={i} className="flex items-center gap-1.5">
-                    <span className={`w-2.5 h-2.5 rounded-full ${TW_BG[i]} shrink-0 ring-1 ring-white shadow-sm`} />
-                    <span>{p.label}</span>
-                    <span className="ml-auto tabular-nums text-slate-400">{p.pct}%</span>
+          {/* Clean Breakdown List */}
+          <div className="flex-1 w-full divide-y divide-slate-100">
+            {PILLARS.map((p, i) => {
+              const countInPillar = concepts.filter((c) => c.pillar === p.id).length;
+              return (
+                <div key={i} className="py-1.5 flex items-center justify-between text-xs">
+                  <div className="flex items-center gap-2">
+                    <span className={`w-2.5 h-2.5 rounded-full ${p.bg} shrink-0`} />
+                    <span className="font-semibold text-slate-800">{p.label}</span>
                   </div>
-                ))}
-              </div>
-            </div>
+                  <div className="flex items-center gap-3">
+                    <span className="text-slate-400 font-mono text-[11px]">
+                      {countInPillar} {countInPillar === 1 ? 'post' : 'posts'}
+                    </span>
+                    <span className="font-mono font-bold text-slate-700 w-9 text-right">{p.pct}%</span>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </Card>
 
       {/* Navigation Footer */}
-      <div className="flex items-center justify-between pt-2">
-        <span className="text-xs text-slate-400">Changes auto-saved to campaign</span>
+      <div className="flex items-center justify-between pt-1">
+        <span className="text-xs text-slate-400">Auto-saved to campaign workspace</span>
         <Button
           type="button"
           variant="primary"
@@ -217,7 +225,7 @@ export default function Step1MonthSetup({ campaign, onUpdateCampaign, onNextStep
             handleSave();
             onNextStep();
           }}
-          className="!bg-slate-900 hover:!bg-slate-800 !text-white !font-bold text-xs shadow-sm"
+          className="!bg-slate-900 hover:!bg-slate-800 !text-white !font-bold text-xs shadow-xs"
         >
           Next: 4-Week Schedule (Step 2) →
         </Button>
@@ -225,3 +233,4 @@ export default function Step1MonthSetup({ campaign, onUpdateCampaign, onNextStep
     </div>
   );
 }
+
