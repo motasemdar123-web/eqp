@@ -55,22 +55,11 @@ export default function Step1MonthSetup({ campaign, onUpdateCampaign, onNextStep
   return (
     <div className="space-y-6 max-w-4xl mx-auto animate-[ds-toast-in_180ms_ease]">
       {/* Step Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b border-slate-200 pb-3.5">
-        <div>
-          <div className="flex items-center gap-2">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-amber-700 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded">
-              Step 1 of 5
-            </span>
-            <span className="text-xs font-mono font-medium text-slate-500">
-              {campaign.monthName}
-            </span>
-          </div>
-          <h2 className="text-lg font-bold text-slate-900 mt-1">Monthly Campaign Theme & Strategy</h2>
-          <p className="text-xs text-slate-500">Define the overarching market narrative, target KPIs, and content pillar balance for {campaign.monthName}.</p>
-        </div>
-
-        <Badge tone="active">{campaign.monthName}</Badge>
+      <div className="border-b border-slate-200 pb-3">
+        <h2 className="text-base font-bold text-slate-900">Monthly Campaign Theme & Strategy</h2>
+        <p className="text-xs text-slate-500 mt-0.5">Define the overarching market narrative, target KPIs, and content pillar balance.</p>
       </div>
+
 
       {/* Quick-Stat Metric Strip */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">

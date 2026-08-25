@@ -67,16 +67,14 @@ export default function Step4PlatformCopy({
   return (
     <div className="space-y-6 animate-[ds-toast-in_180ms_ease]">
       {/* Step Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-slate-200 pb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-slate-200 pb-3">
         <div>
-          <span className="text-[10px] font-black uppercase tracking-widest text-amber-600 bg-amber-50 border border-amber-200 px-2.5 py-0.5 rounded-full">
-            Step 4 of 5
-          </span>
-          <h2 className="text-xl font-black text-slate-900 mt-1">Multi-Platform Copy & Tone of Voice Studio</h2>
-          <p className="text-xs text-slate-500">
+          <h2 className="text-base font-bold text-slate-900">Multi-Platform Copy & Tone of Voice Studio</h2>
+          <p className="text-xs text-slate-500 mt-0.5">
             Craft tailored bilingual copy for LinkedIn (B2B Authority), Instagram (Visual Impact), and Facebook (Community/Sales).
           </p>
         </div>
+
 
         {/* Copy Completion Ring */}
         <div className="flex items-center gap-3 bg-white p-3 rounded-xl border border-slate-200 shadow-xs">

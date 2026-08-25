@@ -54,16 +54,14 @@ SAFETY & PPE: Safety vest, hardhat, steel-toe boots required on all Kuwait works
   return (
     <div className="space-y-6 animate-[ds-toast-in_180ms_ease]">
       {/* Step Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-slate-200 pb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-slate-200 pb-3">
         <div>
-          <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded">
-            Step 5 of 5
-          </span>
-          <h2 className="text-lg font-bold text-slate-900 mt-1">Videographer Production Call Sheet</h2>
-          <p className="text-xs text-slate-500">
+          <h2 className="text-base font-bold text-slate-900">Videographer Production Call Sheet</h2>
+          <p className="text-xs text-slate-500 mt-0.5">
             Print or copy clean shot lists and scripts directly for your camera crew and graphic designers.
           </p>
         </div>
+
 
         {/* View Switcher & Print Controls */}
         <div className="flex items-center gap-2">

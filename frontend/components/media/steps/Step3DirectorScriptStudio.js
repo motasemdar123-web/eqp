@@ -110,16 +110,14 @@ export default function Step3DirectorScriptStudio({
   return (
     <div className="space-y-6 animate-[ds-toast-in_180ms_ease]">
       {/* Step Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-slate-200 pb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-slate-200 pb-3">
         <div>
-          <span className="text-[10px] font-bold uppercase tracking-wider text-amber-700 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded">
-            Step 3 of 5
-          </span>
-          <h2 className="text-lg font-bold text-slate-900 mt-1">Director&apos;s Script & Scene Studio</h2>
-          <p className="text-xs text-slate-500">
+          <h2 className="text-base font-bold text-slate-900">Director&apos;s Script & Scene Studio</h2>
+          <p className="text-xs text-slate-500 mt-0.5">
             Script the 3-second hook, timecoded shot breakdown, and B-roll checklist for your videographer.
           </p>
         </div>
+
 
         <div className="flex items-center gap-2">
           <Button

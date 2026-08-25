@@ -45,19 +45,12 @@ export default function Step2ContentSchedule({
       {/* Top Header: Clean, professional, executive title & actions */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-white p-4 rounded-xl border border-slate-200 shadow-2xs">
         <div>
-          <div className="flex items-center gap-2">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-amber-700 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded">
-              Step 2 of 5
-            </span>
-            <span className="text-xs font-mono font-medium text-slate-500">
-              {campaign.monthName}
-            </span>
-          </div>
-          <h2 className="text-lg font-bold text-slate-900 mt-1">4-Week Content Plan & Schedule</h2>
+          <h2 className="text-base font-bold text-slate-900">4-Week Content Plan & Schedule</h2>
           <p className="text-xs text-slate-500 mt-0.5">
             Cadence: 3 Posts / Week (Sundays, Tuesdays & Thursdays). Click any card to edit its script.
           </p>
         </div>
+
 
         <div className="flex flex-wrap items-center gap-2 self-start sm:self-auto">
           {/* View Mode Toggle */}
