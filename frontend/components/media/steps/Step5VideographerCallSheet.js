@@ -111,91 +111,99 @@ SAFETY & PPE: Safety vest, hardhat, steel-toe boots required on all Kuwait works
       {viewMode === 'single' && (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           {/* Left Concept Selector */}
-          <div className="lg:col-span-4 space-y-2 bg-white p-4 rounded-2xl border border-slate-200 shadow-xs max-h-[700px] overflow-y-auto">
+          <div className="lg:col-span-4 space-y-2 bg-white p-3.5 rounded-xl border border-slate-200 shadow-2xs max-h-[700px] overflow-y-auto">
             <span className="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-2">Select Shoot to Review:</span>
-            {concepts.map((c) => {
-              const isSelected = c.id === currentConcept.id;
-              const fMeta = FORMAT_TYPES.find((f) => f.id === c.format) || FORMAT_TYPES[0];
+            <div className="space-y-1.5">
+              {concepts.map((c) => {
+                const isSelected = c.id === currentConcept.id;
+                const fMeta = FORMAT_TYPES.find((f) => f.id === c.format) || FORMAT_TYPES[0];
 
-              return (
-                <div
-                  key={c.id}
-                  onClick={() => onSelectConcept(c.id)}
-                  className={`p-3 rounded-xl border transition-all cursor-pointer space-y-1 ${
-                    isSelected
-                      ? 'bg-slate-900 text-white border-slate-900 shadow-sm'
-                      : 'bg-slate-50 border-slate-200 text-slate-800 hover:bg-slate-100'
-                  }`}
-                >
-                  <div className="flex items-center justify-between text-[10px]">
-                    <span className="font-bold opacity-80">{c.week} • {c.day}</span>
-                    <span className={`px-1.5 py-0.2 rounded font-bold ${isSelected ? 'bg-slate-800 text-amber-300' : fMeta.color}`}>
-                      {fMeta.label}
-                    </span>
+                return (
+                  <div
+                    key={c.id}
+                    onClick={() => onSelectConcept(c.id)}
+                    className={`p-2.5 rounded-lg border transition-all cursor-pointer space-y-1.5 ${
+                      isSelected
+                        ? 'bg-slate-900 text-white border-slate-900 shadow-xs'
+                        : 'bg-slate-50 border-slate-200 text-slate-800 hover:bg-slate-100'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between text-[10px]">
+                      <span className={`font-semibold ${isSelected ? 'text-slate-300' : 'text-slate-600'}`}>
+                        {c.week} • {c.day}
+                      </span>
+                      <span className={`px-1.5 py-0.5 rounded font-semibold text-[10px] whitespace-nowrap ${isSelected ? 'bg-slate-800 text-amber-300' : fMeta.color}`}>
+                        {fMeta.shortLabel || fMeta.label}
+                      </span>
+                    </div>
+                    <h4 className={`text-xs font-bold leading-snug line-clamp-1 ${isSelected ? 'text-white' : 'text-slate-900'}`}>
+                      {c.title || 'Untitled Shoot'}
+                    </h4>
                   </div>
-                  <h4 className="text-xs font-bold leading-snug line-clamp-1">{c.title}</h4>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
 
           {/* Right Sheet Document Card */}
-          <div className="lg:col-span-8 bg-white p-8 rounded-3xl border border-slate-300 shadow-lg space-y-6 print:p-0 print:border-none print:shadow-none">
+          <div className="lg:col-span-8 bg-white p-6 rounded-xl border border-slate-200 shadow-2xs space-y-5 print:p-0 print:border-none print:shadow-none">
             {/* Sheet Header */}
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b-2 border-slate-900 pb-4">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b-2 border-slate-900 pb-3.5">
               <div>
-                <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">
+                <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500">
                   Dar Al Hay Commercial Co. | Komatsu Kuwait
                 </span>
-                <h3 className="text-xl font-black text-slate-900 mt-0.5">
+                <h3 className="text-lg font-bold text-slate-900 mt-0.5">
                   Production Call Sheet: #{currentConcept.conceptNumber} {currentConcept.title}
                 </h3>
               </div>
 
               <div className="text-right sm:text-right">
-                <span className="font-mono text-xs font-bold bg-amber-50 text-amber-900 px-3 py-1 rounded-lg border border-amber-200 inline-block">
-                  📅 {currentConcept.publishDate} ({currentConcept.day})
+                <span className="font-mono text-xs font-bold bg-slate-100 text-slate-800 px-2.5 py-1 rounded border border-slate-200 inline-block">
+                  {currentConcept.publishDate} ({currentConcept.day})
                 </span>
               </div>
             </div>
 
             {/* Quick Meta Strip */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-slate-50 p-3.5 rounded-xl border border-slate-200 text-xs">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 bg-slate-50 p-3 rounded-lg border border-slate-200 text-xs">
               <div>
-                <span className="text-[10px] font-bold text-slate-400 uppercase block">Format:</span>
-                <span className="font-bold text-slate-900">{formatMeta.label}</span>
+                <span className="text-[10px] font-semibold text-slate-400 uppercase block">Format:</span>
+                <span className="font-semibold text-slate-900">{formatMeta.shortLabel || formatMeta.label}</span>
               </div>
               <div>
-                <span className="text-[10px] font-bold text-slate-400 uppercase block">Pillar:</span>
-                <span className="font-bold text-slate-900">{pillarMeta.label}</span>
+                <span className="text-[10px] font-semibold text-slate-400 uppercase block">Pillar:</span>
+                <span className="font-semibold text-slate-900 truncate block" title={pillarMeta.label}>
+                  {pillarMeta.shortLabel || pillarMeta.label}
+                </span>
               </div>
               <div>
-                <span className="text-[10px] font-bold text-slate-400 uppercase block">Location:</span>
-                <span className="font-bold text-slate-900">Shuwaikh / Kuwait Site</span>
+                <span className="text-[10px] font-semibold text-slate-400 uppercase block">Location:</span>
+                <span className="font-semibold text-slate-900">Shuwaikh / Kuwait Site</span>
               </div>
               <div>
-                <span className="text-[10px] font-bold text-slate-400 uppercase block">Safety PPE:</span>
-                <span className="font-bold text-slate-900">Vest + Hardhat Required</span>
+                <span className="text-[10px] font-semibold text-slate-400 uppercase block">Safety PPE:</span>
+                <span className="font-semibold text-slate-900">Vest + Hardhat</span>
               </div>
             </div>
 
             {/* The 3-Second Hook */}
-            <div className="bg-amber-50/80 p-4 rounded-xl border border-amber-200 space-y-2 text-xs">
-              <span className="font-black uppercase tracking-wider text-amber-900 text-[10px] block">
-                ⚡ 3-Second Spoken Hook & Camera Grabber (0:00 - 0:03)
+            <div className="bg-amber-50/70 p-3.5 rounded-lg border border-amber-200 space-y-1.5 text-xs">
+              <span className="font-bold uppercase tracking-wider text-amber-900 text-[10px] block">
+                3-Second Spoken Hook & Camera Grabber (0:00 - 0:03)
               </span>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <span className="text-[10px] font-bold text-slate-500 uppercase block">Spoken (EN):</span>
-                  <p className="font-bold text-slate-900 italic mt-0.5">
-                    "{typeof currentConcept.hook === 'string' ? currentConcept.hook : currentConcept.hook?.spokenEn}"
+                  <span className="text-[10px] font-semibold text-slate-500 uppercase block">Spoken (EN):</span>
+                  <p className="font-semibold text-slate-900 italic mt-0.5">
+                    &ldquo;{typeof currentConcept.hook === 'string' ? currentConcept.hook : currentConcept.hook?.spokenEn}&rdquo;
                   </p>
                 </div>
                 {typeof currentConcept.hook === 'object' && currentConcept.hook?.spokenAr && (
                   <div dir="rtl">
-                    <span className="text-[10px] font-bold text-slate-500 uppercase block text-right">النص الصوتي (عربي):</span>
-                    <p className="font-bold text-slate-900 italic mt-0.5 text-right">
-                      "{currentConcept.hook?.spokenAr}"
+                    <span className="text-[10px] font-semibold text-slate-500 uppercase block text-right">النص الصوتي (عربي):</span>
+                    <p className="font-semibold text-slate-900 italic mt-0.5 text-right">
+                      &ldquo;{currentConcept.hook?.spokenAr}&rdquo;
                     </p>
                   </div>
                 )}
@@ -206,9 +214,9 @@ SAFETY & PPE: Safety vest, hardhat, steel-toe boots required on all Kuwait works
             {(currentConcept.scenes?.length || 0) > 0 && (
               <div className="space-y-2">
                 <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
-                  🎬 Scene-by-Scene Shot Table for Videographer:
+                  Scene-by-Scene Shot Table for Videographer
                 </h4>
-                <div className="border border-slate-200 rounded-xl overflow-hidden text-xs">
+                <div className="border border-slate-200 rounded-lg overflow-hidden text-xs">
                   <table className="w-full text-left">
                     <thead className="bg-slate-900 text-white text-[11px]">
                       <tr>
@@ -224,17 +232,17 @@ SAFETY & PPE: Safety vest, hardhat, steel-toe boots required on all Kuwait works
                           <td className="p-2.5 font-mono font-bold text-slate-900 align-top">{s.time}</td>
                           <td className="p-2.5 align-top space-y-1">
                             <p className="font-bold text-slate-900">{s.visual}</p>
-                            <p className="text-[11px] text-slate-600">👷 {s.talentAction}</p>
+                            <p className="text-[11px] text-slate-600">{s.talentAction}</p>
                           </td>
                           <td className="p-2.5 align-top space-y-1">
                             <p className="font-semibold text-slate-900">{s.audioVoiceoverEn}</p>
                             <p className="text-[11px] text-slate-700 font-semibold" dir="rtl">{s.audioVoiceoverAr}</p>
                           </td>
                           <td className="p-2.5 align-top space-y-1">
-                            <p className="font-mono text-[11px] font-bold text-amber-800 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200 inline-block">
+                            <span className="font-mono text-[10px] font-bold text-amber-800 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200 inline-block">
                               {s.onScreenTextEn}
-                            </p>
-                            <p className="text-[10px] text-slate-500 italic block">🎵 {s.sfxMusic}</p>
+                            </span>
+                            <p className="text-[10px] text-slate-500 italic block">{s.sfxMusic}</p>
                           </td>
                         </tr>
                       ))}
@@ -248,13 +256,13 @@ SAFETY & PPE: Safety vest, hardhat, steel-toe boots required on all Kuwait works
             {(currentConcept.brollChecklist?.length || 0) > 0 && (
               <div className="space-y-2 pt-2 border-t border-slate-200">
                 <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
-                  🎥 Mandatory B-Roll Shots to Film on Location:
+                  Mandatory B-Roll Shots to Film on Location
                 </h4>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
                   {currentConcept.brollChecklist.map((shot, idx) => (
-                    <div key={idx} className="p-2.5 bg-slate-50 rounded-xl border border-slate-200 flex items-center gap-2">
+                    <div key={idx} className="p-2.5 bg-slate-50 rounded-lg border border-slate-200 flex items-center gap-2">
                       <input type="checkbox" className="rounded accent-slate-900" />
-                      <span className="font-semibold text-slate-800">{shot}</span>
+                      <span className="font-medium text-slate-800">{shot}</span>
                     </div>
                   ))}
                 </div>
@@ -266,13 +274,13 @@ SAFETY & PPE: Safety vest, hardhat, steel-toe boots required on all Kuwait works
 
       {/* MODE 2: FULL MONTHLY PRODUCTION BOOK */}
       {viewMode === 'month_book' && (
-        <div className="bg-white p-8 rounded-3xl border border-slate-300 shadow-lg space-y-8 print:p-0 print:border-none print:shadow-none">
-          <div className="border-b-2 border-slate-900 pb-4 flex items-center justify-between">
+        <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-2xs space-y-6 print:p-0 print:border-none print:shadow-none">
+          <div className="border-b-2 border-slate-900 pb-3 flex items-center justify-between">
             <div>
-              <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500">
                 Dar Al Hay Commercial Co. | Komatsu Kuwait
               </span>
-              <h3 className="text-2xl font-black text-slate-900">
+              <h3 className="text-xl font-bold text-slate-900">
                 Master Monthly Production Book ({campaign.monthName})
               </h3>
               <p className="text-xs text-slate-500 mt-0.5">{campaign.themeTitle}</p>
@@ -280,27 +288,27 @@ SAFETY & PPE: Safety vest, hardhat, steel-toe boots required on all Kuwait works
             <Badge tone="active">{concepts.length} Total Shoots</Badge>
           </div>
 
-          <div className="space-y-8">
+          <div className="space-y-6">
             {concepts.map((c) => {
               const fMeta = FORMAT_TYPES.find((f) => f.id === c.format) || FORMAT_TYPES[0];
               const pMeta = CONTENT_PILLARS.find((p) => p.id === c.pillar) || CONTENT_PILLARS[0];
 
               return (
-                <div key={c.id} className="border border-slate-300 rounded-2xl p-6 bg-slate-50/50 space-y-4 page-break-inside-avoid">
-                  <div className="flex items-center justify-between border-b pb-2">
+                <div key={c.id} className="border border-slate-200 rounded-lg p-4 bg-slate-50/50 space-y-3 page-break-inside-avoid">
+                  <div className="flex items-center justify-between border-b border-slate-200 pb-2">
                     <div className="flex items-center gap-2">
-                      <span className="w-8 h-8 rounded-lg bg-slate-900 text-white font-bold text-xs flex items-center justify-center">
+                      <span className="w-6 h-6 rounded bg-slate-900 text-white font-mono font-bold text-xs flex items-center justify-center">
                         #{c.conceptNumber}
                       </span>
-                      <h4 className="text-base font-bold text-slate-900">{c.title}</h4>
+                      <h4 className="text-sm font-bold text-slate-900">{c.title}</h4>
                     </div>
-                    <span className="text-xs font-mono font-bold">{c.week} ({c.day} - {c.publishDate})</span>
+                    <span className="text-xs font-mono font-semibold text-slate-600">{c.week} ({c.day} - {c.publishDate})</span>
                   </div>
 
                   <p className="text-xs text-slate-700">{c.summary}</p>
 
                   {c.scenes?.length > 0 && (
-                    <div className="border border-slate-200 rounded-xl overflow-hidden text-xs bg-white">
+                    <div className="border border-slate-200 rounded-lg overflow-hidden text-xs bg-white">
                       <table className="w-full text-left">
                         <thead className="bg-slate-900 text-white text-[10px]">
                           <tr>
@@ -313,7 +321,7 @@ SAFETY & PPE: Safety vest, hardhat, steel-toe boots required on all Kuwait works
                         <tbody className="divide-y divide-slate-200">
                           {c.scenes.map((s) => (
                             <tr key={s.sceneNo}>
-                              <td className="p-2 font-mono font-bold">{s.time}</td>
+                              <td className="p-2 font-mono font-bold text-slate-900">{s.time}</td>
                               <td className="p-2 font-semibold text-slate-900">{s.visual}</td>
                               <td className="p-2 text-slate-800">{s.audioVoiceoverEn}</td>
                               <td className="p-2 font-mono text-[10px] text-amber-800">{s.onScreenTextEn}</td>
@@ -329,6 +337,7 @@ SAFETY & PPE: Safety vest, hardhat, steel-toe boots required on all Kuwait works
           </div>
         </div>
       )}
+
 
       {/* Navigation Footer */}
       <div className="flex items-center justify-between pt-4 border-t border-slate-200">
