@@ -101,13 +101,13 @@ export default function Step4PlatformCopy({
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* Left Sidebar: Concept Selector + Copy Status */}
         <div className="lg:col-span-4 space-y-4">
-          <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs max-h-[700px] overflow-y-auto space-y-3">
+          <div className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-2xs max-h-[700px] overflow-y-auto space-y-2">
             <div className="flex items-center justify-between pb-2 border-b border-slate-100">
               <span className="text-xs font-bold text-slate-700 uppercase tracking-wider">Posts in {campaign.monthName}</span>
               <Badge tone="neutral">{concepts.length}</Badge>
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-1.5">
               {concepts.map((c) => {
                 const isSelected = c.id === copyData.id;
                 const fMeta = FORMAT_TYPES.find((f) => f.id === c.format) || FORMAT_TYPES[0];
@@ -117,24 +117,34 @@ export default function Step4PlatformCopy({
                   <div
                     key={c.id}
                     onClick={() => onSelectConcept(c.id)}
-                    className={`p-3 rounded-xl border transition-all cursor-pointer space-y-1 ${
+                    className={`p-2.5 rounded-lg border transition-all cursor-pointer space-y-1.5 ${
                       isSelected
-                        ? 'bg-slate-900 text-white border-slate-900 shadow-sm'
+                        ? 'bg-slate-900 text-white border-slate-900 shadow-xs'
                         : 'bg-slate-50 border-slate-200 text-slate-800 hover:bg-slate-100'
                     }`}
                   >
                     <div className="flex items-center justify-between text-[10px]">
-                      <span className="font-bold opacity-80">{c.week} • {c.day}</span>
+                      <span className={`font-semibold ${isSelected ? 'text-slate-300' : 'text-slate-600'}`}>
+                        {c.week} • {c.day}
+                      </span>
                       <div className="flex items-center gap-1.5">
                         {hasCopy && (
                           <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${isSelected ? 'bg-emerald-400' : 'bg-emerald-500'}`} />
                         )}
-                        <span className={`px-1.5 py-0.2 rounded font-bold ${isSelected ? 'bg-slate-800 text-amber-300' : fMeta.color}`}>
-                          {fMeta.label}
+                        <span className={`px-1.5 py-0.5 rounded font-semibold text-[10px] whitespace-nowrap ${isSelected ? 'bg-slate-800 text-amber-300' : fMeta.color}`}>
+                          {fMeta.shortLabel || fMeta.label}
                         </span>
                       </div>
                     </div>
-                    <h4 className="text-xs font-bold leading-snug line-clamp-1">{c.title}</h4>
+
+                    <h4 className={`text-xs font-bold leading-snug line-clamp-1 ${isSelected ? 'text-white' : 'text-slate-900'}`}>
+                      {c.title || 'Untitled Post'}
+                    </h4>
+
+                    <div className={`flex items-center justify-between text-[10px] pt-0.5 ${isSelected ? 'text-slate-400' : 'text-slate-500'}`}>
+                      <span className="font-mono">#{c.conceptNumber}</span>
+                      <span>{hasCopy ? 'Copy Written' : 'Draft Pending'}</span>
+                    </div>
                   </div>
                 );
               })}
@@ -143,24 +153,19 @@ export default function Step4PlatformCopy({
 
           {/* TOV Quick-Reference Card */}
           {tovPlatform && activeTab !== 'hashtags' && (
-            <div className={`rounded-2xl overflow-hidden border border-slate-200 shadow-xs`}>
-              <div className={`bg-gradient-to-r ${platformInfo.gradient} text-white p-3.5`}>
-                <div className="flex items-center gap-2">
-                  <span className="text-lg">{platformInfo.icon}</span>
-                  <div>
-                    <h4 className="text-xs font-bold">{tovPlatform.platform} TOV Guide</h4>
-                    <p className="text-[10px] opacity-80">{platformInfo.toneLabel}</p>
-                  </div>
-                </div>
+            <div className="rounded-xl overflow-hidden border border-slate-200 shadow-2xs bg-white">
+              <div className="bg-slate-900 text-white p-3 border-b border-slate-800">
+                <h4 className="text-xs font-bold text-slate-100">{tovPlatform.platform} Tone of Voice</h4>
+                <p className="text-[10px] text-slate-400 mt-0.5">{platformInfo.toneLabel}</p>
               </div>
-              <div className="bg-white p-3.5 space-y-2 text-xs">
+              <div className="p-3 space-y-2 text-xs">
                 <div>
                   <span className="text-[10px] font-bold text-slate-400 uppercase block">Target Audience:</span>
-                  <p className="text-slate-800 font-medium mt-0.5">{tovPlatform.target}</p>
+                  <p className="text-slate-800 font-medium mt-0.5 text-xs">{tovPlatform.target}</p>
                 </div>
                 <div>
                   <span className="text-[10px] font-bold text-slate-400 uppercase block">Writing Style:</span>
-                  <p className="text-slate-600 leading-relaxed mt-0.5">{tovPlatform.guidelines}</p>
+                  <p className="text-slate-600 leading-relaxed mt-0.5 text-[11px]">{tovPlatform.guidelines}</p>
                 </div>
               </div>
             </div>
@@ -168,10 +173,10 @@ export default function Step4PlatformCopy({
         </div>
 
         {/* Right Main Stage: Copywriting Tabs & Live Mockup */}
-        <div className="lg:col-span-8 space-y-5">
-          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs space-y-5">
+        <div className="lg:col-span-8 space-y-4">
+          <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-2xs space-y-4">
             {/* Platform Copy Tabs */}
-            <div className="flex flex-wrap items-center gap-2 border-b border-slate-200 pb-3 text-xs font-bold">
+            <div className="flex flex-wrap items-center gap-1.5 border-b border-slate-200 pb-2.5 text-xs font-medium">
               {['linkedin', 'instagram', 'facebook'].map((platId) => {
                 const pi = PLATFORM_LIMITS[platId];
                 const isActive = activeTab === platId;
@@ -181,14 +186,13 @@ export default function Step4PlatformCopy({
                     key={platId}
                     type="button"
                     onClick={() => setActiveTab(platId)}
-                    className={`px-3.5 py-2 rounded-xl transition-all flex items-center gap-2 border ${
+                    className={`px-3 py-1.5 rounded-md transition-all cursor-pointer ${
                       isActive
-                        ? `bg-gradient-to-r ${pi.gradient} text-white border-transparent shadow-md`
-                        : 'text-slate-600 bg-white border-slate-200 hover:bg-slate-50 hover:border-slate-300'
+                        ? 'bg-slate-900 text-white font-bold shadow-xs'
+                        : 'text-slate-600 bg-slate-50 border border-slate-200 hover:bg-slate-100 hover:text-slate-900'
                     }`}
                   >
-                    <span className="text-sm">{pi.icon}</span>
-                    <span>{pi.label}</span>
+                    {pi.label}
                   </button>
                 );
               })}
@@ -196,42 +200,41 @@ export default function Step4PlatformCopy({
               <button
                 type="button"
                 onClick={() => setActiveTab('hashtags')}
-                className={`px-3.5 py-2 rounded-xl transition-all flex items-center gap-2 border ${
+                className={`px-3 py-1.5 rounded-md transition-all cursor-pointer ${
                   activeTab === 'hashtags'
-                    ? 'bg-slate-900 text-white border-slate-900 shadow-md'
-                    : 'text-slate-600 bg-white border-slate-200 hover:bg-slate-50 hover:border-slate-300'
+                    ? 'bg-slate-900 text-white font-bold shadow-xs'
+                    : 'text-slate-600 bg-slate-50 border border-slate-200 hover:bg-slate-100 hover:text-slate-900'
                 }`}
               >
-                <span className="text-sm">#</span>
-                <span>Hashtags & CTA</span>
+                Hashtags & CTA
               </button>
             </div>
 
             {/* TAB CONTENT: ENGLISH & ARABIC PROSE */}
             {(activeTab === 'linkedin' || activeTab === 'instagram' || activeTab === 'facebook') && (
-              <div className="space-y-5">
+              <div className="space-y-4">
                 {/* English Box */}
                 <div className="space-y-1.5">
                   <div className="flex items-center justify-between">
-                    <label className="text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
-                      🇬🇧 English Caption
+                    <label className="text-xs font-semibold text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
+                      English Caption
                       <span className="text-[10px] font-mono text-slate-400 lowercase">({platformInfo.label})</span>
                     </label>
-                    <div className="flex items-center gap-3">
-                      <span className={`text-[10px] font-mono font-bold ${enLen > platformInfo.maxChars ? 'text-red-600' : 'text-slate-400'}`}>
+                    <div className="flex items-center gap-2.5">
+                      <span className={`text-[10px] font-mono font-semibold ${enLen > platformInfo.maxChars ? 'text-red-600' : 'text-slate-400'}`}>
                         {enLen.toLocaleString()} / {platformInfo.maxChars.toLocaleString()}
                       </span>
                       <button
                         type="button"
                         onClick={() => handleCopyText(copyData.captionEn || '', 'en')}
-                        className="text-xs font-bold text-sky-600 hover:underline"
+                        className="text-xs font-semibold text-slate-700 hover:text-slate-900 bg-slate-100 px-2 py-0.5 rounded border border-slate-200 cursor-pointer"
                       >
-                        {copiedSection === 'en' ? '✓ Copied!' : '📋 Copy'}
+                        {copiedSection === 'en' ? '✓ Copied' : 'Copy'}
                       </button>
                     </div>
                   </div>
                   <textarea
-                    rows={5}
+                    rows={4}
                     value={copyData.captionEn || ''}
                     onChange={(e) => handleFieldChange('captionEn', e.target.value)}
                     placeholder="Write structured B2B prose with clear value proposition and Kuwait context..."
@@ -249,25 +252,25 @@ export default function Step4PlatformCopy({
                 {/* Arabic Box */}
                 <div className="space-y-1.5" dir="rtl">
                   <div className="flex items-center justify-between">
-                    <label className="text-xs font-bold text-slate-800 uppercase tracking-wider text-right flex items-center gap-1.5">
-                      🇰🇼 النص العربي
+                    <label className="text-xs font-semibold text-slate-800 uppercase tracking-wider text-right flex items-center gap-1.5">
+                      النص العربي
                       <span className="text-[10px] font-mono text-slate-400 lowercase">({platformInfo.label})</span>
                     </label>
-                    <div className="flex items-center gap-3">
-                      <span className="text-[10px] font-mono font-bold text-slate-400">
+                    <div className="flex items-center gap-2.5">
+                      <span className="text-[10px] font-mono font-semibold text-slate-400">
                         {arLen.toLocaleString()}
                       </span>
                       <button
                         type="button"
                         onClick={() => handleCopyText(copyData.captionAr || '', 'ar')}
-                        className="text-xs font-bold text-sky-600 hover:underline"
+                        className="text-xs font-semibold text-slate-700 hover:text-slate-900 bg-slate-100 px-2 py-0.5 rounded border border-slate-200 cursor-pointer"
                       >
-                        {copiedSection === 'ar' ? '✓ تم النسخ!' : '📋 نسخ'}
+                        {copiedSection === 'ar' ? '✓ تم النسخ' : 'نسخ'}
                       </button>
                     </div>
                   </div>
                   <textarea
-                    rows={5}
+                    rows={4}
                     value={copyData.captionAr || ''}
                     onChange={(e) => handleFieldChange('captionAr', e.target.value)}
                     placeholder="اكتب النص العربي بصياغة خليجية مهنية رصينة..."
@@ -276,6 +279,7 @@ export default function Step4PlatformCopy({
                 </div>
               </div>
             )}
+
 
             {/* TAB: HASHTAGS & CTA */}
             {activeTab === 'hashtags' && (

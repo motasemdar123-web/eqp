@@ -20,45 +20,45 @@ export default function PlatformPostSimulator({ concept }) {
       {/* Platform Simulator Switcher */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-slate-800 pb-3">
         <div className="flex items-center gap-2">
-          <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Live Mockup Preview:</span>
-          <div className="flex bg-slate-800 p-0.5 rounded-lg border border-slate-700">
+          <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">Live Mockup Preview:</span>
+          <div className="flex bg-slate-800 p-0.5 rounded-lg border border-slate-700 text-xs font-medium">
             <button
               type="button"
               onClick={() => setActivePlatform('instagram')}
-              className={`px-2.5 py-1 rounded-md text-xs font-bold transition-all ${
-                activePlatform === 'instagram' ? 'bg-gradient-to-r from-pink-500 to-purple-600 text-white shadow-xs' : 'text-slate-400 hover:text-white'
+              className={`px-3 py-1 rounded-md transition-all cursor-pointer ${
+                activePlatform === 'instagram' ? 'bg-slate-700 text-white font-bold shadow-xs' : 'text-slate-400 hover:text-white'
               }`}
             >
-              📸 Instagram
+              Instagram
             </button>
             <button
               type="button"
               onClick={() => setActivePlatform('linkedin')}
-              className={`px-2.5 py-1 rounded-md text-xs font-bold transition-all ${
-                activePlatform === 'linkedin' ? 'bg-blue-600 text-white shadow-xs' : 'text-slate-400 hover:text-white'
+              className={`px-3 py-1 rounded-md transition-all cursor-pointer ${
+                activePlatform === 'linkedin' ? 'bg-slate-700 text-white font-bold shadow-xs' : 'text-slate-400 hover:text-white'
               }`}
             >
-              💼 LinkedIn
+              LinkedIn
             </button>
             <button
               type="button"
               onClick={() => setActivePlatform('facebook')}
-              className={`px-2.5 py-1 rounded-md text-xs font-bold transition-all ${
-                activePlatform === 'facebook' ? 'bg-blue-500 text-white shadow-xs' : 'text-slate-400 hover:text-white'
+              className={`px-3 py-1 rounded-md transition-all cursor-pointer ${
+                activePlatform === 'facebook' ? 'bg-slate-700 text-white font-bold shadow-xs' : 'text-slate-400 hover:text-white'
               }`}
             >
-              👥 Facebook
+              Facebook
             </button>
           </div>
         </div>
 
         {/* Language Switcher */}
-        <div className="flex items-center gap-1.5 bg-slate-800 p-0.5 rounded-lg border border-slate-700 self-start sm:self-auto">
+        <div className="flex items-center gap-1 bg-slate-800 p-0.5 rounded-lg border border-slate-700 self-start sm:self-auto text-xs font-medium">
           <button
             type="button"
             onClick={() => setActiveLang('en')}
-            className={`px-2 py-0.5 rounded text-[11px] font-bold ${
-              activeLang === 'en' ? 'bg-amber-500 text-slate-950 font-extrabold' : 'text-slate-400 hover:text-white'
+            className={`px-2.5 py-1 rounded text-xs transition-all cursor-pointer ${
+              activeLang === 'en' ? 'bg-amber-400 text-slate-950 font-bold' : 'text-slate-400 hover:text-white'
             }`}
           >
             English
@@ -66,14 +66,15 @@ export default function PlatformPostSimulator({ concept }) {
           <button
             type="button"
             onClick={() => setActiveLang('ar')}
-            className={`px-2 py-0.5 rounded text-[11px] font-bold ${
-              activeLang === 'ar' ? 'bg-amber-500 text-slate-950 font-extrabold' : 'text-slate-400 hover:text-white'
+            className={`px-2.5 py-1 rounded text-xs transition-all cursor-pointer ${
+              activeLang === 'ar' ? 'bg-amber-400 text-slate-950 font-bold' : 'text-slate-400 hover:text-white'
             }`}
           >
             العربية
           </button>
         </div>
       </div>
+
 
       {/* Render Realistic Mockup based on Platform */}
       <div className="max-w-md mx-auto">
