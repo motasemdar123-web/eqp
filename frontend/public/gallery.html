@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dar Al Hai Fleet Operations — UI Screen Gallery</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --border: #334155;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --amber: #f59e0b;
+      --blue: #38bdf8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding: 24px;
+    }
+    header {
+      max-width: 1400px;
+      margin: 0 auto 32px auto;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    h1 { font-size: 24px; font-weight: 700; color: #fff; letter-spacing: -0.02em; }
+    p.subtitle { font-size: 14px; color: var(--muted); margin-top: 4px; }
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 9999px;
+      background: rgba(245, 158, 11, 0.15);
+      color: var(--amber);
+      font-size: 12px;
+      font-weight: 600;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+    .categories {
+      max-width: 1400px;
+      margin: 0 auto 24px auto;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .cat-btn {
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 6px 14px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .cat-btn:hover, .cat-btn.active {
+      background: var(--amber);
+      color: #000;
+      border-color: var(--amber);
+      font-weight: 600;
+    }
+    .grid {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+      gap: 24px;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+      transition: transform 0.2s, border-color 0.2s;
+    }
+    .card:hover {
+      transform: translateY(-2px);
+      border-color: var(--amber);
+    }
+    .card-header {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(15, 23, 42, 0.4);
+    }
+    .card-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #fff;
+    }
+    .card-route {
+      font-size: 11px;
+      font-family: monospace;
+      color: var(--blue);
+      background: rgba(56, 189, 248, 0.1);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+    .img-wrap {
+      background: #000;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      aspect-ratio: 16/10;
+    }
+    .img-wrap.mobile-aspect {
+      aspect-ratio: 9/16;
+      max-height: 500px;
+      display: flex;
+      justify-content: center;
+    }
+    .img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top left;
+      display: block;
+      transition: opacity 0.2s;
+    }
+    .img-wrap:hover img {
+      opacity: 0.9;
+    }
+    .card-desc {
+      padding: 12px 16px;
+      font-size: 12px;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.2);
+    }
+
+    /* Fullscreen Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.92);
+      z-index: 999;
+      padding: 20px;
+      overflow: auto;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal.open { display: flex; }
+    .modal img {
+      max-width: 96vw;
+      max-height: 94vh;
+      border-radius: 8px;
+      border: 1px solid #475569;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+      object-fit: contain;
+    }
+    .close-btn {
+      position: fixed;
+      top: 20px;
+      right: 24px;
+      background: #334155;
+      color: #fff;
+      border: none;
+      font-size: 18px;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .close-btn:hover { background: #ef4444; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div>
+      <h1>Dar Al Hai Fleet Operations — Screen Gallery</h1>
+      <p class="subtitle">Complete visual verification catalog for all 24 production screens (Phase 8 Enterprise QA)</p>
+    </div>
+    <div class="badge">24 Screens Verified • Next.js 16.2.6</div>
+  </header>
+
+  <div class="categories" id="filters">
+    <button class="cat-btn active" onclick="filterCat('all')">All Screens (24)</button>
+    <button class="cat-btn" onclick="filterCat('operations')">Core Operations & Dispatch (6)</button>
+    <button class="cat-btn" onclick="filterCat('governance')">Fleet & Governance (6)</button>
+    <button class="cat-btn" onclick="filterCat('eqp')">EQP Compliance Suite (6)</button>
+    <button class="cat-btn" onclick="filterCat('technician')">Mobile Technician (2)</button>
+    <button class="cat-btn" onclick="filterCat('tools')">Engineering & Studio Tools (4)</button>
+  </div>
+
+  <div class="grid" id="screens-grid"></div>
+
+  <div class="modal" id="preview-modal" onclick="closeModal()">
+    <button class="close-btn" onclick="closeModal()">&times;</button>
+    <img id="modal-img" src="" alt="Enlarged view">
+  </div>
+
+  <script>
+    const screens = [
+      {
+        cat: 'operations',
+        title: 'Operations Command Center',
+        route: '/management',
+        img: '/screenshots/01_command_center.png',
+        desc: 'High-density operational cockpit with 56px unified Health Bar and above-the-fold Work Orders table.'
+      },
+      {
+        cat: 'operations',
+        title: 'Dispatch & Scheduling Timeline',
+        route: '/management/scheduling',
+        img: '/screenshots/02_dispatch_scheduling_timeline.png',
+        desc: '24-hour visual scheduling board with technician assignment rows and collision detection.'
+      },
+      {
+        cat: 'operations',
+        title: 'Work Order Creation & Shift Presets Drawer',
+        route: '/management/scheduling',
+        img: '/screenshots/03_dispatch_scheduling_drawer.png',
+        desc: 'Compact 2-column slide-over drawer with 1-click Morning / Evening shift presets and searchable technician picker.'
+      },
+      {
+        cat: 'operations',
+        title: 'Emergency Order PDX Dispatcher',
+        route: '/management/parts-inquiry',
+        img: '/screenshots/04_parts_inquiry_eo_dispatcher.png',
+        desc: '35%/65% desktop split-pane layout for simultaneous part matching and live Komatsu PDX dispatch queue.'
+      },
+      {
+        cat: 'operations',
+        title: 'Quotation to Sales Order Converter',
+        route: '/management/parts-inquiry',
+        img: '/screenshots/05_parts_inquiry_so_converter.png',
+        desc: 'Batch conversion and confirmation interface for in-process Komatsu quotations.'
+      },
+      {
+        cat: 'operations',
+        title: 'Stock & Price Batch Inquiry',
+        route: '/management/parts-inquiry',
+        img: '/screenshots/06_parts_inquiry_bulk_stock.png',
+        desc: 'Live multi-part inventory & price query engine connecting to Komatsu Middle East PDX master warehouse.'
+      },
+      {
+        cat: 'governance',
+        title: 'Greasing Compliance Matrix',
+        route: '/management/fleet-analytics',
+        img: '/screenshots/07_fleet_analytics_greasing.png',
+        desc: '123-machine monthly greasing matrix, active site deployments (Desire, Sabah, Tricon, Salmi), and machine health stats.'
+      },
+      {
+        cat: 'governance',
+        title: 'Component Lifecycle & Rotations',
+        route: '/management/fleet-analytics',
+        img: '/screenshots/08_fleet_analytics_components.png',
+        desc: 'Heavy machinery critical component tracking (D155A-6 fan pumps, hydraulic cylinders, torque converters).'
+      },
+      {
+        cat: 'governance',
+        title: 'Staff & Technicians Roster',
+        route: '/management/technicians',
+        img: '/screenshots/09_technicians_roster.png',
+        desc: 'Active workforce directory, duty status, shift rosters, region assignments, and skill matrices.'
+      },
+      {
+        cat: 'governance',
+        title: 'Workshop Fleet & Maintenance Countdowns',
+        route: '/management/workshop',
+        img: '/screenshots/10_workshop_fleet.png',
+        desc: 'Service vehicles 5,000 km PM countdowns, fuel allocation ledgers, and battery warranty tracker.'
+      },
+      {
+        cat: 'governance',
+        title: 'Master Sheets Database Hub',
+        route: '/management/sheets-hub',
+        img: '/screenshots/11_sheets_hub.png',
+        desc: '34 enterprise Google Sheets catalog with live explorer and fast full-text filter.'
+      },
+      {
+        cat: 'governance',
+        title: 'Daily Schedule Planner',
+        route: '/management/daily-planner',
+        img: '/screenshots/12_daily_planner.png',
+        desc: 'Engineering day planner with time-blocking, duration estimation, and supervisor dispatch sync.'
+      },
+      {
+        cat: 'eqp',
+        title: 'EQP PM Hub Overview',
+        route: '/eqp',
+        img: '/screenshots/13_eqp_hub_overview.png',
+        desc: 'Central compliance overview with standardized EqpNav sub-navigation and fleet SMR distributions.'
+      },
+      {
+        cat: 'eqp',
+        title: 'Komatsu PM Report Builder',
+        route: '/eqp/generate-reports',
+        img: '/screenshots/14_eqp_report_builder.png',
+        desc: 'Batch generation wizard with pre-filled date workflows, interval selector, and auto-signatures.'
+      },
+      {
+        cat: 'eqp',
+        title: 'Certified PDF Archive & Vault',
+        route: '/eqp/reports',
+        img: '/screenshots/15_eqp_reports_archive.png',
+        desc: 'Permanent archive of generated inspection PDFs, sequential file numbering, and batch ZIP export.'
+      },
+      {
+        cat: 'eqp',
+        title: 'Machinery Asset Register',
+        route: '/eqp/machines',
+        img: '/screenshots/16_eqp_machines_register.png',
+        desc: 'Tracked fleet assets database, engine serial numbers, customer accounts, and SMR operating meters.'
+      },
+      {
+        cat: 'eqp',
+        title: 'Machine Lifecycle Tracker',
+        route: '/eqp/lifecycle',
+        img: '/screenshots/17_eqp_lifecycle_tracker.png',
+        desc: 'Factory delivery milestone progression, service interval completion rates, and monthly gap verification.'
+      },
+      {
+        cat: 'eqp',
+        title: 'Inspection Commentary Pool',
+        route: '/eqp/comments',
+        img: '/screenshots/18_eqp_comments_pool.png',
+        desc: 'Standardized library of weighted inspection remarks and service findings picked during PDF generation.'
+      },
+      {
+        cat: 'technician',
+        title: 'Mobile Technician (Standard Arabic RTL)',
+        route: '/technician',
+        img: '/screenshots/19_technician_mobile_standard.png',
+        desc: 'Native Arabic RTL interface, voice recording memos, camera upload, checklist touch targets, and offline sync.'
+      },
+      {
+        cat: 'technician',
+        title: 'Mobile Technician (Outdoor / High-Contrast)',
+        route: '/technician',
+        img: '/screenshots/20_technician_mobile_outdoor.png',
+        desc: 'Maximum contrast solid #000000/#FFFFFF theme with 48px+ touch targets for direct desert sunlight conditions.'
+      },
+      {
+        cat: 'tools',
+        title: 'Engineering Collaborative Canvas',
+        route: '/workspace',
+        img: '/screenshots/21_engineering_canvas.png',
+        desc: 'Infinite whiteboard workspace for mechanical troubleshooting, hydraulic schematics, and root cause analysis.'
+      },
+      {
+        cat: 'tools',
+        title: 'Media Production Studio',
+        route: '/media',
+        img: '/screenshots/22_media_studio.png',
+        desc: 'Monthly content calendar, multi-platform copy generation, and videographer shoot sheets.'
+      },
+      {
+        cat: 'tools',
+        title: 'Technical Japanese Learning Dojo',
+        route: '/japanese',
+        img: '/screenshots/23_japanese_dojo.png',
+        desc: 'Komatsu technical Japanese terminology, JLPT N3/N2 exam simulator, and parts explorer.'
+      },
+      {
+        cat: 'tools',
+        title: 'Document Certificate Verification Portal',
+        route: '/verify',
+        img: '/screenshots/24_verify_portal.png',
+        desc: 'Public-facing digital certificate and PDF report validation endpoint.'
+      }
+    ];
+
+    let currentCat = 'all';
+
+    function render() {
+      const grid = document.getElementById('screens-grid');
+      const filtered = currentCat === 'all' ? screens : screens.filter(s => s.cat === currentCat);
+      
+      grid.innerHTML = filtered.map(s => `
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">${s.title}</div>
+            <div class="card-route">${s.route}</div>
+          </div>
+          <div class="img-wrap ${s.cat === 'technician' ? 'mobile-aspect' : ''}" onclick="openModal('${s.img}')">
+            <img src="${s.img}" alt="${s.title}" loading="lazy">
+          </div>
+          <div class="card-desc">${s.desc}</div>
+        </div>
+      `).join('');
+    }
+
+    function filterCat(cat) {
+      currentCat = cat;
+      document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+      event.target.classList.add('active');
+      render();
+    }
+
+    function openModal(src) {
+      const modal = document.getElementById('preview-modal');
+      const modalImg = document.getElementById('modal-img');
+      modalImg.src = src;
+      modal.classList.add('open');
+    }
+
+    function closeModal() {
+      document.getElementById('preview-modal').classList.remove('open');
+    }
+
+    render();
+  </script>
+</body>
+</html>
