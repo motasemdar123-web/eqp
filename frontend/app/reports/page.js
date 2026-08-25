@@ -19,6 +19,8 @@ import Card from '../../components/ui/Card';
 import EmptyState from '../../components/ui/EmptyState';
 import Badge from '../../components/ui/Badge';
 import Toast from '../../components/ui/Toast';
+import OverflowMenu from '../../components/ui/OverflowMenu';
+
 
 export default function ReportsPage() {
   const [reports, setReports] = useState([]);
@@ -666,42 +668,41 @@ export default function ReportsPage() {
                             {new Date(report.created_at).toLocaleString()}
                           </td>
                           <td className="text-right">
-                            <div className="inline-flex items-center gap-1.5">
+                            <div className="inline-flex items-center gap-1.5 justify-end">
                               <Button
                                 type="button"
                                 variant="secondary"
                                 size="sm"
                                 onClick={() => downloadSingleReport(report)}
                               >
-                                PDF
+                                Preview PDF
                               </Button>
-                              <button
-                                type="button"
-                                disabled={eqpProgress.active}
-                                onClick={() => handleAutoUploadToEqp([report])}
-                                className="ds-button ds-button-secondary text-xs py-1 px-2.5 font-bold text-sky-700 border-sky-200 bg-sky-50 hover:bg-sky-100 flex items-center gap-1"
-                                title="1-Click Auto Upload this report to Komatsu Equipment Care Daily Operation"
-                              >
-                                <span>⚡</span> Auto EQP
-                              </button>
-                              <Button
-                                type="button"
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => openRename(report)}
-                              >
-                                Rename
-                              </Button>
-                              <Button
-                                type="button"
-                                variant="danger"
-                                size="sm"
-                                onClick={() => openDeleteRequest([report])}
-                              >
-                                Delete
-                              </Button>
+                              <OverflowMenu
+                                items={[
+                                  {
+                                    label: 'Download PDF',
+                                    onClick: () => downloadSingleReport(report),
+                                  },
+                                  {
+                                    label: 'Upload to EQP Care (E0295)',
+                                    onClick: () => handleAutoUploadToEqp([report]),
+                                    disabled: eqpProgress.active,
+                                  },
+                                  {
+                                    label: 'Rename Document',
+                                    onClick: () => openRename(report),
+                                  },
+                                  { divider: true },
+                                  {
+                                    label: 'Delete Report',
+                                    variant: 'danger',
+                                    onClick: () => openDeleteRequest([report]),
+                                  },
+                                ]}
+                              />
                             </div>
                           </td>
+
                         </tr>
                       );
                     })}

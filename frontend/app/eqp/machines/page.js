@@ -1,12 +1,16 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
+import Link from 'next/link';
+
 import SystemShell from '../../../components/SystemShell';
 import Card from '../../../components/ui/Card';
 import Badge from '../../../components/ui/Badge';
 import Button from '../../../components/ui/Button';
 import EmptyState from '../../../components/ui/EmptyState';
 import Skeleton from '../../../components/ui/Skeleton';
+import DetailDrawer from '../../../components/ui/DetailDrawer';
+import Disclosure from '../../../components/ui/Disclosure';
 import { getMachineHistory, getMachines } from '../../../lib/api';
 import { getStoredPlatformSession, getStoredUser, getMatchingEngineerName } from '../../../lib/auth';
 import { FleetModelBarChart } from '../../../components/eqp/EqpCharts';
@@ -22,6 +26,9 @@ export default function MachinesPage() {
   const [machineType, setMachineType] = useState('ALL');
   const [filterEngineer, setFilterEngineer] = useState('ALL');
   const [timelineMachine, setTimelineMachine] = useState(null);
+  const [selectedMachine, setSelectedMachine] = useState(null);
+  const [drawerTab, setDrawerTab] = useState('overview'); // 'overview' | 'history'
+
 
   async function loadData() {
     try {
@@ -308,20 +315,28 @@ export default function MachinesPage() {
                     <th>Model Family</th>
                     <th>Operating SMR</th>
                     <th>Last Counter</th>
-                    <th>Engine Serial</th>
                     <th>Assigned Lead</th>
                     <th>Location / Plant</th>
                     <th>Customer</th>
-                    <th className="text-right">Timeline</th>
+                    <th className="text-right">Action</th>
                   </tr>
                 </thead>
                 <tbody>
                   {filteredMachines.map((machine) => {
                     const counter = Number(machine.report_counter || 0);
+                    const isSelected = selectedMachine && selectedMachine.id === machine.id;
 
                     return (
-                      <tr key={machine.id} className="hover:bg-slate-50/70 transition-colors">
-                        <td className="font-extrabold text-slate-900">{machine.machine_number}</td>
+                      <tr
+                        key={machine.id}
+                        onClick={() => setSelectedMachine(machine)}
+                        className={`cursor-pointer transition-colors group ${
+                          isSelected ? 'bg-amber-50/80 font-medium' : 'hover:bg-slate-50/70'
+                        }`}
+                      >
+                        <td className="font-extrabold text-slate-900 group-hover:text-amber-700 transition-colors">
+                          {machine.machine_number}
+                        </td>
                         <td>
                           <span className="font-bold text-xs px-2 py-0.5 rounded-md bg-slate-100 text-slate-800">
                             {machine.machine_type}
@@ -337,17 +352,19 @@ export default function MachinesPage() {
                             Ex_{counter + 1}
                           </span>
                         </td>
-                        <td className="font-mono text-xs text-slate-500">{machine.engine_number || '—'}</td>
                         <td className="text-xs font-semibold text-slate-800">{machine.responsible_engineer || '—'}</td>
                         <td className="text-xs text-slate-600">{machine.location || '—'}</td>
                         <td className="text-xs text-slate-500 max-w-[180px] truncate">{machine.customer_name || '—'}</td>
                         <td className="text-right">
                           <button
                             type="button"
-                            onClick={() => setTimelineMachine(machine)}
-                            className="px-2.5 py-1 rounded-md text-[11px] font-bold bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSelectedMachine(machine);
+                            }}
+                            className="px-2.5 py-1 rounded-md text-xs font-semibold text-slate-600 hover:text-amber-700 hover:bg-amber-100/70 transition-colors cursor-pointer"
                           >
-                            🔍 History
+                            Inspect →
                           </button>
                         </td>
                       </tr>
@@ -360,6 +377,154 @@ export default function MachinesPage() {
         </Card>
       </div>
 
+      {/* MACHINE MASTER-DETAIL DRAWER (PROGRESSIVE DISCLOSURE) */}
+      <DetailDrawer
+        open={Boolean(selectedMachine)}
+        onClose={() => setSelectedMachine(null)}
+        title={selectedMachine?.machine_number || 'Machine Record'}
+        subtitle={`${selectedMachine?.machine_type || 'Komatsu Asset'} • SMR ${selectedMachine?.last_smr || 0} hrs`}
+        badge={<Badge tone="ready" size="sm">Active Register</Badge>}
+        size="md"
+        footer={
+          <div className="flex items-center justify-between w-full">
+            <button
+              type="button"
+              onClick={() => {
+                const m = selectedMachine;
+                setSelectedMachine(null);
+                setTimelineMachine(m);
+              }}
+              className="text-xs font-semibold text-slate-600 hover:text-slate-900 cursor-pointer underline"
+            >
+              Full Visual Timeline
+            </button>
+            <div className="flex items-center gap-2">
+              <Button variant="secondary" size="sm" onClick={() => setSelectedMachine(null)}>
+                Close
+              </Button>
+              <Link href={`/eqp/generate-reports?machine=${encodeURIComponent(selectedMachine?.machine_number || '')}`}>
+                <Button variant="primary" size="sm">
+                  Generate Report →
+                </Button>
+              </Link>
+            </div>
+          </div>
+        }
+      >
+        {selectedMachine && (
+          <div className="space-y-5">
+            {/* Quick Tab Header */}
+            <div className="flex items-center gap-2 border-b border-slate-200 pb-2 text-xs">
+              <button
+                type="button"
+                onClick={() => setDrawerTab('overview')}
+                className={`px-3 py-1 rounded-md font-semibold cursor-pointer transition-colors ${
+                  drawerTab === 'overview' ? 'bg-slate-900 text-white' : 'text-slate-600 hover:bg-slate-100'
+                }`}
+              >
+                Overview
+              </button>
+              <button
+                type="button"
+                onClick={() => setDrawerTab('history')}
+                className={`px-3 py-1 rounded-md font-semibold cursor-pointer transition-colors ${
+                  drawerTab === 'history' ? 'bg-slate-900 text-white' : 'text-slate-600 hover:bg-slate-100'
+                }`}
+              >
+                Inspection History ({history.filter((h) => h.machine_number === selectedMachine.machine_number).length})
+              </button>
+            </div>
+
+            {drawerTab === 'overview' && (
+              <div className="space-y-4">
+                {/* Identity Card */}
+                <div className="p-4 bg-slate-50/80 rounded-lg border border-slate-200/80 space-y-3">
+                  <div className="grid grid-cols-2 gap-3 text-xs">
+                    <div>
+                      <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-500 block">Machine Unit</span>
+                      <span className="font-bold text-slate-900 text-sm mt-0.5 block">{selectedMachine.machine_number}</span>
+                      <span className="text-[11px] text-slate-500 font-mono">Engine SN: {selectedMachine.engine_number || 'N/A'}</span>
+                    </div>
+                    <div>
+                      <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-500 block">Operating Hours</span>
+                      <span className="font-mono font-bold text-emerald-700 text-sm mt-0.5 block">{selectedMachine.last_smr} SMR</span>
+                      <span className="text-[11px] text-slate-500">Counter: Ex_{Number(selectedMachine.report_counter || 0) + 1}</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Assignment & Location */}
+                <div className="p-4 bg-white rounded-lg border border-slate-200/80 space-y-3">
+                  <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-700">Account & Job Site</h4>
+                  <div className="grid grid-cols-2 gap-3 text-xs">
+                    <div>
+                      <span className="text-[10px] text-slate-500 block">Customer Account</span>
+                      <span className="font-semibold text-slate-900 mt-0.5 block">{selectedMachine.customer_name || 'Dar Al Hai Internal'}</span>
+                    </div>
+                    <div>
+                      <span className="text-[10px] text-slate-500 block">Deployment Site</span>
+                      <span className="font-semibold text-slate-900 mt-0.5 block">{selectedMachine.location || 'Central Workshop'}</span>
+                    </div>
+                    <div>
+                      <span className="text-[10px] text-slate-500 block">Lead Field Engineer</span>
+                      <span className="font-semibold text-slate-900 mt-0.5 block">{selectedMachine.responsible_engineer || 'Unassigned'}</span>
+                    </div>
+                    <div>
+                      <span className="text-[10px] text-slate-500 block">Model Family</span>
+                      <span className="font-semibold text-slate-900 mt-0.5 block">{selectedMachine.machine_type}</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Collapsible Telemetry */}
+                <Disclosure
+                  title="Preventive Service Milestones"
+                  subtitle="250h / 500h / 1000h / 2000h interval tracking"
+                  defaultOpen={true}
+                >
+                  <div className="grid grid-cols-3 gap-2 text-center text-xs">
+                    <div className="p-2.5 bg-slate-50 rounded border border-slate-100">
+                      <span className="text-[10px] text-slate-500 block">Last Recorded SMR</span>
+                      <span className="font-mono font-bold text-slate-900 text-sm mt-0.5 block">{selectedMachine.last_smr} h</span>
+                    </div>
+                    <div className="p-2.5 bg-slate-50 rounded border border-slate-100">
+                      <span className="text-[10px] text-slate-500 block">Next PM Due</span>
+                      <span className="font-mono font-bold text-amber-700 text-sm mt-0.5 block">
+                        {Math.ceil(Number(selectedMachine.last_smr || 0) / 250) * 250} h
+                      </span>
+                    </div>
+                    <div className="p-2.5 bg-slate-50 rounded border border-slate-100">
+                      <span className="text-[10px] text-slate-500 block">Compliance</span>
+                      <span className="font-bold text-emerald-700 text-sm mt-0.5 block">Certified</span>
+                    </div>
+                  </div>
+                </Disclosure>
+              </div>
+            )}
+
+            {drawerTab === 'history' && (
+              <div className="space-y-2">
+                {(() => {
+                  const machineHistory = history.filter((h) => h.machine_number === selectedMachine.machine_number);
+                  if (machineHistory.length === 0) {
+                    return <p className="text-xs text-slate-400 p-4 text-center">No past inspection records archived yet for this unit.</p>;
+                  }
+                  return machineHistory.map((rec, idx) => (
+                    <div key={idx} className="p-3 bg-slate-50 rounded-lg border border-slate-200/80 flex items-center justify-between text-xs">
+                      <div>
+                        <p className="font-semibold text-slate-900">{rec.report_type || 'Periodic PM'} ({rec.smr_hours || 0} h)</p>
+                        <p className="text-[11px] text-slate-500">{rec.inspection_date || 'Past Record'} • {rec.engineer || 'Field Inspector'}</p>
+                      </div>
+                      <Badge tone="ready" size="sm">Certified</Badge>
+                    </div>
+                  ));
+                })()}
+              </div>
+            )}
+          </div>
+        )}
+      </DetailDrawer>
+
       {/* Machine Timeline Modal */}
       {timelineMachine && (
         <MachineTimelineModal
@@ -370,3 +535,4 @@ export default function MachinesPage() {
     </SystemShell>
   );
 }
+

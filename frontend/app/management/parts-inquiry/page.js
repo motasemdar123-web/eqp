@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState, useRef } from 'react';
+
 import SystemShell from '../../../components/SystemShell';
 import Card, { CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '../../../components/ui/Card';
 import Badge from '../../../components/ui/Badge';
@@ -13,7 +14,11 @@ import MetricCard from '../../../components/ui/MetricCard';
 import EmptyState from '../../../components/ui/EmptyState';
 import Toast from '../../../components/ui/Toast';
 import Dialog, { DialogHeader, DialogTitle, DialogContent, DialogFooter } from '../../../components/ui/Dialog';
+import DetailDrawer from '../../../components/ui/DetailDrawer';
+import Disclosure from '../../../components/ui/Disclosure';
+import StatusIndicator from '../../../components/ui/StatusIndicator';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '../../../components/ui/Table';
+
 import {
   getKomatsuStatus,
   saveKomatsuCookie,
@@ -102,6 +107,8 @@ export default function SparePartsPage() {
   const [eoComments, setEoComments] = useState('Urgent Breakdown');
   const [eoStartingOrderNo, setEoStartingOrderNo] = useState('R153/2026');
   const [eoDryRun, setEoDryRun] = useState(false);
+  const [viewingOrder, setViewingOrder] = useState(null);
+
 
   // Fleet Selection
   const [fleetData, setFleetData] = useState([]);
@@ -770,7 +777,7 @@ export default function SparePartsPage() {
                 </div>
               )}
 
-              <div className="grid grid-cols-2 gap-2.5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                 <Field label="Total Required Qty" required>
                   <Input
                     type="number"
@@ -779,17 +786,6 @@ export default function SparePartsPage() {
                     onChange={(e) => setEoTotalQty(e.target.value)}
                   />
                 </Field>
-                <Field label="Max Qty / Order" required>
-                  <Input
-                    type="number"
-                    min={1}
-                    value={eoMaxQtyPerOrder}
-                    onChange={(e) => setEoMaxQtyPerOrder(e.target.value)}
-                  />
-                </Field>
-              </div>
-
-              <div className="grid grid-cols-2 gap-2.5">
                 <Field label="Customer Account">
                   <Select
                     value={selectedCustomer}
@@ -800,50 +796,74 @@ export default function SparePartsPage() {
                     ))}
                   </Select>
                 </Field>
-                <Field label="Machine Model">
-                  <Select
-                    value={selectedModel}
-                    onChange={(e) => setSelectedModel(e.target.value)}
-                  >
-                    {availableModels.map((m) => (
-                      <option key={m.model} value={m.model}>
-                        {m.model} {m.isCompat ? '✓' : ''}
-                      </option>
-                    ))}
-                  </Select>
-                </Field>
               </div>
 
-              <div className="grid grid-cols-2 gap-2.5">
-                <Field label="Starting Order No" required>
-                  <Input
-                    value={eoStartingOrderNo}
-                    onChange={(e) => setEoStartingOrderNo(e.target.value)}
-                    placeholder="e.g. R153/2026"
-                    className="font-mono uppercase"
-                  />
-                </Field>
-                <Field label="Order Comments">
-                  <Input
-                    value={eoComments}
-                    onChange={(e) => setEoComments(e.target.value)}
-                    placeholder="e.g. Urgent Breakdown"
-                  />
-                </Field>
-              </div>
+              <Field label="Machine Model">
+                <Select
+                  value={selectedModel}
+                  onChange={(e) => setSelectedModel(e.target.value)}
+                >
+                  {availableModels.map((m) => (
+                    <option key={m.model} value={m.model}>
+                      {m.model} {m.isCompat ? '✓' : ''}
+                    </option>
+                  ))}
+                </Select>
+              </Field>
 
+              {/* Pool Status Summary */}
               <div className="p-2.5 bg-amber-50/60 border border-amber-200/80 rounded-md text-xs text-amber-900 flex items-center justify-between">
                 <span>Pool: <strong>{matchingMachines.length} machines</strong> allocated.</span>
-                <label className="flex items-center gap-1.5 cursor-pointer select-none font-medium">
-                  <input
-                    type="checkbox"
-                    checked={eoDryRun}
-                    onChange={(e) => setEoDryRun(e.target.checked)}
-                    className="rounded text-amber-600"
-                  />
-                  Dry-Run Mode
-                </label>
+                <span className="text-[11px] font-medium text-amber-800">
+                  {plannedOrders.length} sub-orders planned
+                </span>
               </div>
+
+              {/* Collapsible Advanced Configuration */}
+              <Disclosure
+                title="Advanced Order Configuration"
+                subtitle="Max sub-order limit, starting order sequence & dry-run"
+                defaultOpen={false}
+              >
+                <div className="space-y-3 pt-1 text-xs">
+                  <div className="grid grid-cols-2 gap-2.5">
+                    <Field label="Max Qty / Order" required>
+                      <Input
+                        type="number"
+                        min={1}
+                        value={eoMaxQtyPerOrder}
+                        onChange={(e) => setEoMaxQtyPerOrder(e.target.value)}
+                      />
+                    </Field>
+                    <Field label="Starting Order No" required>
+                      <Input
+                        value={eoStartingOrderNo}
+                        onChange={(e) => setEoStartingOrderNo(e.target.value)}
+                        placeholder="e.g. R153/2026"
+                        className="font-mono uppercase"
+                      />
+                    </Field>
+                  </div>
+
+                  <Field label="Order Comments">
+                    <Input
+                      value={eoComments}
+                      onChange={(e) => setEoComments(e.target.value)}
+                      placeholder="e.g. Urgent Breakdown"
+                    />
+                  </Field>
+
+                  <label className="flex items-center gap-2 p-2 bg-slate-50 rounded border border-slate-200 cursor-pointer select-none font-medium text-slate-700">
+                    <input
+                      type="checkbox"
+                      checked={eoDryRun}
+                      onChange={(e) => setEoDryRun(e.target.checked)}
+                      className="rounded text-amber-600"
+                    />
+                    <span>Simulate Only (Dry-Run Mode — do not submit to live Komatsu PDX)</span>
+                  </label>
+                </div>
+              </Disclosure>
             </Card>
           </div>
 
@@ -915,20 +935,29 @@ export default function SparePartsPage() {
                     <TableHead isNumeric>Batch Qty</TableHead>
                     <TableHead>Quotation #</TableHead>
                     <TableHead>Status</TableHead>
+                    <TableHead className="text-right">Action</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {plannedOrders.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={7} className="text-center py-6 text-xs text-slate-500">
+                      <TableCell colSpan={8} className="text-center py-6 text-xs text-slate-500">
                         No planned orders generated yet. Configure matching machines and click &quot;Generate Sub-Orders&quot;.
                       </TableCell>
                     </TableRow>
                   ) : (
                     plannedOrders.map((order, idx) => (
-                      <TableRow key={order.index || idx}>
+                      <TableRow
+                        key={order.index || idx}
+                        isClickable
+                        isSelected={viewingOrder && viewingOrder.db_order_no === order.db_order_no}
+                        onClick={() => setViewingOrder(order)}
+                        className="group"
+                      >
                         <TableCell className="font-mono text-xs text-slate-400">{order.index}</TableCell>
-                        <TableCell className="font-mono text-xs font-semibold text-slate-900">{order.db_order_no}</TableCell>
+                        <TableCell className="font-mono text-xs font-semibold text-slate-900 group-hover:text-amber-700 transition-colors">
+                          {order.db_order_no}
+                        </TableCell>
                         <TableCell className="font-mono text-xs text-slate-700">{order.serial}</TableCell>
                         <TableCell className="text-xs text-slate-800">{order.model}</TableCell>
                         <TableCell isNumeric className="font-mono text-xs">{order.quantity}</TableCell>
@@ -956,11 +985,24 @@ export default function SparePartsPage() {
                               : 'Ready'}
                           </Badge>
                         </TableCell>
+                        <TableCell className="text-right">
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setViewingOrder(order);
+                            }}
+                            className="text-xs font-semibold text-slate-600 hover:text-amber-700 px-2 py-1 rounded hover:bg-amber-50 transition-colors cursor-pointer"
+                          >
+                            Inspect →
+                          </button>
+                        </TableCell>
                       </TableRow>
                     ))
                   )}
                 </TableBody>
               </Table>
+
 
 
             {/* Collapsible Technical Audit Log (Hidden by default to eliminate pseudo-terminal) */}
@@ -1327,7 +1369,126 @@ export default function SparePartsPage() {
         </form>
       </Dialog>
 
+      {/* SUB-ORDER DETAIL DRAWER (PROGRESSIVE DISCLOSURE) */}
+      <DetailDrawer
+        open={Boolean(viewingOrder)}
+        onClose={() => setViewingOrder(null)}
+        title={`Sub-Order ${viewingOrder?.db_order_no || `#${viewingOrder?.index}`}`}
+        subtitle={`Komatsu PDX • ${viewingOrder?.model || 'Equipment'}`}
+        badge={
+          viewingOrder && (
+            <Badge
+              tone={
+                viewingOrder.status === 'SUCCESS'
+                  ? 'ready'
+                  : viewingOrder.status === 'RUNNING'
+                  ? 'pending'
+                  : viewingOrder.status === 'FAILED' || viewingOrder.status === 'ERROR'
+                  ? 'critical'
+                  : 'neutral'
+              }
+              size="sm"
+            >
+              {viewingOrder.status === 'SUCCESS'
+                ? 'Submitted'
+                : viewingOrder.status === 'RUNNING'
+                ? 'Submitting...'
+                : viewingOrder.status === 'FAILED'
+                ? 'Failed'
+                : 'Ready in Queue'}
+            </Badge>
+          )
+        }
+        size="md"
+        footer={
+          <div className="flex items-center justify-between w-full">
+            <Button variant="secondary" size="sm" onClick={() => setViewingOrder(null)}>
+              Close
+            </Button>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  if (typeof navigator !== 'undefined' && viewingOrder) {
+                    navigator.clipboard.writeText(JSON.stringify(viewingOrder, null, 2));
+                    setToast({ type: 'success', message: 'Sub-order payload copied to clipboard.' });
+                  }
+                }}
+              >
+                Copy Payload JSON
+              </Button>
+            </div>
+          </div>
+        }
+      >
+        {viewingOrder && (
+          <div className="space-y-5">
+            {/* Identity & Allocation */}
+            <div className="p-4 bg-slate-50/80 rounded-lg border border-slate-200/80 space-y-3">
+              <div className="grid grid-cols-2 gap-3 text-xs">
+                <div>
+                  <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-500 block">Target Asset Serial</span>
+                  <span className="font-mono font-bold text-slate-900 text-sm mt-0.5 block">{viewingOrder.serial}</span>
+                  <span className="text-[11px] text-slate-500">Model: {viewingOrder.model}</span>
+                </div>
+                <div>
+                  <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-500 block">Batch Allocation</span>
+                  <span className="font-mono font-bold text-amber-700 text-sm mt-0.5 block">{viewingOrder.quantity} Units</span>
+                  <span className="text-[11px] text-slate-500">Part: {eoPartNo}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Quotation & Dispatch Results */}
+            <div className="p-4 bg-white rounded-lg border border-slate-200/80 space-y-3">
+              <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-700">Komatsu PDX Execution</h4>
+              <div className="grid grid-cols-2 gap-3 text-xs">
+                <div>
+                  <span className="text-[10px] text-slate-500 block">Official Quotation #</span>
+                  <span className="font-mono font-semibold text-slate-900 text-sm mt-0.5 block">
+                    {viewingOrder.quotation_no || 'Pending Submission'}
+                  </span>
+                </div>
+                <div>
+                  <span className="text-[10px] text-slate-500 block">Dispatch Status</span>
+                  <span className="font-medium text-slate-800 mt-0.5 block">
+                    {viewingOrder.status || 'QUEUED'}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Collapsible Raw API Payload & Diagnostic Trace */}
+            <Disclosure
+              title="Raw PDX Dispatch Payload & Technical Trace"
+              subtitle="JSON parameters transmitted to Komatsu portal"
+              defaultOpen={true}
+            >
+              <pre className="p-3 bg-slate-900 text-slate-100 rounded text-[11px] font-mono overflow-x-auto leading-relaxed max-h-48">
+                {JSON.stringify(
+                  {
+                    order_no: viewingOrder.db_order_no,
+                    part_no: eoPartNo,
+                    quantity: viewingOrder.quantity,
+                    machine_model: viewingOrder.model,
+                    machine_serial: viewingOrder.serial,
+                    customer: selectedCustomer || 'DEFAULT_CUSTOMER',
+                    comments: eoComments || '',
+                    dry_run: eoDryRun,
+                    quotation: viewingOrder.quotation_no || null,
+                  },
+                  null,
+                  2
+                )}
+              </pre>
+            </Disclosure>
+          </div>
+        )}
+      </DetailDrawer>
+
       <Toast message={toast?.message} type={toast?.type} onClose={() => setToast(null)} />
     </SystemShell>
   );
 }
+

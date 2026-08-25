@@ -6,6 +6,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Badge from '../../components/ui/Badge';
 import Button from '../../components/ui/Button';
 import Card from '../../components/ui/Card';
+import Disclosure from '../../components/ui/Disclosure';
+
 import { clearStoredUser, getStoredPlatformSession, setStoredPlatformSession, setStoredUser } from '../../lib/auth';
 import {
   formatArabicDate,
@@ -750,29 +752,46 @@ export default function TechnicianAppPage() {
               </div>
             </div>
 
-            <Card className="tech-audio-card">
-              <div>
-                <p>استماع سريع</p>
-                <span>الصوت مولد بالذكاء الاصطناعي لمساعدة الفني على فهم سياق المهمة ونقاط العمل.</span>
+            {/* Progressive Disclosure: Audio & Shop Manual Guide */}
+            <Disclosure
+              title="المساعد الصوتي وإرشادات الدليل الفني"
+              subtitle="استماع صوتي للمهمة وإرشادات صيانة كوماتسو"
+              defaultOpen={false}
+              className="tech-disclosure-rtl"
+            >
+              <div className="space-y-3">
+                <div className="flex items-center justify-between gap-2 p-3 bg-slate-50 rounded-lg">
+                  <div>
+                    <p className="text-xs font-bold text-slate-800">استماع سريع للمهمة</p>
+                    <span className="text-[11px] text-slate-500">ملخص صوتي لنقاط العمل باللغة العربية.</span>
+                  </div>
+                  <Button type="button" variant="secondary" size="sm" onClick={() => speak(selectedTask)} disabled={audioLoading}>
+                    {audioLoading ? 'جاري التجهيز...' : 'تشغيل الصوت 🔊'}
+                  </Button>
+                </div>
+                {audioUrl && (
+                  <audio src={audioUrl} controls className="w-full">
+                    <track kind="captions" />
+                  </audio>
+                )}
+                {selectedTask.manualAdvice && <TechnicianManualAdvice advice={selectedTask.manualAdvice} />}
               </div>
-              <Button type="button" variant="secondary" onClick={() => speak(selectedTask)} disabled={audioLoading}>
-                {audioLoading ? 'جاري تجهيز الصوت...' : 'تشغيل الصوت'}
-              </Button>
-              {audioUrl && (
-                <audio src={audioUrl} controls>
-                  <track kind="captions" />
-                </audio>
-              )}
-            </Card>
+            </Disclosure>
 
-            <div className="tech-info-grid">
-              <Info label="المعدة" value={selectedTask.machineModel || '-'} />
-              <Info label="الموقع" value={selectedTask.location || '-'} />
-              <Info label="الوصف" value={selectedTask.description || '-'} />
-              <Info label="ملاحظات الإدارة" value={selectedTask.notes || '-'} />
-            </div>
-
-            {selectedTask.manualAdvice && <TechnicianManualAdvice advice={selectedTask.manualAdvice} />}
+            {/* Progressive Disclosure: Machine Specifications & Notes */}
+            <Disclosure
+              title="تفاصيل المعدة وملاحظات الموقع"
+              subtitle="بيانات السيريال، موقع العمل، وملاحظات الإدارة"
+              defaultOpen={false}
+              className="tech-disclosure-rtl"
+            >
+              <div className="tech-info-grid">
+                <Info label="المعدة" value={selectedTask.machineModel || '-'} />
+                <Info label="الموقع" value={selectedTask.location || '-'} />
+                <Info label="الوصف" value={selectedTask.description || '-'} />
+                <Info label="ملاحظات الإدارة" value={selectedTask.notes || '-'} />
+              </div>
+            </Disclosure>
 
             {!completed && !canDocument && (
               <Card className="tech-start-card">
@@ -785,6 +804,7 @@ export default function TechnicianAppPage() {
                 </Button>
               </Card>
             )}
+
 
             {!completed && canDocument && (
               <div className="tech-execution-flow">

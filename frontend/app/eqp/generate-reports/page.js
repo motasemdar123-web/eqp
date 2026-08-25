@@ -16,7 +16,9 @@ import Toast from '../../../components/ui/Toast';
 import DatesModal from '../../../components/DatesModal';
 import MachineTimelineModal from '../../../components/eqp/MachineTimelineModal';
 import EqpNav from '../../../components/eqp/EqpNav';
+import Disclosure from '../../../components/ui/Disclosure';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '../../../components/ui/Table';
+
 import { getStoredUser, clearStoredUser, getMatchingEngineerName } from '../../../lib/auth';
 import { generateReports, getMachines, getReportProfile } from '../../../lib/api';
 import { MACHINE_MODELS, REPORT_TYPES, SERVICE_TYPES, getRequiredReportType } from '../../../lib/reportOptions';
@@ -223,7 +225,7 @@ export default function EqpReportBuilderPage() {
         <Card className="p-4 bg-emerald-50/70 border-emerald-200 text-emerald-950">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <div className="flex items-center gap-3">
-              <span className="text-2xl">🎉</span>
+              <span className="h-3 w-3 rounded-full bg-emerald-500 shrink-0" />
               <div>
                 <h4 className="text-sm font-semibold text-emerald-900">
                   {generationSummary.generatedFiles?.length || 0} Certified PDF Reports Created
@@ -256,7 +258,7 @@ export default function EqpReportBuilderPage() {
           <Card className="p-5 space-y-4">
             <SectionHeader
               title="Report Specifications"
-              description="Configure service type, interval, and template"
+              description="Configure service classification and batch interval"
             />
 
             <Field label="Service Classification" required>
@@ -282,18 +284,6 @@ export default function EqpReportBuilderPage() {
               </Select>
             </Field>
 
-            <Field label="Machine Model Filter">
-              <Select
-                value={machineModel}
-                onChange={(e) => setMachineModel(e.target.value)}
-              >
-                {MACHINE_MODELS.map((m) => (
-                  <option key={m.value} value={m.value}>{m.label}</option>
-                ))}
-              </Select>
-            </Field>
-
-
             <Field label="Reports per Machine" required>
               <Input
                 type="number"
@@ -304,15 +294,35 @@ export default function EqpReportBuilderPage() {
               />
             </Field>
 
-            <div className="p-3 bg-slate-50 border border-slate-200 rounded-md text-xs space-y-1.5">
-              <p className="font-semibold text-slate-900">Signer Profile:</p>
-              <p className="text-slate-600">
-                {reportProfile?.reportMaker?.fullName || 'Active Engineer'} ({reportProfile?.reportMaker?.userNumber || 'ENG-01'})
-              </p>
-              <p className="text-slate-500">
-                Signature Status: {reportProfile?.signatureAvailable ? '✓ Verified' : '✕ Missing'}
-              </p>
-            </div>
+            {/* Collapsible Advanced Options */}
+            <Disclosure
+              title="Advanced Signer & Model Options"
+              subtitle="Machine family override & signer credentials"
+              defaultOpen={false}
+            >
+              <div className="space-y-3 pt-1 text-xs">
+                <Field label="Machine Model Filter">
+                  <Select
+                    value={machineModel}
+                    onChange={(e) => setMachineModel(e.target.value)}
+                  >
+                    {MACHINE_MODELS.map((m) => (
+                      <option key={m.value} value={m.value}>{m.label}</option>
+                    ))}
+                  </Select>
+                </Field>
+
+                <div className="p-3 bg-slate-50 border border-slate-200 rounded-md text-xs space-y-1">
+                  <p className="font-semibold text-slate-900">Signer Profile:</p>
+                  <p className="text-slate-600">
+                    {reportProfile?.reportMaker?.fullName || 'Active Engineer'} ({reportProfile?.reportMaker?.userNumber || 'ENG-01'})
+                  </p>
+                  <p className="text-slate-500">
+                    Signature Status: {reportProfile?.signatureAvailable ? '✓ Verified' : '✕ Missing'}
+                  </p>
+                </div>
+              </div>
+            </Disclosure>
 
             <Button
               variant="primary"
@@ -324,6 +334,7 @@ export default function EqpReportBuilderPage() {
             </Button>
           </Card>
         </div>
+
 
         {/* Right Column: Fleet Selection Table (8 cols) */}
         <div className="lg:col-span-8 space-y-4">

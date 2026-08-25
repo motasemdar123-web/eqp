@@ -14,9 +14,14 @@ import SectionHeader from '../../../components/ui/SectionHeader';
 import MetricCard from '../../../components/ui/MetricCard';
 import EmptyState from '../../../components/ui/EmptyState';
 import Toast from '../../../components/ui/Toast';
+import DetailDrawer from '../../../components/ui/DetailDrawer';
+import Disclosure from '../../../components/ui/Disclosure';
+import StatusIndicator from '../../../components/ui/StatusIndicator';
+import OverflowMenu from '../../../components/ui/OverflowMenu';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '../../../components/ui/Table';
 import { getMicrosoftLoginUrl } from '../../../lib/api';
 import { getTaskDisplayStatus } from '../../../lib/taskDisplay';
+
 
 const API_BASE = process.env.NEXT_PUBLIC_BACKEND_URL || process.env.NEXT_PUBLIC_API_BASE_URL || 'https://eqp-1.onrender.com';
 const APP_TIME_ZONE = 'Asia/Riyadh';
@@ -657,28 +662,28 @@ export default function DispatchAndSchedulingPage() {
                                 : 'bg-amber-50 border-amber-300 text-amber-950';
 
                             return (
-                              <div
-                                key={t.id}
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  openEditDrawer(t);
-                                }}
-                                className={`absolute h-9 rounded-md border shadow-2xs px-2 py-1 flex items-center justify-between text-xs font-medium cursor-pointer transition-all hover:scale-[1.01] hover:shadow-xs z-10 ${bgStyle}`}
-                                style={{ left: `${leftPct}%`, width: `${widthPct}%` }}
-                                title={`${t.task} (${t.startsAt} - ${t.endsAt})`}
-                              >
-                                <div className="min-w-0 flex-1 truncate pr-1">
-                                  <span className="font-semibold">{t.task}</span>
-                                  {t.machineModel && (
-                                    <span className="opacity-75 ml-1 text-[10px]">• {t.machineModel}</span>
-                                  )}
+                                <div
+                                  key={t.id}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setViewingTask(t);
+                                  }}
+                                  className={`absolute h-9 rounded-md border shadow-2xs px-2 py-1 flex items-center justify-between text-xs font-medium cursor-pointer transition-all hover:scale-[1.01] hover:shadow-xs z-10 ${bgStyle}`}
+                                  style={{ left: `${leftPct}%`, width: `${widthPct}%` }}
+                                  title={`${t.task} (${t.startsAt} - ${t.endsAt})`}
+                                >
+                                  <div className="min-w-0 flex-1 truncate pr-1">
+                                    <span className="font-semibold">{t.task}</span>
+                                    {t.machineModel && (
+                                      <span className="opacity-75 ml-1 text-[10px]">• {t.machineModel}</span>
+                                    )}
+                                  </div>
+                                  <span className="text-[10px] font-mono opacity-80 shrink-0">
+                                    {t.startsAt}
+                                  </span>
                                 </div>
-                                <span className="text-[10px] font-mono opacity-80 shrink-0">
-                                  {t.startsAt}
-                                </span>
-                              </div>
-                            );
-                          })}
+                              );
+                            })}
                         </div>
                       </div>
                     );
@@ -713,7 +718,7 @@ export default function DispatchAndSchedulingPage() {
                 </TableRow>
               ) : (
                 tasks.map((task) => (
-                  <TableRow key={task.id} isClickable onClick={() => openEditDrawer(task)}>
+                  <TableRow key={task.id} isClickable onClick={() => setViewingTask(task)}>
                     <TableCell>
                       <p className="font-semibold text-slate-900">{task.task}</p>
                       <p className="text-xs text-slate-500">{task.machineModel || 'General Machinery'}</p>
@@ -735,26 +740,21 @@ export default function DispatchAndSchedulingPage() {
                       {task.startsAt} - {task.endsAt}
                     </TableCell>
                     <TableCell>
-                      <Badge tone={statusTone(task.status)}>{task.status}</Badge>
+                      <Badge tone={statusTone(task.status)} size="sm">
+                        {task.status || 'CONFIRMED'}
+                      </Badge>
                     </TableCell>
                     <TableCell className="text-right">
-                      <div className="flex items-center justify-end gap-1.5" onClick={(e) => e.stopPropagation()}>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => openEditDrawer(task)}
-                        >
-                          Edit
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                          onClick={() => deleteTask(task)}
-                        >
-                          Delete
-                        </Button>
-                      </div>
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setViewingTask(task);
+                        }}
+                        className="text-xs font-semibold text-slate-600 hover:text-amber-700 px-2 py-1 rounded hover:bg-amber-50 transition-colors cursor-pointer"
+                      >
+                        Inspect →
+                      </button>
                     </TableCell>
                   </TableRow>
                 ))
@@ -764,68 +764,178 @@ export default function DispatchAndSchedulingPage() {
         </Card>
       )}
 
-      {/* VIEW 3: Komatsu Shop Manuals Library */}
+      {/* VIEW 3: Shop Manuals Knowledge Base */}
       {viewTab === 'manuals' && (
         <div className="space-y-4">
-          <SectionHeader
-            title="Komatsu Shop Manuals Master Library"
-            description="Official OEM shop manuals and disassembly guides parsed by AI Assistant"
-            actions={
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={loadManuals}
-                disabled={manualBusy}
-              >
-                Refresh Index
-              </Button>
-            }
-          />
-
-          <Card>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Model / Title</TableHead>
-                  <TableHead>Manual Type</TableHead>
-                  <TableHead>Serial Range</TableHead>
-                  <TableHead>Language</TableHead>
-                  <TableHead>Indexed Status</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {manuals.length === 0 ? (
-                  <TableRow>
-                    <TableCell colSpan={5} className="py-8 text-center text-xs text-slate-500">
-                      No manuals uploaded yet.
-                    </TableCell>
-                  </TableRow>
-                ) : (
-                  manuals.map((m) => (
-                    <TableRow key={m.id}>
-                      <TableCell className="font-semibold text-slate-900">
-                        {m.title || m.machineModel}
-                      </TableCell>
-                      <TableCell className="text-xs text-slate-600">{m.manualType || 'Shop Manual'}</TableCell>
-                      <TableCell className="text-xs font-mono text-slate-600">{m.serialRange || 'All Serials'}</TableCell>
-                      <TableCell className="text-xs uppercase text-slate-500">{m.language || 'EN'}</TableCell>
-                      <TableCell>
-                        <Badge tone="ready">Indexed (AI Ready)</Badge>
-                      </TableCell>
-                    </TableRow>
-                  ))
-                )}
-              </TableBody>
-            </Table>
+          <Card className="p-4 sm:p-5">
+            <SectionHeader
+              title="Komatsu Shop Manuals & Field Service Documents"
+              description="Index factory disassembly, troubleshooting, and testing procedures for field guidance."
+            />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+              {manuals.map((m) => (
+                <div key={m.id} className="p-3.5 rounded-lg border border-slate-200 bg-slate-50/60 flex items-start justify-between">
+                  <div>
+                    <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-amber-700 block">{m.machineModel}</span>
+                    <p className="text-sm font-semibold text-slate-900 mt-0.5">{m.title}</p>
+                    <p className="text-xs text-slate-500 mt-0.5">{m.manualType} • Rev {m.revision || '01'}</p>
+                  </div>
+                  <Badge tone="ready" size="sm">Indexed</Badge>
+                </div>
+              ))}
+            </div>
           </Card>
         </div>
       )}
 
-      {/* Slide-over Drawer for Creating / Editing Work Orders */}
+      {/* SCHEDULED JOB DETAIL DRAWER (PROGRESSIVE DISCLOSURE) */}
+      <DetailDrawer
+        open={Boolean(viewingTask)}
+        onClose={() => setViewingTask(null)}
+        title={viewingTask?.task || 'Scheduled Work Order'}
+        subtitle={`Work Order • ${viewingTask?.machineModel || 'Komatsu Asset'}`}
+        badge={
+          viewingTask && (
+            <Badge tone={statusTone(viewingTask.status)} size="sm">
+              {viewingTask.status || 'CONFIRMED'}
+            </Badge>
+          )
+        }
+        size="md"
+        footer={
+          <div className="flex items-center justify-between w-full">
+            <Button
+              variant="danger"
+              size="sm"
+              onClick={() => {
+                if (viewingTask?.id) {
+                  deleteTask(viewingTask.id);
+                  setViewingTask(null);
+                }
+              }}
+            >
+              Delete Job
+            </Button>
+            <div className="flex items-center gap-2">
+              <Button variant="secondary" size="sm" onClick={() => setViewingTask(null)}>
+                Close
+              </Button>
+              <Button
+                variant="primary"
+                size="sm"
+                onClick={() => {
+                  const t = viewingTask;
+                  setViewingTask(null);
+                  openEditDrawer(t);
+                }}
+              >
+                Edit Work Order ✎
+              </Button>
+            </div>
+          </div>
+        }
+      >
+        {viewingTask && (
+          <div className="space-y-5">
+            {/* Identity & Shift Window */}
+            <div className="p-4 bg-slate-50/80 rounded-lg border border-slate-200/80 space-y-3">
+              <div className="grid grid-cols-2 gap-3 text-xs">
+                <div>
+                  <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-500 block">Machine Model</span>
+                  <span className="font-semibold text-slate-900 text-sm mt-0.5 block">{viewingTask.machineModel || 'General Machinery'}</span>
+                  <span className="text-[11px] text-slate-500">Site: {viewingTask.location || 'Central Site'}</span>
+                </div>
+                <div>
+                  <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-500 block">Time Window</span>
+                  <span className="font-mono font-bold text-slate-900 mt-0.5 block">
+                    {viewingTask.startsAt || '08:00'} - {viewingTask.endsAt || '16:00'}
+                  </span>
+                  <span className="text-[11px] text-slate-500">{formatDayHeader(viewingTask.workDate || date)}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Assigned Technicians */}
+            <div className="p-4 bg-white rounded-lg border border-slate-200/80 space-y-2">
+              <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-700">Assigned Technicians</h4>
+              <div className="flex flex-wrap gap-2 pt-1">
+                {(viewingTask.technicians || []).map((tech) => (
+                  <div key={tech.id} className="flex items-center gap-2 px-2.5 py-1.5 rounded-md bg-slate-100 border border-slate-200 text-xs">
+                    <span className="h-2 w-2 rounded-full bg-emerald-500" />
+                    <span className="font-semibold text-slate-800">{technicianName(tech)}</span>
+                    <span className="text-[10px] text-slate-400 font-mono">({tech.employeeCode || 'TECH'})</span>
+                  </div>
+                ))}
+                {(!viewingTask.technicians || viewingTask.technicians.length === 0) && (
+                  <p className="text-xs text-amber-700">No technicians assigned yet.</p>
+                )}
+              </div>
+            </div>
+
+            {/* Scope */}
+            {viewingTask.description && (
+              <div className="space-y-1.5">
+                <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-700">Scope Description</h4>
+                <p className="text-xs text-slate-700 leading-relaxed bg-slate-50 p-3 rounded-lg border border-slate-200/60">
+                  {viewingTask.description}
+                </p>
+              </div>
+            )}
+
+            {/* Collapsible Inspection Checklist */}
+            <Disclosure
+              title="Inspection Checklist Points"
+              subtitle={`${(viewingTask.checklist || []).length} verify items for mobile execution`}
+              defaultOpen={true}
+            >
+              <div className="space-y-1.5">
+                {(viewingTask.checklist || []).map((pt, idx) => (
+                  <div key={idx} className="flex items-center gap-2 p-2 rounded bg-slate-50 border border-slate-100 text-xs">
+                    <span className="text-[10px] font-mono text-slate-400">{idx + 1}.</span>
+                    <span className="text-slate-800 flex-1">{pt.text || pt}</span>
+                    <span className="text-[10px] text-slate-400">Pending Field Signoff</span>
+                  </div>
+                ))}
+                {(!viewingTask.checklist || viewingTask.checklist.length === 0) && (
+                  <p className="text-xs text-slate-400 italic">No custom checklist items defined.</p>
+                )}
+              </div>
+            </Disclosure>
+
+            {/* Collapsible Shop Manual Guidance */}
+            {viewingTask.manualAdvice && (
+              <Disclosure
+                title="Komatsu Shop Manual Guidance"
+                subtitle="Extracted factory procedures & safety warnings"
+              >
+                <div className="space-y-2 text-xs bg-amber-50/50 p-3 rounded border border-amber-200/60">
+                  <p className="font-semibold text-amber-900">{viewingTask.manualAdvice.topic || 'Recommended Steps'}</p>
+                  <p className="text-amber-800 leading-relaxed">{viewingTask.manualAdvice.summary || viewingTask.manualAdvice.text}</p>
+                </div>
+              </Disclosure>
+            )}
+
+            {/* Supervisor Notes */}
+            {viewingTask.notes && (
+              <div className="space-y-1.5">
+                <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-700">Supervisor Dispatch Notes</h4>
+                <p className="text-xs text-slate-600 bg-slate-50 p-2.5 rounded border border-slate-200/60">
+                  {viewingTask.notes}
+                </p>
+              </div>
+            )}
+          </div>
+        )}
+      </DetailDrawer>
+
+      {/* CREATE / EDIT WORK ORDER DRAWER */}
       {isDrawerOpen && (
-        <div className="fixed inset-0 z-50 overflow-hidden bg-slate-950/40 backdrop-blur-xs flex justify-end animate-[ds-toast-in_140ms_ease]">
+        <div
+          className="fixed inset-0 z-50 overflow-hidden bg-slate-950/40 backdrop-blur-xs flex justify-end animate-[ds-toast-in_150ms_ease]"
+          onClick={() => setIsDrawerOpen(false)}
+        >
           <div
-            className="w-full max-w-xl bg-white shadow-2xl flex flex-col h-full border-l border-slate-200"
+            className="relative w-full max-w-xl bg-white shadow-2xl border-l border-slate-200 flex flex-col h-full"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Drawer Header */}
@@ -848,11 +958,11 @@ export default function DispatchAndSchedulingPage() {
               </button>
             </div>
 
-            {/* Drawer Form Body */}
+            {/* Drawer Form Body with Step Grouping */}
             <form onSubmit={saveDailyTask} className="p-4 sm:p-6 overflow-y-auto space-y-5 flex-1 text-xs sm:text-sm">
-              {/* 1. Machinery & Task Identity */}
+              {/* Step 1: Work Order Basics */}
               <div className="space-y-3 pb-4 border-b border-slate-100">
-                <p className="text-xs font-semibold text-slate-900 uppercase tracking-wider">1. Work Order Details</p>
+                <p className="text-xs font-semibold text-slate-900 uppercase tracking-wider">Step 1 — Work Order Basics</p>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <Field label="Machine Model" required>
@@ -909,10 +1019,10 @@ export default function DispatchAndSchedulingPage() {
                 </Field>
               </div>
 
-              {/* 2. Schedule & Time Window with Shift Presets */}
+              {/* Step 2: Time Window & Presets */}
               <div className="space-y-3 pb-4 border-b border-slate-100">
                 <div className="flex items-center justify-between">
-                  <p className="text-xs font-semibold text-slate-900 uppercase tracking-wider">2. Time Window & Status</p>
+                  <p className="text-xs font-semibold text-slate-900 uppercase tracking-wider">Step 2 — Shift & Time Window</p>
                   <div className="flex items-center gap-1">
                     <button
                       type="button"
@@ -968,11 +1078,11 @@ export default function DispatchAndSchedulingPage() {
                 </Field>
               </div>
 
-              {/* 3. Assigned Technicians */}
+              {/* Step 3: Assigned Technicians */}
               <div className="space-y-2.5 pb-4 border-b border-slate-100">
                 <div className="flex items-center justify-between">
                   <p className="text-xs font-semibold text-slate-900 uppercase tracking-wider">
-                    3. Assigned Technicians ({taskForm.technicianIds.length} selected)
+                    Step 3 — Assigned Technicians ({taskForm.technicianIds.length} selected)
                   </p>
                   {taskForm.technicianIds.length > 0 && (
                     <button
@@ -1029,49 +1139,56 @@ export default function DispatchAndSchedulingPage() {
                 </div>
               </div>
 
+              {/* Step 4: Collapsible Advanced Options */}
+              <Disclosure
+                title="Advanced Options (Checklist Points & Dispatch Notes)"
+                subtitle="Custom inspection items & safety instructions"
+                defaultOpen={false}
+              >
+                {/* Inspection Checklist Points */}
+                <div className="space-y-2.5">
+                  <div className="flex items-center justify-between">
+                    <p className="text-xs font-semibold text-slate-700">Inspection Checklist Points</p>
+                    <Button type="button" variant="ghost" size="sm" onClick={addChecklistPoint}>
+                      + Add Point
+                    </Button>
+                  </div>
 
-              {/* 4. Inspection Checklist Points */}
-              <div className="space-y-3 pb-4 border-b border-slate-100">
-                <div className="flex items-center justify-between">
-                  <p className="text-xs font-semibold text-slate-900 uppercase tracking-wider">4. Work Points Checklist</p>
-                  <Button type="button" variant="ghost" size="sm" onClick={addChecklistPoint}>
-                    + Add Point
-                  </Button>
+                  <div className="space-y-2">
+                    {taskForm.checklist.map((item, idx) => (
+                      <div key={item.id || idx} className="flex items-center gap-2">
+                        <span className="text-[11px] font-mono text-slate-400 w-4">{idx + 1}.</span>
+                        <Input
+                          value={item.text}
+                          onChange={(e) => updateChecklistPoint(idx, 'text', e.target.value)}
+                          placeholder={`Checklist item ${idx + 1}...`}
+                          className="flex-1 text-xs"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => removeChecklistPoint(idx)}
+                          className="p-1 text-slate-400 hover:text-red-600 transition-colors"
+                          title="Remove point"
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    ))}
+                  </div>
                 </div>
 
-                <div className="space-y-2">
-                  {taskForm.checklist.map((item, idx) => (
-                    <div key={item.id || idx} className="flex items-center gap-2">
-                      <span className="text-[11px] font-mono text-slate-400 w-4">{idx + 1}.</span>
-                      <Input
-                        value={item.text}
-                        onChange={(e) => updateChecklistPoint(idx, 'text', e.target.value)}
-                        placeholder={`Checklist item ${idx + 1}...`}
-                        className="flex-1"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => removeChecklistPoint(idx)}
-                        className="p-1 text-slate-400 hover:text-red-600 transition-colors"
-                        title="Remove point"
-                      >
-                        ✕
-                      </button>
-                    </div>
-                  ))}
+                {/* Supervisor Notes */}
+                <div className="pt-2 border-t border-slate-100">
+                  <Field label="Supervisor Dispatch Notes">
+                    <Textarea
+                      rows={2}
+                      value={taskForm.notes}
+                      onChange={(e) => setTaskForm({ ...taskForm, notes: e.target.value })}
+                      placeholder="Special instructions, required PPE, or access clearance..."
+                    />
+                  </Field>
                 </div>
-              </div>
-
-              {/* 5. Notes */}
-              <Field label="Supervisor Dispatch Notes">
-                <Textarea
-                  rows={2}
-                  value={taskForm.notes}
-                  onChange={(e) => setTaskForm({ ...taskForm, notes: e.target.value })}
-                  placeholder="Special instructions, required PPE, or access clearance..."
-                />
-              </Field>
-
+              </Disclosure>
             </form>
 
             {/* Sticky Drawer Footer */}
