@@ -56,10 +56,10 @@ SAFETY & PPE: Safety vest, hardhat, steel-toe boots required on all Kuwait works
       {/* Step Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-slate-200 pb-4">
         <div>
-          <span className="text-[10px] font-black uppercase tracking-widest text-emerald-600 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full">
+          <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded">
             Step 5 of 5
           </span>
-          <h2 className="text-xl font-black text-slate-900 mt-1">Videographer Production Call Sheet</h2>
+          <h2 className="text-lg font-bold text-slate-900 mt-1">Videographer Production Call Sheet</h2>
           <p className="text-xs text-slate-500">
             Print or copy clean shot lists and scripts directly for your camera crew and graphic designers.
           </p>
@@ -67,24 +67,24 @@ SAFETY & PPE: Safety vest, hardhat, steel-toe boots required on all Kuwait works
 
         {/* View Switcher & Print Controls */}
         <div className="flex items-center gap-2">
-          <div className="flex bg-slate-100 p-0.5 rounded-xl border border-slate-200 text-xs font-bold">
+          <div className="flex bg-slate-100 p-0.5 rounded-lg border border-slate-200 text-xs font-medium">
             <button
               type="button"
               onClick={() => setViewMode('single')}
-              className={`px-3 py-1 rounded-lg transition-all ${
-                viewMode === 'single' ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-600 hover:text-slate-900'
+              className={`px-3 py-1.5 rounded-md transition-all cursor-pointer ${
+                viewMode === 'single' ? 'bg-white text-slate-900 shadow-xs font-bold' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
-              📄 Single Shoot Sheet
+              Single Shoot Sheet
             </button>
             <button
               type="button"
               onClick={() => setViewMode('month_book')}
-              className={`px-3 py-1 rounded-lg transition-all ${
-                viewMode === 'month_book' ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-600 hover:text-slate-900'
+              className={`px-3 py-1.5 rounded-md transition-all cursor-pointer ${
+                viewMode === 'month_book' ? 'bg-white text-slate-900 shadow-xs font-bold' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
-              📖 Full Monthly Book ({concepts.length})
+              Full Monthly Book ({concepts.length})
             </button>
           </div>
 
@@ -92,9 +92,9 @@ SAFETY & PPE: Safety vest, hardhat, steel-toe boots required on all Kuwait works
             type="button"
             variant="primary"
             onClick={() => window.print()}
-            className="!bg-slate-900 hover:!bg-slate-800 !text-white !font-bold text-xs shadow-sm"
+            className="!bg-slate-900 hover:!bg-slate-800 !text-white !font-bold text-xs shadow-xs"
           >
-            🖨️ Print / Save PDF
+            Print / Save PDF
           </Button>
 
           <Button
@@ -103,10 +103,11 @@ SAFETY & PPE: Safety vest, hardhat, steel-toe boots required on all Kuwait works
             onClick={handleCopySingleBrief}
             className="text-xs !bg-white"
           >
-            {copied ? '✓ Copied to Clipboard!' : '📋 Copy for WhatsApp'}
+            {copied ? '✓ Copied to Clipboard!' : 'Copy for WhatsApp'}
           </Button>
         </div>
       </div>
+
 
       {/* MODE 1: SINGLE CONCEPT CALL SHEET */}
       {viewMode === 'single' && (

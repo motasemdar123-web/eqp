@@ -40,17 +40,17 @@ export default function Step2ContentSchedule({
   return (
     <div className="space-y-6 animate-[ds-toast-in_180ms_ease]">
       {/* Top Header: Clean, professional, executive title & actions */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-white p-4 rounded-xl border border-slate-200 shadow-2xs">
         <div>
           <div className="flex items-center gap-2">
-            <span className="text-[10px] font-black uppercase tracking-widest text-amber-600 bg-amber-50 border border-amber-200 px-2.5 py-0.5 rounded-full">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-amber-700 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded">
               Step 2 of 5
             </span>
-            <span className="text-xs font-mono font-bold text-slate-400">
+            <span className="text-xs font-mono font-medium text-slate-500">
               {campaign.monthName}
             </span>
           </div>
-          <h2 className="text-xl font-black text-slate-900 mt-1">4-Week Content Plan & Schedule</h2>
+          <h2 className="text-lg font-bold text-slate-900 mt-1">4-Week Content Plan & Schedule</h2>
           <p className="text-xs text-slate-500 mt-0.5">
             Cadence: 3 Posts / Week (Sundays, Tuesdays & Thursdays). Click any card to edit its script.
           </p>
@@ -58,24 +58,24 @@ export default function Step2ContentSchedule({
 
         <div className="flex flex-wrap items-center gap-2 self-start sm:self-auto">
           {/* View Mode Toggle */}
-          <div className="flex bg-slate-100 p-0.5 rounded-xl border border-slate-200 text-xs font-bold">
+          <div className="flex bg-slate-100 p-0.5 rounded-lg border border-slate-200 text-xs font-medium">
             <button
               type="button"
               onClick={() => setViewMode('board')}
-              className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${
-                viewMode === 'board' ? 'bg-white text-slate-900 shadow-xs font-black' : 'text-slate-600 hover:text-slate-900'
+              className={`px-3 py-1.5 rounded-md transition-all cursor-pointer ${
+                viewMode === 'board' ? 'bg-white text-slate-900 shadow-xs font-bold' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
-              <span>📅</span> 4-Week Board
+              4-Week Board
             </button>
             <button
               type="button"
               onClick={() => setViewMode('list')}
-              className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${
-                viewMode === 'list' ? 'bg-white text-slate-900 shadow-xs font-black' : 'text-slate-600 hover:text-slate-900'
+              className={`px-3 py-1.5 rounded-md transition-all cursor-pointer ${
+                viewMode === 'list' ? 'bg-white text-slate-900 shadow-xs font-bold' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
-              <span>📋</span> Editorial List
+              Editorial List
             </button>
           </div>
 
@@ -99,14 +99,14 @@ export default function Step2ContentSchedule({
             {stats.total} Total Releases
           </span>
           <span className="text-slate-300">|</span>
-          <span className="flex items-center gap-1">
-            <span>🎬</span> {stats.reels} Reels
+          <span className="font-medium text-slate-600">
+            {stats.reels} Reels
           </span>
-          <span className="flex items-center gap-1">
-            <span>📑</span> {stats.carousels} Carousels
+          <span className="font-medium text-slate-600">
+            {stats.carousels} Carousels
           </span>
-          <span className="flex items-center gap-1">
-            <span>📸</span> {stats.photos} Photos
+          <span className="font-medium text-slate-600">
+            {stats.photos} Photos
           </span>
         </div>
 
@@ -117,6 +117,7 @@ export default function Step2ContentSchedule({
           </Badge>
         </div>
       </div>
+
 
       {/* MODE 1: 4-WEEK BOARD VIEW */}
       {viewMode === 'board' && (

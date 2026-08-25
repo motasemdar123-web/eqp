@@ -61,10 +61,10 @@ export default function Step1MonthSetup({ campaign, onUpdateCampaign, onNextStep
   }, [concepts]);
 
   const STAT_CARDS = [
-    { label: 'Total Posts',  value: stats.totalPosts,  icon: '📊', accent: 'from-sky-500/15  to-sky-500/5   text-sky-700   ring-sky-200' },
-    { label: 'Reels',        value: stats.reels,       icon: '🎬', accent: 'from-indigo-500/15 to-indigo-500/5 text-indigo-700 ring-indigo-200' },
-    { label: 'Carousels',    value: stats.carousels,   icon: '📑', accent: 'from-amber-500/15 to-amber-500/5 text-amber-700 ring-amber-200' },
-    { label: 'Scripted',     value: stats.scripted,    icon: '✍️', accent: 'from-emerald-500/15 to-emerald-500/5 text-emerald-700 ring-emerald-200' },
+    { label: 'Total Releases', value: stats.totalPosts, tag: 'Monthly Total' },
+    { label: 'Short-Form Reels', value: stats.reels, tag: 'Video Format' },
+    { label: 'Technical Carousels', value: stats.carousels, tag: 'Slide Format' },
+    { label: 'Director Scripted', value: stats.scripted, tag: 'Production Ready' },
   ];
 
   return (
@@ -72,26 +72,26 @@ export default function Step1MonthSetup({ campaign, onUpdateCampaign, onNextStep
       {/* Step Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b border-slate-200 pb-4">
         <div>
-          <span className="text-[10px] font-black uppercase tracking-widest text-amber-600 bg-amber-50 border border-amber-200 px-2.5 py-0.5 rounded-full">
+          <span className="text-[10px] font-bold uppercase tracking-wider text-amber-700 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded">
             Step 1 of 5
           </span>
-          <h2 className="text-xl font-black text-slate-900 mt-1">Monthly Campaign Theme & Strategy</h2>
+          <h2 className="text-lg font-bold text-slate-900 mt-1">Monthly Campaign Theme & Strategy</h2>
           <p className="text-xs text-slate-500">Define the overarching market narrative and target KPIs for {campaign.monthName}</p>
         </div>
 
         <Badge tone="active">{campaign.monthName}</Badge>
       </div>
 
-      {/* ── Quick‑Stat Metric Cards ────────────────────────────── */}
+      {/* Quick-Stat Metric Cards */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {STAT_CARDS.map((s) => (
           <div
             key={s.label}
-            className={`relative overflow-hidden rounded-xl bg-gradient-to-br ${s.accent} ring-1 p-3.5 flex flex-col gap-1`}
+            className="p-3.5 bg-white rounded-lg border border-slate-200 shadow-2xs space-y-1"
           >
-            <span className="text-lg leading-none">{s.icon}</span>
-            <span className="text-2xl font-black leading-none">{s.value}</span>
-            <span className="text-[11px] font-semibold opacity-80">{s.label}</span>
+            <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-400 block">{s.tag}</span>
+            <span className="text-2xl font-bold font-mono text-slate-900 leading-none block">{s.value}</span>
+            <span className="text-xs font-medium text-slate-600 block">{s.label}</span>
           </div>
         ))}
       </div>
@@ -100,8 +100,8 @@ export default function Step1MonthSetup({ campaign, onUpdateCampaign, onNextStep
       <Card className="p-6 space-y-5 bg-white">
         {/* Campaign Theme Title */}
         <div>
-          <label className="text-xs font-bold text-slate-900 mb-1.5 block">
-            🎯 Campaign Theme Headline
+          <label className="text-xs font-semibold text-slate-900 mb-1.5 block">
+            Campaign Theme Headline
           </label>
           <input
             type="text"
@@ -109,15 +109,15 @@ export default function Step1MonthSetup({ campaign, onUpdateCampaign, onNextStep
             onChange={(e) => setFormData({ ...formData, themeTitle: e.target.value })}
             onBlur={handleSave}
             placeholder="e.g. Extreme Desert Heat Resilience & 50°C+ Summer Operations"
-            className="ds-input text-xs sm:text-sm font-bold text-slate-900"
+            className="ds-input text-xs sm:text-sm font-semibold text-slate-900"
           />
           <p className="text-[11px] text-slate-500 mt-1">The primary theme unifying all reels, carousels, and case studies this month.</p>
         </div>
 
         {/* Strategic Narrative / Objective */}
         <div>
-          <label className="text-xs font-bold text-slate-900 mb-1.5 block">
-            📖 Campaign Narrative & Customer Objective
+          <label className="text-xs font-semibold text-slate-900 mb-1.5 block">
+            Campaign Narrative & Customer Objective
           </label>
           <textarea
             rows={3}
@@ -131,8 +131,8 @@ export default function Step1MonthSetup({ campaign, onUpdateCampaign, onNextStep
 
         {/* Target KPIs */}
         <div>
-          <label className="text-xs font-bold text-slate-900 mb-1.5 block">
-            📊 Target Monthly Performance KPIs
+          <label className="text-xs font-semibold text-slate-900 mb-1.5 block">
+            Target Monthly Performance KPIs
           </label>
           <input
             type="text"
@@ -143,6 +143,7 @@ export default function Step1MonthSetup({ campaign, onUpdateCampaign, onNextStep
             className="ds-input text-xs font-mono font-semibold"
           />
         </div>
+
 
         {/* ── Content Pillar Distribution — donut + legend ──── */}
         <div className="pt-3 border-t border-slate-100 space-y-3">
