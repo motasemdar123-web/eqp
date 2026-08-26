@@ -2,25 +2,7 @@
 
 import { useEffect, useRef, useState, useMemo, useCallback } from 'react';
 import * as THREE from 'three';
-
-// Category color mappings with restrained, professional industrial tones
-const CATEGORY_COLORS = {
-  sockets: { hex: 0x06b6d4, name: 'Sockets & Bits', css: '#06b6d4' },
-  combination_wrenches: { hex: 0xf59e0b, name: 'Spanners & Wrenches', css: '#f59e0b' },
-  open_wrenches: { hex: 0xd97706, name: 'Open Wrenches', css: '#d97706' },
-  torx_keys: { hex: 0x8b5cf6, name: 'Torx & Star Keys', css: '#8b5cf6' },
-  hex_keys: { hex: 0x3b82f6, name: 'Hex Allen Keys', css: '#3b82f6' },
-  screwdrivers: { hex: 0xec4899, name: 'Screwdrivers', css: '#ec4899' },
-  snap_rings: { hex: 0x10b981, name: 'Snap Ring Pliers', css: '#10b981' },
-  files: { hex: 0xa855f7, name: 'Files Set', css: '#a855f7' },
-  ratchets_extensions: { hex: 0x059669, name: 'Ratchets & Extensions', css: '#059669' },
-  pliers_cutters: { hex: 0xef4444, name: 'Pliers & Cutters', css: '#ef4444' },
-  hammers_saws: { hex: 0xe11d48, name: 'Hammers & Saws', css: '#e11d48' },
-  electrical_measuring: { hex: 0x6366f1, name: 'Measurement & Power', css: '#6366f1' },
-  storage: { hex: 0x475569, name: 'Storage & Boxes', css: '#475569' },
-  specialty_tools: { hex: 0x0284c7, name: 'Specialty Tools', css: '#0284c7' },
-  general_tools: { hex: 0x64748b, name: 'General Tools', css: '#64748b' },
-};
+import { buildRealisticToolModel } from './proceduralTools';
 
 const STATUS_COLORS = {
   good: { hex: 0x10b981, css: '#10b981', label: 'Operational' },
@@ -92,7 +74,7 @@ export default function Toolbox3DCanvas({
   const [explodeValue, setExplodeValue] = useState(0.5); // 0.0 -> 1.0
   const [activeCameraPreset, setActiveCameraPreset] = useState('iso');
 
-  // Stable Refs to avoid breaking WebGL Lifecycle
+  // Stable Refs
   const selectedToolRef = useRef(selectedTool);
   const onSelectToolRef = useRef(onSelectTool);
   const explodeValueRef = useRef(explodeValue);
@@ -118,7 +100,7 @@ export default function Toolbox3DCanvas({
   const cameraRef = useRef(null);
   const rendererRef = useRef(null);
   const animFrameRef = useRef(null);
-  const toolMeshesRef = useRef([]);
+  const toolNodesRef = useRef([]);
   const raycasterRef = useRef(new THREE.Raycaster());
   const mousePosRef = useRef(new THREE.Vector2(-999, -999));
 
@@ -126,10 +108,10 @@ export default function Toolbox3DCanvas({
   const controlsRef = useRef({
     isDragging: false,
     prevMousePos: { x: 0, y: 0 },
-    rotation: { x: 0.42, y: -0.6 },
-    targetRotation: { x: 0.42, y: -0.6 },
-    distance: 13.5,
-    targetDistance: 13.5,
+    rotation: { x: 0.45, y: -0.65 },
+    targetRotation: { x: 0.45, y: -0.65 },
+    distance: 14.5,
+    targetDistance: 14.5,
     pan: { x: 0, y: 0.4 },
     targetPan: { x: 0, y: 0.4 },
   });
@@ -177,16 +159,16 @@ export default function Toolbox3DCanvas({
     setActiveCameraPreset(preset);
     const ctrl = controlsRef.current;
     if (preset === 'front') {
-      ctrl.targetRotation = { x: 0.12, y: 0 };
-      ctrl.targetDistance = 11.5;
-      ctrl.targetPan = { x: 0, y: 0.2 };
+      ctrl.targetRotation = { x: 0.15, y: 0 };
+      ctrl.targetDistance = 12.0;
+      ctrl.targetPan = { x: 0, y: 0.3 };
     } else if (preset === 'iso') {
-      ctrl.targetRotation = { x: 0.42, y: -0.6 };
-      ctrl.targetDistance = 13.5;
+      ctrl.targetRotation = { x: 0.45, y: -0.65 };
+      ctrl.targetDistance = 14.5;
       ctrl.targetPan = { x: 0, y: 0.4 };
     } else if (preset === 'top') {
       ctrl.targetRotation = { x: 1.45, y: 0 };
-      ctrl.targetDistance = 14.5;
+      ctrl.targetDistance = 15.0;
       ctrl.targetPan = { x: 0, y: 0 };
     }
   }, []);
@@ -194,14 +176,14 @@ export default function Toolbox3DCanvas({
   // Focus selected tool
   const focusTool = useCallback((tool) => {
     if (!tool) return;
-    const node = toolMeshesRef.current.find((n) => n.tool.id === tool.id);
+    const node = toolNodesRef.current.find((n) => n.tool.id === tool.id);
     if (node) {
       const ctrl = controlsRef.current;
       ctrl.targetPan = {
-        x: node.mesh.position.x * 0.6,
-        y: node.mesh.position.y * 0.6 + 0.3,
+        x: node.group.position.x * 0.6,
+        y: node.group.position.y * 0.6 + 0.3,
       };
-      ctrl.targetDistance = 9.5;
+      ctrl.targetDistance = 10.0;
     }
   }, []);
 
@@ -253,12 +235,12 @@ export default function Toolbox3DCanvas({
     // 1. Scene
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0x070c18);
-    scene.fog = new THREE.FogExp2(0x070c18, 0.02);
+    scene.fog = new THREE.FogExp2(0x070c18, 0.018);
     sceneRef.current = scene;
 
     // 2. Camera
     const camera = new THREE.PerspectiveCamera(40, width / height, 0.1, 100);
-    camera.position.set(0, 5.0, 13.5);
+    camera.position.set(0, 5.5, 14.5);
     cameraRef.current = camera;
 
     // 3. WebGL Renderer
@@ -274,7 +256,7 @@ export default function Toolbox3DCanvas({
       renderer.shadowMap.enabled = true;
       renderer.shadowMap.type = THREE.PCFSoftShadowMap;
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
-      renderer.toneMappingExposure = 1.15;
+      renderer.toneMappingExposure = 1.2;
       container.appendChild(renderer.domElement);
       rendererRef.current = renderer;
     } catch (e) {
@@ -282,27 +264,27 @@ export default function Toolbox3DCanvas({
       return;
     }
 
-    // 4. Lighting
-    const ambientLight = new THREE.AmbientLight(0xffffff, 1.6);
+    // 4. Studio Lighting Design
+    const ambientLight = new THREE.AmbientLight(0xffffff, 1.8);
     scene.add(ambientLight);
 
-    const mainLight = new THREE.DirectionalLight(0xffffff, 2.6);
-    mainLight.position.set(8, 16, 10);
-    mainLight.castShadow = true;
-    mainLight.shadow.mapSize.width = 1024;
-    mainLight.shadow.mapSize.height = 1024;
-    scene.add(mainLight);
+    const mainKeyLight = new THREE.DirectionalLight(0xffffff, 2.8);
+    mainKeyLight.position.set(10, 18, 12);
+    mainKeyLight.castShadow = true;
+    mainKeyLight.shadow.mapSize.width = 2048;
+    mainKeyLight.shadow.mapSize.height = 2048;
+    scene.add(mainKeyLight);
 
-    const cyanPoint = new THREE.PointLight(0x06b6d4, 2.4, 25);
-    cyanPoint.position.set(-8, 6, -5);
-    scene.add(cyanPoint);
+    const cyanRim = new THREE.PointLight(0x06b6d4, 3.0, 25);
+    cyanRim.position.set(-9, 7, -6);
+    scene.add(cyanRim);
 
-    const warmFill = new THREE.DirectionalLight(0xf59e0b, 0.9);
-    warmFill.position.set(6, -2, -6);
-    scene.add(warmFill);
+    const amberFill = new THREE.DirectionalLight(0xf59e0b, 1.1);
+    amberFill.position.set(8, -2, -8);
+    scene.add(amberFill);
 
     // 5. Studio Floor Grid
-    const floorGeo = new THREE.PlaneGeometry(50, 50);
+    const floorGeo = new THREE.PlaneGeometry(60, 60);
     const floorMat = new THREE.MeshStandardMaterial({
       color: 0x050811,
       roughness: 0.9,
@@ -310,18 +292,18 @@ export default function Toolbox3DCanvas({
     });
     const floor = new THREE.Mesh(floorGeo, floorMat);
     floor.rotation.x = -Math.PI / 2;
-    floor.position.y = -1.9;
+    floor.position.y = -2.1;
     floor.receiveShadow = true;
     scene.add(floor);
 
-    const grid = new THREE.GridHelper(28, 28, 0x1e293b, 0x0b1329);
-    grid.position.y = -1.89;
+    const grid = new THREE.GridHelper(32, 32, 0x1e293b, 0x0b1329);
+    grid.position.y = -2.09;
     scene.add(grid);
 
     // 6. Build Cantilever Steel Toolbox Model
     const currentTheme = TOOLBOX_THEMES[themeKey] || TOOLBOX_THEMES.cobalt;
     const toolboxRoot = new THREE.Group();
-    toolboxRoot.position.y = -0.9;
+    toolboxRoot.position.y = -1.0;
     scene.add(toolboxRoot);
 
     const bodyMat = new THREE.MeshStandardMaterial({
@@ -354,19 +336,19 @@ export default function Toolbox3DCanvas({
     });
 
     // Tub Chassis
-    const tubGeo = new THREE.BoxGeometry(5.4, 2.0, 2.8);
+    const tubGeo = new THREE.BoxGeometry(5.8, 2.1, 2.9);
     const tub = new THREE.Mesh(tubGeo, bodyMat);
     tub.castShadow = true;
     tub.receiveShadow = true;
     toolboxRoot.add(tub);
 
     // Corner Bumpers
-    const bumperGeo = new THREE.BoxGeometry(0.28, 2.05, 0.28);
+    const bumperGeo = new THREE.BoxGeometry(0.3, 2.15, 0.3);
     [
-      [-2.65, 0, -1.35],
-      [2.65, 0, -1.35],
-      [-2.65, 0, 1.35],
-      [2.65, 0, 1.35],
+      [-2.85, 0, -1.4],
+      [2.85, 0, -1.4],
+      [-2.85, 0, 1.4],
+      [2.85, 0, 1.4],
     ].forEach(([x, y, z]) => {
       const b = new THREE.Mesh(bumperGeo, rubberMat);
       b.position.set(x, y, z);
@@ -374,12 +356,12 @@ export default function Toolbox3DCanvas({
     });
 
     // Rubber Feet
-    const footGeo = new THREE.CylinderGeometry(0.22, 0.28, 0.16, 16);
+    const footGeo = new THREE.CylinderGeometry(0.24, 0.3, 0.18, 16);
     [
-      [-2.3, -1.05, -1.05],
-      [2.3, -1.05, -1.05],
-      [-2.3, -1.05, 1.05],
-      [2.3, -1.05, 1.05],
+      [-2.4, -1.1, -1.1],
+      [2.4, -1.1, -1.1],
+      [-2.4, -1.1, 1.1],
+      [2.4, -1.1, 1.1],
     ].forEach(([x, y, z]) => {
       const foot = new THREE.Mesh(footGeo, rubberMat);
       foot.position.set(x, y, z);
@@ -387,59 +369,84 @@ export default function Toolbox3DCanvas({
     });
 
     // Technician Engraved Brass Plate
-    const plateGeo = new THREE.BoxGeometry(2.4, 0.6, 0.05);
+    const plateGeo = new THREE.BoxGeometry(2.6, 0.65, 0.06);
     const plate = new THREE.Mesh(plateGeo, goldMat);
-    plate.position.set(0, 0.2, 1.43);
+    plate.position.set(0, 0.2, 1.48);
     toolboxRoot.add(plate);
 
     // Left Cantilever Tray
-    const trayGeo = new THREE.BoxGeometry(2.4, 0.7, 2.6);
+    const trayGeo = new THREE.BoxGeometry(2.5, 0.75, 2.7);
     const trayLeft = new THREE.Mesh(trayGeo, trayMat);
-    trayLeft.position.set(-1.25, 0.6, 0);
+    trayLeft.position.set(-1.3, 0.65, 0);
     trayLeft.castShadow = true;
     toolboxRoot.add(trayLeft);
 
+    // Socket Rail Inserts on Left Tray
+    [-0.7, 0, 0.7].forEach((dx) => {
+      const railGeo = new THREE.BoxGeometry(0.12, 0.65, 2.5);
+      const rail = new THREE.Mesh(railGeo, bodyMat);
+      rail.position.set(dx, 0.05, 0);
+      trayLeft.add(rail);
+    });
+
     // Right Cantilever Tray
     const trayRight = new THREE.Mesh(trayGeo, trayMat);
-    trayRight.position.set(1.25, 0.6, 0);
+    trayRight.position.set(1.3, 0.65, 0);
     trayRight.castShadow = true;
     toolboxRoot.add(trayRight);
 
+    [-0.7, 0, 0.7].forEach((dx) => {
+      const railGeo = new THREE.BoxGeometry(0.12, 0.65, 2.5);
+      const rail = new THREE.Mesh(railGeo, bodyMat);
+      rail.position.set(dx, 0.05, 0);
+      trayRight.add(rail);
+    });
+
+    // Scissor Arms (Cantilever Linkages)
+    const armGeo = new THREE.BoxGeometry(0.08, 1.4, 0.08);
+    const armL = new THREE.Mesh(armGeo, chromeMat);
+    armL.position.set(-2.7, 0.4, 1.4);
+    toolboxRoot.add(armL);
+
+    const armR = new THREE.Mesh(armGeo, chromeMat);
+    armR.position.set(2.7, 0.4, 1.4);
+    toolboxRoot.add(armR);
+
     // Dual Top Lids
     const lidLeftPivot = new THREE.Group();
-    lidLeftPivot.position.set(-2.7, 1.0, 0);
+    lidLeftPivot.position.set(-2.8, 1.05, 0);
     toolboxRoot.add(lidLeftPivot);
 
-    const lidGeo = new THREE.BoxGeometry(2.7, 0.35, 2.82);
+    const lidGeo = new THREE.BoxGeometry(2.8, 0.38, 2.92);
     const lidMeshL = new THREE.Mesh(lidGeo, bodyMat);
-    lidMeshL.position.set(1.35, 0.17, 0);
+    lidMeshL.position.set(1.4, 0.19, 0);
     lidMeshL.castShadow = true;
     lidLeftPivot.add(lidMeshL);
 
     const lidRightPivot = new THREE.Group();
-    lidRightPivot.position.set(2.7, 1.0, 0);
+    lidRightPivot.position.set(2.8, 1.05, 0);
     toolboxRoot.add(lidRightPivot);
 
     const lidMeshR = new THREE.Mesh(lidGeo, bodyMat);
-    lidMeshR.position.set(-1.35, 0.17, 0);
+    lidMeshR.position.set(-1.4, 0.19, 0);
     lidMeshR.castShadow = true;
     lidRightPivot.add(lidMeshR);
 
     // Aluminum Handle
-    const handleGeo = new THREE.CylinderGeometry(0.12, 0.12, 2.2, 16);
+    const handleGeo = new THREE.CylinderGeometry(0.14, 0.14, 2.4, 16);
     const handle = new THREE.Mesh(handleGeo, chromeMat);
     handle.rotation.z = Math.PI / 2;
-    handle.position.set(-1.35, 0.62, 0);
+    handle.position.set(-1.4, 0.68, 0);
     lidRightPivot.add(handle);
 
     // Chrome Latches
-    const latchGeo = new THREE.BoxGeometry(0.2, 0.4, 0.1);
+    const latchGeo = new THREE.BoxGeometry(0.24, 0.45, 0.12);
     const latch1 = new THREE.Mesh(latchGeo, chromeMat);
-    latch1.position.set(-1.2, 0.85, 1.45);
+    latch1.position.set(-1.3, 0.9, 1.5);
     toolboxRoot.add(latch1);
 
     const latch2 = new THREE.Mesh(latchGeo, chromeMat);
-    latch2.position.set(1.2, 0.85, 1.45);
+    latch2.position.set(1.3, 0.9, 1.5);
     toolboxRoot.add(latch2);
 
     partsRef.current = {
@@ -489,15 +496,15 @@ export default function Toolbox3DCanvas({
       e.preventDefault();
       controlsRef.current.targetDistance = Math.max(
         6.5,
-        Math.min(22, controlsRef.current.targetDistance + e.deltaY * 0.012)
+        Math.min(24, controlsRef.current.targetDistance + e.deltaY * 0.012)
       );
     };
 
     const onClick = () => {
       if (!cameraRef.current || !sceneRef.current) return;
       raycasterRef.current.setFromCamera(mousePosRef.current, cameraRef.current);
-      const meshes = toolMeshesRef.current.map((n) => n.mesh);
-      const intersects = raycasterRef.current.intersectObjects(meshes, true);
+      const interactiveObjects = toolNodesRef.current.map((n) => n.group);
+      const intersects = raycasterRef.current.intersectObjects(interactiveObjects, true);
 
       if (intersects.length > 0) {
         let obj = intersects[0].object;
@@ -519,7 +526,7 @@ export default function Toolbox3DCanvas({
     container.addEventListener('wheel', onWheel, { passive: false });
     container.addEventListener('click', onClick);
 
-    // 8. ResizeObserver for robust layout adaptation
+    // 8. ResizeObserver
     const resizeObserver = new ResizeObserver(() => {
       if (!container || !rendererRef.current || !cameraRef.current) return;
       const w = container.clientWidth || 800;
@@ -561,12 +568,12 @@ export default function Toolbox3DCanvas({
       if (p.lidRightPivot) p.lidRightPivot.rotation.z = -op * (Math.PI * 0.64);
 
       if (p.trayLeft) {
-        p.trayLeft.position.x = -1.25 - op * 1.5;
-        p.trayLeft.position.y = 0.6 + op * 0.4;
+        p.trayLeft.position.x = -1.3 - op * 1.55;
+        p.trayLeft.position.y = 0.65 + op * 0.45;
       }
       if (p.trayRight) {
-        p.trayRight.position.x = 1.25 + op * 1.5;
-        p.trayRight.position.y = 0.6 + op * 0.4;
+        p.trayRight.position.x = 1.3 + op * 1.55;
+        p.trayRight.position.y = 0.65 + op * 0.45;
       }
 
       if (p.latches) {
@@ -575,12 +582,12 @@ export default function Toolbox3DCanvas({
         });
       }
 
-      // Tool Meshes Positioning & Dynamic Highlight
+      // Tool Models Positioning & Dynamic Highlight
       const activeSelected = selectedToolRef.current;
       const hoveredId = lastHoveredIdRef.current;
 
-      toolMeshesRef.current.forEach((node) => {
-        const { mesh, highlightRing, defaultPos, explodeOffset, tool } = node;
+      toolNodesRef.current.forEach((node) => {
+        const { group, highlightRing, defaultPos, explodeOffset, tool } = node;
 
         const isSelected = activeSelected?.id === tool.id;
         const isHovered = hoveredId === tool.id;
@@ -590,15 +597,15 @@ export default function Toolbox3DCanvas({
         const posY = defaultPos.y + explodeOffset.y * op;
         const posZ = defaultPos.z + explodeOffset.z * op;
 
-        mesh.position.set(posX, posY, posZ);
+        group.position.set(posX, posY, posZ);
 
         // Highlight ring animation
         if (highlightRing) {
           highlightRing.visible = isSelected || isHovered;
           if (isSelected) {
             highlightRing.material.color.setHex(0x06b6d4);
-            highlightRing.material.opacity = 0.9;
-            highlightRing.rotation.z += delta * 2;
+            highlightRing.material.opacity = 0.95;
+            highlightRing.rotation.z += delta * 2.5;
           } else if (isHovered) {
             highlightRing.material.color.setHex(0x38bdf8);
             highlightRing.material.opacity = 0.6;
@@ -608,8 +615,8 @@ export default function Toolbox3DCanvas({
 
       // Raycast Hover Check
       raycasterRef.current.setFromCamera(mousePosRef.current, camera);
-      const meshes = toolMeshesRef.current.map((n) => n.mesh);
-      const intersects = raycasterRef.current.intersectObjects(meshes, true);
+      const interactiveObjects = toolNodesRef.current.map((n) => n.group);
+      const intersects = raycasterRef.current.intersectObjects(interactiveObjects, true);
 
       if (intersects.length > 0) {
         let obj = intersects[0].object;
@@ -651,109 +658,125 @@ export default function Toolbox3DCanvas({
     };
   }, [themeKey]);
 
-  // 2. Build Procedural 3D Tool Meshes inside drawers (Updates when filteredTools change)
+  // 2. Build Realistic 3D Tool Geometries (Updates when filteredTools change)
   useEffect(() => {
     if (!sceneRef.current) return;
     const scene = sceneRef.current;
 
-    // Clean old tool meshes
-    toolMeshesRef.current.forEach((n) => {
-      scene.remove(n.mesh);
-      if (n.mesh.geometry) n.mesh.geometry.dispose();
-      if (n.mesh.material) n.mesh.material.dispose();
+    // Clean old tool nodes
+    toolNodesRef.current.forEach((n) => {
+      scene.remove(n.group);
     });
-    toolMeshesRef.current = [];
+    toolNodesRef.current = [];
 
-    // Arrange up to 80 tools in realistic physical drawer trays
-    const count = Math.min(filteredTools.length, 80);
+    // Organize tools into authentic physical tray compartments
+    // Tray 1 (Left Upper): Sockets & Bits (Arranged on socket rails)
+    // Tray 2 (Right Upper): Hex & Torx L-Keys (Stepped holder)
+    // Tray 3 (Middle Upper): Combination Spanners & Wrenches (Graduated 6mm -> 24mm)
+    // Tray 4 (Middle Right): Screwdrivers (Parallel fluted handles)
+    // Tray 5 (Deep Base): Heavy tools (Ratchet handles, Pliers, Multimeter, Hammers, Files, Snap rings)
+    const sockets = filteredTools.filter((t) => ['sockets', 'specialty_sets'].includes(t.category));
+    const keys = filteredTools.filter((t) => ['hex_keys', 'torx_keys'].includes(t.category));
+    const wrenches = filteredTools.filter((t) => ['combination_wrenches', 'open_wrenches'].includes(t.category));
+    const screwdrivers = filteredTools.filter((t) => t.category === 'screwdrivers');
+    const heavyTools = filteredTools.filter(
+      (t) => !['sockets', 'specialty_sets', 'hex_keys', 'torx_keys', 'combination_wrenches', 'open_wrenches', 'screwdrivers'].includes(t.category)
+    );
 
-    filteredTools.slice(0, count).forEach((tool, idx) => {
-      const catCfg = CATEGORY_COLORS[tool.category] || CATEGORY_COLORS.general_tools;
-      const statCfg = STATUS_COLORS[tool.status] || STATUS_COLORS.good;
+    const placeToolList = (list, trayType) => {
+      list.forEach((tool, idx) => {
+        const model = buildRealisticToolModel(tool);
+        let defX = 0, defY = 0, defZ = 0;
+        let expX = 0, expY = 0, expZ = 0;
 
-      let trayOrigin = 'base';
-      if (['sockets', 'specialty_sets'].includes(tool.category)) trayOrigin = 'left';
-      else if (['torx_keys', 'hex_keys'].includes(tool.category)) trayOrigin = 'right';
+        if (trayType === 'sockets_left') {
+          // Dual rows along socket rails
+          const col = idx % 10;
+          const row = Math.floor(idx / 10);
+          defX = -1.3 + (row === 0 ? -0.4 : 0.4);
+          defY = 0.8;
+          defZ = (col - 4.5) * 0.24;
 
-      let defX = 0, defY = 0, defZ = 0;
-      let expX = 0, expY = 0, expZ = 0;
+          expX = defX - 1.8;
+          expY = 1.3 + (col % 2) * 0.15;
+          expZ = defZ;
+        } else if (trayType === 'keys_right') {
+          // Stepped L-keys
+          const col = idx % 10;
+          const row = Math.floor(idx / 10);
+          defX = 1.3 + (row === 0 ? -0.4 : 0.4);
+          defY = 0.8;
+          defZ = (col - 4.5) * 0.24;
 
-      const row = Math.floor(idx / 8);
-      const col = idx % 8;
-      const offsetGrid = (col - 3.5) * 0.32;
-      const offsetRow = (row - 2.5) * 0.38;
+          expX = defX + 1.8;
+          expY = 1.3 + (col % 2) * 0.15;
+          expZ = defZ;
+        } else if (trayType === 'wrenches_middle') {
+          // Graduated parallel spanners
+          const col = idx % 12;
+          defX = (col - 5.5) * 0.22;
+          defY = 0.15;
+          defZ = -0.45;
 
-      if (trayOrigin === 'left') {
-        defX = -1.25 + offsetGrid * 0.6;
-        defY = 0.7;
-        defZ = offsetRow * 0.6;
-        expX = defX - 1.8;
-        expY = 1.4 + Math.abs(offsetGrid) * 0.4;
-        expZ = defZ;
-      } else if (trayOrigin === 'right') {
-        defX = 1.25 + offsetGrid * 0.6;
-        defY = 0.7;
-        defZ = offsetRow * 0.6;
-        expX = defX + 1.8;
-        expY = 1.4 + Math.abs(offsetGrid) * 0.4;
-        expZ = defZ;
-      } else {
-        defX = offsetGrid * 0.7;
-        defY = -0.1;
-        defZ = offsetRow * 0.7;
-        expX = defX * 1.5;
-        expY = 1.8 + Math.cos(offsetGrid) * 0.5;
-        expZ = defZ * 1.5;
-      }
+          expX = defX * 1.3;
+          expY = 1.5 + Math.sin((col / 12) * Math.PI) * 0.35;
+          expZ = -0.9;
+        } else if (trayType === 'screwdrivers_middle') {
+          // Screwdrivers
+          const col = idx % 10;
+          defX = (col - 4.5) * 0.25;
+          defY = 0.15;
+          defZ = 0.45;
 
-      // Procedural Tool Geometry based on category
-      let toolGeo;
-      if (tool.category === 'sockets') {
-        toolGeo = new THREE.CylinderGeometry(0.11, 0.13, 0.32, 16);
-      } else if (tool.category === 'combination_wrenches' || tool.category === 'open_wrenches') {
-        toolGeo = new THREE.BoxGeometry(0.12, 0.04, 0.85);
-      } else if (tool.category === 'screwdrivers') {
-        toolGeo = new THREE.CylinderGeometry(0.06, 0.09, 0.75, 12);
-      } else if (tool.category === 'hex_keys' || tool.category === 'torx_keys') {
-        toolGeo = new THREE.TorusGeometry(0.15, 0.03, 8, 16, Math.PI * 1.2);
-      } else {
-        toolGeo = new THREE.BoxGeometry(0.18, 0.12, 0.55);
-      }
+          expX = defX * 1.3;
+          expY = 1.5 + Math.cos((col / 10) * Math.PI) * 0.35;
+          expZ = 0.9;
+        } else {
+          // Heavy tools in deep base
+          const col = idx % 6;
+          const row = Math.floor(idx / 6);
+          defX = (col - 2.5) * 0.55;
+          defY = -0.4;
+          defZ = (row - 1.0) * 0.6;
 
-      const toolMat = new THREE.MeshStandardMaterial({
-        color: tool.status === 'good' ? catCfg.hex : statCfg.hex,
-        metalness: 0.85,
-        roughness: 0.25,
+          expX = defX * 1.2;
+          expY = 0.4;
+          expZ = defZ;
+        }
+
+        model.position.set(defX, defY, defZ);
+
+        // Highlight ring on model root
+        const ringGeo = new THREE.RingGeometry(0.35, 0.4, 32);
+        const ringMat = new THREE.MeshBasicMaterial({
+          color: 0x06b6d4,
+          side: THREE.DoubleSide,
+          transparent: true,
+          opacity: 0.85,
+        });
+        const highlightRing = new THREE.Mesh(ringGeo, ringMat);
+        highlightRing.rotation.x = -Math.PI / 2;
+        highlightRing.position.y = -0.12;
+        highlightRing.visible = false;
+        model.add(highlightRing);
+
+        scene.add(model);
+
+        toolNodesRef.current.push({
+          group: model,
+          highlightRing,
+          tool,
+          defaultPos: new THREE.Vector3(defX, defY, defZ),
+          explodeOffset: new THREE.Vector3(expX - defX, expY - defY, expZ - defZ),
+        });
       });
+    };
 
-      const mesh = new THREE.Mesh(toolGeo, toolMat);
-      mesh.position.set(defX, defY, defZ);
-      mesh.castShadow = true;
-      mesh.userData = { tool };
-      scene.add(mesh);
-
-      // Selection / Hover Indicator Ring
-      const ringGeo = new THREE.RingGeometry(0.24, 0.28, 32);
-      const ringMat = new THREE.MeshBasicMaterial({
-        color: 0x06b6d4,
-        side: THREE.DoubleSide,
-        transparent: true,
-        opacity: 0.8,
-      });
-      const highlightRing = new THREE.Mesh(ringGeo, ringMat);
-      highlightRing.rotation.x = -Math.PI / 2;
-      highlightRing.position.y = -0.15;
-      highlightRing.visible = false;
-      mesh.add(highlightRing);
-
-      toolMeshesRef.current.push({
-        mesh,
-        highlightRing,
-        tool,
-        defaultPos: new THREE.Vector3(defX, defY, defZ),
-        explodeOffset: new THREE.Vector3(expX - defX, expY - defY, expZ - defZ),
-      });
-    });
+    placeToolList(sockets.slice(0, 24), 'sockets_left');
+    placeToolList(keys.slice(0, 20), 'keys_right');
+    placeToolList(wrenches.slice(0, 18), 'wrenches_middle');
+    placeToolList(screwdrivers.slice(0, 12), 'screwdrivers_middle');
+    placeToolList(heavyTools.slice(0, 12), 'heavy_base');
   }, [filteredTools]);
 
   return (
