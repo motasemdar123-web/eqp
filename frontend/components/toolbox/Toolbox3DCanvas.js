@@ -71,7 +71,7 @@ export default function Toolbox3DCanvas({
   const [hoveredTool, setHoveredTool] = useState(null);
   const [tooltipPos, setTooltipPos] = useState({ x: -999, y: -999 });
   const [explodePreset, setExplodePreset] = useState('inspection'); // 'closed' | 'slight' | 'inspection' | 'exploded'
-  const [explodeValue, setExplodeValue] = useState(0.5); // 0.0 -> 1.0
+  const [explodeValue, setExplodeValue] = useState(1.0); // 0.0 -> 2.0 (High Explosive Index)
   const [activeCameraPreset, setActiveCameraPreset] = useState('iso');
 
   // Stable Refs
@@ -91,7 +91,7 @@ export default function Toolbox3DCanvas({
   useEffect(() => {
     explodeValueRef.current = explodeValue;
     if (partsRef.current) {
-      partsRef.current.targetOpenProgress = explodeValue;
+      partsRef.current.targetOpenProgress = Math.min(1.0, explodeValue);
     }
   }, [explodeValue]);
 
@@ -104,16 +104,16 @@ export default function Toolbox3DCanvas({
   const raycasterRef = useRef(new THREE.Raycaster());
   const mousePosRef = useRef(new THREE.Vector2(-999, -999));
 
-  // Camera Controller State
+  // Camera Controller State (Wide viewing distance to frame dramatic explosions)
   const controlsRef = useRef({
     isDragging: false,
     prevMousePos: { x: 0, y: 0 },
     rotation: { x: 0.45, y: -0.65 },
     targetRotation: { x: 0.45, y: -0.65 },
-    distance: 14.5,
-    targetDistance: 14.5,
-    pan: { x: 0, y: 0.4 },
-    targetPan: { x: 0, y: 0.4 },
+    distance: 16.5,
+    targetDistance: 16.5,
+    pan: { x: 0, y: 0.6 },
+    targetPan: { x: 0, y: 0.6 },
   });
 
   // Toolbox Mechanism Parts
@@ -124,8 +124,8 @@ export default function Toolbox3DCanvas({
     trayLeft: null,
     trayRight: null,
     latches: [],
-    openProgress: 0.5,
-    targetOpenProgress: 0.5,
+    openProgress: 1.0,
+    targetOpenProgress: 1.0,
   });
 
   // Filter tools
@@ -149,9 +149,9 @@ export default function Toolbox3DCanvas({
   const handleSetExplodePreset = useCallback((preset) => {
     setExplodePreset(preset);
     if (preset === 'closed') setExplodeValue(0.0);
-    else if (preset === 'slight') setExplodeValue(0.25);
-    else if (preset === 'inspection') setExplodeValue(0.5);
-    else if (preset === 'exploded') setExplodeValue(1.0);
+    else if (preset === 'slight') setExplodeValue(0.5);
+    else if (preset === 'inspection') setExplodeValue(1.0);
+    else if (preset === 'exploded') setExplodeValue(1.8);
   }, []);
 
   // Camera presets
@@ -160,15 +160,15 @@ export default function Toolbox3DCanvas({
     const ctrl = controlsRef.current;
     if (preset === 'front') {
       ctrl.targetRotation = { x: 0.15, y: 0 };
-      ctrl.targetDistance = 12.0;
-      ctrl.targetPan = { x: 0, y: 0.3 };
+      ctrl.targetDistance = 14.0;
+      ctrl.targetPan = { x: 0, y: 0.5 };
     } else if (preset === 'iso') {
       ctrl.targetRotation = { x: 0.45, y: -0.65 };
-      ctrl.targetDistance = 14.5;
-      ctrl.targetPan = { x: 0, y: 0.4 };
+      ctrl.targetDistance = 16.5;
+      ctrl.targetPan = { x: 0, y: 0.6 };
     } else if (preset === 'top') {
       ctrl.targetRotation = { x: 1.45, y: 0 };
-      ctrl.targetDistance = 15.0;
+      ctrl.targetDistance = 17.5;
       ctrl.targetPan = { x: 0, y: 0 };
     }
   }, []);
@@ -180,10 +180,10 @@ export default function Toolbox3DCanvas({
     if (node) {
       const ctrl = controlsRef.current;
       ctrl.targetPan = {
-        x: node.group.position.x * 0.6,
-        y: node.group.position.y * 0.6 + 0.3,
+        x: node.group.position.x * 0.5,
+        y: node.group.position.y * 0.5 + 0.4,
       };
-      ctrl.targetDistance = 10.0;
+      ctrl.targetDistance = 11.0;
     }
   }, []);
 
@@ -198,7 +198,7 @@ export default function Toolbox3DCanvas({
     if (onResetCameraRef) onResetCameraRef.current = () => handleSetCameraPreset('iso');
     if (onToggleExplodeRef) {
       onToggleExplodeRef.current = () => {
-        setExplodeValue((v) => (v > 0.3 ? 0.0 : 0.5));
+        setExplodeValue((v) => (v > 0.4 ? 0.0 : 1.2));
       };
     }
   }, [onResetCameraRef, onToggleExplodeRef, handleSetCameraPreset]);
@@ -213,7 +213,7 @@ export default function Toolbox3DCanvas({
       } else if (e.key === 'f' || e.key === 'F') {
         if (selectedToolRef.current) focusTool(selectedToolRef.current);
       } else if (e.key === 'e' || e.key === 'E') {
-        setExplodeValue((v) => (v > 0.3 ? 0.0 : 0.5));
+        setExplodeValue((v) => (v > 0.4 ? 0.0 : 1.2));
       }
     };
     window.addEventListener('keydown', handleKeyDown);
@@ -235,12 +235,12 @@ export default function Toolbox3DCanvas({
     // 1. Scene
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0x070c18);
-    scene.fog = new THREE.FogExp2(0x070c18, 0.018);
+    scene.fog = new THREE.FogExp2(0x070c18, 0.015);
     sceneRef.current = scene;
 
     // 2. Camera
     const camera = new THREE.PerspectiveCamera(40, width / height, 0.1, 100);
-    camera.position.set(0, 5.5, 14.5);
+    camera.position.set(0, 6.0, 16.5);
     cameraRef.current = camera;
 
     // 3. WebGL Renderer
@@ -256,7 +256,7 @@ export default function Toolbox3DCanvas({
       renderer.shadowMap.enabled = true;
       renderer.shadowMap.type = THREE.PCFSoftShadowMap;
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
-      renderer.toneMappingExposure = 1.2;
+      renderer.toneMappingExposure = 1.25;
       container.appendChild(renderer.domElement);
       rendererRef.current = renderer;
     } catch (e) {
@@ -268,23 +268,23 @@ export default function Toolbox3DCanvas({
     const ambientLight = new THREE.AmbientLight(0xffffff, 1.8);
     scene.add(ambientLight);
 
-    const mainKeyLight = new THREE.DirectionalLight(0xffffff, 2.8);
-    mainKeyLight.position.set(10, 18, 12);
+    const mainKeyLight = new THREE.DirectionalLight(0xffffff, 3.0);
+    mainKeyLight.position.set(12, 20, 14);
     mainKeyLight.castShadow = true;
     mainKeyLight.shadow.mapSize.width = 2048;
     mainKeyLight.shadow.mapSize.height = 2048;
     scene.add(mainKeyLight);
 
-    const cyanRim = new THREE.PointLight(0x06b6d4, 3.0, 25);
-    cyanRim.position.set(-9, 7, -6);
+    const cyanRim = new THREE.PointLight(0x06b6d4, 3.2, 30);
+    cyanRim.position.set(-10, 8, -8);
     scene.add(cyanRim);
 
-    const amberFill = new THREE.DirectionalLight(0xf59e0b, 1.1);
-    amberFill.position.set(8, -2, -8);
+    const amberFill = new THREE.DirectionalLight(0xf59e0b, 1.2);
+    amberFill.position.set(10, -2, -10);
     scene.add(amberFill);
 
     // 5. Studio Floor Grid
-    const floorGeo = new THREE.PlaneGeometry(60, 60);
+    const floorGeo = new THREE.PlaneGeometry(70, 70);
     const floorMat = new THREE.MeshStandardMaterial({
       color: 0x050811,
       roughness: 0.9,
@@ -292,18 +292,18 @@ export default function Toolbox3DCanvas({
     });
     const floor = new THREE.Mesh(floorGeo, floorMat);
     floor.rotation.x = -Math.PI / 2;
-    floor.position.y = -2.1;
+    floor.position.y = -2.2;
     floor.receiveShadow = true;
     scene.add(floor);
 
-    const grid = new THREE.GridHelper(32, 32, 0x1e293b, 0x0b1329);
-    grid.position.y = -2.09;
+    const grid = new THREE.GridHelper(36, 36, 0x1e293b, 0x0b1329);
+    grid.position.y = -2.19;
     scene.add(grid);
 
     // 6. Build Cantilever Steel Toolbox Model
     const currentTheme = TOOLBOX_THEMES[themeKey] || TOOLBOX_THEMES.cobalt;
     const toolboxRoot = new THREE.Group();
-    toolboxRoot.position.y = -1.0;
+    toolboxRoot.position.y = -1.1;
     scene.add(toolboxRoot);
 
     const bodyMat = new THREE.MeshStandardMaterial({
@@ -456,8 +456,8 @@ export default function Toolbox3DCanvas({
       trayLeft,
       trayRight,
       latches: [latch1, latch2],
-      openProgress: explodeValueRef.current,
-      targetOpenProgress: explodeValueRef.current,
+      openProgress: Math.min(1.0, explodeValueRef.current),
+      targetOpenProgress: Math.min(1.0, explodeValueRef.current),
     };
 
     // 7. Mouse / Pointer Controls
@@ -495,8 +495,8 @@ export default function Toolbox3DCanvas({
     const onWheel = (e) => {
       e.preventDefault();
       controlsRef.current.targetDistance = Math.max(
-        6.5,
-        Math.min(24, controlsRef.current.targetDistance + e.deltaY * 0.012)
+        7.5,
+        Math.min(28, controlsRef.current.targetDistance + e.deltaY * 0.012)
       );
     };
 
@@ -537,12 +537,13 @@ export default function Toolbox3DCanvas({
     });
     resizeObserver.observe(container);
 
-    // 9. Continuous Animation Loop
+    // 9. Continuous 60 FPS Animation Loop
     let clock = new THREE.Clock();
 
     const animate = () => {
       animFrameRef.current = requestAnimationFrame(animate);
       const delta = clock.getDelta();
+      const elapsed = clock.getElapsedTime();
 
       // Camera lerp
       const ctrl = controlsRef.current;
@@ -563,41 +564,48 @@ export default function Toolbox3DCanvas({
       const p = partsRef.current;
       p.openProgress += (p.targetOpenProgress - p.openProgress) * 0.07;
       const op = p.openProgress;
+      const explosiveIndex = explodeValueRef.current;
 
-      if (p.lidLeftPivot) p.lidLeftPivot.rotation.z = op * (Math.PI * 0.64);
-      if (p.lidRightPivot) p.lidRightPivot.rotation.z = -op * (Math.PI * 0.64);
+      if (p.lidLeftPivot) p.lidLeftPivot.rotation.z = Math.min(1.0, op) * (Math.PI * 0.68);
+      if (p.lidRightPivot) p.lidRightPivot.rotation.z = -Math.min(1.0, op) * (Math.PI * 0.68);
 
       if (p.trayLeft) {
-        p.trayLeft.position.x = -1.3 - op * 1.55;
-        p.trayLeft.position.y = 0.65 + op * 0.45;
+        p.trayLeft.position.x = -1.3 - Math.min(1.0, op) * 1.6;
+        p.trayLeft.position.y = 0.65 + Math.min(1.0, op) * 0.5;
       }
       if (p.trayRight) {
-        p.trayRight.position.x = 1.3 + op * 1.55;
-        p.trayRight.position.y = 0.65 + op * 0.45;
+        p.trayRight.position.x = 1.3 + Math.min(1.0, op) * 1.6;
+        p.trayRight.position.y = 0.65 + Math.min(1.0, op) * 0.5;
       }
 
       if (p.latches) {
         p.latches.forEach((l) => {
-          l.rotation.x = op * (Math.PI * 0.45);
+          l.rotation.x = Math.min(1.0, op) * (Math.PI * 0.45);
         });
       }
 
-      // Tool Models Positioning & Dynamic Highlight
+      // Dynamic High-Dispersal Tool Explosion & Subtle Hover Floating Waves
       const activeSelected = selectedToolRef.current;
       const hoveredId = lastHoveredIdRef.current;
 
       toolNodesRef.current.forEach((node) => {
-        const { group, highlightRing, defaultPos, explodeOffset, tool } = node;
+        const { group, highlightRing, defaultPos, explodeOffset, phase, tool } = node;
 
         const isSelected = activeSelected?.id === tool.id;
         const isHovered = hoveredId === tool.id;
 
-        // Controlled Explode position
-        const posX = defaultPos.x + explodeOffset.x * op;
-        const posY = defaultPos.y + explodeOffset.y * op;
-        const posZ = defaultPos.z + explodeOffset.z * op;
+        // Harmonic Floating Waves in exploded mode
+        const floatY = Math.sin(elapsed * 2.2 + phase) * 0.12 * Math.min(1.0, explosiveIndex);
+        const floatX = Math.cos(elapsed * 1.6 + phase) * 0.05 * Math.min(1.0, explosiveIndex);
 
-        group.position.set(posX, posY, posZ);
+        // High Explosive Index scaling
+        const targetX = defaultPos.x + explodeOffset.x * explosiveIndex + floatX;
+        const targetY = defaultPos.y + explodeOffset.y * explosiveIndex + floatY;
+        const targetZ = defaultPos.z + explodeOffset.z * explosiveIndex;
+
+        group.position.x += (targetX - group.position.x) * 0.1;
+        group.position.y += (targetY - group.position.y) * 0.1;
+        group.position.z += (targetZ - group.position.z) * 0.1;
 
         // Highlight ring animation
         if (highlightRing) {
@@ -658,7 +666,7 @@ export default function Toolbox3DCanvas({
     };
   }, [themeKey]);
 
-  // 2. Build Realistic 3D Tool Geometries (Updates when filteredTools change)
+  // 2. Build Realistic 3D Tool Geometries with Dramatic Architectural Explosion Offsets
   useEffect(() => {
     if (!sceneRef.current) return;
     const scene = sceneRef.current;
@@ -670,11 +678,6 @@ export default function Toolbox3DCanvas({
     toolNodesRef.current = [];
 
     // Organize tools into authentic physical tray compartments
-    // Tray 1 (Left Upper): Sockets & Bits (Arranged on socket rails)
-    // Tray 2 (Right Upper): Hex & Torx L-Keys (Stepped holder)
-    // Tray 3 (Middle Upper): Combination Spanners & Wrenches (Graduated 6mm -> 24mm)
-    // Tray 4 (Middle Right): Screwdrivers (Parallel fluted handles)
-    // Tray 5 (Deep Base): Heavy tools (Ratchet handles, Pliers, Multimeter, Hammers, Files, Snap rings)
     const sockets = filteredTools.filter((t) => ['sockets', 'specialty_sets'].includes(t.category));
     const keys = filteredTools.filter((t) => ['hex_keys', 'torx_keys'].includes(t.category));
     const wrenches = filteredTools.filter((t) => ['combination_wrenches', 'open_wrenches'].includes(t.category));
@@ -690,58 +693,61 @@ export default function Toolbox3DCanvas({
         let expX = 0, expY = 0, expZ = 0;
 
         if (trayType === 'sockets_left') {
-          // Dual rows along socket rails
+          // Dual rows along socket rails exploding out to the far left in dual stadium tiers
           const col = idx % 10;
           const row = Math.floor(idx / 10);
           defX = -1.3 + (row === 0 ? -0.4 : 0.4);
           defY = 0.8;
           defZ = (col - 4.5) * 0.24;
 
-          expX = defX - 1.8;
-          expY = 1.3 + (col % 2) * 0.15;
-          expZ = defZ;
+          // Dramatic Leftward and upward explosion
+          expX = -3.2 - (row === 0 ? 0.8 : 0) - (col % 3) * 0.4;
+          expY = 2.4 + (col % 2) * 0.6 + Math.sin(col * 0.5) * 0.4;
+          expZ = (col - 4.5) * 0.45;
         } else if (trayType === 'keys_right') {
-          // Stepped L-keys
+          // Stepped L-keys exploding out to the far right in tiered stadium arcs
           const col = idx % 10;
           const row = Math.floor(idx / 10);
           defX = 1.3 + (row === 0 ? -0.4 : 0.4);
           defY = 0.8;
           defZ = (col - 4.5) * 0.24;
 
-          expX = defX + 1.8;
-          expY = 1.3 + (col % 2) * 0.15;
-          expZ = defZ;
+          // Dramatic Rightward and upward explosion
+          expX = 3.2 + (row === 0 ? 0.8 : 0) + (col % 3) * 0.4;
+          expY = 2.4 + (col % 2) * 0.6 + Math.sin(col * 0.5) * 0.4;
+          expZ = (col - 4.5) * 0.45;
         } else if (trayType === 'wrenches_middle') {
-          // Graduated parallel spanners
+          // Graduated parallel spanners exploding high in a majestic rainbow bridge arc
           const col = idx % 12;
           defX = (col - 5.5) * 0.22;
           defY = 0.15;
           defZ = -0.45;
 
-          expX = defX * 1.3;
-          expY = 1.5 + Math.sin((col / 12) * Math.PI) * 0.35;
-          expZ = -0.9;
+          const arcAngle = (col / 12) * Math.PI;
+          expX = (col - 5.5) * 0.65;
+          expY = 3.6 + Math.sin(arcAngle) * 1.2;
+          expZ = -1.4;
         } else if (trayType === 'screwdrivers_middle') {
-          // Screwdrivers
+          // Screwdrivers exploding forward and spreading wide
           const col = idx % 10;
           defX = (col - 4.5) * 0.25;
           defY = 0.15;
           defZ = 0.45;
 
-          expX = defX * 1.3;
-          expY = 1.5 + Math.cos((col / 10) * Math.PI) * 0.35;
-          expZ = 0.9;
+          expX = (col - 4.5) * 0.6;
+          expY = 2.6 + Math.cos((col / 10) * Math.PI) * 0.5;
+          expZ = 2.4;
         } else {
-          // Heavy tools in deep base
+          // Heavy tools in deep base exploding rearward and elevating
           const col = idx % 6;
           const row = Math.floor(idx / 6);
           defX = (col - 2.5) * 0.55;
           defY = -0.4;
           defZ = (row - 1.0) * 0.6;
 
-          expX = defX * 1.2;
-          expY = 0.4;
-          expZ = defZ;
+          expX = (col - 2.5) * 0.9;
+          expY = 1.4 + (row === 0 ? 0.6 : 0);
+          expZ = -2.6 - row * 0.8;
         }
 
         model.position.set(defX, defY, defZ);
@@ -766,6 +772,7 @@ export default function Toolbox3DCanvas({
           group: model,
           highlightRing,
           tool,
+          phase: (idx * 0.5) % (Math.PI * 2),
           defaultPos: new THREE.Vector3(defX, defY, defZ),
           explodeOffset: new THREE.Vector3(expX - defX, expY - defY, expZ - defZ),
         });
@@ -793,7 +800,7 @@ export default function Toolbox3DCanvas({
             {technician?.name}
           </span>
           <span className="text-[11px] text-slate-400 font-mono">
-            ({filteredTools.length}/{tools.length} visible)
+            ({filteredTools.length}/{tools.length} tools)
           </span>
         </div>
 
@@ -839,6 +846,14 @@ export default function Toolbox3DCanvas({
               Closed
             </button>
             <button
+              onClick={() => handleSetExplodePreset('slight')}
+              className={`px-2.5 py-1 rounded-lg text-[11px] font-medium transition-all ${
+                explodePreset === 'slight' ? 'bg-slate-700 text-white font-bold' : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              Slight
+            </button>
+            <button
               onClick={() => handleSetExplodePreset('inspection')}
               className={`px-2.5 py-1 rounded-lg text-[11px] font-medium transition-all ${
                 explodePreset === 'inspection' ? 'bg-cyan-500 text-slate-950 font-bold' : 'text-slate-400 hover:text-white'
@@ -850,10 +865,10 @@ export default function Toolbox3DCanvas({
             <button
               onClick={() => handleSetExplodePreset('exploded')}
               className={`px-2.5 py-1 rounded-lg text-[11px] font-medium transition-all ${
-                explodePreset === 'exploded' ? 'bg-indigo-600 text-white font-bold' : 'text-slate-400 hover:text-white'
+                explodePreset === 'exploded' ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-bold shadow-md shadow-indigo-500/25' : 'text-slate-400 hover:text-white'
               }`}
             >
-              Explode
+              Hyper Explode
             </button>
           </div>
         </div>
@@ -861,26 +876,26 @@ export default function Toolbox3DCanvas({
 
       {/* Bottom Explode Slider & Keyboard Shortcuts Hint */}
       <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between pointer-events-none">
-        {/* Slider */}
-        <div className="flex items-center gap-2.5 bg-slate-900/90 backdrop-blur-xl px-3.5 py-2 rounded-xl border border-slate-700/80 shadow-xl pointer-events-auto">
-          <span className="text-[11px] font-bold text-slate-300">Explode Trays:</span>
+        {/* Slider with High Explosive Index (0% to 200%) */}
+        <div className="flex items-center gap-2.5 bg-slate-900/90 backdrop-blur-xl px-4 py-2 rounded-xl border border-slate-700/80 shadow-xl pointer-events-auto">
+          <span className="text-[11px] font-bold text-slate-300">Explosive Index:</span>
           <input
             type="range"
             min="0.0"
-            max="1.0"
+            max="2.0"
             step="0.05"
             value={explodeValue}
             onChange={(e) => {
               const val = parseFloat(e.target.value);
               setExplodeValue(val);
               if (val === 0) setExplodePreset('closed');
-              else if (val < 0.35) setExplodePreset('slight');
-              else if (val < 0.75) setExplodePreset('inspection');
+              else if (val < 0.6) setExplodePreset('slight');
+              else if (val < 1.3) setExplodePreset('inspection');
               else setExplodePreset('exploded');
             }}
-            className="w-24 h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-cyan-400"
+            className="w-28 h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-cyan-400"
           />
-          <span className="text-[11px] text-cyan-400 font-mono font-bold">
+          <span className="text-[11px] text-cyan-400 font-mono font-bold w-10 text-right">
             {Math.round(explodeValue * 100)}%
           </span>
         </div>
@@ -891,7 +906,7 @@ export default function Toolbox3DCanvas({
           <span>•</span>
           <span><kbd className="font-mono font-bold text-slate-300">F</kbd> Focus Tool</span>
           <span>•</span>
-          <span><kbd className="font-mono font-bold text-slate-300">E</kbd> Explode</span>
+          <span><kbd className="font-mono font-bold text-slate-300">E</kbd> Toggle Explode</span>
         </div>
       </div>
 
