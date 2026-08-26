@@ -1,25 +1,23 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, useRef } from 'react';
 import SystemShell from '../../../components/SystemShell';
+import ToolboxHeader from '../../../components/toolbox/ToolboxHeader';
+import ToolboxSummaryKPIs from '../../../components/toolbox/ToolboxSummaryKPIs';
+import ToolLibraryRail from '../../../components/toolbox/ToolLibraryRail';
 import Toolbox3DCanvas from '../../../components/toolbox/Toolbox3DCanvas';
-import ToolboxTrayViewer from '../../../components/toolbox/ToolboxTrayViewer';
+import ContextualInspectorRail from '../../../components/toolbox/ContextualInspectorRail';
+import ToolDetailDrawer from '../../../components/toolbox/ToolDetailDrawer';
+import DamageReportModal from '../../../components/toolbox/DamageReportModal';
+import MissingToolModal from '../../../components/toolbox/MissingToolModal';
+import CommandPalette from '../../../components/toolbox/CommandPalette';
 import ToolboxInventoryTable from '../../../components/toolbox/ToolboxInventoryTable';
-import ToolInspectorPanel from '../../../components/toolbox/ToolInspectorPanel';
-import ToolDetailModal from '../../../components/toolbox/ToolDetailModal';
 import rawTechniciansData from '../../../data/techniciansToolboxes.json';
 
 const STORAGE_KEY = 'eqp_technician_toolboxes_state';
 
-const THEMES = [
-  { id: 'cobalt', name: 'Cobalt Blue', color: '#1e3a8a' },
-  { id: 'crimson', name: 'Crimson Red', color: '#b91c1c' },
-  { id: 'stealth', name: 'Stealth Black', color: '#18181b' },
-  { id: 'dewalt', name: 'Dewalt Yellow', color: '#ca8a04' },
-  { id: 'emerald', name: 'Titanium Green', color: '#047857' },
-];
-
 export default function ManagementToolboxPage() {
+  // 1. Data & State Initialization
   const [technicians, setTechnicians] = useState(() => {
     if (typeof window === 'undefined') return rawTechniciansData;
     try {
@@ -31,16 +29,54 @@ export default function ManagementToolboxPage() {
   });
 
   const [selectedSlug, setSelectedSlug] = useState(rawTechniciansData[0]?.slug || 'ahmad-jawawdeh');
-  const [viewMode, setViewMode] = useState('3D'); // '3D' | 'TRAYS' | 'INVENTORY' | 'FLEET'
-  const [isOpen3D, setIsOpen3D] = useState(true);
-  const [themeKey, setThemeKey] = useState('cobalt');
+  const [viewMode, setViewMode] = useState('3D'); // '3D' | 'INVENTORY' | 'FLEET'
+  const [selectedTool, setSelectedTool] = useState(null);
   const [activeCategory, setActiveCategory] = useState('ALL');
+  const [activeDrawer, setActiveDrawer] = useState('ALL');
   const [statusFilter, setStatusFilter] = useState('ALL');
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedTool, setSelectedTool] = useState(null);
 
-  // Sync tool updates
-  const updateToolStatus = (toolId, newStatus, note) => {
+  // Rails Collapse State
+  const [isLeftCollapsed, setIsLeftCollapsed] = useState(false);
+  const [isRightCollapsed, setIsRightCollapsed] = useState(false);
+
+  // Modals & Drawers Workflow State
+  const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
+  const [isDetailDrawerOpen, setIsDetailDrawerOpen] = useState(false);
+  const [isDamageModalOpen, setIsDamageModalOpen] = useState(false);
+  const [isMissingModalOpen, setIsMissingModalOpen] = useState(false);
+  const [workflowTool, setWorkflowTool] = useState(null);
+  const [toastFeedback, setToastFeedback] = useState(null);
+
+  // References for keyboard & camera controls
+  const resetCameraRef = useRef(null);
+  const toggleExplodeRef = useRef(null);
+
+  // Active Technician Record
+  const currentTech = useMemo(() => {
+    return technicians.find((t) => t.slug === selectedSlug) || technicians[0];
+  }, [technicians, selectedSlug]);
+
+  // Global Command Palette Shortcut Listener (Ctrl/Cmd + K)
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        setIsCommandPaletteOpen((prev) => !prev);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  // Show Temporary Toast
+  const showToast = (message) => {
+    setToastFeedback(message);
+    setTimeout(() => setToastFeedback(null), 3000);
+  };
+
+  // State Mutator: Update Tool Status & Recalculate KPIs
+  const handleUpdateToolStatus = (toolId, newStatus, note = '') => {
     setTechnicians((prevTechs) => {
       const updated = prevTechs.map((tech) => {
         const hasTool = tech.tools.some((t) => t.id === toolId);
@@ -55,7 +91,7 @@ export default function ManagementToolboxPage() {
                 newStatus === 'good'
                   ? 'سليم / متوفر'
                   : newStatus === 'damaged'
-                  ? 'تالف'
+                  ? 'تالف / صيانة'
                   : newStatus === 'missing'
                   ? 'مفقود'
                   : 'لم يتم التسليم',
@@ -67,7 +103,7 @@ export default function ManagementToolboxPage() {
                   : newStatus === 'missing'
                   ? 'Missing'
                   : 'Pending Delivery',
-              inspectionNote: note !== undefined ? note : t.inspectionNote,
+              inspectionNote: note || t.inspectionNote,
             };
             if (selectedTool?.id === toolId) {
               setSelectedTool(updatedItem);
@@ -108,339 +144,187 @@ export default function ManagementToolboxPage() {
     });
   };
 
-  const currentTech = useMemo(() => {
-    return technicians.find((t) => t.slug === selectedSlug) || technicians[0];
-  }, [technicians, selectedSlug]);
+  // Submit Damage Report
+  const handleSubmitDamage = ({ toolId, damageType, severity, description }) => {
+    handleUpdateToolStatus(toolId, 'damaged', `Damage: ${damageType} (${severity}) - ${description}`);
+    showToast(`⚠️ Damage report recorded for tool #${toolId}`);
+  };
+
+  // Submit Missing Tool Report
+  const handleSubmitMissing = ({ toolId, reason, location, notes }) => {
+    handleUpdateToolStatus(toolId, 'missing', `Missing: ${reason} at ${location}. ${notes}`);
+    showToast(`❌ Asset loss recorded for tool #${toolId}`);
+  };
+
+  // Export CSV
+  const handleExportCsv = () => {
+    const headers = ['ID', 'Tool Name (Arabic)', 'Tool Name (English)', 'Category', 'Specification (mm)', 'Quantity', 'Status', 'Technician'];
+    const rows = currentTech.tools.map((t) => [
+      t.id,
+      `"${t.name.replace(/"/g, '""')}"`,
+      `"${(t.nameEn || '').replace(/"/g, '""')}"`,
+      `"${t.categoryEn || t.categoryAr}"`,
+      `"${t.specification || ''}"`,
+      t.quantity,
+      `"${t.statusLabelEn || t.status}"`,
+      `"${currentTech?.name || ''}"`,
+    ]);
+
+    const csvContent = '\uFEFF' + [headers.join(','), ...rows.map((r) => r.join(','))].join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', `Toolbox_${currentTech?.nameEn || 'Technician'}_Audit_${new Date().toISOString().split('T')[0]}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    showToast('📥 Toolbox inventory audit exported to CSV');
+  };
 
   return (
     <SystemShell title="Technician Toolboxes" activeModule="toolbox">
-      <div className="space-y-6 pb-12">
-        {/* Top Header Hero */}
-        <div className="bg-gradient-to-r from-slate-900 via-slate-850 to-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-          <div>
-            <div className="flex items-center gap-2.5 mb-2">
-              <span className="px-3 py-1 rounded-full bg-cyan-500/15 text-cyan-300 border border-cyan-500/30 text-xs font-black uppercase tracking-wider flex items-center gap-1.5 shadow-sm">
-                <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
-                3D WebGL Digital Twin
-              </span>
-              <span className="text-xs text-slate-400 font-medium">8 Verified Technicians • 1,077 Assets</span>
-            </div>
-            <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
-              Technician 3D Toolboxes & Assets Studio
-            </h1>
-            <p className="text-xs sm:text-sm text-slate-400 mt-1 max-w-2xl">
-              Inspect openable 3D toolboxes, dynamic floating tool arcs, physical multi-drawer tray organizers, and live condition audits for certified maintenance specialists.
-            </p>
-          </div>
+      <div className="space-y-4 pb-12 font-sans selection:bg-cyan-500 selection:text-slate-950">
+        {/* 1. Header with Breadcrumbs, Compact Searchable Selector, View Toggles & Actions */}
+        <ToolboxHeader
+          technicians={technicians}
+          selectedSlug={selectedSlug}
+          onSelectTechnician={(slug) => {
+            setSelectedSlug(slug);
+            setSelectedTool(null);
+          }}
+          viewMode={viewMode}
+          onSetViewMode={setViewMode}
+          onOpenCommandPalette={() => setIsCommandPaletteOpen(true)}
+          onExportCsv={handleExportCsv}
+          readinessRate={currentTech?.stats?.operationalRate || 100}
+          damagedCount={currentTech?.stats?.damagedCount || 0}
+          missingCount={currentTech?.stats?.missingCount || 0}
+        />
 
-          {/* View Mode Switcher Pills */}
-          <div className="flex flex-wrap items-center gap-1.5 bg-slate-950/90 p-2 rounded-2xl border border-slate-800 self-start lg:self-center shadow-inner">
-            <button
-              onClick={() => setViewMode('3D')}
-              className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
-                viewMode === '3D'
-                  ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 shadow-lg shadow-cyan-500/25'
-                  : 'text-slate-400 hover:text-white hover:bg-slate-900'
-              }`}
-            >
-              <span>🪐</span>
-              <span>3D Studio</span>
-            </button>
+        {/* 2. Hierarchical Summary KPIs (Readiness Primary, Total Tools, Conditional Alert Chips) */}
+        <ToolboxSummaryKPIs
+          stats={currentTech?.stats}
+          onFilterStatus={(st) => {
+            setStatusFilter(st);
+            if (viewMode === '3D') {
+              showToast(`Filtering 3D view by ${st} tools`);
+            }
+          }}
+        />
 
-            <button
-              onClick={() => setViewMode('TRAYS')}
-              className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
-                viewMode === 'TRAYS'
-                  ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 shadow-lg shadow-cyan-500/25'
-                  : 'text-slate-400 hover:text-white hover:bg-slate-900'
-              }`}
-            >
-              <span>🗄️</span>
-              <span>Tray Drawers</span>
-            </button>
-
-            <button
-              onClick={() => setViewMode('INVENTORY')}
-              className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
-                viewMode === 'INVENTORY'
-                  ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 shadow-lg shadow-cyan-500/25'
-                  : 'text-slate-400 hover:text-white hover:bg-slate-900'
-              }`}
-            >
-              <span>📋</span>
-              <span>Inventory Audit</span>
-            </button>
-
-            <button
-              onClick={() => setViewMode('FLEET')}
-              className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
-                viewMode === 'FLEET'
-                  ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 shadow-lg shadow-cyan-500/25'
-                  : 'text-slate-400 hover:text-white hover:bg-slate-900'
-              }`}
-            >
-              <span>📊</span>
-              <span>Fleet Matrix</span>
-            </button>
-          </div>
-        </div>
-
-        {/* Technician Selection Carousel Ribbon */}
-        <div className="bg-slate-900 border border-slate-800 rounded-3xl p-5 shadow-2xl">
-          <div className="flex items-center justify-between mb-3 px-1">
-            <span className="text-xs font-black uppercase tracking-wider text-slate-400">Select Technician</span>
-            <span className="text-xs text-cyan-400 font-bold">Live Asset Roster</span>
-          </div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2.5">
-            {technicians.map((t) => {
-              const isSelected = t.slug === selectedSlug;
-              const hasAlerts = t.stats.damagedCount > 0 || t.stats.missingCount > 0 || t.stats.notDeliveredCount > 0;
-              return (
-                <button
-                  key={t.slug}
-                  onClick={() => {
-                    setSelectedSlug(t.slug);
-                    setSelectedTool(null);
-                  }}
-                  className={`p-3.5 rounded-2xl text-left transition-all flex flex-col justify-between border ${
-                    isSelected
-                      ? 'bg-gradient-to-b from-cyan-950/90 to-slate-900 border-cyan-400 shadow-xl shadow-cyan-500/20 scale-[1.03]'
-                      : 'bg-slate-950/70 border-slate-800 hover:bg-slate-850 hover:border-slate-700'
-                  }`}
-                >
-                  <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-lg">🧰</span>
-                      <span
-                        className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-full border ${
-                          t.stats.operationalRate >= 95
-                            ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30'
-                            : 'bg-amber-500/20 text-amber-300 border-amber-500/30'
-                        }`}
-                      >
-                        {t.stats.operationalRate}%
-                      </span>
-                    </div>
-
-                    <h4 className="text-xs font-black text-white leading-snug truncate">{t.name}</h4>
-                    <p className="text-[10px] text-slate-400 truncate mt-0.5">{t.nameEn}</p>
-                  </div>
-
-                  <div className="mt-3 pt-2 border-t border-slate-800 flex items-center justify-between text-[10px] text-slate-400">
-                    <span className="font-mono">{t.stats.totalQuantity} pcs</span>
-                    {hasAlerts && (
-                      <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" title="Contains damaged/pending tools" />
-                    )}
-                  </div>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Quick KPI Stat Ribbon */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg">
-            <span className="text-[11px] text-slate-400 font-medium block">Technician Profile</span>
-            <span className="text-sm font-black text-white mt-1 block truncate">{currentTech?.name}</span>
-            <span className="text-[11px] text-slate-400 block truncate">{currentTech?.role}</span>
-          </div>
-
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg">
-            <span className="text-[11px] text-slate-400 font-medium block">Toolbox Readiness</span>
-            <div className="flex items-center gap-2 mt-1">
-              <span className="text-xl font-black text-cyan-400 font-mono">
-                {currentTech?.stats?.operationalRate}%
-              </span>
-              <span className="text-[10px] px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-bold">
-                {currentTech?.stats?.goodCount}/{currentTech?.stats?.totalQuantity}
-              </span>
-            </div>
-            <span className="text-[10px] text-slate-400 block">Operational state</span>
-          </div>
-
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg">
-            <span className="text-[11px] text-slate-400 font-medium block">Total Tool Items</span>
-            <span className="text-xl font-black text-white font-mono mt-1 block">
-              {currentTech?.stats?.totalQuantity} <span className="text-xs font-normal text-slate-400">PCS</span>
-            </span>
-            <span className="text-[10px] text-slate-400 block">{currentTech?.stats?.uniqueTools} unique specifications</span>
-          </div>
-
-          <div
-            onClick={() => {
-              setStatusFilter('damaged');
-              if (viewMode === '3D') setViewMode('INVENTORY');
-            }}
-            className="bg-slate-900 border border-slate-800 hover:border-amber-500/40 cursor-pointer rounded-2xl p-4 shadow-lg transition-colors"
-          >
-            <span className="text-[11px] text-amber-400 font-bold block">Damaged Tools</span>
-            <span className="text-xl font-black text-amber-400 font-mono mt-1 block">
-              {currentTech?.stats?.damagedCount}
-            </span>
-            <span className="text-[10px] text-slate-400 block">Requires repair / replacement</span>
-          </div>
-
-          <div
-            onClick={() => {
-              setStatusFilter('missing');
-              if (viewMode === '3D') setViewMode('INVENTORY');
-            }}
-            className="bg-slate-900 border border-slate-800 hover:border-red-500/40 cursor-pointer rounded-2xl p-4 shadow-lg transition-colors"
-          >
-            <span className="text-[11px] text-red-400 font-bold block">Missing Tools</span>
-            <span className="text-xl font-black text-red-400 font-mono mt-1 block">
-              {currentTech?.stats?.missingCount}
-            </span>
-            <span className="text-[10px] text-slate-400 block">Unaccounted / lost</span>
-          </div>
-
-          <div
-            onClick={() => {
-              setStatusFilter('not_delivered');
-              if (viewMode === '3D') setViewMode('INVENTORY');
-            }}
-            className="bg-slate-900 border border-slate-800 hover:border-purple-500/40 cursor-pointer rounded-2xl p-4 shadow-lg transition-colors"
-          >
-            <span className="text-[11px] text-purple-400 font-bold block">Pending Delivery</span>
-            <span className="text-xl font-black text-purple-400 font-mono mt-1 block">
-              {currentTech?.stats?.notDeliveredCount}
-            </span>
-            <span className="text-[10px] text-slate-400 block">Not yet issued to technician</span>
-          </div>
-        </div>
-
-        {/* View Mode 1: 3D Studio (Canvas + Docked Tool Inspector Split View) */}
+        {/* 3. Main Workspace */}
         {viewMode === '3D' && (
-          <div className="space-y-4">
-            {/* Paint & Filter Toolbar */}
-            <div className="flex flex-wrap items-center justify-between gap-3 bg-slate-900 p-4 rounded-3xl border border-slate-800 shadow-xl">
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="text-xs font-bold text-slate-400 uppercase tracking-wider mr-1">Toolbox Paint:</span>
-                <div className="flex items-center gap-2">
-                  {THEMES.map((th) => (
-                    <button
-                      key={th.id}
-                      onClick={() => setThemeKey(th.id)}
-                      className={`w-7 h-7 rounded-full border-2 transition-all shadow-md ${
-                        themeKey === th.id ? 'border-cyan-400 scale-110 shadow-cyan-500/30' : 'border-slate-700 opacity-70 hover:opacity-100'
-                      }`}
-                      style={{ backgroundColor: th.color }}
-                      title={th.name}
-                    />
-                  ))}
-                </div>
-              </div>
-
-              {/* Status Filter Chips */}
-              <div className="flex items-center gap-1.5">
-                <span className="text-xs text-slate-400 font-medium mr-1">Filter:</span>
-                <button
-                  onClick={() => setStatusFilter('ALL')}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-bold ${
-                    statusFilter === 'ALL' ? 'bg-cyan-500 text-slate-950' : 'bg-slate-800 text-slate-400 hover:text-white'
-                  }`}
-                >
-                  All
-                </button>
-                <button
-                  onClick={() => setStatusFilter('good')}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-bold ${
-                    statusFilter === 'good' ? 'bg-emerald-500 text-slate-950' : 'bg-slate-800 text-slate-400 hover:text-white'
-                  }`}
-                >
-                  Operational
-                </button>
-                <button
-                  onClick={() => setStatusFilter('damaged')}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-bold ${
-                    statusFilter === 'damaged' ? 'bg-amber-500 text-slate-950' : 'bg-slate-800 text-slate-400 hover:text-white'
-                  }`}
-                >
-                  Damaged
-                </button>
-                <button
-                  onClick={() => setStatusFilter('not_delivered')}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-bold ${
-                    statusFilter === 'not_delivered' ? 'bg-purple-500 text-slate-950' : 'bg-slate-800 text-slate-400 hover:text-white'
-                  }`}
-                >
-                  Pending
-                </button>
-              </div>
-
-              {/* Search */}
-              <div className="relative">
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Filter 3D tools..."
-                  className="px-3.5 py-2 pl-9 bg-slate-950 border border-slate-700 rounded-xl text-xs text-white placeholder-slate-400 focus:outline-none focus:border-cyan-500"
-                />
-                <span className="absolute left-3 top-2.5 text-slate-400 text-xs">🔍</span>
-              </div>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-stretch h-[640px]">
+            {/* Left Rail: Tool Library & Drawers */}
+            <div
+              className={`transition-all duration-200 h-full ${
+                isLeftCollapsed ? 'lg:col-span-1' : 'lg:col-span-3'
+              }`}
+            >
+              <ToolLibraryRail
+                tools={currentTech?.tools || []}
+                selectedToolId={selectedTool?.id}
+                onSelectTool={(tool) => setSelectedTool(tool)}
+                activeCategory={activeCategory}
+                onSelectCategory={setActiveCategory}
+                activeDrawer={activeDrawer}
+                onSelectDrawer={setActiveDrawer}
+                searchQuery={searchQuery}
+                onSearchChange={setSearchQuery}
+                isCollapsed={isLeftCollapsed}
+                onToggleCollapse={() => setIsLeftCollapsed(!isLeftCollapsed)}
+              />
             </div>
 
-            {/* Split View: 3D Canvas + Docked Live Inspector */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 min-h-[640px]">
-              <div className="lg:col-span-8 xl:col-span-9 h-[640px] w-full">
-                <Toolbox3DCanvas
-                  technician={currentTech}
-                  tools={currentTech?.tools || []}
-                  selectedTool={selectedTool}
-                  onSelectTool={(tool) => setSelectedTool(tool)}
-                  isOpen={isOpen3D}
-                  onToggleOpen={() => setIsOpen3D(!isOpen3D)}
-                  activeCategory={activeCategory}
-                  statusFilter={statusFilter}
-                  searchQuery={searchQuery}
-                  themeKey={themeKey}
-                />
-              </div>
+            {/* Center: 3D Digital Twin Studio */}
+            <div
+              className={`transition-all duration-200 h-full ${
+                isLeftCollapsed && isRightCollapsed
+                  ? 'lg:col-span-10'
+                  : isLeftCollapsed || isRightCollapsed
+                  ? 'lg:col-span-8'
+                  : 'lg:col-span-6'
+              }`}
+            >
+              <Toolbox3DCanvas
+                technician={currentTech}
+                tools={currentTech?.tools || []}
+                selectedTool={selectedTool}
+                onSelectTool={(tool) => setSelectedTool(tool)}
+                activeCategory={activeCategory}
+                activeDrawer={activeDrawer}
+                statusFilter={statusFilter}
+                searchQuery={searchQuery}
+                themeKey="cobalt"
+                onResetCameraRef={resetCameraRef}
+                onToggleExplodeRef={toggleExplodeRef}
+              />
+            </div>
 
-              <div className="lg:col-span-4 xl:col-span-3 h-[640px]">
-                <ToolInspectorPanel
-                  tool={selectedTool}
-                  technician={currentTech}
-                  onClose={() => setSelectedTool(null)}
-                  onUpdateStatus={updateToolStatus}
-                />
-              </div>
+            {/* Right Rail: Contextual Inspector */}
+            <div
+              className={`transition-all duration-200 h-full ${
+                isRightCollapsed ? 'lg:col-span-1' : 'lg:col-span-3'
+              }`}
+            >
+              <ContextualInspectorRail
+                tool={selectedTool}
+                technician={currentTech}
+                onOpenDetails={(t) => {
+                  setWorkflowTool(t);
+                  setIsDetailDrawerOpen(true);
+                }}
+                onOpenDamageModal={(t) => {
+                  setWorkflowTool(t);
+                  setIsDamageModalOpen(true);
+                }}
+                onOpenMissingModal={(t) => {
+                  setWorkflowTool(t);
+                  setIsMissingModalOpen(true);
+                }}
+                onQuickMarkOperational={(toolId) => {
+                  handleUpdateToolStatus(toolId, 'good');
+                  showToast('✅ Tool marked operational');
+                }}
+                isCollapsed={isRightCollapsed}
+                onToggleCollapse={() => setIsRightCollapsed(!isRightCollapsed)}
+              />
             </div>
           </div>
         )}
 
-        {/* View Mode 2: Multi-Drawer Cantilever Tray View */}
-        {viewMode === 'TRAYS' && (
-          <ToolboxTrayViewer
-            tools={currentTech?.tools || []}
-            technician={currentTech}
-            onSelectTool={(tool) => setSelectedTool(tool)}
-          />
-        )}
-
-        {/* View Mode 3: Complete Inventory & Audit Matrix */}
+        {/* View Mode 2: Complete Inventory Audit Table */}
         {viewMode === 'INVENTORY' && (
           <ToolboxInventoryTable
             tools={currentTech?.tools || []}
             technician={currentTech}
-            onSelectTool={(tool) => setSelectedTool(tool)}
-            onUpdateStatus={updateToolStatus}
+            onSelectTool={(tool) => {
+              setWorkflowTool(tool);
+              setIsDetailDrawerOpen(true);
+            }}
+            onUpdateStatus={handleUpdateToolStatus}
           />
         )}
 
-        {/* View Mode 4: Fleet Readiness Comparison Matrix */}
+        {/* View Mode 3: Fleet Matrix View */}
         {viewMode === 'FLEET' && (
           <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl space-y-6">
-            <div>
-              <h3 className="text-white font-black text-lg flex items-center gap-2">
-                <span>📊</span> Fleet Toolbox Readiness & Status Matrix
-              </h3>
-              <p className="text-xs text-slate-400 mt-0.5">
-                Comparative readiness index across all 8 certified field technicians
-              </p>
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-white font-black text-lg flex items-center gap-2">
+                  <span>📊</span> Fleet Toolbox Readiness & Status Matrix
+                </h3>
+                <p className="text-xs text-slate-400 mt-0.5">
+                  Comparative readiness index across all 8 certified field technicians
+                </p>
+              </div>
+              <button
+                onClick={() => setViewMode('3D')}
+                className="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-750 text-slate-200 text-xs font-bold transition-colors"
+              >
+                Back to 3D Studio
+              </button>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -471,7 +355,7 @@ export default function ManagementToolboxPage() {
                     </span>
                   </div>
 
-                  <div className="w-full bg-slate-850 h-2.5 rounded-full overflow-hidden mb-3">
+                  <div className="w-full bg-slate-850 h-2 rounded-full overflow-hidden mb-3">
                     <div
                       className={`h-full transition-all duration-500 ${
                         t.stats.operationalRate >= 95 ? 'bg-gradient-to-r from-emerald-500 to-cyan-400' : 'bg-gradient-to-r from-amber-500 to-yellow-400'
@@ -497,7 +381,7 @@ export default function ManagementToolboxPage() {
 
                   <div className="mt-3 flex items-center justify-between text-xs text-slate-400">
                     <span>Issued: {t.deliveryDate}</span>
-                    <span className="text-cyan-400 font-bold group-hover:underline">Open 3D Box →</span>
+                    <span className="text-cyan-400 font-bold group-hover:underline">Open 3D Studio →</span>
                   </div>
                 </div>
               ))}
@@ -505,14 +389,64 @@ export default function ManagementToolboxPage() {
           </div>
         )}
 
-        {/* Selected Tool Modal */}
-        {selectedTool && viewMode !== '3D' && (
-          <ToolDetailModal
-            tool={selectedTool}
-            technician={currentTech}
-            onClose={() => setSelectedTool(null)}
-            onUpdateStatus={updateToolStatus}
-          />
+        {/* 4. Secondary Workflow Modals & Drawers */}
+        <CommandPalette
+          isOpen={isCommandPaletteOpen}
+          onClose={() => setIsCommandPaletteOpen(false)}
+          technicians={technicians}
+          tools={currentTech?.tools || []}
+          selectedTechnician={currentTech}
+          onSelectTechnician={(slug) => {
+            setSelectedSlug(slug);
+            setSelectedTool(null);
+          }}
+          onSelectTool={(tool) => setSelectedTool(tool)}
+          onSetViewMode={setViewMode}
+          onResetCamera={() => resetCameraRef.current && resetCameraRef.current()}
+          onToggleExplode={() => toggleExplodeRef.current && toggleExplodeRef.current()}
+        />
+
+        <ToolDetailDrawer
+          isOpen={isDetailDrawerOpen}
+          tool={workflowTool || selectedTool}
+          technician={currentTech}
+          onClose={() => setIsDetailDrawerOpen(false)}
+          onOpenDamage={(t) => {
+            setWorkflowTool(t);
+            setIsDamageModalOpen(true);
+          }}
+          onOpenMissing={(t) => {
+            setWorkflowTool(t);
+            setIsMissingModalOpen(true);
+          }}
+          onMarkOperational={(toolId) => {
+            handleUpdateToolStatus(toolId, 'good');
+            showToast('✅ Tool marked operational');
+          }}
+        />
+
+        <DamageReportModal
+          isOpen={isDamageModalOpen}
+          tool={workflowTool || selectedTool}
+          technician={currentTech}
+          onClose={() => setIsDamageModalOpen(false)}
+          onSubmitDamage={handleSubmitDamage}
+        />
+
+        <MissingToolModal
+          isOpen={isMissingModalOpen}
+          tool={workflowTool || selectedTool}
+          technician={currentTech}
+          onClose={() => setIsMissingModalOpen(false)}
+          onSubmitMissing={handleSubmitMissing}
+        />
+
+        {/* Toast Notification Alert */}
+        {toastFeedback && (
+          <div className="fixed bottom-6 right-6 z-50 bg-slate-900 border border-cyan-500 text-white px-4 py-3 rounded-2xl shadow-2xl animate-in fade-in slide-in-from-bottom-3 duration-200 text-xs font-bold flex items-center gap-2">
+            <span>ℹ️</span>
+            <span>{toastFeedback}</span>
+          </div>
         )}
       </div>
     </SystemShell>
