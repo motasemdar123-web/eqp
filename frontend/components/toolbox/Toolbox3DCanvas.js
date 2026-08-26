@@ -3,38 +3,78 @@
 import { useEffect, useRef, useState, useMemo, useCallback } from 'react';
 import * as THREE from 'three';
 
-// Category color mappings for 3D neon glow
-const CATEGORY_COLORS = {
-  sockets: { hex: 0x06b6d4, css: '#06b6d4', glow: 'rgba(6, 182, 212, 0.4)' }, // Cyan
-  combination_wrenches: { hex: 0xf59e0b, css: '#f59e0b', glow: 'rgba(245, 158, 11, 0.4)' }, // Amber
-  open_wrenches: { hex: 0xf97316, css: '#f97316', glow: 'rgba(249, 115, 22, 0.4)' }, // Orange
-  torx_keys: { hex: 0x8b5cf6, css: '#8b5cf6', glow: 'rgba(139, 92, 246, 0.4)' }, // Purple
-  hex_keys: { hex: 0x3b82f6, css: '#3b82f6', glow: 'rgba(59, 130, 246, 0.4)' }, // Blue
-  screwdrivers: { hex: 0xec4899, css: '#ec4899', glow: 'rgba(236, 72, 153, 0.4)' }, // Pink
-  snap_rings: { hex: 0x14b8a6, css: '#14b8a6', glow: 'rgba(20, 184, 166, 0.4)' }, // Teal
-  files: { hex: 0xa855f7, css: '#a855f7', glow: 'rgba(168, 85, 247, 0.4)' }, // Violet
-  ratchets_extensions: { hex: 0x10b981, css: '#10b981', glow: 'rgba(16, 185, 129, 0.4)' }, // Emerald
-  pliers_cutters: { hex: 0xef4444, css: '#ef4444', glow: 'rgba(239, 68, 68, 0.4)' }, // Red
-  hammers_saws: { hex: 0xe11d48, css: '#e11d48', glow: 'rgba(225, 29, 72, 0.4)' }, // Rose
-  electrical_measuring: { hex: 0x6366f1, css: '#6366f1', glow: 'rgba(99, 102, 241, 0.4)' }, // Indigo
-  storage: { hex: 0x64748b, css: '#64748b', glow: 'rgba(100, 116, 139, 0.4)' }, // Slate
-  specialty_tools: { hex: 0x0ea5e9, css: '#0ea5e9', glow: 'rgba(14, 165, 233, 0.4)' }, // Sky
-  general_tools: { hex: 0x94a3b8, css: '#94a3b8', glow: 'rgba(148, 163, 184, 0.4)' },
+// Category color mappings with vibrant neon accents
+const CATEGORY_THEMES = {
+  sockets: { hex: 0x00f2fe, css: '#00f2fe', name: 'Sockets & Bits', nameAr: 'بكسات وبوكسات' },
+  combination_wrenches: { hex: 0xffa000, css: '#ffa000', name: 'Spanners & Wrenches', nameAr: 'مفاتيح شق-رنج' },
+  open_wrenches: { hex: 0xff6b00, css: '#ff6b00', name: 'Open Wrenches', nameAr: 'مفاتيح شق' },
+  torx_keys: { hex: 0x9d4edd, css: '#9d4edd', name: 'Torx & Star Keys', nameAr: 'مفاتيح ومشرشر Torx' },
+  hex_keys: { hex: 0x3a86ff, css: '#3a86ff', name: 'Hex Allen Keys', nameAr: 'مفاتيح ألنكيه' },
+  screwdrivers: { hex: 0xf72585, css: '#f72585', name: 'Screwdrivers', nameAr: 'مفكات متنوعة' },
+  snap_rings: { hex: 0x06d6a0, css: '#06d6a0', name: 'Snap Ring Pliers', nameAr: 'طقم سناب رنج' },
+  files: { hex: 0xb5179e, css: '#b5179e', name: 'Files Set', nameAr: 'طقم مبارد' },
+  ratchets_extensions: { hex: 0x10b981, css: '#10b981', name: 'Ratchets & Extensions', nameAr: 'يدات ووصلات' },
+  pliers_cutters: { hex: 0xef4444, css: '#ef4444', name: 'Pliers & Cutters', nameAr: 'زراديات وبنس' },
+  hammers_saws: { hex: 0xf43f5e, css: '#f43f5e', name: 'Hammers & Saws', nameAr: 'مطارق ومناشير' },
+  electrical_measuring: { hex: 0x6366f1, css: '#6366f1', name: 'Measurement & Power', nameAr: 'قياس وكهرباء' },
+  storage: { hex: 0x64748b, css: '#64748b', name: 'Storage & Boxes', nameAr: 'صناديق وحقائب' },
+  specialty_tools: { hex: 0x0284c7, css: '#0284c7', name: 'Specialty Tools', nameAr: 'أدوات متخصصة' },
+  general_tools: { hex: 0x94a3b8, css: '#94a3b8', name: 'General Tools', nameAr: 'أدوات عامة' },
 };
 
-const STATUS_COLORS = {
-  good: { hex: 0x22c55e, css: '#22c55e' }, // Green
-  damaged: { hex: 0xeab308, css: '#eab308' }, // Yellow
-  missing: { hex: 0xef4444, css: '#ef4444' }, // Red
-  not_delivered: { hex: 0xa855f7, css: '#a855f7' }, // Purple
+const STATUS_THEMES = {
+  good: { hex: 0x10b981, css: '#10b981', label: 'Operational', labelAr: 'سليم' },
+  damaged: { hex: 0xf59e0b, css: '#f59e0b', label: 'Damaged', labelAr: 'تالف' },
+  missing: { hex: 0xef4444, css: '#ef4444', label: 'Missing', labelAr: 'مفقود' },
+  not_delivered: { hex: 0x8b5cf6, css: '#8b5cf6', label: 'Pending Delivery', labelAr: 'لم يتم التسليم' },
 };
 
-const THEMES = {
-  cobalt: { name: 'Cobalt Blue', body: 0x1d4ed8, bodyHex: '#1d4ed8', lid: 0x1e40af, dark: 0x0f172a, chrome: 0xe2e8f0 },
-  crimson: { name: 'Crimson Red', body: 0xdc2626, bodyHex: '#dc2626', lid: 0xb91c1c, dark: 0x18181b, chrome: 0xf1f5f9 },
-  stealth: { name: 'Stealth Black', body: 0x1e293b, bodyHex: '#1e293b', lid: 0x0f172a, dark: 0x090d16, chrome: 0xf59e0b },
-  dewalt: { name: 'Industrial Yellow', body: 0xeab308, bodyHex: '#eab308', lid: 0xca8a04, dark: 0x1e293b, chrome: 0x334155 },
-  emerald: { name: 'Workshop Green', body: 0x059669, bodyHex: '#059669', lid: 0x047857, dark: 0x064e3b, chrome: 0xe2e8f0 },
+const TOOLBOX_THEMES = {
+  cobalt: {
+    name: 'Cobalt Pro Blue',
+    body: 0x1e3a8a,
+    lid: 0x172554,
+    tray: 0x0f172a,
+    accent: 0x38bdf8,
+    metalness: 0.85,
+    roughness: 0.25,
+  },
+  crimson: {
+    name: 'Crimson Racing Red',
+    body: 0xb91c1c,
+    lid: 0x7f1d1d,
+    tray: 0x18181b,
+    accent: 0xf87171,
+    metalness: 0.8,
+    roughness: 0.3,
+  },
+  stealth: {
+    name: 'Stealth Carbon Black',
+    body: 0x18181b,
+    lid: 0x09090b,
+    tray: 0x27272a,
+    accent: 0xf59e0b,
+    metalness: 0.9,
+    roughness: 0.2,
+  },
+  dewalt: {
+    name: 'Industrial Yellow',
+    body: 0xca8a04,
+    lid: 0xa16207,
+    tray: 0x1e293b,
+    accent: 0x0f172a,
+    metalness: 0.75,
+    roughness: 0.35,
+  },
+  emerald: {
+    name: 'Titanium Green',
+    body: 0x047857,
+    lid: 0x064e3b,
+    tray: 0x0f172a,
+    accent: 0x34d399,
+    metalness: 0.85,
+    roughness: 0.25,
+  },
 };
 
 export default function Toolbox3DCanvas({
@@ -52,364 +92,426 @@ export default function Toolbox3DCanvas({
   const mountRef = useRef(null);
   const [hoveredTool, setHoveredTool] = useState(null);
   const [autoRotate, setAutoRotate] = useState(false);
-  const [explosionDistance, setExplosionDistance] = useState(1.0);
-  const [canvasError, setCanvasError] = useState(null);
+  const [explosionHeight, setExplosionHeight] = useState(1.0);
+  const [activePreset, setActivePreset] = useState('iso');
 
-  // References for three.js internal animation loop
+  // Three.js References
   const sceneRef = useRef(null);
   const cameraRef = useRef(null);
   const rendererRef = useRef(null);
-  const animFrameIdRef = useRef(null);
+  const animFrameRef = useRef(null);
+  const toolNodesRef = useRef([]);
+  const raycasterRef = useRef(new THREE.Raycaster());
+  const mousePosRef = useRef(new THREE.Vector2(-999, -999));
+
+  // Dynamic Camera Controls State
   const controlsRef = useRef({
     isDragging: false,
     prevMousePos: { x: 0, y: 0 },
-    rotation: { x: 0.35, y: -0.6 },
-    targetRotation: { x: 0.35, y: -0.6 },
-    distance: 14,
-    targetDistance: 14,
-    pan: { x: 0, y: 0.5 },
-    targetPan: { x: 0, y: 0.5 },
+    rotation: { x: 0.38, y: -0.55 },
+    targetRotation: { x: 0.38, y: -0.55 },
+    distance: 13.5,
+    targetDistance: 13.5,
+    pan: { x: 0, y: 0.6 },
+    targetPan: { x: 0, y: 0.6 },
   });
 
-  // 3D Objects refs
-  const toolboxPartsRef = useRef({
-    base: null,
-    lidLeft: null,
-    lidRight: null,
+  // Toolbox Mechanism Parts
+  const partsRef = useRef({
+    chassis: null,
+    lidLeftPivot: null,
+    lidRightPivot: null,
     trayLeft: null,
     trayRight: null,
+    scissorArms: [],
     latches: [],
     openProgress: isOpen ? 1 : 0,
     targetOpenProgress: isOpen ? 1 : 0,
   });
 
-  const toolNodesRef = useRef([]);
-  const raycasterRef = useRef(new THREE.Raycaster());
-  const mousePosNormRef = useRef(new THREE.Vector2(-999, -999));
-
-  // Filter tools based on search / category / status
+  // Filter tools
   const filteredTools = useMemo(() => {
     return tools.filter((t) => {
       if (activeCategory !== 'ALL' && t.category !== activeCategory) return false;
       if (statusFilter !== 'ALL' && t.status !== statusFilter) return false;
       if (searchQuery.trim()) {
         const q = searchQuery.toLowerCase();
-        const matchName = (t.name || '').toLowerCase().includes(q);
-        const matchEn = (t.nameEn || '').toLowerCase().includes(q);
-        const matchCat = (t.categoryAr || '').toLowerCase().includes(q);
-        const matchSpec = (t.specification || '').toLowerCase().includes(q);
-        if (!matchName && !matchEn && !matchCat && !matchSpec) return false;
+        const mName = (t.name || '').toLowerCase().includes(q);
+        const mEn = (t.nameEn || '').toLowerCase().includes(q);
+        const mCat = (t.categoryAr || '').toLowerCase().includes(q);
+        const mSpec = (t.specification || '').toLowerCase().includes(q);
+        if (!mName && !mEn && !mCat && !mSpec) return false;
       }
       return true;
     });
   }, [tools, activeCategory, statusFilter, searchQuery]);
 
-  // Update target open progress when prop changes
+  // Sync open state
   useEffect(() => {
-    toolboxPartsRef.current.targetOpenProgress = isOpen ? 1 : 0;
+    partsRef.current.targetOpenProgress = isOpen ? 1 : 0;
   }, [isOpen]);
 
-  // Create sprite texture for tool node
-  const createToolSprite = useCallback((tool) => {
+  // High-DPI Canvas Sprite Texture Generator
+  const createToolTexture = useCallback((tool, isHovered, isSelected) => {
     const canvas = document.createElement('canvas');
-    canvas.width = 256;
-    canvas.height = 128;
+    canvas.width = 512;
+    canvas.height = 256;
     const ctx = canvas.getContext('2d');
 
-    const catColor = CATEGORY_COLORS[tool.category]?.css || '#38bdf8';
-    const statusColor = STATUS_COLORS[tool.status]?.css || '#22c55e';
+    const catTheme = CATEGORY_THEMES[tool.category] || CATEGORY_THEMES.general_tools;
+    const statusTheme = STATUS_THEMES[tool.status] || STATUS_THEMES.good;
 
-    // Rounded card background
-    ctx.fillStyle = 'rgba(15, 23, 42, 0.88)';
-    ctx.strokeStyle = catColor;
-    ctx.lineWidth = 4;
+    // Background Card with Glassmorphic Gradient
+    const bgGrad = ctx.createLinearGradient(0, 0, 0, 256);
+    bgGrad.addColorStop(0, isSelected ? 'rgba(30, 58, 138, 0.95)' : isHovered ? 'rgba(15, 23, 42, 0.96)' : 'rgba(10, 15, 29, 0.92)');
+    bgGrad.addColorStop(1, isSelected ? 'rgba(15, 23, 42, 0.98)' : 'rgba(5, 8, 16, 0.95)');
+
+    ctx.fillStyle = bgGrad;
+    ctx.strokeStyle = isSelected ? '#38bdf8' : isHovered ? catTheme.css : 'rgba(255, 255, 255, 0.18)';
+    ctx.lineWidth = isSelected ? 8 : isHovered ? 6 : 3;
+
     ctx.beginPath();
-    ctx.roundRect(6, 6, 244, 116, 16);
+    ctx.roundRect(10, 10, 492, 236, 28);
     ctx.fill();
     ctx.stroke();
 
-    // Top Category Header bar
-    ctx.fillStyle = catColor;
+    // Top Category Accent Banner
+    ctx.fillStyle = catTheme.css;
     ctx.beginPath();
-    ctx.roundRect(6, 6, 244, 28, [16, 16, 0, 0]);
+    ctx.roundRect(10, 10, 492, 48, [28, 28, 0, 0]);
     ctx.fill();
 
-    // Category Text
-    ctx.fillStyle = '#0f172a';
-    ctx.font = 'bold 14px sans-serif';
+    // Category Label
+    ctx.fillStyle = '#090d16';
+    ctx.font = '900 22px system-ui, -apple-system, sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText((tool.categoryEn || tool.categoryAr || '').toUpperCase().slice(0, 24), 128, 26);
+    ctx.fillText((tool.categoryEn || tool.categoryAr || '').toUpperCase(), 256, 42);
 
-    // Tool Name
+    // Primary Tool Name
     ctx.fillStyle = '#ffffff';
-    ctx.font = 'bold 18px sans-serif';
+    ctx.font = 'bold 36px system-ui, -apple-system, sans-serif';
     ctx.textAlign = 'center';
-    const cleanName = tool.name.length > 20 ? tool.name.slice(0, 18) + '..' : tool.name;
-    ctx.fillText(cleanName, 128, 64);
+    const cleanName = tool.name.length > 22 ? tool.name.slice(0, 20) + '...' : tool.name;
+    ctx.fillText(cleanName, 256, 115);
 
-    // Spec / English sub-label
+    // English Name / Transliteration
     ctx.fillStyle = '#94a3b8';
-    ctx.font = '13px sans-serif';
-    const subText = tool.specification ? `Size: ${tool.specification}mm` : (tool.nameEn || '').slice(0, 22);
-    ctx.fillText(subText, 128, 86);
+    ctx.font = '500 22px system-ui, -apple-system, sans-serif';
+    const cleanEn = (tool.nameEn || '').length > 30 ? (tool.nameEn || '').slice(0, 28) + '...' : tool.nameEn;
+    ctx.fillText(cleanEn || '', 256, 150);
 
-    // Status indicator pill
-    ctx.fillStyle = statusColor;
+    // Bottom Badges Line
+    // Left: Status Badge
+    ctx.fillStyle = statusTheme.css;
     ctx.beginPath();
-    ctx.roundRect(16, 96, 12, 12, 6);
+    ctx.roundRect(32, 180, 20, 20, 10);
     ctx.fill();
 
-    ctx.fillStyle = '#cbd5e1';
-    ctx.font = 'bold 11px sans-serif';
+    ctx.fillStyle = '#e2e8f0';
+    ctx.font = 'bold 20px system-ui, -apple-system, sans-serif';
     ctx.textAlign = 'left';
-    ctx.fillText(tool.statusLabelEn || 'Operational', 34, 107);
+    ctx.fillText(statusTheme.label, 62, 196);
 
-    // Quantity pill on right
-    ctx.fillStyle = 'rgba(255,255,255,0.15)';
+    // Center / Right: Specification Badge
+    if (tool.specification) {
+      ctx.fillStyle = 'rgba(56, 189, 248, 0.18)';
+      ctx.strokeStyle = 'rgba(56, 189, 248, 0.4)';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.roundRect(260, 172, 110, 36, 10);
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.fillStyle = '#38bdf8';
+      ctx.font = 'bold 20px monospace';
+      ctx.textAlign = 'center';
+      ctx.fillText(`${tool.specification} mm`, 315, 197);
+    }
+
+    // Right: Quantity Badge
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.12)';
     ctx.beginPath();
-    ctx.roundRect(188, 94, 52, 20, 10);
+    ctx.roundRect(385, 172, 95, 36, 10);
     ctx.fill();
-    ctx.fillStyle = '#f8fafc';
+
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 20px system-ui, -apple-system, sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText(`QTY: ${tool.quantity}`, 214, 108);
+    ctx.fillText(`x${tool.quantity}`, 432, 197);
 
     const texture = new THREE.CanvasTexture(canvas);
     texture.minFilter = THREE.LinearFilter;
+    texture.generateMipmaps = false;
     return texture;
   }, []);
 
-  // Initialize Three.js Scene
+  // Initialize Three.js WebGL Engine
   useEffect(() => {
     if (!mountRef.current) return;
     const container = mountRef.current;
-    const width = container.clientWidth || 800;
-    const height = container.clientHeight || 550;
+    const width = container.clientWidth || 900;
+    const height = container.clientHeight || 580;
 
-    // 1. Scene
+    // 1. Scene setup
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x0a0f1d);
-    scene.fog = new THREE.FogExp2(0x0a0f1d, 0.025);
+    scene.background = new THREE.Color(0x060913);
+    scene.fog = new THREE.FogExp2(0x060913, 0.022);
     sceneRef.current = scene;
 
-    // 2. Camera
-    const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
-    camera.position.set(0, 6, 14);
+    // 2. Camera setup
+    const camera = new THREE.PerspectiveCamera(40, width / height, 0.1, 100);
+    camera.position.set(0, 5.5, 13.5);
     cameraRef.current = camera;
 
-    // 3. Renderer
+    // 3. Renderer with high dynamic range and shadows
     let renderer;
     try {
-      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
+      renderer = new THREE.WebGLRenderer({
+        antialias: true,
+        alpha: true,
+        powerPreference: 'high-performance',
+      });
       renderer.setSize(width, height);
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
       renderer.shadowMap.enabled = true;
       renderer.shadowMap.type = THREE.PCFSoftShadowMap;
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
-      renderer.toneMappingExposure = 1.1;
+      renderer.toneMappingExposure = 1.15;
       container.replaceChildren(renderer.domElement);
       rendererRef.current = renderer;
     } catch (e) {
-      setCanvasError('WebGL is not supported or encountered an error.');
+      console.error(e);
       return;
     }
 
-    // 4. Lighting
-    const ambientLight = new THREE.AmbientLight(0xffffff, 1.2);
+    // 4. Studio Lighting Design
+    const ambientLight = new THREE.AmbientLight(0xffffff, 1.4);
     scene.add(ambientLight);
 
-    const keyLight = new THREE.DirectionalLight(0xffffff, 2.5);
-    keyLight.position.set(8, 16, 12);
+    const keyLight = new THREE.DirectionalLight(0xffffff, 2.8);
+    keyLight.position.set(10, 18, 12);
     keyLight.castShadow = true;
     keyLight.shadow.mapSize.width = 2048;
     keyLight.shadow.mapSize.height = 2048;
     keyLight.shadow.bias = -0.0001;
     scene.add(keyLight);
 
-    const fillLight = new THREE.DirectionalLight(0x38bdf8, 1.2);
-    fillLight.position.set(-10, 8, -6);
-    scene.add(fillLight);
+    const cyanRim = new THREE.PointLight(0x00f2fe, 3.2, 25);
+    cyanRim.position.set(-9, 8, -6);
+    scene.add(cyanRim);
 
-    const rimLight = new THREE.PointLight(0xa855f7, 2.0, 20);
-    rimLight.position.set(0, 10, -8);
-    scene.add(rimLight);
+    const amberFill = new THREE.DirectionalLight(0xffa000, 1.2);
+    amberFill.position.set(8, -2, -8);
+    scene.add(amberFill);
 
-    // 5. Studio Workbench Floor
-    const gridHelper = new THREE.GridHelper(30, 30, 0x1e293b, 0x0f172a);
-    gridHelper.position.y = -2.0;
-    scene.add(gridHelper);
-
-    const floorGeo = new THREE.PlaneGeometry(50, 50);
+    // 5. Studio Workbench & Circular Neon Stage
+    const floorGeo = new THREE.PlaneGeometry(60, 60);
     const floorMat = new THREE.MeshStandardMaterial({
-      color: 0x070b14,
+      color: 0x05070e,
       roughness: 0.85,
-      metalness: 0.2,
+      metalness: 0.1,
     });
     const floor = new THREE.Mesh(floorGeo, floorMat);
     floor.rotation.x = -Math.PI / 2;
-    floor.position.y = -2.01;
+    floor.position.y = -2.1;
     floor.receiveShadow = true;
     scene.add(floor);
 
-    // Glowing stage circle
-    const ringGeo = new THREE.RingGeometry(4.2, 4.35, 64);
-    const ringMat = new THREE.MeshBasicMaterial({ color: 0x38bdf8, side: THREE.DoubleSide });
-    const ring = new THREE.Mesh(ringGeo, ringMat);
-    ring.rotation.x = -Math.PI / 2;
-    ring.position.y = -1.99;
-    scene.add(ring);
+    // Holographic Grid Rings
+    const grid = new THREE.GridHelper(32, 32, 0x1e293b, 0x090d16);
+    grid.position.y = -2.09;
+    scene.add(grid);
 
-    // 6. Build Procedural 3D Cantilever Toolbox Model
-    const currentTheme = THEMES[themeKey] || THEMES.cobalt;
-    const toolboxGroup = new THREE.Group();
-    toolboxGroup.position.y = -1.0;
-    scene.add(toolboxGroup);
+    const ringGeo1 = new THREE.RingGeometry(4.6, 4.75, 64);
+    const ringMat1 = new THREE.MeshBasicMaterial({ color: 0x00f2fe, side: THREE.DoubleSide });
+    const ring1 = new THREE.Mesh(ringGeo1, ringMat1);
+    ring1.rotation.x = -Math.PI / 2;
+    ring1.position.y = -2.08;
+    scene.add(ring1);
+
+    const ringGeo2 = new THREE.RingGeometry(6.2, 6.25, 64);
+    const ringMat2 = new THREE.MeshBasicMaterial({ color: 0x3b82f6, side: THREE.DoubleSide, opacity: 0.5, transparent: true });
+    const ring2 = new THREE.Mesh(ringGeo2, ringMat2);
+    ring2.rotation.x = -Math.PI / 2;
+    ring2.position.y = -2.08;
+    scene.add(ring2);
+
+    // 6. Build Ultra-Realistic 3D Cantilever Toolbox Model
+    const currentTheme = TOOLBOX_THEMES[themeKey] || TOOLBOX_THEMES.cobalt;
+    const toolboxRoot = new THREE.Group();
+    toolboxRoot.position.y = -1.1;
+    scene.add(toolboxRoot);
 
     // Materials
     const bodyMat = new THREE.MeshStandardMaterial({
       color: currentTheme.body,
-      roughness: 0.35,
-      metalness: 0.75,
+      metalness: currentTheme.metalness,
+      roughness: currentTheme.roughness,
     });
-    const interiorMat = new THREE.MeshStandardMaterial({
-      color: currentTheme.dark,
+
+    const darkInteriorMat = new THREE.MeshStandardMaterial({
+      color: currentTheme.tray,
+      metalness: 0.3,
       roughness: 0.7,
-      metalness: 0.4,
     });
+
     const chromeMat = new THREE.MeshStandardMaterial({
-      color: currentTheme.chrome,
-      roughness: 0.15,
+      color: 0xf1f5f9,
       metalness: 0.95,
+      roughness: 0.1,
     });
+
+    const goldMat = new THREE.MeshStandardMaterial({
+      color: 0xf59e0b,
+      metalness: 0.9,
+      roughness: 0.2,
+    });
+
     const rubberMat = new THREE.MeshStandardMaterial({
       color: 0x09090b,
       roughness: 0.9,
     });
-    const goldMat = new THREE.MeshStandardMaterial({
-      color: 0xf59e0b,
-      roughness: 0.2,
-      metalness: 0.9,
+
+    // --- Main Bottom Tub Chassis ---
+    const tubGeo = new THREE.BoxGeometry(5.6, 2.1, 2.9);
+    const tubMesh = new THREE.Mesh(tubGeo, bodyMat);
+    tubMesh.castShadow = true;
+    tubMesh.receiveShadow = true;
+    toolboxRoot.add(tubMesh);
+
+    // Rubber Corner Bumpers
+    const bumperGeo = new THREE.BoxGeometry(0.3, 2.15, 0.3);
+    [
+      [-2.75, 0, -1.4],
+      [2.75, 0, -1.4],
+      [-2.75, 0, 1.4],
+      [2.75, 0, 1.4],
+    ].forEach(([x, y, z]) => {
+      const b = new THREE.Mesh(bumperGeo, rubberMat);
+      b.position.set(x, y, z);
+      toolboxRoot.add(b);
     });
 
-    // --- Bottom Tub Base ---
-    const baseGeo = new THREE.BoxGeometry(5.4, 2.0, 2.8);
-    const baseMesh = new THREE.Mesh(baseGeo, bodyMat);
-    baseMesh.castShadow = true;
-    baseMesh.receiveShadow = true;
-    baseMesh.position.y = 0;
-    toolboxGroup.add(baseMesh);
-
     // Rubber Feet
-    const footGeo = new THREE.CylinderGeometry(0.2, 0.25, 0.15, 16);
+    const footGeo = new THREE.CylinderGeometry(0.25, 0.3, 0.18, 16);
     [
-      [-2.4, -1.05, -1.1],
-      [2.4, -1.05, -1.1],
-      [-2.4, -1.05, 1.1],
-      [2.4, -1.05, 1.1],
+      [-2.4, -1.1, -1.1],
+      [2.4, -1.1, -1.1],
+      [-2.4, -1.1, 1.1],
+      [2.4, -1.1, 1.1],
     ].forEach(([x, y, z]) => {
       const foot = new THREE.Mesh(footGeo, rubberMat);
       foot.position.set(x, y, z);
-      toolboxGroup.add(foot);
+      toolboxRoot.add(foot);
     });
 
     // Side Handles
-    const sideHandleGeo = new THREE.TorusGeometry(0.35, 0.08, 12, 24, Math.PI);
-    const handleL = new THREE.Mesh(sideHandleGeo, chromeMat);
-    handleL.position.set(-2.75, 0.2, 0);
-    handleL.rotation.y = -Math.PI / 2;
-    handleL.rotation.z = Math.PI / 2;
-    toolboxGroup.add(handleL);
+    const sideHandleGeo = new THREE.TorusGeometry(0.4, 0.09, 12, 24, Math.PI);
+    const hLeft = new THREE.Mesh(sideHandleGeo, chromeMat);
+    hLeft.position.set(-2.85, 0.2, 0);
+    hLeft.rotation.y = -Math.PI / 2;
+    hLeft.rotation.z = Math.PI / 2;
+    toolboxRoot.add(hLeft);
 
-    const handleR = new THREE.Mesh(sideHandleGeo, chromeMat);
-    handleR.position.set(2.75, 0.2, 0);
-    handleR.rotation.y = Math.PI / 2;
-    handleR.rotation.z = Math.PI / 2;
-    toolboxGroup.add(handleR);
+    const hRight = new THREE.Mesh(sideHandleGeo, chromeMat);
+    hRight.position.set(2.85, 0.2, 0);
+    hRight.rotation.y = Math.PI / 2;
+    hRight.rotation.z = Math.PI / 2;
+    toolboxRoot.add(hRight);
 
-    // Front Metal Nameplate
-    const plateGeo = new THREE.BoxGeometry(2.4, 0.6, 0.05);
-    const plateMesh = new THREE.Mesh(plateGeo, goldMat);
-    plateMesh.position.set(0, 0.2, 1.43);
-    toolboxGroup.add(plateMesh);
+    // Brass Technician Engraved Nameplate
+    const nameplateGeo = new THREE.BoxGeometry(2.6, 0.65, 0.06);
+    const nameplate = new THREE.Mesh(nameplateGeo, goldMat);
+    nameplate.position.set(0, 0.2, 1.48);
+    toolboxRoot.add(nameplate);
 
-    // --- Left Cantilever Upper Tray ---
-    const trayGeo = new THREE.BoxGeometry(2.4, 0.7, 2.6);
-    const trayLeft = new THREE.Mesh(trayGeo, interiorMat);
-    trayLeft.position.set(-1.25, 0.6, 0);
+    // --- Left Upper Cantilever Tray ---
+    const trayGeo = new THREE.BoxGeometry(2.5, 0.75, 2.7);
+    const trayLeft = new THREE.Mesh(trayGeo, darkInteriorMat);
+    trayLeft.position.set(-1.3, 0.65, 0);
     trayLeft.castShadow = true;
-    toolboxGroup.add(trayLeft);
+    toolboxRoot.add(trayLeft);
 
-    // Tray Left Dividers
-    const divGeo = new THREE.BoxGeometry(0.06, 0.6, 2.5);
-    [-0.6, 0, 0.6].forEach((dx) => {
+    // Tray Dividers
+    const divGeo = new THREE.BoxGeometry(0.08, 0.65, 2.6);
+    [-0.65, 0, 0.65].forEach((dx) => {
       const div = new THREE.Mesh(divGeo, bodyMat);
       div.position.set(dx, 0.05, 0);
       trayLeft.add(div);
     });
 
-    // --- Right Cantilever Upper Tray ---
-    const trayRight = new THREE.Mesh(trayGeo, interiorMat);
-    trayRight.position.set(1.25, 0.6, 0);
+    // --- Right Upper Cantilever Tray ---
+    const trayRight = new THREE.Mesh(trayGeo, darkInteriorMat);
+    trayRight.position.set(1.3, 0.65, 0);
     trayRight.castShadow = true;
-    toolboxGroup.add(trayRight);
+    toolboxRoot.add(trayRight);
 
-    // Tray Right Dividers
-    [-0.6, 0, 0.6].forEach((dx) => {
+    [-0.65, 0, 0.65].forEach((dx) => {
       const div = new THREE.Mesh(divGeo, bodyMat);
       div.position.set(dx, 0.05, 0);
       trayRight.add(div);
     });
 
+    // --- Scissor Linkages (Cantilever Arms) ---
+    const armGeo = new THREE.BoxGeometry(0.08, 1.4, 0.08);
+    const scissorArmL1 = new THREE.Mesh(armGeo, chromeMat);
+    scissorArmL1.position.set(-2.6, 0.4, 1.4);
+    toolboxRoot.add(scissorArmL1);
+
+    const scissorArmR1 = new THREE.Mesh(armGeo, chromeMat);
+    scissorArmR1.position.set(2.6, 0.4, 1.4);
+    toolboxRoot.add(scissorArmR1);
+
     // --- Dual Top Lids with Pivot Hinges ---
-    // Left Lid Pivot
-    const pivotL = new THREE.Group();
-    pivotL.position.set(-2.7, 1.0, 0);
-    toolboxGroup.add(pivotL);
+    const lidLeftPivot = new THREE.Group();
+    lidLeftPivot.position.set(-2.8, 1.05, 0);
+    toolboxRoot.add(lidLeftPivot);
 
-    const lidGeo = new THREE.BoxGeometry(2.7, 0.35, 2.84);
-    const lidL = new THREE.Mesh(lidGeo, bodyMat);
-    lidL.position.set(1.35, 0.175, 0);
-    lidL.castShadow = true;
-    pivotL.add(lidL);
+    const lidGeo = new THREE.BoxGeometry(2.8, 0.38, 2.92);
+    const lidMeshL = new THREE.Mesh(lidGeo, bodyMat);
+    lidMeshL.position.set(1.4, 0.19, 0);
+    lidMeshL.castShadow = true;
+    lidLeftPivot.add(lidMeshL);
 
-    // Right Lid Pivot
-    const pivotR = new THREE.Group();
-    pivotR.position.set(2.7, 1.0, 0);
-    toolboxGroup.add(pivotR);
+    const lidRightPivot = new THREE.Group();
+    lidRightPivot.position.set(2.8, 1.05, 0);
+    toolboxRoot.add(lidRightPivot);
 
-    const lidR = new THREE.Mesh(lidGeo, bodyMat);
-    lidR.position.set(-1.35, 0.175, 0);
-    lidR.castShadow = true;
-    pivotR.add(lidR);
+    const lidMeshR = new THREE.Mesh(lidGeo, bodyMat);
+    lidMeshR.position.set(-1.4, 0.19, 0);
+    lidMeshR.castShadow = true;
+    lidRightPivot.add(lidMeshR);
 
-    // Top Center Carry Handle (on right lid)
-    const topHandleGeo = new THREE.CylinderGeometry(0.12, 0.12, 2.2, 16);
-    const topHandle = new THREE.Mesh(topHandleGeo, chromeMat);
-    topHandle.rotation.z = Math.PI / 2;
-    topHandle.position.set(-1.35, 0.6, 0);
-    pivotR.add(topHandle);
+    // Center Heavy Aluminum Handle (Mounted on right lid)
+    const handleBarGeo = new THREE.CylinderGeometry(0.14, 0.14, 2.4, 16);
+    const handleBar = new THREE.Mesh(handleBarGeo, chromeMat);
+    handleBar.rotation.z = Math.PI / 2;
+    handleBar.position.set(-1.4, 0.68, 0);
+    lidRightPivot.add(handleBar);
 
-    // Latches
-    const latchGeo = new THREE.BoxGeometry(0.2, 0.4, 0.1);
+    // Front Chrome Toggle Latches
+    const latchGeo = new THREE.BoxGeometry(0.24, 0.45, 0.12);
     const latch1 = new THREE.Mesh(latchGeo, chromeMat);
-    latch1.position.set(-1.2, 0.85, 1.45);
-    toolboxGroup.add(latch1);
+    latch1.position.set(-1.3, 0.9, 1.5);
+    toolboxRoot.add(latch1);
 
     const latch2 = new THREE.Mesh(latchGeo, chromeMat);
-    latch2.position.set(1.2, 0.85, 1.45);
-    toolboxGroup.add(latch2);
+    latch2.position.set(1.3, 0.9, 1.5);
+    toolboxRoot.add(latch2);
 
-    toolboxPartsRef.current = {
-      base: baseMesh,
-      lidLeft: pivotL,
-      lidRight: pivotR,
+    partsRef.current = {
+      chassis: tubMesh,
+      lidLeftPivot,
+      lidRightPivot,
       trayLeft,
       trayRight,
+      scissorArms: [scissorArmL1, scissorArmR1],
       latches: [latch1, latch2],
       openProgress: isOpen ? 1 : 0,
       targetOpenProgress: isOpen ? 1 : 0,
     };
 
-    // 7. Mouse and Touch Interaction Handlers
+    // 7. Interactive Mouse / Touch Handlers
     const onPointerDown = (e) => {
       controlsRef.current.isDragging = true;
       controlsRef.current.prevMousePos = { x: e.clientX, y: e.clientY };
@@ -417,17 +519,17 @@ export default function Toolbox3DCanvas({
 
     const onPointerMove = (e) => {
       const rect = container.getBoundingClientRect();
-      mousePosNormRef.current.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-      mousePosNormRef.current.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+      mousePosRef.current.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+      mousePosRef.current.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
 
       if (!controlsRef.current.isDragging) return;
       const deltaX = e.clientX - controlsRef.current.prevMousePos.x;
       const deltaY = e.clientY - controlsRef.current.prevMousePos.y;
 
-      controlsRef.current.targetRotation.y += deltaX * 0.008;
+      controlsRef.current.targetRotation.y += deltaX * 0.007;
       controlsRef.current.targetRotation.x = Math.max(
         0.05,
-        Math.min(Math.PI / 2 - 0.05, controlsRef.current.targetRotation.x + deltaY * 0.008)
+        Math.min(Math.PI / 2 - 0.05, controlsRef.current.targetRotation.x + deltaY * 0.007)
       );
 
       controlsRef.current.prevMousePos = { x: e.clientX, y: e.clientY };
@@ -440,27 +542,34 @@ export default function Toolbox3DCanvas({
     const onWheel = (e) => {
       e.preventDefault();
       controlsRef.current.targetDistance = Math.max(
-        6,
-        Math.min(26, controlsRef.current.targetDistance + e.deltaY * 0.015)
+        6.5,
+        Math.min(24, controlsRef.current.targetDistance + e.deltaY * 0.012)
       );
     };
 
-    const onClick = (e) => {
-      // Raycasting for tools
+    const onClick = () => {
       if (!cameraRef.current || !sceneRef.current) return;
-      raycasterRef.current.setFromCamera(mousePosNormRef.current, cameraRef.current);
+      raycasterRef.current.setFromCamera(mousePosRef.current, cameraRef.current);
       const meshes = toolNodesRef.current.map((n) => n.mesh);
       const intersects = raycasterRef.current.intersectObjects(meshes, true);
 
       if (intersects.length > 0) {
-        const hit = intersects[0];
-        let parent = hit.object;
-        while (parent && !parent.userData.tool && parent.parent) {
-          parent = parent.parent;
+        let obj = intersects[0].object;
+        while (obj && !obj.userData.tool && obj.parent) {
+          obj = obj.parent;
         }
-        if (parent?.userData?.tool) {
-          const tool = parent.userData.tool;
+        if (obj?.userData?.tool) {
+          const tool = obj.userData.tool;
           if (onSelectTool) onSelectTool(tool);
+
+          // Smooth camera focus glide
+          const targetNode = toolNodesRef.current.find((n) => n.tool.id === tool.id);
+          if (targetNode) {
+            controlsRef.current.targetPan = {
+              x: targetNode.group.position.x * 0.5,
+              y: targetNode.group.position.y * 0.5 + 0.2,
+            };
+          }
         }
       }
     };
@@ -474,33 +583,33 @@ export default function Toolbox3DCanvas({
     // 8. Resize Handler
     const onResize = () => {
       if (!container || !rendererRef.current || !cameraRef.current) return;
-      const newW = container.clientWidth;
-      const newH = container.clientHeight;
-      cameraRef.current.aspect = newW / newH;
+      const w = container.clientWidth;
+      const h = container.clientHeight;
+      cameraRef.current.aspect = w / h;
       cameraRef.current.updateProjectionMatrix();
-      rendererRef.current.setSize(newW, newH);
+      rendererRef.current.setSize(w, h);
     };
     window.addEventListener('resize', onResize);
 
-    // 9. Animation Loop
+    // 9. 60 FPS Render Loop
     let clock = new THREE.Clock();
 
     const animate = () => {
-      animFrameIdRef.current = requestAnimationFrame(animate);
+      animFrameRef.current = requestAnimationFrame(animate);
       const delta = clock.getDelta();
       const elapsed = clock.getElapsedTime();
 
-      // Smooth camera orbit lerping
+      // Camera lerp
       const ctrl = controlsRef.current;
       if (autoRotate && !ctrl.isDragging) {
-        ctrl.targetRotation.y += delta * 0.35;
+        ctrl.targetRotation.y += delta * 0.25;
       }
 
-      ctrl.rotation.x += (ctrl.targetRotation.x - ctrl.rotation.x) * 0.1;
-      ctrl.rotation.y += (ctrl.targetRotation.y - ctrl.rotation.y) * 0.1;
-      ctrl.distance += (ctrl.targetDistance - ctrl.distance) * 0.1;
-      ctrl.pan.x += (ctrl.targetPan.x - ctrl.pan.x) * 0.1;
-      ctrl.pan.y += (ctrl.targetPan.y - ctrl.pan.y) * 0.1;
+      ctrl.rotation.x += (ctrl.targetRotation.x - ctrl.rotation.x) * 0.08;
+      ctrl.rotation.y += (ctrl.targetRotation.y - ctrl.rotation.y) * 0.08;
+      ctrl.distance += (ctrl.targetDistance - ctrl.distance) * 0.08;
+      ctrl.pan.x += (ctrl.targetPan.x - ctrl.pan.x) * 0.08;
+      ctrl.pan.y += (ctrl.targetPan.y - ctrl.pan.y) * 0.08;
 
       const camX = ctrl.distance * Math.sin(ctrl.rotation.y) * Math.cos(ctrl.rotation.x) + ctrl.pan.x;
       const camY = ctrl.distance * Math.sin(ctrl.rotation.x) + ctrl.pan.y;
@@ -509,72 +618,71 @@ export default function Toolbox3DCanvas({
       camera.position.set(camX, camY, camZ);
       camera.lookAt(ctrl.pan.x, ctrl.pan.y, 0);
 
-      // Smooth Toolbox Opening / Closing Animation
-      const parts = toolboxPartsRef.current;
-      parts.openProgress += (parts.targetOpenProgress - parts.openProgress) * 0.08;
-      const op = parts.openProgress;
+      // Smooth Toolbox Opening Mechanics
+      const p = partsRef.current;
+      p.openProgress += (p.targetOpenProgress - p.openProgress) * 0.07;
+      const op = p.openProgress;
 
-      // Lid rotation (-115 deg)
-      if (parts.lidLeft) parts.lidLeft.rotation.z = op * (Math.PI * 0.65);
-      if (parts.lidRight) parts.lidRight.rotation.z = -op * (Math.PI * 0.65);
+      // Lids swing open (-115 deg)
+      if (p.lidLeftPivot) p.lidLeftPivot.rotation.z = op * (Math.PI * 0.64);
+      if (p.lidRightPivot) p.lidRightPivot.rotation.z = -op * (Math.PI * 0.64);
 
-      // Cantilever Tray slide out laterally
-      if (parts.trayLeft) {
-        parts.trayLeft.position.x = -1.25 - op * 1.5;
-        parts.trayLeft.position.y = 0.6 + op * 0.4;
+      // Cantilever trays slide outward
+      if (p.trayLeft) {
+        p.trayLeft.position.x = -1.3 - op * 1.55;
+        p.trayLeft.position.y = 0.65 + op * 0.45;
       }
-      if (parts.trayRight) {
-        parts.trayRight.position.x = 1.25 + op * 1.5;
-        parts.trayRight.position.y = 0.6 + op * 0.4;
+      if (p.trayRight) {
+        p.trayRight.position.x = 1.3 + op * 1.55;
+        p.trayRight.position.y = 0.65 + op * 0.45;
       }
 
-      // Latches drop
-      if (parts.latches) {
-        parts.latches.forEach((l) => {
-          l.rotation.x = op * Math.PI * 0.4;
+      // Latches unclamp
+      if (p.latches) {
+        p.latches.forEach((l) => {
+          l.rotation.x = op * (Math.PI * 0.45);
         });
       }
 
-      // Floating Tools Physics & Animation
-      toolNodesRef.current.forEach((node, i) => {
-        const { group, basePos, orbitRadius, orbitAngle, orbitHeight, phase } = node;
+      // Dynamic Holographic Tool Arc Explosion
+      toolNodesRef.current.forEach((node) => {
+        const { group, targetArcPos, phase } = node;
 
-        if (op < 0.05) {
-          // Collapsed inside box
+        if (op < 0.03) {
           group.scale.setScalar(0.001);
           group.position.set(0, 0, 0);
         } else {
-          // Dynamic Floating Galaxy
-          const wave = Math.sin(elapsed * 2.0 + phase) * 0.25;
-          const rotWave = Math.sin(elapsed * 1.2 + phase) * 0.15;
+          // Gentle floating sine wave
+          const waveY = Math.sin(elapsed * 2.2 + phase) * 0.18;
+          const waveX = Math.cos(elapsed * 1.5 + phase) * 0.08;
 
-          const targetX = basePos.x * op * explosionDistance;
-          const targetY = (basePos.y + wave) * op * explosionDistance;
-          const targetZ = basePos.z * op * explosionDistance;
+          const destX = targetArcPos.x * op;
+          const destY = (targetArcPos.y + waveY) * op * explosionHeight;
+          const destZ = (targetArcPos.z + waveX) * op;
 
-          group.position.x += (targetX - group.position.x) * 0.1;
-          group.position.y += (targetY - group.position.y) * 0.1;
-          group.position.z += (targetZ - group.position.z) * 0.1;
+          group.position.x += (destX - group.position.x) * 0.1;
+          group.position.y += (destY - group.position.y) * 0.1;
+          group.position.z += (destZ - group.position.z) * 0.1;
 
-          group.scale.setScalar(Math.min(1.0, op * 1.1));
+          group.scale.setScalar(Math.min(1.0, op * 1.05));
 
-          // Billboarding: Tool Sprite faces camera
+          // Billboarding: Tool card always faces camera with high clarity
           group.quaternion.copy(camera.quaternion);
         }
       });
 
-      // Hover Raycasting
-      raycasterRef.current.setFromCamera(mousePosNormRef.current, camera);
+      // Hover Raycasting Check
+      raycasterRef.current.setFromCamera(mousePosRef.current, camera);
       const meshes = toolNodesRef.current.map((n) => n.mesh);
       const intersects = raycasterRef.current.intersectObjects(meshes, true);
 
       if (intersects.length > 0) {
-        let parent = intersects[0].object;
-        while (parent && !parent.userData.tool && parent.parent) {
-          parent = parent.parent;
+        let obj = intersects[0].object;
+        while (obj && !obj.userData.tool && obj.parent) {
+          obj = obj.parent;
         }
-        if (parent?.userData?.tool) {
-          setHoveredTool(parent.userData.tool);
+        if (obj?.userData?.tool) {
+          setHoveredTool(obj.userData.tool);
           container.style.cursor = 'pointer';
         }
       } else {
@@ -588,7 +696,7 @@ export default function Toolbox3DCanvas({
     animate();
 
     return () => {
-      cancelAnimationFrame(animFrameIdRef.current);
+      cancelAnimationFrame(animFrameRef.current);
       window.removeEventListener('resize', onResize);
       window.removeEventListener('pointermove', onPointerMove);
       window.removeEventListener('pointerup', onPointerUp);
@@ -599,9 +707,9 @@ export default function Toolbox3DCanvas({
         rendererRef.current.dispose();
       }
     };
-  }, [themeKey, autoRotate, explosionDistance, isOpen, onSelectTool]);
+  }, [themeKey, autoRotate, explosionHeight, isOpen, onSelectTool]);
 
-  // Re-generate floating tool 3D nodes when filteredTools changes
+  // Re-generate Structured 3D Tool Fan Arcs
   useEffect(() => {
     if (!sceneRef.current) return;
     const scene = sceneRef.current;
@@ -616,25 +724,35 @@ export default function Toolbox3DCanvas({
     toolNodesRef.current = [];
 
     // Limit floating nodes in 3D to maintain 60 FPS while keeping top tools
-    const maxNodes = Math.min(filteredTools.length, 64);
-    const stepAngle = (Math.PI * 2) / Math.max(1, maxNodes);
+    const maxNodes = Math.min(filteredTools.length, 52);
 
+    // Group tools into 3 physical drawer origins
+    // 1. Sockets & Bits (Left Arc)
+    // 2. Torx & Hex Keys (Right Arc)
+    // 3. Spanners, Screwdrivers & Heavy Tools (Center High Arc)
     filteredTools.slice(0, maxNodes).forEach((tool, idx) => {
       const group = new THREE.Group();
 
-      // Calculate 3D Orbital Coordinates
-      const tier = idx % 4; // 4 vertical tiers
-      const ringRadius = 4.2 + (tier % 2) * 2.2 + (idx % 3) * 0.8;
-      const angle = idx * stepAngle + (tier * 0.4);
-      const height = 1.2 + tier * 1.5 + (idx % 2) * 0.4;
+      let originTray = 'center';
+      if (['sockets', 'specialty_sets'].includes(tool.category)) originTray = 'left';
+      else if (['torx_keys', 'hex_keys'].includes(tool.category)) originTray = 'right';
 
-      const posX = Math.cos(angle) * ringRadius;
-      const posY = height;
-      const posZ = Math.sin(angle) * ringRadius;
+      let posX, posY, posZ;
+      const countInGroup = maxNodes;
+      const angle = (idx / countInGroup) * Math.PI * 1.6 - Math.PI * 0.8; // Fan between -145° and +145°
+      const tier = idx % 3; // 3 vertical stadium tiers
 
-      // Sprite Plane Mesh
-      const texture = createToolSprite(tool);
-      const spriteGeo = new THREE.PlaneGeometry(1.8, 0.9);
+      const radius = 4.2 + tier * 1.6;
+      posX = Math.sin(angle) * radius;
+      posY = 1.6 + tier * 1.4 + Math.cos(angle) * 0.6;
+      posZ = Math.cos(angle) * (radius * 0.75);
+
+      // Create high-res sprite
+      const isSelected = selectedTool?.id === tool.id;
+      const isHovered = hoveredTool?.id === tool.id;
+      const texture = createToolTexture(tool, isHovered, isSelected);
+
+      const spriteGeo = new THREE.PlaneGeometry(2.0, 1.0);
       const spriteMat = new THREE.MeshBasicMaterial({
         map: texture,
         transparent: true,
@@ -646,20 +764,19 @@ export default function Toolbox3DCanvas({
       spriteMesh.userData = { tool };
       group.add(spriteMesh);
 
-      // Glowing Neon Ring Base
-      const catHex = CATEGORY_COLORS[tool.category]?.hex || 0x38bdf8;
-      const auraGeo = new THREE.RingGeometry(0.9, 0.98, 32);
-      const auraMat = new THREE.MeshBasicMaterial({
+      // Category Halo Ring
+      const catHex = CATEGORY_THEMES[tool.category]?.hex || 0x00f2fe;
+      const haloGeo = new THREE.RingGeometry(1.0, 1.08, 32);
+      const haloMat = new THREE.MeshBasicMaterial({
         color: catHex,
         side: THREE.DoubleSide,
         transparent: true,
-        opacity: 0.6,
+        opacity: 0.5,
       });
-      const aura = new THREE.Mesh(auraGeo, auraMat);
-      aura.position.z = -0.02;
-      group.add(aura);
+      const halo = new THREE.Mesh(haloGeo, haloMat);
+      halo.position.z = -0.01;
+      group.add(halo);
 
-      // Initial position
       group.position.set(posX, posY, posZ);
       group.userData = { tool };
       scene.add(group);
@@ -668,177 +785,172 @@ export default function Toolbox3DCanvas({
         group,
         mesh: spriteMesh,
         tool,
-        basePos: new THREE.Vector3(posX, posY, posZ),
-        orbitRadius: ringRadius,
-        orbitAngle: angle,
-        orbitHeight: height,
-        phase: (idx * 0.5) % (Math.PI * 2),
+        targetArcPos: new THREE.Vector3(posX, posY, posZ),
+        phase: (idx * 0.4) % (Math.PI * 2),
       });
     });
-  }, [filteredTools, createToolSprite]);
+  }, [filteredTools, selectedTool, hoveredTool, createToolTexture]);
 
   // Preset Camera Angles
   const setCameraPreset = (preset) => {
+    setActivePreset(preset);
     const ctrl = controlsRef.current;
     if (preset === 'front') {
       ctrl.targetRotation = { x: 0.15, y: 0 };
-      ctrl.targetDistance = 11;
-      ctrl.targetPan = { x: 0, y: 0.2 };
+      ctrl.targetDistance = 11.5;
+      ctrl.targetPan = { x: 0, y: 0.3 };
     } else if (preset === 'iso') {
-      ctrl.targetRotation = { x: 0.45, y: -0.65 };
-      ctrl.targetDistance = 13;
-      ctrl.targetPan = { x: 0, y: 0.5 };
+      ctrl.targetRotation = { x: 0.38, y: -0.55 };
+      ctrl.targetDistance = 13.5;
+      ctrl.targetPan = { x: 0, y: 0.6 };
     } else if (preset === 'top') {
       ctrl.targetRotation = { x: 1.35, y: 0 };
       ctrl.targetDistance = 14;
       ctrl.targetPan = { x: 0, y: 0 };
-    } else if (preset === 'orbit') {
+    } else if (preset === 'cloud') {
       ctrl.targetRotation = { x: 0.3, y: -0.9 };
-      ctrl.targetDistance = 17;
-      ctrl.targetPan = { x: 0, y: 1.5 };
+      ctrl.targetDistance = 18;
+      ctrl.targetPan = { x: 0, y: 1.8 };
     }
   };
 
   return (
-    <div className="relative w-full h-full min-h-[520px] bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 rounded-2xl overflow-hidden border border-slate-800 shadow-2xl">
-      {/* 3D WebGL Canvas Mount */}
-      <div ref={mountRef} className="w-full h-full min-h-[520px]" />
+    <div className="relative w-full h-full min-h-[580px] bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 rounded-3xl overflow-hidden border border-slate-800 shadow-2xl">
+      {/* 3D Canvas Mount */}
+      <div ref={mountRef} className="w-full h-full min-h-[580px]" />
 
-      {/* Top Floating Overlay - HUD Controls */}
+      {/* Top Glassmorphic Control Bar */}
       <div className="absolute top-4 left-4 right-4 flex flex-wrap items-center justify-between gap-3 pointer-events-none">
-        {/* Left: Technician Info Badge */}
-        <div className="flex items-center gap-3 bg-slate-900/85 backdrop-blur-md px-4 py-2.5 rounded-xl border border-slate-700/60 shadow-lg pointer-events-auto">
-          <div className="w-9 h-9 rounded-lg bg-cyan-500/20 border border-cyan-400/40 flex items-center justify-center text-cyan-400 font-bold text-base">
+        {/* Technician Badge */}
+        <div className="flex items-center gap-3 bg-slate-900/90 backdrop-blur-xl px-4 py-2.5 rounded-2xl border border-slate-700/80 shadow-2xl pointer-events-auto">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center text-white text-lg shadow-md shadow-cyan-500/20">
             🧰
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-white font-bold text-sm">{technician?.name || 'Technician Toolbox'}</span>
-              <span className="text-xs px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 font-medium">
-                {technician?.stats?.operationalRate || 100}% Ready
+              <span className="text-white font-bold text-sm tracking-tight">{technician?.name}</span>
+              <span className="text-[11px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-bold border border-emerald-500/30">
+                {technician?.stats?.operationalRate}% Ready
               </span>
             </div>
-            <span className="text-xs text-slate-400">{technician?.nameEn} • {technician?.stats?.totalQuantity || 0} Total Tools</span>
+            <span className="text-xs text-slate-400 font-medium">
+              {technician?.nameEn} • {technician?.stats?.totalQuantity} Tools Total
+            </span>
           </div>
         </div>
 
-        {/* Right: 3D Interaction Control Hub */}
-        <div className="flex items-center gap-2 bg-slate-900/85 backdrop-blur-md p-1.5 rounded-xl border border-slate-700/60 shadow-lg pointer-events-auto">
+        {/* Studio Controls */}
+        <div className="flex items-center gap-2 bg-slate-900/90 backdrop-blur-xl p-1.5 rounded-2xl border border-slate-700/80 shadow-2xl pointer-events-auto">
+          {/* Latch Open/Close Toggle */}
           <button
             onClick={onToggleOpen}
-            className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${
+            className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
               isOpen
-                ? 'bg-cyan-500 text-slate-950 shadow-md shadow-cyan-500/30'
-                : 'bg-slate-800 text-slate-200 hover:bg-slate-700'
+                ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 shadow-md shadow-cyan-500/30'
+                : 'bg-slate-800 text-slate-200 hover:bg-slate-750'
             }`}
           >
-            {isOpen ? '🔓 Opened (Exploded)' : '🔒 Closed'}
+            <span>{isOpen ? '🔓' : '🔒'}</span>
+            <span>{isOpen ? 'Toolbox Open (Exploded)' : 'Toolbox Closed'}</span>
           </button>
 
           <button
             onClick={() => setAutoRotate(!autoRotate)}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
-              autoRotate ? 'bg-indigo-600 text-white' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+            className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
+              autoRotate ? 'bg-indigo-600 text-white shadow-md' : 'bg-slate-800 text-slate-300 hover:bg-slate-750'
             }`}
           >
-            🔄 {autoRotate ? 'Rotating' : 'Auto Rotate'}
+            <span>🔄</span>
+            <span>{autoRotate ? 'Rotating' : 'Auto Rotate'}</span>
           </button>
 
-          <div className="h-5 w-px bg-slate-700 mx-0.5" />
+          <div className="h-5 w-px bg-slate-700 mx-1" />
 
-          {/* Camera Angles */}
+          {/* Camera Preset Pills */}
           <div className="flex items-center gap-1">
             <button
               onClick={() => setCameraPreset('iso')}
-              className="px-2.5 py-1.5 rounded-lg text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-300 transition-all"
-              title="Isometric View"
+              className={`px-3 py-1.5 rounded-xl text-xs font-medium transition-all ${
+                activePreset === 'iso' ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 font-bold' : 'bg-slate-800 text-slate-400 hover:text-white'
+              }`}
             >
               Isometric
             </button>
             <button
               onClick={() => setCameraPreset('front')}
-              className="px-2.5 py-1.5 rounded-lg text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-300 transition-all"
-              title="Front View"
+              className={`px-3 py-1.5 rounded-xl text-xs font-medium transition-all ${
+                activePreset === 'front' ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 font-bold' : 'bg-slate-800 text-slate-400 hover:text-white'
+              }`}
             >
               Front
             </button>
             <button
               onClick={() => setCameraPreset('top')}
-              className="px-2.5 py-1.5 rounded-lg text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-300 transition-all"
-              title="Top View"
+              className={`px-3 py-1.5 rounded-xl text-xs font-medium transition-all ${
+                activePreset === 'top' ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 font-bold' : 'bg-slate-800 text-slate-400 hover:text-white'
+              }`}
             >
               Top-Down
             </button>
             <button
-              onClick={() => setCameraPreset('orbit')}
-              className="px-2.5 py-1.5 rounded-lg text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-300 transition-all"
-              title="Floating Orbit Cloud"
+              onClick={() => setCameraPreset('cloud')}
+              className={`px-3 py-1.5 rounded-xl text-xs font-medium transition-all ${
+                activePreset === 'cloud' ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 font-bold' : 'bg-slate-800 text-slate-400 hover:text-white'
+              }`}
             >
-              Orbit Cloud
+              Orbit Fan
             </button>
           </div>
         </div>
       </div>
 
       {/* Floating Tools Density Slider */}
-      <div className="absolute bottom-4 left-4 flex items-center gap-3 bg-slate-900/85 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-700/60 shadow-lg pointer-events-auto">
-        <span className="text-xs font-medium text-slate-400">Floating Explosion:</span>
+      <div className="absolute bottom-4 left-4 flex items-center gap-3 bg-slate-900/90 backdrop-blur-xl px-4 py-2.5 rounded-2xl border border-slate-700/80 shadow-2xl pointer-events-auto">
+        <span className="text-xs font-bold text-slate-300">Explosion Fan Radius:</span>
         <input
           type="range"
           min="0.5"
           max="2.0"
           step="0.1"
-          value={explosionDistance}
-          onChange={(e) => setExplosionDistance(parseFloat(e.target.value))}
-          className="w-24 h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-cyan-400"
+          value={explosionHeight}
+          onChange={(e) => setExplosionHeight(parseFloat(e.target.value))}
+          className="w-28 h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-cyan-400"
         />
-        <span className="text-xs text-cyan-400 font-mono font-bold">{Math.round(explosionDistance * 100)}%</span>
+        <span className="text-xs text-cyan-400 font-mono font-bold">{Math.round(explosionHeight * 100)}%</span>
       </div>
 
-      {/* Hovered Tool Quick HUD Card */}
+      {/* Quick Hover Tool Card Overlay */}
       {hoveredTool && (
-        <div className="absolute bottom-4 right-4 max-w-sm bg-slate-900/95 backdrop-blur-xl p-4 rounded-xl border border-cyan-500/50 shadow-2xl shadow-cyan-500/20 animate-in fade-in slide-in-from-bottom-2 duration-150 pointer-events-auto">
+        <div className="absolute bottom-4 right-4 max-w-sm bg-slate-900/95 backdrop-blur-2xl p-4 rounded-2xl border border-cyan-500/60 shadow-2xl shadow-cyan-950/60 animate-in fade-in slide-in-from-bottom-2 duration-150 pointer-events-auto">
           <div className="flex items-start justify-between gap-3">
             <div>
               <div className="flex items-center gap-2 mb-1">
                 <span
                   className="w-2.5 h-2.5 rounded-full"
-                  style={{ backgroundColor: STATUS_COLORS[hoveredTool.status]?.css }}
+                  style={{ backgroundColor: STATUS_THEMES[hoveredTool.status]?.css }}
                 />
                 <span className="text-xs font-bold text-cyan-400 uppercase tracking-wider">
                   {hoveredTool.categoryEn || hoveredTool.categoryAr}
                 </span>
               </div>
-              <h4 className="text-white font-bold text-base leading-snug">{hoveredTool.name}</h4>
-              <p className="text-xs text-slate-300 mt-0.5">{hoveredTool.nameEn}</p>
+              <h4 className="text-white font-black text-base leading-tight">{hoveredTool.name}</h4>
+              <p className="text-xs text-slate-400 mt-0.5">{hoveredTool.nameEn}</p>
             </div>
-            <span className="px-2 py-1 rounded-md bg-slate-800 border border-slate-700 text-xs text-slate-200 font-mono">
-              Qty: {hoveredTool.quantity}
+            <span className="px-2.5 py-1 rounded-lg bg-slate-800 border border-slate-700 text-xs text-cyan-300 font-mono font-bold">
+              x{hoveredTool.quantity}
             </span>
           </div>
 
           <div className="mt-3 pt-2.5 border-t border-slate-800 flex items-center justify-between text-xs">
             <span className="text-slate-400">
-              Spec: <strong className="text-slate-200">{hoveredTool.specification ? `${hoveredTool.specification}mm` : 'Standard'}</strong>
+              Size: <strong className="text-slate-200">{hoveredTool.specification ? `${hoveredTool.specification}mm` : 'Standard'}</strong>
             </span>
             <button
               onClick={() => onSelectTool && onSelectTool(hoveredTool)}
               className="text-cyan-400 hover:text-cyan-300 font-bold flex items-center gap-1"
             >
-              Inspect Details →
+              Open Inspector →
             </button>
-          </div>
-        </div>
-      )}
-
-      {/* Error Fallback */}
-      {canvasError && (
-        <div className="absolute inset-0 flex items-center justify-center bg-slate-950/90 text-center p-6">
-          <div className="max-w-md bg-slate-900 p-6 rounded-2xl border border-red-500/30">
-            <div className="text-3xl mb-2">⚠️</div>
-            <h3 className="text-white font-bold text-lg mb-1">3D View Notice</h3>
-            <p className="text-slate-400 text-sm mb-4">{canvasError}</p>
-            <p className="text-xs text-slate-500">You can still use the 2.5D Tray Organizer and Inventory views.</p>
           </div>
         </div>
       )}

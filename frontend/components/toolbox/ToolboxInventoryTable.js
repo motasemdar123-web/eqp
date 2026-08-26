@@ -39,9 +39,9 @@ export default function ToolboxInventoryTable({
   const [selectedCat, setSelectedCat] = useState('ALL');
   const [selectedStatus, setSelectedStatus] = useState('ALL');
   const [page, setPage] = useState(1);
-  const pageSize = 20;
+  const pageSize = 25;
 
-  // Categories list for filter
+  // Categories list
   const categories = useMemo(() => {
     const map = new Map();
     tools.forEach((t) => {
@@ -100,14 +100,17 @@ export default function ToolboxInventoryTable({
 
   return (
     <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl space-y-6">
-      {/* Table Header & Controls Bar */}
+      {/* Top Header & Search Controls */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h3 className="text-white font-bold text-lg flex items-center gap-2">
-            <span>📋</span> Complete Toolbox Inventory & Audit
-          </h3>
-          <p className="text-xs text-slate-400 mt-0.5">
-            Detailed list of all {tools.length} tools registered for {technician?.name} ({technician?.nameEn})
+          <div className="flex items-center gap-2 mb-1">
+            <span className="w-8 h-8 rounded-xl bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 flex items-center justify-center text-sm font-bold">
+              📋
+            </span>
+            <h3 className="text-white font-black text-lg">Toolbox Inventory Audit Matrix</h3>
+          </div>
+          <p className="text-xs text-slate-400">
+            Complete registry of all {tools.length} certified tools assigned to {technician?.name} ({technician?.nameEn})
           </p>
         </div>
 
@@ -122,13 +125,13 @@ export default function ToolboxInventoryTable({
                 setPage(1);
               }}
               placeholder="Search tool name, size, spec..."
-              className="w-64 px-3.5 py-2 pl-9 bg-slate-800 border border-slate-700 rounded-xl text-xs text-white placeholder-slate-400 focus:outline-none focus:border-cyan-500"
+              className="w-72 px-4 py-2.5 pl-10 bg-slate-950 border border-slate-700/80 rounded-2xl text-xs text-white placeholder-slate-400 focus:outline-none focus:border-cyan-500 shadow-inner"
             />
-            <span className="absolute left-3 top-2.5 text-slate-400 text-xs">🔍</span>
+            <span className="absolute left-3.5 top-3 text-slate-400 text-xs">🔍</span>
             {searchTerm && (
               <button
                 onClick={() => setSearchTerm('')}
-                className="absolute right-2.5 top-2.5 text-slate-400 hover:text-white text-xs"
+                className="absolute right-3 top-3 text-slate-400 hover:text-white text-xs"
               >
                 ✕
               </button>
@@ -138,29 +141,30 @@ export default function ToolboxInventoryTable({
           {/* Export CSV */}
           <button
             onClick={handleExportCsv}
-            className="px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-750 text-slate-200 border border-slate-700 hover:border-slate-600 transition-colors flex items-center gap-1.5"
+            className="px-4 py-2.5 rounded-2xl text-xs font-bold bg-gradient-to-r from-slate-800 to-slate-750 hover:from-slate-750 hover:to-slate-700 text-white border border-slate-700 shadow-lg transition-all flex items-center gap-2"
           >
-            📥 Export CSV
+            <span>📥</span>
+            <span>Export CSV Audit</span>
           </button>
         </div>
       </div>
 
-      {/* Filter Chips Bar */}
-      <div className="flex flex-wrap items-center justify-between gap-3 bg-slate-950/60 p-3 rounded-2xl border border-slate-800/80">
-        {/* Status Filter Tabs */}
+      {/* Filter Tabs Bar */}
+      <div className="flex flex-wrap items-center justify-between gap-3 bg-slate-950/80 p-3 rounded-2xl border border-slate-800">
+        {/* Status Pills */}
         <div className="flex flex-wrap items-center gap-1.5">
           <button
             onClick={() => {
               setSelectedStatus('ALL');
               setPage(1);
             }}
-            className={`px-3 py-1 rounded-xl text-xs font-medium transition-all ${
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
               selectedStatus === 'ALL'
-                ? 'bg-slate-700 text-white font-bold'
-                : 'bg-slate-800/60 text-slate-400 hover:text-slate-200'
+                ? 'bg-slate-700 text-white shadow-md'
+                : 'bg-slate-900 text-slate-400 hover:text-white'
             }`}
           >
-            All Statuses ({tools.length})
+            All Items ({tools.length})
           </button>
 
           <button
@@ -168,10 +172,10 @@ export default function ToolboxInventoryTable({
               setSelectedStatus('good');
               setPage(1);
             }}
-            className={`px-3 py-1 rounded-xl text-xs font-medium transition-all flex items-center gap-1.5 ${
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
               selectedStatus === 'good'
-                ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-bold'
-                : 'bg-slate-800/60 text-slate-400 hover:text-emerald-300'
+                ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-md'
+                : 'bg-slate-900 text-slate-400 hover:text-emerald-300'
             }`}
           >
             <span className="w-2 h-2 rounded-full bg-emerald-400" />
@@ -183,10 +187,10 @@ export default function ToolboxInventoryTable({
               setSelectedStatus('damaged');
               setPage(1);
             }}
-            className={`px-3 py-1 rounded-xl text-xs font-medium transition-all flex items-center gap-1.5 ${
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
               selectedStatus === 'damaged'
-                ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold'
-                : 'bg-slate-800/60 text-slate-400 hover:text-amber-300'
+                ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 shadow-md'
+                : 'bg-slate-900 text-slate-400 hover:text-amber-300'
             }`}
           >
             <span className="w-2 h-2 rounded-full bg-amber-400" />
@@ -198,10 +202,10 @@ export default function ToolboxInventoryTable({
               setSelectedStatus('missing');
               setPage(1);
             }}
-            className={`px-3 py-1 rounded-xl text-xs font-medium transition-all flex items-center gap-1.5 ${
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
               selectedStatus === 'missing'
-                ? 'bg-red-500/20 text-red-300 border border-red-500/40 font-bold'
-                : 'bg-slate-800/60 text-slate-400 hover:text-red-300'
+                ? 'bg-red-500/20 text-red-300 border border-red-500/40 shadow-md'
+                : 'bg-slate-900 text-slate-400 hover:text-red-300'
             }`}
           >
             <span className="w-2 h-2 rounded-full bg-red-400" />
@@ -213,10 +217,10 @@ export default function ToolboxInventoryTable({
               setSelectedStatus('not_delivered');
               setPage(1);
             }}
-            className={`px-3 py-1 rounded-xl text-xs font-medium transition-all flex items-center gap-1.5 ${
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
               selectedStatus === 'not_delivered'
-                ? 'bg-purple-500/20 text-purple-300 border border-purple-500/40 font-bold'
-                : 'bg-slate-800/60 text-slate-400 hover:text-purple-300'
+                ? 'bg-purple-500/20 text-purple-300 border border-purple-500/40 shadow-md'
+                : 'bg-slate-900 text-slate-400 hover:text-purple-300'
             }`}
           >
             <span className="w-2 h-2 rounded-full bg-purple-400" />
@@ -226,14 +230,14 @@ export default function ToolboxInventoryTable({
 
         {/* Category Dropdown */}
         <div className="flex items-center gap-2">
-          <span className="text-xs text-slate-400">Category:</span>
+          <span className="text-xs text-slate-400 font-medium">Category:</span>
           <select
             value={selectedCat}
             onChange={(e) => {
               setSelectedCat(e.target.value);
               setPage(1);
             }}
-            className="px-3 py-1 bg-slate-800 border border-slate-700 rounded-xl text-xs text-white focus:outline-none focus:border-cyan-500"
+            className="px-3.5 py-1.5 bg-slate-900 border border-slate-700 rounded-xl text-xs text-white focus:outline-none focus:border-cyan-500 shadow-inner"
           >
             <option value="ALL">All Categories ({categories.length})</option>
             {categories.map((c) => (
@@ -245,65 +249,65 @@ export default function ToolboxInventoryTable({
         </div>
       </div>
 
-      {/* Inventory Data Table */}
-      <div className="overflow-x-auto rounded-2xl border border-slate-800">
+      {/* Inventory Table */}
+      <div className="overflow-x-auto rounded-2xl border border-slate-800 shadow-inner">
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="bg-slate-950 text-slate-400 text-[11px] font-bold uppercase tracking-wider border-b border-slate-800">
-              <th className="py-3 px-4 w-14 text-center">#</th>
-              <th className="py-3 px-4">Tool Name (Arabic & English)</th>
-              <th className="py-3 px-4">Category</th>
-              <th className="py-3 px-4">Specification / Size</th>
-              <th className="py-3 px-4 text-center">Quantity</th>
-              <th className="py-3 px-4">Condition Status</th>
-              <th className="py-3 px-4 text-right">Actions</th>
+              <th className="py-3.5 px-4 w-14 text-center">#</th>
+              <th className="py-3.5 px-4">Tool Specification & Name</th>
+              <th className="py-3.5 px-4">Category</th>
+              <th className="py-3.5 px-4">Size / Spec</th>
+              <th className="py-3.5 px-4 text-center">Quantity</th>
+              <th className="py-3.5 px-4">Condition State</th>
+              <th className="py-3.5 px-4 text-right">Action</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-800/60 text-xs">
+          <tbody className="divide-y divide-slate-850 text-xs">
             {paginated.length > 0 ? (
               paginated.map((t, idx) => {
                 const st = STATUS_CONFIG[t.status] || STATUS_CONFIG.good;
                 return (
                   <tr
                     key={t.id}
-                    className="hover:bg-slate-850/60 transition-colors group cursor-pointer"
+                    className="hover:bg-slate-850/70 transition-colors group cursor-pointer"
                     onClick={() => onSelectTool && onSelectTool(t)}
                   >
-                    <td className="py-3 px-4 text-center text-slate-500 font-mono text-[11px]">
+                    <td className="py-3.5 px-4 text-center text-slate-500 font-mono text-[11px]">
                       {(page - 1) * pageSize + idx + 1}
                     </td>
-                    <td className="py-3 px-4">
-                      <div className="font-bold text-white group-hover:text-cyan-300 transition-colors">
+                    <td className="py-3.5 px-4">
+                      <div className="font-black text-white group-hover:text-cyan-300 transition-colors text-sm">
                         {t.name}
                       </div>
                       <div className="text-[11px] text-slate-400">{t.nameEn}</div>
                     </td>
-                    <td className="py-3 px-4">
-                      <span className="px-2.5 py-0.5 rounded-full bg-slate-800 text-slate-300 text-[11px] border border-slate-700/60">
+                    <td className="py-3.5 px-4">
+                      <span className="px-2.5 py-1 rounded-lg bg-slate-950 text-slate-300 text-[11px] border border-slate-800 font-medium">
                         {t.categoryEn || t.categoryAr}
                       </span>
                     </td>
-                    <td className="py-3 px-4 font-mono font-medium text-slate-200">
-                      {t.specification ? `${t.specification} mm` : '—'}
+                    <td className="py-3.5 px-4 font-mono font-bold text-cyan-400 text-xs">
+                      {t.specification ? `${t.specification} mm` : 'Standard'}
                     </td>
-                    <td className="py-3 px-4 text-center">
-                      <span className="px-2 py-0.5 rounded-md bg-slate-800 text-cyan-400 font-bold font-mono text-xs">
-                        {t.quantity}
+                    <td className="py-3.5 px-4 text-center">
+                      <span className="px-2.5 py-1 rounded-md bg-slate-950 text-white font-bold font-mono text-xs border border-slate-800">
+                        x{t.quantity}
                       </span>
                     </td>
-                    <td className="py-3 px-4">
+                    <td className="py-3.5 px-4">
                       <span className={`px-2.5 py-1 rounded-full text-[11px] font-bold border inline-flex items-center gap-1.5 ${st.badge}`}>
                         <span className={`w-1.5 h-1.5 rounded-full ${st.dot}`} />
                         {st.labelEn}
                       </span>
                     </td>
-                    <td className="py-3 px-4 text-right">
+                    <td className="py-3.5 px-4 text-right">
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
                           if (onSelectTool) onSelectTool(t);
                         }}
-                        className="px-3 py-1 rounded-lg bg-slate-800 hover:bg-cyan-500 hover:text-slate-950 text-slate-300 font-bold text-[11px] transition-all"
+                        className="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-cyan-500 hover:text-slate-950 text-slate-200 font-bold text-[11px] transition-all shadow-sm"
                       >
                         Inspect
                       </button>
@@ -313,16 +317,16 @@ export default function ToolboxInventoryTable({
               })
             ) : (
               <tr>
-                <td colSpan={7} className="py-12 text-center text-slate-500">
+                <td colSpan={7} className="py-14 text-center text-slate-500">
                   <div className="text-3xl mb-2">🔍</div>
-                  <p className="text-sm font-medium">No tools match your filter criteria.</p>
+                  <p className="text-sm font-medium">No tools found matching your filters.</p>
                   <button
                     onClick={() => {
                       setSearchTerm('');
                       setSelectedCat('ALL');
                       setSelectedStatus('ALL');
                     }}
-                    className="mt-2 text-xs text-cyan-400 hover:underline"
+                    className="mt-2 text-xs text-cyan-400 hover:underline font-bold"
                   >
                     Reset all filters
                   </button>
@@ -333,28 +337,28 @@ export default function ToolboxInventoryTable({
         </table>
       </div>
 
-      {/* Pagination Controls */}
+      {/* Pagination */}
       {totalPages > 1 && (
         <div className="flex items-center justify-between pt-2">
           <span className="text-xs text-slate-400">
-            Showing {(page - 1) * pageSize + 1} to {Math.min(page * pageSize, filtered.length)} of {filtered.length} tools
+            Showing {(page - 1) * pageSize + 1} to {Math.min(page * pageSize, filtered.length)} of {filtered.length} items
           </span>
 
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-2">
             <button
               onClick={() => setPage((p) => Math.max(1, p - 1))}
               disabled={page === 1}
-              className="px-3 py-1.5 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed text-xs"
+              className="px-3.5 py-2 rounded-xl bg-slate-800 text-slate-300 hover:bg-slate-750 disabled:opacity-30 disabled:cursor-not-allowed text-xs font-bold"
             >
               Previous
             </button>
-            <span className="px-3 py-1.5 text-xs text-slate-400 font-mono">
+            <span className="px-3.5 py-2 text-xs text-cyan-400 font-mono font-bold bg-slate-950 rounded-xl border border-slate-800">
               Page {page} / {totalPages}
             </span>
             <button
               onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
               disabled={page === totalPages}
-              className="px-3 py-1.5 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed text-xs"
+              className="px-3.5 py-2 rounded-xl bg-slate-800 text-slate-300 hover:bg-slate-750 disabled:opacity-30 disabled:cursor-not-allowed text-xs font-bold"
             >
               Next
             </button>
