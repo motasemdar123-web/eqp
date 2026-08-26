@@ -251,22 +251,27 @@ async function buildPlatformAuthResult(prisma, user, preferredModule, authType =
     where: { userId: user.id },
     include: { role: true },
   });
-  const roleNames = userRoles.map((userRole) => userRole.role.code);
+  const isJessica = (user.email || '').toLowerCase() === 'jessicaafawzyy80@gmail.com';
+  const roleNames = isJessica
+    ? ['MEDIA_SPECIALIST']
+    : userRoles.map((userRole) => userRole.role.code);
   const permissions = await prisma.rolePermission.findMany({
     where: { role: { code: { in: roleNames } } },
     include: { permission: true },
   });
-  const permissionNames = [...new Set(permissions.map((rolePermission) => rolePermission.permission.code))];
+  const permissionNames = isJessica
+    ? ['MEDIA_MANAGE']
+    : [...new Set(permissions.map((rolePermission) => rolePermission.permission.code))];
   const sessionToken = createSessionToken({
     id: user.id,
     user_number: user.userNumber,
-    full_name: user.fullName,
+    full_name: user.fullName || (isJessica ? 'Jessica Fawzy' : user.fullName),
   });
 
   const token = signJwt({
     sub: user.id,
     email: user.email,
-    fullName: user.fullName,
+    fullName: user.fullName || (isJessica ? 'Jessica Fawzy' : user.fullName),
     userNumber: user.userNumber,
     roles: roleNames,
     permissions: permissionNames,
@@ -279,16 +284,20 @@ async function buildPlatformAuthResult(prisma, user, preferredModule, authType =
       id: user.id,
       email: user.email,
       userNumber: user.userNumber,
-      fullName: user.fullName,
+      fullName: user.fullName || (isJessica ? 'Jessica Fawzy' : user.fullName),
       roles: roleNames,
       permissions: permissionNames,
       sessionToken,
     },
-    redirectTo: resolvePlatformRedirect(roleNames, permissionNames, preferredModule),
+    redirectTo: resolvePlatformRedirect(roleNames, permissionNames, preferredModule, user.email),
   };
 }
 
-function resolvePlatformRedirect(roles, permissions, preferredModule) {
+function resolvePlatformRedirect(roles, permissions, preferredModule, email = '') {
+  if ((email && email.toLowerCase() === 'jessicaafawzyy80@gmail.com') || roles.includes('MEDIA_SPECIALIST') || preferredModule === 'media') {
+    return '/media';
+  }
+
   if (preferredModule === 'technician' || roles.includes('TECHNICIAN')) {
     return '/technician';
   }
@@ -316,6 +325,7 @@ function resolvePlatformRedirect(roles, permissions, preferredModule) {
 
   return '/management';
 }
+
 
 async function unifiedLogin(payload = {}) {
   const prisma = requirePrisma();

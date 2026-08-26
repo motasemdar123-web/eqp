@@ -205,6 +205,15 @@ async function main() {
     await removeTechnicianProfileForUser(engineer.id);
   }
 
+  const jessicaPasswordHash = await bcrypt.hash('Jessica@8080', 12);
+  const jessica = await upsertSeedUser({
+    email: 'jessicaafawzyy80@gmail.com',
+    fullName: 'Jessica Fawzy',
+    passwordHash: jessicaPasswordHash,
+    locale: 'en',
+  });
+  await ensureUserRole(jessica.id, roles.CLIENT.id);
+
   const technicianSeeds = [
     { userNumber: 1001, email: 'alikomatsu223@gmail.com', fullName: 'Ali Sabri', employeeCode: 'TECH-1001', region: null, skills: [] },
     { userNumber: 1002, email: 'mhmaad600042@gmail.com', fullName: 'Mohammad Alharsa', employeeCode: 'TECH-1002', region: null, skills: [] },

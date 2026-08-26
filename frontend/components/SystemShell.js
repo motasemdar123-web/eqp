@@ -203,6 +203,20 @@ function isActivePath(pathname, href, activePath) {
   return target === href || target.startsWith(`${href}/`);
 }
 
+export function isMediaOnlyUser(user) {
+  if (!user) return false;
+  const email = String(user.email || '').trim().toLowerCase();
+  if (email === 'jessicaafawzyy80@gmail.com') return true;
+  const roles = Array.isArray(user.roles) ? user.roles : [];
+  if (roles.includes('MEDIA_SPECIALIST') || roles.includes('MEDIA')) {
+    const hasAdminOrOps = roles.some((r) =>
+      ['SUPER_ADMIN', 'SYSTEM_ADMIN', 'GENERAL_MANAGER', 'OPERATIONS_MANAGER', 'SERVICE_ENGINEER', 'MAINTENANCE_SUPERVISOR', 'WAREHOUSE_OFFICER', 'FIELD_TECHNICIAN', 'TECHNICIAN'].includes(r)
+    );
+    return !hasAdminOrOps;
+  }
+  return false;
+}
+
 function formatRoleLabel(role) {
   const labels = {
     SERVICE_ENGINEER: 'Service Engineer',
@@ -210,10 +224,12 @@ function formatRoleLabel(role) {
     FIELD_TECHNICIAN: 'Technician',
     MAINTENANCE_SUPERVISOR: 'Maintenance Supervisor',
     WAREHOUSE_OFFICER: 'Spare Parts Officer',
+    MEDIA_SPECIALIST: 'Media Specialist',
   };
 
   return labels[role] || String(role || '').replace(/_/g, ' ').toLowerCase().replace(/\b\w/g, (letter) => letter.toUpperCase());
 }
+
 
 const COMMAND_ITEMS = [
   { id: 'nav-dashboard', title: 'Command Center', subtitle: 'Operations overview, attention queue & dispatch roster', href: '/management', category: 'Navigation', badge: 'Operations' },
@@ -357,18 +373,47 @@ export default function SystemShell({
     localStorage.setItem('darAlHaiLabsOpen', String(nextState));
   };
 
+  const isMediaOnly = useMemo(() => isMediaOnlyUser(user), [user]);
+
+  // Route Guard: Protect other modules from media-only users
+  useEffect(() => {
+    if (!hasHydrated || !user) return;
+    if (isMediaOnly && pathname && !pathname.startsWith('/media')) {
+      router.replace('/media');
+    }
+  }, [hasHydrated, isMediaOnly, pathname, router, user]);
+
+  // Restrict navigation sections for Media-Only users
+  const visibleNavSections = useMemo(() => {
+    if (isMediaOnly) {
+      return [
+        {
+          title: 'Media & Creative',
+          items: [
+            { href: '/media', label: 'Media Corner', icon: 'media' },
+          ],
+        },
+      ];
+    }
+    return navigationSections;
+  }, [isMediaOnly]);
+
   // Filtered Command Items
   const filteredCmdItems = useMemo(() => {
+    const baseItems = isMediaOnly
+      ? COMMAND_ITEMS.filter((item) => item.href === '/media')
+      : COMMAND_ITEMS;
     const q = cmdQuery.trim().toLowerCase();
-    if (!q) return COMMAND_ITEMS;
-    return COMMAND_ITEMS.filter(
+    if (!q) return baseItems;
+    return baseItems.filter(
       (item) =>
         item.title.toLowerCase().includes(q) ||
         item.subtitle.toLowerCase().includes(q) ||
         item.category.toLowerCase().includes(q) ||
         item.badge.toLowerCase().includes(q)
     );
-  }, [cmdQuery]);
+  }, [cmdQuery, isMediaOnly]);
+
 
   function handleCmdKeyDown(e) {
     if (e.key === 'ArrowDown') {
@@ -439,7 +484,7 @@ export default function SystemShell({
 
   // Breadcrumbs computation
   const pathSegments = (pathname || '').split('/').filter(Boolean);
-  const breadcrumbSection = pathSegments[0] === 'management' ? 'Operations' : pathSegments[0] === 'eqp' ? 'Reporting' : 'Platform';
+  const breadcrumbSection = isMediaOnly ? 'Media & Creative' : pathSegments[0] === 'management' ? 'Operations' : pathSegments[0] === 'eqp' ? 'Reporting' : 'Platform';
 
   return (
     <div className={`ds-shell ds-reference-shell ${sidebarCollapsed ? 'ds-sidebar-collapsed' : ''}`}>
@@ -456,7 +501,7 @@ export default function SystemShell({
         {/* Brand Header */}
         <div className="ds-sidebar-header">
           <Link
-            href="/management"
+            href={isMediaOnly ? '/media' : '/management'}
             className="ds-sidebar-brand"
             aria-label="Dar Al Hai Home"
             onClick={() => setMobileMenuOpen(false)}
@@ -466,7 +511,9 @@ export default function SystemShell({
             </span>
             <span className="ds-sidebar-brand-text">
               <span className="block text-sm font-semibold leading-none text-white tracking-tight">Dar Al Hai</span>
-              <span className="mt-1 block text-[10px] font-medium uppercase tracking-wider text-slate-400">Fleet Operations</span>
+              <span className="mt-1 block text-[10px] font-medium uppercase tracking-wider text-slate-400">
+                {isMediaOnly ? 'Media Studio' : 'Fleet Operations'}
+              </span>
             </span>
           </Link>
           {mobileMenuOpen && (
@@ -485,7 +532,7 @@ export default function SystemShell({
 
         {/* Categorized Navigation */}
         <nav className="ds-sidebar-nav" aria-label="Primary navigation">
-          {navigationSections.map((section) => {
+          {visibleNavSections.map((section) => {
             if (section.isLabs) {
               return (
                 <div key={section.title} className="mt-4 pt-3 border-t border-slate-800/80">
@@ -592,13 +639,14 @@ export default function SystemShell({
 
             {/* Breadcrumbs */}
             <nav aria-label="Breadcrumb navigation" className="hidden sm:flex items-center gap-1.5 text-xs text-slate-500 font-normal">
-              <Link href="/management" className="hover:text-slate-800 transition-colors">Dar Al Hai</Link>
+              <Link href={isMediaOnly ? '/media' : '/management'} className="hover:text-slate-800 transition-colors">Dar Al Hai</Link>
               <span className="text-slate-300 select-none">/</span>
               <span className="text-slate-500">{breadcrumbSection}</span>
               <span className="text-slate-300 select-none">/</span>
               <span className="text-slate-900 font-medium truncate max-w-[220px]">{title}</span>
             </nav>
           </div>
+
 
           <div className="flex items-center gap-2.5">
             {/* Quick Command Trigger */}
