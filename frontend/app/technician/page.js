@@ -3,6 +3,7 @@
 /* eslint-disable @next/next/no-img-element */
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import Link from 'next/link';
 import Badge from '../../components/ui/Badge';
 import Button from '../../components/ui/Button';
 import Card from '../../components/ui/Card';
@@ -673,6 +674,34 @@ export default function TechnicianAppPage() {
               overdue={overdueCount}
               pending={pendingCount}
             />
+
+            {/* 3D Toolbox Sub-Module Quick Access */}
+            <Link
+              href="/technician/toolbox"
+              className="block p-4 rounded-2xl bg-gradient-to-r from-slate-900 via-cyan-950/40 to-slate-900 border border-cyan-500/40 shadow-xl hover:border-cyan-400 transition-all group my-3"
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3.5">
+                  <div className="w-12 h-12 rounded-xl bg-cyan-500/20 border border-cyan-400/40 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+                    🧰
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <h3 className="text-white font-bold text-sm sm:text-base">حقيبة وعدة الفني التفاعلية (3D Toolbox)</h3>
+                      <span className="px-2 py-0.5 rounded-full bg-cyan-500 text-slate-950 font-bold text-[10px]">
+                        جديد 3D
+                      </span>
+                    </div>
+                    <p className="text-xs text-slate-300 mt-0.5">
+                      عرض مجسم صندوق العدة ثلاثي الأبعاد، تفقّد الأدوات العائمة، والإبلاغ الفوري عن النواقص والتوالف
+                    </p>
+                  </div>
+                </div>
+                <span className="text-cyan-400 font-bold text-sm group-hover:-translate-x-1 transition-transform">
+                  فتح الحقيبة ←
+                </span>
+              </div>
+            </Link>
 
             {pendingCount > 0 && <div className="tech-sync-banner">{pendingCount} مهمة محفوظة بانتظار الإرسال عند عودة الاتصال.</div>}
             {loading && <TechnicianLoading label="جاري تحميل المهام..." />}

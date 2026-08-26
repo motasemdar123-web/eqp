@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
+import Link from 'next/link';
 import SystemShell from '../../../components/SystemShell';
 import Card from '../../../components/ui/Card';
 import Badge from '../../../components/ui/Badge';
@@ -339,6 +340,15 @@ export default function TechniciansManagementPage() {
               <span className="text-base">⚠️</span>
               <span>Quality & Disciplinary Audit Log</span>
             </button>
+
+            <Link
+              href="/management/toolbox"
+              className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs font-bold transition-all text-cyan-700 hover:bg-cyan-50 bg-cyan-50/60 border border-cyan-200"
+            >
+              <span className="text-base">🧰</span>
+              <span>Technician 3D Toolboxes</span>
+              <span className="px-1.5 py-0.2 rounded bg-cyan-600 text-white text-[10px]">3D</span>
+            </Link>
           </div>
         </section>
 

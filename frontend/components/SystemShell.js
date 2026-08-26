@@ -37,6 +37,7 @@ const navigationSections = [
     title: 'Administration',
     items: [
       { href: '/management/technicians', label: 'Staff & Technicians', icon: 'users' },
+      { href: '/management/toolbox', label: 'Technician 3D Toolboxes', icon: 'toolbox', badge: '3D' },
     ],
   },
   {
@@ -44,6 +45,7 @@ const navigationSections = [
     isLabs: true,
     items: [
       { href: '/technician', label: 'Technician Mobile App', icon: 'mobile', badge: 'RTL' },
+      { href: '/technician/toolbox', label: 'Field 3D Toolbox (Mobile)', icon: 'toolbox', badge: '3D' },
       { href: '/management/daily-planner', label: 'Daily Planner', icon: 'planner' },
       { href: '/management/workshop', label: 'Workshop Operations', icon: 'workshop' },
       { href: '/management/sheets-hub', label: 'Master Sheets Database', icon: 'sheets' },
@@ -179,6 +181,14 @@ const iconPaths = {
   japanese: (
     <>
       <path d="M4 6h16M7 6v14M17 6v14M2 10h20M9 14h6" />
+    </>
+  ),
+  toolbox: (
+    <>
+      <path d="M4 8h16v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8z" />
+      <path d="M8 8V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v3" />
+      <line x1="2" y1="8" x2="22" y2="8" />
+      <line x1="10" y1="12" x2="14" y2="12" />
     </>
   ),
 };
