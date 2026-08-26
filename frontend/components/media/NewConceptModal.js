@@ -4,69 +4,99 @@ import React, { useState } from 'react';
 import Button from '../ui/Button';
 import { FORMAT_TYPES, GOAL_TYPES, PIPELINE_STAGES, MEDIA_PLATFORMS, CONTENT_PILLARS } from '../../lib/mediaMonthlyData';
 
+const DEFAULT_CONCEPT_DATA = {
+  title: '',
+  week: 'Week 1',
+  day: 'Sunday',
+  format: 'reel',
+  pillar: 'pillar_engineering',
+  platforms: ['instagram', 'linkedin', 'facebook'],
+  goal: 'product_education',
+  status: 'idea',
+  publishDate: new Date().toISOString().slice(0, 10),
+  targetAudience: 'Contractors, Fleet Owners, Maintenance Engineers in Kuwait',
+  tov: 'Authoritative, Precision Engineering, Industrial Strength',
+  summary: '',
+  hook: {
+    spokenEn: '',
+    spokenAr: '',
+    visualHook: '',
+  },
+  scenes: [
+    {
+      sceneNo: 1,
+      time: '0:00 - 0:04',
+      visual: '4K low-angle shot of machine in action against Kuwait golden hour...',
+      talentAction: 'Certified engineer walks up to machine pointing to key feature...',
+      audioVoiceoverEn: 'Opening hook statement in English...',
+      audioVoiceoverAr: 'العبارة الافتتاحية بالعربية...',
+      onScreenTextEn: 'KEY MACHINE SPECIFICATION',
+      onScreenTextAr: 'المواصفات الفنية الرئيسية',
+      sfxMusic: 'Cinematic sub drop + engine hum',
+    },
+  ],
+  slides: [
+    { slideNo: 1, title: 'Cover Slide Hook', body: 'Engaging value proposition...' },
+    { slideNo: 2, title: 'The Problem in Kuwait Worksite', body: 'Desert heat and abrasive sand...' },
+    { slideNo: 3, title: 'The Komatsu Engineering Solution', body: 'High-ambient cooling & filtration...' },
+    { slideNo: 4, title: 'Real-World Fleet Results', body: '98%+ uptime recorded...' },
+    { slideNo: 5, title: 'Partner With Dar Al Hay', body: 'Contact our team for fleet quotation...' },
+  ],
+  brollChecklist: [
+    '4K slow motion shot of hydraulic boom movement',
+    'Close-up of genuine Komatsu logo badge and clean filter housing',
+  ],
+  postProductionNotes: 'Grade with warm desert contrast while preserving true Komatsu yellow.',
+  captionEn: '',
+  captionAr: '',
+  hashtags: '#Komatsu #DarAlHay #KuwaitConstruction #HeavyMachinery #KuwaitContractors',
+  ctaText: 'Visit our Shuwaikh showroom or contact our heavy equipment specialists today.',
+};
+
+function getMergedFormData(initialData) {
+  if (!initialData) return { ...DEFAULT_CONCEPT_DATA };
+  return {
+    ...DEFAULT_CONCEPT_DATA,
+    ...initialData,
+    format: initialData.format || DEFAULT_CONCEPT_DATA.format,
+    pillar: initialData.pillar || DEFAULT_CONCEPT_DATA.pillar,
+    status: initialData.status || DEFAULT_CONCEPT_DATA.status,
+    week: initialData.week || DEFAULT_CONCEPT_DATA.week,
+    day: initialData.day || DEFAULT_CONCEPT_DATA.day,
+    platforms: Array.isArray(initialData.platforms) && initialData.platforms.length > 0
+      ? initialData.platforms
+      : ['instagram', 'linkedin', 'facebook'],
+    hook: typeof initialData.hook === 'object' && initialData.hook !== null
+      ? { ...DEFAULT_CONCEPT_DATA.hook, ...initialData.hook }
+      : { ...DEFAULT_CONCEPT_DATA.hook, spokenEn: typeof initialData.hook === 'string' ? initialData.hook : '' },
+    scenes: Array.isArray(initialData.scenes) && initialData.scenes.length > 0
+      ? initialData.scenes
+      : DEFAULT_CONCEPT_DATA.scenes,
+    slides: Array.isArray(initialData.slides) && initialData.slides.length > 0
+      ? initialData.slides
+      : DEFAULT_CONCEPT_DATA.slides,
+    brollChecklist: Array.isArray(initialData.brollChecklist)
+      ? initialData.brollChecklist
+      : DEFAULT_CONCEPT_DATA.brollChecklist,
+  };
+}
+
 export default function NewConceptModal({ initialData, onSave, onClose }) {
-  const [formData, setFormData] = useState(
-    initialData || {
-      title: '',
-      week: 'Week 1',
-      day: 'Sunday',
-      format: 'reel',
-      pillar: 'pillar_engineering',
-      platforms: ['instagram', 'linkedin', 'facebook'],
-      goal: 'product_education',
-      status: 'idea',
-      publishDate: new Date().toISOString().slice(0, 10),
-      targetAudience: 'Contractors, Fleet Owners, Maintenance Engineers in Kuwait',
-      tov: 'Authoritative, Precision Engineering, Industrial Strength',
-      summary: '',
-      hook: {
-        spokenEn: '',
-        spokenAr: '',
-        visualHook: '',
-      },
-      scenes: [
-        {
-          sceneNo: 1,
-          time: '0:00 - 0:04',
-          visual: '4K low-angle shot of machine in action against Kuwait golden hour...',
-          talentAction: 'Certified engineer walks up to machine pointing to key feature...',
-          audioVoiceoverEn: 'Opening hook statement in English...',
-          audioVoiceoverAr: 'العبارة الافتتاحية بالعربية...',
-          onScreenTextEn: 'KEY MACHINE SPECIFICATION',
-          onScreenTextAr: 'المواصفات الفنية الرئيسية',
-          sfxMusic: 'Cinematic sub drop + engine hum',
-        },
-      ],
-      slides: [
-        { slideNo: 1, title: 'Cover Slide Hook', body: 'Engaging value proposition...' },
-        { slideNo: 2, title: 'The Problem in Kuwait Worksite', body: 'Desert heat and abrasive sand...' },
-        { slideNo: 3, title: 'The Komatsu Engineering Solution', body: 'High-ambient cooling & filtration...' },
-        { slideNo: 4, title: 'Real-World Fleet Results', body: '98%+ uptime recorded...' },
-        { slideNo: 5, title: 'Partner With Dar Al Hay', body: 'Contact our team for fleet quotation...' },
-      ],
-      brollChecklist: [
-        '4K slow motion shot of hydraulic boom movement',
-        'Close-up of genuine Komatsu logo badge and clean filter housing',
-      ],
-      postProductionNotes: 'Grade with warm desert contrast while preserving true Komatsu yellow.',
-      captionEn: '',
-      captionAr: '',
-      hashtags: '#Komatsu #DarAlHay #KuwaitConstruction #HeavyMachinery #KuwaitContractors',
-      ctaText: 'Visit our Shuwaikh showroom or contact our heavy equipment specialists today.',
-    }
-  );
+  const [formData, setFormData] = useState(() => getMergedFormData(initialData));
 
   const [activeSubTab, setActiveSubTab] = useState('general'); // 'general' | 'hook' | 'scenes' | 'slides' | 'copy'
 
   const togglePlatform = (pid) => {
     setFormData((prev) => {
-      const exists = prev.platforms.includes(pid);
+      const currentPlatforms = Array.isArray(prev?.platforms) ? prev.platforms : [];
+      const exists = currentPlatforms.includes(pid);
       if (exists) {
-        return { ...prev, platforms: prev.platforms.filter((p) => p !== pid) };
+        return { ...prev, platforms: currentPlatforms.filter((p) => p !== pid) };
       }
-      return { ...prev, platforms: [...prev.platforms, pid] };
+      return { ...prev, platforms: [...currentPlatforms, pid] };
     });
   };
+
 
   const handleAddScene = () => {
     setFormData((prev) => ({
@@ -300,27 +330,28 @@ export default function NewConceptModal({ initialData, onSave, onClose }) {
 
               {/* Target Platforms */}
               <div>
-                <label className="text-xs font-bold text-slate-700 mb-1 block">Target Social Channels</label>
+                <label className="text-xs font-semibold text-slate-700 mb-1 block">Target Social Channels</label>
                 <div className="flex gap-2">
                   {MEDIA_PLATFORMS.map((p) => {
-                    const isSelected = formData.platforms?.includes(p.id);
+                    const isSelected = Array.isArray(formData.platforms) && formData.platforms.includes(p.id);
                     return (
                       <button
                         key={p.id}
                         type="button"
                         onClick={() => togglePlatform(p.id)}
-                        className={`px-3 py-1.5 rounded-xl text-xs font-bold border transition-all ${
+                        className={`px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all cursor-pointer ${
                           isSelected
-                            ? 'bg-slate-900 text-white border-slate-900 shadow-xs'
-                            : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'
+                            ? 'bg-slate-900 text-white border-slate-900 shadow-2xs'
+                            : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50 hover:text-slate-900'
                         }`}
                       >
-                        {p.icon} {p.label}
+                        {p.label}
                       </button>
                     );
                   })}
                 </div>
               </div>
+
 
               <div>
                 <label className="text-xs font-bold text-slate-700 mb-1 block">Concept Narrative Summary</label>

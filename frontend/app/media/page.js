@@ -93,19 +93,25 @@ export default function MediaCornerPage() {
 
   // Update or Save a Concept Script / Copy
   const handleSaveConcept = (conceptData) => {
-    const exists = currentConcepts.some((c) => c.id === conceptData.id);
+    const finalConcept = {
+      ...conceptData,
+      id: conceptData.id || Date.now(),
+      conceptNumber: conceptData.conceptNumber || (currentConcepts.length + 1),
+    };
+    const exists = currentConcepts.some((c) => c.id === finalConcept.id);
     let updatedConcepts = [];
     if (exists) {
-      updatedConcepts = currentConcepts.map((c) => (c.id === conceptData.id ? conceptData : c));
+      updatedConcepts = currentConcepts.map((c) => (c.id === finalConcept.id ? finalConcept : c));
     } else {
-      updatedConcepts = [...currentConcepts, conceptData];
+      updatedConcepts = [...currentConcepts, finalConcept];
     }
     const updatedCampaign = { ...activeCampaign, concepts: updatedConcepts };
     const updatedCampaigns = { ...campaigns, [selectedMonthId]: updatedCampaign };
     saveCampaigns(updatedCampaigns);
-    setSelectedConceptId(conceptData.id);
+    setSelectedConceptId(finalConcept.id);
     setIsNewConceptModalOpen(false);
   };
+
 
   // Create Brand New Month
   const handleCreateNewMonth = (newMonthData) => {
