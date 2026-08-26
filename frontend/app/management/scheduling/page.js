@@ -21,6 +21,7 @@ import OverflowMenu from '../../../components/ui/OverflowMenu';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '../../../components/ui/Table';
 import { getMicrosoftLoginUrl } from '../../../lib/api';
 import { getTaskDisplayStatus } from '../../../lib/taskDisplay';
+import { MACHINE_CATEGORIES, ALL_MACHINE_MODELS, getMachineModelLabel } from '../../../lib/machineModels';
 
 
 const API_BASE = process.env.NEXT_PUBLIC_BACKEND_URL || process.env.NEXT_PUBLIC_API_BASE_URL || 'https://eqp-1.onrender.com';
@@ -287,13 +288,15 @@ export default function DispatchAndSchedulingPage() {
 
   function openEditDrawer(task) {
     setEditingTaskId(task.id);
+    const isKnownModel = ALL_MACHINE_MODELS.some((m) => m.id === task.machineModel);
     setTaskForm({
       technicianIds: (task.technicians || []).map((t) => t.id),
       workDate: formatDate(task.workDate),
       task: task.task || '',
       description: task.description || '',
       checklist: normalizeChecklistForForm(task.checklist),
-      machineModel: task.machineModel || '',
+      machineModel: isKnownModel ? task.machineModel : (task.machineModel ? 'OTHER' : 'PC400-8R'),
+      customMachineModel: isKnownModel ? '' : (task.machineModel || ''),
       manualAdvice: task.manualAdvice || null,
       location: task.location || '',
       startsAt: task.startsAt || '08:00',
@@ -314,8 +317,13 @@ export default function DispatchAndSchedulingPage() {
 
     setLoading(true);
     try {
+      const finalMachineModel = (taskForm.machineModel === 'OTHER' && taskForm.customMachineModel?.trim())
+        ? taskForm.customMachineModel.trim()
+        : (taskForm.machineModel || 'PC400-8R');
+
       const payload = {
         ...taskForm,
+        machineModel: finalMachineModel,
         checklist: normalizeChecklistForSave(taskForm.checklist),
       };
       await request(editingTaskId ? `/api/scheduling/tasks/${editingTaskId}` : '/api/scheduling/tasks', {
@@ -842,7 +850,7 @@ export default function DispatchAndSchedulingPage() {
               <div className="grid grid-cols-2 gap-3 text-xs">
                 <div>
                   <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-500 block">Machine Model</span>
-                  <span className="font-semibold text-slate-900 text-sm mt-0.5 block">{viewingTask.machineModel || 'General Machinery'}</span>
+                  <span className="font-semibold text-slate-900 text-sm mt-0.5 block">{getMachineModelLabel(viewingTask.machineModel)}</span>
                   <span className="text-[11px] text-slate-500">Site: {viewingTask.location || 'Central Site'}</span>
                 </div>
                 <div>
@@ -970,12 +978,15 @@ export default function DispatchAndSchedulingPage() {
                       value={taskForm.machineModel}
                       onChange={(e) => setTaskForm({ ...taskForm, machineModel: e.target.value })}
                     >
-                      <option value="PC400-8R">Komatsu PC400-8R Excavator</option>
-                      <option value="PC400LC-8R">Komatsu PC400LC-8R</option>
-                      <option value="HM400-3R">Komatsu HM400-3R Articulated Truck</option>
-                      <option value="D155A-6R">Komatsu D155A-6R Bulldozer</option>
-                      <option value="WA470-6R">Komatsu WA470-6R Wheel Loader</option>
-                      <option value="GD655-5">Komatsu GD655-5 Motor Grader</option>
+                      {MACHINE_CATEGORIES.map((cat) => (
+                        <optgroup key={cat.category} label={cat.category}>
+                          {cat.models.map((m) => (
+                            <option key={m.id} value={m.id}>
+                              {m.label}
+                            </option>
+                          ))}
+                        </optgroup>
+                      ))}
                     </Select>
                   </Field>
 
@@ -987,6 +998,17 @@ export default function DispatchAndSchedulingPage() {
                     />
                   </Field>
                 </div>
+
+                {taskForm.machineModel === 'OTHER' && (
+                  <Field label="Custom Machine Model / Equipment Specification">
+                    <Input
+                      value={taskForm.customMachineModel || ''}
+                      onChange={(e) => setTaskForm({ ...taskForm, customMachineModel: e.target.value })}
+                      placeholder="e.g. Komatsu FD30 Forklift, DCA-125 Generator, or custom asset code"
+                    />
+                  </Field>
+                )}
+
 
                 <Field label="Task Name / Operation" required>
                   <div className="flex gap-2">
