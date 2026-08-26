@@ -92,6 +92,27 @@ export default function Toolbox3DCanvas({
   const [explodeValue, setExplodeValue] = useState(0.5); // 0.0 -> 1.0
   const [activeCameraPreset, setActiveCameraPreset] = useState('iso');
 
+  // Stable Refs to avoid breaking WebGL Lifecycle
+  const selectedToolRef = useRef(selectedTool);
+  const onSelectToolRef = useRef(onSelectTool);
+  const explodeValueRef = useRef(explodeValue);
+  const lastHoveredIdRef = useRef(null);
+
+  useEffect(() => {
+    selectedToolRef.current = selectedTool;
+  }, [selectedTool]);
+
+  useEffect(() => {
+    onSelectToolRef.current = onSelectTool;
+  }, [onSelectTool]);
+
+  useEffect(() => {
+    explodeValueRef.current = explodeValue;
+    if (partsRef.current) {
+      partsRef.current.targetOpenProgress = explodeValue;
+    }
+  }, [explodeValue]);
+
   // Three.js References
   const sceneRef = useRef(null);
   const cameraRef = useRef(null);
@@ -107,10 +128,10 @@ export default function Toolbox3DCanvas({
     prevMousePos: { x: 0, y: 0 },
     rotation: { x: 0.42, y: -0.6 },
     targetRotation: { x: 0.42, y: -0.6 },
-    distance: 14.0,
-    targetDistance: 14.0,
-    pan: { x: 0, y: 0.5 },
-    targetPan: { x: 0, y: 0.5 },
+    distance: 13.5,
+    targetDistance: 13.5,
+    pan: { x: 0, y: 0.4 },
+    targetPan: { x: 0, y: 0.4 },
   });
 
   // Toolbox Mechanism Parts
@@ -142,11 +163,6 @@ export default function Toolbox3DCanvas({
     });
   }, [tools, activeCategory, statusFilter, searchQuery]);
 
-  // Sync explode value with parts
-  useEffect(() => {
-    partsRef.current.targetOpenProgress = explodeValue;
-  }, [explodeValue]);
-
   // Set Explode Preset
   const handleSetExplodePreset = useCallback((preset) => {
     setExplodePreset(preset);
@@ -166,8 +182,8 @@ export default function Toolbox3DCanvas({
       ctrl.targetPan = { x: 0, y: 0.2 };
     } else if (preset === 'iso') {
       ctrl.targetRotation = { x: 0.42, y: -0.6 };
-      ctrl.targetDistance = 14.0;
-      ctrl.targetPan = { x: 0, y: 0.5 };
+      ctrl.targetDistance = 13.5;
+      ctrl.targetPan = { x: 0, y: 0.4 };
     } else if (preset === 'top') {
       ctrl.targetRotation = { x: 1.45, y: 0 };
       ctrl.targetDistance = 14.5;
@@ -195,7 +211,7 @@ export default function Toolbox3DCanvas({
     }
   }, [selectedTool, focusTool]);
 
-  // Expose reset & explode handlers to parents / keyboard
+  // Expose reset & explode handlers
   useEffect(() => {
     if (onResetCameraRef) onResetCameraRef.current = () => handleSetCameraPreset('iso');
     if (onToggleExplodeRef) {
@@ -213,39 +229,44 @@ export default function Toolbox3DCanvas({
       if (e.key === 'r' || e.key === 'R') {
         handleSetCameraPreset('iso');
       } else if (e.key === 'f' || e.key === 'F') {
-        if (selectedTool) focusTool(selectedTool);
+        if (selectedToolRef.current) focusTool(selectedToolRef.current);
       } else if (e.key === 'e' || e.key === 'E') {
         setExplodeValue((v) => (v > 0.3 ? 0.0 : 0.5));
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [selectedTool, focusTool, handleSetCameraPreset]);
+  }, [focusTool, handleSetCameraPreset]);
 
-  // Initialize WebGL Three.js Engine
+  // 1. Initialize WebGL Three.js Engine (Runs ONLY ONCE per theme)
   useEffect(() => {
     if (!mountRef.current) return;
     const container = mountRef.current;
     const width = container.clientWidth || 800;
     const height = container.clientHeight || 560;
 
+    // Clean previous children if any
+    while (container.firstChild) {
+      container.removeChild(container.firstChild);
+    }
+
     // 1. Scene
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x080d1a);
-    scene.fog = new THREE.FogExp2(0x080d1a, 0.02);
+    scene.background = new THREE.Color(0x070c18);
+    scene.fog = new THREE.FogExp2(0x070c18, 0.02);
     sceneRef.current = scene;
 
     // 2. Camera
     const camera = new THREE.PerspectiveCamera(40, width / height, 0.1, 100);
-    camera.position.set(0, 5.0, 14.0);
+    camera.position.set(0, 5.0, 13.5);
     cameraRef.current = camera;
 
-    // 3. Renderer
+    // 3. WebGL Renderer
     let renderer;
     try {
       renderer = new THREE.WebGLRenderer({
         antialias: true,
-        alpha: true,
+        alpha: false,
         powerPreference: 'high-performance',
       });
       renderer.setSize(width, height);
@@ -253,32 +274,32 @@ export default function Toolbox3DCanvas({
       renderer.shadowMap.enabled = true;
       renderer.shadowMap.type = THREE.PCFSoftShadowMap;
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
-      renderer.toneMappingExposure = 1.1;
-      container.replaceChildren(renderer.domElement);
+      renderer.toneMappingExposure = 1.15;
+      container.appendChild(renderer.domElement);
       rendererRef.current = renderer;
     } catch (e) {
-      console.error(e);
+      console.error('WebGL Initialization Error:', e);
       return;
     }
 
-    // 4. Lighting Design
-    const ambientLight = new THREE.AmbientLight(0xffffff, 1.5);
+    // 4. Lighting
+    const ambientLight = new THREE.AmbientLight(0xffffff, 1.6);
     scene.add(ambientLight);
 
-    const mainLight = new THREE.DirectionalLight(0xffffff, 2.5);
+    const mainLight = new THREE.DirectionalLight(0xffffff, 2.6);
     mainLight.position.set(8, 16, 10);
     mainLight.castShadow = true;
-    mainLight.shadow.mapSize.width = 2048;
-    mainLight.shadow.mapSize.height = 2048;
+    mainLight.shadow.mapSize.width = 1024;
+    mainLight.shadow.mapSize.height = 1024;
     scene.add(mainLight);
 
-    const cyanFill = new THREE.PointLight(0x06b6d4, 2.2, 20);
-    cyanFill.position.set(-8, 6, -5);
-    scene.add(cyanFill);
+    const cyanPoint = new THREE.PointLight(0x06b6d4, 2.4, 25);
+    cyanPoint.position.set(-8, 6, -5);
+    scene.add(cyanPoint);
 
-    const amberFill = new THREE.DirectionalLight(0xf59e0b, 0.8);
-    amberFill.position.set(6, -2, -6);
-    scene.add(amberFill);
+    const warmFill = new THREE.DirectionalLight(0xf59e0b, 0.9);
+    warmFill.position.set(6, -2, -6);
+    scene.add(warmFill);
 
     // 5. Studio Floor Grid
     const floorGeo = new THREE.PlaneGeometry(50, 50);
@@ -428,8 +449,8 @@ export default function Toolbox3DCanvas({
       trayLeft,
       trayRight,
       latches: [latch1, latch2],
-      openProgress: explodeValue,
-      targetOpenProgress: explodeValue,
+      openProgress: explodeValueRef.current,
+      targetOpenProgress: explodeValueRef.current,
     };
 
     // 7. Mouse / Pointer Controls
@@ -485,7 +506,9 @@ export default function Toolbox3DCanvas({
         }
         if (obj?.userData?.tool) {
           const tool = obj.userData.tool;
-          if (onSelectTool) onSelectTool(tool);
+          if (onSelectToolRef.current) {
+            onSelectToolRef.current(tool);
+          }
         }
       }
     };
@@ -496,24 +519,23 @@ export default function Toolbox3DCanvas({
     container.addEventListener('wheel', onWheel, { passive: false });
     container.addEventListener('click', onClick);
 
-    // 8. Resize
-    const onResize = () => {
+    // 8. ResizeObserver for robust layout adaptation
+    const resizeObserver = new ResizeObserver(() => {
       if (!container || !rendererRef.current || !cameraRef.current) return;
-      const w = container.clientWidth;
-      const h = container.clientHeight;
+      const w = container.clientWidth || 800;
+      const h = container.clientHeight || 560;
       cameraRef.current.aspect = w / h;
       cameraRef.current.updateProjectionMatrix();
       rendererRef.current.setSize(w, h);
-    };
-    window.addEventListener('resize', onResize);
+    });
+    resizeObserver.observe(container);
 
-    // 9. 60 FPS Render Loop
+    // 9. Continuous Animation Loop
     let clock = new THREE.Clock();
 
     const animate = () => {
       animFrameRef.current = requestAnimationFrame(animate);
       const delta = clock.getDelta();
-      const elapsed = clock.getElapsedTime();
 
       // Camera lerp
       const ctrl = controlsRef.current;
@@ -530,7 +552,7 @@ export default function Toolbox3DCanvas({
       camera.position.set(camX, camY, camZ);
       camera.lookAt(ctrl.pan.x, ctrl.pan.y, 0);
 
-      // Smooth Toolbox Kinematics
+      // Toolbox Mechanics Lerp
       const p = partsRef.current;
       p.openProgress += (p.targetOpenProgress - p.openProgress) * 0.07;
       const op = p.openProgress;
@@ -554,11 +576,14 @@ export default function Toolbox3DCanvas({
       }
 
       // Tool Meshes Positioning & Dynamic Highlight
+      const activeSelected = selectedToolRef.current;
+      const hoveredId = lastHoveredIdRef.current;
+
       toolMeshesRef.current.forEach((node) => {
         const { mesh, highlightRing, defaultPos, explodeOffset, tool } = node;
 
-        const isSelected = selectedTool?.id === tool.id;
-        const isHovered = hoveredTool?.id === tool.id;
+        const isSelected = activeSelected?.id === tool.id;
+        const isHovered = hoveredId === tool.id;
 
         // Controlled Explode position
         const posX = defaultPos.x + explodeOffset.x * op;
@@ -592,11 +617,18 @@ export default function Toolbox3DCanvas({
           obj = obj.parent;
         }
         if (obj?.userData?.tool) {
-          setHoveredTool(obj.userData.tool);
+          const t = obj.userData.tool;
+          if (lastHoveredIdRef.current !== t.id) {
+            lastHoveredIdRef.current = t.id;
+            setHoveredTool(t);
+          }
           container.style.cursor = 'pointer';
         }
       } else {
-        setHoveredTool(null);
+        if (lastHoveredIdRef.current !== null) {
+          lastHoveredIdRef.current = null;
+          setHoveredTool(null);
+        }
         container.style.cursor = 'grab';
       }
 
@@ -607,7 +639,7 @@ export default function Toolbox3DCanvas({
 
     return () => {
       cancelAnimationFrame(animFrameRef.current);
-      window.removeEventListener('resize', onResize);
+      resizeObserver.disconnect();
       window.removeEventListener('pointermove', onPointerMove);
       window.removeEventListener('pointerup', onPointerUp);
       container.removeEventListener('pointerdown', onPointerDown);
@@ -617,9 +649,9 @@ export default function Toolbox3DCanvas({
         rendererRef.current.dispose();
       }
     };
-  }, [themeKey, explodeValue, onSelectTool, selectedTool, hoveredTool]);
+  }, [themeKey]);
 
-  // Build Procedural 3D Tool Meshes inside drawers
+  // 2. Build Procedural 3D Tool Meshes inside drawers (Updates when filteredTools change)
   useEffect(() => {
     if (!sceneRef.current) return;
     const scene = sceneRef.current;
@@ -639,10 +671,6 @@ export default function Toolbox3DCanvas({
       const catCfg = CATEGORY_COLORS[tool.category] || CATEGORY_COLORS.general_tools;
       const statCfg = STATUS_COLORS[tool.status] || STATUS_COLORS.good;
 
-      // Group into trays:
-      // Left Tray: Sockets & Bits
-      // Right Tray: Torx & Hex Keys
-      // Center Base: Wrenches, Screwdrivers, Ratchets
       let trayOrigin = 'base';
       if (['sockets', 'specialty_sets'].includes(tool.category)) trayOrigin = 'left';
       else if (['torx_keys', 'hex_keys'].includes(tool.category)) trayOrigin = 'right';

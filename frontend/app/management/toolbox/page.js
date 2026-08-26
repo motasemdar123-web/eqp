@@ -215,12 +215,12 @@ export default function ManagementToolboxPage() {
 
         {/* 3. Main Workspace */}
         {viewMode === '3D' && (
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-stretch h-[640px]">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-stretch lg:h-[640px]">
             {/* Left Rail: Tool Library & Drawers */}
             <div
-              className={`transition-all duration-200 h-full ${
+              className={`transition-all duration-200 ${
                 isLeftCollapsed ? 'lg:col-span-1' : 'lg:col-span-3'
-              }`}
+              } h-[420px] lg:h-full`}
             >
               <ToolLibraryRail
                 tools={currentTech?.tools || []}
@@ -239,7 +239,7 @@ export default function ManagementToolboxPage() {
 
             {/* Center: 3D Digital Twin Studio */}
             <div
-              className={`transition-all duration-200 h-full ${
+              className={`transition-all duration-200 min-h-[560px] h-[560px] lg:h-full ${
                 isLeftCollapsed && isRightCollapsed
                   ? 'lg:col-span-10'
                   : isLeftCollapsed || isRightCollapsed
