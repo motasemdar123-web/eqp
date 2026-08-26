@@ -42,19 +42,12 @@ async function request(path, options = {}) {
   const data = await response.json().catch(() => ({}));
 
   if (!response.ok) {
-    const isAuthEndpoint = path.startsWith('/api/auth');
-    if (response.status === 401 && typeof window !== 'undefined' && !isLocalDatasetRoute && !isAuthEndpoint) {
-      localStorage.removeItem('user');
-      localStorage.removeItem('platformToken');
-      localStorage.removeItem('platformUser');
-      window.location.href = '/';
-    }
-
     throw new Error(data.error || 'Request failed');
   }
 
   return data;
 }
+
 
 export function getMicrosoftLoginUrl(returnTo) {
   const loginUrl = new URL(`${API_BASE_URL}/api/auth/microsoft/start`);
@@ -185,8 +178,19 @@ export function getShifts() {
 }
 
 export function getNotifications(limit = 12) {
+  if (typeof window !== 'undefined') {
+    try {
+      const user = JSON.parse(localStorage.getItem('platformUser') || localStorage.getItem('user') || 'null');
+      if (user?.roles?.includes('MEDIA_SPECIALIST') || user?.email?.toLowerCase() === 'jessicaafawzyy80@gmail.com') {
+        return Promise.resolve({ notifications: [], unreadCount: 0 });
+      }
+    } catch {
+      // Ignore
+    }
+  }
   return request(`/api/notifications?limit=${encodeURIComponent(limit)}`);
 }
+
 
 export function markNotificationRead(id) {
   return request(`/api/notifications/${id}/read`, {
