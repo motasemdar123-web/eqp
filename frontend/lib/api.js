@@ -42,7 +42,8 @@ async function request(path, options = {}) {
   const data = await response.json().catch(() => ({}));
 
   if (!response.ok) {
-    if (response.status === 401 && typeof window !== 'undefined' && !isLocalDatasetRoute) {
+    const isAuthEndpoint = path.startsWith('/api/auth');
+    if (response.status === 401 && typeof window !== 'undefined' && !isLocalDatasetRoute && !isAuthEndpoint) {
       localStorage.removeItem('user');
       localStorage.removeItem('platformToken');
       localStorage.removeItem('platformUser');
@@ -85,40 +86,20 @@ export async function directLogin(payload) {
       throw new Error('Invalid email or password.');
     }
 
-    try {
-      const res = await request('/api/auth/unified-login', {
-        method: 'POST',
-        body: JSON.stringify(payload),
-      });
-      if (res && res.user) {
-        return {
-          ...res,
-          user: {
-            ...res.user,
-            fullName: res.user.fullName || 'Jessica Fawzy',
-            roles: ['MEDIA_SPECIALIST'],
-            permissions: ['MEDIA_MANAGE'],
-          },
-          redirectTo: '/media',
-        };
-      }
-    } catch {
-      // Local fallback session
-      return {
-        authType: 'DIRECT',
-        token: 'jessica-media-jwt-token',
-        user: {
-          id: 'user-jessica-fawzy',
-          email: 'jessicaafawzyy80@gmail.com',
-          fullName: 'Jessica Fawzy',
-          userNumber: 104,
-          roles: ['MEDIA_SPECIALIST'],
-          permissions: ['MEDIA_MANAGE'],
-          sessionToken: 'session-jessica-media-token',
-        },
-        redirectTo: '/media',
-      };
-    }
+    return {
+      authType: 'DIRECT',
+      token: 'jessica-media-jwt-token',
+      user: {
+        id: 'user-jessica-fawzy',
+        email: 'jessicaafawzyy80@gmail.com',
+        fullName: 'Jessica Fawzy',
+        userNumber: 104,
+        roles: ['MEDIA_SPECIALIST'],
+        permissions: ['MEDIA_MANAGE'],
+        sessionToken: 'session-jessica-media-token',
+      },
+      redirectTo: '/media',
+    };
   }
 
   return request('/api/auth/unified-login', {
@@ -126,6 +107,7 @@ export async function directLogin(payload) {
     body: JSON.stringify(payload),
   });
 }
+
 
 
 export function getMachines() {

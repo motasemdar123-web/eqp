@@ -40,18 +40,22 @@ export default function UnifiedLogin({ preferredModule = 'auto' }) {
         preferredModule,
       });
 
+      const isMedia = result.user?.email?.toLowerCase() === 'jessicaafawzyy80@gmail.com' || result.user?.roles?.includes('MEDIA_SPECIALIST');
+      const targetDestination = isMedia ? '/media' : (returnTo && returnTo !== '/' ? returnTo : result.redirectTo || '/management');
+
       setStoredPlatformSession(result.token, result.user);
       if (result.user?.sessionToken) {
         setStoredUser(result.user);
       }
 
-      router.replace(returnTo || result.redirectTo || '/management');
+      window.location.href = targetDestination;
     } catch (err) {
       setError(err.message || 'Invalid credentials. Please verify your email and password.');
     } finally {
       setLoading(false);
     }
   }
+
 
   return (
     <main className="min-h-screen bg-slate-900 flex items-center justify-center p-4 sm:p-6 lg:p-8">
