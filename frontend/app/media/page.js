@@ -12,12 +12,12 @@ import Step5VideographerCallSheet from '../../components/media/steps/Step5Videog
 import NewMonthModal from '../../components/media/NewMonthModal';
 import NewConceptModal from '../../components/media/NewConceptModal';
 
-const CAMPAIGNS_STORAGE_KEY = 'daralhay.social_media_campaigns_v4';
-const ACTIVE_MONTH_STORAGE_KEY = 'daralhay.social_media_active_month_v4';
+const CAMPAIGNS_STORAGE_KEY = 'daralhay.social_media_campaigns_v5';
+const ACTIVE_MONTH_STORAGE_KEY = 'daralhay.social_media_active_month_v5';
 
 export default function MediaCornerPage() {
   const [campaigns, setCampaigns] = useState({});
-  const [selectedMonthId, setSelectedMonthId] = useState('2026-08');
+  const [selectedMonthId, setSelectedMonthId] = useState('2026-09');
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedConceptId, setSelectedConceptId] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -39,16 +39,16 @@ export default function MediaCornerPage() {
         if (storedActiveMonth && parsed[storedActiveMonth]) {
           setSelectedMonthId(storedActiveMonth);
         } else {
-          setSelectedMonthId(Object.keys(parsed)[0] || '2026-08');
+          setSelectedMonthId(parsed['2026-09'] ? '2026-09' : Object.keys(parsed)[0] || '2026-09');
         }
       } else {
         setCampaigns(INITIAL_MONTHLY_CAMPAIGNS);
         localStorage.setItem(CAMPAIGNS_STORAGE_KEY, JSON.stringify(INITIAL_MONTHLY_CAMPAIGNS));
-        setSelectedMonthId('2026-08');
+        setSelectedMonthId('2026-09');
       }
     } catch {
       setCampaigns(INITIAL_MONTHLY_CAMPAIGNS);
-      setSelectedMonthId('2026-08');
+      setSelectedMonthId('2026-09');
     } finally {
       setLoading(false);
     }
