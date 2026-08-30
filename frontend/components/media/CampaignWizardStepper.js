@@ -15,7 +15,7 @@ export default function CampaignWizardStepper({
   const steps = [
     { id: 1, label: '1. Month Setup', desc: 'Strategy & Goal' },
     { id: 2, label: '2. 4-Week Schedule', desc: '12–15 Releases' },
-    { id: 3, label: '3. Script Studio', desc: 'Hooks, Scenes & B-Roll' },
+    { id: 3, label: '3. Creative Studio', desc: 'Shot Lists, Decks & Scripts' },
     { id: 4, label: '4. Platform Copy', desc: 'LinkedIn, IG & FB' },
     { id: 5, label: '5. Call Sheet', desc: 'Print & Hand-Off' },
   ];
