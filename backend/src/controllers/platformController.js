@@ -311,8 +311,13 @@ async function executeKomatsuEoOrder(req, res) {
     });
   }
 
-  const result = await komatsuEoService.executeSingleEmergencyOrder(orderData);
-  res.json({ success: true, ...result });
+  try {
+    const result = await komatsuEoService.executeSingleEmergencyOrder(orderData);
+    res.json({ success: true, ...result });
+  } catch (err) {
+    console.error('[executeKomatsuEoOrder] Dispatch error:', err.message);
+    res.status(400).json({ success: false, error: err.message, status: 'FAILED' });
+  }
 }
 
 async function searchKomatsuQuotations(req, res) {

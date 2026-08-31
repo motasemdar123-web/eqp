@@ -420,8 +420,20 @@ export default function SparePartsPage() {
   }
 
   // =========================================================
-  // FLEET & MULTI-SN COMPUTATIONS
+  // FLEET & MULTI-SN COMPUTATIONS & COMPATIBILITY ENGINE
   // =========================================================
+  function isPartCompatibleWithModel(item, modelStr) {
+    if (!modelStr) return false;
+    const mUpper = modelStr.toUpperCase().trim();
+    if (!item.models || item.models.length === 0) {
+      return true; // Neutral when not verified or no restrictions
+    }
+    return item.models.some((pm) => {
+      const pmUpper = pm.toUpperCase().trim();
+      return mUpper.includes(pmUpper) || pmUpper.includes(mUpper);
+    });
+  }
+
   const allVerifiedModels = useMemo(() => {
     const verifiedItems = eoItems.filter((it) => it.verified && it.models?.length > 0);
     if (verifiedItems.length === 0) return [];
@@ -442,20 +454,74 @@ export default function SparePartsPage() {
     return [...new Set(customerFleet.map((m) => m.machine_type).filter(Boolean))].sort();
   }, [customerFleet]);
 
+  // Model-level compatibility map
+  const modelCompatibilityMap = useMemo(() => {
+    const validItems = eoItems.filter((it) => it.part_no && it.part_no.trim());
+    const map = {};
+
+    customerFleet.forEach((m) => {
+      const model = m.model;
+      if (!model || map[model]) return;
+
+      if (validItems.length === 0) {
+        map[model] = {
+          model,
+          matchedCount: 0,
+          totalCount: 0,
+          percentage: 100,
+          isFullMatch: true,
+          isPartialMatch: false,
+          label: model,
+        };
+        return;
+      }
+
+      const matchedCount = validItems.filter((item) => isPartCompatibleWithModel(item, model)).length;
+      const percentage = Math.round((matchedCount / validItems.length) * 100);
+      const isFullMatch = matchedCount === validItems.length;
+      const isPartialMatch = matchedCount > 0 && !isFullMatch;
+
+      map[model] = {
+        model,
+        matchedCount,
+        totalCount: validItems.length,
+        percentage,
+        isFullMatch,
+        isPartialMatch,
+        label: isFullMatch
+          ? `★ ${model} (100% Match - Fit for all ${matchedCount} parts)`
+          : isPartialMatch
+          ? `⚡ ${model} (${percentage}% Match - ${matchedCount}/${validItems.length} parts)`
+          : `${model} (0% Match - 0/${validItems.length} parts)`,
+      };
+    });
+
+    return map;
+  }, [customerFleet, eoItems]);
+
   const availableModels = useMemo(() => {
     let filtered = customerFleet;
     if (selectedMachineType) {
       filtered = filtered.filter((m) => m.machine_type.toLowerCase() === selectedMachineType.toLowerCase());
     }
-    const distinct = [...new Set(filtered.map((m) => m.model).filter(Boolean))].sort();
+    const distinct = [...new Set(filtered.map((m) => m.model).filter(Boolean))];
 
-    return distinct.map((m) => {
-      const isCompat = allVerifiedModels.some((cm) => cm.includes(m.toUpperCase()) || m.toUpperCase().includes(cm));
-      return { model: m, isCompat };
-    });
-  }, [customerFleet, selectedMachineType, allVerifiedModels]);
+    return distinct
+      .map((m) => {
+        const info = modelCompatibilityMap[m] || { percentage: 0, isFullMatch: false, isPartialMatch: false, label: m };
+        return {
+          model: m,
+          ...info,
+        };
+      })
+      .sort((a, b) => {
+        if (b.percentage !== a.percentage) return b.percentage - a.percentage;
+        return a.model.localeCompare(b.model);
+      });
+  }, [customerFleet, selectedMachineType, modelCompatibilityMap]);
 
-  const filteredFleetMachines = useMemo(() => {
+  // Ranked fleet machines with individual compatibility scores
+  const rankedFleetMachines = useMemo(() => {
     let list = customerFleet;
     if (selectedMachineType) {
       list = list.filter((m) => m.machine_type.toLowerCase() === selectedMachineType.toLowerCase());
@@ -463,8 +529,51 @@ export default function SparePartsPage() {
     if (selectedModel) {
       list = list.filter((m) => m.model.toLowerCase() === selectedModel.toLowerCase());
     }
-    return list;
-  }, [customerFleet, selectedMachineType, selectedModel]);
+
+    const validItems = eoItems.filter((it) => it.part_no && it.part_no.trim());
+
+    return list
+      .map((m) => {
+        const info = modelCompatibilityMap[m.model] || {
+          percentage: validItems.length === 0 ? 100 : 0,
+          isFullMatch: validItems.length === 0,
+          isPartialMatch: false,
+          matchedCount: 0,
+          totalCount: validItems.length,
+        };
+        return {
+          ...m,
+          compatInfo: info,
+        };
+      })
+      .sort((a, b) => {
+        if (b.compatInfo.percentage !== a.compatInfo.percentage) {
+          return b.compatInfo.percentage - a.compatInfo.percentage;
+        }
+        return a.serial.localeCompare(b.serial);
+      });
+  }, [customerFleet, selectedMachineType, selectedModel, modelCompatibilityMap, eoItems]);
+
+  const filteredFleetMachines = rankedFleetMachines;
+
+  // Auto-select most compatible model when available
+  useEffect(() => {
+    if (availableModels.length > 0) {
+      const topModel = availableModels[0]?.model;
+      if (topModel && (!selectedModel || !availableModels.some((m) => m.model === selectedModel))) {
+        setSelectedModel(topModel);
+      }
+    }
+  }, [availableModels, selectedCustomer]);
+
+  // Auto-select most compatible serial numbers when fleet changes
+  useEffect(() => {
+    if (rankedFleetMachines.length > 0) {
+      const bestMatches = rankedFleetMachines.filter((m) => m.compatInfo.isFullMatch || m.compatInfo.percentage >= 50);
+      const toSelect = bestMatches.length > 0 ? bestMatches : rankedFleetMachines.slice(0, 5);
+      setSelectedSerials(new Set(toSelect.map((m) => m.serial)));
+    }
+  }, [rankedFleetMachines]);
 
   // Selected Machines Pool for EO Sub-Orders
   const activeMachinePool = useMemo(() => {
@@ -482,25 +591,32 @@ export default function SparePartsPage() {
           model: selectedModel || 'PC500LC-10R',
           machine_type: selectedMachineType || 'Excavator',
           serial: sn,
+          compatInfo: modelCompatibilityMap[selectedModel] || { percentage: 100, isFullMatch: true },
         }));
       }
     }
 
     if (selectedSerials.size > 0) {
-      const selected = filteredFleetMachines.filter((m) => selectedSerials.has(m.serial));
+      const selected = rankedFleetMachines.filter((m) => selectedSerials.has(m.serial));
       if (selected.length > 0) return selected;
     }
 
-    if (filteredFleetMachines.length > 0) {
-      return filteredFleetMachines;
+    if (rankedFleetMachines.length > 0) {
+      return rankedFleetMachines;
     }
 
-    return [{ customer: cust, model: selectedModel || 'PC500LC-10R', machine_type: 'Excavator', serial: '100433' }];
-  }, [customSerialsMode, customSerialsInput, selectedSerials, filteredFleetMachines, selectedCustomer, selectedModel, selectedMachineType]);
+    return [{
+      customer: cust,
+      model: selectedModel || 'PC500LC-10R',
+      machine_type: 'Excavator',
+      serial: '100433',
+      compatInfo: { percentage: 100, isFullMatch: true },
+    }];
+  }, [customSerialsMode, customSerialsInput, selectedSerials, rankedFleetMachines, selectedCustomer, selectedModel, selectedMachineType, modelCompatibilityMap]);
 
   // Helper actions for Multi-SN selection
   function handleSelectAllSn() {
-    setSelectedSerials(new Set(filteredFleetMachines.map((m) => m.serial).filter(Boolean)));
+    setSelectedSerials(new Set(rankedFleetMachines.map((m) => m.serial).filter(Boolean)));
   }
 
   function handleClearSn() {
@@ -508,19 +624,12 @@ export default function SparePartsPage() {
   }
 
   function handleSelectCompatibleSn() {
-    if (allVerifiedModels.length === 0) {
-      setToast({ type: 'info', message: 'Verify parts first to identify compatible machine models.' });
-      return;
-    }
-    const compatible = filteredFleetMachines.filter((m) => {
-      const modelUpper = m.model.toUpperCase();
-      return allVerifiedModels.some((cm) => cm.includes(modelUpper) || modelUpper.includes(cm));
-    });
-    if (compatible.length > 0) {
-      setSelectedSerials(new Set(compatible.map((m) => m.serial)));
-      setToast({ type: 'success', message: `Selected ${compatible.length} compatible machine assets.` });
+    const bestMatches = rankedFleetMachines.filter((m) => m.compatInfo.isFullMatch || m.compatInfo.percentage > 0);
+    if (bestMatches.length > 0) {
+      setSelectedSerials(new Set(bestMatches.map((m) => m.serial)));
+      setToast({ type: 'success', message: `Selected ${bestMatches.length} most compatible machine assets.` });
     } else {
-      setToast({ type: 'warn', message: 'No assets directly matched verified part models.' });
+      handleSelectAllSn();
     }
   }
 
@@ -596,17 +705,29 @@ export default function SparePartsPage() {
         }
       }
 
+      // Select most compatible machine from pool for these specific order parts
+      const compatibleMachines = machinesPool.filter((m) =>
+        orderParts.every((p) => {
+          const itemRef = validItems.find((it) => it.part_no === p.part_no);
+          return isPartCompatibleWithModel(itemRef || {}, m.model);
+        })
+      );
+      const chosenMachine = compatibleMachines.length > 0
+        ? compatibleMachines[(orderIdx - 1) % compatibleMachines.length]
+        : machinesPool[machineIdx];
+
       orders.push({
         index: orderIdx,
         db_order_no: currentDbOrderNo,
-        customer: machine.customer || cust,
-        model: machine.model,
-        serial: machine.serial,
+        customer: chosenMachine.customer || cust,
+        model: chosenMachine.model,
+        serial: chosenMachine.serial,
         parts: orderParts,
         total_items: orderParts.length,
         total_quantity: orderParts.reduce((sum, p) => sum + p.quantity, 0),
         total_amount: orderTotalAmount > 0 ? orderTotalAmount.toFixed(3) : '0.000',
         cycle_num: cycleNum,
+        compat_badge: chosenMachine.compatInfo?.isFullMatch ? '★ 100% Fit' : 'Compatible',
         quotation_no: '',
         status: 'READY',
       });
@@ -1225,15 +1346,15 @@ export default function SparePartsPage() {
                     ))}
                   </Select>
                 </Field>
-                <Field label="Model Filter">
+                <Field label="Machine Model (Ranked by Compatibility)">
                   <Select
                     value={selectedModel}
                     onChange={(e) => setSelectedModel(e.target.value)}
                   >
-                    <option value="">All Models</option>
+                    <option value="">All Models ({availableModels.length})</option>
                     {availableModels.map((m) => (
                       <option key={m.model} value={m.model}>
-                        {m.model} {m.isCompat ? '✓' : ''}
+                        {m.label}
                       </option>
                     ))}
                   </Select>
@@ -1252,18 +1373,19 @@ export default function SparePartsPage() {
                       <>
                         <button
                           type="button"
-                          onClick={handleSelectAllSn}
-                          className="text-[11px] text-amber-700 hover:text-amber-800 font-medium px-1.5 py-0.5 rounded hover:bg-amber-50 cursor-pointer"
+                          onClick={handleSelectCompatibleSn}
+                          className="text-[11px] text-emerald-700 hover:text-emerald-800 font-bold px-2 py-0.5 rounded bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 cursor-pointer shadow-xs transition"
+                          title="Auto-select all machines compatible with requested parts"
                         >
-                          Select All ({filteredFleetMachines.length})
+                          ★ Select Most Compatible SNs
                         </button>
                         <span className="text-slate-300">•</span>
                         <button
                           type="button"
-                          onClick={handleSelectCompatibleSn}
-                          className="text-[11px] text-emerald-700 hover:text-emerald-800 font-medium px-1.5 py-0.5 rounded hover:bg-emerald-50 cursor-pointer"
+                          onClick={handleSelectAllSn}
+                          className="text-[11px] text-amber-700 hover:text-amber-800 font-medium px-1.5 py-0.5 rounded hover:bg-amber-50 cursor-pointer"
                         >
-                          Select Compatible
+                          Select All ({filteredFleetMachines.length})
                         </button>
                         <span className="text-slate-300">•</span>
                         <button
@@ -1301,7 +1423,7 @@ export default function SparePartsPage() {
                     </p>
                   </div>
                 ) : (
-                  <div className="max-h-40 overflow-y-auto border border-slate-200 rounded-md p-2 grid grid-cols-1 sm:grid-cols-2 gap-1.5 bg-slate-50/50">
+                  <div className="max-h-48 overflow-y-auto border border-slate-200 rounded-md p-2 grid grid-cols-1 sm:grid-cols-2 gap-1.5 bg-slate-50/50">
                     {filteredFleetMachines.length === 0 ? (
                       <p className="col-span-2 text-center text-xs text-slate-400 py-3">
                         No fleet machines found matching filter.
@@ -1309,13 +1431,16 @@ export default function SparePartsPage() {
                     ) : (
                       filteredFleetMachines.map((m, idx) => {
                         const isChecked = selectedSerials.has(m.serial);
-                        const isCompat = allVerifiedModels.some((cm) => cm.includes(m.model.toUpperCase()));
+                        const isFull = m.compatInfo?.isFullMatch;
+                        const isPart = m.compatInfo?.isPartialMatch;
                         return (
                           <label
                             key={`${m.serial}-${idx}`}
-                            className={`flex items-center gap-2 p-1.5 rounded border text-xs cursor-pointer select-none transition-colors ${
+                            className={`flex items-center gap-2 p-2 rounded-md border text-xs cursor-pointer select-none transition-all ${
                               isChecked
-                                ? 'bg-amber-50/80 border-amber-300 text-slate-900 font-medium'
+                                ? isFull
+                                  ? 'bg-emerald-50/90 border-emerald-300 text-slate-900 shadow-xs'
+                                  : 'bg-amber-50/80 border-amber-300 text-slate-900 font-medium'
                                 : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'
                             }`}
                           >
@@ -1326,14 +1451,18 @@ export default function SparePartsPage() {
                               className="rounded text-amber-600"
                             />
                             <div className="truncate flex-1">
-                              <span className="font-mono font-semibold">{m.serial}</span>
-                              <span className="text-[11px] text-slate-500 ml-1">({m.model})</span>
+                              <span className="font-mono font-bold text-slate-900">{m.serial}</span>
+                              <span className="text-[11px] text-slate-500 ml-1.5 font-medium">({m.model})</span>
                             </div>
-                            {isCompat && (
-                              <span className="text-[10px] text-emerald-700 bg-emerald-100/80 px-1 py-0.2 rounded font-semibold">
-                                ✓ Fit
+                            {isFull ? (
+                              <span className="text-[10px] text-emerald-800 bg-emerald-100 px-1.5 py-0.5 rounded font-bold">
+                                ★ Best Match
                               </span>
-                            )}
+                            ) : isPart ? (
+                              <span className="text-[10px] text-amber-800 bg-amber-100 px-1.5 py-0.5 rounded font-medium">
+                                ⚡ {m.compatInfo.matchedCount}/{m.compatInfo.totalCount} Fit
+                              </span>
+                            ) : null}
                           </label>
                         );
                       })

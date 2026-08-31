@@ -107,6 +107,14 @@ function addCustomMachine({ customer, machine_type, model, serials }) {
   return loadFleetData();
 }
 
+function formatPortalDate(offsetDays = 14) {
+  const d = new Date(Date.now() + offsetDays * 86400 * 1000);
+  const mm = String(d.getMonth() + 1).padStart(2, '0');
+  const dd = String(d.getDate()).padStart(2, '0');
+  const yyyy = d.getFullYear();
+  return `${mm}/${dd}/${yyyy}`;
+}
+
 async function lookupPartMaster(partNo, customCookie = null) {
   const cookieStr = customCookie ? parseCookieInput(customCookie) : loadCookie();
   if (!cookieStr) {
@@ -133,7 +141,17 @@ async function lookupPartMaster(partNo, customCookie = null) {
     throw new Error(`Part Master lookup failed with status: ${response.status}`);
   }
 
-  const resJson = await response.json();
+  const resText = await response.text();
+  let resJson;
+  try {
+    resJson = JSON.parse(resText);
+  } catch {
+    if (resText.includes('Account/Login') || resText.includes('<html') || response.status === 401 || response.status === 302) {
+      throw new Error('Komatsu PDX session cookie has expired. Please update your PDX Cookie in the settings.');
+    }
+    throw new Error(`Part Master lookup returned invalid response (status ${response.status})`);
+  }
+
   const desc = resJson.txtPNAM || '';
   const qtyByUnitStr = resJson.txtQBYU || '1';
   let qtyByUnit = parseInt(qtyByUnitStr, 10);
@@ -284,8 +302,8 @@ async function executeSingleEmergencyOrder(orderData, customCookie = null) {
       LoadingPort: 'JEA',
       UnloadingPort: 'KWI',
       PersonIncharge: user_id,
-      QuotationValidity: '08/29/2026',
-      RequestedDeliveryTime: '08/22/2026',
+      QuotationValidity: formatPortalDate(14),
+      RequestedDeliveryTime: formatPortalDate(7),
       PriceCalculationMethod: 'D',
       DiscountRateOther: '0',
       PremiumRate: '13.3',
@@ -331,7 +349,17 @@ async function executeSingleEmergencyOrder(orderData, customCookie = null) {
     body: JSON.stringify(payload),
   });
 
-  const saveJson = await saveResp.json();
+  const saveText = await saveResp.text();
+  let saveJson;
+  try {
+    saveJson = JSON.parse(saveText);
+  } catch {
+    if (saveText.includes('Account/Login') || saveText.includes('<html') || saveResp.status === 401 || saveResp.status === 302) {
+      throw new Error('Komatsu PDX session cookie has expired. Please update your PDX Cookie in the settings.');
+    }
+    throw new Error(`QuotationCondition/Save returned non-JSON (status ${saveResp.status}): ${saveText.slice(0, 200)}`);
+  }
+
   const newQtn = saveJson.NewQuotaioonNumber || saveJson.NewQuotationNumber;
   if (!newQtn) {
     throw new Error(`QuotationCondition Save failed: ${JSON.stringify(saveJson)}`);
@@ -671,8 +699,8 @@ async function confirmQuotation(quotationNo, seqNo = '00', customCookie = null) 
       LoadingPort: 'JEA',
       UnloadingPort: 'KWI',
       PersonIncharge: 'motasemgha',
-      QuotationValidity: searchData.QuotationValidity || '08/29/2026',
-      RequestedDeliveryTime: searchData.RequestedDeliveryTime || '08/22/2026',
+      QuotationValidity: searchData.QuotationValidity || formatPortalDate(14),
+      RequestedDeliveryTime: searchData.RequestedDeliveryTime || formatPortalDate(7),
       PriceCalculationMethod: 'D',
       DiscountRateOther: '0',
       PremiumRate: '13.3',
