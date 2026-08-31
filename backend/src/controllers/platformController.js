@@ -247,7 +247,11 @@ const komatsuEoService = require('../services/komatsuEoService');
 const komatsuEqpCareService = require('../services/komatsuEqpCareService');
 
 async function getKomatsuStatus(req, res) {
-  const status = await komatsuInquiryService.testPdxConnection();
+  const { cookie } = req.query || {};
+  if (cookie) {
+    komatsuInquiryService.saveCookie(cookie);
+  }
+  const status = await komatsuInquiryService.testPdxConnection(cookie);
   res.json({ success: true, ...status, hasSavedCookie: Boolean(komatsuInquiryService.loadCookie()) });
 }
 
@@ -266,6 +270,9 @@ async function runKomatsuInquiry(req, res) {
   if (!Array.isArray(parts) || parts.length === 0) {
     return res.status(400).json({ success: false, message: 'Array of parts is required' });
   }
+  if (cookie) {
+    komatsuInquiryService.saveCookie(cookie);
+  }
   const results = await komatsuInquiryService.runBulkInquiry(parts, cookie);
   res.json({ success: true, ...results });
 }
@@ -281,22 +288,32 @@ async function addKomatsuCustomMachine(req, res) {
 }
 
 async function lookupKomatsuPartMaster(req, res) {
-  const { partNo } = req.query || {};
+  const { partNo, cookie } = req.query || {};
   if (!partNo) {
     return res.status(400).json({ success: false, message: 'Part number is required' });
   }
-  const data = await komatsuEoService.lookupPartMaster(partNo);
+  if (cookie) {
+    komatsuInquiryService.saveCookie(cookie);
+  }
+  const data = await komatsuEoService.lookupPartMaster(partNo, cookie);
   res.json({ success: true, ...data });
 }
 
 async function getKomatsuLatestOrderNo(req, res) {
-  const { customerCode } = req.query || {};
-  const data = await komatsuEoService.getLatestDbOrderNo(customerCode || 'REG');
+  const { customerCode, cookie } = req.query || {};
+  if (cookie) {
+    komatsuInquiryService.saveCookie(cookie);
+  }
+  const data = await komatsuEoService.getLatestDbOrderNo(customerCode || 'REG', cookie);
   res.json({ success: true, ...data });
 }
 
 async function executeKomatsuEoOrder(req, res) {
-  const { dryRun, ...orderData } = req.body || {};
+  const { dryRun, cookie, ...orderData } = req.body || {};
+  if (cookie) {
+    komatsuInquiryService.saveCookie(cookie);
+  }
+
   if (dryRun) {
     const mockQtn = `0000${Math.floor(280350 + Math.random() * 9000)}`;
     return res.json({
@@ -312,54 +329,49 @@ async function executeKomatsuEoOrder(req, res) {
   }
 
   try {
-    const result = await komatsuEoService.executeSingleEmergencyOrder(orderData);
+    const result = await komatsuEoService.executeSingleEmergencyOrder(orderData, cookie);
     return res.json({ success: true, ...result });
   } catch (err) {
-    console.warn('[executeKomatsuEoOrder] Live portal dispatch warning:', err.message);
-
-    // Provide seamless fallback quotation so batch workflow never crashes on expired cookie
-    const fallbackQtn = `0000${Math.floor(280350 + Math.random() * 9000)}`;
-    return res.json({
-      success: true,
-      status: 'SUCCESS',
-      quotation_no: fallbackQtn,
-      db_order_no: orderData.db_order_no,
-      model_code: orderData.model_code,
-      serial_no: orderData.serial_no,
-      customer: orderData.customer_detail,
-      parts: orderData.parts || [],
-      warning: err.message,
-      fallback: true,
+    console.error('[executeKomatsuEoOrder] Live portal dispatch error:', err.message);
+    return res.status(400).json({
+      success: false,
+      status: 'FAILED',
+      error: err.message,
     });
   }
 }
 
 async function searchKomatsuQuotations(req, res) {
-  const data = await komatsuEoService.searchQuotations(req.query || {});
+  const { cookie, ...filters } = req.query || {};
+  if (cookie) {
+    komatsuInquiryService.saveCookie(cookie);
+  }
+  const data = await komatsuEoService.searchQuotations(filters, cookie);
   res.json({ success: true, ...data });
 }
 
 async function confirmKomatsuQuotation(req, res) {
-  const { quotationNo, seqNo } = req.body || {};
+  const { quotationNo, seqNo, cookie } = req.body || {};
   if (!quotationNo) {
     return res.status(400).json({ success: false, message: 'Quotation number is required' });
   }
-  try {
-    const result = await komatsuEoService.confirmQuotation(quotationNo, seqNo || '00');
-    res.json({ success: true, ...result });
-  } catch (err) {
-    console.error(`[confirmKomatsuQuotation] Error for ${quotationNo}:`, err.message);
-    res.status(500).json({ success: false, error: err.message });
+  if (cookie) {
+    komatsuInquiryService.saveCookie(cookie);
   }
+  const result = await komatsuEoService.confirmQuotation(quotationNo, seqNo || '00', cookie);
+  res.json({ success: true, ...result });
 }
 
 async function copyKomatsuQuotationToSo(req, res) {
-  const { quotationNo, seqNo, options } = req.body || {};
+  const { quotationNo, seqNo, cookie, options } = req.body || {};
   if (!quotationNo) {
     return res.status(400).json({ success: false, message: 'Quotation number is required' });
   }
+  if (cookie) {
+    komatsuInquiryService.saveCookie(cookie);
+  }
   try {
-    const result = await komatsuEoService.copyQuotationToSo(quotationNo, seqNo || '00', options || {});
+    const result = await komatsuEoService.copyQuotationToSo(quotationNo, seqNo || '00', cookie, options || {});
     res.json({ success: true, ...result });
   } catch (err) {
     console.error(`[copyKomatsuQuotationToSo] Error for ${quotationNo}:`, err.message);

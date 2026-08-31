@@ -196,6 +196,12 @@ export default function SparePartsPage() {
   const [typeFilter, setTypeFilter] = useState('ALL');
 
   useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem('komatsuPdxCookie');
+      if (stored) {
+        setCookieInput(stored);
+      }
+    }
     loadConnectionStatus();
     loadFleetDatabase();
     loadLatestOrderNumber();
@@ -267,19 +273,22 @@ export default function SparePartsPage() {
 
   async function handleSaveCookie(e) {
     e.preventDefault();
-    if (!cookieInput.trim()) {
+    const cleanCookie = cookieInput.trim();
+    if (!cleanCookie) {
       setToast({ type: 'error', message: 'Please paste your cookie string' });
       return;
     }
 
     try {
       setSavingCookie(true);
-      const res = await saveKomatsuCookie(cookieInput.trim());
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('komatsuPdxCookie', cleanCookie);
+      }
+      const res = await saveKomatsuCookie(cleanCookie);
       setStatus(res);
       if (res.connected) {
         setToast({ type: 'success', message: 'PDX session authenticated successfully!' });
         setCookieModalOpen(false);
-        setCookieInput('');
         loadLatestOrderNumber();
         if (activeTab === 'so-converter') loadInProcessQuotations();
       } else {

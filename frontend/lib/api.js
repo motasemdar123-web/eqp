@@ -349,21 +349,34 @@ export function dismissWorkspacePlannerTask(id) {
   });
 }
 
+function getStoredPdxCookie() {
+  if (typeof window !== 'undefined') {
+    return localStorage.getItem('komatsuPdxCookie') || '';
+  }
+  return '';
+}
+
 export function getKomatsuStatus() {
-  return request('/api/komatsu/status');
+  const cookie = getStoredPdxCookie();
+  const query = cookie ? `?cookie=${encodeURIComponent(cookie)}` : '';
+  return request(`/api/komatsu/status${query}`);
 }
 
 export function saveKomatsuCookie(cookie) {
+  if (typeof window !== 'undefined' && cookie) {
+    localStorage.setItem('komatsuPdxCookie', cookie);
+  }
   return request('/api/komatsu/cookie', {
     method: 'POST',
     body: JSON.stringify({ cookie }),
   });
 }
 
-export function runKomatsuInquiry(parts, cookie = null) {
+export function runKomatsuInquiry(parts, customCookie = null) {
+  const cookie = customCookie || getStoredPdxCookie();
   return request('/api/komatsu/inquiry', {
     method: 'POST',
-    body: JSON.stringify({ parts, cookie }),
+    body: JSON.stringify({ parts, ...(cookie ? { cookie } : {}) }),
   });
 }
 
@@ -379,36 +392,53 @@ export function addKomatsuCustomMachine(payload) {
 }
 
 export function lookupKomatsuPart(partNo) {
-  return request(`/api/komatsu/part-lookup?partNo=${encodeURIComponent(partNo)}`);
+  const cookie = getStoredPdxCookie();
+  const query = new URLSearchParams({
+    partNo,
+    ...(cookie ? { cookie } : {}),
+  }).toString();
+  return request(`/api/komatsu/part-lookup?${query}`);
 }
 
 export function getKomatsuLatestOrderNo(customerCode = 'REG') {
-  return request(`/api/komatsu/latest-order-no?customerCode=${encodeURIComponent(customerCode)}`);
+  const cookie = getStoredPdxCookie();
+  const query = new URLSearchParams({
+    customerCode,
+    ...(cookie ? { cookie } : {}),
+  }).toString();
+  return request(`/api/komatsu/latest-order-no?${query}`);
 }
 
 export function executeKomatsuEoOrder(payload) {
+  const cookie = payload.cookie || getStoredPdxCookie();
   return request('/api/komatsu/eo-execute', {
     method: 'POST',
-    body: JSON.stringify(payload),
+    body: JSON.stringify({ ...payload, ...(cookie ? { cookie } : {}) }),
   });
 }
 
 export function getKomatsuQuotations(params = {}) {
-  const query = new URLSearchParams(params).toString();
+  const cookie = getStoredPdxCookie();
+  const query = new URLSearchParams({
+    ...params,
+    ...(cookie ? { cookie } : {}),
+  }).toString();
   return request(`/api/komatsu/quotations?${query}`);
 }
 
 export function confirmKomatsuQuotation(payload) {
+  const cookie = payload.cookie || getStoredPdxCookie();
   return request('/api/komatsu/quotations/confirm', {
     method: 'POST',
-    body: JSON.stringify(payload),
+    body: JSON.stringify({ ...payload, ...(cookie ? { cookie } : {}) }),
   });
 }
 
 export function copyKomatsuQuotationToSo(payload) {
+  const cookie = payload.cookie || getStoredPdxCookie();
   return request('/api/komatsu/quotations/copy-to-so', {
     method: 'POST',
-    body: JSON.stringify(payload),
+    body: JSON.stringify({ ...payload, ...(cookie ? { cookie } : {}) }),
   });
 }
 

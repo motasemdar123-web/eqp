@@ -400,7 +400,14 @@ async function executeSingleEmergencyOrder(orderData, customCookie = null) {
     throw new Error(`QuotationCondition/Save returned non-JSON (status ${saveResp.status}): ${saveText.slice(0, 200)}`);
   }
 
-  const newQtn = saveJson.NewQuotaioonNumber || saveJson.NewQuotationNumber;
+  const newQtn =
+    saveJson.NewQuotaioonNumber ||
+    saveJson.NewQuotationNumber ||
+    saveJson.QuotationNo ||
+    saveJson.strQUTN ||
+    saveJson.QuotNo ||
+    (saveJson.data && (saveJson.data.NewQuotaioonNumber || saveJson.data.NewQuotationNumber));
+
   if (!newQtn) {
     throw new Error(`QuotationCondition Save failed: ${JSON.stringify(saveJson)}`);
   }
