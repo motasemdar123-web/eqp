@@ -31,6 +31,9 @@ import {
   getKomatsuQuotations,
   confirmKomatsuQuotation,
   copyKomatsuQuotationToSo,
+  createSapPurchaseOrder,
+  getSapPoStatus,
+  downloadSapPoExcel,
 } from '../../../lib/api';
 
 const SAMPLE_EO_ITEMS = [
@@ -186,6 +189,20 @@ export default function SparePartsPage() {
   const [soConversionProgress, setSoConversionProgress] = useState(null);
   const [soLogs, setSoLogs] = useState([]);
   const shouldStopSoRef = useRef(false);
+
+  // SAP PURCHASE ORDER AUTOMATION STATE
+  const [sapModalOpen, setSapModalOpen] = useState(false);
+  const [sapTargetOrder, setSapTargetOrder] = useState(null);
+  const [sapBuyer, setSapBuyer] = useState('Motasem Ghanem');
+  const [sapVendor, setSapVendor] = useState('V000006');
+  const [sapDeliveryDate, setSapDeliveryDate] = useState(() => {
+    const d = new Date();
+    d.setDate(d.getDate() + 3);
+    return d.toISOString().split('T')[0];
+  });
+  const [isExecutingSapPo, setIsExecutingSapPo] = useState(false);
+  const [sapLogs, setSapLogs] = useState([]);
+  const [sapResult, setSapResult] = useState(null);
 
   // TAB 3: BULK INQUIRY STATE
   const [pastedInquiryText, setPastedInquiryText] = useState(SAMPLE_INQUIRY_PARTS.join('\n'));
@@ -1028,6 +1045,125 @@ export default function SparePartsPage() {
   }
 
   // =========================================================
+  // SAP PURCHASE ORDER AUTOMATION HANDLERS
+  // =========================================================
+  function openSapPoModalForQuotation(quotation) {
+    const items = quotation.parts && quotation.parts.length > 0
+      ? quotation.parts
+      : eoItems.map((it) => ({ part_no: it.part_no, qty: it.quantity, price: it.unit_price, description: it.description }));
+
+    setSapTargetOrder({
+      quotationNo: quotation.quotation_no,
+      db_order_no: quotation.db_order_no,
+      customer: quotation.customer_name,
+      amount: quotation.total_amount,
+      items,
+    });
+    setSapLogs([]);
+    setSapResult(null);
+    setSapModalOpen(true);
+  }
+
+  function openSapPoModalFromBatch() {
+    const selectedList = inProcessQuotations.filter((q) => selectedQtnNumbers.has(q.quotation_no));
+    if (selectedList.length === 0) {
+      setToast({ type: 'error', message: 'Select at least one quotation to create SAP PO.' });
+      return;
+    }
+
+    const firstQ = selectedList[0];
+    const combinedItems = selectedList.flatMap((q) =>
+      q.parts && q.parts.length > 0
+        ? q.parts
+        : eoItems.map((it) => ({ part_no: it.part_no, qty: it.quantity, price: it.unit_price, description: it.description }))
+    );
+
+    setSapTargetOrder({
+      quotationNo: selectedList.map((q) => q.quotation_no).join(', '),
+      db_order_no: selectedList.map((q) => q.db_order_no).filter(Boolean).join(', '),
+      customer: firstQ.customer_name || 'Komatsu PDX Orders',
+      items: combinedItems,
+    });
+    setSapLogs([]);
+    setSapResult(null);
+    setSapModalOpen(true);
+  }
+
+  function openSapPoModalFromEoQueue() {
+    const items = plannedOrders.length > 0
+      ? plannedOrders.flatMap((o) => o.parts || [])
+      : eoItems.map((it) => ({ part_no: it.part_no, qty: it.quantity, price: it.unit_price, description: it.description }));
+
+    setSapTargetOrder({
+      quotationNo: `EO-QUEUE-${new Date().toISOString().slice(5, 10).replace('-', '')}`,
+      db_order_no: eoStartingOrderNo,
+      customer: selectedCustomer || 'Komatsu Fleet Orders',
+      items,
+    });
+    setSapLogs([]);
+    setSapResult(null);
+    setSapModalOpen(true);
+  }
+
+  async function handleExecuteSapPo(dryRun = false) {
+    if (!sapTargetOrder || !sapTargetOrder.items || sapTargetOrder.items.length === 0) {
+      setToast({ type: 'error', message: 'No items available to create SAP Purchase Order.' });
+      return;
+    }
+
+    setIsExecutingSapPo(true);
+    setSapLogs((prev) => [...prev, `[${new Date().toLocaleTimeString()}] Starting SAP PO Automation for Vendor ${sapVendor}...`]);
+
+    try {
+      const payload = {
+        vendor: sapVendor,
+        buyer: sapBuyer,
+        deliveryDate: sapDeliveryDate,
+        items: sapTargetOrder.items,
+        quotationNo: sapTargetOrder.quotationNo,
+        remarks: `PDX Order #${sapTargetOrder.quotationNo || sapTargetOrder.db_order_no || ''} - ${sapTargetOrder.customer || ''}`,
+        dryRun,
+      };
+
+      const resp = await createSapPurchaseOrder(payload);
+      setSapResult(resp);
+      setSapLogs((prev) => [
+        ...prev,
+        `[${new Date().toLocaleTimeString()}] ✓ SUCCESS: Purchase Order sent to SAP Business One!`,
+        `[${new Date().toLocaleTimeString()}] Status: ${resp.message || 'PO Created in SAP'}`,
+      ]);
+      setToast({ type: 'success', message: 'SAP Purchase Order successfully submitted!' });
+    } catch (err) {
+      setSapLogs((prev) => [...prev, `[${new Date().toLocaleTimeString()}] ❌ Error: ${err.message}`]);
+      setToast({ type: 'error', message: err.message || 'Failed to create SAP Purchase Order' });
+    } finally {
+      setIsExecutingSapPo(false);
+    }
+  }
+
+  async function handleDownloadSapExcel() {
+    if (!sapTargetOrder || !sapTargetOrder.items || sapTargetOrder.items.length === 0) {
+      setToast({ type: 'error', message: 'No items available to export.' });
+      return;
+    }
+
+    try {
+      await downloadSapPoExcel({
+        vendor: sapVendor,
+        buyer: sapBuyer,
+        deliveryDate: sapDeliveryDate,
+        items: sapTargetOrder.items,
+        quotationNo: sapTargetOrder.quotationNo,
+        remarks: `PDX Quotation #${sapTargetOrder.quotationNo}`,
+      });
+      setToast({ type: 'success', message: 'SAP Purchase Order Excel file downloaded!' });
+    } catch (err) {
+      setToast({ type: 'error', message: err.message || 'Export failed' });
+    }
+  }
+
+
+  // =========================================================
   // TAB 3: BULK INQUIRY FUNCTIONS
   // =========================================================
   async function executeInquiry() {
@@ -1641,6 +1777,15 @@ export default function SparePartsPage() {
                   >
                     CSV Export
                   </Button>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    className="bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border-emerald-300 font-semibold"
+                    onClick={openSapPoModalFromEoQueue}
+                    disabled={eoItems.length === 0}
+                  >
+                    📋 Create SAP PO
+                  </Button>
                 </div>
               </div>
 
@@ -1804,6 +1949,15 @@ export default function SparePartsPage() {
               >
                 {isConvertingSo ? 'Processing...' : `1-Click Convert (${selectedQtnNumbers.size})`}
               </Button>
+              <Button
+                variant="secondary"
+                size="sm"
+                className="bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border-emerald-300 font-semibold"
+                onClick={openSapPoModalFromBatch}
+                disabled={selectedQtnNumbers.size === 0 || isConvertingSo}
+              >
+                📋 Create SAP PO ({selectedQtnNumbers.size})
+              </Button>
             </div>
           </div>
 
@@ -1842,18 +1996,19 @@ export default function SparePartsPage() {
                 <TableHead>Person In Charge</TableHead>
                 <TableHead isNumeric>Amount (USD)</TableHead>
                 <TableHead>Status</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {loadingQuotations ? (
                 <TableRow>
-                  <TableCell colSpan={7} className="py-8 text-center text-xs text-slate-500">
+                  <TableCell colSpan={8} className="py-8 text-center text-xs text-slate-500">
                     Loading quotations from PDX...
                   </TableCell>
                 </TableRow>
               ) : filteredQuotations.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={7} className="py-8 text-center text-xs text-slate-500">
+                  <TableCell colSpan={8} className="py-8 text-center text-xs text-slate-500">
                     No quotations found matching filter.
                   </TableCell>
                 </TableRow>
@@ -1897,6 +2052,16 @@ export default function SparePartsPage() {
                           {q.status || 'In-Process'}
                         </Badge>
                       </TableCell>
+                      <TableCell className="text-right">
+                        <Button
+                          variant="ghost"
+                          size="xs"
+                          className="text-emerald-700 hover:bg-emerald-50 hover:text-emerald-800 font-medium"
+                          onClick={() => openSapPoModalForQuotation(q)}
+                        >
+                          SAP PO ➔
+                        </Button>
+                      </TableCell>
                     </TableRow>
                   );
                 })
@@ -1905,6 +2070,7 @@ export default function SparePartsPage() {
           </Table>
         </Card>
       )}
+
 
       {/* ========================================== */}
       {/* TAB 3: BULK STOCK & PRICE INQUIRY           */}
@@ -2312,7 +2478,144 @@ export default function SparePartsPage() {
         )}
       </DetailDrawer>
 
+      {/* SAP Business One Purchase Order Modal */}
+      <Dialog open={sapModalOpen} onClose={() => !isExecutingSapPo && setSapModalOpen(false)}>
+        <DialogHeader>
+          <div className="flex items-center gap-2">
+            <span className="p-1.5 bg-emerald-100 text-emerald-800 rounded text-sm font-bold">SAP B1</span>
+            <div>
+              <DialogTitle>Create SAP Purchase Order</DialogTitle>
+              <p className="text-xs text-slate-500 mt-0.5">
+                Automatically push PDX order lines into SAP Business One via Playwright Automation
+              </p>
+            </div>
+          </div>
+        </DialogHeader>
+
+        <DialogContent className="space-y-4 max-h-[75vh] overflow-y-auto">
+          {/* Header Summary */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-3 bg-slate-50 border border-slate-200 rounded-lg text-xs">
+            <div>
+              <span className="text-slate-500 block">Vendor (CardCode)</span>
+              <strong className="text-slate-900 font-mono">V000006</strong> (Komatsu)
+            </div>
+            <div>
+              <span className="text-slate-500 block">PDX Reference #</span>
+              <strong className="text-slate-900 font-mono">{sapTargetOrder?.quotationNo || 'N/A'}</strong>
+            </div>
+            <div>
+              <span className="text-slate-500 block">Customer / Machine</span>
+              <strong className="text-slate-900">{sapTargetOrder?.customer || 'Direct Order'}</strong>
+            </div>
+          </div>
+
+          {/* Form Fields */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <Field label="Buyer Selection" hint="Mapped directly to SAP Buyer dropdown">
+              <Select value={sapBuyer} onChange={(e) => setSapBuyer(e.target.value)}>
+                <option value="Motasem Ghanem">Motasem Ghanem</option>
+                <option value="Mohammad Qraein">Mohammad Qraein</option>
+              </Select>
+            </Field>
+
+            <Field label="Delivery Date" hint="Required delivery / due date">
+              <Input
+                type="date"
+                value={sapDeliveryDate}
+                onChange={(e) => setSapDeliveryDate(e.target.value)}
+              />
+            </Field>
+          </div>
+
+          {/* Items Table */}
+          <div className="space-y-1.5">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-semibold text-slate-800 uppercase tracking-wide">
+                Items to Insert ({sapTargetOrder?.items?.length || 0})
+              </span>
+              <span className="text-xs text-slate-500">Tax Code: <strong>P0</strong> | Whs: <strong>01</strong></span>
+            </div>
+
+            <div className="border border-slate-200 rounded-lg overflow-hidden max-h-48 overflow-y-auto">
+              <table className="w-full text-left text-xs border-collapse">
+                <thead className="bg-slate-100 text-slate-700 font-semibold border-b border-slate-200">
+                  <tr>
+                    <th className="py-2 px-3">#</th>
+                    <th className="py-2 px-3">Item No</th>
+                    <th className="py-2 px-3 text-right">Quantity</th>
+                    <th className="py-2 px-3 text-right">Unit Price</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {sapTargetOrder?.items?.map((it, idx) => (
+                    <tr key={idx} className="hover:bg-slate-50">
+                      <td className="py-1.5 px-3 text-slate-400">{idx + 1}</td>
+                      <td className="py-1.5 px-3 font-mono font-semibold text-slate-900">
+                        {it.part_no || it.partNo || it.itemCode}
+                      </td>
+                      <td className="py-1.5 px-3 text-right font-mono font-medium text-slate-800">
+                        {it.qty || it.quantity || 1}
+                      </td>
+                      <td className="py-1.5 px-3 text-right font-mono text-slate-600">
+                        {it.price || it.unit_price || '$0.00'}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* Execution Logs */}
+          {sapLogs.length > 0 && (
+            <div className="space-y-1.5">
+              <span className="text-xs font-semibold text-slate-800 uppercase tracking-wide">Automation Logs</span>
+              <div className="p-3 bg-slate-900 text-slate-100 font-mono text-xs rounded-lg max-h-36 overflow-y-auto space-y-1">
+                {sapLogs.map((log, lIdx) => (
+                  <div key={lIdx} className="leading-tight">
+                    {log}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </DialogContent>
+
+        <DialogFooter className="flex flex-col sm:flex-row items-center justify-between gap-2 border-t border-slate-100 pt-3">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handleDownloadSapExcel}
+            disabled={isExecutingSapPo}
+            className="text-xs text-slate-600 hover:text-slate-900"
+          >
+            📥 Export SAP Excel Template
+          </Button>
+
+          <div className="flex items-center gap-2">
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => setSapModalOpen(false)}
+              disabled={isExecutingSapPo}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="primary"
+              size="sm"
+              className="bg-emerald-600 hover:bg-emerald-700 text-white border-emerald-600 font-semibold"
+              onClick={() => handleExecuteSapPo(false)}
+              disabled={isExecutingSapPo}
+            >
+              {isExecutingSapPo ? 'Creating PO in SAP...' : '🚀 Automate PO in SAP'}
+            </Button>
+          </div>
+        </DialogFooter>
+      </Dialog>
+
       <Toast message={toast?.message} type={toast?.type} onClose={() => setToast(null)} />
     </SystemShell>
   );
 }
+

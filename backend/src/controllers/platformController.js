@@ -245,6 +245,7 @@ async function dismissMyWorkspacePlannerTaskPush(req, res) {
 const komatsuInquiryService = require('../services/komatsuInquiryService');
 const komatsuEoService = require('../services/komatsuEoService');
 const komatsuEqpCareService = require('../services/komatsuEqpCareService');
+const sapPoAutomationService = require('../services/sapPoAutomationService');
 
 async function getKomatsuStatus(req, res) {
   const { cookie } = req.query || {};
@@ -464,6 +465,54 @@ async function batchUploadEqpcReports(req, res) {
   res.json({ success: true, ...result });
 }
 
+// ----------------------------------------------------
+// SAP BUSINESS ONE PURCHASE ORDER CONTROLLER METHODS
+// ----------------------------------------------------
+
+async function createSapPurchaseOrder(req, res) {
+  const { vendor, buyer, deliveryDate, items, remarks, quotationNo, dryRun } = req.body || {};
+  if (!Array.isArray(items) || items.length === 0) {
+    return res.status(400).json({ success: false, message: 'Array of items is required' });
+  }
+
+  const result = await sapPoAutomationService.createSapPurchaseOrder({
+    vendor: vendor || 'V000006',
+    buyer: buyer || 'Motasem Ghanem',
+    deliveryDate,
+    items,
+    remarks,
+    quotationNo,
+    dryRun: Boolean(dryRun),
+  });
+
+  res.json({ success: true, ...result });
+}
+
+async function getSapPoStatus(req, res) {
+  const status = sapPoAutomationService.getSapPoStatus();
+  res.json({ success: true, ...status });
+}
+
+async function exportSapPoExcel(req, res) {
+  const { vendor, buyer, deliveryDate, items, remarks, quotationNo } = req.body || {};
+  if (!Array.isArray(items) || items.length === 0) {
+    return res.status(400).json({ success: false, message: 'Array of items is required' });
+  }
+
+  const buffer = await sapPoAutomationService.generateSapPoExcelBuffer({
+    vendor: vendor || 'V000006',
+    buyer: buyer || 'Motasem Ghanem',
+    deliveryDate,
+    items,
+    remarks,
+    quotationNo,
+  });
+
+  res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+  res.setHeader('Content-Disposition', `attachment; filename="SAP_PO_${quotationNo || 'Export'}.xlsx"`);
+  res.send(buffer);
+}
+
 module.exports = {
   login,
   unifiedLogin,
@@ -525,5 +574,9 @@ module.exports = {
   lookupEqpcMachine,
   uploadEqpcReport,
   batchUploadEqpcReports,
+  createSapPurchaseOrder,
+  getSapPoStatus,
+  exportSapPoExcel,
 };
+
 

@@ -537,6 +537,52 @@ export function batchUploadEqpcReports(payload) {
   });
 }
 
+export function createSapPurchaseOrder(payload) {
+  return request('/api/sap/po/create', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+}
+
+export function getSapPoStatus() {
+  return request('/api/sap/po/status');
+}
+
+export async function downloadSapPoExcel(payload) {
+  let token = '';
+  if (typeof window !== 'undefined') {
+    try {
+      token = localStorage.getItem('platformToken') || JSON.parse(localStorage.getItem('user') || 'null')?.sessionToken || '';
+    } catch {
+      localStorage.removeItem('user');
+    }
+  }
+
+  const response = await fetch(`${API_BASE_URL}/api/sap/po/export-excel`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+    body: JSON.stringify(payload),
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to export SAP PO Excel');
+  }
+
+  const blob = await response.blob();
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `SAP_PO_${payload.quotationNo || 'Export'}.xlsx`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  window.URL.revokeObjectURL(url);
+}
+
+
 export async function getComments(params = {}) {
   const query = new URLSearchParams(params).toString();
   try {

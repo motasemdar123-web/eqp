@@ -78,6 +78,12 @@ router.get('/api/komatsu/eqpc/machine-lookup', requirePlatformAuth, asyncHandler
 router.post('/api/komatsu/eqpc/upload', requirePlatformAuth, asyncHandler(platformController.uploadEqpcReport));
 router.post('/api/komatsu/eqpc/batch-upload', requirePlatformAuth, asyncHandler(platformController.batchUploadEqpcReports));
 
+// SAP Business One Purchase Order Automation routes
+router.post('/api/sap/po/create', requirePlatformAuth, asyncHandler(platformController.createSapPurchaseOrder));
+router.get('/api/sap/po/status', requirePlatformAuth, asyncHandler(platformController.getSapPoStatus));
+router.post('/api/sap/po/export-excel', requirePlatformAuth, asyncHandler(platformController.exportSapPoExcel));
+
 module.exports = router;
+
 
 
