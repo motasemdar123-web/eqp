@@ -808,28 +808,20 @@ export default function SparePartsPage() {
           current.quotation_no = res.quotation_no;
           current.status = 'SUCCESS';
           successCount++;
-          addLog(`✓ Order #${current.index} (${current.db_order_no} | SN: ${current.serial} | ${current.parts.length} items) created quotation ${res.quotation_no}`, 'success');
+          if (res.fallback) {
+            addLog(`✓ Order #${current.index} (${current.db_order_no} | SN: ${current.serial} | ${current.parts.length} items) -> Quotation ${res.quotation_no} (Simulation Fallback - Update PDX Cookie for live Komatsu sync)`, 'warn');
+          } else {
+            addLog(`✓ Order #${current.index} (${current.db_order_no} | SN: ${current.serial} | ${current.parts.length} items) -> Quotation ${res.quotation_no}`, 'success');
+          }
         } else {
           current.status = 'FAILED';
           const errMsg = res?.error || 'Unknown error';
           addLog(`✕ Order #${current.index} failed: ${errMsg}`, 'error');
-
-          if (errMsg.toLowerCase().includes('cookie') || errMsg.toLowerCase().includes('expired')) {
-            setCookieModalOpen(true);
-            setToast({ type: 'error', message: 'PDX session expired. Please update your cookie or use Simulation Mode.' });
-            break;
-          }
         }
       } catch (err) {
         current.status = 'ERROR';
         const errMsg = err.message || 'Request failed';
         addLog(`✕ Order #${current.index} error: ${errMsg}`, 'error');
-
-        if (errMsg.toLowerCase().includes('cookie') || errMsg.toLowerCase().includes('expired')) {
-          setCookieModalOpen(true);
-          setToast({ type: 'error', message: 'PDX session expired. Please update your cookie or use Simulation Mode.' });
-          break;
-        }
       }
 
       setPlannedOrders([...updatedOrders]);
