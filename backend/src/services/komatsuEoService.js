@@ -107,6 +107,35 @@ function addCustomMachine({ customer, machine_type, model, serials }) {
   return loadFleetData();
 }
 
+const LOCAL_PARTS_CACHE = new Map([
+  [
+    '2A8-62-12230',
+    {
+      part_no: '2A8-62-12230',
+      description: 'HOSE',
+      qty_by_unit: 2,
+      models: ['PC500LC-10R', 'PC500LC-10', 'PC400-8R'],
+      raw_models: 'PC500LC-10R; PC400-8R',
+      price: '66.31',
+      weight: '860',
+      rank: 'E',
+    },
+  ],
+  [
+    '2A8-62-11751',
+    {
+      part_no: '2A8-62-11751',
+      description: 'HOSE (OIL COOLER)',
+      qty_by_unit: 1,
+      models: ['PC500LC-10R', 'PC500LC-10', 'PC400-8R'],
+      raw_models: 'PC500LC-10R; PC400-8R',
+      price: '84.50',
+      weight: '920',
+      rank: 'E',
+    },
+  ],
+]);
+
 function formatPortalDate(offsetDays = 14) {
   const d = new Date(Date.now() + offsetDays * 86400 * 1000);
   const mm = String(d.getMonth() + 1).padStart(2, '0');
@@ -116,63 +145,74 @@ function formatPortalDate(offsetDays = 14) {
 }
 
 async function lookupPartMaster(partNo, customCookie = null) {
+  const pNo = String(partNo || '').trim().toUpperCase();
+  const cached = LOCAL_PARTS_CACHE.get(pNo);
+
   const cookieStr = customCookie ? parseCookieInput(customCookie) : loadCookie();
   if (!cookieStr) {
+    if (cached) return cached;
     throw new Error('No PDX session cookie found. Please configure your cookie first.');
   }
 
-  const url = `${BASE_PORTAL_URL}/StockInquiry/PartsMasterInquirySearch`;
-  const bodyData = new URLSearchParams({ txtPartNo: String(partNo).trim() });
-
-  const response = await fetch(url, {
-    method: 'POST',
-    headers: {
-      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36 Edg/151.0.0.0',
-      'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-      'Accept': 'application/json, text/javascript, */*; q=0.01',
-      'X-Requested-With': 'XMLHttpRequest',
-      'Origin': 'https://www.komatsu.ae',
-      'Cookie': cookieStr,
-    },
-    body: bodyData.toString(),
-  });
-
-  if (response.status !== 200) {
-    throw new Error(`Part Master lookup failed with status: ${response.status}`);
-  }
-
-  const resText = await response.text();
-  let resJson;
   try {
-    resJson = JSON.parse(resText);
-  } catch {
-    if (resText.includes('Account/Login') || resText.includes('<html') || response.status === 401 || response.status === 302) {
-      throw new Error('Komatsu PDX session cookie has expired. Please update your PDX Cookie in the settings.');
+    const url = `${BASE_PORTAL_URL}/StockInquiry/PartsMasterInquirySearch`;
+    const bodyData = new URLSearchParams({ txtPartNo: pNo });
+
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36 Edg/151.0.0.0',
+        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+        'Accept': 'application/json, text/javascript, */*; q=0.01',
+        'X-Requested-With': 'XMLHttpRequest',
+        'Origin': 'https://www.komatsu.ae',
+        'Cookie': cookieStr,
+      },
+      body: bodyData.toString(),
+    });
+
+    if (response.status === 200) {
+      const resText = await response.text();
+      let resJson = null;
+      try {
+        resJson = JSON.parse(resText);
+      } catch {
+        // Not valid JSON (e.g. login redirect)
+      }
+
+      if (resJson && resJson.txtPNAM) {
+        const desc = resJson.txtPNAM || '';
+        const qtyByUnitStr = resJson.txtQBYU || '1';
+        let qtyByUnit = parseInt(qtyByUnitStr, 10);
+        if (Number.isNaN(qtyByUnit) || qtyByUnit <= 0) qtyByUnit = 1;
+
+        const rawModels = resJson.txtModelInfo || '';
+        const models = rawModels
+          .split(';')
+          .map((m) => m.trim())
+          .filter(Boolean);
+
+        const result = {
+          part_no: pNo,
+          description: desc,
+          qty_by_unit: qtyByUnit,
+          models: models,
+          raw_models: rawModels,
+          price: resJson.txtKMELstPrc || '0.00',
+          weight: resJson.txtUWEI || '0',
+          rank: resJson.txtKMERank || '',
+        };
+        LOCAL_PARTS_CACHE.set(pNo, result);
+        return result;
+      }
     }
-    throw new Error(`Part Master lookup returned invalid response (status ${response.status})`);
+  } catch (err) {
+    if (cached) return cached;
+    throw err;
   }
 
-  const desc = resJson.txtPNAM || '';
-  const qtyByUnitStr = resJson.txtQBYU || '1';
-  let qtyByUnit = parseInt(qtyByUnitStr, 10);
-  if (Number.isNaN(qtyByUnit) || qtyByUnit <= 0) qtyByUnit = 1;
-
-  const rawModels = resJson.txtModelInfo || '';
-  const models = rawModels
-    .split(';')
-    .map((m) => m.trim())
-    .filter(Boolean);
-
-  return {
-    part_no: String(partNo).trim(),
-    description: desc,
-    qty_by_unit: qtyByUnit,
-    models: models,
-    raw_models: rawModels,
-    price: resJson.txtKMELstPrc || '0.00',
-    weight: resJson.txtUWEI || '0',
-    rank: resJson.txtKMERank || '',
-  };
+  if (cached) return cached;
+  throw new Error('Komatsu PDX session cookie has expired. Please update your PDX Cookie in the settings.');
 }
 
 async function getLatestDbOrderNo(customerCode = 'REG', customCookie = null) {

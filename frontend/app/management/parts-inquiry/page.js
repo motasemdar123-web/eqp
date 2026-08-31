@@ -811,11 +811,25 @@ export default function SparePartsPage() {
           addLog(`✓ Order #${current.index} (${current.db_order_no} | SN: ${current.serial} | ${current.parts.length} items) created quotation ${res.quotation_no}`, 'success');
         } else {
           current.status = 'FAILED';
-          addLog(`✕ Order #${current.index} failed: ${res.error || 'Unknown error'}`, 'error');
+          const errMsg = res?.error || 'Unknown error';
+          addLog(`✕ Order #${current.index} failed: ${errMsg}`, 'error');
+
+          if (errMsg.toLowerCase().includes('cookie') || errMsg.toLowerCase().includes('expired')) {
+            setCookieModalOpen(true);
+            setToast({ type: 'error', message: 'PDX session expired. Please update your cookie or use Simulation Mode.' });
+            break;
+          }
         }
       } catch (err) {
         current.status = 'ERROR';
-        addLog(`✕ Order #${current.index} error: ${err.message}`, 'error');
+        const errMsg = err.message || 'Request failed';
+        addLog(`✕ Order #${current.index} error: ${errMsg}`, 'error');
+
+        if (errMsg.toLowerCase().includes('cookie') || errMsg.toLowerCase().includes('expired')) {
+          setCookieModalOpen(true);
+          setToast({ type: 'error', message: 'PDX session expired. Please update your cookie or use Simulation Mode.' });
+          break;
+        }
       }
 
       setPlannedOrders([...updatedOrders]);
@@ -864,9 +878,21 @@ export default function SparePartsPage() {
           addLog(`✓ Retry Order #${current.index} succeeded -> Quotation ${res.quotation_no}`, 'success');
         } else {
           current.status = 'FAILED';
+          const errMsg = res?.error || 'Unknown error';
+          if (errMsg.toLowerCase().includes('cookie') || errMsg.toLowerCase().includes('expired')) {
+            setCookieModalOpen(true);
+            setToast({ type: 'error', message: 'PDX session expired. Please update your cookie or use Simulation Mode.' });
+            break;
+          }
         }
-      } catch {
+      } catch (err) {
         current.status = 'ERROR';
+        const errMsg = err.message || 'Request failed';
+        if (errMsg.toLowerCase().includes('cookie') || errMsg.toLowerCase().includes('expired')) {
+          setCookieModalOpen(true);
+          setToast({ type: 'error', message: 'PDX session expired. Please update your cookie or use Simulation Mode.' });
+          break;
+        }
       }
       setPlannedOrders([...updatedOrders]);
       await new Promise((r) => setTimeout(r, 600));
@@ -1123,6 +1149,44 @@ export default function SparePartsPage() {
           />
         </div>
       </section>
+
+      {/* Cookie Expiration Warning Banner */}
+      {!status.connected && (
+        <div className="bg-amber-50 border border-amber-300 rounded-lg p-3.5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs text-amber-950 shadow-xs">
+          <div className="flex items-start gap-2.5">
+            <span className="text-base leading-none">⚠️</span>
+            <div>
+              <p className="font-bold text-amber-900">Komatsu PDX Session Cookie Expired</p>
+              <p className="text-amber-800 text-[11px] mt-0.5">
+                Live dispatching on the portal requires a fresh session cookie. You can paste your active cookie or toggle Simulation Mode to preview quotations.
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 shrink-0">
+            <Button
+              type="button"
+              variant="primary"
+              size="xs"
+              onClick={() => setCookieModalOpen(true)}
+            >
+              🔑 Update PDX Cookie
+            </Button>
+            {!eoDryRun && (
+              <Button
+                type="button"
+                variant="outline"
+                size="xs"
+                onClick={() => {
+                  setEoDryRun(true);
+                  setToast({ type: 'info', message: 'Switched to Simulation Mode (Dry Run).' });
+                }}
+              >
+                ⚡ Enable Simulation Mode
+              </Button>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Tab Navigation */}
       <div className="flex items-center justify-between border-b border-slate-200/80 pb-2">
