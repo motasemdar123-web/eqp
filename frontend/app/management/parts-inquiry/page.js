@@ -2061,15 +2061,21 @@ export default function SparePartsPage() {
         </DialogHeader>
         <form onSubmit={handleSaveCookie}>
           <DialogContent className="space-y-3">
-            <p className="text-xs text-slate-500">
-              Paste your active session cookie from the Komatsu PDX portal to authenticate Emergency Orders and Quotations.
+            <p className="text-xs text-slate-600">
+              Paste your full active Cookie header from the Komatsu PDX portal (<code>https://www.komatsu.ae/kmewebportal</code>).
             </p>
+            <div className="p-2.5 bg-blue-50 border border-blue-200 rounded text-[11px] text-blue-900 leading-relaxed">
+              <strong>💡 How to copy from Edge/Chrome:</strong><br />
+              1. In your Komatsu portal tab, press <kbd className="px-1 bg-white border rounded">F12</kbd> ➔ go to <strong>Network</strong> tab.<br />
+              2. Refresh or click any link ➔ click a request.<br />
+              3. Under <strong>Request Headers</strong>, copy the entire <code>Cookie:</code> string (make sure it includes <code>.AspNet.Cookies=...</code>).
+            </div>
             <Field label="Cookie Header String" required>
               <Textarea
-                rows={4}
+                rows={5}
                 value={cookieInput}
                 onChange={(e) => setCookieInput(e.target.value)}
-                placeholder="JSESSIONID=...; BIGipServer=..."
+                placeholder="SelectedLanguage=; .AspNet.Cookies=...; ASP.NET_SessionId=..."
                 className="font-mono text-xs"
               />
             </Field>
