@@ -277,8 +277,36 @@ async function getLatestDbOrderNo(customerCode = 'REG', customCookie = null) {
   };
 }
 
+function mergeCookies(existingCookieStr = '', setCookieHeaders = []) {
+  if (!setCookieHeaders || setCookieHeaders.length === 0) return existingCookieStr;
+  const headers = Array.isArray(setCookieHeaders) ? setCookieHeaders : [setCookieHeaders];
+  const cookieMap = new Map();
+
+  // Parse existing cookies
+  existingCookieStr.split(';').forEach((part) => {
+    const [k, ...v] = part.trim().split('=');
+    if (k && v.length > 0) {
+      cookieMap.set(k.trim(), v.join('=').trim());
+    }
+  });
+
+  // Merge Set-Cookie headers
+  headers.forEach((h) => {
+    if (!h) return;
+    const cookiePart = h.split(';')[0];
+    const [k, ...v] = cookiePart.trim().split('=');
+    if (k && v.length > 0) {
+      cookieMap.set(k.trim(), v.join('=').trim());
+    }
+  });
+
+  return Array.from(cookieMap.entries())
+    .map(([k, v]) => `${k}=${v}`)
+    .join('; ');
+}
+
 async function executeSingleEmergencyOrder(orderData, customCookie = null) {
-  const cookieStr = customCookie ? parseCookieInput(customCookie) : loadCookie();
+  let cookieStr = customCookie ? parseCookieInput(customCookie) : loadCookie();
   if (!cookieStr) {
     throw new Error('No PDX session cookie configured.');
   }
@@ -301,12 +329,20 @@ async function executeSingleEmergencyOrder(orderData, customCookie = null) {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36 Edg/151.0.0.0',
     'Accept-Language': 'en-US,en;q=0.9,ar;q=0.8',
     'Origin': 'https://www.komatsu.ae',
-    'Cookie': cookieStr,
   };
 
   // STEP 1: Reset session by calling QuotationCondition/Index
   const initUrl = `${BASE_PORTAL_URL}/QuotationCondition/Index`;
-  await fetch(initUrl, { method: 'GET', headers: defaultHeaders });
+  const initResp = await fetch(initUrl, {
+    method: 'GET',
+    headers: { ...defaultHeaders, Cookie: cookieStr },
+    redirect: 'follow',
+  });
+
+  const initSetCookies = initResp.headers.getSetCookie ? initResp.headers.getSetCookie() : [initResp.headers.get('set-cookie')].filter(Boolean);
+  if (initSetCookies.length > 0) {
+    cookieStr = mergeCookies(cookieStr, initSetCookies);
+  }
 
   // STEP 2: Save Quotation Condition
   const saveUrl = `${BASE_PORTAL_URL}/QuotationCondition/Save`;
@@ -385,9 +421,15 @@ async function executeSingleEmergencyOrder(orderData, customCookie = null) {
       'Accept': 'application/json, text/javascript, */*; q=0.01',
       'X-Requested-With': 'XMLHttpRequest',
       'Referer': initUrl,
+      'Cookie': cookieStr,
     },
     body: JSON.stringify(payload),
   });
+
+  const saveSetCookies = saveResp.headers.getSetCookie ? saveResp.headers.getSetCookie() : [saveResp.headers.get('set-cookie')].filter(Boolean);
+  if (saveSetCookies.length > 0) {
+    cookieStr = mergeCookies(cookieStr, saveSetCookies);
+  }
 
   const saveText = await saveResp.text();
   let saveJson;
@@ -417,7 +459,15 @@ async function executeSingleEmergencyOrder(orderData, customCookie = null) {
 
   // STEP 3: Load detail page & Search
   const detailUrl = `${BASE_PORTAL_URL}/QuotationDetails/Index?strQUTN=${newQtn}&strQutnSubNo=0&DBCode=${db_code}`;
-  await fetch(detailUrl, { method: 'GET', headers: defaultHeaders });
+  const detailResp = await fetch(detailUrl, {
+    method: 'GET',
+    headers: { ...defaultHeaders, Cookie: cookieStr },
+  });
+
+  const detailSetCookies = detailResp.headers.getSetCookie ? detailResp.headers.getSetCookie() : [detailResp.headers.get('set-cookie')].filter(Boolean);
+  if (detailSetCookies.length > 0) {
+    cookieStr = mergeCookies(cookieStr, detailSetCookies);
+  }
 
   const searchUrl = `${BASE_PORTAL_URL}/QuotationDetails/Search`;
   await fetch(searchUrl, {
@@ -427,6 +477,7 @@ async function executeSingleEmergencyOrder(orderData, customCookie = null) {
       'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
       'X-Requested-With': 'XMLHttpRequest',
       'Referer': detailUrl,
+      'Cookie': cookieStr,
     },
     body: new URLSearchParams({ qtno: newQtn, subqtno: '0', DBCode: db_code }).toString(),
   });
@@ -455,6 +506,7 @@ async function executeSingleEmergencyOrder(orderData, customCookie = null) {
       'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
       'X-Requested-With': 'XMLHttpRequest',
       'Referer': detailUrl,
+      'Cookie': cookieStr,
     },
     body: addData.toString(),
   });
@@ -484,6 +536,7 @@ async function executeSingleEmergencyOrder(orderData, customCookie = null) {
       'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
       'X-Requested-With': 'XMLHttpRequest',
       'Referer': detailUrl,
+      'Cookie': cookieStr,
     },
     body: updateData.toString(),
   });
