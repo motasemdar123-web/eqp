@@ -5,34 +5,79 @@ const COOKIE_FILE_PATH = path.join(__dirname, '../../data/pdx_cookies.txt');
 const INQUIRY_PAGE_URL = 'https://www.komatsu.ae/kmewebportal/StockInquiry/MultiplePartsStockInquiry';
 const SEARCH_API_URL = 'https://www.komatsu.ae/kmewebportal/StockInquiry/MultiPartsStockInqSearch';
 
+const DEFAULT_INITIAL_COOKIES =
+  'SelectedLanguage=; ' +
+  'ASP.NET_SessionId=dhikw34t4w02mzgqk5bckgg3; ' +
+  '.AspNet.Cookies=3diPcaSc4DOvzzM3fKBXLobcx-_b7h-kebCwlG9baEieeg-b3fLEzVUI6NkQhvYMKmeaNZl5NDLONnje8T6QAVgzLxFpt3uzr9zT2qAqVEDPyCGFCFzfIJhVn5zbC4LeOIGi5XsNTaamtJqZ3P6LoxG3cTPYyABNVgV4YU6I-N9mErrHIaYw5DaXOU3dsiAclNJO2x53-Po5hCkqbX-zt_drfKT2hVLflni7ZA_LrGzcyHqihO1qr73xNsD5z9x455D0iQrZYUQB_J4bInBK7fogTvv3V0p2QaVJoQ13pwe0nA49rE_3wT7jKrUbR3yQfBkNMsIPFjiKLkK2XRNh90fggcc2kXAY524E0ZsbEm6glLHIpM_nqVS9hLWjGogAUenzWBRUcIEFD9ZVa3c2DAk2jYxcUHkm00vnJ7MVK6-V-au5SqQLIQSY6m8DzmVLYNlNCR7cYvghxhY7nR3OQvbHjFoQF_rrdpiYFkx23wgbfTZSlNzhhW1hmtUmzOnp4WV_zf7G_9IVaubutGx9C97Lo5vKg1g2Ka34sIzFo2_UorW-MZPP6hsi8zk7T2fFrvpSfsfj1NGjVkL7xr34GIw6prGEVuk0Nmhmbx2jggnRpOUyT1SFBijvd4f6g-o5NnP14qooTRslosODoyoZ5DPBL_qCm7idEOeXks_FcWdi2tjMqYV6VawL7m67diXW2UX5F-DzOwdiRNah5rSMQg2hYzXbaceKVhAdEi3l9HtdA_Vdei3mEUTCsK69-Uk6tmX8MX5MGTNW81ukI8N_y9m8eCqEr6_kyLPkvO_LpGa8fxt3m2IRi_aGonKz2Nuj1DWSMZQzXekR96GE7Ed6Yv1KlbntKuAviO_d7YK8yrhXuX3IDMDZRrDVd41GB7XuSYWapsXa6IpEBrW0c-TFZsryQf7GQKOitgUmK6s7hC7kuPDwyNPWRybgfzl87SK9Ux24MlTlMp6UECtlNNRLpKHuA6oqMHovYclJqkZBxXIAvuGthh2WpSahgfUMCc1GieLAnhoIePcSd5CXQg7P_MnlH9A6ojvuTYmh8SqoY1Kmlh07QeCcovnD0nCctukzMF9arBnsISpYR5QOR9U94jUv7CzFWDNo3GpeYyHGUxcYJqdLAmb6emiBJizye2MZlYdQIDTy8eRSDuYZNvrjlyiw6IeS4LQZUo4fZ3brGD3j88Ag0lT8aXlqVXhKJzXy-U6-odFfaxJ5IRc_9APJ2GqeywGpNaXm2uSt5qpn8itDUf9JSO2-K1Ih1U5EIDfjhcwT4PksgAuYi7gDudWoNs6cXGuEZvFGMle2ehTsamKUj_3mln3kO2RibH-u7i5jWBB1aY-OvrF0jLYhPGmEX_MCuswqjmTPOsZZSbDa7HoRdfFPiQ3DiYQhqDOdDn7Eft23W13RxOz_Xvy2SXXiEy_BRKDkYig_8fTZF53YihbhBjj2kYiCx7sfPL4aqV4Xxd_cdSiXGwtu_haKllHUo-naYUWelfvhU59podgg8tBkdU51OBCD1fsKhVB16XZTsie0qynbqMONKDzrJ5041UPK01uZNUMe8mRRLSf6lyp9P5zIh8u9dDlDPuWJJzR8KpwVodWWKJ9zuIQyrgSUsYXVuO4EqAe99rPSCVh9xUM6xz4Cl97hflI1ov2D5HVa';
+
+let inMemoryCookie = '';
+
+function loadSavedCookieRaw() {
+  try {
+    if (fs.existsSync(COOKIE_FILE_PATH)) {
+      const saved = fs.readFileSync(COOKIE_FILE_PATH, 'utf-8').trim();
+      if (saved) return saved;
+    }
+  } catch {
+    // Ignore read error
+  }
+  return '';
+}
+
+function extractStoredAuthCookie() {
+  const current = inMemoryCookie || loadSavedCookieRaw() || DEFAULT_INITIAL_COOKIES;
+  const match = current.match(/\.AspNet\.Cookies=([^;]+)/);
+  return match ? match[1] : '';
+}
+
 function parseCookieInput(rawInput = '') {
   const trimmed = String(rawInput || '').trim();
-  if (!trimmed) return '';
+  if (!trimmed) return loadCookie();
 
+  let extracted = trimmed;
+
+  // If cURL command or header pasted
   if (trimmed.toLowerCase().includes('curl') || trimmed.toLowerCase().includes('invoke-webrequest') || trimmed.includes('fetch(')) {
     const match = trimmed.match(/-(?:H|-header)\s+['"](?:cookie:\s*)?([^'"]+)['"]/i);
-    if (match) return match[1].trim();
+    if (match) extracted = match[1].trim();
 
-    const match2 = trimmed.match(/["']?cookie["']?\s*:\s*["']([^"']+)["']/i);
-    if (match2) return match2[1].trim();
+    const match2 = trimmed.match(/-(?:b|-cookie)\s+['"]([^'"]+)['"]/i);
+    if (match2) extracted = match2[1].trim();
+
+    const match3 = trimmed.match(/["']?cookie["']?\s*:\s*["']([^"']+)["']/i);
+    if (match3) extracted = match3[1].trim();
   }
 
-  for (const line of trimmed.split('\n')) {
+  for (const line of extracted.split('\n')) {
     const lineTrimmed = line.trim();
     if (lineTrimmed.toLowerCase().startsWith('cookie:')) {
-      return lineTrimmed.slice(7).trim();
+      extracted = lineTrimmed.slice(7).trim();
+      break;
     }
   }
 
-  return trimmed;
+  // Parse key-value pairs
+  const map = new Map();
+  extracted.split(';').forEach((part) => {
+    const [k, ...v] = part.trim().split('=');
+    if (k && v.length > 0) {
+      map.set(k.trim(), v.join('=').trim());
+    }
+  });
+
+  // If user only provided document.cookie (missing .AspNet.Cookies), automatically merge with stored auth token!
+  if (!map.has('.AspNet.Cookies')) {
+    const savedAuth = extractStoredAuthCookie();
+    if (savedAuth) {
+      map.set('.AspNet.Cookies', savedAuth);
+    }
+  }
+
+  // Re-assemble complete cookie string
+  return Array.from(map.entries())
+    .map(([k, v]) => `${k}=${v}`)
+    .join('; ');
 }
-
-const DEFAULT_INITIAL_COOKIES =
-  'SelectedLanguage=; ' +
-  '.AspNet.Cookies=cqIYX_3LSAVsSB0yvBHA1Esz6Z7Nd5IRgDulEoi-WW19R66jyOkA_pcuA3J3tWkvl7DrkPwpWsMhRc8AcOnxGQ4JT-V3Qlge2OOEVBjO1g9XF7_rMu8l5qGOS6JpZFVxwr0nRaQEZEBUCHV9NKL7IkZaUEICoE35IMwNr8mlqpMRt8AOVrjzLJDFmR0R8oTzfJuxAVzqDH2g3huhvkVQVi0wcnS2gE-XYIVxksxnXb0-I6fHjSelGmMlFvTCm5Z1BMZ7YD6uaiKgIKvCYLFV81fUP0zGWLuLzpARxfbSQC_YUzdcBPTwEculK4B7Caz3oJ27h-Tc6Y_KVJsKqwg6-EIO8yVtbFt_1R20rMga5IDZiGp8hHPWBQax2Q20m7pC4ymPDZDTWpP0rNpFpbd12vjIpXkfqKYg15RiJZEQkYivi6TYu2YepVOu1pJ0M8HNcH7UzPf3zgHDEb-cHR8LZFvWJjeOL17o53kPNEIvQnMDiFf3OPFv9xVh5THfR9QgA4eaB0pDnyD8i4S6lPx4xH6yFi5-yjy98tTw4eR48wP_sW1ppU4gPzGt3F4G_klXy5XbLpvOmzUFtLbx0fVWflkBJK4zxZFmhly14D9-m9R1hddKJv3YQM-XzI-1Y1YXpvYMd9vVf6d-WvohFYcfrOOgHZozc8EnQdaGwIQe6hYHCaRftJ9b_t_YzygnrX-zJ7BCMAEDErE1JLwzBcfkqG22qEI8_GnEpoWHqx_jXRBlXUC3_gmLNIhXf8yrXRDSFMjdOIs_zhYXBg6pltzHmV1MVA9NgvPKgc4DPqdCbLSxyk9uPum2wOqWPvJ7sVjUtmVjKGrJY2P09zwOZmaF18vrjZT3DapMMNg9nzAdCTUVsCK-haC-Fq9lbXgNKb7xMKIFSX3euEx-1PCDfRWsFEnufRWyf1n8MyHvVTSJDpQkCDOdVHjEJMGuO5DDXm8cALpgOLLrbEP5e84gE2mTiKdhrVWFYFZ5kdwyAxftZz-sVCycQQAfrd4zvExB9SGzyY6qVBWSqBmqRYPnQzPG_MhO7CZ3kTcCeuCFINV6hKCITdyArNNIEwdQ7zlxglhNhZqQjH3TgRZlXah22ipdL6LT-2Pz_3A-N-OqsaXKA59_YXyoNsK93oj0jEzS_p5CQwkVGtv4Wo15iboqWLoa_XCynmtueqXJnxBwYVN1PWBfkMDphjRIb_BkbZv2Wa3PiO-5xhN59xK3Itzz72DmaqQnn72ELsjxSpp2Uk4iWOn-DUoDOT8ghcF-6CvSU3cpr1Qp9MjTseUIYvYvOj8XXbTt4-hsS8AqJetfsD5HpQQNk9hraZBJeNCHy_ClQrP9nIQPs3d5IUh_AgPvy42Mv1aI8mMJdhSW0eFlLkYc7IPbjNd5PeF7eJn4pXKltjbq23HZEbG3xQ4wP50QHx4ogQS81hftxiInh03xl-2ETm-l-r11zKapI_vZESarEeoQ_koccqaJV4-6qtCwFSkA1ApNYx9V76Vgj-fl0HaLobakaxG_IzjcqGmH6LkWR8sbtQRHqZAoA-O4jPaLHCOqFFD66tqlDQPfK6vfifDbS-yVbg_YE4XaExoeuIWafn8hnGPF2BETEz9dM3cLhLtf6O5WxbrayIYrR2OFOhW0OE7Sxqsykl63wYXIbFsWzpVB_; ' +
-  'ASP.NET_SessionId=f33mpgny11b3ikxgvclruxcl';
-
-let inMemoryCookie = '';
 
 function loadCookie() {
   if (inMemoryCookie) {
@@ -44,14 +89,9 @@ function loadCookie() {
   if (process.env.KOMATSU_COOKIES) {
     return parseCookieInput(process.env.KOMATSU_COOKIES);
   }
-  try {
-    if (fs.existsSync(COOKIE_FILE_PATH)) {
-      const saved = fs.readFileSync(COOKIE_FILE_PATH, 'utf-8').trim();
-      if (saved) return saved;
-    }
-  } catch {
-    // Ignore read error
-  }
+  const saved = loadSavedCookieRaw();
+  if (saved) return saved;
+
   return DEFAULT_INITIAL_COOKIES;
 }
 
@@ -272,6 +312,7 @@ async function runBulkInquiry(partRecords, customCookie = null) {
 module.exports = {
   saveCookie,
   loadCookie,
+  parseCookieInput,
   testPdxConnection,
   queryPdxBatch,
   runBulkInquiry,
