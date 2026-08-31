@@ -398,7 +398,7 @@ async function copyKomatsuQuotationToSo(req, res) {
     komatsuInquiryService.saveCookie(cookie);
   }
   try {
-    const result = await komatsuEoService.copyQuotationToSo(quotationNo, seqNo || '00', cookie, options || {});
+    const result = await komatsuEoService.copyQuotationToSo(quotationNo, seqNo || '00', options || {}, cookie);
     res.json({ success: true, ...result });
   } catch (err) {
     console.error(`[copyKomatsuQuotationToSo] Error for ${quotationNo}:`, err.message);

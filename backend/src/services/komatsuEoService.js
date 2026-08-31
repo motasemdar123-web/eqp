@@ -883,7 +883,14 @@ async function confirmQuotation(quotationNo, seqNo = '00', customCookie = null) 
 }
 
 async function copyQuotationToSo(quotationNo, seqNo = '00', options = {}, customCookie = null) {
-  const cookieStr = customCookie ? parseCookieInput(customCookie) : loadCookie();
+  let opts = typeof options === 'object' && options !== null ? options : {};
+  let cookie = customCookie;
+  if (typeof options === 'string') {
+    cookie = options;
+    opts = typeof customCookie === 'object' && customCookie !== null ? customCookie : {};
+  }
+
+  const cookieStr = cookie ? parseCookieInput(cookie) : loadCookie();
   if (!cookieStr) {
     throw new Error('No PDX session cookie configured.');
   }
