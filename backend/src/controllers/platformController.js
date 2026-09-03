@@ -263,7 +263,7 @@ async function saveKomatsuCookie(req, res) {
   }
   const saved = komatsuInquiryService.saveCookie(cookie);
   const status = await komatsuInquiryService.testPdxConnection(saved);
-  res.json({ success: true, ...status });
+  res.json({ success: true, ...status, cookie: saved });
 }
 
 async function runKomatsuInquiry(req, res) {

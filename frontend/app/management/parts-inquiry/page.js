@@ -298,10 +298,10 @@ export default function SparePartsPage() {
 
     try {
       setSavingCookie(true);
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('komatsuPdxCookie', cleanCookie);
-      }
       const res = await saveKomatsuCookie(cleanCookie);
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('komatsuPdxCookie', res?.cookie || cleanCookie);
+      }
       setStatus(res);
       if (res.connected) {
         setToast({ type: 'success', message: 'PDX session authenticated successfully!' });
@@ -2228,20 +2228,20 @@ export default function SparePartsPage() {
         <form onSubmit={handleSaveCookie}>
           <DialogContent className="space-y-3">
             <p className="text-xs text-slate-600">
-              Paste your full active Cookie header from the Komatsu PDX portal (<code>https://www.komatsu.ae/kmewebportal</code>).
+              Paste your session cookie from the Komatsu PDX portal (<code>https://www.komatsu.ae/kmewebportal</code>).
             </p>
             <div className="p-2.5 bg-blue-50 border border-blue-200 rounded text-[11px] text-blue-900 leading-relaxed">
-              <strong>💡 How to copy from Edge/Chrome:</strong><br />
-              1. In your Komatsu portal tab, press <kbd className="px-1 bg-white border rounded">F12</kbd> ➔ go to <strong>Network</strong> tab.<br />
-              2. Refresh or click any link ➔ click a request.<br />
-              3. Under <strong>Request Headers</strong>, copy the entire <code>Cookie:</code> string (make sure it includes <code>.AspNet.Cookies=...</code>).
+              <strong>💡 Easy way via Console:</strong><br />
+              1. In your logged-in Komatsu portal tab, press <kbd className="px-1 bg-white border rounded">F12</kbd> ➔ go to <strong>Console</strong>.<br />
+              2. Type <code>copy(document.cookie)</code> and press <kbd className="px-1 bg-white border rounded">Enter</kbd>.<br />
+              3. Paste here and click <strong>Save & Verify Cookie</strong>.
             </div>
-            <Field label="Cookie Header String" required>
+            <Field label="Cookie String" required>
               <Textarea
-                rows={5}
+                rows={4}
                 value={cookieInput}
                 onChange={(e) => setCookieInput(e.target.value)}
-                placeholder="SelectedLanguage=; .AspNet.Cookies=...; ASP.NET_SessionId=..."
+                placeholder="SelectedLanguage=; ASP.NET_SessionId=..."
                 className="font-mono text-xs"
               />
             </Field>
