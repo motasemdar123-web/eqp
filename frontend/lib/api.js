@@ -42,6 +42,12 @@ async function request(path, options = {}) {
   const data = await response.json().catch(() => ({}));
 
   if (!response.ok) {
+    if (response.status === 401) {
+      const err = String(data.error || '');
+      if (err.includes('session token') || err.includes('Session expired') || err.includes('Authentication required') || err.includes('expired token')) {
+        throw new Error('Your EQP portal login session has expired. Please refresh the page or sign back in.');
+      }
+    }
     throw new Error(data.error || 'Request failed');
   }
 

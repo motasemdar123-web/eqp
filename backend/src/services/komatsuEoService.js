@@ -134,6 +134,19 @@ const LOCAL_PARTS_CACHE = new Map([
       rank: 'E',
     },
   ],
+  [
+    '425-16-31270',
+    {
+      part_no: '425-16-31270',
+      description: 'DISC',
+      qty_by_unit: 1,
+      models: ['WA380-6', 'WA470-6', 'WA500-6'],
+      raw_models: 'WA380-6; WA470-6',
+      price: '144.94',
+      weight: '1200',
+      rank: 'A',
+    },
+  ],
 ]);
 
 function formatPortalDate(offsetDays = 14) {
@@ -442,7 +455,15 @@ async function executeSingleEmergencyOrder(orderData, customCookie = null) {
   try {
     saveJson = JSON.parse(saveText);
   } catch {
-    if (saveText.includes('Account/Login') || saveText.includes('<html') || saveResp.status === 401 || saveResp.status === 302) {
+    if (
+      saveText.includes('Account/Login') ||
+      saveText.includes('<html') ||
+      saveText.includes('/SSO/') ||
+      saveText.includes('Dashboard') ||
+      saveText.trim().startsWith('http') ||
+      saveResp.status === 401 ||
+      saveResp.status === 302
+    ) {
       throw new Error('Komatsu PDX session cookie has expired. Please update your PDX Cookie in the settings.');
     }
     throw new Error(`QuotationCondition/Save returned non-JSON (status ${saveResp.status}): ${saveText.slice(0, 200)}`);
