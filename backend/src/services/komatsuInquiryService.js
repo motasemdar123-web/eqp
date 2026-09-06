@@ -7,8 +7,8 @@ const SEARCH_API_URL = 'https://www.komatsu.ae/kmewebportal/StockInquiry/MultiPa
 
 const DEFAULT_INITIAL_COOKIES =
   'SelectedLanguage=; ' +
-  'ASP.NET_SessionId=dhikw34t4w02mzgqk5bckgg3; ' +
-  '.AspNet.Cookies=3diPcaSc4DOvzzM3fKBXLobcx-_b7h-kebCwlG9baEieeg-b3fLEzVUI6NkQhvYMKmeaNZl5NDLONnje8T6QAVgzLxFpt3uzr9zT2qAqVEDPyCGFCFzfIJhVn5zbC4LeOIGi5XsNTaamtJqZ3P6LoxG3cTPYyABNVgV4YU6I-N9mErrHIaYw5DaXOU3dsiAclNJO2x53-Po5hCkqbX-zt_drfKT2hVLflni7ZA_LrGzcyHqihO1qr73xNsD5z9x455D0iQrZYUQB_J4bInBK7fogTvv3V0p2QaVJoQ13pwe0nA49rE_3wT7jKrUbR3yQfBkNMsIPFjiKLkK2XRNh90fggcc2kXAY524E0ZsbEm6glLHIpM_nqVS9hLWjGogAUenzWBRUcIEFD9ZVa3c2DAk2jYxcUHkm00vnJ7MVK6-V-au5SqQLIQSY6m8DzmVLYNlNCR7cYvghxhY7nR3OQvbHjFoQF_rrdpiYFkx23wgbfTZSlNzhhW1hmtUmzOnp4WV_zf7G_9IVaubutGx9C97Lo5vKg1g2Ka34sIzFo2_UorW-MZPP6hsi8zk7T2fFrvpSfsfj1NGjVkL7xr34GIw6prGEVuk0Nmhmbx2jggnRpOUyT1SFBijvd4f6g-o5NnP14qooTRslosODoyoZ5DPBL_qCm7idEOeXks_FcWdi2tjMqYV6VawL7m67diXW2UX5F-DzOwdiRNah5rSMQg2hYzXbaceKVhAdEi3l9HtdA_Vdei3mEUTCsK69-Uk6tmX8MX5MGTNW81ukI8N_y9m8eCqEr6_kyLPkvO_LpGa8fxt3m2IRi_aGonKz2Nuj1DWSMZQzXekR96GE7Ed6Yv1KlbntKuAviO_d7YK8yrhXuX3IDMDZRrDVd41GB7XuSYWapsXa6IpEBrW0c-TFZsryQf7GQKOitgUmK6s7hC7kuPDwyNPWRybgfzl87SK9Ux24MlTlMp6UECtlNNRLpKHuA6oqMHovYclJqkZBxXIAvuGthh2WpSahgfUMCc1GieLAnhoIePcSd5CXQg7P_MnlH9A6ojvuTYmh8SqoY1Kmlh07QeCcovnD0nCctukzMF9arBnsISpYR5QOR9U94jUv7CzFWDNo3GpeYyHGUxcYJqdLAmb6emiBJizye2MZlYdQIDTy8eRSDuYZNvrjlyiw6IeS4LQZUo4fZ3brGD3j88Ag0lT8aXlqVXhKJzXy-U6-odFfaxJ5IRc_9APJ2GqeywGpNaXm2uSt5qpn8itDUf9JSO2-K1Ih1U5EIDfjhcwT4PksgAuYi7gDudWoNs6cXGuEZvFGMle2ehTsamKUj_3mln3kO2RibH-u7i5jWBB1aY-OvrF0jLYhPGmEX_MCuswqjmTPOsZZSbDa7HoRdfFPiQ3DiYQhqDOdDn7Eft23W13RxOz_Xvy2SXXiEy_BRKDkYig_8fTZF53YihbhBjj2kYiCx7sfPL4aqV4Xxd_cdSiXGwtu_haKllHUo-naYUWelfvhU59podgg8tBkdU51OBCD1fsKhVB16XZTsie0qynbqMONKDzrJ5041UPK01uZNUMe8mRRLSf6lyp9P5zIh8u9dDlDPuWJJzR8KpwVodWWKJ9zuIQyrgSUsYXVuO4EqAe99rPSCVh9xUM6xz4Cl97hflI1ov2D5HVa';
+  'ASP.NET_SessionId=1zp0iv5w2ulkhvcuviybpqwu; ' +
+  '.AspNet.Cookies=Civep9fb8HDo2vgXd9gD9Lwy8esQb4TiFKlms9asxL5zcAoeVvvMLZjQzrPwsyD0Pj9nOfbRSNfEA47X1Dj5VAve1vdqFxpO5hDPsziB48Gi4tjvUzfas2pNb-qmg2kmAKG7eTmdeQh2NwEnGV49fHck_ki6s7cQ39U04CqVxdOxEtDnEoQN-SaA8AT2IaJByBSRP3o8KrvC-nnokfgsKu7qleG8mFLU3VrsDBfVIzZdboUSUaXx1LSEUqDnGf9bv_7DEcxVEkK-QxfpHgd8NB1b_o7elx0LLNLHE0-UaMmzfAltPSlhJezUuC0XA7LUZZl0Bj5oHEu6TKBD5-z3aS7DH1bU_tR7oZ1QOK1J0FecZd1WLgIlBHdfYHHvOsm0yxKDpVRnXEkCWKS_o8viACgAG9ONaYanDSzuDaUHEQMFonM_JuvllS_enRcDdf0ASYTYcpeqFkR09343X7kSOzpTgH4End5didDTqyu6UZR2OIdEUB0v9I-OEb4CE-fbIDV8vvIahZYSQ2lfQp8DnrXXcM52mku1KVlE0dSvNo6yaz1AqUVZ18GkrXv0lyLqxiser_NLnRKFCaihYh5POlvaK3VatEMe9RBDsoEyMbX8wpitDoQB5Cjp_X8GhJhxP4H3eGngK2_efK5gYt6-9iv9G-YjoPkw6_2uswR2_eFKE744PkwVOtkPNvSOO7WU-lhw2lqI7SNu6dhVWOMfr98C4lbE3EcdCs9zerIVLmBBmillX8LKMW2AruOss5CaxSEKhs_rDZREnbCQchqH3GJVUXDs9Zy3wNw7cHm2bkH3XU3ufQMhSRi0_mFhFAyVjR-UlDeQulZV_FEHKGzUpwFFdBttYNg99WaZpeeTjJLc1z_ZkNG3UyH3J-obkvfcgtfbXtM7vDb9F425NOPjwWSsUnkA6pXqADZSAyOUKXTg5nVvVY7yuHaCFV0IPA4GbegoRJRENF0hzaUSV880y7mKZ8pdTe7rqilGFBY8tWyLfsNTPEKCdnRbUTltlAa4zLqSoMDRg2dz3eM5RgzbXWoWjyU2It8ZIFZl1QtjV0ShUrycAYX2zbrb42b_3J0j5H1LmKx9e7eS1H7QFVZGAgcT-pwtqXUy5Js-OJgzIlgHjG5pjIzdHtLHsg3_cb9LedH_toxtUEKqRFkJL1mxSXhNoQYrl_R2h_akQ3KJMrdqmMx4Dig5L2TClZ5moZSTWfYY2VuQOh0q1bu37Xv8KvUJjt_yHvRi542mI6Vqpi207nCX3dSaal6RzNQjSZ1rEgGJ-empk5gu3_hZeVKgO_rBK9KI1vUwwrTRZBikYbNFiZAJjRkCh44hfN-S0moUSP9f8hZkYxRYXob7rFOU6d4NiWLMLr816rceCHDEK1TiPK2FEV-XjFECjhdAe7nntsqxWUoxD__uDaYU1GD5m9ctgig64uHUGFlIdq6uiQc6NJrID6Bfa1F4cRnUyqe2iNGI_r3jhYT41o5u8V6maP-1EqxTmnkwysTxoE0ErTQprNC_VhYJF19X_CZpM7E4TfHLXDZ4OGuYAUCSfRuzIoxycep7apXpw6Wu4Ee0JbCG8vLjzrJO-UeIDt2KNSgFHdKCd8kdZZ6ODzMrz74cCr2IKxv0o5tDEg5boP1pi9i9V4e0xXt1-r4bxLeThS2r';
 
 let inMemoryCookie = '';
 
@@ -134,24 +134,26 @@ async function testPdxConnection(customCookie = null) {
     const text = await response.text();
     const finalUrl = response.url || '';
 
-    if (finalUrl.includes('login.microsoftonline.com') || text.includes('Sign in to your account')) {
+    if (
+      finalUrl.includes('login.microsoftonline.com') ||
+      finalUrl.includes('SSO/Dashboard') ||
+      text.includes('Sign in to your account') ||
+      !finalUrl.includes('kmewebportal')
+    ) {
       return { connected: false, message: 'PDX Session expired. Please copy fresh cookies from your Edge browser tab.' };
     }
 
-    if (finalUrl.includes('MultiplePartsStockInquiry') || text.includes('PDX') || text.includes('KOMATSU')) {
-      const userMatch = text.match(/([A-Za-z\s]+),\s*Database:\s*([A-Za-z0-9_]+)/);
-      if (userMatch) {
-        return {
-          connected: true,
-          user: userMatch[1].trim(),
-          database: userMatch[2].trim(),
-          message: `Connected as ${userMatch[1].trim()} (${userMatch[2].trim()})`,
-        };
-      }
-      return { connected: true, message: 'Successfully connected to Komatsu PDX portal!' };
+    const userMatch = text.match(/([A-Za-z\s]+),\s*Database:\s*([A-Za-z0-9_]+)/);
+    if (userMatch) {
+      return {
+        connected: true,
+        user: userMatch[1].trim(),
+        database: userMatch[2].trim(),
+        message: `Connected as ${userMatch[1].trim()} (${userMatch[2].trim()})`,
+      };
     }
 
-    return { connected: false, message: `Unexpected response status: ${response.status}` };
+    return { connected: false, message: 'PDX Session invalid or expired. Please refresh your session cookie.' };
   } catch (error) {
     return { connected: false, message: `Network error connecting to Komatsu PDX: ${error.message}` };
   }

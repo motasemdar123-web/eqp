@@ -419,7 +419,7 @@ async function executeSingleEmergencyOrder(orderData, customCookie = null) {
       ModelCode: model_code || 'PC500LC-10R',
       SerialNo: serial_no || '100433',
       EngineSrNo: '-',
-      CustomerDetails: customer_detail || 'LAALA AL-KUWAIT REAL ESTATE',
+      CustomerDetails: customer_detail || 'DAR AL HAI',
       ModelInfoMark: true,
       jobCard: '',
       Warranty: '',
@@ -457,7 +457,6 @@ async function executeSingleEmergencyOrder(orderData, customCookie = null) {
   } catch {
     if (
       saveText.includes('Account/Login') ||
-      saveText.includes('<html') ||
       saveText.includes('/SSO/') ||
       saveText.includes('Dashboard') ||
       saveText.trim().startsWith('http') ||
