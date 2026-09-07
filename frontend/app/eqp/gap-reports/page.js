@@ -323,6 +323,7 @@ function GapReportsStudio() {
         reportDates: selectedDates,
         skipCounterUpdates: true, // Guarantees zero alteration of machine last_smr and report_counter
         autoUploadToEqp,
+        eqpcCookie: typeof window !== 'undefined' ? localStorage.getItem('eqpc_user_cookie') || '' : '',
       };
 
       if (smrMode === 'uniform' && uniformSmr) {
@@ -347,10 +348,31 @@ function GapReportsStudio() {
       const data = await generateReports(payload);
 
       setGenerationSummary(data);
-      setToast({
-        type: 'success',
-        message: `Successfully created ${data.generatedFiles?.length || totalReportsCount} certified gap reports without altering live fleet meters!`,
-      });
+
+      if (data.eqpCare) {
+        if (data.eqpCare.successful > 0 && data.eqpCare.failed === 0) {
+          setToast({
+            type: 'success',
+            message: `🎉 Generated ${data.generatedFiles?.length || totalReportsCount} reports and uploaded all to Komatsu EQP Care successfully!`,
+          });
+        } else if (data.eqpCare.failed > 0 && data.eqpCare.successful > 0) {
+          setToast({
+            type: 'warning',
+            message: `⚠️ Generated ${data.generatedFiles?.length || totalReportsCount} reports. EQP Care: ${data.eqpCare.successful} uploaded, ${data.eqpCare.failed} failed.`,
+          });
+        } else if (data.eqpCare.failed > 0) {
+          const errMsg = data.eqpCare.errors?.[0]?.error || data.eqpCare.error || 'Session expired or invalid';
+          setToast({
+            type: 'warning',
+            message: `⚠️ Generated ${data.generatedFiles?.length || totalReportsCount} reports, but EQP Care upload failed (${errMsg}). Update session in EQP Care Studio.`,
+          });
+        }
+      } else {
+        setToast({
+          type: 'success',
+          message: `Successfully created ${data.generatedFiles?.length || totalReportsCount} certified gap reports without altering live fleet meters!`,
+        });
+      }
 
       // Refresh reports to update lifecycle records
       const updatedReports = await getReports().catch(() => []);

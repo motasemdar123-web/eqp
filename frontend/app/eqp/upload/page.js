@@ -306,15 +306,27 @@ export default function EqpCareUploadPage() {
       else if (sType.includes('NEW') || sType.includes('DELIVERY')) mappedCode = 'W41N';
       else mappedCode = 'W41X';
 
+      const rawModel = r.machine_type || r.machine?.machineType || 'HM400';
+      const mType = String(rawModel).toUpperCase();
+      let type = '3';
+      let subtype = 'R';
+      if (mType.includes('PC')) {
+        type = '8';
+        subtype = 'R';
+      } else if (mType.includes('D155') || mType.includes('WA')) {
+        type = '6';
+        subtype = 'R';
+      }
+
       return {
-        model: r.machine_type || r.machine?.machineType || 'HM400',
-        type: '3',
-        subtype: 'R',
+        model: rawModel,
+        type,
+        subtype,
         serialNo: r.machine_number || r.machine?.machineNumber || '',
         eventCode: mappedCode,
         serviceDate: r.service_date ? new Date(r.service_date).toISOString().slice(0, 10) : new Date().toISOString().slice(0, 10),
         smr: r.smr || 0,
-        customer: r.machine?.customerName || "LA'ALA AL-KUWAIT REAL ESTATE CO.",
+        customer: r.machine?.customerName || r.customer_name || "LA'ALA AL-KUWAIT REAL ESTATE CO.",
         comments: r.comments || 'Periodic maintenance service completed.',
         reportId: r.id,
         fileName: r.file_name,

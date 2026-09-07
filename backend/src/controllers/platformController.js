@@ -419,7 +419,8 @@ async function copyKomatsuQuotationToSo(req, res) {
 // ----------------------------------------------------
 
 async function getEqpcStatus(req, res) {
-  const status = await komatsuEqpCareService.testEqpcConnection();
+  const customCookie = req.query.cookie || req.body?.cookie || req.headers['x-eqpc-cookie'] || null;
+  const status = await komatsuEqpCareService.testEqpcConnection(customCookie);
   res.json({
     success: true,
     ...status,
@@ -454,21 +455,26 @@ async function uploadEqpcReport(req, res) {
   const reportData = req.body || {};
   requireFields(reportData, ['model', 'serialNo', 'eventCode', 'serviceDate']);
 
-  const result = await komatsuEqpCareService.uploadReportToEqpCare({
-    ...reportData,
-    performedBy: req.platformUser?.fullName || req.user?.fullName || 'IBRAHIM AHMAD ALDARAWSHEH',
-  });
+  const customCookie = reportData.cookie || req.headers['x-eqpc-cookie'] || null;
+  const result = await komatsuEqpCareService.uploadReportToEqpCare(
+    {
+      ...reportData,
+      performedBy: req.platformUser?.fullName || req.user?.fullName || 'IBRAHIM AHMAD ALDARAWSHEH',
+    },
+    customCookie
+  );
 
   res.json({ success: true, ...result });
 }
 
 async function batchUploadEqpcReports(req, res) {
-  const { items } = req.body || {};
+  const { items, cookie } = req.body || {};
   if (!Array.isArray(items) || items.length === 0) {
     return res.status(400).json({ success: false, message: 'Array of report items is required' });
   }
 
-  const result = await komatsuEqpCareService.batchUploadReports(items);
+  const customCookie = cookie || req.headers['x-eqpc-cookie'] || null;
+  const result = await komatsuEqpCareService.batchUploadReports(items, customCookie);
   res.json({ success: true, ...result });
 }
 

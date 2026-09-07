@@ -285,15 +285,27 @@ export default function ReportsPage() {
       const rawDate = r.service_date || r.created_at || new Date().toISOString();
       const serviceDate = rawDate ? new Date(rawDate).toISOString().slice(0, 10) : new Date().toISOString().slice(0, 10);
 
+      const rawModel = r.machine_type || r.machine?.machineType || 'HM400';
+      const mType = String(rawModel).toUpperCase();
+      let type = '3';
+      let subtype = 'R';
+      if (mType.includes('PC')) {
+        type = '8';
+        subtype = 'R';
+      } else if (mType.includes('D155') || mType.includes('WA')) {
+        type = '6';
+        subtype = 'R';
+      }
+
       return {
-        model: r.machine_type || r.machine?.machineType || 'HM400',
-        type: '3',
-        subtype: 'R',
+        model: rawModel,
+        type,
+        subtype,
         serialNo: r.machine_number || r.machine?.machineNumber || '',
         eventCode: mappedCode,
         serviceDate,
         smr: Number(r.smr) || (r.machine?.smr ? Number(r.machine.smr) : 0),
-        customer: r.machine?.customerName || "LA'ALA AL-KUWAIT REAL ESTATE CO.",
+        customer: r.machine?.customerName || r.customer_name || "LA'ALA AL-KUWAIT REAL ESTATE CO.",
         comments: r.comments || `Scheduled periodic maintenance service (${sType || 'PM'}) completed according to Komatsu specifications.`,
         reportId: r.id,
         fileName: r.file_name,

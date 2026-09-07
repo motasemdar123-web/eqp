@@ -64,6 +64,35 @@ describe('Komatsu Equipment Care (EQP Care) Service', () => {
       expect(pc400.type).toBe('8');
       expect(pc400.subtype).toBe('R');
     });
+
+    test('resolveMachineTypeAndSubtype handles all Komatsu fleet classes and autocorrects mismatched types', () => {
+      expect(komatsuEqpCareService.resolveMachineTypeAndSubtype('PC400-8R')).toEqual({ type: '8', subtype: 'R' });
+      expect(komatsuEqpCareService.resolveMachineTypeAndSubtype('PC500LC-10M0')).toEqual({ type: '8', subtype: 'R' });
+      expect(komatsuEqpCareService.resolveMachineTypeAndSubtype('D155A-6R')).toEqual({ type: '6', subtype: 'R' });
+      expect(komatsuEqpCareService.resolveMachineTypeAndSubtype('WA600-6')).toEqual({ type: '6', subtype: 'R' });
+      expect(komatsuEqpCareService.resolveMachineTypeAndSubtype('HM400-2')).toEqual({ type: '3', subtype: 'R' });
+
+      // Autocorrects PC400 when incorrectly passed as Dump Truck (Type 3)
+      expect(komatsuEqpCareService.resolveMachineTypeAndSubtype('PC400', '3', 'R')).toEqual({ type: '8', subtype: 'R' });
+      // Autocorrects D155A when incorrectly passed as Dump Truck (Type 3)
+      expect(komatsuEqpCareService.resolveMachineTypeAndSubtype('D155A', '3', 'R')).toEqual({ type: '6', subtype: 'R' });
+    });
+  });
+
+  describe('Connection & Session Security', () => {
+    test('rejects placeholder test cookies with informative error', async () => {
+      const res = await komatsuEqpCareService.testEqpcConnection('JSESSIONID=test_session_xyz; userId=s021895');
+      expect(res.connected).toBe(false);
+      expect(res.status).toBe(401);
+      expect(res.message).toContain('No active Komatsu Equipment Care session cookie configured');
+    });
+
+    test('rejects cookies missing JSESSIONID', async () => {
+      const res = await komatsuEqpCareService.testEqpcConnection('userId=s021895; eqpMenuCtg=E');
+      expect(res.connected).toBe(false);
+      expect(res.status).toBe(401);
+      expect(res.message).toContain("missing 'JSESSIONID'");
+    });
   });
 
   describe('Report Upload Validation', () => {

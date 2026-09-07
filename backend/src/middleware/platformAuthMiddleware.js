@@ -23,7 +23,21 @@ function requirePlatformAuth(req, res, next) {
       throw new ApiError(401, 'Authentication required');
     }
 
-    req.platformUser = verifyPlatformJwt(token);
+    try {
+      req.platformUser = verifyPlatformJwt(token);
+    } catch (jwtErr) {
+      const { verifySessionToken } = require('../utils/sessionToken');
+      const sessionUser = verifySessionToken(token);
+      req.platformUser = {
+        sub: sessionUser.sub || sessionUser.id,
+        userNumber: sessionUser.userNumber || sessionUser.user_number,
+        fullName: sessionUser.fullName || sessionUser.full_name,
+        email: sessionUser.email,
+        roles: sessionUser.roles || ['ENGINEER'],
+        permissions: sessionUser.permissions || ['EQP_MANAGE', 'REPORTS_READ', 'REPORTS_WRITE'],
+      };
+      req.user = sessionUser;
+    }
     next();
   } catch (error) {
     next(error.statusCode ? error : new ApiError(401, 'Invalid or expired token'));

@@ -1756,30 +1756,47 @@ async function generateReports(payload) {
     }
   }
 
+  let eqpCareResult = null;
   if (payload.autoUploadToEqp || payload.autoUploadToEqpc) {
+    const userCookie = payload.eqpcCookie || payload.cookie || null;
     const eqpcItems = reportJobs.map((job) => {
-      const matchedFile = generatedFiles.find((f) => String(f.machine) === String(job.machine.machine_number));
+      const matchedFile =
+        generatedFiles.find((f) => f.report === job.reportNo || f.file === job.fileName) ||
+        generatedFiles.find((f) => String(f.machine) === String(job.machine.machine_number));
+      const { type, subtype } = komatsuEqpCareService.resolveMachineTypeAndSubtype(job.machine.machine_type);
       return {
         model: job.machine.machine_type,
+        type,
+        subtype,
         serialNo: job.machine.machine_number,
         smr: job.smr,
         serviceDate: job.serviceDate,
         eventCode: komatsuEqpCareService.mapServiceTypeToEventCode(job.serviceType),
-        customer: job.customerName || "LA'ALA AL-KUWAIT REAL ESTATE CO.",
+        customer: job.machine?.customer_name || job.customerName || "LA'ALA AL-KUWAIT REAL ESTATE CO.",
         comments: job.comments,
         fileName: job.fileName,
         fileUrl: matchedFile?.fileUrl || null,
+        fileBuffer: pdfBuffers.get(job.id) || null,
       };
     });
 
-    komatsuEqpCareService.batchUploadReports(eqpcItems).catch((err) => {
-      console.warn('[autoUploadToEqp] Background EQP Care auto-upload notice:', err.message);
-    });
+    try {
+      eqpCareResult = await komatsuEqpCareService.batchUploadReports(eqpcItems, userCookie);
+    } catch (err) {
+      console.warn('[autoUploadToEqp] EQP Care auto-upload notice:', err.message);
+      eqpCareResult = {
+        total: eqpcItems.length,
+        successful: 0,
+        failed: eqpcItems.length,
+        error: err.message,
+      };
+    }
   }
 
   return {
     totalMachines: machines.length,
     generatedFiles,
+    eqpCare: eqpCareResult,
     reportMaker: {
       id: user.id,
       fullName: user.full_name,
