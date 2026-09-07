@@ -90,6 +90,9 @@ describe('report service type handling', () => {
     expect(getLifecycleReportCount('88767', 'W41X')).toBe(22);
     expect(getLifecycleReportCount('9720', 'W30')).toBe(7);
     expect(getLifecycleReportCount('9720', 'W41X')).toBe(6);
+    expect(getLifecycleReportCount('77150', 'W41X')).toBe(21);
+    expect(getLifecycleReportCount('77151', 'W41X')).toBe(22);
+    expect(getLifecycleReportCount('77326', 'W41X')).toBe(20);
   });
 
   it('continues repeating report counters from persistent machine report_counter or lifecycle', () => {
@@ -110,5 +113,42 @@ describe('report service type handling', () => {
       },
       reportType: 'W41X',
     })).toBe(22);
+
+    expect(getInitialRepeatingReportCounter({
+      machine: {
+        id: 40,
+        machine_number: '77150',
+        report_counter: 21,
+      },
+      reportType: 'W41X',
+    })).toBe(21);
+
+    expect(getInitialRepeatingReportCounter({
+      machine: {
+        id: 52,
+        machine_number: '77326',
+        report_counter: 20,
+      },
+      reportType: 'W41X',
+    })).toBe(20);
+  });
+
+  it('names PC400 reports sequentially without counter jumps', () => {
+    expect(buildReportFileName({
+      machineModel: 'PC400',
+      machineNumber: '77150',
+      reportType: getEffectiveReportType('W41X', 'Add. Service'),
+      serviceType: 'Add. Service',
+      reportCounter: 22,
+    })).toBe('PC400 77150 Ex_22.pdf');
+
+    expect(buildReportFileName({
+      machineModel: 'PC400',
+      machineNumber: '77326',
+      reportType: getEffectiveReportType('W41X', 'Add. Service'),
+      serviceType: 'Add. Service',
+      reportCounter: 21,
+    })).toBe('PC400 77326 Ex_21.pdf');
   });
 });
+

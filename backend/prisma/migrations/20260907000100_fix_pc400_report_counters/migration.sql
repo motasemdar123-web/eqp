@@ -1,0 +1,19 @@
+-- Fix PC400 report counters to match baseline uploaded report suffixes and prevent naming jumps
+UPDATE "eqp_machines" SET "report_counter" = 21, "updated_at" = CURRENT_TIMESTAMP WHERE "machine_number" = '77149' AND "machine_type" = 'PC400';
+UPDATE "eqp_machines" SET "report_counter" = 21, "updated_at" = CURRENT_TIMESTAMP WHERE "machine_number" = '77150' AND "machine_type" = 'PC400';
+UPDATE "eqp_machines" SET "report_counter" = 22, "updated_at" = CURRENT_TIMESTAMP WHERE "machine_number" = '77151' AND "machine_type" = 'PC400';
+UPDATE "eqp_machines" SET "report_counter" = 22, "updated_at" = CURRENT_TIMESTAMP WHERE "machine_number" = '77152' AND "machine_type" = 'PC400';
+UPDATE "eqp_machines" SET "report_counter" = 21, "updated_at" = CURRENT_TIMESTAMP WHERE "machine_number" = '77153' AND "machine_type" = 'PC400';
+UPDATE "eqp_machines" SET "report_counter" = 22, "updated_at" = CURRENT_TIMESTAMP WHERE "machine_number" = '77175' AND "machine_type" = 'PC400';
+UPDATE "eqp_machines" SET "report_counter" = 22, "updated_at" = CURRENT_TIMESTAMP WHERE "machine_number" = '77177' AND "machine_type" = 'PC400';
+UPDATE "eqp_machines" SET "report_counter" = 22, "updated_at" = CURRENT_TIMESTAMP WHERE "machine_number" = '77178' AND "machine_type" = 'PC400';
+UPDATE "eqp_machines" SET "report_counter" = 21, "updated_at" = CURRENT_TIMESTAMP WHERE "machine_number" = '77321' AND "machine_type" = 'PC400';
+UPDATE "eqp_machines" SET "report_counter" = 21, "updated_at" = CURRENT_TIMESTAMP WHERE "machine_number" = '77322' AND "machine_type" = 'PC400';
+UPDATE "eqp_machines" SET "report_counter" = 21, "updated_at" = CURRENT_TIMESTAMP WHERE "machine_number" = '77323' AND "machine_type" = 'PC400';
+UPDATE "eqp_machines" SET "report_counter" = 21, "updated_at" = CURRENT_TIMESTAMP WHERE "machine_number" = '77324' AND "machine_type" = 'PC400';
+UPDATE "eqp_machines" SET "report_counter" = 21, "updated_at" = CURRENT_TIMESTAMP WHERE "machine_number" = '77325' AND "machine_type" = 'PC400';
+UPDATE "eqp_machines" SET "report_counter" = 20, "updated_at" = CURRENT_TIMESTAMP WHERE "machine_number" = '77326' AND "machine_type" = 'PC400';
+UPDATE "eqp_machines" SET "report_counter" = 20, "updated_at" = CURRENT_TIMESTAMP WHERE "machine_number" = '77327' AND "machine_type" = 'PC400';
+UPDATE "eqp_machines" SET "report_counter" = 20, "updated_at" = CURRENT_TIMESTAMP WHERE "machine_number" = '77336' AND "machine_type" = 'PC400';
+UPDATE "eqp_machines" SET "report_counter" = 20, "updated_at" = CURRENT_TIMESTAMP WHERE "machine_number" = '77338' AND "machine_type" = 'PC400';
+UPDATE "eqp_machines" SET "report_counter" = 20, "updated_at" = CURRENT_TIMESTAMP WHERE "machine_number" = '77339' AND "machine_type" = 'PC400';

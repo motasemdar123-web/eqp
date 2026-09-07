@@ -80,78 +80,65 @@ function planMultiItemEoOrders({
   return orders;
 }
 
-// ============================================
-// TEST SUITE
-// ============================================
-console.log('Testing Multi-Item & Multi-SN EO Planning Engine...');
+describe('Multi-Item & Multi-SN EO Planning Engine', () => {
+  it('bundles 2 items together when quantities fit in 1 sub-order', () => {
+    const items = [
+      { part_no: '2A8-62-12230', description: 'HOSE', quantity: 12, max_per_order: 12, unit_price: '51.200', unit: 'EA' },
+      { part_no: '2A8-62-11751', description: 'HOSE', quantity: 10, max_per_order: 10, unit_price: '54.100', unit: 'EA' },
+    ];
+    const machines = [
+      { customer: 'DAR AL HAI', model: 'PC500LC-10R', serial: '100433' },
+    ];
 
-// Test 1: Bundling 2 items together when quantities fit in 1 sub-order
-{
-  const items = [
-    { part_no: '2A8-62-12230', description: 'HOSE', quantity: 12, max_per_order: 12, unit_price: '51.200', unit: 'EA' },
-    { part_no: '2A8-62-11751', description: 'HOSE', quantity: 10, max_per_order: 10, unit_price: '54.100', unit: 'EA' },
-  ];
-  const machines = [
-    { customer: 'DAR AL HAI', model: 'PC500LC-10R', serial: '100433' },
-  ];
+    const orders = planMultiItemEoOrders({ items, selectedMachines: machines, startingOrderNo: 'R153/2026' });
 
-  const orders = planMultiItemEoOrders({ items, selectedMachines: machines, startingOrderNo: 'R153/2026' });
+    expect(orders.length).toBe(1);
+    expect(orders[0].parts.length).toBe(2);
+    expect(orders[0].parts[0].part_no).toBe('2A8-62-12230');
+    expect(orders[0].parts[0].quantity).toBe(12);
+    expect(orders[0].parts[0].total_price).toBe('614.400');
+    expect(orders[0].parts[1].part_no).toBe('2A8-62-11751');
+    expect(orders[0].parts[1].quantity).toBe(10);
+    expect(orders[0].parts[1].total_price).toBe('541.000');
+    expect(orders[0].total_amount).toBe('1155.400');
+  });
 
-  assert.strictEqual(orders.length, 1, 'Should create exactly 1 sub-order when all parts fit in batch limit');
-  assert.strictEqual(orders[0].parts.length, 2, 'Sub-order #1 must contain both part numbers together');
-  assert.strictEqual(orders[0].parts[0].part_no, '2A8-62-12230');
-  assert.strictEqual(orders[0].parts[0].quantity, 12);
-  assert.strictEqual(orders[0].parts[0].total_price, '614.400');
-  assert.strictEqual(orders[0].parts[1].part_no, '2A8-62-11751');
-  assert.strictEqual(orders[0].parts[1].quantity, 10);
-  assert.strictEqual(orders[0].parts[1].total_price, '541.000');
-  assert.strictEqual(orders[0].total_amount, '1155.400');
-  console.log('✓ Test 1 Passed: Both items requested together in single sub-order.');
-}
+  it('splits multi-items with different quantities across multi-SNs', () => {
+    const items = [
+      { part_no: '2A8-62-12230', description: 'HOSE', quantity: 12, max_per_order: 6, unit_price: '50.000', unit: 'EA' },
+      { part_no: '2A8-62-11751', description: 'HOSE', quantity: 5, max_per_order: 5, unit_price: '50.000', unit: 'EA' },
+      { part_no: '6745-12-3100', description: 'VALVE', quantity: 18, max_per_order: 6, unit_price: '100.000', unit: 'EA' },
+    ];
+    const machines = [
+      { customer: 'DAR AL HAI', model: 'PC500LC-10R', serial: '100433' },
+      { customer: 'DAR AL HAI', model: 'PC500LC-10R', serial: '100434' },
+      { customer: 'DAR AL HAI', model: 'PC500LC-10R', serial: '100435' },
+    ];
 
-// Test 2: Multi-Item with different quantities splitting across Multi-SNs
-// Part A (qty 12, max 6) -> 2 batches
-// Part B (qty 5, max 5) -> 1 batch
-// Part C (qty 18, max 6) -> 3 batches
-{
-  const items = [
-    { part_no: '2A8-62-12230', description: 'HOSE', quantity: 12, max_per_order: 6, unit_price: '50.000', unit: 'EA' },
-    { part_no: '2A8-62-11751', description: 'HOSE', quantity: 5, max_per_order: 5, unit_price: '50.000', unit: 'EA' },
-    { part_no: '6745-12-3100', description: 'VALVE', quantity: 18, max_per_order: 6, unit_price: '100.000', unit: 'EA' },
-  ];
-  const machines = [
-    { customer: 'DAR AL HAI', model: 'PC500LC-10R', serial: '100433' },
-    { customer: 'DAR AL HAI', model: 'PC500LC-10R', serial: '100434' },
-    { customer: 'DAR AL HAI', model: 'PC500LC-10R', serial: '100435' },
-  ];
+    const orders = planMultiItemEoOrders({ items, selectedMachines: machines, startingOrderNo: 'R100/2026' });
 
-  const orders = planMultiItemEoOrders({ items, selectedMachines: machines, startingOrderNo: 'R100/2026' });
+    expect(orders.length).toBe(3);
 
-  assert.strictEqual(orders.length, 3, 'Should create 3 sub-orders to fulfill all quantities');
-  
-  // Order #1: SN 100433, has all 3 parts together
-  assert.strictEqual(orders[0].db_order_no, 'R100/2026');
-  assert.strictEqual(orders[0].serial, '100433');
-  assert.strictEqual(orders[0].parts.length, 3, 'Order #1 has Part A, Part B, Part C together');
-  assert.strictEqual(orders[0].parts[0].quantity, 6);
-  assert.strictEqual(orders[0].parts[1].quantity, 5);
-  assert.strictEqual(orders[0].parts[2].quantity, 6);
+    // Order #1: SN 100433, has all 3 parts together
+    expect(orders[0].db_order_no).toBe('R100/2026');
+    expect(orders[0].serial).toBe('100433');
+    expect(orders[0].parts.length).toBe(3);
+    expect(orders[0].parts[0].quantity).toBe(6);
+    expect(orders[0].parts[1].quantity).toBe(5);
+    expect(orders[0].parts[2].quantity).toBe(6);
 
-  // Order #2: SN 100434, has Part A (6) and Part C (6), Part B is done
-  assert.strictEqual(orders[1].db_order_no, 'R101/2026');
-  assert.strictEqual(orders[1].serial, '100434');
-  assert.strictEqual(orders[1].parts.length, 2, 'Order #2 has Part A and Part C');
-  assert.strictEqual(orders[1].parts[0].quantity, 6);
-  assert.strictEqual(orders[1].parts[1].quantity, 6);
+    // Order #2: SN 100434, has Part A (6) and Part C (6), Part B is done
+    expect(orders[1].db_order_no).toBe('R101/2026');
+    expect(orders[1].serial).toBe('100434');
+    expect(orders[1].parts.length).toBe(2);
+    expect(orders[1].parts[0].quantity).toBe(6);
+    expect(orders[1].parts[1].quantity).toBe(6);
 
-  // Order #3: SN 100435, has only Part C remainder (6)
-  assert.strictEqual(orders[2].db_order_no, 'R102/2026');
-  assert.strictEqual(orders[2].serial, '100435');
-  assert.strictEqual(orders[2].parts.length, 1, 'Order #3 has only remaining Part C in a separate inquiry');
-  assert.strictEqual(orders[2].parts[0].part_no, '6745-12-3100');
-  assert.strictEqual(orders[2].parts[0].quantity, 6);
-
-  console.log('✓ Test 2 Passed: Multi-item packing together and separate remainder orders across Multi-SNs.');
-}
-
-console.log('\nAll Multi-Item & Multi-SN tests passed successfully!');
+    // Order #3: SN 100435, has only Part C remainder (6)
+    expect(orders[2].db_order_no).toBe('R102/2026');
+    expect(orders[2].serial).toBe('100435');
+    expect(orders[2].parts.length).toBe(1);
+    expect(orders[2].parts[0].part_no).toBe('6745-12-3100');
+    expect(orders[2].parts[0].quantity).toBe(6);
+  });
+});
