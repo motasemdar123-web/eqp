@@ -1589,10 +1589,22 @@ async function generateReports(payload) {
     }
 
     const skipCounterUpdates = Boolean(payload.skipCounterUpdates);
-    const hasManualSmr = payload.manualSmr !== undefined && payload.manualSmr !== null && payload.manualSmr !== '';
-    const manualSmrValue = hasManualSmr ? Math.max(0, Number(payload.manualSmr)) : null;
-    const hasManualReportCounter = payload.reportCounter !== undefined && payload.reportCounter !== null && payload.reportCounter !== '';
-    const manualReportCounterValue = hasManualReportCounter ? Math.max(1, Number(payload.reportCounter)) : null;
+
+    // Per-machine SMR override or batch fallback
+    const machineSmrOverride = payload.machineSmrMap?.[machine.id] ?? payload.machineSmrMap?.[machine.machine_number];
+    const hasMachineSmr = machineSmrOverride !== undefined && machineSmrOverride !== null && machineSmrOverride !== '';
+    const hasManualSmr = hasMachineSmr || (payload.manualSmr !== undefined && payload.manualSmr !== null && payload.manualSmr !== '');
+    const manualSmrValue = hasMachineSmr
+      ? Math.max(0, Number(machineSmrOverride))
+      : (hasManualSmr ? Math.max(0, Number(payload.manualSmr)) : null);
+
+    // Per-machine report counter override or batch fallback
+    const machineCounterOverride = payload.machineCounterMap?.[machine.id] ?? payload.machineCounterMap?.[machine.machine_number];
+    const hasMachineCounter = machineCounterOverride !== undefined && machineCounterOverride !== null && machineCounterOverride !== '';
+    const hasManualReportCounter = hasMachineCounter || (payload.reportCounter !== undefined && payload.reportCounter !== null && payload.reportCounter !== '');
+    const manualReportCounterValue = hasMachineCounter
+      ? Math.max(1, Number(machineCounterOverride))
+      : (hasManualReportCounter ? Math.max(1, Number(payload.reportCounter)) : null);
 
     let currentSMR = hasManualSmr ? manualSmrValue : Number(machine.last_smr);
     let currentStep = Number(machine.smr_step);

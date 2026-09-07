@@ -58,6 +58,13 @@ async function generateReports(req, res) {
     ? Number(req.body.reportCounter)
     : undefined;
 
+  const machineSmrMap = req.body.machineSmrMap && typeof req.body.machineSmrMap === 'object'
+    ? req.body.machineSmrMap
+    : undefined;
+  const machineCounterMap = req.body.machineCounterMap && typeof req.body.machineCounterMap === 'object'
+    ? req.body.machineCounterMap
+    : undefined;
+
   const result = await reportGeneratorService.generateReports({
     userId: req.user.sub,
     userNumber: req.user.userNumber,
@@ -70,6 +77,8 @@ async function generateReports(req, res) {
     manualSmr,
     reportCounter,
     skipCounterUpdates,
+    machineSmrMap,
+    machineCounterMap,
   });
 
   res.json({
