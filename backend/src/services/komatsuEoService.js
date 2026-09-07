@@ -357,6 +357,22 @@ async function executeSingleEmergencyOrder(orderData, customCookie = null) {
     cookieStr = mergeCookies(cookieStr, initSetCookies);
   }
 
+  // Auto-advance order reference if already consumed on portal
+  let activeOrderNo = db_order_no;
+  try {
+    const latest = await getLatestDbOrderNo(customer_code || 'REG', cookieStr);
+    const currMatch = String(activeOrderNo).match(/R(\d+)\/(\d{4})/);
+    if (currMatch && latest && latest.next_seq) {
+      const currSeq = parseInt(currMatch[1], 10);
+      if (currSeq < latest.next_seq) {
+        console.log(`[executeSingleEmergencyOrder] Order ref ${activeOrderNo} already consumed, auto-advancing to ${latest.next_order_no}`);
+        activeOrderNo = latest.next_order_no;
+      }
+    }
+  } catch {
+    // Non-fatal
+  }
+
   // STEP 2: Save Quotation Condition
   const saveUrl = `${BASE_PORTAL_URL}/QuotationCondition/Save`;
   const rates = ['A', 'B', 'C', 'D', 'DA', 'E', 'F', 'NA', 'Other', 'S'].map((grp) => ({
@@ -373,7 +389,7 @@ async function executeSingleEmergencyOrder(orderData, customCookie = null) {
       OrigQuotationSeqNo: '00',
       QuotationNo: '',
       QuotationSeqNo: '00',
-      DistributerOrderNo: db_order_no,
+      DistributerOrderNo: activeOrderNo,
       DistributerCodes: db_code,
       DistributerName: db_name,
       SalesPriceList: 'USD037',
@@ -413,13 +429,13 @@ async function executeSingleEmergencyOrder(orderData, customCookie = null) {
       FixPrice: false,
       ModelInformation: '',
       Memo: '',
-      Comments: comments || 'Urgent',
+      Comments: String(comments || 'URGENT').toUpperCase(),
       isDetailsExist: '0',
       LineNo: '0',
       ModelCode: model_code || 'PC500LC-10R',
-      SerialNo: serial_no || '100433',
-      EngineSrNo: '-',
-      CustomerDetails: customer_detail || 'DAR AL HAI',
+      SerialNo: serial_no || '100466',
+      EngineSrNo: '1',
+      CustomerDetails: customer_detail || 'LAALA AL KUWAIT',
       ModelInfoMark: true,
       jobCard: '',
       Warranty: '',
@@ -574,7 +590,7 @@ async function executeSingleEmergencyOrder(orderData, customCookie = null) {
   return {
     status: 'SUCCESS',
     quotation_no: newQtn,
-    db_order_no,
+    db_order_no: activeOrderNo,
     model_code,
     serial_no,
     customer: customer_detail,

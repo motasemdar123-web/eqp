@@ -7,8 +7,7 @@ const SEARCH_API_URL = 'https://www.komatsu.ae/kmewebportal/StockInquiry/MultiPa
 
 const DEFAULT_INITIAL_COOKIES =
   'SelectedLanguage=; ' +
-  'ASP.NET_SessionId=1zp0iv5w2ulkhvcuviybpqwu; ' +
-  '.AspNet.Cookies=Civep9fb8HDo2vgXd9gD9Lwy8esQb4TiFKlms9asxL5zcAoeVvvMLZjQzrPwsyD0Pj9nOfbRSNfEA47X1Dj5VAve1vdqFxpO5hDPsziB48Gi4tjvUzfas2pNb-qmg2kmAKG7eTmdeQh2NwEnGV49fHck_ki6s7cQ39U04CqVxdOxEtDnEoQN-SaA8AT2IaJByBSRP3o8KrvC-nnokfgsKu7qleG8mFLU3VrsDBfVIzZdboUSUaXx1LSEUqDnGf9bv_7DEcxVEkK-QxfpHgd8NB1b_o7elx0LLNLHE0-UaMmzfAltPSlhJezUuC0XA7LUZZl0Bj5oHEu6TKBD5-z3aS7DH1bU_tR7oZ1QOK1J0FecZd1WLgIlBHdfYHHvOsm0yxKDpVRnXEkCWKS_o8viACgAG9ONaYanDSzuDaUHEQMFonM_JuvllS_enRcDdf0ASYTYcpeqFkR09343X7kSOzpTgH4End5didDTqyu6UZR2OIdEUB0v9I-OEb4CE-fbIDV8vvIahZYSQ2lfQp8DnrXXcM52mku1KVlE0dSvNo6yaz1AqUVZ18GkrXv0lyLqxiser_NLnRKFCaihYh5POlvaK3VatEMe9RBDsoEyMbX8wpitDoQB5Cjp_X8GhJhxP4H3eGngK2_efK5gYt6-9iv9G-YjoPkw6_2uswR2_eFKE744PkwVOtkPNvSOO7WU-lhw2lqI7SNu6dhVWOMfr98C4lbE3EcdCs9zerIVLmBBmillX8LKMW2AruOss5CaxSEKhs_rDZREnbCQchqH3GJVUXDs9Zy3wNw7cHm2bkH3XU3ufQMhSRi0_mFhFAyVjR-UlDeQulZV_FEHKGzUpwFFdBttYNg99WaZpeeTjJLc1z_ZkNG3UyH3J-obkvfcgtfbXtM7vDb9F425NOPjwWSsUnkA6pXqADZSAyOUKXTg5nVvVY7yuHaCFV0IPA4GbegoRJRENF0hzaUSV880y7mKZ8pdTe7rqilGFBY8tWyLfsNTPEKCdnRbUTltlAa4zLqSoMDRg2dz3eM5RgzbXWoWjyU2It8ZIFZl1QtjV0ShUrycAYX2zbrb42b_3J0j5H1LmKx9e7eS1H7QFVZGAgcT-pwtqXUy5Js-OJgzIlgHjG5pjIzdHtLHsg3_cb9LedH_toxtUEKqRFkJL1mxSXhNoQYrl_R2h_akQ3KJMrdqmMx4Dig5L2TClZ5moZSTWfYY2VuQOh0q1bu37Xv8KvUJjt_yHvRi542mI6Vqpi207nCX3dSaal6RzNQjSZ1rEgGJ-empk5gu3_hZeVKgO_rBK9KI1vUwwrTRZBikYbNFiZAJjRkCh44hfN-S0moUSP9f8hZkYxRYXob7rFOU6d4NiWLMLr816rceCHDEK1TiPK2FEV-XjFECjhdAe7nntsqxWUoxD__uDaYU1GD5m9ctgig64uHUGFlIdq6uiQc6NJrID6Bfa1F4cRnUyqe2iNGI_r3jhYT41o5u8V6maP-1EqxTmnkwysTxoE0ErTQprNC_VhYJF19X_CZpM7E4TfHLXDZ4OGuYAUCSfRuzIoxycep7apXpw6Wu4Ee0JbCG8vLjzrJO-UeIDt2KNSgFHdKCd8kdZZ6ODzMrz74cCr2IKxv0o5tDEg5boP1pi9i9V4e0xXt1-r4bxLeThS2r';
+  'ASP.NET_SessionId=izik1kr2yiinlrtcdv2bs4cw;';
 
 let inMemoryCookie = '';
 
@@ -25,7 +24,8 @@ function loadSavedCookieRaw() {
 }
 
 function extractStoredAuthCookie() {
-  const current = inMemoryCookie || loadSavedCookieRaw() || DEFAULT_INITIAL_COOKIES;
+  const current = inMemoryCookie || loadSavedCookieRaw();
+  if (!current) return '';
   const match = current.match(/\.AspNet\.Cookies=([^;]+)/);
   return match ? match[1] : '';
 }
@@ -64,14 +64,6 @@ function parseCookieInput(rawInput = '') {
       map.set(k.trim(), v.join('=').trim());
     }
   });
-
-  // If user only provided document.cookie (missing .AspNet.Cookies), automatically merge with stored auth token!
-  if (!map.has('.AspNet.Cookies')) {
-    const savedAuth = extractStoredAuthCookie();
-    if (savedAuth) {
-      map.set('.AspNet.Cookies', savedAuth);
-    }
-  }
 
   // Re-assemble complete cookie string
   return Array.from(map.entries())
