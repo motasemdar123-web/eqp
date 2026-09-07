@@ -300,7 +300,14 @@ async function lookupKomatsuPartMaster(req, res) {
     const data = await komatsuEoService.lookupPartMaster(partNo, cookie);
     res.json({ success: true, ...data });
   } catch (err) {
-    console.warn('[lookupKomatsuPartMaster] Lookup fallback for', partNo, err.message);
+    console.warn('[lookupKomatsuPartMaster] Lookup error for', partNo, err.message);
+    const msg = String(err.message || '').toLowerCase();
+    if (msg.includes('expired') || msg.includes('login') || msg.includes('cookie') || msg.includes('session')) {
+      return res.status(401).json({
+        success: false,
+        error: 'PDX session expired. Please refresh your session cookie.',
+      });
+    }
     const cleanNo = String(partNo).trim().toUpperCase();
     res.json({
       success: true,

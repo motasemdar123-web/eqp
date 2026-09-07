@@ -1,0 +1,17 @@
+﻿{
+  "manifest_version": 3,
+  "name": "EQP - Komatsu PDX Session Sync",
+  "version": "1.0.0",
+  "description": "1-Click session extraction and automatic sync for Komatsu PDX portal",
+  "permissions": [
+    "cookies",
+    "clipboardWrite"
+  ],
+  "host_permissions": [
+    "https://*.komatsu.ae/*"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Sync Komatsu PDX Session"
+  }
+}
