@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 const EQP_NAV_ITEMS = [
   { href: '/eqp', label: 'Overview' },
   { href: '/eqp/generate-reports', label: 'Report Builder' },
+  { href: '/eqp/gap-reports', label: 'Gap Reports' },
   { href: '/eqp/reports', label: 'PDF Archive' },
   { href: '/eqp/machines', label: 'Machine Register' },
   { href: '/eqp/lifecycle', label: 'Lifecycle Matrix' },

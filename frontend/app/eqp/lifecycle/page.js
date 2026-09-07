@@ -386,12 +386,22 @@ export default function EqpLifecyclePage() {
               <div className="rounded-xl border border-amber-200 bg-amber-50/60 p-4">
                 <div className="flex items-center justify-between mb-1">
                   <p className="text-xs font-bold uppercase tracking-wider text-amber-800">Recommended Next Step</p>
-                  <Link
-                    href="/eqp/generate-reports"
-                    className="text-[11px] font-bold text-amber-700 hover:underline"
-                  >
-                    Open Builder →
-                  </Link>
+                  <div className="flex items-center gap-2">
+                    {selectedMachine.hasMonthlyGap && (
+                      <Link
+                        href={`/eqp/gap-reports?machine=${selectedMachine.machineNumber}`}
+                        className="text-[11px] font-bold text-amber-800 bg-amber-200/70 hover:bg-amber-200 px-2 py-0.5 rounded transition"
+                      >
+                        Fill Gaps Studio →
+                      </Link>
+                    )}
+                    <Link
+                      href="/eqp/generate-reports"
+                      className="text-[11px] font-bold text-amber-700 hover:underline"
+                    >
+                      Open Builder →
+                    </Link>
+                  </div>
                 </div>
                 <p className="text-xs text-slate-800 font-medium leading-relaxed">{selectedMachine.nextAction}</p>
               </div>
@@ -419,13 +429,21 @@ export default function EqpLifecyclePage() {
                             <span className="font-bold text-slate-900">{gap.type}</span>
                             <span className="ml-2 font-mono text-slate-500">{gap.code} ({formatLifecycleMonth(gap.month)})</span>
                           </div>
-                          <button
-                            type="button"
-                            onClick={() => handleDismissMonthlyGap(selectedMachine.machineNumber, gap)}
-                            className="rounded-md bg-rose-100 px-2.5 py-1 text-[11px] font-bold text-rose-900 hover:bg-rose-200 transition"
-                          >
-                            Dismiss
-                          </button>
+                          <div className="flex items-center gap-1.5">
+                            <Link
+                              href={`/eqp/gap-reports?machine=${selectedMachine.machineNumber}&month=${gap.month}&serviceType=${encodeURIComponent(gap.type)}`}
+                              className="rounded-md bg-amber-500 px-2.5 py-1 text-[11px] font-bold text-white hover:bg-amber-600 transition shadow-2xs"
+                            >
+                              Fill Gap →
+                            </Link>
+                            <button
+                              type="button"
+                              onClick={() => handleDismissMonthlyGap(selectedMachine.machineNumber, gap)}
+                              className="rounded-md bg-rose-100 px-2.5 py-1 text-[11px] font-bold text-rose-900 hover:bg-rose-200 transition"
+                            >
+                              Dismiss
+                            </button>
+                          </div>
                         </div>
                       ))}
                     </div>

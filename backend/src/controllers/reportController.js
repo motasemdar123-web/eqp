@@ -50,6 +50,14 @@ async function generateReports(req, res) {
   assertArray(req.body.selectedMachines, 'selectedMachines');
   assertDateStrings(req.body.reportDates, 'reportDates');
 
+  const skipCounterUpdates = Boolean(req.body.skipCounterUpdates || req.body.isGapReport);
+  const manualSmr = req.body.manualSmr !== undefined && req.body.manualSmr !== null && req.body.manualSmr !== ''
+    ? Number(req.body.manualSmr)
+    : undefined;
+  const reportCounter = req.body.reportCounter !== undefined && req.body.reportCounter !== null && req.body.reportCounter !== ''
+    ? Number(req.body.reportCounter)
+    : undefined;
+
   const result = await reportGeneratorService.generateReports({
     userId: req.user.sub,
     userNumber: req.user.userNumber,
@@ -59,6 +67,9 @@ async function generateReports(req, res) {
     selectedMachines: req.body.selectedMachines.map(Number),
     reportDates: req.body.reportDates,
     autoUploadToEqp: Boolean(req.body.autoUploadToEqp),
+    manualSmr,
+    reportCounter,
+    skipCounterUpdates,
   });
 
   res.json({

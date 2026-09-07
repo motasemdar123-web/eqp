@@ -42,6 +42,20 @@ const modules = [
     description: 'Track factory delivery milestones, service interval progression, and monthly gap verification.',
   },
   {
+    href: '/eqp/gap-reports',
+    title: 'Gap Fill Studio',
+    status: 'Ready',
+    tone: 'warning',
+    color: 'from-amber-500/10 to-amber-500/5 border-amber-500/20',
+    iconColor: 'bg-amber-600 text-white',
+    icon: (
+      <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+      </svg>
+    ),
+    description: 'Generate retroactive gap reports with manual SMR input without altering current fleet counters or hours.',
+  },
+  {
     href: '/eqp/upload',
     title: 'EQP Care Dispatch',
     status: 'Live',

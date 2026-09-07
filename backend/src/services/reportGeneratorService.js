@@ -1486,13 +1486,21 @@ async function loadTemplate(templateCache, reportType, serviceType, templateMode
   };
 }
 
+let pdfConverterOverride = null;
+
+function setPdfConverterForTesting(fn) {
+  pdfConverterOverride = fn;
+}
+
 async function convertReportJobsToPdfBuffers(reportJobs) {
   const chunkSize = Math.max(Number(process.env.EQP_REPORT_CONVERSION_BATCH_SIZE) || 12, 1);
   const pdfBuffers = new Map();
 
   for (let start = 0; start < reportJobs.length; start += chunkSize) {
     const chunk = reportJobs.slice(start, start + chunkSize);
-    const converted = await tryConvertWorkbooksToPdfs(chunk);
+    const converted = pdfConverterOverride
+      ? await pdfConverterOverride(chunk)
+      : await tryConvertWorkbooksToPdfs(chunk);
 
     if (!converted) {
       throw new ApiError(
@@ -1580,22 +1588,36 @@ async function generateReports(payload) {
       throw new ApiError(400, `Machine model could not be resolved for ${machine.machine_number || machine.id}. Select D155A, HM400, or PC400.`);
     }
 
-    let currentSMR = Number(machine.last_smr);
+    const skipCounterUpdates = Boolean(payload.skipCounterUpdates);
+    const hasManualSmr = payload.manualSmr !== undefined && payload.manualSmr !== null && payload.manualSmr !== '';
+    const manualSmrValue = hasManualSmr ? Math.max(0, Number(payload.manualSmr)) : null;
+    const hasManualReportCounter = payload.reportCounter !== undefined && payload.reportCounter !== null && payload.reportCounter !== '';
+    const manualReportCounterValue = hasManualReportCounter ? Math.max(1, Number(payload.reportCounter)) : null;
+
+    let currentSMR = hasManualSmr ? manualSmrValue : Number(machine.last_smr);
     let currentStep = Number(machine.smr_step);
-    const initialCounter = getInitialRepeatingReportCounter({ machine, reportType: effectiveReportType });
-    let currentCounter = Math.max(Number(machine.report_counter) || 0, initialCounter);
+    const initialCounter = hasManualReportCounter
+      ? manualReportCounterValue
+      : getInitialRepeatingReportCounter({ machine, reportType: effectiveReportType });
+    let currentCounter = hasManualReportCounter
+      ? manualReportCounterValue - 1
+      : Math.max(Number(machine.report_counter) || 0, initialCounter);
 
     for (const serviceDate of payload.reportDates) {
       const safeDate = serviceDate.replace(/-/g, '');
 
-      currentStep += 1;
-      currentCounter += 1;
+      if (!skipCounterUpdates) {
+        currentStep += 1;
+        currentCounter += 1;
 
-      // Randomized SMR increment: +1 hour every 2 to 3 reports
-      const stepThreshold = (currentCounter % 5 === 0 || currentCounter % 3 === 0) ? 2 : 3;
-      if (currentStep >= stepThreshold) {
-        currentSMR += 1;
-        currentStep = 0;
+        // Randomized SMR increment: +1 hour every 2 to 3 reports
+        const stepThreshold = (currentCounter % 5 === 0 || currentCounter % 3 === 0) ? 2 : 3;
+        if (currentStep >= stepThreshold) {
+          currentSMR += 1;
+          currentStep = 0;
+        }
+      } else {
+        currentCounter += 1;
       }
 
       const workbook = new ExcelJS.Workbook();
@@ -1664,11 +1686,13 @@ async function generateReports(payload) {
         templateGroup: template.group,
       });
 
-      machineCounterUpdates.set(machine.id, {
-        lastSmr: currentSMR,
-        smrStep: currentStep,
-        reportCounter: currentCounter,
-      });
+      if (!skipCounterUpdates) {
+        machineCounterUpdates.set(machine.id, {
+          lastSmr: currentSMR,
+          smrStep: currentStep,
+          reportCounter: currentCounter,
+        });
+      }
 
       reportIndex += 1;
     }
@@ -1714,8 +1738,10 @@ async function generateReports(payload) {
     });
   }
 
-  for (const [machineId, counters] of machineCounterUpdates.entries()) {
-    await machineRepository.updateCounters(machineId, counters);
+  if (!payload.skipCounterUpdates) {
+    for (const [machineId, counters] of machineCounterUpdates.entries()) {
+      await machineRepository.updateCounters(machineId, counters);
+    }
   }
 
   if (payload.autoUploadToEqp || payload.autoUploadToEqpc) {
@@ -1765,5 +1791,6 @@ module.exports = {
     getTemplateServiceType,
     getTemplateReportType,
     isRepeatingServiceType,
+    setPdfConverterForTesting,
   },
 };
