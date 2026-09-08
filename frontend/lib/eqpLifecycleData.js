@@ -1,4 +1,11 @@
-const AUDIT_DATE = '2026-06-14';
+export function getCurrentMonthKey() {
+  const now = new Date();
+  const y = now.getUTCFullYear();
+  const m = String(now.getUTCMonth() + 1).padStart(2, '0');
+  return `${y}-${m}`;
+}
+
+const AUDIT_DATE = `${getCurrentMonthKey()}-15`;
 
 const BASE_LIFECYCLE_ROWS = [
   [
@@ -16970,25 +16977,27 @@ export function buildLifecycleRecordFromProps({
   isLiveEqpc = false,
   syncedAt = null,
 }) {
-  const workingStatus = 'not_working';
-  const storageGaps = findStorageGaps(observedReports, deliveryDate);
-  const addServiceGaps = findAddServiceGaps({
+  const currentMonth = getCurrentMonthKey();
+  const { strictGaps, nonCreatedReports, monthlyGaps } = analyzeMissingLifecycleMonths({
     observedReports,
     firstServiceDate,
     secondServiceDate,
     thirdServiceDate,
-    workingStatus,
+    deliveryDate,
+    currentMonth,
   });
-  const monthlyGaps = [...storageGaps, ...addServiceGaps];
+
   const missingReports = [
     { label: 'Pre Delivery', missing: !preDeliveryDate },
     { label: 'Delivery', missing: !deliveryDate },
     { label: '1st Service', missing: !firstServiceDate },
     { label: '2nd Service', missing: !secondServiceDate },
-    { label: '3rd Service', missing: !thirdServiceDate && shouldExpectThirdService(deliveryDate) },
+    { label: '3rd Service', missing: !thirdServiceDate && shouldExpectThirdService(deliveryDate, currentMonth) },
   ].filter((item) => item.missing).map((item) => item.label);
-  const hasMonthlyGap = monthlyGaps.length > 0;
-  const inAddServiceCycle = workingStatus === 'not_working';
+
+  const hasStrictGap = strictGaps.length > 0;
+  const hasNonCreated = nonCreatedReports.length > 0;
+  const hasMonthlyGap = hasStrictGap || hasNonCreated;
 
   return {
     machineNumber,
@@ -17008,16 +17017,18 @@ export function buildLifecycleRecordFromProps({
     latestSmr,
     addServiceCount,
     observedReports,
-    workingStatus,
-    storageGaps,
-    addServiceGaps,
-    monthlyGaps,
+    workingStatus: 'not_working',
+    strictGaps,
+    nonCreatedReports,
+    monthlyGaps, // combined for backwards compatibility
     missingReports,
+    hasStrictGap,
+    hasNonCreated,
     hasMonthlyGap,
-    hasLifecycleGap: missingReports.length > 0 || hasMonthlyGap,
-    status: hasMonthlyGap ? 'Monthly follow-up missing' : 'Monthly follow-up current',
-    statusTone: hasMonthlyGap ? 'archived' : 'ready',
-    nextAction: buildNextAction(missingReports, monthlyGaps),
+    hasLifecycleGap: missingReports.length > 0 || hasStrictGap,
+    status: hasStrictGap ? 'Historical Gaps' : (hasNonCreated ? 'Pending Monthly' : 'Lifecycle Current'),
+    statusTone: hasStrictGap ? 'warning' : (hasNonCreated ? 'neutral' : 'ready'),
+    nextAction: buildStrictNextAction(missingReports, strictGaps, nonCreatedReports),
     milestones: [
       { label: 'Pre Delivery', date: preDeliveryDate, code: 'W41P' },
       { label: 'Delivery', date: deliveryDate, code: 'W41N' },
@@ -17025,7 +17036,7 @@ export function buildLifecycleRecordFromProps({
       { label: '2nd Service', date: secondServiceDate, code: 'W412' },
       { label: '3rd Service', date: thirdServiceDate, code: 'W413' },
     ],
-    serviceModeLabel: inAddServiceCycle ? 'Not working' : 'Working',
+    serviceModeLabel: 'Not working',
   };
 }
 
@@ -17177,64 +17188,129 @@ export const EQP_LIFECYCLE_RECORDS = BASE_LIFECYCLE_ROWS.map(([
   })
 );
 
-function findStorageGaps(observedReports, deliveryDate) {
-  const storageDates = getDatesByCode(observedReports, 'W30');
+export function getPrecedingReport(observedReports = [], targetMonth) {
+  const chronological = [...observedReports]
+    .filter(([, date]) => date && toMonthKey(date) < targetMonth)
+    .sort((a, b) => b[1].localeCompare(a[1]));
 
-  if (!storageDates.length || !deliveryDate) return [];
-
-  const observedMonths = new Set(storageDates.map(toMonthKey));
-  const startMonth = addMonths(toMonthKey(storageDates[0]), 1);
-  const endMonth = addMonths(toMonthKey(deliveryDate), -1);
-
-  return monthRange(startMonth, endMonth)
-    .filter((month) => !observedMonths.has(month))
-    .map((month) => ({ type: 'Storage', code: 'W30', month }));
+  if (chronological.length > 0) {
+    const [code, date, smr, name] = chronological[0];
+    return { code, date, smr: smr != null && !isNaN(Number(smr)) ? Number(smr) : null, name };
+  }
+  return null;
 }
 
-function findAddServiceGaps({ observedReports, firstServiceDate, secondServiceDate, thirdServiceDate, workingStatus }) {
-  if (workingStatus !== 'not_working' || !firstServiceDate) return [];
-
-  const observedMonthlyMonths = new Set(
-    observedReports
-      .filter(([code]) => ['W41X', 'W412', 'W413'].includes(code))
-      .map(([, date]) => toMonthKey(date))
+export function analyzeMissingLifecycleMonths({
+  observedReports = [],
+  firstServiceDate,
+  secondServiceDate,
+  thirdServiceDate,
+  deliveryDate,
+  currentMonth = getCurrentMonthKey(),
+}) {
+  const observedMonthsSet = new Set(
+    observedReports.map(([, date]) => (date ? toMonthKey(date) : null)).filter(Boolean)
   );
-  const endMonth = addMonths(toMonthKey(AUDIT_DATE), -1);
-  const windows = [
-    [addMonths(toMonthKey(firstServiceDate), 1), secondServiceDate ? addMonths(toMonthKey(secondServiceDate), -1) : endMonth],
-    secondServiceDate
-      ? [addMonths(toMonthKey(secondServiceDate), 1), thirdServiceDate ? addMonths(toMonthKey(thirdServiceDate), -1) : endMonth]
-      : null,
-    thirdServiceDate ? [addMonths(toMonthKey(thirdServiceDate), 1), endMonth] : null,
-  ].filter(Boolean);
-  const requiredMonths = new Set(windows.flatMap(([startMonth, end]) => monthRange(startMonth, end)));
 
-  return [...requiredMonths]
-    .filter((month) => !observedMonthlyMonths.has(month))
-    .map((month) => ({ type: 'Add. Service', code: 'W41X', month }));
+  let latestObservedMonth = null;
+  for (const [, date] of observedReports) {
+    if (date) {
+      const m = toMonthKey(date);
+      if (!latestObservedMonth || compareMonths(m, latestObservedMonth) > 0) {
+        latestObservedMonth = m;
+      }
+    }
+  }
+
+  // 1. Storage checks (prior to delivery date)
+  const storageDates = getDatesByCode(observedReports, 'W30');
+  const storageGaps = [];
+  if (storageDates.length > 0 && deliveryDate) {
+    const startStorageMonth = addMonths(toMonthKey(storageDates[0]), 1);
+    const endStorageMonth = addMonths(toMonthKey(deliveryDate), -1);
+    for (const m of monthRange(startStorageMonth, endStorageMonth)) {
+      if (!observedMonthsSet.has(m)) {
+        const prec = getPrecedingReport(observedReports, m);
+        storageGaps.push({
+          type: 'Storage',
+          code: 'W30',
+          month: m,
+          isStrictGap: true,
+          precedingSmr: prec?.smr ?? null,
+          precedingDate: prec?.date ?? null,
+        });
+      }
+    }
+  }
+
+  // 2. Service intervals
+  const anchorDate = firstServiceDate || deliveryDate;
+  const startServiceMonth = anchorDate ? addMonths(toMonthKey(anchorDate), 1) : null;
+
+  const strictGaps = [...storageGaps];
+  const nonCreatedReports = [];
+
+  if (startServiceMonth && compareMonths(startServiceMonth, currentMonth) <= 0) {
+    const allMonthsToCheck = monthRange(startServiceMonth, currentMonth);
+
+    for (const m of allMonthsToCheck) {
+      if (observedMonthsSet.has(m)) continue;
+
+      // STRICT GAP: month is strictly between two existing reports
+      const hasReportAhead = latestObservedMonth && compareMonths(latestObservedMonth, m) > 0;
+      const prec = getPrecedingReport(observedReports, m);
+
+      if (hasReportAhead) {
+        strictGaps.push({
+          type: 'Add. Service',
+          code: 'W41X',
+          month: m,
+          isStrictGap: true,
+          precedingSmr: prec?.smr ?? null,
+          precedingDate: prec?.date ?? null,
+        });
+      } else {
+        // NON-CREATED REPORT: Months after the latest existing report up to current month
+        nonCreatedReports.push({
+          type: 'Add. Service',
+          code: 'W41X',
+          month: m,
+          isStrictGap: false,
+          isPending: true,
+          precedingSmr: prec?.smr ?? null,
+          precedingDate: prec?.date ?? null,
+        });
+      }
+    }
+  }
+
+  return {
+    strictGaps,
+    nonCreatedReports,
+    monthlyGaps: [...strictGaps, ...nonCreatedReports],
+  };
 }
 
-function shouldExpectThirdService(deliveryDate) {
+function shouldExpectThirdService(deliveryDate, currentMonth = getCurrentMonthKey()) {
   if (!deliveryDate) return false;
-  return compareMonths(addMonths(toMonthKey(deliveryDate), 10), toMonthKey(AUDIT_DATE)) <= 0;
+  return compareMonths(addMonths(toMonthKey(deliveryDate), 10), currentMonth) <= 0;
 }
 
-function buildNextAction(missingReports, monthlyGaps) {
-  if (missingReports.length && monthlyGaps.length) {
-    return `Create the missing lifecycle report(s), then close ${monthlyGaps.length} monthly storage/add-service gap(s).`;
+function buildStrictNextAction(missingReports, strictGaps, nonCreatedReports) {
+  if (missingReports.length > 0) {
+    return `Create the missing factory milestone(s): ${missingReports.join(', ')}.`;
   }
-
-  if (monthlyGaps.length) {
-    const nextGap = monthlyGaps[0];
-    return `Create ${nextGap.code} for ${formatLifecycleMonth(nextGap.month)} and continue monthly tracking until the machine starts working.`;
+  if (strictGaps.length > 0) {
+    const nextGap = strictGaps[0];
+    return `Bridge strict gap for ${formatLifecycleMonth(nextGap.month)} (preceding SMR: ${nextGap.precedingSmr ?? 'N/A'} hrs).`;
   }
-
-  if (missingReports.length) {
-    return `Create the missing lifecycle report(s): ${missingReports.join(', ')}.`;
+  if (nonCreatedReports.length > 0) {
+    const nextPending = nonCreatedReports[0];
+    return `Create pending monthly report for ${formatLifecycleMonth(nextPending.month)} to keep tracking current.`;
   }
-
-  return 'Monthly tracking is current. Keep the machine in follow-up until it is marked as working.';
+  return 'All lifecycle milestones and monthly reports are completely up to date through current month.';
 }
+
 
 function getDatesByCode(observedReports, code) {
   return observedReports

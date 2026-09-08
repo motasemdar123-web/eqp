@@ -123,19 +123,31 @@ export default function EqpLifecyclePage() {
 
   const machines = useMemo(() => {
     return dynamicRecords.map((machine) => {
-      const activeMonthlyGaps = machine.monthlyGaps.filter((gap) => !dismissedGapKeySet.has(getMonthlyGapKey(machine.machineNumber, gap)));
-      const dismissedMonthlyGaps = machine.monthlyGaps.filter((gap) => dismissedGapKeySet.has(getMonthlyGapKey(machine.machineNumber, gap)));
-      const hasMonthlyGap = activeMonthlyGaps.length > 0;
+      const activeStrictGaps = (machine.strictGaps || []).filter(
+        (gap) => !dismissedGapKeySet.has(getMonthlyGapKey(machine.machineNumber, gap))
+      );
+      const activeNonCreated = (machine.nonCreatedReports || []).filter(
+        (gap) => !dismissedGapKeySet.has(getMonthlyGapKey(machine.machineNumber, gap))
+      );
+      const dismissedMonthlyGaps = (machine.monthlyGaps || []).filter(
+        (gap) => dismissedGapKeySet.has(getMonthlyGapKey(machine.machineNumber, gap))
+      );
+      const hasStrictGap = activeStrictGaps.length > 0;
+      const hasNonCreated = activeNonCreated.length > 0;
+      const hasMonthlyGap = hasStrictGap || hasNonCreated;
 
       return {
         ...machine,
-        activeMonthlyGaps,
+        activeStrictGaps,
+        activeNonCreated,
         dismissedMonthlyGaps,
+        hasStrictGap,
+        hasNonCreated,
         hasMonthlyGap,
-        hasLifecycleGap: machine.missingReports.length > 0 || hasMonthlyGap,
-        status: hasMonthlyGap ? 'Follow-up Required' : 'Lifecycle Current',
-        statusTone: hasMonthlyGap ? 'warning' : 'ready',
-        nextAction: buildNextAction(machine.missingReports, activeMonthlyGaps),
+        hasLifecycleGap: machine.missingReports.length > 0 || hasStrictGap,
+        status: hasStrictGap ? 'Historical Gaps' : (hasNonCreated ? 'Pending Monthly' : 'Lifecycle Current'),
+        statusTone: hasStrictGap ? 'warning' : (hasNonCreated ? 'neutral' : 'ready'),
+        nextAction: machine.nextAction,
       };
     });
   }, [dynamicRecords, dismissedGapKeySet]);
@@ -185,7 +197,8 @@ export default function EqpLifecyclePage() {
     const s1Done = machines.filter((m) => m.firstServiceDate).length;
     const s2Done = machines.filter((m) => m.secondServiceDate).length;
     const s3Done = machines.filter((m) => m.thirdServiceDate).length;
-    const monthlyGaps = machines.reduce((total, machine) => total + machine.activeMonthlyGaps.length, 0);
+    const strictGaps = machines.reduce((total, machine) => total + (machine.activeStrictGaps?.length || 0), 0);
+    const nonCreated = machines.reduce((total, machine) => total + (machine.activeNonCreated?.length || 0), 0);
     const dismissedMonthlyGaps = machines.reduce((total, machine) => total + machine.dismissedMonthlyGaps.length, 0);
 
     return {
@@ -195,7 +208,8 @@ export default function EqpLifecyclePage() {
       s1Done,
       s2Done,
       s3Done,
-      monthlyGaps,
+      strictGaps,
+      nonCreated,
       dismissedMonthlyGaps,
     };
   }, [machines]);
@@ -272,7 +286,7 @@ export default function EqpLifecyclePage() {
           </div>
 
 
-          <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 text-center">
+          <div className="grid grid-cols-2 sm:grid-cols-6 gap-3 text-center">
             <div className="bg-slate-800/80 rounded-xl p-3 border border-slate-700">
               <p className="text-[10px] font-bold uppercase text-slate-400">Pre-Delivery (PDI)</p>
               <p className="text-xl font-extrabold text-amber-400 mt-1">{stats.pdiDone}</p>
@@ -293,12 +307,19 @@ export default function EqpLifecyclePage() {
               <p className="text-xl font-extrabold text-indigo-400 mt-1">{stats.s2Done}</p>
               <p className="text-[10px] text-slate-400 mt-0.5">{Math.round((stats.s2Done / (stats.total || 1)) * 100)}% Done</p>
             </div>
-            <div className="bg-slate-800/80 rounded-xl p-3 border border-slate-700 col-span-2 sm:col-span-1">
-              <p className="text-[10px] font-bold uppercase text-slate-400">Monthly Gaps</p>
-              <p className={`text-xl font-extrabold mt-1 ${stats.monthlyGaps > 0 ? 'text-rose-400' : 'text-emerald-400'}`}>
-                {stats.monthlyGaps}
+            <div className="bg-slate-800/80 rounded-xl p-3 border border-rose-900/60 bg-rose-950/20">
+              <p className="text-[10px] font-bold uppercase text-rose-400">Strict Gaps</p>
+              <p className={`text-xl font-extrabold mt-1 ${stats.strictGaps > 0 ? 'text-rose-400' : 'text-emerald-400'}`}>
+                {stats.strictGaps}
               </p>
-              <p className="text-[10px] text-slate-400 mt-0.5">{stats.monthlyGaps > 0 ? 'Action Needed' : 'All Clear'}</p>
+              <p className="text-[10px] text-slate-400 mt-0.5">Between Reports</p>
+            </div>
+            <div className="bg-slate-800/80 rounded-xl p-3 border border-amber-900/40 bg-amber-950/20">
+              <p className="text-[10px] font-bold uppercase text-amber-400">Non-Created</p>
+              <p className="text-xl font-extrabold text-amber-300 mt-1">
+                {stats.nonCreated}
+              </p>
+              <p className="text-[10px] text-slate-400 mt-0.5">Pending to Current Mo.</p>
             </div>
           </div>
         </Card>
@@ -308,12 +329,26 @@ export default function EqpLifecyclePage() {
           {/* Table Card */}
           <Card className="overflow-hidden">
             <div className="border-b border-slate-200 p-5 bg-slate-50/70 space-y-3">
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                 <div>
                   <h3 className="text-base font-bold text-slate-900">Tracked Fleet Assets</h3>
                   <p className="text-xs text-slate-500">Click any machine to inspect its visual milestone timeline</p>
                 </div>
-                <Badge tone="neutral">{filteredMachines.length} Units</Badge>
+                <div className="flex flex-wrap items-center gap-2">
+                  <Badge tone={liveEqpData ? 'ready' : 'neutral'}>
+                    {liveEqpData ? `Live: ${Object.keys(liveEqpData.machines || {}).length} units` : `${filteredMachines.length} Units`}
+                  </Badge>
+                  <Button
+                    type="button"
+                    variant="primary"
+                    size="sm"
+                    onClick={() => handleSyncLive()}
+                    disabled={loadingReports || isSyncingLive}
+                    className="shadow-sm font-bold bg-blue-600 hover:bg-blue-700 text-white cursor-pointer"
+                  >
+                    {isSyncingLive && !singleSyncMachine ? '⏳ Syncing All Fleet...' : '⚡ Sync All Fleet from Komatsu EQP Care'}
+                  </Button>
+                </div>
               </div>
 
               {/* Engineer Tabs */}
@@ -460,13 +495,13 @@ export default function EqpLifecyclePage() {
                   </div>
                   <Button
                     type="button"
-                    variant="ghost"
+                    variant="secondary"
                     size="xs"
                     onClick={() => handleSyncLive(selectedMachine.machineNumber)}
                     disabled={isSyncingLive || loadingReports}
-                    className="text-[10px] text-blue-600 hover:text-blue-800 font-semibold"
+                    className="text-xs bg-sky-50 text-sky-800 border border-sky-300 hover:bg-sky-100 font-bold px-2.5 py-1 rounded-lg shadow-2xs cursor-pointer"
                   >
-                    {isSyncingLive && singleSyncMachine === selectedMachine.machineNumber ? 'Syncing...' : '↻ Sync from Komatsu'}
+                    {isSyncingLive && singleSyncMachine === selectedMachine.machineNumber ? '⏳ Syncing...' : '↻ Sync from Komatsu'}
                   </Button>
                 </div>
               </div>
@@ -503,33 +538,44 @@ export default function EqpLifecyclePage() {
                 <p className="text-xs text-slate-800 font-medium leading-relaxed">{selectedMachine.nextAction}</p>
               </div>
 
-              {/* Monthly Gaps Drawer */}
-              {selectedMachine.hasMonthlyGap && (
-                <div className="rounded-xl border border-rose-200 bg-rose-50/70 p-4">
-                  <button
-                    type="button"
-                    onClick={() => setMonthlyListOpen((isOpen) => !isOpen)}
-                    className="flex w-full items-center justify-between text-left"
-                  >
-                    <span className="text-xs font-bold uppercase text-rose-800">
-                      Missing Monthly Reports ({selectedMachine.activeMonthlyGaps.length})
-                    </span>
-                    <span className="text-xs font-bold text-rose-700 hover:underline">
-                      {monthlyListOpen ? 'Hide' : 'Show'}
-                    </span>
-                  </button>
-                  {monthlyListOpen && (
-                    <div className="mt-3 space-y-2">
-                      {selectedMachine.activeMonthlyGaps.map((gap) => (
-                        <div key={`${gap.code}-${gap.month}`} className="flex items-center justify-between rounded-lg bg-white p-2.5 text-xs border border-rose-200 shadow-2xs">
+              {/* 1. Strict Gaps Drawer (Months missing strictly BETWEEN existing reports) */}
+              {selectedMachine.activeStrictGaps?.length > 0 && (
+                <div className="rounded-xl border border-rose-300 bg-rose-50/80 p-4 space-y-3">
+                  <div className="flex w-full items-center justify-between text-left">
+                    <div>
+                      <span className="text-xs font-bold uppercase text-rose-900 flex items-center gap-1.5">
+                        <span className="w-2 h-2 rounded-full bg-rose-600 animate-pulse" />
+                        Strict Gaps Between Reports ({selectedMachine.activeStrictGaps.length})
+                      </span>
+                      <p className="text-[11px] text-rose-700 mt-0.5">
+                        Missing months situated between uploaded reports. Automatically inherits the preceding SMR.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    {selectedMachine.activeStrictGaps.map((gap) => {
+                      const precSmr = gap.precedingSmr != null ? gap.precedingSmr : (selectedMachine.latestSmr ?? '');
+                      return (
+                        <div key={`strict-${gap.code}-${gap.month}`} className="flex items-center justify-between rounded-lg bg-white p-2.5 text-xs border border-rose-200 shadow-2xs">
                           <div>
-                            <span className="font-bold text-slate-900">{gap.type}</span>
-                            <span className="ml-2 font-mono text-slate-500">{gap.code} ({formatLifecycleMonth(gap.month)})</span>
+                            <div className="flex items-center gap-2">
+                              <span className="font-bold text-slate-900">{gap.type}</span>
+                              <span className="font-mono text-slate-500">{gap.code} ({formatLifecycleMonth(gap.month)})</span>
+                            </div>
+                            <div className="flex items-center gap-1 mt-0.5 text-[10px] text-slate-500 font-medium">
+                              <span>Preceding SMR:</span>
+                              <span className="font-bold text-amber-800 bg-amber-50 px-1 rounded border border-amber-200">
+                                {gap.precedingSmr != null ? `${gap.precedingSmr} hrs` : `${selectedMachine.latestSmr ?? 0} hrs`}
+                              </span>
+                              {gap.precedingDate && (
+                                <span className="text-slate-400 font-mono">(from {formatLifecycleDate(gap.precedingDate)})</span>
+                              )}
+                            </div>
                           </div>
                           <div className="flex items-center gap-1.5">
                             <Link
-                              href={`/eqp/gap-reports?machine=${selectedMachine.machineNumber}&month=${gap.month}&serviceType=${encodeURIComponent(gap.type)}`}
-                              className="rounded-md bg-amber-500 px-2.5 py-1 text-[11px] font-bold text-white hover:bg-amber-600 transition shadow-2xs"
+                              href={`/eqp/gap-reports?machine=${selectedMachine.machineNumber}&month=${gap.month}&serviceType=${encodeURIComponent(gap.type)}&smr=${precSmr}&updateCounters=false`}
+                              className="rounded-md bg-rose-600 px-2.5 py-1 text-[11px] font-bold text-white hover:bg-rose-700 transition shadow-2xs"
                             >
                               Fill Gap →
                             </Link>
@@ -537,6 +583,56 @@ export default function EqpLifecyclePage() {
                               type="button"
                               onClick={() => handleDismissMonthlyGap(selectedMachine.machineNumber, gap)}
                               className="rounded-md bg-rose-100 px-2.5 py-1 text-[11px] font-bold text-rose-900 hover:bg-rose-200 transition"
+                            >
+                              Dismiss
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* 2. Non-Created Reports Drawer (Pending months from latest report up to current month) */}
+              {selectedMachine.activeNonCreated?.length > 0 && (
+                <div className="rounded-xl border border-amber-200 bg-amber-50/50 p-4">
+                  <button
+                    type="button"
+                    onClick={() => setMonthlyListOpen((isOpen) => !isOpen)}
+                    className="flex w-full items-center justify-between text-left"
+                  >
+                    <div>
+                      <span className="text-xs font-bold uppercase text-amber-900">
+                        Non-Created Reports ({selectedMachine.activeNonCreated.length})
+                      </span>
+                      <p className="text-[11px] text-amber-700 mt-0.5">
+                        Pending sequential months through current month. Creates standard reports affecting SMR and counters.
+                      </p>
+                    </div>
+                    <span className="text-xs font-bold text-amber-800 hover:underline">
+                      {monthlyListOpen ? 'Hide' : 'Show'}
+                    </span>
+                  </button>
+                  {monthlyListOpen && (
+                    <div className="mt-3 space-y-2 max-h-56 overflow-y-auto pr-1">
+                      {selectedMachine.activeNonCreated.map((gap) => (
+                        <div key={`noncreated-${gap.code}-${gap.month}`} className="flex items-center justify-between rounded-lg bg-white p-2.5 text-xs border border-amber-200 shadow-2xs">
+                          <div>
+                            <span className="font-semibold text-slate-900">{gap.type}</span>
+                            <span className="ml-2 font-mono text-slate-500">{gap.code} ({formatLifecycleMonth(gap.month)})</span>
+                          </div>
+                          <div className="flex items-center gap-1.5">
+                            <Link
+                              href={`/eqp/gap-reports?machine=${selectedMachine.machineNumber}&month=${gap.month}&serviceType=${encodeURIComponent(gap.type)}&updateCounters=true`}
+                              className="rounded-md bg-amber-500 px-2.5 py-1 text-[11px] font-bold text-white hover:bg-amber-600 transition shadow-2xs"
+                            >
+                              Create Report →
+                            </Link>
+                            <button
+                              type="button"
+                              onClick={() => handleDismissMonthlyGap(selectedMachine.machineNumber, gap)}
+                              className="rounded-md bg-slate-100 px-2.5 py-1 text-[11px] font-bold text-slate-700 hover:bg-slate-200 transition"
                             >
                               Dismiss
                             </button>

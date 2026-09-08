@@ -34,6 +34,8 @@ function GapReportsStudio() {
   const initialMachineParam = searchParams.get('machine') || '';
   const initialMonthParam = searchParams.get('month') || '';
   const initialServiceTypeParam = searchParams.get('serviceType') || '';
+  const initialSmrParam = searchParams.get('smr') || '';
+  const initialUpdateCounters = searchParams.get('updateCounters') === 'true' || searchParams.get('mode') === 'normal';
 
   const [loading, setLoading] = useState(true);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -43,6 +45,7 @@ function GapReportsStudio() {
   const [reports, setReports] = useState([]);
   const [reportProfile, setReportProfile] = useState(null);
   const [liveEqpData, setLiveEqpData] = useState(null);
+  const [updateCounters, setUpdateCounters] = useState(() => initialUpdateCounters);
   const [toast, setToast] = useState(null);
 
   // Multi-Machine Selection State
@@ -55,7 +58,7 @@ function GapReportsStudio() {
     }
     return [];
   });
-  const [activeYear, setActiveYear] = useState('2024');
+  const [activeYear, setActiveYear] = useState(() => (initialMonthParam ? initialMonthParam.slice(0, 4) : '2024'));
   const [dayOfMonth, setDayOfMonth] = useState(15);
   const [customDateInput, setCustomDateInput] = useState('');
 
@@ -65,8 +68,8 @@ function GapReportsStudio() {
   const [reportCounter, setReportCounter] = useState('');
 
   // SMR Configuration Mode: 'default' | 'uniform' | 'per_machine'
-  const [smrMode, setSmrMode] = useState('default');
-  const [uniformSmr, setUniformSmr] = useState('');
+  const [smrMode, setSmrMode] = useState(() => (initialSmrParam ? 'uniform' : 'default'));
+  const [uniformSmr, setUniformSmr] = useState(() => initialSmrParam || '');
   const [machineSmrOverrides, setMachineSmrOverrides] = useState({});
 
   // Dispatch & Summary State
@@ -107,6 +110,9 @@ function GapReportsStudio() {
         );
         if (matched) {
           setSelectedMachineIds([matched.id]);
+          if (initialSmrParam) {
+            setMachineSmrOverrides({ [matched.id]: initialSmrParam });
+          }
         }
       }
     } catch (err) {
@@ -343,7 +349,7 @@ function GapReportsStudio() {
         serviceType,
         selectedMachines: selectedMachineIds,
         reportDates: selectedDates,
-        skipCounterUpdates: true, // Guarantees zero alteration of machine last_smr and report_counter
+        skipCounterUpdates: !updateCounters, // If updateCounters is true (Normal reporting mode), skipCounterUpdates is false. If false (Strict gap fill), skipCounterUpdates is true.
         autoUploadToEqp,
         eqpcCookie: typeof window !== 'undefined' ? localStorage.getItem('eqpc_user_cookie') || '' : '',
       };
@@ -1086,6 +1092,28 @@ function GapReportsStudio() {
               />
             </Field>
 
+            {/* Counter Update Mode Toggle */}
+            <div className="p-2.5 rounded-lg border border-slate-200 bg-slate-50 space-y-1">
+              <label className="flex items-start gap-2.5 text-xs cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={updateCounters}
+                  onChange={(e) => setUpdateCounters(e.target.checked)}
+                  className="rounded text-blue-600 mt-0.5"
+                />
+                <div>
+                  <span className="font-semibold text-slate-800">
+                    Update Machine Meters & Counters
+                  </span>
+                  <p className="text-[11px] text-slate-500 leading-normal">
+                    {updateCounters
+                      ? '⚡ Normal Report Mode: Advances machine last_smr and report_counter in the database.'
+                      : '🛡️ Strict Gap Mode: Historical gap backfill. Meters and counters are preserved without modification.'}
+                  </p>
+                </div>
+              </label>
+            </div>
+
             {/* EQP CARE Auto Upload */}
             <label className="flex items-start gap-2.5 text-xs text-slate-700 cursor-pointer pt-1">
               <input
@@ -1103,7 +1131,9 @@ function GapReportsStudio() {
             <div className="p-4 bg-slate-900 text-white rounded-xl space-y-3">
               <div className="flex items-center justify-between text-[11px] text-slate-400 uppercase font-semibold">
                 <span>Batch Formula</span>
-                <span className="text-emerald-400 font-bold">Safe Mode Active</span>
+                <span className={updateCounters ? "text-blue-400 font-bold" : "text-emerald-400 font-bold"}>
+                  {updateCounters ? "⚡ Normal Progress Mode" : "🛡️ Gap Safe Mode Active"}
+                </span>
               </div>
 
               <div className="grid grid-cols-3 gap-2 text-center py-2 bg-slate-800/80 rounded-lg border border-slate-700">
@@ -1122,7 +1152,15 @@ function GapReportsStudio() {
               </div>
 
               <p className="text-[11px] text-slate-400 leading-relaxed">
-                🛡️ Live machine meters (<code className="text-slate-200">last_smr</code>, <code className="text-slate-200">report_counter</code>) will <strong>not</strong> be modified in the database.
+                {updateCounters ? (
+                  <>
+                    ⚡ <strong>Normal Reporting Mode:</strong> Machine meters (<code className="text-slate-200">last_smr</code>, <code className="text-slate-200">report_counter</code>) <strong>will be updated</strong> in the database.
+                  </>
+                ) : (
+                  <>
+                    🛡️ <strong>Strict Gap Mode:</strong> Live machine meters (<code className="text-slate-200">last_smr</code>, <code className="text-slate-200">report_counter</code>) will <strong>not</strong> be modified in the database.
+                  </>
+                )}
               </p>
 
               {/* GENERATE CTA BUTTON */}
