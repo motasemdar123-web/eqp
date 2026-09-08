@@ -255,6 +255,11 @@ export function LifecycleMilestoneProgressBar({ milestones = [] }) {
                 {found.date.slice(5)}
               </span>
             )}
+            {found?.smr != null && (
+              <span className="text-[8px] font-mono font-bold text-amber-800 bg-amber-50 border border-amber-200 px-1 rounded mt-0.5">
+                {found.smr} hrs
+              </span>
+            )}
           </div>
         );
       })}

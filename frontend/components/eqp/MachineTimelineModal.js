@@ -105,6 +105,11 @@ export default function MachineTimelineModal({ machine, onClose, onSelectForRepo
                       <span className="text-[10px] font-mono text-slate-400 mt-0.5">
                         {m.date ? String(m.date).slice(0, 10) : 'Pending'}
                       </span>
+                      {m.smr != null && (
+                        <span className="text-[9px] font-mono font-bold text-amber-800 bg-amber-50 border border-amber-200 px-1 rounded mt-0.5">
+                          {m.smr} hrs
+                        </span>
+                      )}
                     </div>
                   );
                 })}
@@ -128,8 +133,9 @@ export default function MachineTimelineModal({ machine, onClose, onSelectForRepo
                 {observedReports.map((evt, idx) => {
                   const code = Array.isArray(evt) ? evt[0] : (evt.code || evt.report_type || 'W41X');
                   const date = Array.isArray(evt) ? evt[1] : (evt.date || evt.service_date || evt.created_at || '—');
+                  const evtSmr = Array.isArray(evt) ? evt[2] : (evt.smr != null ? evt.smr : '');
+                  const evtName = Array.isArray(evt) ? evt[3] : (evt.eventName || evt.service_type || '');
                   const fileName = evt.fileName || evt.file_name || '';
-                  const evtSmr = evt.smr || '';
 
                   return (
                     <div key={idx} className="relative group">
@@ -143,7 +149,7 @@ export default function MachineTimelineModal({ machine, onClose, onSelectForRepo
                               {code}
                             </span>
                             <span className="text-xs font-semibold text-slate-800">
-                              {fileName || `Service Report (${code})`}
+                              {fileName || evtName || `Service Report (${code})`}
                             </span>
                           </div>
                           <span className="text-[11px] font-mono text-slate-500 font-medium">
@@ -151,10 +157,10 @@ export default function MachineTimelineModal({ machine, onClose, onSelectForRepo
                           </span>
                         </div>
 
-                        {evtSmr && (
+                        {evtSmr !== '' && evtSmr != null && (
                           <div className="mt-1.5 flex items-center gap-2 text-[11px] text-slate-500">
                             <span className="font-semibold text-slate-700">SMR:</span>
-                            <span className="font-mono bg-white px-1.5 py-0.5 rounded border border-slate-200 text-slate-800">
+                            <span className="font-mono bg-white px-1.5 py-0.5 rounded border border-slate-200 text-slate-800 font-bold">
                               {evtSmr} hrs
                             </span>
                           </div>

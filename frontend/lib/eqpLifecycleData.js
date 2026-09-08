@@ -25606,6 +25606,17 @@ export function buildLifecycleRecordFromProps({
   const hasStrictGap = strictGaps.length > 0;
   const hasNonCreated = nonCreatedReports.length > 0;
   const hasMonthlyGap = hasStrictGap || hasNonCreated;
+  const getMilestoneSmr = (code, date) => {
+    if (!date) return null;
+    const found = observedReports.find(([c, d]) => c === code && d === date);
+    return (found && found[2] != null && !isNaN(Number(found[2]))) ? Number(found[2]) : null;
+  };
+
+  const preDeliverySmr = getMilestoneSmr('W41P', preDeliveryDate);
+  const deliverySmr = getMilestoneSmr('W41N', deliveryDate);
+  const firstServiceSmr = getMilestoneSmr('W411', firstServiceDate);
+  const secondServiceSmr = getMilestoneSmr('W412', secondServiceDate);
+  const thirdServiceSmr = getMilestoneSmr('W413', thirdServiceDate);
 
   return {
     machineNumber,
@@ -25615,10 +25626,15 @@ export function buildLifecycleRecordFromProps({
     syncedAt,
     responsibleEngineer,
     preDeliveryDate,
+    preDeliverySmr,
     deliveryDate,
+    deliverySmr,
     firstServiceDate,
+    firstServiceSmr,
     secondServiceDate,
+    secondServiceSmr,
     thirdServiceDate,
+    thirdServiceSmr,
     latestReportDate,
     latestReportCode,
     latestReportType,
@@ -25638,11 +25654,11 @@ export function buildLifecycleRecordFromProps({
     statusTone: hasStrictGap ? 'warning' : (hasNonCreated ? 'neutral' : 'ready'),
     nextAction: buildStrictNextAction(missingReports, strictGaps, nonCreatedReports),
     milestones: [
-      { label: 'Pre Delivery', date: preDeliveryDate, code: 'W41P' },
-      { label: 'Delivery', date: deliveryDate, code: 'W41N' },
-      { label: '1st Service', date: firstServiceDate, code: 'W411' },
-      { label: '2nd Service', date: secondServiceDate, code: 'W412' },
-      { label: '3rd Service', date: thirdServiceDate, code: 'W413' },
+      { label: 'Pre Delivery', date: preDeliveryDate, code: 'W41P', smr: preDeliverySmr },
+      { label: 'Delivery', date: deliveryDate, code: 'W41N', smr: deliverySmr },
+      { label: '1st Service', date: firstServiceDate, code: 'W411', smr: firstServiceSmr },
+      { label: '2nd Service', date: secondServiceDate, code: 'W412', smr: secondServiceSmr },
+      { label: '3rd Service', date: thirdServiceDate, code: 'W413', smr: thirdServiceSmr },
     ],
     serviceModeLabel: 'Not working',
   };

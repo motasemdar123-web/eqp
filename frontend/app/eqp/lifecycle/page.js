@@ -456,11 +456,28 @@ export default function EqpLifecyclePage() {
                             </span>
                           </td>
                           <td>
-                            <span className="font-semibold text-slate-800">{machine.latestReportType}</span>
+                            <div className="flex items-center gap-1.5">
+                              <span className="font-semibold text-slate-800">{machine.latestReportType}</span>
+                              {machine.latestSmr != null && (
+                                <span className="inline-flex items-center px-1.5 py-0.2 rounded text-[10px] font-mono font-bold bg-amber-50 text-amber-900 border border-amber-200">
+                                  {machine.latestSmr} hrs
+                                </span>
+                              )}
+                            </div>
                             <span className="block text-[0.6875rem] font-mono text-slate-400">{formatLifecycleDate(machine.latestReportDate)}</span>
                           </td>
-                          <td className="text-xs text-slate-600">{formatLifecycleDate(machine.deliveryDate)}</td>
-                          <td className="text-xs text-slate-600">{formatLifecycleDate(machine.thirdServiceDate)}</td>
+                          <td className="text-xs text-slate-600">
+                            <div>{formatLifecycleDate(machine.deliveryDate)}</div>
+                            {machine.deliverySmr != null && (
+                              <span className="text-[10px] font-mono text-slate-500 font-semibold">{machine.deliverySmr} hrs</span>
+                            )}
+                          </td>
+                          <td className="text-xs text-slate-600">
+                            <div>{formatLifecycleDate(machine.thirdServiceDate)}</div>
+                            {machine.thirdServiceSmr != null && (
+                              <span className="text-[10px] font-mono text-slate-500 font-semibold">{machine.thirdServiceSmr} hrs</span>
+                            )}
+                          </td>
                           <td>
                             <Badge tone={machine.statusTone}>{machine.status}</Badge>
                           </td>
@@ -688,18 +705,32 @@ export default function EqpLifecyclePage() {
 
               {/* Chronological Timeline Feed */}
               <div>
-                <p className="text-xs font-bold uppercase text-slate-500 mb-3">Service Events Timeline</p>
-                <div className="relative pl-5 space-y-2.5 before:absolute before:left-2 before:top-2 before:bottom-2 before:w-0.5 before:bg-slate-200 max-h-64 overflow-y-auto pr-1">
+                <div className="flex items-center justify-between mb-3">
+                  <p className="text-xs font-bold uppercase text-slate-500">Service Events Timeline</p>
+                  <span className="text-[11px] font-mono text-slate-400 font-semibold">{selectedTimelineItems.length} Reports</span>
+                </div>
+                <div className="relative pl-5 space-y-2.5 before:absolute before:left-2 before:top-2 before:bottom-2 before:w-0.5 before:bg-slate-200 max-h-72 overflow-y-auto pr-1">
                   {selectedTimelineItems.map((milestone) => (
-                    <div key={milestone.id} className="relative group flex items-center justify-between rounded-lg border border-slate-200 p-2.5 bg-white text-xs shadow-2xs">
-                      <span className="absolute -left-5 top-3 w-2 h-2 rounded-full bg-slate-400 group-hover:bg-amber-500 ring-4 ring-white" />
+                    <div key={milestone.id} className="relative group flex items-center justify-between rounded-lg border border-slate-200 p-2.5 bg-white text-xs shadow-2xs hover:border-amber-300 transition-colors">
+                      <span className={`absolute -left-5 top-3 w-2 h-2 rounded-full ring-4 ring-white ${milestone.date ? 'bg-amber-500' : 'bg-slate-300'}`} />
                       <div>
                         <p className="font-bold text-slate-900">{milestone.label}</p>
                         <p className="font-mono text-slate-400 text-[10px]">{milestone.code}</p>
                       </div>
-                      <span className="font-semibold text-slate-700 font-mono text-[11px]">
-                        {formatLifecycleDate(milestone.date)}
-                      </span>
+                      <div className="flex items-center gap-2">
+                        {milestone.smr != null ? (
+                          <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-amber-100 text-amber-900 border border-amber-200" title="Equipment Operating Hours">
+                            {milestone.smr} hrs
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-mono text-slate-400 bg-slate-50 border border-slate-200" title="Operating hours not stamped">
+                            - hrs
+                          </span>
+                        )}
+                        <span className="font-semibold text-slate-700 font-mono text-[11px]">
+                          {formatLifecycleDate(milestone.date)}
+                        </span>
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -750,20 +781,50 @@ function buildNextAction(missingReports, monthlyGaps) {
 }
 
 function buildTimelineItems(machine) {
-  const mainItems = machine.milestones.map((milestone) => ({
-    ...milestone,
-    id: `main-${milestone.code}`,
-    sortDate: milestone.date || '9999-12-31',
-  }));
-  const monthlyItems = machine.observedReports
-    .filter(([code]) => ['W30', 'W41X'].includes(code))
-    .map(([code, date], index) => ({
-      id: `monthly-${code}-${date}-${index}`,
-      label: code === 'W30' ? 'Storage Operation' : 'Add. Service',
-      code,
-      date,
-      sortDate: date,
-    }));
+  if (!machine || !Array.isArray(machine.observedReports)) return [];
 
-  return [...mainItems, ...monthlyItems].sort((left, right) => left.sortDate.localeCompare(right.sortDate));
+  // Map all observed reports directly so EVERY single report has its exact code, date, SMR, and label
+  const items = machine.observedReports
+    .filter(([, date]) => Boolean(date && String(date).trim()))
+    .map(([code, date, smr, eventName], idx) => {
+      let label = eventName || '';
+      if (!label) {
+        if (code === 'W41P') label = 'Pre Delivery';
+        else if (code === 'W41N') label = 'Delivery';
+        else if (code === 'W411') label = '1st Service';
+        else if (code === 'W412') label = '2nd Service';
+        else if (code === 'W413') label = '3rd Service';
+        else if (code === 'W30') label = 'Storage Operation';
+        else if (code === 'W41X') label = 'Add. Service';
+        else label = code;
+      }
+
+      const numericSmr = smr != null && !isNaN(Number(smr)) ? Number(smr) : null;
+
+      return {
+        id: `report-${code}-${date}-${idx}`,
+        label,
+        code,
+        date: String(date).trim(),
+        smr: numericSmr,
+        sortDate: String(date).trim(),
+      };
+    });
+
+  // Also include pending factory milestones if they have no date
+  for (const m of (machine.milestones || [])) {
+    if (!m.date) {
+      items.push({
+        id: `milestone-${m.code}-pending`,
+        label: m.label,
+        code: m.code,
+        date: null,
+        smr: null,
+        sortDate: '0000-00-00',
+      });
+    }
+  }
+
+  // Sort descending by date (newest service event on top)
+  return items.sort((a, b) => (b.sortDate || '').localeCompare(a.sortDate || ''));
 }
