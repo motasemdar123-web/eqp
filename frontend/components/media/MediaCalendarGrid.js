@@ -75,17 +75,17 @@ export default function MediaCalendarGrid({
   return (
     <div className="bg-white rounded-2xl border border-slate-200 shadow-2xs overflow-hidden">
       {/* Calendar Header Row: Weekday Names */}
-      <div className="grid grid-cols-7 border-b border-slate-200 bg-slate-900 text-white text-center">
+      <div className="grid grid-cols-7 border-b border-slate-200 bg-slate-50 text-slate-700 text-center">
         {WEEKDAYS.map((dayName, idx) => (
           <div
             key={dayName}
-            className={`py-3 text-xs font-bold uppercase tracking-wider ${
-              idx === 0 || idx === 2 || idx === 4 ? 'text-amber-400' : 'text-slate-300'
+            className={`py-3.5 text-xs uppercase tracking-wider ${
+              idx === 0 || idx === 2 || idx === 4 ? 'text-amber-800 font-bold' : 'text-slate-600 font-semibold'
             }`}
           >
             {dayName}
             {(idx === 0 || idx === 2 || idx === 4) && (
-              <span className="block text-[9px] font-normal text-amber-300/80 uppercase">Publish</span>
+              <span className="block text-[9px] font-bold text-amber-700 uppercase tracking-tight">Publish</span>
             )}
           </div>
         ))}
@@ -98,7 +98,7 @@ export default function MediaCalendarGrid({
             return (
               <div
                 key={`pad-${idx}`}
-                className="bg-slate-50/50 p-2 min-h-[115px] sm:min-h-[135px] text-slate-300 select-none"
+                className="bg-slate-50/40 p-2.5 min-h-[135px] sm:min-h-[155px] text-slate-300 select-none"
               >
                 <span className="text-xs font-semibold font-mono text-slate-400/50">
                   {cell.dayNumber}
@@ -114,18 +114,18 @@ export default function MediaCalendarGrid({
           return (
             <div
               key={cell.dateStr}
-              className={`p-2 min-h-[115px] sm:min-h-[135px] flex flex-col justify-between transition-colors group relative ${
-                isToday ? 'bg-amber-50/30' : 'bg-white hover:bg-slate-50/80'
+              className={`p-2.5 min-h-[135px] sm:min-h-[155px] flex flex-col justify-between transition-colors group relative ${
+                isToday ? 'bg-amber-50/40' : 'bg-white hover:bg-slate-50/70'
               }`}
             >
               {/* Cell Top Bar: Day Number & Add Button */}
-              <div className="flex items-center justify-between gap-1 mb-1">
+              <div className="flex items-center justify-between gap-1 mb-1.5">
                 <span
                   className={`text-xs font-mono font-bold w-6 h-6 rounded-full flex items-center justify-center ${
                     isToday
                       ? 'bg-amber-400 text-slate-950 shadow-2xs font-black'
                       : hasPosts
-                      ? 'text-slate-900 bg-slate-100'
+                      ? 'text-slate-900 bg-slate-100 font-bold'
                       : 'text-slate-500'
                   }`}
                 >
@@ -136,14 +136,14 @@ export default function MediaCalendarGrid({
                   type="button"
                   onClick={() => onAddPost(cell.dateStr)}
                   title={`Add post idea on ${cell.dateStr}`}
-                  className="opacity-0 group-hover:opacity-100 text-[10px] font-bold text-slate-500 hover:text-slate-900 hover:bg-slate-200 px-1.5 py-0.5 rounded transition-all cursor-pointer"
+                  className="opacity-0 group-hover:opacity-100 text-[10px] font-bold text-slate-500 hover:text-slate-900 hover:bg-slate-100 px-2 py-0.5 rounded transition-all cursor-pointer"
                 >
                   + Add
                 </button>
               </div>
 
               {/* Scheduled Posts in This Day */}
-              <div className="space-y-1.5 flex-1">
+              <div className="space-y-2 flex-1">
                 {cell.posts.map((post) => {
                   const formatMeta =
                     FORMAT_TYPES.find((f) => f.id === post.format) || FORMAT_TYPES[0];
@@ -154,34 +154,34 @@ export default function MediaCalendarGrid({
                     <div
                       key={post.id}
                       onClick={() => onSelectPost(post)}
-                      className="p-1.5 sm:p-2 rounded-lg bg-slate-900 text-white hover:bg-slate-800 transition-all cursor-pointer shadow-2xs group/card border border-slate-800"
+                      className="p-2 sm:p-2.5 rounded-xl bg-white text-slate-900 hover:border-amber-400 hover:shadow-xs transition-all cursor-pointer shadow-2xs group/card border border-slate-200/90 space-y-1"
                     >
                       {/* Post Format & Status Dot */}
-                      <div className="flex items-center justify-between text-[9px] mb-1">
-                        <span className="font-semibold text-amber-400 uppercase tracking-tight truncate">
+                      <div className="flex items-center justify-between text-[9px]">
+                        <span className={`font-semibold text-[9px] uppercase tracking-tight truncate px-1.5 py-0.2 rounded border ${formatMeta.color}`}>
                           {formatMeta.shortLabel || formatMeta.label}
                         </span>
 
                         <span
-                          className={`w-1.5 h-1.5 rounded-full ${
+                          className={`w-2 h-2 rounded-full ${
                             post.status === 'ready' || post.status === 'published'
-                              ? 'bg-emerald-400 ring-2 ring-emerald-400/20'
+                              ? 'bg-emerald-500 ring-2 ring-emerald-500/20'
                               : post.status === 'production' || post.status === 'scripted'
-                              ? 'bg-amber-400'
-                              : 'bg-slate-400'
+                              ? 'bg-amber-500'
+                              : 'bg-slate-300'
                           }`}
                           title={stageMeta.label}
                         />
                       </div>
 
                       {/* Post Title */}
-                      <p className="text-[11px] font-bold text-slate-100 line-clamp-2 leading-tight group-hover/card:text-amber-300 transition-colors">
+                      <p className="text-[11px] font-bold text-slate-900 line-clamp-2 leading-snug group-hover/card:text-amber-700 transition-colors">
                         {post.title}
                       </p>
 
                       {/* Optional TOV snippet if available */}
                       {post.tov && (
-                        <p className="text-[9px] text-slate-400 truncate mt-1">
+                        <p className="text-[9px] text-slate-500 truncate mt-0.5">
                           🎙️ {post.tov}
                         </p>
                       )}

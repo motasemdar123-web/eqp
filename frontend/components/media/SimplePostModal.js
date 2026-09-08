@@ -115,7 +115,7 @@ export default function SimplePostModal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-slate-950/60 backdrop-blur-xs animate-[ds-fade-in_150ms_ease]"
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-slate-900/40 backdrop-blur-xs animate-[ds-fade-in_150ms_ease]"
       onClick={onClose}
     >
       <div
@@ -123,25 +123,25 @@ export default function SimplePostModal({
         onClick={(e) => e.stopPropagation()}
       >
         {/* Modal Header */}
-        <div className="bg-slate-900 text-white px-6 py-4 flex items-center justify-between border-b border-slate-800 shrink-0">
+        <div className="bg-white text-slate-900 px-7 py-5 flex items-center justify-between border-b border-slate-200 shrink-0">
           <div className="flex items-center gap-3">
             <span className="w-3 h-3 rounded-full bg-amber-400 shrink-0" />
             <div>
-              <h2 className="text-sm sm:text-base font-bold text-white">
+              <h2 className="text-base sm:text-lg font-bold text-slate-900">
                 {isEdit ? `Edit Post Idea ${formData.conceptNumber ? `#${formData.conceptNumber}` : ''}` : 'New Post Idea'}
               </h2>
-              <p className="text-[11px] text-slate-400">
+              <p className="text-xs text-slate-500 mt-0.5">
                 {isEdit ? 'Update core concept, tone of voice, and platform copy' : 'Schedule a new content release on the monthly calendar'}
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2.5">
             {/* Status Quick Select */}
             <select
               value={formData.status}
               onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-              className="bg-slate-800 border border-slate-700 text-slate-200 text-xs font-semibold rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-amber-400 cursor-pointer"
+              className="bg-slate-50 border border-slate-300 text-slate-800 text-xs font-semibold rounded-lg px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-amber-400 cursor-pointer"
             >
               {PIPELINE_STAGES.map((s) => (
                 <option key={s.id} value={s.id}>
@@ -153,7 +153,7 @@ export default function SimplePostModal({
             <button
               type="button"
               onClick={onClose}
-              className="text-slate-400 hover:text-white p-1.5 rounded-lg hover:bg-slate-800 transition-colors cursor-pointer"
+              className="text-slate-400 hover:text-slate-700 p-1.5 rounded-lg hover:bg-slate-100 transition-colors cursor-pointer text-sm font-bold"
             >
               ✕
             </button>
@@ -161,7 +161,7 @@ export default function SimplePostModal({
         </div>
 
         {/* Modal Form Body */}
-        <form id="post-form" onSubmit={handleSubmit} className="p-6 space-y-5 overflow-y-auto flex-1">
+        <form id="post-form" onSubmit={handleSubmit} className="p-7 space-y-6 overflow-y-auto flex-1">
           {/* Row 1: Title */}
           <div>
             <label className="text-xs font-bold text-slate-900 mb-1.5 block">
@@ -314,7 +314,7 @@ export default function SimplePostModal({
         </form>
 
         {/* Modal Footer */}
-        <div className="bg-slate-50 border-t border-slate-200 px-6 py-3.5 flex items-center justify-between shrink-0">
+        <div className="bg-slate-50/80 border-t border-slate-200 px-7 py-4 flex items-center justify-between shrink-0">
           <div>
             {isEdit && onDelete && (
               <button
@@ -331,13 +331,12 @@ export default function SimplePostModal({
             )}
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2.5">
             <Button
               type="button"
               variant="secondary"
               size="sm"
               onClick={onClose}
-              className="text-xs cursor-pointer"
             >
               Cancel
             </Button>
@@ -347,7 +346,6 @@ export default function SimplePostModal({
               form="post-form"
               variant="primary"
               size="sm"
-              className="!bg-slate-900 hover:!bg-slate-800 !text-white !font-bold text-xs shadow-xs cursor-pointer"
             >
               {isEdit ? 'Save Changes' : 'Create Post'}
             </Button>

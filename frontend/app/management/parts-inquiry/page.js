@@ -1239,11 +1239,14 @@ export default function SparePartsPage() {
         actions={
           <div className="flex items-center gap-2">
             <Button
-              variant="outline"
+              variant="secondary"
               size="sm"
               onClick={() => setCookieModalOpen(true)}
             >
-              🔑 PDX Cookie Session
+              <svg className="w-4 h-4 mr-1.5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
+              </svg>
+              PDX Cookie Session
             </Button>
           </div>
         }
@@ -1251,7 +1254,7 @@ export default function SparePartsPage() {
 
       {/* KPI Overview Metrics */}
       <section aria-label="Spare Parts Summary">
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
           <MetricCard
             label="PDX System Status"
             value={status.connected ? 'ONLINE' : 'AUTH REQ'}
@@ -1289,36 +1292,40 @@ export default function SparePartsPage() {
 
       {/* Cookie Expiration Warning Banner */}
       {!status.connected && (
-        <div className="bg-amber-50 border border-amber-300 rounded-lg p-3.5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs text-amber-950 shadow-xs">
-          <div className="flex items-start gap-2.5">
-            <span className="text-base leading-none">⚠️</span>
+        <div className="bg-amber-50/90 border border-amber-300 rounded-lg p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs text-amber-950 shadow-2xs">
+          <div className="flex items-start gap-3">
+            <span className="flex items-center justify-center w-8 h-8 rounded-full bg-amber-200/80 text-amber-900 shrink-0">
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+            </span>
             <div>
-              <p className="font-bold text-amber-900">Komatsu PDX Session Cookie Expired</p>
-              <p className="text-amber-800 text-[11px] mt-0.5">
-                Live dispatching on the portal requires a fresh session cookie. You can paste your active cookie or toggle Simulation Mode to preview quotations.
+              <p className="font-bold text-amber-950 text-sm">Komatsu PDX Session Cookie Expired</p>
+              <p className="text-amber-800 text-xs mt-0.5">
+                Live dispatching requires an active Komatsu portal session cookie. You can paste your active cookie or toggle Simulation Mode to preview quotations.
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-2 shrink-0">
+          <div className="flex items-center gap-2 shrink-0 pl-11 sm:pl-0">
             <Button
               type="button"
               variant="primary"
-              size="xs"
+              size="sm"
               onClick={() => setCookieModalOpen(true)}
             >
-              🔑 Update PDX Cookie
+              Update PDX Cookie
             </Button>
             {!eoDryRun && (
               <Button
                 type="button"
-                variant="outline"
-                size="xs"
+                variant="secondary"
+                size="sm"
                 onClick={() => {
                   setEoDryRun(true);
                   setToast({ type: 'info', message: 'Switched to Simulation Mode (Dry Run).' });
                 }}
               >
-                ⚡ Enable Simulation Mode
+                Enable Simulation Mode
               </Button>
             )}
           </div>
@@ -1326,33 +1333,33 @@ export default function SparePartsPage() {
       )}
 
       {/* Tab Navigation */}
-      <div className="flex items-center justify-between border-b border-slate-200/80 pb-2">
-        <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-md text-xs font-medium">
+      <div className="flex items-center justify-between border-b border-slate-200 pb-2">
+        <div className="flex items-center gap-1.5 bg-slate-100 p-1 rounded-lg text-xs font-medium">
           <button
             type="button"
             onClick={() => setActiveTab('eo-dispatcher')}
-            className={`px-3 py-1.5 rounded transition-all cursor-pointer ${activeTab === 'eo-dispatcher' ? 'bg-white text-slate-900 shadow-2xs font-semibold' : 'text-slate-600 hover:text-slate-900'}`}
+            className={`px-3.5 py-1.5 rounded-md transition-all cursor-pointer ${activeTab === 'eo-dispatcher' ? 'bg-white text-slate-900 shadow-2xs font-semibold' : 'text-slate-600 hover:text-slate-900'}`}
           >
             Emergency Order Dispatcher
           </button>
           <button
             type="button"
             onClick={() => setActiveTab('so-converter')}
-            className={`px-3 py-1.5 rounded transition-all cursor-pointer ${activeTab === 'so-converter' ? 'bg-white text-slate-900 shadow-2xs font-semibold' : 'text-slate-600 hover:text-slate-900'}`}
+            className={`px-3.5 py-1.5 rounded-md transition-all cursor-pointer ${activeTab === 'so-converter' ? 'bg-white text-slate-900 shadow-2xs font-semibold' : 'text-slate-600 hover:text-slate-900'}`}
           >
             Quotations → SO Converter
           </button>
           <button
             type="button"
             onClick={() => setActiveTab('inquiry')}
-            className={`px-3 py-1.5 rounded transition-all cursor-pointer ${activeTab === 'inquiry' ? 'bg-white text-slate-900 shadow-2xs font-semibold' : 'text-slate-600 hover:text-slate-900'}`}
+            className={`px-3.5 py-1.5 rounded-md transition-all cursor-pointer ${activeTab === 'inquiry' ? 'bg-white text-slate-900 shadow-2xs font-semibold' : 'text-slate-600 hover:text-slate-900'}`}
           >
             PDX Stock & Price Inquiry
           </button>
           <button
             type="button"
             onClick={() => setActiveTab('fleet')}
-            className={`px-3 py-1.5 rounded transition-all cursor-pointer ${activeTab === 'fleet' ? 'bg-white text-slate-900 shadow-2xs font-semibold' : 'text-slate-600 hover:text-slate-900'}`}
+            className={`px-3.5 py-1.5 rounded-md transition-all cursor-pointer ${activeTab === 'fleet' ? 'bg-white text-slate-900 shadow-2xs font-semibold' : 'text-slate-600 hover:text-slate-900'}`}
           >
             Registered Fleet Assets ({fleetData.length})
           </button>
@@ -1360,172 +1367,225 @@ export default function SparePartsPage() {
       </div>
 
       {/* ========================================================= */}
-      {/* TAB 1: EMERGENCY ORDER (EO) DISPATCHER (SPLIT-PANE ~45/55) */}
+      {/* TAB 1: EMERGENCY ORDER (EO) DISPATCHER (3-TIER SPACIOUS)   */}
       {/* ========================================================= */}
       {activeTab === 'eo-dispatcher' && (
-        <div className="grid grid-cols-1 xl:grid-cols-12 gap-5 items-start">
-          {/* Left Column: Parameters, Multi-Items & Multi-SNs (~45% / 5.5 cols) */}
-          <div className="xl:col-span-5 space-y-4">
-            
-            {/* 1. Multi-Item Parts Request Section */}
-            <Card className="p-4 space-y-3.5">
-              <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
-                <div>
-                  <h3 className="text-sm font-semibold text-slate-900">1. Requested Parts & Item Types</h3>
-                  <p className="text-[11px] text-slate-500">
-                    Add multiple items. Parts will be bundled together in quotations as much as possible.
-                  </p>
+        <div className="space-y-6">
+          {/* STEP 1: REQUESTED PARTS & ITEM TYPES (FULL WIDTH CARD) */}
+          <Card className="p-5 sm:p-6 space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between pb-4 border-b border-slate-100 gap-3">
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="flex items-center justify-center w-6 h-6 rounded-full bg-amber-100 text-amber-900 font-bold text-xs">
+                    1
+                  </span>
+                  <h3 className="text-base font-bold text-slate-900 tracking-tight">
+                    Requested Parts & Item Types
+                  </h3>
                 </div>
-                <div className="flex items-center gap-1.5">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="xs"
-                    onClick={() => setPastePartsModalOpen(true)}
-                  >
-                    📋 Paste / Import
-                  </Button>
-                  <Button
-                    type="button"
-                    variant="secondary"
-                    size="xs"
-                    onClick={handleVerifyAllParts}
-                    disabled={isVerifyingParts || eoItems.length === 0}
-                  >
-                    {isVerifyingParts ? 'Verifying...' : '⚡ Verify All'}
-                  </Button>
-                  <Button
-                    type="button"
-                    variant="primary"
-                    size="xs"
-                    onClick={handleAddItem}
-                  >
-                    + Add Item
-                  </Button>
-                </div>
+                <p className="text-xs text-slate-500 mt-1 pl-8">
+                  Add multiple item numbers. The automated dispatcher bundles line items together into unified quotations up to the sub-order max.
+                </p>
               </div>
 
-              {/* Items Table */}
-              <div className="border border-slate-200 rounded-md overflow-hidden text-xs">
-                <table className="w-full text-left border-collapse">
-                  <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 text-[11px] uppercase tracking-wider font-semibold">
+              <div className="flex items-center gap-2 pl-8 sm:pl-0">
+                <Button
+                  type="button"
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => setPastePartsModalOpen(true)}
+                >
+                  <svg className="w-4 h-4 mr-1.5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                  </svg>
+                  Import / Paste
+                </Button>
+                <Button
+                  type="button"
+                  variant="secondary"
+                  size="sm"
+                  onClick={handleVerifyAllParts}
+                  disabled={isVerifyingParts || eoItems.length === 0}
+                >
+                  <svg className={`w-4 h-4 mr-1.5 text-amber-500 ${isVerifyingParts ? 'animate-spin' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                  {isVerifyingParts ? 'Verifying...' : 'Verify Parts'}
+                </Button>
+                <Button
+                  type="button"
+                  variant="primary"
+                  size="sm"
+                  onClick={handleAddItem}
+                >
+                  <svg className="w-4 h-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" />
+                  </svg>
+                  Add Part Item
+                </Button>
+              </div>
+            </div>
+
+            {/* Full-width Items Table */}
+            <div className="border border-slate-200 rounded-lg overflow-hidden">
+              <table className="w-full text-left border-collapse text-xs">
+                <thead className="bg-slate-50/80 border-b border-slate-200 text-slate-700 text-[11px] uppercase tracking-wider font-semibold">
+                  <tr>
+                    <th className="py-3 px-4 min-w-[220px]">Part Number</th>
+                    <th className="py-3 px-4 min-w-[220px]">Description</th>
+                    <th className="py-3 px-4 w-28 text-right">Requested Qty</th>
+                    <th className="py-3 px-4 w-32 text-right">Max / Sub-Order</th>
+                    <th className="py-3 px-4 w-32 text-right">Unit Price ($)</th>
+                    <th className="py-3 px-4 w-32 text-right">Line Total ($)</th>
+                    <th className="py-3 px-3 w-12 text-center"></th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 bg-white">
+                  {eoItems.length === 0 ? (
                     <tr>
-                      <th className="py-2 px-2.5">Part Number</th>
-                      <th className="py-2 px-2">Description</th>
-                      <th className="py-2 px-2 w-16 text-right">Qty</th>
-                      <th className="py-2 px-2 w-20 text-right">Max / Sub-Order</th>
-                      <th className="py-2 px-2 w-20 text-right">Price ($)</th>
-                      <th className="py-2 px-1 w-8 text-center"></th>
+                      <td colSpan={7} className="py-10 text-center text-slate-400">
+                        <div className="flex flex-col items-center justify-center gap-2">
+                          <span className="text-2xl">📦</span>
+                          <p className="font-medium text-slate-600">No parts added to the dispatch queue.</p>
+                          <p className="text-xs text-slate-400">Click &ldquo;Add Part Item&rdquo; or &ldquo;Import / Paste&rdquo; from Excel to get started.</p>
+                        </div>
+                      </td>
                     </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100 bg-white">
-                    {eoItems.length === 0 ? (
-                      <tr>
-                        <td colSpan={6} className="py-6 text-center text-slate-400">
-                          No parts added yet. Click &quot;+ Add Item&quot; or &quot;📋 Paste / Import&quot;.
-                        </td>
-                      </tr>
-                    ) : (
-                      eoItems.map((item, idx) => (
-                        <tr key={item.id || idx} className="hover:bg-slate-50/60 transition-colors">
-                          <td className="p-1.5">
+                  ) : (
+                    eoItems.map((item, idx) => {
+                      const qty = parseInt(item.quantity, 10) || 0;
+                      const price = parseFloat(item.unit_price) || 0;
+                      const lineTotal = (qty * price).toFixed(2);
+                      return (
+                        <tr key={item.id || idx} className="hover:bg-slate-50/70 transition-colors">
+                          <td className="py-2.5 px-4">
                             <input
                               type="text"
                               value={item.part_no}
                               onChange={(e) => handleUpdateItem(item.id, 'part_no', e.target.value)}
                               placeholder="e.g. 2A8-62-12230"
-                              className="w-full font-mono text-xs uppercase px-2 py-1 border border-slate-200 rounded focus:ring-1 focus:ring-amber-500 focus:border-amber-500"
+                              className="w-full font-mono text-xs font-semibold uppercase px-2.5 py-1.5 border border-slate-300 rounded-md focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 bg-white shadow-2xs"
                             />
                             {item.verified && (
-                              <span className="text-[10px] text-emerald-600 font-medium block mt-0.5">
-                                ✓ Verified {item.models?.length > 0 ? `(${item.models.length} models)` : ''}
-                              </span>
+                              <div className="flex items-center gap-1 text-[11px] text-emerald-700 font-medium mt-1">
+                                <svg className="w-3.5 h-3.5 text-emerald-600 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                </svg>
+                                <span>Verified Genuine {item.models?.length > 0 ? `(${item.models.join(', ')})` : ''}</span>
+                              </div>
                             )}
                           </td>
-                          <td className="p-1.5">
+                          <td className="py-2.5 px-4">
                             <input
                               type="text"
                               value={item.description}
                               onChange={(e) => handleUpdateItem(item.id, 'description', e.target.value)}
-                              placeholder="e.g. HOSE"
-                              className="w-full text-xs px-2 py-1 border border-slate-200 rounded focus:ring-1 focus:ring-amber-500 focus:border-amber-500"
+                              placeholder="e.g. HOSE, HYDRAULIC"
+                              className="w-full text-xs px-2.5 py-1.5 border border-slate-300 rounded-md focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 bg-white shadow-2xs"
                             />
                           </td>
-                          <td className="p-1.5 text-right">
+                          <td className="py-2.5 px-4 text-right">
                             <input
                               type="number"
                               min={1}
                               value={item.quantity}
                               onChange={(e) => handleUpdateItem(item.id, 'quantity', e.target.value)}
-                              className="w-16 font-mono text-xs text-right px-1.5 py-1 border border-slate-200 rounded focus:ring-1 focus:ring-amber-500 focus:border-amber-500"
+                              className="w-24 font-mono text-xs text-right font-medium px-2.5 py-1.5 border border-slate-300 rounded-md focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 bg-white shadow-2xs"
                             />
                           </td>
-                          <td className="p-1.5 text-right">
+                          <td className="py-2.5 px-4 text-right">
                             <input
                               type="number"
                               min={1}
                               value={item.max_per_order}
                               onChange={(e) => handleUpdateItem(item.id, 'max_per_order', e.target.value)}
                               title="Maximum quantity allowed per sub-order quotation"
-                              className="w-18 font-mono text-xs text-right px-1.5 py-1 border border-slate-200 rounded focus:ring-1 focus:ring-amber-500 focus:border-amber-500"
+                              className="w-24 font-mono text-xs text-right font-medium px-2.5 py-1.5 border border-slate-300 rounded-md focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 bg-white shadow-2xs"
                             />
                           </td>
-                          <td className="p-1.5 text-right font-mono text-slate-700">
+                          <td className="py-2.5 px-4 text-right">
                             <input
                               type="text"
                               value={item.unit_price}
                               onChange={(e) => handleUpdateItem(item.id, 'unit_price', e.target.value)}
                               placeholder="0.000"
-                              className="w-18 font-mono text-xs text-right px-1.5 py-1 border border-slate-200 rounded focus:ring-1 focus:ring-amber-500 focus:border-amber-500"
+                              className="w-24 font-mono text-xs text-right font-medium px-2.5 py-1.5 border border-slate-300 rounded-md focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 bg-white shadow-2xs"
                             />
                           </td>
-                          <td className="p-1 text-center">
+                          <td className="py-2.5 px-4 text-right font-mono text-xs font-bold text-slate-800">
+                            ${lineTotal}
+                          </td>
+                          <td className="py-2.5 px-3 text-center">
                             <button
                               type="button"
                               onClick={() => handleRemoveItem(item.id)}
-                              className="text-slate-400 hover:text-red-600 p-1 rounded transition-colors cursor-pointer"
+                              className="text-slate-400 hover:text-rose-600 p-1.5 rounded-md hover:bg-rose-50 transition-colors cursor-pointer"
                               title="Remove item"
                             >
-                              ✕
+                              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                              </svg>
                             </button>
                           </td>
                         </tr>
-                      ))
-                    )}
-                  </tbody>
-                  {eoItems.length > 0 && (
-                    <tfoot className="bg-slate-50 border-t border-slate-200 font-semibold text-slate-800 text-[11px]">
-                      <tr>
-                        <td colSpan={2} className="py-2 px-2.5 text-slate-600">
-                          Total: {eoItems.length} Item Types
-                        </td>
-                        <td className="py-2 px-2 text-right font-mono">{totalPlannedPieces} EA</td>
-                        <td></td>
-                        <td className="py-2 px-2 text-right font-mono text-amber-700">${totalEstimatedValue}</td>
-                        <td className="text-center">
-                          <button
-                            type="button"
-                            onClick={handleClearAllItems}
-                            className="text-[10px] text-slate-400 hover:text-red-600 underline"
-                          >
-                            Clear
-                          </button>
-                        </td>
-                      </tr>
-                    </tfoot>
+                      );
+                    })
                   )}
-                </table>
+                </tbody>
+                {eoItems.length > 0 && (
+                  <tfoot className="bg-slate-50 border-t border-slate-200 font-semibold text-slate-800 text-xs">
+                    <tr>
+                      <td colSpan={2} className="py-3 px-4 text-slate-600">
+                        Total Summary: <strong>{eoItems.length} Item Types</strong>
+                      </td>
+                      <td className="py-3 px-4 text-right font-mono font-bold text-slate-900">
+                        {totalPlannedPieces} EA
+                      </td>
+                      <td className="py-3 px-4"></td>
+                      <td className="py-3 px-4 text-right text-slate-500 font-normal text-[11px]">
+                        Est. Total:
+                      </td>
+                      <td className="py-3 px-4 text-right font-mono font-extrabold text-amber-600 text-sm">
+                        ${totalEstimatedValue}
+                      </td>
+                      <td className="py-3 px-3 text-center">
+                        <button
+                          type="button"
+                          onClick={handleClearAllItems}
+                          className="text-[11px] text-slate-400 hover:text-rose-600 underline font-medium cursor-pointer"
+                        >
+                          Clear
+                        </button>
+                      </td>
+                    </tr>
+                  </tfoot>
+                )}
+              </table>
+            </div>
+          </Card>
+
+          {/* STEP 2: BALANCED 2-COLUMN GRID (FLEET SELECTION & ORDER CONFIGURATION) */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            {/* Left Column: Target Fleet & Multi-SNs Allocation (7 cols) */}
+            <Card className="lg:col-span-7 p-5 sm:p-6 space-y-4">
+              <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+                <div className="flex items-center gap-2">
+                  <span className="flex items-center justify-center w-6 h-6 rounded-full bg-amber-100 text-amber-900 font-bold text-xs">
+                    2
+                  </span>
+                  <div>
+                    <h3 className="text-base font-bold text-slate-900 tracking-tight">
+                      Target Fleet & Multi-SNs Allocation
+                    </h3>
+                    <p className="text-xs text-slate-500">
+                      Select target equipment serial numbers to distribute inquiry quotations
+                    </p>
+                  </div>
+                </div>
               </div>
-            </Card>
 
-            {/* 2. Customer & Multi-SNs Selection Section */}
-            <Card className="p-4 space-y-3.5">
-              <SectionHeader
-                title="2. Target Fleet & Multi-SNs Allocation"
-                description="Select multiple machine serial numbers to distribute inquiry quotations"
-              />
-
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+              {/* Filters */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <Field label="Customer Account">
                   <Select
                     value={selectedCustomer}
@@ -1536,7 +1596,7 @@ export default function SparePartsPage() {
                     ))}
                   </Select>
                 </Field>
-                <Field label="Machine Type Filter">
+                <Field label="Machine Type">
                   <Select
                     value={selectedMachineType}
                     onChange={(e) => setSelectedMachineType(e.target.value)}
@@ -1547,7 +1607,7 @@ export default function SparePartsPage() {
                     ))}
                   </Select>
                 </Field>
-                <Field label="Machine Model (Ranked by Compatibility)">
+                <Field label="Model (Compatibility)">
                   <Select
                     value={selectedModel}
                     onChange={(e) => setSelectedModel(e.target.value)}
@@ -1562,37 +1622,35 @@ export default function SparePartsPage() {
                 </Field>
               </div>
 
-              {/* Multi-SN Selection Container */}
-              <div className="space-y-2 pt-1 border-t border-slate-100">
-                <div className="flex items-center justify-between text-xs">
+              {/* Action Toolbar for SNs */}
+              <div className="space-y-2 pt-2 border-t border-slate-100">
+                <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
                   <span className="font-semibold text-slate-800">
-                    Target Machine Serial Numbers (SNs):{' '}
-                    <strong className="text-amber-700">{activeMachinePool.length}</strong> in pool
+                    Serial Numbers in Pool:{' '}
+                    <strong className="text-amber-600 font-mono text-sm">{activeMachinePool.length}</strong>
                   </span>
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-1.5">
                     {!customSerialsMode ? (
                       <>
                         <button
                           type="button"
                           onClick={handleSelectCompatibleSn}
-                          className="text-[11px] text-emerald-700 hover:text-emerald-800 font-bold px-2 py-0.5 rounded bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 cursor-pointer shadow-xs transition"
+                          className="text-xs text-emerald-800 hover:text-emerald-900 font-semibold px-2.5 py-1 rounded-md bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 cursor-pointer shadow-2xs transition"
                           title="Auto-select all machines compatible with requested parts"
                         >
-                          ★ Select Most Compatible SNs
+                          ★ Auto-Select Compatible
                         </button>
-                        <span className="text-slate-300">•</span>
                         <button
                           type="button"
                           onClick={handleSelectAllSn}
-                          className="text-[11px] text-amber-700 hover:text-amber-800 font-medium px-1.5 py-0.5 rounded hover:bg-amber-50 cursor-pointer"
+                          className="text-xs text-slate-700 hover:text-slate-900 font-medium px-2 py-1 rounded-md bg-white hover:bg-slate-50 border border-slate-300 cursor-pointer shadow-2xs transition"
                         >
                           Select All ({filteredFleetMachines.length})
                         </button>
-                        <span className="text-slate-300">•</span>
                         <button
                           type="button"
                           onClick={handleClearSn}
-                          className="text-[11px] text-slate-500 hover:text-slate-700 font-medium px-1.5 py-0.5 rounded hover:bg-slate-100 cursor-pointer"
+                          className="text-xs text-slate-500 hover:text-slate-700 font-medium px-2 py-1 rounded-md hover:bg-slate-100 cursor-pointer transition"
                         >
                           Clear
                         </button>
@@ -1601,7 +1659,7 @@ export default function SparePartsPage() {
                     <button
                       type="button"
                       onClick={() => setCustomSerialsMode(!customSerialsMode)}
-                      className="text-[11px] text-indigo-600 hover:text-indigo-800 font-medium px-1.5 py-0.5 rounded hover:bg-indigo-50 cursor-pointer ml-1"
+                      className="text-xs text-indigo-600 hover:text-indigo-800 font-medium px-2 py-1 rounded-md hover:bg-indigo-50 cursor-pointer transition"
                     >
                       {customSerialsMode ? 'Switch to Fleet List' : 'Custom SNs Input'}
                     </button>
@@ -1609,10 +1667,10 @@ export default function SparePartsPage() {
                 </div>
 
                 {customSerialsMode ? (
-                  <div className="space-y-1">
+                  <div className="space-y-1.5 pt-1">
                     <Field label="Custom Serial Numbers (Comma or line separated)">
                       <Textarea
-                        rows={2}
+                        rows={3}
                         value={customSerialsInput}
                         onChange={(e) => setCustomSerialsInput(e.target.value)}
                         placeholder="e.g. 100433, 100434, 100435"
@@ -1624,9 +1682,9 @@ export default function SparePartsPage() {
                     </p>
                   </div>
                 ) : (
-                  <div className="max-h-48 overflow-y-auto border border-slate-200 rounded-md p-2 grid grid-cols-1 sm:grid-cols-2 gap-1.5 bg-slate-50/50">
+                  <div className="max-h-56 overflow-y-auto border border-slate-200 rounded-lg p-2.5 grid grid-cols-1 sm:grid-cols-2 gap-2 bg-slate-50/50">
                     {filteredFleetMachines.length === 0 ? (
-                      <p className="col-span-2 text-center text-xs text-slate-400 py-3">
+                      <p className="col-span-2 text-center text-xs text-slate-400 py-6">
                         No fleet machines found matching filter.
                       </p>
                     ) : (
@@ -1637,11 +1695,11 @@ export default function SparePartsPage() {
                         return (
                           <label
                             key={`${m.serial}-${idx}`}
-                            className={`flex items-center gap-2 p-2 rounded-md border text-xs cursor-pointer select-none transition-all ${
+                            className={`flex items-center gap-2.5 p-2 rounded-lg border text-xs cursor-pointer select-none transition-all ${
                               isChecked
                                 ? isFull
-                                  ? 'bg-emerald-50/90 border-emerald-300 text-slate-900 shadow-xs'
-                                  : 'bg-amber-50/80 border-amber-300 text-slate-900 font-medium'
+                                  ? 'bg-emerald-50 border-emerald-300 text-slate-900 shadow-2xs font-medium'
+                                  : 'bg-amber-50 border-amber-300 text-slate-900 font-medium shadow-2xs'
                                 : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'
                             }`}
                           >
@@ -1649,19 +1707,19 @@ export default function SparePartsPage() {
                               type="checkbox"
                               checked={isChecked}
                               onChange={() => handleToggleSerial(m.serial)}
-                              className="rounded text-amber-600"
+                              className="rounded text-amber-500 focus:ring-amber-400"
                             />
                             <div className="truncate flex-1">
                               <span className="font-mono font-bold text-slate-900">{m.serial}</span>
-                              <span className="text-[11px] text-slate-500 ml-1.5 font-medium">({m.model})</span>
+                              <span className="text-[11px] text-slate-500 ml-1.5">({m.model})</span>
                             </div>
                             {isFull ? (
                               <span className="text-[10px] text-emerald-800 bg-emerald-100 px-1.5 py-0.5 rounded font-bold">
-                                ★ Best Match
+                                Full Match
                               </span>
                             ) : isPart ? (
                               <span className="text-[10px] text-amber-800 bg-amber-100 px-1.5 py-0.5 rounded font-medium">
-                                ⚡ {m.compatInfo.matchedCount}/{m.compatInfo.totalCount} Fit
+                                {m.compatInfo.matchedCount}/{m.compatInfo.totalCount} Fit
                               </span>
                             ) : null}
                           </label>
@@ -1671,143 +1729,184 @@ export default function SparePartsPage() {
                   </div>
                 )}
               </div>
+            </Card>
 
-              {/* Pool Status Summary */}
-              <div className="p-2.5 bg-amber-50/60 border border-amber-200/80 rounded-md text-xs text-amber-900 flex items-center justify-between">
-                <span>
-                  Pool: <strong>{activeMachinePool.length} SNs</strong> allocated across{' '}
-                  <strong>{plannedOrders.length} sub-orders</strong>.
-                </span>
-                <span className="text-[11px] font-medium text-amber-800">
-                  {plannedOrders.length} unified quotations
-                </span>
+            {/* Right Column: Order Configuration & Sequence (5 cols) */}
+            <Card className="lg:col-span-5 p-5 sm:p-6 space-y-4">
+              <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+                <div className="flex items-center gap-2">
+                  <span className="flex items-center justify-center w-6 h-6 rounded-full bg-amber-100 text-amber-900 font-bold text-xs">
+                    3
+                  </span>
+                  <div>
+                    <h3 className="text-base font-bold text-slate-900 tracking-tight">
+                      Order Sequence & PDX Settings
+                    </h3>
+                    <p className="text-xs text-slate-500">
+                      Starting order sequence, comments, and submission mode
+                    </p>
+                  </div>
+                </div>
               </div>
 
-              {/* Collapsible Advanced Configuration */}
-              <Disclosure
-                title="Advanced Order & Sequence Configuration"
-                subtitle="Starting sequence, comments, and simulation mode"
-                defaultOpen={false}
-              >
-                <div className="space-y-3 pt-1 text-xs">
-                  <div className="grid grid-cols-2 gap-2.5">
-                    <Field label="Starting DB Order No" required>
-                      <Input
-                        value={eoStartingOrderNo}
-                        onChange={(e) => setEoStartingOrderNo(e.target.value)}
-                        placeholder="e.g. R153/2026"
-                        className="font-mono uppercase"
-                      />
-                    </Field>
-                    <Field label="Order Comments">
-                      <Input
-                        value={eoComments}
-                        onChange={(e) => setEoComments(e.target.value)}
-                        placeholder="e.g. Urgent Breakdown"
-                      />
-                    </Field>
-                  </div>
+              <div className="space-y-3.5">
+                <Field label="Starting DB Order No" hint="Sequential reference number" required>
+                  <Input
+                    value={eoStartingOrderNo}
+                    onChange={(e) => setEoStartingOrderNo(e.target.value)}
+                    placeholder="e.g. R153/2026"
+                    className="font-mono uppercase font-semibold"
+                  />
+                </Field>
 
-                  <label className="flex items-center gap-2 p-2 bg-slate-50 rounded border border-slate-200 cursor-pointer select-none font-medium text-slate-700">
+                <Field label="Order Comments / PO Reference">
+                  <Input
+                    value={eoComments}
+                    onChange={(e) => setEoComments(e.target.value)}
+                    placeholder="e.g. Urgent Breakdown"
+                  />
+                </Field>
+
+                <div className="pt-2 border-t border-slate-100">
+                  <label className="flex items-start gap-3 p-3 bg-slate-50 rounded-lg border border-slate-200 cursor-pointer select-none">
                     <input
                       type="checkbox"
                       checked={eoDryRun}
                       onChange={(e) => setEoDryRun(e.target.checked)}
-                      className="rounded text-amber-600"
+                      className="rounded text-amber-500 mt-0.5"
                     />
-                    <span>Simulate Only (Dry-Run Mode — do not submit to live Komatsu PDX)</span>
+                    <div className="text-xs">
+                      <span className="font-semibold text-slate-900 block">Simulation Mode (Dry Run)</span>
+                      <span className="text-slate-500 text-[11px]">
+                        Calculate unified quotations and sub-orders without dispatching live records to Komatsu PDX.
+                      </span>
+                    </div>
                   </label>
                 </div>
-              </Disclosure>
+
+                {/* Pool Allocation Summary Banner */}
+                <div className="p-3.5 bg-amber-50/70 border border-amber-200/80 rounded-lg text-xs text-amber-950 space-y-1">
+                  <div className="flex items-center justify-between font-bold text-amber-900">
+                    <span>Generated Sub-Orders:</span>
+                    <span className="font-mono text-sm">{plannedOrders.length} Quotation(s)</span>
+                  </div>
+                  <div className="flex items-center justify-between text-[11px] text-amber-800">
+                    <span>Target Machine Pool:</span>
+                    <span>{activeMachinePool.length} SNs allocated</span>
+                  </div>
+                  <div className="flex items-center justify-between text-[11px] text-amber-800">
+                    <span>Est. Total Order Value:</span>
+                    <span className="font-mono font-bold">${totalEstimatedValue}</span>
+                  </div>
+                </div>
+              </div>
             </Card>
           </div>
 
-          {/* Right Column: Live Dispatch Queue & Sub-Orders Board (~55% / 7 cols) */}
-          <div className="xl:col-span-7 space-y-4">
-            <Card className="p-4">
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between pb-3 mb-3 border-b border-slate-100 gap-2">
-                <div>
-                  <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
-                    3. Planned Unified Quotations & Live Dispatch Queue
-                  </h3>
-                  <p className="text-xs text-slate-500">
-                    {plannedOrders.length} sub-orders generated ({eoItems.length} items, {totalPlannedPieces} units)
-                    {successfulOrdersCount > 0 && ` • ${successfulOrdersCount} submitted`}
-                    {failedOrdersCount > 0 && ` • ${failedOrdersCount} failed`}
-                  </p>
-                </div>
-
+          {/* STEP 3: PLANNED UNIFIED QUOTATIONS & DISPATCH QUEUE (FULL WIDTH CARD) */}
+          <Card className="p-5 sm:p-6 space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between pb-4 border-b border-slate-100 gap-3">
+              <div>
                 <div className="flex items-center gap-2">
-                  {failedOrdersCount > 0 && (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={retryFailedOrders}
-                      disabled={isExecutingEo}
-                      className="text-red-700 border-red-200 bg-red-50 hover:bg-red-100"
-                    >
-                      Retry Failed ({failedOrdersCount})
-                    </Button>
-                  )}
-                  {isExecutingEo ? (
-                    <Button
-                      variant="danger"
-                      size="sm"
-                      onClick={() => {
-                        shouldStopEoRef.current = true;
-                      }}
-                    >
-                      Stop Execution
-                    </Button>
-                  ) : (
-                    <Button
-                      variant="primary"
-                      size="sm"
-                      onClick={startBatchExecution}
-                      disabled={plannedOrders.length === 0}
-                    >
-                      Dispatch All ({plannedOrders.length})
-                    </Button>
-                  )}
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={downloadEoCsv}
-                    disabled={plannedOrders.length === 0}
-                  >
-                    CSV Export
-                  </Button>
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    className="bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border-emerald-300 font-semibold"
-                    onClick={openSapPoModalFromEoQueue}
-                    disabled={eoItems.length === 0}
-                  >
-                    📋 Create SAP PO
-                  </Button>
+                  <span className="flex items-center justify-center w-6 h-6 rounded-full bg-amber-500 text-slate-950 font-extrabold text-xs">
+                    4
+                  </span>
+                  <h3 className="text-base font-bold text-slate-900 tracking-tight">
+                    Planned Unified Quotations & Live Dispatch Queue
+                  </h3>
                 </div>
+                <p className="text-xs text-slate-500 mt-1 pl-8">
+                  {plannedOrders.length} sub-orders generated across {eoItems.length} requested parts ({totalPlannedPieces} units)
+                  {successfulOrdersCount > 0 && ` • ${successfulOrdersCount} successfully submitted`}
+                  {failedOrdersCount > 0 && ` • ${failedOrdersCount} failed`}
+                </p>
               </div>
 
-              <Table density="compact">
-                <TableHeader sticky>
+              <div className="flex flex-wrap items-center gap-2 pl-8 sm:pl-0">
+                {failedOrdersCount > 0 && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={retryFailedOrders}
+                    disabled={isExecutingEo}
+                    className="text-rose-700 border-rose-300 bg-rose-50 hover:bg-rose-100"
+                  >
+                    Retry Failed ({failedOrdersCount})
+                  </Button>
+                )}
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={downloadEoCsv}
+                  disabled={plannedOrders.length === 0}
+                >
+                  <svg className="w-4 h-4 mr-1.5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                  Export CSV
+                </Button>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={openSapPoModalFromEoQueue}
+                  disabled={eoItems.length === 0}
+                >
+                  <svg className="w-4 h-4 mr-1.5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                  Create SAP PO
+                </Button>
+                {isExecutingEo ? (
+                  <Button
+                    variant="danger"
+                    size="sm"
+                    onClick={() => {
+                      shouldStopEoRef.current = true;
+                    }}
+                  >
+                    Stop Execution
+                  </Button>
+                ) : (
+                  <Button
+                    variant="primary"
+                    size="sm"
+                    onClick={startBatchExecution}
+                    disabled={plannedOrders.length === 0}
+                  >
+                    <svg className="w-4 h-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                    Dispatch All ({plannedOrders.length})
+                  </Button>
+                )}
+              </div>
+            </div>
+
+            {/* Wide Full-Width Quotations Table - NO HORIZONTAL SCROLLBAR */}
+            <div className="border border-slate-200 rounded-lg overflow-hidden">
+              <Table density="normal">
+                <TableHeader>
                   <TableRow>
-                    <TableHead className="w-8">#</TableHead>
-                    <TableHead>DB Order No</TableHead>
-                    <TableHead>Target Asset (SN & Model)</TableHead>
+                    <TableHead className="w-12 text-center">#</TableHead>
+                    <TableHead className="w-32">DB Order No</TableHead>
+                    <TableHead className="w-44">Target Asset</TableHead>
                     <TableHead>Bundled Parts Requested</TableHead>
-                    <TableHead isNumeric>Qty</TableHead>
-                    <TableHead isNumeric>Est. ($)</TableHead>
-                    <TableHead>Quotation #</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead className="text-right">Action</TableHead>
+                    <TableHead isNumeric className="w-20">Total Qty</TableHead>
+                    <TableHead isNumeric className="w-28">Est. Value ($)</TableHead>
+                    <TableHead className="w-32">Quotation #</TableHead>
+                    <TableHead className="w-28 text-center">Status</TableHead>
+                    <TableHead className="w-24 text-right">Action</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {plannedOrders.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={9} className="text-center py-8 text-xs text-slate-500">
-                        No planned orders generated yet. Add part numbers and configure target SNs to preview unified quotations.
+                      <TableCell colSpan={9} className="text-center py-12 text-xs text-slate-500">
+                        <div className="flex flex-col items-center justify-center gap-2">
+                          <span className="text-2xl">📋</span>
+                          <p className="font-semibold text-slate-700">No unified quotations generated.</p>
+                          <p className="text-slate-400">Add requested part numbers and ensure machine serial numbers are in the pool.</p>
+                        </div>
                       </TableCell>
                     </TableRow>
                   ) : (
@@ -1817,39 +1916,39 @@ export default function SparePartsPage() {
                         isClickable
                         isSelected={viewingOrder && viewingOrder.db_order_no === order.db_order_no}
                         onClick={() => setViewingOrder(order)}
-                        className="group"
+                        className="group hover:bg-slate-50/80 transition-colors"
                       >
-                        <TableCell className="font-mono text-xs text-slate-400">{order.index}</TableCell>
-                        <TableCell className="font-mono text-xs font-semibold text-slate-900 group-hover:text-amber-700 transition-colors">
+                        <TableCell className="font-mono text-xs text-slate-400 text-center">{order.index}</TableCell>
+                        <TableCell className="font-mono text-xs font-bold text-slate-900 group-hover:text-amber-600 transition-colors">
                           {order.db_order_no}
                         </TableCell>
                         <TableCell>
-                          <div className="text-xs font-mono font-semibold text-slate-800">{order.serial}</div>
-                          <div className="text-[11px] text-slate-500">{order.model}</div>
+                          <div className="text-xs font-mono font-bold text-slate-900">{order.serial}</div>
+                          <div className="text-[11px] text-slate-500 font-medium">{order.model} • {order.customer}</div>
                         </TableCell>
                         <TableCell>
-                          <div className="flex flex-wrap gap-1 max-w-xs">
+                          <div className="flex flex-wrap gap-1.5 py-1">
                             {order.parts.map((p, pIdx) => (
                               <span
                                 key={pIdx}
-                                className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-mono bg-slate-100 text-slate-700 border border-slate-200"
+                                className="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-mono bg-slate-100 text-slate-800 border border-slate-200/80"
                                 title={`${p.description} (Qty: ${p.quantity})`}
                               >
-                                <strong>{p.part_no}</strong>: {p.quantity}
+                                <strong className="font-semibold mr-1">{p.part_no}</strong>: {p.quantity} EA
                               </span>
                             ))}
                           </div>
                         </TableCell>
-                        <TableCell isNumeric className="font-mono text-xs font-semibold text-slate-900">
+                        <TableCell isNumeric className="font-mono text-xs font-bold text-slate-900">
                           {order.total_quantity}
                         </TableCell>
-                        <TableCell isNumeric className="font-mono text-xs text-slate-700">
+                        <TableCell isNumeric className="font-mono text-xs font-bold text-emerald-700">
                           ${order.total_amount}
                         </TableCell>
-                        <TableCell className="font-mono text-xs font-semibold text-amber-700">
+                        <TableCell className="font-mono text-xs font-bold text-amber-700">
                           {order.quotation_no || '—'}
                         </TableCell>
-                        <TableCell>
+                        <TableCell className="text-center">
                           <Badge
                             tone={
                               order.status === 'SUCCESS'
@@ -1873,47 +1972,48 @@ export default function SparePartsPage() {
                           </Badge>
                         </TableCell>
                         <TableCell className="text-right">
-                          <button
-                            type="button"
+                          <Button
+                            variant="secondary"
+                            size="xs"
                             onClick={(e) => {
                               e.stopPropagation();
                               setViewingOrder(order);
                             }}
-                            className="text-xs font-semibold text-slate-600 hover:text-amber-700 px-2 py-1 rounded hover:bg-amber-50 transition-colors cursor-pointer"
                           >
-                            Inspect →
-                          </button>
+                            Inspect
+                          </Button>
                         </TableCell>
                       </TableRow>
                     ))
                   )}
                 </TableBody>
               </Table>
+            </div>
 
-              {/* Technical Audit Log */}
-              <div className="mt-4 pt-3 border-t border-slate-100">
-                <details className="text-xs text-slate-500 group">
-                  <summary className="font-medium text-slate-700 hover:text-slate-900 cursor-pointer select-none py-1">
-                    ▶ View Technical Dispatch Audit Logs ({eoLogs.length} entries)
-                  </summary>
-                  <div className="mt-2 p-3 rounded-md bg-slate-900 text-slate-300 font-mono text-[11px] max-h-48 overflow-y-auto space-y-1">
-                    {eoLogs.length === 0 ? (
-                      <p className="text-slate-500">No log entries recorded yet.</p>
-                    ) : (
-                      eoLogs.map((log, idx) => (
-                        <div key={idx} className="leading-relaxed">
-                          <span className="text-slate-500">[{log.timestamp}]</span>{' '}
-                          <span className={log.type === 'error' ? 'text-red-400' : log.type === 'success' ? 'text-emerald-400' : 'text-slate-200'}>
-                            {log.text}
-                          </span>
-                        </div>
-                      ))
-                    )}
-                  </div>
-                </details>
-              </div>
-            </Card>
-          </div>
+            {/* Technical Audit Log - Clean Light Terminal Styling */}
+            <div className="pt-2 border-t border-slate-100">
+              <details className="text-xs text-slate-500 group">
+                <summary className="font-medium text-slate-700 hover:text-slate-900 cursor-pointer select-none py-1 flex items-center gap-1.5">
+                  <span className="text-slate-400 group-open:rotate-90 transition-transform">▶</span>
+                  <span>View Technical Dispatch Audit Logs ({eoLogs.length} entries)</span>
+                </summary>
+                <div className="mt-2.5 p-3.5 rounded-lg bg-slate-50 border border-slate-200 text-slate-700 font-mono text-[11px] max-h-48 overflow-y-auto space-y-1">
+                  {eoLogs.length === 0 ? (
+                    <p className="text-slate-400">No log entries recorded yet.</p>
+                  ) : (
+                    eoLogs.map((log, idx) => (
+                      <div key={idx} className="leading-relaxed">
+                        <span className="text-slate-400">[{log.timestamp}]</span>{' '}
+                        <span className={log.type === 'error' ? 'text-rose-600 font-medium' : log.type === 'success' ? 'text-emerald-700 font-medium' : 'text-slate-800'}>
+                          {log.text}
+                        </span>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </details>
+            </div>
+          </Card>
         </div>
       )}
 
@@ -2396,53 +2496,53 @@ export default function SparePartsPage() {
                 Bundled Parts Quotation Breakdown
               </h4>
 
-              <div className="border border-slate-900/90 rounded-none overflow-hidden">
+              <div className="border border-slate-200 rounded-lg overflow-hidden">
                 <table className="w-full text-left border-collapse font-sans text-xs">
-                  <thead className="bg-white border-b-2 border-slate-900 text-slate-900 font-bold text-[11px]">
+                  <thead className="bg-slate-50 border-b border-slate-200 text-slate-700 font-semibold text-[11px] uppercase tracking-wider">
                     <tr>
-                      <th className="py-2 px-3 border-r border-slate-900">Part Number</th>
-                      <th className="py-2 px-3 border-r border-slate-900">Description</th>
-                      <th className="py-2 px-3 border-r border-slate-900 text-right">Qty</th>
-                      <th className="py-2 px-3 border-r border-slate-900 text-center">Unit</th>
-                      <th className="py-2 px-3 border-r border-slate-900 text-right">Unit Price (USD)</th>
-                      <th className="py-2 px-3 text-right">Total Price (USD)</th>
+                      <th className="py-2.5 px-3">Part Number</th>
+                      <th className="py-2.5 px-3">Description</th>
+                      <th className="py-2.5 px-3 text-right">Qty</th>
+                      <th className="py-2.5 px-3 text-center">Unit</th>
+                      <th className="py-2.5 px-3 text-right">Unit Price (USD)</th>
+                      <th className="py-2.5 px-3 text-right">Total Price (USD)</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-900/80 bg-white">
+                  <tbody className="divide-y divide-slate-100 bg-white">
                     {viewingOrder.parts.map((p, idx) => (
-                      <tr key={idx} className="hover:bg-slate-50">
-                        <td className="py-2 px-3 border-r border-slate-900 font-mono font-semibold text-slate-900">
+                      <tr key={idx} className="hover:bg-slate-50/70">
+                        <td className="py-2.5 px-3 font-mono font-bold text-slate-900">
                           {p.part_no}
                         </td>
-                        <td className="py-2 px-3 border-r border-slate-900 text-slate-800 uppercase font-medium">
+                        <td className="py-2.5 px-3 text-slate-800 uppercase font-medium">
                           {p.description}
                         </td>
-                        <td className="py-2 px-3 border-r border-slate-900 text-right font-mono font-medium">
+                        <td className="py-2.5 px-3 text-right font-mono font-medium">
                           {p.quantity.toFixed(2)}
                         </td>
-                        <td className="py-2 px-3 border-r border-slate-900 text-center font-mono font-semibold text-slate-700">
+                        <td className="py-2.5 px-3 text-center font-mono font-medium text-slate-600">
                           {p.unit || 'EA'}
                         </td>
-                        <td className="py-2 px-3 border-r border-slate-900 text-right font-mono">
+                        <td className="py-2.5 px-3 text-right font-mono">
                           {p.unit_price}
                         </td>
-                        <td className="py-2 px-3 text-right font-mono font-semibold text-slate-900">
+                        <td className="py-2.5 px-3 text-right font-mono font-bold text-slate-900">
                           {p.total_price}
                         </td>
                       </tr>
                     ))}
                   </tbody>
-                  <tfoot className="border-t-2 border-slate-900 bg-slate-50 font-bold text-xs">
+                  <tfoot className="border-t border-slate-200 bg-slate-50 font-semibold text-xs">
                     <tr>
-                      <td colSpan={2} className="py-2 px-3 border-r border-slate-900 text-slate-900">
+                      <td colSpan={2} className="py-2.5 px-3 text-slate-700">
                         Quotation Total
                       </td>
-                      <td className="py-2 px-3 border-r border-slate-900 text-right font-mono">
+                      <td className="py-2.5 px-3 text-right font-mono font-bold text-slate-900">
                         {viewingOrder.total_quantity.toFixed(2)}
                       </td>
-                      <td className="py-2 px-3 border-r border-slate-900 text-center font-mono">EA</td>
-                      <td className="py-2 px-3 border-r border-slate-900"></td>
-                      <td className="py-2 px-3 text-right font-mono text-emerald-800 font-bold">
+                      <td className="py-2.5 px-3 text-center font-mono">EA</td>
+                      <td className="py-2.5 px-3"></td>
+                      <td className="py-2.5 px-3 text-right font-mono text-emerald-700 font-bold text-sm">
                         ${viewingOrder.total_amount}
                       </td>
                     </tr>
@@ -2457,7 +2557,7 @@ export default function SparePartsPage() {
               subtitle="JSON parameters transmitted to Komatsu portal"
               defaultOpen={false}
             >
-              <pre className="p-3 bg-slate-900 text-slate-100 rounded text-[11px] font-mono overflow-x-auto leading-relaxed max-h-48">
+              <pre className="p-3 bg-slate-50 border border-slate-200 text-slate-700 rounded-lg text-[11px] font-mono overflow-x-auto leading-relaxed max-h-48">
                 {JSON.stringify(
                   {
                     order_no: viewingOrder.db_order_no,
@@ -2570,7 +2670,7 @@ export default function SparePartsPage() {
           {sapLogs.length > 0 && (
             <div className="space-y-1.5">
               <span className="text-xs font-semibold text-slate-800 uppercase tracking-wide">Automation Logs</span>
-              <div className="p-3 bg-slate-900 text-slate-100 font-mono text-xs rounded-lg max-h-36 overflow-y-auto space-y-1">
+              <div className="p-3 bg-slate-50 border border-slate-200 text-slate-800 font-mono text-xs rounded-lg max-h-36 overflow-y-auto space-y-1">
                 {sapLogs.map((log, lIdx) => (
                   <div key={lIdx} className="leading-tight">
                     {log}

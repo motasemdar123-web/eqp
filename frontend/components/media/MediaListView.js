@@ -117,15 +117,15 @@ export default function MediaListView({
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-900 text-white text-[11px] uppercase tracking-wider">
+              <thead className="bg-slate-50 text-slate-700 text-[11px] uppercase tracking-wider font-semibold border-b border-slate-200">
                 <tr>
-                  <th className="p-3.5 w-10 text-center">#</th>
-                  <th className="p-3.5 whitespace-nowrap">Schedule Date</th>
-                  <th className="p-3.5">Post Title & Concept</th>
-                  <th className="p-3.5">Tone of Voice (TOV)</th>
-                  <th className="p-3.5 whitespace-nowrap">Format</th>
-                  <th className="p-3.5 whitespace-nowrap">Status</th>
-                  <th className="p-3.5 text-right whitespace-nowrap">Actions</th>
+                  <th className="py-4 px-4 w-10 text-center">#</th>
+                  <th className="py-4 px-4 whitespace-nowrap">Schedule Date</th>
+                  <th className="py-4 px-4">Post Title & Concept</th>
+                  <th className="py-4 px-4">Tone of Voice (TOV)</th>
+                  <th className="py-4 px-4 whitespace-nowrap">Format</th>
+                  <th className="py-4 px-4 whitespace-nowrap">Status</th>
+                  <th className="py-4 px-4 text-right whitespace-nowrap">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-200">
@@ -141,11 +141,11 @@ export default function MediaListView({
                       onClick={() => onSelectPost(post)}
                       className="hover:bg-slate-50/80 cursor-pointer transition-colors group"
                     >
-                      <td className="p-3.5 text-center font-mono font-bold text-slate-400">
+                      <td className="py-4 px-4 text-center font-mono font-bold text-slate-400">
                         {post.conceptNumber || index + 1}
                       </td>
 
-                      <td className="p-3.5 whitespace-nowrap">
+                      <td className="py-4 px-4 whitespace-nowrap">
                         <span className="font-bold text-slate-900 block font-mono">
                           {post.publishDate || 'Not set'}
                         </span>
@@ -154,7 +154,7 @@ export default function MediaListView({
                         </span>
                       </td>
 
-                      <td className="p-3.5 max-w-sm">
+                      <td className="py-4 px-4 max-w-sm">
                         <p className="font-bold text-slate-900 group-hover:text-amber-700 transition-colors leading-snug">
                           {post.title}
                         </p>
@@ -165,19 +165,19 @@ export default function MediaListView({
                         )}
                       </td>
 
-                      <td className="p-3.5 max-w-[200px]">
+                      <td className="py-4 px-4 max-w-[200px]">
                         <span className="text-slate-700 font-medium line-clamp-2 text-[11px]">
                           {post.tov || '—'}
                         </span>
                       </td>
 
-                      <td className="p-3.5 whitespace-nowrap">
+                      <td className="py-4 px-4 whitespace-nowrap">
                         <span className={`px-2 py-0.5 rounded font-semibold text-[11px] border ${formatMeta.color}`}>
                           {formatMeta.shortLabel || formatMeta.label}
                         </span>
                       </td>
 
-                      <td className="p-3.5 whitespace-nowrap">
+                      <td className="py-4 px-4 whitespace-nowrap">
                         <StatusIndicator
                           tone={
                             post.status === 'ready' || post.status === 'published'
@@ -192,16 +192,15 @@ export default function MediaListView({
                       </td>
 
                       <td
-                        className="p-3.5 text-right whitespace-nowrap"
+                        className="py-4 px-4 text-right whitespace-nowrap"
                         onClick={(e) => e.stopPropagation()}
                       >
-                        <div className="flex items-center justify-end gap-1.5">
+                        <div className="flex items-center justify-end gap-2">
                           <Button
                             type="button"
                             variant="secondary"
                             size="sm"
                             onClick={() => onSelectPost(post)}
-                            className="text-xs font-semibold !bg-slate-100 hover:!bg-slate-200"
                           >
                             Edit
                           </Button>

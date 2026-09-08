@@ -507,7 +507,7 @@ export default function SystemShell({
       )}
 
       {/* Sidebar */}
-      <aside className={`ds-app-sidebar ${mobileMenuOpen ? 'ds-sidebar-mobile-open' : ''}`}>
+      <aside className={`ds-app-sidebar !bg-white !text-slate-900 border-r border-slate-200 ${mobileMenuOpen ? 'ds-sidebar-mobile-open' : ''}`}>
         {/* Brand Header */}
         <div className="ds-sidebar-header">
           <Link
@@ -520,8 +520,8 @@ export default function SystemShell({
               <span className="h-2 w-2 rounded-full bg-amber-400" />
             </span>
             <span className="ds-sidebar-brand-text">
-              <span className="block text-sm font-semibold leading-none text-white tracking-tight">Dar Al Hai</span>
-              <span className="mt-1 block text-[10px] font-medium uppercase tracking-wider text-slate-400">
+              <span className="block text-sm font-bold leading-none text-slate-900 tracking-tight">Dar Al Hai</span>
+              <span className="mt-1 block text-[10px] font-semibold uppercase tracking-wider text-slate-500">
                 {isMediaOnly ? 'Media Studio' : 'Fleet Operations'}
               </span>
             </span>
@@ -530,7 +530,7 @@ export default function SystemShell({
             <button
               type="button"
               onClick={() => setMobileMenuOpen(false)}
-              className="lg:hidden rounded-md p-1 text-slate-400 hover:text-white hover:bg-slate-800 cursor-pointer"
+              className="lg:hidden rounded-md p-1 text-slate-400 hover:text-slate-900 hover:bg-slate-100 cursor-pointer"
               aria-label="Close mobile menu"
             >
               <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -545,14 +545,14 @@ export default function SystemShell({
           {visibleNavSections.map((section) => {
             if (section.isLabs) {
               return (
-                <div key={section.title} className="mt-4 pt-3 border-t border-slate-800/80">
+                <div key={section.title} className="mt-4 pt-3 border-t border-slate-200">
                   <button
                     type="button"
                     onClick={toggleLabs}
-                    className="w-full flex items-center justify-between px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-slate-500 hover:text-slate-300 transition-colors select-none cursor-pointer"
+                    className="w-full flex items-center justify-between px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-slate-400 hover:text-slate-700 transition-colors select-none cursor-pointer"
                   >
                     <span>{section.title}</span>
-                    <span className="text-slate-600 font-mono text-[9px]">{labsOpen ? '▲' : '▼'}</span>
+                    <span className="text-slate-400 font-mono text-[9px]">{labsOpen ? '▲' : '▼'}</span>
                   </button>
                   {labsOpen && (
                     <div className="mt-1 space-y-0.5 animate-[ds-toast-in_100ms_ease]">
@@ -569,7 +569,7 @@ export default function SystemShell({
                             <span className="ds-side-nav-icon"><NavIcon name={item.icon} /></span>
                             <span className="ds-nav-label truncate flex-1">{item.label}</span>
                             {item.badge && (
-                              <span className="text-[10px] font-mono font-medium px-1.5 py-0.2 rounded bg-slate-800 text-slate-400 border border-slate-700/60">
+                              <span className="text-[10px] font-mono font-medium px-1.5 py-0.2 rounded bg-slate-100 text-slate-600 border border-slate-200">
                                 {item.badge}
                               </span>
                             )}
@@ -599,7 +599,7 @@ export default function SystemShell({
                         <span className="ds-side-nav-icon"><NavIcon name={item.icon} /></span>
                         <span className="ds-nav-label truncate flex-1">{item.label}</span>
                         {item.badge && (
-                          <span className="text-[10px] font-mono font-medium px-1.5 py-0.2 rounded bg-slate-800 text-slate-400 border border-slate-700/60">
+                          <span className="text-[10px] font-mono font-medium px-1.5 py-0.2 rounded bg-slate-100 text-slate-600 border border-slate-200">
                             {item.badge}
                           </span>
                         )}
@@ -615,14 +615,14 @@ export default function SystemShell({
         {/* Sidebar Footer */}
         <div className="ds-sidebar-footer">
           <div className="flex items-center gap-2">
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" aria-hidden="true" />
-            <span className="text-[11px] font-medium text-slate-400">System Live</span>
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" aria-hidden="true" />
+            <span className="text-[11px] font-medium text-slate-500">System Live</span>
           </div>
           {user && (
             <button
               type="button"
               onClick={logout}
-              className="text-[11px] font-medium text-slate-400 hover:text-red-400 transition-colors cursor-pointer"
+              className="text-[11px] font-medium text-slate-400 hover:text-red-600 transition-colors cursor-pointer"
               aria-label="Logout"
             >
               Sign out

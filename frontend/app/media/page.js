@@ -225,17 +225,17 @@ export default function MediaCornerPage() {
       title="Media Corner"
       description="Interactive social media calendar: schedule post ideas, refine tone of voice, and manage bilingual captions."
     >
-      <div className="space-y-5 max-w-7xl mx-auto pb-16 animate-[ds-toast-in_180ms_ease]">
+      <div className="space-y-7 max-w-7xl mx-auto pb-16 animate-[ds-toast-in_180ms_ease]">
         {/* Top Command Bar */}
-        <div className="bg-slate-900 text-white p-4 sm:p-5 rounded-2xl border border-slate-800 shadow-xs flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div className="bg-white text-slate-900 p-5 sm:p-6 rounded-2xl border border-slate-200/90 shadow-2xs flex flex-col md:flex-row md:items-center md:justify-between gap-5">
           {/* Month Title & Prev/Next Navigation */}
-          <div className="flex items-center gap-3">
-            <div className="flex items-center bg-slate-800 rounded-lg p-0.5 border border-slate-700">
+          <div className="flex items-center gap-3.5">
+            <div className="flex items-center bg-slate-50 rounded-lg p-0.5 border border-slate-200">
               <button
                 type="button"
                 onClick={() => handleNavigateMonth('prev')}
                 title="Previous Month"
-                className="w-8 h-8 flex items-center justify-center text-slate-300 hover:text-white hover:bg-slate-700 rounded transition-colors font-bold text-sm cursor-pointer"
+                className="w-8 h-8 flex items-center justify-center text-slate-600 hover:text-slate-900 hover:bg-white rounded transition-all font-bold text-sm cursor-pointer"
               >
                 ◀
               </button>
@@ -243,7 +243,7 @@ export default function MediaCornerPage() {
                 type="button"
                 onClick={() => handleNavigateMonth('next')}
                 title="Next Month"
-                className="w-8 h-8 flex items-center justify-center text-slate-300 hover:text-white hover:bg-slate-700 rounded transition-colors font-bold text-sm cursor-pointer"
+                className="w-8 h-8 flex items-center justify-center text-slate-600 hover:text-slate-900 hover:bg-white rounded transition-all font-bold text-sm cursor-pointer"
               >
                 ▶
               </button>
@@ -251,21 +251,21 @@ export default function MediaCornerPage() {
 
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="text-base sm:text-lg font-bold text-white tracking-tight">
+                <h2 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight">
                   {activeCampaign.monthName || selectedMonthId}
                 </h2>
                 <span className="w-2 h-2 rounded-full bg-amber-400" />
               </div>
-              <p className="text-[11px] text-slate-400 font-medium">
+              <p className="text-xs text-slate-500 font-medium mt-0.5">
                 {activeCampaign.themeTitle || 'Monthly Social Media Calendar'}
               </p>
             </div>
           </div>
 
           {/* Controls: Month Selector Pills, View Mode, and Add Post Action */}
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2.5">
             {/* Quick Month Jump Pills */}
-            <div className="hidden lg:flex items-center gap-1 bg-slate-800/80 p-1 rounded-lg border border-slate-700/80">
+            <div className="hidden lg:flex items-center gap-1 bg-slate-50 p-1 rounded-lg border border-slate-200">
               {availableMonths.map((m) => {
                 const isSelected = selectedMonthId === m.monthId;
                 return (
@@ -273,10 +273,10 @@ export default function MediaCornerPage() {
                     key={m.monthId}
                     type="button"
                     onClick={() => handleSelectMonth(m.monthId)}
-                    className={`px-2.5 py-1 rounded text-xs transition-all cursor-pointer ${
+                    className={`px-3 py-1 rounded text-xs transition-all cursor-pointer ${
                       isSelected
                         ? 'bg-amber-400 text-slate-950 font-bold shadow-2xs'
-                        : 'text-slate-300 hover:text-white hover:bg-slate-700/60'
+                        : 'text-slate-600 hover:text-slate-900 hover:bg-white'
                     }`}
                   >
                     {m.monthName.split(' ')[0]}
@@ -288,21 +288,21 @@ export default function MediaCornerPage() {
                 type="button"
                 onClick={() => setIsNewMonthModalOpen(true)}
                 title="Add new month"
-                className="px-2 py-1 rounded text-xs font-semibold text-slate-400 hover:text-white hover:bg-slate-700 cursor-pointer"
+                className="px-2.5 py-1 rounded text-xs font-semibold text-slate-500 hover:text-slate-900 hover:bg-white transition-colors cursor-pointer"
               >
                 + Month
               </button>
             </div>
 
             {/* View Mode Toggle */}
-            <div className="flex bg-slate-800 p-0.5 rounded-lg border border-slate-700 text-xs font-medium">
+            <div className="flex bg-slate-100 p-0.5 rounded-lg border border-slate-200 text-xs font-medium">
               <button
                 type="button"
                 onClick={() => setViewMode('calendar')}
-                className={`px-3 py-1.5 rounded-md transition-all cursor-pointer flex items-center gap-1.5 ${
+                className={`px-3.5 py-1.5 rounded-md transition-all cursor-pointer flex items-center gap-1.5 ${
                   viewMode === 'calendar'
-                    ? 'bg-white text-slate-950 font-bold shadow-xs'
-                    : 'text-slate-300 hover:text-white'
+                    ? 'bg-white text-slate-950 font-bold shadow-2xs'
+                    : 'text-slate-600 hover:text-slate-900'
                 }`}
               >
                 <span>📅</span>
@@ -311,10 +311,10 @@ export default function MediaCornerPage() {
               <button
                 type="button"
                 onClick={() => setViewMode('list')}
-                className={`px-3 py-1.5 rounded-md transition-all cursor-pointer flex items-center gap-1.5 ${
+                className={`px-3.5 py-1.5 rounded-md transition-all cursor-pointer flex items-center gap-1.5 ${
                   viewMode === 'list'
-                    ? 'bg-white text-slate-950 font-bold shadow-xs'
-                    : 'text-slate-300 hover:text-white'
+                    ? 'bg-white text-slate-950 font-bold shadow-2xs'
+                    : 'text-slate-600 hover:text-slate-900'
                 }`}
               >
                 <span>📋</span>
@@ -328,7 +328,6 @@ export default function MediaCornerPage() {
               variant="primary"
               size="sm"
               onClick={() => handleOpenAddPost()}
-              className="!bg-amber-400 hover:!bg-amber-300 !text-slate-950 !font-bold text-xs shadow-xs cursor-pointer"
             >
               + Add Post Idea
             </Button>
@@ -338,7 +337,7 @@ export default function MediaCornerPage() {
               type="button"
               onClick={handleResetCampaign}
               title="Reset master template"
-              className="p-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-colors text-xs font-medium cursor-pointer"
+              className="p-2 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors text-xs font-medium cursor-pointer"
             >
               ↺
             </button>
