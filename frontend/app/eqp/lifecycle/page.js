@@ -92,7 +92,12 @@ export default function EqpLifecyclePage() {
         setSyncStatusMsg(`Pulling real EQP Care records from Komatsu for fleet...`);
       }
 
-      const res = await syncEqpcLifecycle(targetSerial ? { machineNumber: targetSerial } : {});
+      const userCookie = typeof window !== 'undefined' ? localStorage.getItem('eqpc_user_cookie') || '' : '';
+      const payload = targetSerial ? { machineNumber: targetSerial } : {};
+      if (userCookie) {
+        payload.cookie = userCookie;
+      }
+      const res = await syncEqpcLifecycle(payload);
       if (res && res.success) {
         const updatedCache = await getEqpcLifecycleCache().catch(() => null);
         if (updatedCache) {

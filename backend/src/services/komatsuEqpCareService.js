@@ -11,7 +11,7 @@ const BASE_EQPC_URL = 'https://eqp-care.komatsu.co.jp/eqpc';
 const DAILY_OPERATION_URL = `${BASE_EQPC_URL}/EMDW0102MoveToEMDW0295.do?eqpMenuCtg=E&menuId=E0904`;
 
 const DEFAULT_INITIAL_COOKIES =
-  'mkmwFlg=""; userId=s021895; langCd=ENG; bandwidth=true; eqpMenuCtg=E; dispMenu=1';
+  'mkmwFlg=""; userId=s021895; langCd=ENG; bandwidth=true; dispMenu=1; eqpMenuCtg=E; JSESSIONID=00019nAi3onLHDyC_MuBMUXqYw0:C3B70D869FE8372C0000046000000BED0A02014F';
 
 let inMemoryCookie = '';
 
