@@ -2,15 +2,13 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import SystemShell from '../../components/SystemShell';
+import Button from '../../components/ui/Button';
+import Badge from '../../components/ui/Badge';
 import { INITIAL_MONTHLY_CAMPAIGNS } from '../../lib/mediaMonthlyData';
-import CampaignWizardStepper from '../../components/media/CampaignWizardStepper';
-import Step1MonthSetup from '../../components/media/steps/Step1MonthSetup';
-import Step2ContentSchedule from '../../components/media/steps/Step2ContentSchedule';
-import Step3DirectorScriptStudio from '../../components/media/steps/Step3DirectorScriptStudio';
-import Step4PlatformCopy from '../../components/media/steps/Step4PlatformCopy';
-import Step5VideographerCallSheet from '../../components/media/steps/Step5VideographerCallSheet';
+import MediaCalendarGrid from '../../components/media/MediaCalendarGrid';
+import MediaListView from '../../components/media/MediaListView';
+import SimplePostModal from '../../components/media/SimplePostModal';
 import NewMonthModal from '../../components/media/NewMonthModal';
-import NewConceptModal from '../../components/media/NewConceptModal';
 
 const CAMPAIGNS_STORAGE_KEY = 'daralhay.social_media_campaigns_v5';
 const ACTIVE_MONTH_STORAGE_KEY = 'daralhay.social_media_active_month_v5';
@@ -18,16 +16,18 @@ const ACTIVE_MONTH_STORAGE_KEY = 'daralhay.social_media_active_month_v5';
 export default function MediaCornerPage() {
   const [campaigns, setCampaigns] = useState({});
   const [selectedMonthId, setSelectedMonthId] = useState('2026-09');
-  const [currentStep, setCurrentStep] = useState(1);
-  const [selectedConceptId, setSelectedConceptId] = useState(null);
+  const [viewMode, setViewMode] = useState('calendar'); // 'calendar' | 'list'
   const [loading, setLoading] = useState(true);
 
-  // Modals
-  const [isNewMonthModalOpen, setIsNewMonthModalOpen] = useState(false);
-  const [isNewConceptModalOpen, setIsNewConceptModalOpen] = useState(false);
-  const [newConceptInitialData, setNewConceptInitialData] = useState(null);
+  // Post modal state
+  const [isPostModalOpen, setIsPostModalOpen] = useState(false);
+  const [activePost, setActivePost] = useState(null);
+  const [defaultPostDate, setDefaultPostDate] = useState(null);
 
-  // Load state from localStorage or default
+  // New month modal state
+  const [isNewMonthModalOpen, setIsNewMonthModalOpen] = useState(false);
+
+  // Load from localStorage or initial template
   useEffect(() => {
     try {
       const storedCampaigns = localStorage.getItem(CAMPAIGNS_STORAGE_KEY);
@@ -59,64 +59,142 @@ export default function MediaCornerPage() {
     localStorage.setItem(CAMPAIGNS_STORAGE_KEY, JSON.stringify(newCampaigns));
   };
 
-  const handleResetCampaign = () => {
-    if (!window.confirm('Reset all campaigns to master template (12 posts/month)?')) return;
-    setCampaigns(INITIAL_MONTHLY_CAMPAIGNS);
-    localStorage.setItem(CAMPAIGNS_STORAGE_KEY, JSON.stringify(INITIAL_MONTHLY_CAMPAIGNS));
-    setSelectedMonthId('2026-08');
-    setSelectedConceptId(null);
-    setCurrentStep(1);
-  };
-
   const handleSelectMonth = (monthId) => {
     setSelectedMonthId(monthId);
     localStorage.setItem(ACTIVE_MONTH_STORAGE_KEY, monthId);
-    setSelectedConceptId(null);
   };
 
-  const activeCampaign = campaigns[selectedMonthId] || INITIAL_MONTHLY_CAMPAIGNS['2026-08'] || {};
+  // Month navigation: previous / next month
+  const handleNavigateMonth = (direction) => {
+    const [yStr, mStr] = (selectedMonthId || '2026-09').split('-');
+    let year = parseInt(yStr, 10);
+    let month = parseInt(mStr, 10);
+
+    if (direction === 'prev') {
+      month -= 1;
+      if (month < 1) {
+        month = 12;
+        year -= 1;
+      }
+    } else {
+      month += 1;
+      if (month > 12) {
+        month = 1;
+        year += 1;
+      }
+    }
+
+    const nextMonthId = `${year}-${String(month).padStart(2, '0')}`;
+
+    // If campaign exists, select it; otherwise create minimal shell
+    if (!campaigns[nextMonthId]) {
+      const dateObj = new Date(year, month - 1, 1);
+      const monthName = dateObj.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+      const newCampaign = {
+        monthId: nextMonthId,
+        monthName,
+        themeTitle: `${monthName} Editorial Plan`,
+        concepts: [],
+      };
+      const updatedCampaigns = { ...campaigns, [nextMonthId]: newCampaign };
+      saveCampaigns(updatedCampaigns);
+    }
+    handleSelectMonth(nextMonthId);
+  };
+
+  const activeCampaign = campaigns[selectedMonthId] || {
+    monthId: selectedMonthId,
+    monthName: 'Current Month',
+    concepts: [],
+  };
+
   const currentConcepts = activeCampaign.concepts || [];
 
   const availableMonths = useMemo(() => {
-    return Object.values(campaigns).map((c) => ({
-      monthId: c.monthId,
-      monthName: c.monthName,
-    })).sort((a, b) => a.monthId.localeCompare(b.monthId));
+    return Object.values(campaigns)
+      .map((c) => ({
+        monthId: c.monthId,
+        monthName: c.monthName,
+      }))
+      .sort((a, b) => a.monthId.localeCompare(b.monthId));
   }, [campaigns]);
 
-  // Update Campaign Level properties (Theme, Goal, KPIs)
-  const handleUpdateCampaignSetup = (setupData) => {
-    const updatedCampaign = { ...activeCampaign, ...setupData };
-    const updatedCampaigns = { ...campaigns, [selectedMonthId]: updatedCampaign };
-    saveCampaigns(updatedCampaigns);
+  // Quick stats
+  const stats = useMemo(() => {
+    const total = currentConcepts.length;
+    const drafts = currentConcepts.filter((c) => c.status === 'idea' || !c.status).length;
+    const inProgress = currentConcepts.filter(
+      (c) => c.status === 'scripted' || c.status === 'production' || c.status === 'review'
+    ).length;
+    const readyOrPublished = currentConcepts.filter(
+      (c) => c.status === 'ready' || c.status === 'published'
+    ).length;
+    return { total, drafts, inProgress, readyOrPublished };
+  }, [currentConcepts]);
+
+  // Open modal to add a new post
+  const handleOpenAddPost = (dateStr = null) => {
+    setActivePost(null);
+    setDefaultPostDate(dateStr || `${selectedMonthId}-01`);
+    setIsPostModalOpen(true);
   };
 
-  // Update or Save a Concept Script / Copy
-  const handleSaveConcept = (conceptData) => {
-    const finalConcept = {
-      ...conceptData,
-      id: conceptData.id || Date.now(),
-      conceptNumber: conceptData.conceptNumber || (currentConcepts.length + 1),
-    };
-    const exists = currentConcepts.some((c) => c.id === finalConcept.id);
+  // Open modal to edit existing post
+  const handleOpenEditPost = (post) => {
+    setActivePost(post);
+    setDefaultPostDate(post.publishDate);
+    setIsPostModalOpen(true);
+  };
+
+  // Save (create or update) post
+  const handleSavePost = (postData) => {
     let updatedConcepts = [];
-    if (exists) {
-      updatedConcepts = currentConcepts.map((c) => (c.id === finalConcept.id ? finalConcept : c));
+    if (postData.id) {
+      // Update existing
+      updatedConcepts = currentConcepts.map((c) => (c.id === postData.id ? { ...c, ...postData } : c));
     } else {
-      updatedConcepts = [...currentConcepts, finalConcept];
+      // Create new
+      const newPost = {
+        ...postData,
+        id: Date.now(),
+        conceptNumber: currentConcepts.length + 1,
+      };
+      updatedConcepts = [...currentConcepts, newPost];
     }
+
     const updatedCampaign = { ...activeCampaign, concepts: updatedConcepts };
     const updatedCampaigns = { ...campaigns, [selectedMonthId]: updatedCampaign };
     saveCampaigns(updatedCampaigns);
-    setSelectedConceptId(finalConcept.id);
-    setIsNewConceptModalOpen(false);
+    setIsPostModalOpen(false);
+    setActivePost(null);
   };
 
+  // Delete post
+  const handleDeletePost = (postId) => {
+    const updatedConcepts = currentConcepts.filter((c) => c.id !== postId);
+    const updatedCampaign = { ...activeCampaign, concepts: updatedConcepts };
+    const updatedCampaigns = { ...campaigns, [selectedMonthId]: updatedCampaign };
+    saveCampaigns(updatedCampaigns);
+    setIsPostModalOpen(false);
+    setActivePost(null);
+  };
 
-  // Create Brand New Month
+  // Reset to master template
+  const handleResetCampaign = () => {
+    if (!window.confirm('Reset all campaigns back to master template?')) return;
+    setCampaigns(INITIAL_MONTHLY_CAMPAIGNS);
+    localStorage.setItem(CAMPAIGNS_STORAGE_KEY, JSON.stringify(INITIAL_MONTHLY_CAMPAIGNS));
+    setSelectedMonthId('2026-09');
+  };
+
+  // Create new month
   const handleCreateNewMonth = (newMonthData) => {
     let newConcepts = [];
-    if (newMonthData.cloneFromMonthId && newMonthData.cloneFromMonthId !== 'none' && campaigns[newMonthData.cloneFromMonthId]) {
+    if (
+      newMonthData.cloneFromMonthId &&
+      newMonthData.cloneFromMonthId !== 'none' &&
+      campaigns[newMonthData.cloneFromMonthId]
+    ) {
       const sourceConcepts = campaigns[newMonthData.cloneFromMonthId].concepts || [];
       newConcepts = sourceConcepts.map((c, idx) => ({
         ...c,
@@ -131,39 +209,13 @@ export default function MediaCornerPage() {
       themeTitle: newMonthData.themeTitle,
       strategicGoal: newMonthData.strategicGoal,
       targetKpi: newMonthData.targetKpi,
-      pillarDistribution: { pillar_authority: 20, pillar_engineering: 25, pillar_workshop: 20, pillar_projects: 20, pillar_leadgen: 15 },
       concepts: newConcepts,
     };
 
     const updatedCampaigns = { ...campaigns, [newMonthData.monthId]: newCampaign };
     saveCampaigns(updatedCampaigns);
     setSelectedMonthId(newMonthData.monthId);
-    setSelectedConceptId(null);
-    setCurrentStep(1);
     setIsNewMonthModalOpen(false);
-  };
-
-  // Delete a concept from current campaign
-  const handleDeleteConcept = (conceptId) => {
-    if (!window.confirm('Delete this content package from the campaign?')) return;
-    const updatedConcepts = currentConcepts.filter((c) => c.id !== conceptId);
-    const updatedCampaign = { ...activeCampaign, concepts: updatedConcepts };
-    const updatedCampaigns = { ...campaigns, [selectedMonthId]: updatedCampaign };
-    saveCampaigns(updatedCampaigns);
-    if (selectedConceptId === conceptId) {
-      setSelectedConceptId(updatedConcepts[0]?.id || null);
-    }
-  };
-
-  // Trigger from Step 2 directly to Step 3
-  const handleSelectConceptToScript = (concept) => {
-    setSelectedConceptId(concept.id);
-    setCurrentStep(3);
-  };
-
-  const handleOpenAddConceptModal = (initialData = null) => {
-    setNewConceptInitialData(initialData);
-    setIsNewConceptModalOpen(true);
   };
 
   return (
@@ -171,78 +223,201 @@ export default function MediaCornerPage() {
       activePath="/media"
       eyebrow="Creative & Communications"
       title="Media Corner"
-      description="5-step guided wizard: set monthly strategy, organize weekly releases, write director scripts, and export call sheets for your videographer."
+      description="Interactive social media calendar: schedule post ideas, refine tone of voice, and manage bilingual captions."
     >
+      <div className="space-y-5 max-w-7xl mx-auto pb-16 animate-[ds-toast-in_180ms_ease]">
+        {/* Top Command Bar */}
+        <div className="bg-slate-900 text-white p-4 sm:p-5 rounded-2xl border border-slate-800 shadow-xs flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          {/* Month Title & Prev/Next Navigation */}
+          <div className="flex items-center gap-3">
+            <div className="flex items-center bg-slate-800 rounded-lg p-0.5 border border-slate-700">
+              <button
+                type="button"
+                onClick={() => handleNavigateMonth('prev')}
+                title="Previous Month"
+                className="w-8 h-8 flex items-center justify-center text-slate-300 hover:text-white hover:bg-slate-700 rounded transition-colors font-bold text-sm cursor-pointer"
+              >
+                ◀
+              </button>
+              <button
+                type="button"
+                onClick={() => handleNavigateMonth('next')}
+                title="Next Month"
+                className="w-8 h-8 flex items-center justify-center text-slate-300 hover:text-white hover:bg-slate-700 rounded transition-colors font-bold text-sm cursor-pointer"
+              >
+                ▶
+              </button>
+            </div>
 
-      <div className="space-y-6 max-w-7xl mx-auto pb-12">
-        {/* Stepper Header with Month Selector */}
-        <CampaignWizardStepper
-          currentStep={currentStep}
-          onStepChange={setCurrentStep}
-          availableMonths={availableMonths}
-          selectedMonthId={selectedMonthId}
-          onSelectMonth={handleSelectMonth}
-          onOpenNewMonthModal={() => setIsNewMonthModalOpen(true)}
-          onResetCampaign={handleResetCampaign}
-        />
+            <div>
+              <div className="flex items-center gap-2">
+                <h2 className="text-base sm:text-lg font-bold text-white tracking-tight">
+                  {activeCampaign.monthName || selectedMonthId}
+                </h2>
+                <span className="w-2 h-2 rounded-full bg-amber-400" />
+              </div>
+              <p className="text-[11px] text-slate-400 font-medium">
+                {activeCampaign.themeTitle || 'Monthly Social Media Calendar'}
+              </p>
+            </div>
+          </div>
 
-        {/* STEP 1: MONTH SETUP */}
-        {currentStep === 1 && (
-          <Step1MonthSetup
-            campaign={activeCampaign}
-            onUpdateCampaign={handleUpdateCampaignSetup}
-            onNextStep={() => setCurrentStep(2)}
+          {/* Controls: Month Selector Pills, View Mode, and Add Post Action */}
+          <div className="flex flex-wrap items-center gap-2">
+            {/* Quick Month Jump Pills */}
+            <div className="hidden lg:flex items-center gap-1 bg-slate-800/80 p-1 rounded-lg border border-slate-700/80">
+              {availableMonths.map((m) => {
+                const isSelected = selectedMonthId === m.monthId;
+                return (
+                  <button
+                    key={m.monthId}
+                    type="button"
+                    onClick={() => handleSelectMonth(m.monthId)}
+                    className={`px-2.5 py-1 rounded text-xs transition-all cursor-pointer ${
+                      isSelected
+                        ? 'bg-amber-400 text-slate-950 font-bold shadow-2xs'
+                        : 'text-slate-300 hover:text-white hover:bg-slate-700/60'
+                    }`}
+                  >
+                    {m.monthName.split(' ')[0]}
+                  </button>
+                );
+              })}
+
+              <button
+                type="button"
+                onClick={() => setIsNewMonthModalOpen(true)}
+                title="Add new month"
+                className="px-2 py-1 rounded text-xs font-semibold text-slate-400 hover:text-white hover:bg-slate-700 cursor-pointer"
+              >
+                + Month
+              </button>
+            </div>
+
+            {/* View Mode Toggle */}
+            <div className="flex bg-slate-800 p-0.5 rounded-lg border border-slate-700 text-xs font-medium">
+              <button
+                type="button"
+                onClick={() => setViewMode('calendar')}
+                className={`px-3 py-1.5 rounded-md transition-all cursor-pointer flex items-center gap-1.5 ${
+                  viewMode === 'calendar'
+                    ? 'bg-white text-slate-950 font-bold shadow-xs'
+                    : 'text-slate-300 hover:text-white'
+                }`}
+              >
+                <span>📅</span>
+                <span>Calendar</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setViewMode('list')}
+                className={`px-3 py-1.5 rounded-md transition-all cursor-pointer flex items-center gap-1.5 ${
+                  viewMode === 'list'
+                    ? 'bg-white text-slate-950 font-bold shadow-xs'
+                    : 'text-slate-300 hover:text-white'
+                }`}
+              >
+                <span>📋</span>
+                <span>List</span>
+              </button>
+            </div>
+
+            {/* Add Post Button */}
+            <Button
+              type="button"
+              variant="primary"
+              size="sm"
+              onClick={() => handleOpenAddPost()}
+              className="!bg-amber-400 hover:!bg-amber-300 !text-slate-950 !font-bold text-xs shadow-xs cursor-pointer"
+            >
+              + Add Post Idea
+            </Button>
+
+            {/* Reset Template Button */}
+            <button
+              type="button"
+              onClick={handleResetCampaign}
+              title="Reset master template"
+              className="p-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-colors text-xs font-medium cursor-pointer"
+            >
+              ↺
+            </button>
+          </div>
+        </div>
+
+        {/* Metric Strip (Clean & Executive) */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div className="p-3.5 bg-white rounded-xl border border-slate-200 shadow-2xs">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
+              Scheduled Posts
+            </span>
+            <span className="text-xl font-bold font-mono text-slate-900 mt-0.5 block">
+              {stats.total}
+            </span>
+            <span className="text-[11px] font-medium text-slate-500">Total in this month</span>
+          </div>
+
+          <div className="p-3.5 bg-white rounded-xl border border-slate-200 shadow-2xs">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
+              Concept Drafts
+            </span>
+            <span className="text-xl font-bold font-mono text-slate-700 mt-0.5 block">
+              {stats.drafts}
+            </span>
+            <span className="text-[11px] font-medium text-slate-500">Pending development</span>
+          </div>
+
+          <div className="p-3.5 bg-white rounded-xl border border-slate-200 shadow-2xs">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-amber-600 block">
+              In Production
+            </span>
+            <span className="text-xl font-bold font-mono text-amber-600 mt-0.5 block">
+              {stats.inProgress}
+            </span>
+            <span className="text-[11px] font-medium text-slate-500">Filming / Designing</span>
+          </div>
+
+          <div className="p-3.5 bg-white rounded-xl border border-slate-200 shadow-2xs">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-600 block">
+              Ready / Published
+            </span>
+            <span className="text-xl font-bold font-mono text-emerald-600 mt-0.5 block">
+              {stats.readyOrPublished}
+            </span>
+            <span className="text-[11px] font-medium text-slate-500">Approved for release</span>
+          </div>
+        </div>
+
+        {/* Main Content Area */}
+        {viewMode === 'calendar' ? (
+          <MediaCalendarGrid
+            selectedMonthId={selectedMonthId}
+            concepts={currentConcepts}
+            onSelectPost={handleOpenEditPost}
+            onAddPost={handleOpenAddPost}
           />
-        )}
-
-        {/* STEP 2: 4-WEEK SCHEDULE */}
-        {currentStep === 2 && (
-          <Step2ContentSchedule
-            campaign={activeCampaign}
-            onSelectConceptToScript={handleSelectConceptToScript}
-            onAddNewConcept={handleOpenAddConceptModal}
-            onDeleteConcept={handleDeleteConcept}
-            onPrevStep={() => setCurrentStep(1)}
-            onNextStep={() => setCurrentStep(3)}
-          />
-        )}
-
-        {/* STEP 3: DIRECTOR'S SCRIPT STUDIO */}
-        {currentStep === 3 && (
-          <Step3DirectorScriptStudio
-            campaign={activeCampaign}
-            selectedConceptId={selectedConceptId}
-            onSelectConcept={setSelectedConceptId}
-            onSaveConceptScript={handleSaveConcept}
-            onDeleteConcept={handleDeleteConcept}
-            onPrevStep={() => setCurrentStep(2)}
-            onNextStep={() => setCurrentStep(4)}
-            onJumpToCallSheet={() => setCurrentStep(5)}
-          />
-        )}
-
-        {/* STEP 4: MULTI-PLATFORM COPY */}
-        {currentStep === 4 && (
-          <Step4PlatformCopy
-            campaign={activeCampaign}
-            selectedConceptId={selectedConceptId}
-            onSelectConcept={setSelectedConceptId}
-            onSaveConceptCopy={handleSaveConcept}
-            onPrevStep={() => setCurrentStep(3)}
-            onNextStep={() => setCurrentStep(5)}
-          />
-        )}
-
-        {/* STEP 5: VIDEOGRAPHER CALL SHEET */}
-        {currentStep === 5 && (
-          <Step5VideographerCallSheet
-            campaign={activeCampaign}
-            selectedConceptId={selectedConceptId}
-            onSelectConcept={setSelectedConceptId}
-            onPrevStep={() => setCurrentStep(4)}
+        ) : (
+          <MediaListView
+            concepts={currentConcepts}
+            onSelectPost={handleOpenEditPost}
+            onAddPost={handleOpenAddPost}
+            onDeletePost={handleDeletePost}
           />
         )}
       </div>
+
+      {/* Simplified Post Modal */}
+      <SimplePostModal
+        isOpen={isPostModalOpen}
+        post={activePost}
+        defaultDate={defaultPostDate}
+        onSave={handleSavePost}
+        onDelete={handleDeletePost}
+        onClose={() => {
+          setIsPostModalOpen(false);
+          setActivePost(null);
+        }}
+      />
 
       {/* New Month Modal */}
       {isNewMonthModalOpen && (
@@ -250,18 +425,6 @@ export default function MediaCornerPage() {
           availableMonths={availableMonths}
           onSave={handleCreateNewMonth}
           onClose={() => setIsNewMonthModalOpen(false)}
-        />
-      )}
-
-      {/* New / Edit Concept Modal */}
-      {isNewConceptModalOpen && (
-        <NewConceptModal
-          initialData={newConceptInitialData}
-          onSave={handleSaveConcept}
-          onClose={() => {
-            setIsNewConceptModalOpen(false);
-            setNewConceptInitialData(null);
-          }}
         />
       )}
     </SystemShell>
