@@ -18,7 +18,7 @@ import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '.
 import ReportBuildingProgressModal from '../../../components/eqp/ReportBuildingProgressModal';
 import ReportGenerationSummaryModal from '../../../components/eqp/ReportGenerationSummaryModal';
 
-import { generateReports, getMachines, getReports, getReportProfile, getAllFleetReports } from '../../../lib/api';
+import { generateReports, getMachines, getReports, getReportProfile, getAllFleetReports, getEqpcLifecycleCache } from '../../../lib/api';
 import { REPORT_TYPES, SERVICE_TYPES, getRequiredReportType } from '../../../lib/reportOptions';
 import { buildDynamicLifecycleRecords, formatLifecycleMonth, getMachineReportMonths } from '../../../lib/eqpLifecycleData';
 
@@ -42,6 +42,7 @@ function GapReportsStudio() {
   const [machines, setMachines] = useState([]);
   const [reports, setReports] = useState([]);
   const [reportProfile, setReportProfile] = useState(null);
+  const [liveEqpData, setLiveEqpData] = useState(null);
   const [toast, setToast] = useState(null);
 
   // Multi-Machine Selection State
@@ -84,16 +85,20 @@ function GapReportsStudio() {
   const loadData = useCallback(async () => {
     try {
       setLoading(true);
-      const [machinesRes, reportsRes, profileRes] = await Promise.all([
+      const [machinesRes, reportsRes, profileRes, liveCacheRes] = await Promise.all([
         getMachines().catch(() => ({ machines: [] })),
         getAllFleetReports().catch(() => []),
         getReportProfile().catch(() => null),
+        getEqpcLifecycleCache().catch(() => null),
       ]);
 
       const loadedMachines = machinesRes.machines || [];
       setMachines(loadedMachines);
       setReports(reportsRes || []);
       setReportProfile(profileRes);
+      if (liveCacheRes && (liveCacheRes.machines || liveCacheRes.success)) {
+        setLiveEqpData(liveCacheRes);
+      }
 
       // Pre-select machine from query param if provided
       if (initialMachineParam && loadedMachines.length > 0) {
@@ -117,8 +122,8 @@ function GapReportsStudio() {
 
   // Compute lifecycle records to detect gaps
   const lifecycleRecords = useMemo(() => {
-    return buildDynamicLifecycleRecords(reports, machines);
-  }, [reports, machines]);
+    return buildDynamicLifecycleRecords(reports, machines, liveEqpData);
+  }, [reports, machines, liveEqpData]);
 
   // Map machineNumber -> lifecycle record
   const lifecycleMap = useMemo(() => {
@@ -138,14 +143,14 @@ function GapReportsStudio() {
   const existingReportMonthsMap = useMemo(() => {
     const map = new Map();
     for (const m of selectedMachines) {
-      const months = getMachineReportMonths(m.machine_number, reports);
+      const months = getMachineReportMonths(m.machine_number, reports, liveEqpData);
       for (const mo of months) {
         if (!map.has(mo)) map.set(mo, []);
         map.get(mo).push(m.machine_number);
       }
     }
     return map;
-  }, [selectedMachines, reports]);
+  }, [selectedMachines, reports, liveEqpData]);
 
   // Unique missing months across all currently selected machines
   const detectedGapsAcrossSelected = useMemo(() => {

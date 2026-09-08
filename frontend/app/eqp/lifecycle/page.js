@@ -7,7 +7,7 @@ import Card from '../../../components/ui/Card';
 import Badge from '../../../components/ui/Badge';
 import EmptyState from '../../../components/ui/EmptyState';
 import Button from '../../../components/ui/Button';
-import { getMachines, getReports, getAllFleetReports } from '../../../lib/api';
+import { getMachines, getReports, getAllFleetReports, getEqpcLifecycleCache, syncEqpcLifecycle } from '../../../lib/api';
 import { getStoredPlatformSession, getStoredUser, getMatchingEngineerName } from '../../../lib/auth';
 import {
   buildDynamicLifecycleRecords,
@@ -31,6 +31,10 @@ export default function EqpLifecyclePage() {
   const [generatedReports, setGeneratedReports] = useState([]);
   const [machinesList, setMachinesList] = useState([]);
   const [loadingReports, setLoadingReports] = useState(false);
+  const [liveEqpData, setLiveEqpData] = useState(null);
+  const [isSyncingLive, setIsSyncingLive] = useState(false);
+  const [syncStatusMsg, setSyncStatusMsg] = useState('');
+  const [singleSyncMachine, setSingleSyncMachine] = useState(null);
 
   useEffect(() => {
     const timerId = window.setTimeout(() => {
@@ -50,13 +54,17 @@ export default function EqpLifecyclePage() {
   async function loadReportsData() {
     try {
       setLoadingReports(true);
-      const [reportsRes, machinesRes] = await Promise.all([
+      const [reportsRes, machinesRes, liveCacheRes] = await Promise.all([
         getAllFleetReports().catch(() => getReports().catch(() => [])),
         getMachines().catch(() => ({ machines: [] })),
+        getEqpcLifecycleCache().catch(() => null),
       ]);
       setGeneratedReports(reportsRes || []);
       const mList = machinesRes?.machines || [];
       setMachinesList(mList);
+      if (liveCacheRes && (liveCacheRes.machines || liveCacheRes.success)) {
+        setLiveEqpData(liveCacheRes);
+      }
 
       const session = getStoredPlatformSession();
       const user = getStoredUser();
@@ -73,11 +81,45 @@ export default function EqpLifecyclePage() {
     }
   }
 
+  async function handleSyncLive(targetSerial = null) {
+    if (isSyncingLive) return; // Prevent double clicks
+    try {
+      setIsSyncingLive(true);
+      if (targetSerial) {
+        setSingleSyncMachine(targetSerial);
+        setSyncStatusMsg(`Pulling real EQP Care records for #${targetSerial}...`);
+      } else {
+        setSyncStatusMsg(`Pulling real EQP Care records from Komatsu for fleet...`);
+      }
+
+      const res = await syncEqpcLifecycle(targetSerial ? { machineNumber: targetSerial } : {});
+      if (res && res.success) {
+        const updatedCache = await getEqpcLifecycleCache().catch(() => null);
+        if (updatedCache) {
+          setLiveEqpData(updatedCache);
+        }
+        if (targetSerial) {
+          setSyncStatusMsg(`✓ Machine #${targetSerial} lifecycle successfully updated from Komatsu EQP Care.`);
+        } else {
+          setSyncStatusMsg(`✓ Synced ${res.synced || 0} fleet machines with real Komatsu EQP Care data.`);
+        }
+      } else {
+        setSyncStatusMsg(`Sync completed with notices: ${res?.message || 'Check connection'}`);
+      }
+    } catch (err) {
+      setSyncStatusMsg(`Failed to sync from EQP Care: ${err.message}`);
+    } finally {
+      setIsSyncingLive(false);
+      setSingleSyncMachine(null);
+      setTimeout(() => setSyncStatusMsg(''), 7000);
+    }
+  }
+
   const dismissedGapKeySet = useMemo(() => new Set(dismissedGapKeys), [dismissedGapKeys]);
 
   const dynamicRecords = useMemo(() => {
-    return buildDynamicLifecycleRecords(generatedReports, machinesList);
-  }, [generatedReports, machinesList]);
+    return buildDynamicLifecycleRecords(generatedReports, machinesList, liveEqpData);
+  }, [generatedReports, machinesList, liveEqpData]);
 
   const machines = useMemo(() => {
     return dynamicRecords.map((machine) => {
@@ -175,23 +217,49 @@ export default function EqpLifecyclePage() {
       description="Interactive milestone timeline, service stage progression, and monthly gap verification across the fleet."
       actions={
         <div className="flex items-center gap-2">
-          <Badge tone={generatedReports.length > 0 ? 'ready' : 'neutral'} size="sm">
-            {loadingReports ? 'Syncing...' : `${generatedReports.length} Reports Synced`}
+          {liveEqpData?.lastSync && (
+            <span className="text-[11px] text-emerald-400 font-medium hidden md:inline">
+              ● Live Data: {new Date(liveEqpData.lastSync).toLocaleTimeString()}
+            </span>
+          )}
+          <Badge tone={liveEqpData ? 'ready' : 'neutral'} size="sm">
+            {liveEqpData ? `Live EQP: ${Object.keys(liveEqpData.machines || {}).length} units` : `${generatedReports.length} Reports Synced`}
           </Badge>
           <Button
             type="button"
             variant="secondary"
             size="sm"
             onClick={loadReportsData}
-            disabled={loadingReports}
+            disabled={loadingReports || isSyncingLive}
           >
-            {loadingReports ? 'Refreshing...' : 'Refresh Lifecycle'}
+            {loadingReports ? 'Refreshing...' : 'Refresh'}
+          </Button>
+          <Button
+            type="button"
+            variant="primary"
+            size="sm"
+            onClick={() => handleSyncLive()}
+            disabled={loadingReports || isSyncingLive}
+          >
+            {isSyncingLive && !singleSyncMachine ? 'Syncing Live EQP...' : '⚡ Sync Live from EQP Care'}
           </Button>
         </div>
       }
     >
       <div className="space-y-5">
         <EqpNav />
+
+        {syncStatusMsg && (
+          <div className="flex items-center justify-between p-3.5 rounded-xl bg-blue-50/90 border border-blue-200 text-blue-900 text-xs font-medium shadow-xs">
+            <div className="flex items-center gap-2">
+              <span className={`inline-block w-2.5 h-2.5 rounded-full ${isSyncingLive ? 'bg-blue-600 animate-ping' : 'bg-emerald-600'}`} />
+              <span>{syncStatusMsg}</span>
+            </div>
+            {isSyncingLive && (
+              <span className="text-[11px] font-semibold text-blue-700">Connecting strictly read-only to Komatsu...</span>
+            )}
+          </div>
+        )}
 
         {/* Fleet Milestone Funnel Bar */}
         <Card className="p-4 bg-slate-900 text-white border-slate-800">
@@ -332,7 +400,16 @@ export default function EqpLifecyclePage() {
                           className={`cursor-pointer transition-colors ${isSelected ? '!bg-amber-50/70 font-semibold' : 'hover:bg-slate-50/60'}`}
                           onClick={() => setSelectedMachineNumber(machine.machineNumber)}
                         >
-                          <td className="font-bold text-slate-900">{machine.machineNumber}</td>
+                          <td className="font-bold text-slate-900">
+                            <div className="flex items-center gap-1.5">
+                              <span>{machine.machineNumber}</span>
+                              {machine.isLiveEqpc && (
+                                <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-bold bg-emerald-100 text-emerald-800" title="Pulled directly from live Komatsu Equipment Care">
+                                  LIVE
+                                </span>
+                              )}
+                            </div>
+                          </td>
                           <td className="text-slate-700">
                             <span className="px-2 py-0.5 rounded-md bg-slate-100 text-slate-800 text-xs font-semibold">
                               {machine.model}
@@ -368,10 +445,30 @@ export default function EqpLifecyclePage() {
                     <h2 className="text-xl font-bold text-slate-900">{selectedMachine.model} #{selectedMachine.machineNumber}</h2>
                     <p className="text-xs text-slate-500">
                       Lead: <span className="font-semibold text-slate-800">{selectedMachine.responsibleEngineer || 'Service Engineer'}</span>
+                      {selectedMachine.machineId && (
+                        <span className="ml-2 font-mono text-[10px] text-slate-400">EQP ID: {selectedMachine.machineId}</span>
+                      )}
                     </p>
                   </div>
                 </div>
-                <Badge tone={selectedMachine.statusTone}>{selectedMachine.latestReportCode}</Badge>
+                <div className="flex flex-col items-end gap-1.5">
+                  <div className="flex items-center gap-1.5">
+                    {selectedMachine.isLiveEqpc && (
+                      <Badge tone="live" size="sm">⚡ Live EQP</Badge>
+                    )}
+                    <Badge tone={selectedMachine.statusTone}>{selectedMachine.latestReportCode}</Badge>
+                  </div>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="xs"
+                    onClick={() => handleSyncLive(selectedMachine.machineNumber)}
+                    disabled={isSyncingLive || loadingReports}
+                    className="text-[10px] text-blue-600 hover:text-blue-800 font-semibold"
+                  >
+                    {isSyncingLive && singleSyncMachine === selectedMachine.machineNumber ? 'Syncing...' : '↻ Sync from Komatsu'}
+                  </Button>
+                </div>
               </div>
 
               {/* Visual Lifecycle Milestone Stepper */}

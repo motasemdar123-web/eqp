@@ -478,6 +478,26 @@ async function batchUploadEqpcReports(req, res) {
   res.json({ success: true, ...result });
 }
 
+async function getEqpcLifecycleCache(req, res) {
+  const cache = komatsuEqpCareService.loadCachedLiveLifecycle();
+  res.json({ success: true, ...cache });
+}
+
+async function syncEqpcLifecycle(req, res) {
+  const { machineNumber, serial, machines } = { ...(req.query || {}), ...(req.body || {}) };
+  const customCookie = req.body?.cookie || req.query?.cookie || req.headers['x-eqpc-cookie'] || null;
+  const targetSerial = machineNumber || serial || null;
+
+  const result = await komatsuEqpCareService.syncFleetLifecycleFromEqpc({
+    machines: Array.isArray(machines) ? machines : [],
+    customCookie,
+    machineNumber: targetSerial,
+  });
+
+  res.json(result);
+}
+
+
 // ----------------------------------------------------
 // SAP BUSINESS ONE PURCHASE ORDER CONTROLLER METHODS
 // ----------------------------------------------------
@@ -587,6 +607,8 @@ module.exports = {
   lookupEqpcMachine,
   uploadEqpcReport,
   batchUploadEqpcReports,
+  getEqpcLifecycleCache,
+  syncEqpcLifecycle,
   createSapPurchaseOrder,
   getSapPoStatus,
   exportSapPoExcel,

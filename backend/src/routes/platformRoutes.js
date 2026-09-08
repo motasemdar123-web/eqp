@@ -77,6 +77,9 @@ router.get('/api/komatsu/eqpc/event-codes', requirePlatformAuth, asyncHandler(pl
 router.get('/api/komatsu/eqpc/machine-lookup', requirePlatformAuth, asyncHandler(platformController.lookupEqpcMachine));
 router.post('/api/komatsu/eqpc/upload', requirePlatformAuth, asyncHandler(platformController.uploadEqpcReport));
 router.post('/api/komatsu/eqpc/batch-upload', requirePlatformAuth, asyncHandler(platformController.batchUploadEqpcReports));
+router.get('/api/komatsu/eqpc/lifecycle-cache', requirePlatformAuth, asyncHandler(platformController.getEqpcLifecycleCache));
+router.post('/api/komatsu/eqpc/lifecycle-sync', requirePlatformAuth, asyncHandler(platformController.syncEqpcLifecycle));
+router.get('/api/komatsu/eqpc/lifecycle-sync', requirePlatformAuth, asyncHandler(platformController.syncEqpcLifecycle));
 
 // SAP Business One Purchase Order Automation routes
 router.post('/api/sap/po/create', requirePlatformAuth, asyncHandler(platformController.createSapPurchaseOrder));

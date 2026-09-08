@@ -6,6 +6,7 @@ const db = require('../config/database');
 const { resolveEqpTable } = require('../repositories/eqpTableResolver');
 
 const COOKIE_FILE_PATH = path.join(__dirname, '../../data/eqpc_cookies.txt');
+const LIFECYCLE_CACHE_FILE = path.join(__dirname, '../../data/eqp_care_live_lifecycle.json');
 const BASE_EQPC_URL = 'https://eqp-care.komatsu.co.jp/eqpc';
 const DAILY_OPERATION_URL = `${BASE_EQPC_URL}/EMDW0102MoveToEMDW0295.do?eqpMenuCtg=E&menuId=E0904`;
 
@@ -731,6 +732,264 @@ async function batchUploadReports(items = [], customCookie = null) {
   };
 }
 
+/**
+ * Loads the cached live lifecycle data pulled from Komatsu Equipment Care.
+ */
+function loadCachedLiveLifecycle() {
+  try {
+    if (fs.existsSync(LIFECYCLE_CACHE_FILE)) {
+      const raw = fs.readFileSync(LIFECYCLE_CACHE_FILE, 'utf-8');
+      return JSON.parse(raw);
+    }
+  } catch (err) {
+    console.warn('[loadCachedLiveLifecycle] Cache read notice:', err.message);
+  }
+  return { lastSync: null, totalMachines: 0, machines: {} };
+}
+
+/**
+ * Persists the live lifecycle cache to disk.
+ */
+function saveCachedLiveLifecycle(data) {
+  try {
+    const dir = path.dirname(LIFECYCLE_CACHE_FILE);
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+    }
+    fs.writeFileSync(LIFECYCLE_CACHE_FILE, JSON.stringify(data, null, 2), 'utf-8');
+  } catch (err) {
+    console.warn('[saveCachedLiveLifecycle] Cache write notice:', err.message);
+  }
+}
+
+/**
+ * Parses the HTML response of EMDW0904tiles to extract all live equipment history reports.
+ * 100% read-only parsing with zero writes to Komatsu.
+ */
+function parseHistoryTableFromHtml(html, serialNo, model) {
+  const normSerial = String(serialNo || '').trim();
+  const normModel = String(model || '').trim();
+
+  const idMatch = html.match(/name="machineId"\s+value="([^"]+)"/i) || html.match(/id="machineId"\s+value="([^"]+)"/i);
+  const machineId = idMatch ? idMatch[1] : null;
+
+  const tableMatch = html.match(/<table[^>]*id\s*=\s*["']resultTable["'][^>]*>([\s\S]*?)<\/table>/i);
+  let tableSnippet = '';
+  if (tableMatch) {
+    tableSnippet = tableMatch[1];
+  } else {
+    const tableIndex = html.search(/id\s*=\s*["']resultTable["']/i);
+    if (tableIndex === -1) {
+      return {
+        machineNumber: normSerial,
+        model: normModel,
+        machineId,
+        totalReports: 0,
+        reports: [],
+        syncedAt: new Date().toISOString(),
+      };
+    }
+    const tableEndMatch = html.slice(tableIndex).search(/<\/table>/i);
+    tableSnippet = tableEndMatch !== -1 ? html.slice(tableIndex, tableIndex + tableEndMatch) : html.slice(tableIndex, tableIndex + 50000);
+  }
+
+  const trs = tableSnippet.match(/<TR[^>]*>[\s\S]*?<\/TR>/gi) || [];
+  const reports = [];
+
+  for (const tr of trs) {
+    const tds = tr.match(/<TD[^>]*>([\s\S]*?)<\/TD>/gi) || [];
+    if (tds.length < 3) continue;
+
+    const cleanTds = tds.map((td) =>
+      td.replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim()
+    );
+    const eventCode = cleanTds[0] || '';
+    if (!eventCode) continue;
+
+    const eventName = cleanTds[1] || '';
+    const rawDate = cleanTds[2] || '';
+    const smrStr = cleanTds[3] || '';
+    const country = cleanTds[4] || '';
+    const distributor = cleanTds[5] || '';
+
+    let isoDate = null;
+    if (rawDate && rawDate.includes('/')) {
+      const parts = rawDate.split('/');
+      if (parts.length === 3) {
+        if (parts[0].length === 4) {
+          // YYYY/MM/DD
+          isoDate = `${parts[0]}-${parts[1].padStart(2, '0')}-${parts[2].padStart(2, '0')}`;
+        } else {
+          // MM/DD/YYYY
+          const m = parts[0].padStart(2, '0');
+          const d = parts[1].padStart(2, '0');
+          const y = parts[2];
+          isoDate = `${y}-${m}-${d}`;
+        }
+      }
+    } else if (rawDate && /^\d{4}-\d{2}-\d{2}$/.test(rawDate)) {
+      isoDate = rawDate;
+    }
+
+    reports.push({
+      eventCode,
+      eventName,
+      rawDate,
+      date: isoDate || rawDate,
+      smr: smrStr && !isNaN(Number(smrStr)) ? Number(smrStr) : null,
+      country,
+      distributor,
+    });
+  }
+
+  return {
+    machineNumber: normSerial,
+    model: normModel,
+    machineId,
+    totalReports: reports.length,
+    reports,
+    syncedAt: new Date().toISOString(),
+  };
+}
+
+/**
+ * Strictly read-only: Pulls the real, complete reports lifecycle history for a single machine
+ * directly from Komatsu Equipment Care online portal (EMDW0904tiles).
+ * NEVER alters or writes to the Komatsu system.
+ */
+async function fetchMachineLifecycleFromEqpc({ serialNo, model = '', customCookie = null }) {
+  const cookieStr = customCookie ? parseCookieInput(customCookie) : loadCookie();
+  if (!cookieStr || cookieStr.includes('test_session')) {
+    throw new Error('No active Komatsu Equipment Care session cookie configured.');
+  }
+
+  const normSerial = String(serialNo || '').trim();
+  let effectiveModel = String(model || '').trim();
+
+  // If model is missing, attempt to look up from database
+  if (!effectiveModel) {
+    try {
+      const machineTable = await resolveEqpTable('eqp_machines', 'machines');
+      const mRes = await db.query(
+        `SELECT machine_type FROM ${machineTable} WHERE machine_number ILIKE $1 LIMIT 1`,
+        [normSerial]
+      );
+      effectiveModel = mRes.rows[0]?.machine_type || '';
+    } catch {
+      // Ignore
+    }
+  }
+
+  const defaultHeaders = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36 Edg/152.0.0.0',
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+    'Accept-Language': 'en-US,en;q=0.9',
+    'Cookie': cookieStr,
+    'Referer': 'https://eqp-care.komatsu.co.jp/eqpc/EMDW0904.do',
+  };
+
+  const url = `https://eqp-care.komatsu.co.jp/eqpc/link.do?linkPath=EMDW0904tiles&model=${encodeURIComponent(effectiveModel)}&serial=${encodeURIComponent(normSerial)}`;
+
+  const res = await fetch(url, {
+    method: 'GET',
+    headers: defaultHeaders,
+  });
+
+  if (res.status === 401 || res.status === 302) {
+    throw new Error('Komatsu EQP Care session expired. Please refresh your session cookie.');
+  }
+
+  const html = await res.text();
+  if (html.includes('session is expired') || html.includes('Your session was over')) {
+    throw new Error('Komatsu EQP Care session expired. Please update your session cookie.');
+  }
+
+  const parsed = parseHistoryTableFromHtml(html, normSerial, effectiveModel);
+  return parsed;
+}
+
+/**
+ * Strictly read-only: Synchronizes the fleet lifecycle records from Komatsu Equipment Care.
+ * Caches the results locally to enable instant offline access and fast page loading.
+ */
+async function syncFleetLifecycleFromEqpc({ machines = [], customCookie = null, machineNumber = null }) {
+  const cache = loadCachedLiveLifecycle();
+  if (!cache.machines) cache.machines = {};
+
+  // If specific machineNumber requested
+  if (machineNumber) {
+    const matched = machines.find((m) =>
+      String(m.machine_number || m.machineNumber || m.serialNo || m.serial) === String(machineNumber)
+    );
+    const model = matched?.machine_type || matched?.machineType || matched?.model || '';
+    const res = await fetchMachineLifecycleFromEqpc({ serialNo: machineNumber, model, customCookie });
+    cache.machines[String(machineNumber)] = res;
+    cache.lastSync = new Date().toISOString();
+    cache.totalMachines = Object.keys(cache.machines).length;
+    saveCachedLiveLifecycle(cache);
+    return {
+      success: true,
+      single: true,
+      machineNumber,
+      record: res,
+      cache,
+    };
+  }
+
+  // If list of machines provided or fetch all from database
+  let targetMachines = machines;
+  if (!targetMachines || targetMachines.length === 0) {
+    try {
+      const machineTable = await resolveEqpTable('eqp_machines', 'machines');
+      const res = await db.query(
+        `SELECT id, machine_number, machine_type FROM ${machineTable} ORDER BY machine_number ASC`
+      );
+      targetMachines = res.rows || [];
+    } catch {
+      targetMachines = [];
+    }
+  }
+
+  let synced = 0;
+  let failed = 0;
+  const errors = [];
+
+  for (const m of targetMachines) {
+    const sNo = String(m.machine_number || m.machineNumber || m.serialNo || m.serial || '').trim();
+    const model = m.machine_type || m.machineType || m.model || '';
+    if (!sNo) continue;
+
+    try {
+      const res = await fetchMachineLifecycleFromEqpc({ serialNo: sNo, model, customCookie });
+      cache.machines[sNo] = res;
+      synced++;
+      // Brief polite delay between calls to not flood the Komatsu server
+      await new Promise((r) => setTimeout(r, 200));
+    } catch (err) {
+      failed++;
+      errors.push({ serialNo: sNo, error: err.message });
+      // If session expired, halt batch to avoid useless retries
+      if (err.message.includes('expired')) {
+        break;
+      }
+    }
+  }
+
+  cache.lastSync = new Date().toISOString();
+  cache.totalMachines = Object.keys(cache.machines).length;
+  saveCachedLiveLifecycle(cache);
+
+  return {
+    success: true,
+    totalTarget: targetMachines.length,
+    synced,
+    failed,
+    errors,
+    lastSync: cache.lastSync,
+    machines: cache.machines,
+  };
+}
+
 module.exports = {
   saveCookie,
   loadCookie,
@@ -742,4 +1001,10 @@ module.exports = {
   resolveMachineTypeAndSubtype,
   EVENT_CODES,
   mapServiceTypeToEventCode,
+  loadCachedLiveLifecycle,
+  saveCachedLiveLifecycle,
+  parseHistoryTableFromHtml,
+  fetchMachineLifecycleFromEqpc,
+  syncFleetLifecycleFromEqpc,
 };
+

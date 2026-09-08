@@ -33,6 +33,9 @@ router.get('/api/eqp/care/event-codes', requireAuth, requireEqpAccess, asyncHand
 router.get('/api/eqp/care/machine-lookup', requireAuth, requireEqpAccess, asyncHandler(platformController.lookupEqpcMachine));
 router.post('/api/eqp/care/upload', requireAuth, requireEqpAccess, asyncHandler(platformController.uploadEqpcReport));
 router.post('/api/eqp/care/batch-upload', requireAuth, requireEqpAccess, asyncHandler(platformController.batchUploadEqpcReports));
+router.get('/api/eqp/care/lifecycle-cache', requireAuth, requireEqpAccess, asyncHandler(platformController.getEqpcLifecycleCache));
+router.post('/api/eqp/care/lifecycle-sync', requireAuth, requireEqpAccess, asyncHandler(platformController.syncEqpcLifecycle));
+router.get('/api/eqp/care/lifecycle-sync', requireAuth, requireEqpAccess, asyncHandler(platformController.syncEqpcLifecycle));
 
 module.exports = router;
 

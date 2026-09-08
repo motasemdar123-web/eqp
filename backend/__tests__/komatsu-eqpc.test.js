@@ -120,4 +120,65 @@ describe('Komatsu Equipment Care (EQP Care) Service', () => {
       });
     });
   });
+
+  describe('Lifecycle History Extraction & Cache', () => {
+    test('loads and saves cached lifecycle data safely', () => {
+      const initial = komatsuEqpCareService.loadCachedLiveLifecycle();
+      expect(typeof initial).toBe('object');
+      expect(initial.machines).toBeDefined();
+
+      const testData = { ...initial, testKey: 'live_test_val' };
+      komatsuEqpCareService.saveCachedLiveLifecycle(testData);
+      const reloaded = komatsuEqpCareService.loadCachedLiveLifecycle();
+      expect(reloaded.testKey).toBe('live_test_val');
+      komatsuEqpCareService.saveCachedLiveLifecycle(initial);
+    });
+
+    test('parseHistoryTableFromHtml extracts genuine reports from HTML table', () => {
+      const sampleHtml = `
+        <input type="hidden" name="machineId" value="3411838">
+        <table id="resultTable">
+          <thead>
+            <tr>
+              <th>Event Code</th>
+              <th>Event Name</th>
+              <th>Service Date</th>
+              <th>SMR</th>
+              <th>Country</th>
+              <th>Distributor</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>W411</td>
+              <td>1ST PERIODIC SERVICE</td>
+              <td>2023/05/20</td>
+              <td>250</td>
+              <td>KUWAIT</td>
+              <td>5194</td>
+            </tr>
+            <tr>
+              <td>W41P</td>
+              <td>PRE-DELIVERY INSPECTION</td>
+              <td>2023/02/04</td>
+              <td>10</td>
+              <td>KUWAIT</td>
+              <td>5194</td>
+            </tr>
+          </tbody>
+        </table>
+      `;
+
+      const result = komatsuEqpCareService.parseHistoryTableFromHtml(sampleHtml, '77149', 'PC400');
+      expect(result.machineNumber).toBe('77149');
+      expect(result.model).toBe('PC400');
+      expect(result.machineId).toBe('3411838');
+      expect(result.totalReports).toBe(2);
+      expect(result.reports[0].eventCode).toBe('W411');
+      expect(result.reports[0].date).toBe('2023-05-20');
+      expect(result.reports[0].smr).toBe(250);
+      expect(result.reports[1].eventCode).toBe('W41P');
+      expect(result.reports[1].date).toBe('2023-02-04');
+    });
+  });
 });

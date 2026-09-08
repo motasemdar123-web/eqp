@@ -551,6 +551,17 @@ export function batchUploadEqpcReports(payload) {
   });
 }
 
+export function getEqpcLifecycleCache() {
+  return request('/api/komatsu/eqpc/lifecycle-cache');
+}
+
+export function syncEqpcLifecycle(payload = {}) {
+  return request('/api/komatsu/eqpc/lifecycle-sync', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+}
+
 export function createSapPurchaseOrder(payload) {
   return request('/api/sap/po/create', {
     method: 'POST',

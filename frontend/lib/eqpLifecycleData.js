@@ -16966,6 +16966,9 @@ export function buildLifecycleRecordFromProps({
   latestSmr,
   addServiceCount,
   observedReports = [],
+  machineId = null,
+  isLiveEqpc = false,
+  syncedAt = null,
 }) {
   const workingStatus = 'not_working';
   const storageGaps = findStorageGaps(observedReports, deliveryDate);
@@ -16990,6 +16993,9 @@ export function buildLifecycleRecordFromProps({
   return {
     machineNumber,
     model,
+    machineId,
+    isLiveEqpc,
+    syncedAt,
     responsibleEngineer,
     preDeliveryDate,
     deliveryDate,
@@ -17023,7 +17029,7 @@ export function buildLifecycleRecordFromProps({
   };
 }
 
-export function buildDynamicLifecycleRecords(generatedReports = [], machinesList = []) {
+export function buildDynamicLifecycleRecords(generatedReports = [], machinesList = [], liveEqpData = null) {
   const reportsByMachine = new Map();
   for (const r of generatedReports) {
     const mNum = String(r.machine_number || r.machine?.machineNumber || r.machine?.machine_number || '').trim();
@@ -17031,6 +17037,8 @@ export function buildDynamicLifecycleRecords(generatedReports = [], machinesList
     if (!reportsByMachine.has(mNum)) reportsByMachine.set(mNum, []);
     reportsByMachine.get(mNum).push(r);
   }
+
+  const liveMachinesMap = (liveEqpData && typeof liveEqpData === 'object') ? (liveEqpData.machines || liveEqpData) : {};
 
   const machineNumbers = new Set(BASE_LIFECYCLE_ROWS.map(([num]) => String(num)));
   for (const mNum of reportsByMachine.keys()) {
@@ -17040,6 +17048,10 @@ export function buildDynamicLifecycleRecords(generatedReports = [], machinesList
     const mNum = String(m.machine_number || m.machineNumber || '').trim();
     if (mNum) machineNumbers.add(mNum);
   }
+  for (const mNum of Object.keys(liveMachinesMap)) {
+    const trimmed = String(mNum).trim();
+    if (trimmed) machineNumbers.add(trimmed);
+  }
 
   const records = [];
 
@@ -17047,12 +17059,19 @@ export function buildDynamicLifecycleRecords(generatedReports = [], machinesList
     const baseRow = BASE_LIFECYCLE_ROWS.find(([num]) => String(num) === machineNumber);
     const machineObj = machinesList.find((m) => String(m.machine_number || m.machineNumber) === machineNumber);
     const genReports = reportsByMachine.get(machineNumber) || [];
+    const liveMachine = liveMachinesMap[machineNumber];
 
-    const model = baseRow ? baseRow[1] : (machineObj?.machine_type || machineObj?.machineType || 'HM400');
+    const model = liveMachine?.model || (baseRow ? baseRow[1] : (machineObj?.machine_type || machineObj?.machineType || 'HM400'));
     const responsibleEngineer = machineObj?.responsible_engineer || machineObj?.responsibleEngineer || null;
     
-    // Combine baseline observed reports with generated reports
-    const baseObserved = OBSERVED_REPORTS[machineNumber] ? [...OBSERVED_REPORTS[machineNumber]] : [];
+    // Prioritize genuine Komatsu Equipment Care live reports over baseline excel rows
+    let baseObserved = [];
+    if (liveMachine && Array.isArray(liveMachine.reports) && liveMachine.reports.length > 0) {
+      baseObserved = liveMachine.reports.map((r) => [r.eventCode, r.date, r.smr, r.eventName]);
+    } else if (OBSERVED_REPORTS[machineNumber]) {
+      baseObserved = [...OBSERVED_REPORTS[machineNumber]];
+    }
+
     const observedSet = new Set(baseObserved.map(([code, date]) => `${code}_${date}`));
 
     for (const gr of genReports) {
@@ -17063,32 +17082,35 @@ export function buildDynamicLifecycleRecords(generatedReports = [], machinesList
       const key = `${code}_${date}`;
       if (!observedSet.has(key)) {
         observedSet.add(key);
-        baseObserved.push([code, date]);
+        baseObserved.push([code, date, gr.smr ? Number(gr.smr) : null, gr.report_type || gr.service_type || 'Generated Report']);
       }
     }
 
     // Sort observed reports chronologically descending (latest first)
     baseObserved.sort((a, b) => b[1].localeCompare(a[1]));
 
-    const preDeliveryDate = baseRow?.[2] || getEarliestDateByCode(baseObserved, 'W41P');
-    const deliveryDate = baseRow?.[3] || getEarliestDateByCode(baseObserved, 'W41N');
-    const firstServiceDate = baseRow?.[4] || getEarliestDateByCode(baseObserved, 'W411');
-    const secondServiceDate = baseRow?.[5] || getEarliestDateByCode(baseObserved, 'W412');
-    const thirdServiceDate = baseRow?.[6] || getEarliestDateByCode(baseObserved, 'W413');
+    const preDeliveryDate = getEarliestDateByCode(baseObserved, 'W41P') || baseRow?.[2] || null;
+    const deliveryDate = getEarliestDateByCode(baseObserved, 'W41N') || baseRow?.[3] || null;
+    const firstServiceDate = getEarliestDateByCode(baseObserved, 'W411') || baseRow?.[4] || null;
+    const secondServiceDate = getEarliestDateByCode(baseObserved, 'W412') || baseRow?.[5] || null;
+    const thirdServiceDate = getEarliestDateByCode(baseObserved, 'W413') || baseRow?.[6] || null;
 
-    let latestReportDate = baseRow?.[7] || null;
-    let latestReportCode = baseRow?.[8] || 'W41X';
-    let latestReportType = baseRow?.[9] || 'Add. Service';
-    let latestSmr = baseRow?.[10] ?? (machineObj?.last_smr ? Number(machineObj.last_smr) : null);
-
-    if (baseObserved.length > 0) {
-      const [newestCode, newestDate] = baseObserved[0];
-      if (!latestReportDate || newestDate >= latestReportDate) {
-        latestReportDate = newestDate;
-        latestReportCode = newestCode;
-        latestReportType = getReportTypeLabel(newestCode);
+    let latestReportDate = baseObserved[0] ? baseObserved[0][1] : (baseRow?.[7] || null);
+    let latestReportCode = baseObserved[0] ? baseObserved[0][0] : (baseRow?.[8] || 'W41X');
+    let latestReportType = baseObserved[0] ? getReportTypeLabel(baseObserved[0][0]) : (baseRow?.[9] || 'Add. Service');
+    
+    // Extract highest SMR from live reports if available
+    let liveMaxSmr = null;
+    if (liveMachine && Array.isArray(liveMachine.reports)) {
+      for (const r of liveMachine.reports) {
+        if (r.smr != null && !isNaN(Number(r.smr))) {
+          if (liveMaxSmr == null || Number(r.smr) > liveMaxSmr) {
+            liveMaxSmr = Number(r.smr);
+          }
+        }
       }
     }
+    let latestSmr = liveMaxSmr ?? (baseRow?.[10] ?? (machineObj?.last_smr ? Number(machineObj.last_smr) : null));
 
     for (const gr of genReports) {
       if (gr.smr && Number(gr.smr) > (latestSmr || 0)) {
@@ -17101,6 +17123,9 @@ export function buildDynamicLifecycleRecords(generatedReports = [], machinesList
     const record = buildLifecycleRecordFromProps({
       machineNumber,
       model,
+      machineId: liveMachine?.machineId || null,
+      isLiveEqpc: Boolean(liveMachine && liveMachine.reports?.length > 0),
+      syncedAt: liveMachine?.syncedAt || liveEqpData?.lastSync || null,
       responsibleEngineer,
       preDeliveryDate,
       deliveryDate,
@@ -17256,12 +17281,21 @@ export function formatLifecycleMonth(value) {
   return new Date(`${value}-01T00:00:00`).toLocaleDateString('en-GB', { month: 'short', year: 'numeric' });
 }
 
-export function getMachineReportMonths(machineNumber, generatedReports = []) {
+export function getMachineReportMonths(machineNumber, generatedReports = [], liveEqpData = null) {
   const months = new Set();
   const mNum = String(machineNumber || '').trim();
   if (!mNum) return months;
 
-  const baseObserved = OBSERVED_REPORTS[mNum] || [];
+  const liveMachinesMap = (liveEqpData && typeof liveEqpData === 'object') ? (liveEqpData.machines || liveEqpData) : {};
+  const liveMachine = liveMachinesMap[mNum];
+
+  let baseObserved = [];
+  if (liveMachine && Array.isArray(liveMachine.reports) && liveMachine.reports.length > 0) {
+    baseObserved = liveMachine.reports.map((r) => [r.eventCode, r.date]);
+  } else if (OBSERVED_REPORTS[mNum]) {
+    baseObserved = OBSERVED_REPORTS[mNum];
+  }
+
   for (const [, date] of baseObserved) {
     if (date) months.add(String(date).slice(0, 7));
   }
