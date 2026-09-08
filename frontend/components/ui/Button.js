@@ -13,7 +13,7 @@ export default function Button({
   disabled = false,
   ...props
 }) {
-  const baseStyles = 'inline-flex items-center justify-center font-medium transition-all duration-120 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-900/20 focus-visible:ring-offset-1 disabled:opacity-50 disabled:pointer-events-none active:scale-[0.99] select-none cursor-pointer';
+  const baseStyles = 'inline-flex items-center justify-center font-medium whitespace-nowrap shrink-0 transition-all duration-120 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-900/20 focus-visible:ring-offset-1 disabled:opacity-50 disabled:pointer-events-none active:scale-[0.99] select-none cursor-pointer';
 
   const variants = {
     primary: 'bg-amber-500 text-slate-950 hover:bg-amber-400 font-bold shadow-xs border border-amber-500/80 active:scale-[0.98]',
@@ -27,7 +27,8 @@ export default function Button({
   };
 
   const sizes = {
-    sm: 'h-8 px-2.5 text-xs rounded-md gap-1.5',
+    xs: 'h-7 px-2.5 text-xs rounded-md gap-1',
+    sm: 'h-8 px-3 text-xs rounded-md gap-1.5',
     md: 'h-9 px-3.5 text-xs sm:text-sm rounded-md gap-2',
     lg: 'h-10 px-4 text-sm rounded-md gap-2.5',
     icon: 'h-9 w-9 p-0 rounded-md',

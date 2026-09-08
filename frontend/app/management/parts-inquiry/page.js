@@ -1373,10 +1373,10 @@ export default function SparePartsPage() {
         <div className="space-y-6">
           {/* STEP 1: REQUESTED PARTS & ITEM TYPES (FULL WIDTH CARD) */}
           <Card className="p-5 sm:p-6 space-y-4">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between pb-4 border-b border-slate-100 gap-3">
-              <div>
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between pb-4 border-b border-slate-100 gap-4">
+              <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
-                  <span className="flex items-center justify-center w-6 h-6 rounded-full bg-amber-100 text-amber-900 font-bold text-xs">
+                  <span className="flex items-center justify-center w-6 h-6 rounded-full bg-amber-100 text-amber-900 font-bold text-xs shrink-0">
                     1
                   </span>
                   <h3 className="text-base font-bold text-slate-900 tracking-tight">
@@ -1388,7 +1388,7 @@ export default function SparePartsPage() {
                 </p>
               </div>
 
-              <div className="flex items-center gap-2 pl-8 sm:pl-0">
+              <div className="flex items-center gap-2 shrink-0">
                 <Button
                   type="button"
                   variant="secondary"
@@ -1805,10 +1805,10 @@ export default function SparePartsPage() {
 
           {/* STEP 3: PLANNED UNIFIED QUOTATIONS & DISPATCH QUEUE (FULL WIDTH CARD) */}
           <Card className="p-5 sm:p-6 space-y-4">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between pb-4 border-b border-slate-100 gap-3">
-              <div>
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between pb-4 border-b border-slate-100 gap-4">
+              <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
-                  <span className="flex items-center justify-center w-6 h-6 rounded-full bg-amber-500 text-slate-950 font-extrabold text-xs">
+                  <span className="flex items-center justify-center w-6 h-6 rounded-full bg-amber-500 text-slate-950 font-extrabold text-xs shrink-0">
                     4
                   </span>
                   <h3 className="text-base font-bold text-slate-900 tracking-tight">
@@ -1822,7 +1822,7 @@ export default function SparePartsPage() {
                 </p>
               </div>
 
-              <div className="flex flex-wrap items-center gap-2 pl-8 sm:pl-0">
+              <div className="flex flex-wrap items-center gap-2 shrink-0">
                 {failedOrdersCount > 0 && (
                   <Button
                     variant="outline"
