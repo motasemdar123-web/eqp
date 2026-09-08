@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import Card from '../../ui/Card';
 import Badge from '../../ui/Badge';
 import Button from '../../ui/Button';
-import { FORMAT_TYPES, CONTENT_PILLARS, PRE_PRODUCTION_CHECKLIST } from '../../../lib/mediaMonthlyData';
+import { FORMAT_TYPES, CONTENT_PILLARS, PRE_PRODUCTION_CHECKLIST, getConceptOnAssetCopy } from '../../../lib/mediaMonthlyData';
 
 export default function Step5VideographerCallSheet({
   campaign,
@@ -19,6 +19,7 @@ export default function Step5VideographerCallSheet({
   const currentConcept = concepts.find((c) => c.id === selectedConceptId) || concepts[0] || {};
   const formatMeta = FORMAT_TYPES.find((f) => f.id === currentConcept.format) || FORMAT_TYPES[0];
   const pillarMeta = CONTENT_PILLARS.find((p) => p.id === currentConcept.pillar) || CONTENT_PILLARS[0];
+  const onAssetCopy = getConceptOnAssetCopy(currentConcept);
 
   const handleCopySingleBrief = () => {
     let specificContent = '';
@@ -80,6 +81,15 @@ ${(currentConcept.brollChecklist || []).map((b) => `- [ ] ${b}`).join('\n')}`;
 POST #${currentConcept.conceptNumber}: ${currentConcept.title}
 SCHEDULE: ${currentConcept.week} (${currentConcept.day} - ${currentConcept.publishDate})
 FORMAT: ${formatMeta.label} | PILLAR: ${pillarMeta.label}
+
+🎨 DESIGNER ON-ASSET COPY & TOV (TEXT ON PIC / VIDEO):
+* BADGE: ${onAssetCopy.badge}
+* HEADLINE (EN): ${onAssetCopy.headlineEn}
+* HEADLINE (AR): ${onAssetCopy.headlineAr}
+* CALLOUTS: ${(onAssetCopy.callouts || []).join(' • ')}
+* VISUAL CTA: ${onAssetCopy.visualCta}
+* DESIGN NOTES: ${onAssetCopy.designNotes}
+---------------------------------------------------
 
 ${specificContent}
 
@@ -222,6 +232,57 @@ SAFETY & PPE: Safety vest, hardhat, steel-toe boots required on all Kuwait works
                 <span className="text-[10px] font-semibold text-slate-400 uppercase block">Safety PPE:</span>
                 <span className="font-semibold text-slate-900">Vest + Hardhat + Boots</span>
               </div>
+            </div>
+
+            {/* DESIGNER ON-ASSET COPY & TOV SECTION */}
+            <div className="bg-amber-50/80 rounded-xl border border-amber-200 p-4 space-y-3 shadow-2xs">
+              <div className="flex items-center justify-between border-b border-amber-200/80 pb-2">
+                <h4 className="text-xs font-bold text-amber-950 uppercase tracking-wider flex items-center gap-1.5">
+                  <span>🎨</span> Designer On-Asset Copy & TOV (Text on Pic / Video)
+                </h4>
+                <span className="text-[10px] font-mono font-bold bg-amber-400 text-slate-950 px-2 py-0.5 rounded">
+                  {onAssetCopy.badge}
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <div className="bg-white p-3 rounded-lg border border-amber-200 shadow-2xs">
+                  <span className="text-[10px] font-bold text-slate-400 uppercase block">Headline on Visual (EN):</span>
+                  <p className="font-black text-slate-900 mt-1 text-sm uppercase leading-snug">{onAssetCopy.headlineEn}</p>
+                </div>
+
+                <div className="bg-white p-3 rounded-lg border border-amber-200 shadow-2xs" dir="rtl">
+                  <span className="text-[10px] font-bold text-slate-400 uppercase block text-right">العنوان على التصميم (عربي):</span>
+                  <p className="font-bold text-slate-900 mt-1 text-sm text-right leading-snug">{onAssetCopy.headlineAr}</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <div className="space-y-1">
+                  <span className="text-[10px] font-bold text-slate-500 uppercase block">Spec Callout Badges:</span>
+                  <div className="flex flex-wrap gap-1">
+                    {(onAssetCopy.callouts || []).map((c, i) => (
+                      <span key={i} className="bg-white text-slate-800 px-2 py-0.5 rounded border border-slate-200 font-semibold text-[11px]">
+                        ✓ {c}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="space-y-1">
+                  <span className="text-[10px] font-bold text-slate-500 uppercase block">Visual Call to Action (CTA):</span>
+                  <p className="font-bold text-slate-900 bg-white px-2.5 py-1 rounded border border-slate-200 inline-block text-xs">
+                    {onAssetCopy.visualCta}
+                  </p>
+                </div>
+              </div>
+
+              {onAssetCopy.designNotes && (
+                <div className="text-[11px] text-slate-600 bg-white/90 p-2.5 rounded-lg border border-amber-200/80">
+                  <span className="font-bold text-slate-700 uppercase text-[10px] block">📐 Designer Layout & Safe Margin Directives:</span>
+                  <p className="mt-0.5 leading-snug">{onAssetCopy.designNotes}</p>
+                </div>
+              )}
             </div>
 
             {/* DYNAMIC CONTENT PER FORMAT */}
@@ -426,6 +487,24 @@ SAFETY & PPE: Safety vest, hardhat, steel-toe boots required on all Kuwait works
                       </span>
                     </div>
                   </div>
+
+                  {/* Designer On-Asset Headline & Badge */}
+                  {(() => {
+                    const cOnAsset = getConceptOnAssetCopy(c);
+                    return (
+                      <div className="bg-amber-50/70 p-2.5 rounded-lg border border-amber-200 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span className="font-bold text-amber-950 uppercase text-[10px] shrink-0">🎨 On-Asset Text:</span>
+                          <span className="font-black text-slate-900">{cOnAsset.headlineEn}</span>
+                          <span className="text-slate-400 font-normal">|</span>
+                          <span className="font-bold text-slate-700" dir="rtl">{cOnAsset.headlineAr}</span>
+                        </div>
+                        <span className="text-[10px] font-mono text-amber-800 bg-amber-100 px-2 py-0.5 rounded font-bold self-start sm:self-auto shrink-0">
+                          {cOnAsset.badge}
+                        </span>
+                      </div>
+                    );
+                  })()}
 
                   {c.format === 'photography' ? (
                     <div className="p-3 bg-slate-50 rounded-lg border border-slate-200 text-xs space-y-1">

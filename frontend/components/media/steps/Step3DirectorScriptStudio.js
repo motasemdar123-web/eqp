@@ -4,7 +4,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import Card from '../../ui/Card';
 import Badge from '../../ui/Badge';
 import Button from '../../ui/Button';
-import { FORMAT_TYPES, CONTENT_PILLARS, MEDIA_PLATFORMS, PIPELINE_STAGES } from '../../../lib/mediaMonthlyData';
+import { FORMAT_TYPES, CONTENT_PILLARS, MEDIA_PLATFORMS, PIPELINE_STAGES, TOV_GUIDELINES, getConceptOnAssetCopy } from '../../../lib/mediaMonthlyData';
 
 // Default smart shot templates for photography posts
 const DEFAULT_PHOTO_SHOTS = [
@@ -49,6 +49,11 @@ export default function Step3DirectorScriptStudio({
 
   const [scriptData, setScriptData] = useState(currentConcept || {});
   const [activeTab, setActiveTab] = useState('main'); // dynamic tab based on format
+  const [copiedOnAsset, setCopiedOnAsset] = useState(false);
+
+  const onAssetCopyData = useMemo(() => {
+    return getConceptOnAssetCopy(scriptData);
+  }, [scriptData]);
 
   // Sync state when selected concept changes
   useEffect(() => {
@@ -113,6 +118,42 @@ export default function Step3DirectorScriptStudio({
     const currentHook = typeof scriptData.hook === 'object' ? scriptData.hook : { spokenEn: scriptData.hook || '', spokenAr: '', visualHook: '' };
     const updatedHook = { ...currentHook, [field]: value };
     handleFieldChange('hook', updatedHook);
+  };
+
+  const handleOnAssetCopyChange = (field, value) => {
+    const currentOnAsset = scriptData.onAssetCopy || onAssetCopyData;
+    const updatedOnAsset = { ...currentOnAsset, [field]: value };
+    handleFieldChange('onAssetCopy', updatedOnAsset);
+  };
+
+  const handleCopyOnAssetText = () => {
+    const data = onAssetCopyData;
+    const text = `🎨 DESIGNER ON-ASSET COPY & TOV DIRECTIVE
+===================================================
+POST #${scriptData.conceptNumber || ''}: ${scriptData.title || ''}
+FORMAT: ${scriptData.format?.toUpperCase() || ''} | PILLAR: ${pillarMeta?.label || ''}
+---------------------------------------------------
+🏷️ MODEL / EYEBROW BADGE:
+${data.badge}
+
+🔥 PRIMARY HEADLINE (ENGLISH):
+${data.headlineEn}
+
+🔥 PRIMARY HEADLINE (ARABIC):
+${data.headlineAr}
+
+📌 TECHNICAL SPEC CALLOUTS:
+${(data.callouts || []).map((c, i) => `  ${i + 1}. ${c}`).join('\n')}
+
+🎯 VISUAL CALL TO ACTION:
+${data.visualCta}
+
+📐 DESIGNER TYPOGRAPHY & LAYOUT NOTES:
+${data.designNotes}
+===================================================`;
+    navigator.clipboard.writeText(text);
+    setCopiedOnAsset(true);
+    setTimeout(() => setCopiedOnAsset(false), 2000);
   };
 
   // --- PHOTOGRAPHY HANDLERS ---
@@ -424,6 +465,19 @@ export default function Step3DirectorScriptStudio({
 
           {/* DYNAMIC SUB-TABS BASED ON FORMAT */}
           <div className="flex flex-wrap items-center gap-1.5 border-b border-slate-200 pb-2.5 text-xs font-medium">
+            {/* UNIVERSAL ON-ASSET TEXT & TOV TAB (FOR DESIGNER) */}
+            <button
+              type="button"
+              onClick={() => setActiveTab('onAssetText')}
+              className={`px-3 py-1.5 rounded-md transition-all cursor-pointer flex items-center gap-1.5 ${
+                activeTab === 'onAssetText'
+                  ? 'bg-amber-400 text-slate-950 font-bold shadow-xs ring-1 ring-amber-500/30'
+                  : 'text-amber-950 bg-amber-50/80 border border-amber-300 hover:bg-amber-100 font-semibold'
+              }`}
+            >
+              <span>🎨</span>
+              <span>On-Asset Text & TOV (Designer Copy)</span>
+            </button>
             {/* 1. PHOTOGRAPHY TABS */}
             {scriptData.format === 'photography' && (
               <>
@@ -605,6 +659,253 @@ export default function Step3DirectorScriptStudio({
               </>
             )}
           </div>
+
+          {/* ========================================================= */}
+          {/* SECTION 0: ON-ASSET TEXT & TOV (FOR DESIGNERS & EDITORS)  */}
+          {/* ========================================================= */}
+          {activeTab === 'onAssetText' && (
+            <div className="space-y-6 animate-[ds-toast-in_180ms_ease]">
+              {/* Panel Top Header */}
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-slate-200 pb-3">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h4 className="text-sm font-bold text-slate-900">🎨 Text on Visual Asset (What to Write on the Pic / Video)</h4>
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-100 text-amber-900 border border-amber-300">
+                      Graphic & Video Directive
+                    </span>
+                  </div>
+                  <p className="text-xs text-slate-500 mt-0.5">
+                    Define the exact on-screen headline, model badge, spec callouts, and visual micro-CTA that the designer will render on this asset.
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <Button
+                    type="button"
+                    variant="primary"
+                    size="sm"
+                    onClick={handleCopyOnAssetText}
+                    className="text-xs !bg-slate-900 hover:!bg-slate-800 !text-white font-bold cursor-pointer shadow-xs"
+                  >
+                    {copiedOnAsset ? '✓ Copied for Designer!' : '📋 Copy Text for Designer'}
+                  </Button>
+                </div>
+              </div>
+
+              {/* Visual Asset Live Mockup Simulator */}
+              <div className="rounded-2xl overflow-hidden border border-slate-800 bg-slate-950 text-white p-5 sm:p-6 shadow-md relative">
+                <div className="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
+                    <span className="text-[10px] font-mono uppercase font-bold text-slate-400">
+                      Live Graphic / Video Frame Mockup Preview
+                    </span>
+                  </div>
+                  <span className="text-[10px] font-mono text-amber-400 font-bold border border-amber-400/30 px-2 py-0.5 rounded bg-amber-400/10">
+                    Safe Margin: 10% Inset
+                  </span>
+                </div>
+
+                {/* Simulated Canvas with Safe Margin Grid */}
+                <div className="border border-dashed border-slate-700 rounded-xl p-4 sm:p-6 min-h-[200px] flex flex-col justify-between bg-gradient-to-br from-slate-900/90 via-slate-900 to-slate-950 relative overflow-hidden">
+                  {/* Subtle machine silhouette / watermark bg */}
+                  <div className="absolute right-4 bottom-2 text-6xl opacity-10 select-none pointer-events-none font-black text-amber-400">
+                    KOMATSU
+                  </div>
+
+                  {/* Top: Eyebrow Badge */}
+                  <div className="flex items-center justify-between">
+                    <div className="inline-flex items-center gap-1.5 bg-amber-400 text-slate-950 px-2.5 py-1 rounded font-black font-mono text-[11px] uppercase tracking-wider shadow-xs">
+                      <span>🏷️</span>
+                      <span>{onAssetCopyData.badge || 'KOMATSU MODEL BADGE'}</span>
+                    </div>
+                    <span className="text-[10px] font-mono text-slate-500 uppercase">Dar Al Hay Kuwait</span>
+                  </div>
+
+                  {/* Middle: Headline & Arabic Translation */}
+                  <div className="my-4 space-y-1.5">
+                    <h3 className="text-lg sm:text-xl font-black text-white uppercase tracking-tight leading-tight">
+                      {onAssetCopyData.headlineEn || 'PUNCHY 3–5 WORD HEADLINE HERE'}
+                    </h3>
+                    <p className="text-sm sm:text-base font-bold text-amber-300 leading-snug" dir="rtl">
+                      {onAssetCopyData.headlineAr || 'العنوان الرئيسي بالعربية على الصورة أو الفيديو'}
+                    </p>
+                  </div>
+
+                  {/* Bottom: Spec Callouts & Visual CTA */}
+                  <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 pt-2 border-t border-slate-800/80">
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      {(onAssetCopyData.callouts || []).map((c, i) => (
+                        <span key={i} className="text-[10px] font-semibold bg-slate-800/90 text-slate-300 px-2 py-0.5 rounded border border-slate-700">
+                          ✓ {c}
+                        </span>
+                      ))}
+                    </div>
+
+                    <div className="self-start sm:self-auto">
+                      <span className="inline-block text-[11px] font-bold bg-white text-slate-950 px-3 py-1 rounded-md shadow-xs">
+                        {onAssetCopyData.visualCta || 'Micro CTA Here'}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <p className="text-[10px] text-slate-400 text-center mt-2.5">
+                  Above: Real-time simulation of typography overlay. Designer should preserve true Komatsu Yellow (#FFD100) and keep text inside dashed safe borders.
+                </p>
+              </div>
+
+              {/* Form Fields: Editable On-Asset Copy */}
+              <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-2xs space-y-4">
+                <div className="border-b border-slate-100 pb-2 flex items-center justify-between">
+                  <h5 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
+                    ✏️ Edit On-Asset Copy Fields for this Post
+                  </h5>
+                  <span className="text-[11px] text-slate-400">Changes auto-save to campaign</span>
+                </div>
+
+                {/* Primary Headline (EN & AR) */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <div className="flex items-center justify-between mb-1">
+                      <label className="text-xs font-bold text-slate-800">
+                        Primary Headline on Asset (English)
+                      </label>
+                      <span className="text-[10px] text-slate-400 font-mono">
+                        {(onAssetCopyData.headlineEn || '').length} chars • 3–5 words
+                      </span>
+                    </div>
+                    <input
+                      type="text"
+                      value={onAssetCopyData.headlineEn || ''}
+                      onChange={(e) => handleOnAssetCopyChange('headlineEn', e.target.value)}
+                      placeholder="e.g. CONQUERING 52°C DESERT HEAT"
+                      className="ds-input text-xs font-bold text-slate-900"
+                    />
+                  </div>
+
+                  <div dir="rtl">
+                    <div className="flex items-center justify-between mb-1">
+                      <label className="text-xs font-bold text-slate-800 text-right">
+                        العنوان الرئيسي على الصورة / الفيديو (عربي)
+                      </label>
+                      <span className="text-[10px] text-slate-400 font-mono">
+                        {(onAssetCopyData.headlineAr || '').length} حرف
+                      </span>
+                    </div>
+                    <input
+                      type="text"
+                      value={onAssetCopyData.headlineAr || ''}
+                      onChange={(e) => handleOnAssetCopyChange('headlineAr', e.target.value)}
+                      placeholder="مثال: قهر حرارة الصحراء فوق 50 درجة مئوية"
+                      className="ds-input text-xs font-bold text-slate-900 text-right"
+                    />
+                  </div>
+                </div>
+
+                {/* Eyebrow Badge & Visual CTA */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-xs font-bold text-slate-800 mb-1 block">
+                      Eyebrow / Model Badge (Top-Left Pill)
+                    </label>
+                    <input
+                      type="text"
+                      value={onAssetCopyData.badge || ''}
+                      onChange={(e) => handleOnAssetCopyChange('badge', e.target.value)}
+                      placeholder="e.g. KOMATSU PC350LC-8M0 • 50°C RATED"
+                      className="ds-input text-xs font-mono font-bold"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-xs font-bold text-slate-800 mb-1 block">
+                      On-Asset Micro Call-To-Action (Visual CTA Sticker)
+                    </label>
+                    <input
+                      type="text"
+                      value={onAssetCopyData.visualCta || ''}
+                      onChange={(e) => handleOnAssetCopyChange('visualCta', e.target.value)}
+                      placeholder="e.g. Swipe for Specs 👉 or 📍 Shuwaikh Showroom"
+                      className="ds-input text-xs font-semibold"
+                    />
+                  </div>
+                </div>
+
+                {/* Callout Points (Chips) */}
+                <div>
+                  <label className="text-xs font-bold text-slate-800 mb-1 block">
+                    Technical Spec Callout Chips (One per line)
+                  </label>
+                  <textarea
+                    rows={3}
+                    value={(onAssetCopyData.callouts || []).join('\n')}
+                    onChange={(e) => handleOnAssetCopyChange('callouts', e.target.value.split('\n').filter((l) => l.trim().length > 0))}
+                    placeholder="Japanese Precision Engineering&#10;50°C High-Ambient Cooling&#10;15,000+ Genuine Parts in Shuwaikh"
+                    className="ds-input text-xs leading-relaxed font-mono"
+                  />
+                  <p className="text-[10px] text-slate-400 mt-1">
+                    Enter 2–3 brief specs that the designer will place as badge chips on the graphic or video cutaway.
+                  </p>
+                </div>
+
+                {/* Designer Typography & Layout Notes */}
+                <div>
+                  <label className="text-xs font-bold text-slate-800 mb-1 block">
+                    Designer Typography, Color & Safe Zone Instructions
+                  </label>
+                  <textarea
+                    rows={2}
+                    value={onAssetCopyData.designNotes || ''}
+                    onChange={(e) => handleOnAssetCopyChange('designNotes', e.target.value)}
+                    placeholder="e.g. Bold condensed sans-serif (DIN Next). Place text on bottom-left with 50% dark gradient scrim. Avoid covering the excavator bucket."
+                    className="ds-input text-xs leading-relaxed"
+                  />
+                </div>
+              </div>
+
+              {/* Quick Preset Inserters */}
+              <div className="border border-slate-200 rounded-xl p-4 bg-slate-50 space-y-3">
+                <span className="text-[11px] font-bold text-slate-700 uppercase tracking-wider block">
+                  💡 Quick Insert from Master TOV Library:
+                </span>
+
+                <div className="space-y-2">
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    <span className="text-[10px] font-bold text-slate-500 mr-1">Headline Templates:</span>
+                    {(TOV_GUIDELINES.designerGuidelines?.headlineTemplates || []).map((t, idx) => (
+                      <button
+                        key={idx}
+                        type="button"
+                        onClick={() => {
+                          handleOnAssetCopyChange('headlineEn', t.en);
+                          handleOnAssetCopyChange('headlineAr', t.ar);
+                        }}
+                        className="px-2 py-1 rounded bg-white hover:bg-amber-100 hover:border-amber-300 border border-slate-200 text-[10px] font-semibold text-slate-800 transition-colors cursor-pointer"
+                        title={`Click to apply: ${t.en} / ${t.ar}`}
+                      >
+                        {t.category}
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className="flex flex-wrap items-center gap-1.5 pt-1">
+                    <span className="text-[10px] font-bold text-slate-500 mr-1">Badge Presets:</span>
+                    {(TOV_GUIDELINES.designerGuidelines?.badgePresets || []).slice(0, 5).map((b, idx) => (
+                      <button
+                        key={idx}
+                        type="button"
+                        onClick={() => handleOnAssetCopyChange('badge', b)}
+                        className="px-2 py-0.5 rounded bg-white hover:bg-amber-100 hover:border-amber-300 border border-slate-200 text-[10px] font-mono font-bold text-slate-700 transition-colors cursor-pointer"
+                      >
+                        {b}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* ========================================================= */}
           {/* SECTION A: PHOTOGRAPHY STUDIO PANELS                      */}

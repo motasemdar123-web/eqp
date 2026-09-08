@@ -76,6 +76,58 @@ export const TOV_GUIDELINES = {
     { do: 'Highlight certified engineers, PPE safety helmets, clean Shuwaikh workshop, and genuine parts.', dont: 'Show uncertified field repairs without safety gear or messy workshop environments.' },
     { do: 'Include clear Call To Actions with contact numbers, WhatsApp links, and showroom location.', dont: 'Leave posts with no next step for interested fleet managers.' },
   ],
+  designerGuidelines: {
+    title: 'Visual Assets Tone of Voice (Text on Pictures & Videos)',
+    summary: 'Rules & directives for graphic designers and video editors on what typography, badges, and headlines to overlay directly on visuals.',
+    colorPalette: [
+      { name: 'Komatsu Yellow', hex: '#FFD100', text: '#000000', role: 'Primary accent, key badges, hook highlight' },
+      { name: 'Industrial Navy', hex: '#0F172A', text: '#FFFFFF', role: 'Solid background cards, high-contrast containers' },
+      { name: 'Pure White', hex: '#FFFFFF', text: '#0F172A', role: 'Primary text on dark background scrims' },
+      { name: 'Safety Amber', hex: '#F59E0B', text: '#000000', role: 'Secondary callouts, warnings, KPI tags' },
+      { name: 'Steel Gray', hex: '#475569', text: '#FFFFFF', role: 'Subtitles, metric units, borders' },
+    ],
+    safeZones: {
+      reels916: 'Top 15% clear (profile/header), Bottom 22% clear (captions/audio/UI buttons), Sides 5% margin. Keep critical text within 1080x1080 center square.',
+      portrait45: '10% margin on all sides. Center hook in top 35% or lower 30%.',
+      square11: '8% padding margin on all sides.',
+    },
+    onImageRules: [
+      { rule: 'Ultra-Punchy Headline (3–5 Words)', desc: 'Viewers scan images in under 1 second. Never write full paragraphs on photos — write bold claims like "BUILT FOR 52°C DESERT HEAT".' },
+      { rule: 'Specific Technical Badge', desc: 'Always anchor the photo with the exact model number or spec badge (e.g., [KOMATSU PC350LC-8M0 • 35 TON]).' },
+      { rule: 'Bilingual Lockup Harmony', desc: 'Place English technical headline in bold uppercase sans-serif; pair with natural Arabic phrase in modern clean geometric font (DIN / GE SS Two).' },
+      { rule: 'Visual Scrim / Contrast Bar', desc: 'Never place raw white text on bright sand or reflective metal. Always use a subtle 40–60% dark gradient scrim or solid dark container pill.' },
+      { rule: 'Clear On-Asset Micro-CTA', desc: 'Add subtle directional prompt: "Swipe for Specs 👉" or "📍 Shuwaikh Showroom" without cluttering the machine.' },
+    ],
+    onVideoRules: [
+      { rule: '0:00–0:03 Hook Card Overlay', desc: 'Large high-contrast text bar stating the core intrigue (e.g. "CAN YOUR EXCAVATOR SURVIVE 52°C?"). 85% of users watch without sound!' },
+      { rule: 'Lower-Third Engineering ID', desc: 'When staff or engineers appear, display: [Eng. Name] | Certified Komatsu Master Specialist | Dar Al Hay Kuwait.' },
+      { rule: 'Technical Metric Popups', desc: 'Animate quick 1-2 second data badges synced with action: "+18% Fuel Economy", "350 Bar Hydraulic Pressure", "15,000 Parts in Shuwaikh".' },
+      { rule: 'End-Card Outro (Last 3–4 Seconds)', desc: 'Clean lockup: Official Komatsu Distributor Logo + Dar Al Hay + Direct WhatsApp/Phone + Showroom Location.' },
+    ],
+    doAndDont: [
+      { do: 'Use bold, high-contrast, condensed sans-serif fonts with solid backing.', dont: 'Use thin, script, or decorative fonts that wash out in bright desert sun.' },
+      { do: 'Include exact machine codes (e.g. PC500LC, WA470, D155A).', dont: 'Use generic text like "Great Heavy Bulldozer" or "Super Strong Digger".' },
+      { do: 'Keep image overlays under 20% total surface area to let machine visual shine.', dont: 'Cover the excavator bucket, hydraulic boom, or engine bay with giant text blocks.' },
+      { do: 'Provide both English & Arabic on key hero slides and covers.', dont: 'Use awkward machine-translated Arabic that lacks Kuwaiti industrial fluency.' },
+    ],
+    headlineTemplates: [
+      { category: 'Extreme Heat & Reliability', en: 'CONQUERING 52°C DESERT HEAT', ar: 'قهر حرارة الصحراء فوق 50 درجة مئوية' },
+      { category: 'Japanese Engineering', en: 'JAPANESE PRECISION. KUWAIT TOUGHNESS.', ar: 'دقة يابانية.. لقوة تضاريس الكويت' },
+      { category: 'Preventive Maintenance', en: 'ZERO DOWNTIME. MAXIMUM UPTIME.', ar: 'صفر توقف.. أعلى إنتاجية مستمرة' },
+      { category: 'Genuine Parts', en: '100% GENUINE KOMATSU PARTS IN SHUWAIKH', ar: 'قطع غيار كوماتسو أصلية 100% في الشويخ' },
+      { category: 'Megaproject Validation', en: 'POWERING KUWAIT MEGAPROJECTS', ar: 'نبني أضخم مشاريع البنية التحتية في الكويت' },
+      { category: 'Fleet ROI', en: 'LOWER TCO. PROVEN 10,000+ HOUR ENDURANCE.', ar: 'تكلفة تشغيلية أقل.. واعتمادية تفوق 10,000 ساعة' },
+    ],
+    badgePresets: [
+      'KOMATSU PC350LC-8M0',
+      '50°C+ AMBIENT RATED',
+      '15,000+ GENUINE PARTS IN STOCK',
+      'DAR AL HAY OFFICIAL KUWAIT DISTRIBUTOR',
+      '24/7 MOBILE DESERT FIELD CARE',
+      'KOMTRAX SATELLITE TELEMETRY',
+      'ZERO-HOUR CERTIFIED OVERHAUL',
+    ],
+  },
 };
 
 export const PRE_PRODUCTION_CHECKLIST = [
@@ -818,3 +870,41 @@ export const INITIAL_MONTHLY_CAMPAIGNS = {
     ],
   },
 };
+
+export function getConceptOnAssetCopy(concept) {
+  if (!concept) {
+    return {
+      headlineEn: 'BUILT FOR KUWAIT 50°C',
+      headlineAr: 'صُنعت لتقهر تضاريس الكويت',
+      badge: 'KOMATSU PC350LC-8M0',
+      callouts: ['Japanese Precision', '50°C+ Ambient Resilience', 'Shuwaikh Certified Support'],
+      visualCta: 'Visit Showroom | WhatsApp 180XXXX',
+      designNotes: 'High-contrast bold typography with Komatsu yellow accent bar. Keep text within upper/lower safe zones.',
+    };
+  }
+
+  const hookEn = typeof concept.hook === 'string' ? concept.hook : (concept.hook?.spokenEn || '');
+  const hookAr = typeof concept.hook === 'object' ? (concept.hook?.spokenAr || '') : '';
+  const firstSceneText = concept.scenes?.[0]?.onScreenTextEn || '';
+  const firstSceneTextAr = concept.scenes?.[0]?.onScreenTextAr || '';
+  const firstSlide = concept.slides?.[0]?.title || '';
+
+  const fallbackHeadlineEn = firstSceneText || firstSlide || (hookEn ? hookEn.slice(0, 48).toUpperCase() : (concept.title || 'KOMATSU HEAVY MACHINERY'));
+  const fallbackHeadlineAr = firstSceneTextAr || (hookAr ? hookAr.slice(0, 50) : 'كوماتسو الكويت | دار الحي');
+  const fallbackBadge = concept.format === 'reel' ? '🎬 REEL • 4K MOTION' : concept.format === 'carousel' ? '📑 SWIPE DECK • 5 SLIDES' : concept.format === 'photography' ? '📸 HERO PHOTOGRAPHY • 50°C' : '📐 TECHNICAL BLUEPRINT';
+  const fallbackCallouts = (concept.brollChecklist && concept.brollChecklist.length > 0)
+    ? concept.brollChecklist.slice(0, 3)
+    : ['Japanese Precision & Quality', 'Shuwaikh Certified Overhaul', '15,000+ Genuine Parts In Stock'];
+  const fallbackCta = concept.ctaText || 'Visit Shuwaikh Showroom • WhatsApp 180XXXX';
+  const fallbackDesignNotes = concept.postProductionNotes || 'High-contrast bold typography with Komatsu yellow (#FFD100) accent. Respect safe zones for mobile viewports.';
+
+  return {
+    headlineEn: concept.onAssetCopy?.headlineEn || fallbackHeadlineEn,
+    headlineAr: concept.onAssetCopy?.headlineAr || fallbackHeadlineAr,
+    badge: concept.onAssetCopy?.badge || fallbackBadge,
+    callouts: concept.onAssetCopy?.callouts && concept.onAssetCopy.callouts.length > 0 ? concept.onAssetCopy.callouts : fallbackCallouts,
+    visualCta: concept.onAssetCopy?.visualCta || fallbackCta,
+    designNotes: concept.onAssetCopy?.designNotes || fallbackDesignNotes,
+  };
+}
+

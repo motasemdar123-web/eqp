@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Button from '../ui/Button';
-import { FORMAT_TYPES, GOAL_TYPES, PIPELINE_STAGES, CONTENT_PILLARS, PRE_PRODUCTION_CHECKLIST } from '../../lib/mediaMonthlyData';
+import { FORMAT_TYPES, GOAL_TYPES, PIPELINE_STAGES, CONTENT_PILLARS, PRE_PRODUCTION_CHECKLIST, getConceptOnAssetCopy } from '../../lib/mediaMonthlyData';
 
 export default function MasterProductionBookModal({ campaign, onClose }) {
   if (!campaign) return null;
@@ -133,6 +133,48 @@ export default function MasterProductionBookModal({ campaign, onClose }) {
                       📅 {c.publishDate}
                     </span>
                   </div>
+
+                  {/* Designer On-Asset Copy & TOV Box */}
+                  {(() => {
+                    const onAssetCopy = getConceptOnAssetCopy(c);
+                    return (
+                      <div className="bg-amber-50/70 border border-amber-200 rounded-xl p-4 space-y-2.5 text-xs">
+                        <div className="flex items-center justify-between border-b border-amber-200/80 pb-1.5">
+                          <span className="text-[10px] font-bold uppercase tracking-wider text-amber-950 flex items-center gap-1.5">
+                            <span>🎨</span> Designer On-Asset Text (What to Design ON Picture / Video)
+                          </span>
+                          <span className="text-[10px] font-mono font-bold bg-amber-400 text-slate-950 px-2 py-0.5 rounded">
+                            {onAssetCopy.badge}
+                          </span>
+                        </div>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                          <div className="bg-white p-2.5 rounded-lg border border-amber-200">
+                            <span className="text-[10px] font-bold text-slate-400 uppercase block">Headline on Graphic (EN):</span>
+                            <p className="font-black text-slate-900 mt-0.5 text-xs uppercase">{onAssetCopy.headlineEn}</p>
+                          </div>
+                          <div className="bg-white p-2.5 rounded-lg border border-amber-200" dir="rtl">
+                            <span className="text-[10px] font-bold text-slate-400 uppercase block text-right">العنوان على التصميم (عربي):</span>
+                            <p className="font-bold text-slate-900 mt-0.5 text-xs text-right">{onAssetCopy.headlineAr}</p>
+                          </div>
+                        </div>
+
+                        <div className="flex flex-wrap items-center justify-between gap-2 pt-0.5 text-[11px]">
+                          <div className="flex flex-wrap items-center gap-1">
+                            <span className="text-[10px] font-bold text-slate-500 uppercase">Specs:</span>
+                            {(onAssetCopy.callouts || []).map((chip, idx) => (
+                              <span key={idx} className="bg-white px-2 py-0.5 rounded border text-slate-700 font-semibold text-[10px]">
+                                ✓ {chip}
+                              </span>
+                            ))}
+                          </div>
+                          <span className="bg-white px-2 py-0.5 rounded border border-slate-300 font-bold text-slate-800 text-[10px]">
+                            CTA: {onAssetCopy.visualCta}
+                          </span>
+                        </div>
+                      </div>
+                    );
+                  })()}
 
                   {/* 3-Second Hook */}
                   <div className="bg-amber-50/80 border border-amber-200 rounded-xl p-4 space-y-2">

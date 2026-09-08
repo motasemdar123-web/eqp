@@ -51,6 +51,14 @@ const DEFAULT_CONCEPT_DATA = {
   captionAr: '',
   hashtags: '#Komatsu #DarAlHay #KuwaitConstruction #HeavyMachinery #KuwaitContractors',
   ctaText: 'Visit our Shuwaikh showroom or contact our heavy equipment specialists today.',
+  onAssetCopy: {
+    headlineEn: '',
+    headlineAr: '',
+    badge: 'KOMATSU HEAVY EQUIPMENT',
+    callouts: ['Japanese Precision', '50°C+ Ambient Tested', '15,000+ Genuine Parts'],
+    visualCta: 'Visit Shuwaikh Showroom | WhatsApp 180XXXX',
+    designNotes: 'High-contrast bold typography with Komatsu yellow accent bar.',
+  },
 };
 
 function getMergedFormData(initialData) {
@@ -78,6 +86,9 @@ function getMergedFormData(initialData) {
     brollChecklist: Array.isArray(initialData.brollChecklist)
       ? initialData.brollChecklist
       : DEFAULT_CONCEPT_DATA.brollChecklist,
+    onAssetCopy: typeof initialData.onAssetCopy === 'object' && initialData.onAssetCopy !== null
+      ? { ...DEFAULT_CONCEPT_DATA.onAssetCopy, ...initialData.onAssetCopy }
+      : { ...DEFAULT_CONCEPT_DATA.onAssetCopy },
   };
 }
 
@@ -219,6 +230,15 @@ export default function NewConceptModal({ initialData, onSave, onClose }) {
             }`}
           >
             5. Bilingual Social Copy
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveSubTab('onAsset')}
+            className={`px-3 py-1.5 rounded-lg transition-all ${
+              activeSubTab === 'onAsset' ? 'bg-amber-400 text-slate-950 font-bold' : 'text-slate-600 hover:bg-slate-200'
+            }`}
+          >
+            🎨 On-Asset Text (For Designer)
           </button>
         </div>
 
@@ -625,6 +645,90 @@ export default function NewConceptModal({ initialData, onSave, onClose }) {
                   value={formData.ctaText}
                   onChange={(e) => setFormData({ ...formData, ctaText: e.target.value })}
                   placeholder="e.g. Visit our showroom or WhatsApp our sales desk..."
+                  className="ds-input text-xs"
+                />
+              </div>
+            </div>
+          )}
+
+          {/* TAB 6: ON-ASSET TEXT FOR DESIGNER */}
+          {activeSubTab === 'onAsset' && (
+            <div className="space-y-4">
+              <div className="bg-amber-50 p-3.5 rounded-xl border border-amber-200 text-xs text-amber-950 space-y-0.5">
+                <span className="font-extrabold block uppercase text-[10px]">🎨 What to Write on the Picture / Video:</span>
+                <p>Define the exact headlines, badges, and visual CTA for the graphic designer or video editor.</p>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="text-xs font-bold text-slate-700 mb-1 block">Headline on Graphic (English)</label>
+                  <input
+                    type="text"
+                    value={formData.onAssetCopy?.headlineEn || ''}
+                    onChange={(e) => setFormData({
+                      ...formData,
+                      onAssetCopy: { ...formData.onAssetCopy, headlineEn: e.target.value }
+                    })}
+                    placeholder="e.g. CONQUERING 52°C DESERT HEAT"
+                    className="ds-input text-xs font-bold"
+                  />
+                </div>
+
+                <div dir="rtl">
+                  <label className="text-xs font-bold text-slate-700 mb-1 block text-right">العنوان على التصميم (عربي)</label>
+                  <input
+                    type="text"
+                    value={formData.onAssetCopy?.headlineAr || ''}
+                    onChange={(e) => setFormData({
+                      ...formData,
+                      onAssetCopy: { ...formData.onAssetCopy, headlineAr: e.target.value }
+                    })}
+                    placeholder="مثال: قهر حرارة الصحراء فوق 50 درجة مئوية"
+                    className="ds-input text-xs font-bold text-right"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="text-xs font-bold text-slate-700 mb-1 block">Model / Eyebrow Badge</label>
+                  <input
+                    type="text"
+                    value={formData.onAssetCopy?.badge || ''}
+                    onChange={(e) => setFormData({
+                      ...formData,
+                      onAssetCopy: { ...formData.onAssetCopy, badge: e.target.value }
+                    })}
+                    placeholder="e.g. KOMATSU PC350LC-8M0 • 50°C RATED"
+                    className="ds-input text-xs font-mono font-bold"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-xs font-bold text-slate-700 mb-1 block">Visual Micro-CTA</label>
+                  <input
+                    type="text"
+                    value={formData.onAssetCopy?.visualCta || ''}
+                    onChange={(e) => setFormData({
+                      ...formData,
+                      onAssetCopy: { ...formData.onAssetCopy, visualCta: e.target.value }
+                    })}
+                    placeholder="e.g. Swipe for Specs 👉 or 📍 Shuwaikh Showroom"
+                    className="ds-input text-xs font-semibold"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="text-xs font-bold text-slate-700 mb-1 block">Designer Layout & Typography Directives</label>
+                <textarea
+                  rows={2}
+                  value={formData.onAssetCopy?.designNotes || ''}
+                  onChange={(e) => setFormData({
+                    ...formData,
+                    onAssetCopy: { ...formData.onAssetCopy, designNotes: e.target.value }
+                  })}
+                  placeholder="e.g. Bold condensed sans-serif, high contrast dark gradient scrim, keep within upper-left 40%..."
                   className="ds-input text-xs"
                 />
               </div>

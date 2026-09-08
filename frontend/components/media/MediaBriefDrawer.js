@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Badge from '../ui/Badge';
 import Button from '../ui/Button';
 import { FORMAT_TYPES, GOAL_TYPES, PIPELINE_STAGES, MEDIA_PLATFORMS, CONTENT_PILLARS } from '../../lib/mediaContentData';
+import { getConceptOnAssetCopy } from '../../lib/mediaMonthlyData';
 import PlatformPostSimulator from './PlatformPostSimulator';
 
 export default function MediaBriefDrawer({ concept, onClose, onUpdateStatus, onEdit }) {
@@ -16,6 +17,7 @@ export default function MediaBriefDrawer({ concept, onClose, onUpdateStatus, onE
   const goalMeta = GOAL_TYPES.find((g) => g.id === concept.goal) || GOAL_TYPES[0];
   const stageMeta = PIPELINE_STAGES.find((s) => s.id === concept.status) || PIPELINE_STAGES[0];
   const pillarMeta = CONTENT_PILLARS.find((p) => p.id === concept.pillar) || CONTENT_PILLARS[0];
+  const onAssetCopy = getConceptOnAssetCopy(concept);
 
   const handleCopy = (text, sectionName) => {
     navigator.clipboard.writeText(text);
@@ -122,11 +124,11 @@ export default function MediaBriefDrawer({ concept, onClose, onUpdateStatus, onE
           <button
             type="button"
             onClick={() => setActiveTab('tov')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all whitespace-nowrap ${
-              activeTab === 'tov' ? 'bg-slate-900 text-white shadow-xs' : 'text-slate-600 hover:bg-slate-200'
+            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${
+              activeTab === 'tov' ? 'bg-amber-400 text-slate-950 shadow-xs' : 'text-slate-600 hover:bg-slate-200'
             }`}
           >
-            🎯 TOV & Target Audience
+            🎨 TOV & Designer Text
           </button>
 
           <button
@@ -320,18 +322,104 @@ export default function MediaBriefDrawer({ concept, onClose, onUpdateStatus, onE
             </div>
           )}
 
-          {/* TAB 4: TONE OF VOICE & AUDIENCE */}
+          {/* TAB 4: TONE OF VOICE & DESIGNER COPY */}
           {activeTab === 'tov' && (
-            <div className="space-y-4">
+            <div className="space-y-5">
+              {/* Box 1: Exact Text for Designer on Picture / Video */}
+              <div className="border border-amber-300 bg-amber-50/70 rounded-xl p-5 space-y-4 shadow-2xs">
+                <div className="flex flex-wrap items-center justify-between gap-2 border-b border-amber-200/80 pb-2.5">
+                  <div className="flex items-center gap-2">
+                    <span className="text-base">🎨</span>
+                    <h4 className="text-xs font-bold text-amber-950 uppercase tracking-wider">
+                      Text to Design ON the Picture / Video (For Graphic Designer & Video Editor)
+                    </h4>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => handleCopy(`${onAssetCopy.badge}\n${onAssetCopy.headlineEn}\n${onAssetCopy.headlineAr}\n${(onAssetCopy.callouts || []).join(' • ')}\n${onAssetCopy.visualCta}`, 'allOnAsset')}
+                    className="text-xs font-bold text-amber-800 hover:underline cursor-pointer"
+                  >
+                    {copiedSection === 'allOnAsset' ? '✓ Copied All!' : '📋 Copy All On-Asset Text'}
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="bg-white p-3 rounded-lg border border-amber-200 shadow-2xs space-y-1">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[10px] font-bold text-slate-400 uppercase">Primary Headline (English):</span>
+                      <button
+                        type="button"
+                        onClick={() => handleCopy(onAssetCopy.headlineEn, 'headEn')}
+                        className="text-[10px] font-bold text-amber-700 hover:underline cursor-pointer"
+                      >
+                        {copiedSection === 'headEn' ? '✓ Copied' : 'Copy'}
+                      </button>
+                    </div>
+                    <p className="font-black text-slate-900 text-sm uppercase leading-snug">{onAssetCopy.headlineEn}</p>
+                  </div>
+
+                  <div className="bg-white p-3 rounded-lg border border-amber-200 shadow-2xs space-y-1" dir="rtl">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[10px] font-bold text-slate-400 uppercase text-right">العنوان على التصميم (عربي):</span>
+                      <button
+                        type="button"
+                        onClick={() => handleCopy(onAssetCopy.headlineAr, 'headAr')}
+                        className="text-[10px] font-bold text-amber-700 hover:underline cursor-pointer"
+                      >
+                        {copiedSection === 'headAr' ? '✓ تم النسخ' : 'نسخ'}
+                      </button>
+                    </div>
+                    <p className="font-black text-slate-900 text-sm text-right leading-snug">{onAssetCopy.headlineAr}</p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                  <div className="bg-white p-3 rounded-lg border border-amber-200 shadow-2xs space-y-1.5">
+                    <span className="text-[10px] font-bold text-slate-400 uppercase block">Model / Eyebrow Badge:</span>
+                    <span className="inline-block font-mono font-bold text-xs bg-amber-400 text-slate-950 px-2 py-0.5 rounded">
+                      {onAssetCopy.badge}
+                    </span>
+                  </div>
+
+                  <div className="bg-white p-3 rounded-lg border border-amber-200 shadow-2xs space-y-1.5">
+                    <span className="text-[10px] font-bold text-slate-400 uppercase block">Visual Micro-CTA:</span>
+                    <span className="font-semibold text-xs text-slate-900 bg-slate-100 px-2 py-0.5 rounded border border-slate-200 inline-block">
+                      {onAssetCopy.visualCta}
+                    </span>
+                  </div>
+                </div>
+
+                {(onAssetCopy.callouts || []).length > 0 && (
+                  <div className="space-y-1 bg-white p-3 rounded-lg border border-amber-200 shadow-2xs">
+                    <span className="text-[10px] font-bold text-slate-400 uppercase block">Spec Callout Badges:</span>
+                    <div className="flex flex-wrap gap-1.5 pt-0.5">
+                      {onAssetCopy.callouts.map((c, i) => (
+                        <span key={i} className="text-xs bg-slate-50 text-slate-800 px-2.5 py-0.5 rounded border border-slate-200 font-semibold">
+                          ✓ {c}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {onAssetCopy.designNotes && (
+                  <div className="text-xs text-slate-700 bg-white/90 p-3 rounded-lg border border-amber-200/80 space-y-0.5">
+                    <span className="font-bold text-slate-800 uppercase text-[10px] block">📐 Layout & Typography Directive for Designer:</span>
+                    <p className="leading-relaxed">{onAssetCopy.designNotes}</p>
+                  </div>
+                )}
+              </div>
+
+              {/* Box 2: Target Audience & Voice Archetype */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="border border-slate-200 rounded-xl p-4 bg-white shadow-2xs space-y-2">
+                <div className="border border-slate-200 rounded-xl p-4 bg-white shadow-2xs space-y-1">
                   <span className="text-xs font-bold uppercase tracking-wider text-slate-500 block">
                     🎯 Target Audience Persona
                   </span>
                   <p className="text-xs font-bold text-slate-900">{concept.targetAudience}</p>
                 </div>
 
-                <div className="border border-slate-200 rounded-xl p-4 bg-white shadow-2xs space-y-2">
+                <div className="border border-slate-200 rounded-xl p-4 bg-white shadow-2xs space-y-1">
                   <span className="text-xs font-bold uppercase tracking-wider text-slate-500 block">
                     🗣️ Specific Tone of Voice (TOV)
                   </span>
@@ -339,20 +427,21 @@ export default function MediaBriefDrawer({ concept, onClose, onUpdateStatus, onE
                 </div>
               </div>
 
+              {/* Box 3: Brand TOV Checklist */}
               <div className="border border-slate-200 rounded-xl p-4 bg-slate-50 space-y-2">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-slate-700">Brand TOV Checklist for this Piece:</h4>
+                <h4 className="text-xs font-bold uppercase tracking-wider text-slate-700">Brand TOV Writing Rules for Visuals:</h4>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-slate-600">
                   <div className="flex items-center gap-2">
-                    <span className="text-emerald-600">✓</span> Authoritative engineering terminology
+                    <span className="text-emerald-600 font-bold">✓</span> Authoritative engineering terminology (e.g. PC350LC, KOMTRAX)
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="text-emerald-600">✓</span> Focus on uptime, heat resilience, and ROI
+                    <span className="text-emerald-600 font-bold">✓</span> Focus on uptime, 50°C heat endurance, and fleet ROI
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="text-emerald-600">✓</span> Natural bilingual phrasing for Kuwait market
+                    <span className="text-emerald-600 font-bold">✓</span> Natural Kuwaiti / Gulf phrasing (avoid literal machine translation)
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="text-emerald-600">✓</span> Direct contact CTA with WhatsApp/showroom info
+                    <span className="text-emerald-600 font-bold">✓</span> Contrast backing scrim & 10% safe margin compliance
                   </div>
                 </div>
               </div>
