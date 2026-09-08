@@ -5,7 +5,7 @@ import Card from '../../ui/Card';
 import Badge from '../../ui/Badge';
 import Button from '../../ui/Button';
 import PlatformPostSimulator from '../PlatformPostSimulator';
-import { FORMAT_TYPES, CONTENT_PILLARS, TOV_GUIDELINES, getConceptOnAssetCopy } from '../../../lib/mediaMonthlyData';
+import { FORMAT_TYPES, CONTENT_PILLARS } from '../../../lib/mediaMonthlyData';
 
 const PLATFORM_LIMITS = {
   linkedin: { maxChars: 3000, label: 'LinkedIn', icon: '💼', color: 'bg-blue-600', gradient: 'from-blue-600 to-blue-800', toneLabel: 'B2B Authority & Fleet Economics' },
@@ -57,8 +57,6 @@ export default function Step4PlatformCopy({
   const enLen = (copyData.captionEn || '').length;
   const arLen = (copyData.captionAr || '').length;
   const platformInfo = PLATFORM_LIMITS[activeTab] || PLATFORM_LIMITS.linkedin;
-  const tovPlatform = TOV_GUIDELINES?.platforms?.[activeTab];
-  const onAssetCopy = getConceptOnAssetCopy(copyData);
   const hasCopyEn = enLen > 0;
   const hasCopyAr = arLen > 0;
   const hasHashtags = (copyData.hashtags || '').length > 0;
@@ -151,61 +149,11 @@ export default function Step4PlatformCopy({
               })}
             </div>
           </div>
-
-          {/* TOV Quick-Reference Card */}
-          {tovPlatform && activeTab !== 'hashtags' && (
-            <div className="rounded-xl overflow-hidden border border-slate-200 shadow-2xs bg-white">
-              <div className="bg-slate-900 text-white p-3 border-b border-slate-800">
-                <h4 className="text-xs font-bold text-slate-100">{tovPlatform.platform} Tone of Voice</h4>
-                <p className="text-[10px] text-slate-400 mt-0.5">{platformInfo.toneLabel}</p>
-              </div>
-              <div className="p-3 space-y-2 text-xs">
-                <div>
-                  <span className="text-[10px] font-bold text-slate-400 uppercase block">Target Audience:</span>
-                  <p className="text-slate-800 font-medium mt-0.5 text-xs">{tovPlatform.target}</p>
-                </div>
-                <div>
-                  <span className="text-[10px] font-bold text-slate-400 uppercase block">Writing Style:</span>
-                  <p className="text-slate-600 leading-relaxed mt-0.5 text-[11px]">{tovPlatform.guidelines}</p>
-                </div>
-              </div>
-            </div>
-          )}
         </div>
 
         {/* Right Main Stage: Copywriting Tabs & Live Mockup */}
         <div className="lg:col-span-8 space-y-4">
           <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-2xs space-y-4">
-            {/* ON-ASSET VISUAL COPY DIFFERENTIATION BANNER */}
-            <div className="bg-amber-50/80 border border-amber-200 rounded-xl p-3.5 space-y-2 text-xs">
-              <div className="flex flex-wrap items-center justify-between gap-1">
-                <div className="flex items-center gap-1.5">
-                  <span className="text-sm">🎨</span>
-                  <span className="font-extrabold text-amber-950 uppercase tracking-wider text-[11px]">
-                    Text on Picture / Video (For Graphic Designer & Video Editor):
-                  </span>
-                </div>
-                <span className="text-[10px] font-mono text-slate-900 bg-amber-400 px-2 py-0.5 rounded font-bold">
-                  {onAssetCopy.badge || 'KOMATSU BADGE'}
-                </span>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-                <div className="bg-white p-2.5 rounded-lg border border-amber-200/90 shadow-2xs">
-                  <span className="text-[10px] font-bold text-slate-400 uppercase block">Headline on Visual (EN):</span>
-                  <p className="font-black text-slate-900 mt-0.5 text-xs">{onAssetCopy.headlineEn}</p>
-                </div>
-                <div className="bg-white p-2.5 rounded-lg border border-amber-200/90 shadow-2xs" dir="rtl">
-                  <span className="text-[10px] font-bold text-slate-400 uppercase block text-right">العنوان على التصميم (عربي):</span>
-                  <p className="font-bold text-slate-900 mt-0.5 text-xs text-right">{onAssetCopy.headlineAr}</p>
-                </div>
-              </div>
-
-              <p className="text-[10px] text-amber-800 leading-snug">
-                💡 <em>Note for Team:</em> The box above shows what is designed directly <strong>onto the picture/video graphic</strong>. The tabs below are for the <strong>social media post captions</strong> typed into LinkedIn, Instagram, and Facebook descriptions.
-              </p>
-            </div>
-
             {/* Platform Copy Tabs */}
             <div className="flex flex-wrap items-center gap-1.5 border-b border-slate-200 pb-2.5 text-xs font-medium">
               {['linkedin', 'instagram', 'facebook'].map((platId) => {
@@ -351,23 +299,6 @@ export default function Step4PlatformCopy({
                     placeholder="e.g. Visit our showroom in Shuwaikh or WhatsApp our sales desk..."
                   />
                 </div>
-
-                {/* Brand Do's & Don'ts Quick Card */}
-                {TOV_GUIDELINES?.doAndDont && (
-                  <div className="pt-3 border-t border-slate-100 space-y-2">
-                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Brand Writing Rules:</span>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                      {TOV_GUIDELINES.doAndDont.slice(0, 2).map((rule, idx) => (
-                        <div key={idx} className="text-[11px]">
-                          <div className="flex items-start gap-1.5 text-emerald-800 bg-emerald-50/70 p-2 rounded-lg border border-emerald-200">
-                            <span className="font-bold shrink-0">✅</span>
-                            <span className="leading-relaxed">{rule.do}</span>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
               </div>
             )}
           </div>

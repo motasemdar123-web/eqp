@@ -11,7 +11,6 @@ export default function CampaignWizardStepper({
   onSelectMonth,
   onOpenNewMonthModal,
   onResetCampaign,
-  onOpenDesignerTovModal,
 }) {
   const steps = [
     { id: 1, label: '1. Month Setup', desc: 'Strategy & Goal' },
@@ -63,18 +62,6 @@ export default function CampaignWizardStepper({
             >
               + New Month
             </button>
-
-            {onOpenDesignerTovModal && (
-              <button
-                type="button"
-                onClick={onOpenDesignerTovModal}
-                title="Guidelines on what typography, headlines, and badges to write on pictures & videos"
-                className="px-2.5 py-1 rounded-md text-xs font-bold bg-amber-400 text-slate-950 hover:bg-amber-300 transition-all cursor-pointer flex items-center gap-1 shadow-xs"
-              >
-                <span>🎨</span>
-                <span>Designer TOV Guide</span>
-              </button>
-            )}
 
             {onResetCampaign && (
               <button

@@ -160,17 +160,17 @@ export default function MasterProductionBookModal({ campaign, onClose }) {
                         </div>
 
                         <div className="flex flex-wrap items-center justify-between gap-2 pt-0.5 text-[11px]">
-                          <div className="flex flex-wrap items-center gap-1">
-                            <span className="text-[10px] font-bold text-slate-500 uppercase">Specs:</span>
-                            {(onAssetCopy.callouts || []).map((chip, idx) => (
-                              <span key={idx} className="bg-white px-2 py-0.5 rounded border text-slate-700 font-semibold text-[10px]">
-                                ✓ {chip}
-                              </span>
-                            ))}
+                          <div className="flex items-center gap-1.5">
+                            <span className="text-[10px] font-bold text-slate-500 uppercase">TOV:</span>
+                            <span className="font-semibold text-slate-800 text-[10px]">
+                              {c.tov || 'Authoritative, Japanese Precision'}
+                            </span>
                           </div>
-                          <span className="bg-white px-2 py-0.5 rounded border border-slate-300 font-bold text-slate-800 text-[10px]">
-                            CTA: {onAssetCopy.visualCta}
-                          </span>
+                          {onAssetCopy.designNotes && (
+                            <span className="text-slate-600 text-[10px] italic">
+                              {onAssetCopy.designNotes}
+                            </span>
+                          )}
                         </div>
                       </div>
                     );

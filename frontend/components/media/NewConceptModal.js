@@ -159,7 +159,12 @@ export default function NewConceptModal({ initialData, onSave, onClose }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!formData.title.trim()) return;
-    onSave(formData);
+    onSave({
+      ...formData,
+      visualHeadlineEn: formData.onAssetCopy?.headlineEn || formData.visualHeadlineEn || '',
+      visualHeadlineAr: formData.onAssetCopy?.headlineAr || formData.visualHeadlineAr || '',
+      visualNotes: formData.onAssetCopy?.designNotes || formData.visualNotes || '',
+    });
   };
 
   return (
@@ -689,7 +694,18 @@ export default function NewConceptModal({ initialData, onSave, onClose }) {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div>
+                  <label className="text-xs font-bold text-slate-700 mb-1 block">🗣️ Tone of Voice (TOV)</label>
+                  <input
+                    type="text"
+                    value={formData.tov || ''}
+                    onChange={(e) => setFormData({ ...formData, tov: e.target.value })}
+                    placeholder="e.g. Authoritative, Precision, Industrial Strength"
+                    className="ds-input text-xs font-semibold"
+                  />
+                </div>
+
                 <div>
                   <label className="text-xs font-bold text-slate-700 mb-1 block">Model / Eyebrow Badge</label>
                   <input

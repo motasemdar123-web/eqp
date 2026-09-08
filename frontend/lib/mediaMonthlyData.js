@@ -899,12 +899,12 @@ export function getConceptOnAssetCopy(concept) {
   const fallbackDesignNotes = concept.postProductionNotes || 'High-contrast bold typography with Komatsu yellow (#FFD100) accent. Respect safe zones for mobile viewports.';
 
   return {
-    headlineEn: concept.onAssetCopy?.headlineEn || fallbackHeadlineEn,
-    headlineAr: concept.onAssetCopy?.headlineAr || fallbackHeadlineAr,
+    headlineEn: concept.visualHeadlineEn || concept.onAssetCopy?.headlineEn || fallbackHeadlineEn,
+    headlineAr: concept.visualHeadlineAr || concept.onAssetCopy?.headlineAr || fallbackHeadlineAr,
     badge: concept.onAssetCopy?.badge || fallbackBadge,
     callouts: concept.onAssetCopy?.callouts && concept.onAssetCopy.callouts.length > 0 ? concept.onAssetCopy.callouts : fallbackCallouts,
     visualCta: concept.onAssetCopy?.visualCta || fallbackCta,
-    designNotes: concept.onAssetCopy?.designNotes || fallbackDesignNotes,
+    designNotes: concept.visualNotes || concept.onAssetCopy?.designNotes || fallbackDesignNotes,
   };
 }
 

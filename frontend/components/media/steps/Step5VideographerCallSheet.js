@@ -83,6 +83,7 @@ SCHEDULE: ${currentConcept.week} (${currentConcept.day} - ${currentConcept.publi
 FORMAT: ${formatMeta.label} | PILLAR: ${pillarMeta.label}
 
 🎨 DESIGNER ON-ASSET COPY & TOV (TEXT ON PIC / VIDEO):
+* TONE OF VOICE: ${currentConcept.tov || 'Authoritative, Japanese Precision'}
 * BADGE: ${onAssetCopy.badge}
 * HEADLINE (EN): ${onAssetCopy.headlineEn}
 * HEADLINE (AR): ${onAssetCopy.headlineAr}
@@ -259,14 +260,10 @@ SAFETY & PPE: Safety vest, hardhat, steel-toe boots required on all Kuwait works
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                 <div className="space-y-1">
-                  <span className="text-[10px] font-bold text-slate-500 uppercase block">Spec Callout Badges:</span>
-                  <div className="flex flex-wrap gap-1">
-                    {(onAssetCopy.callouts || []).map((c, i) => (
-                      <span key={i} className="bg-white text-slate-800 px-2 py-0.5 rounded border border-slate-200 font-semibold text-[11px]">
-                        ✓ {c}
-                      </span>
-                    ))}
-                  </div>
+                  <span className="text-[10px] font-bold text-slate-500 uppercase block">🗣️ Tone of Voice (TOV):</span>
+                  <p className="font-bold text-slate-900 bg-white px-2.5 py-1 rounded border border-slate-200 text-xs">
+                    {currentConcept.tov || 'Authoritative, Japanese Precision'}
+                  </p>
                 </div>
 
                 <div className="space-y-1">

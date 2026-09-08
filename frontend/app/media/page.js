@@ -11,7 +11,6 @@ import Step4PlatformCopy from '../../components/media/steps/Step4PlatformCopy';
 import Step5VideographerCallSheet from '../../components/media/steps/Step5VideographerCallSheet';
 import NewMonthModal from '../../components/media/NewMonthModal';
 import NewConceptModal from '../../components/media/NewConceptModal';
-import DesignerTovGuideModal from '../../components/media/DesignerTovGuideModal';
 
 const CAMPAIGNS_STORAGE_KEY = 'daralhay.social_media_campaigns_v5';
 const ACTIVE_MONTH_STORAGE_KEY = 'daralhay.social_media_active_month_v5';
@@ -26,7 +25,6 @@ export default function MediaCornerPage() {
   // Modals
   const [isNewMonthModalOpen, setIsNewMonthModalOpen] = useState(false);
   const [isNewConceptModalOpen, setIsNewConceptModalOpen] = useState(false);
-  const [isDesignerTovModalOpen, setIsDesignerTovModalOpen] = useState(false);
   const [newConceptInitialData, setNewConceptInitialData] = useState(null);
 
   // Load state from localStorage or default
@@ -186,7 +184,6 @@ export default function MediaCornerPage() {
           onSelectMonth={handleSelectMonth}
           onOpenNewMonthModal={() => setIsNewMonthModalOpen(true)}
           onResetCampaign={handleResetCampaign}
-          onOpenDesignerTovModal={() => setIsDesignerTovModalOpen(true)}
         />
 
         {/* STEP 1: MONTH SETUP */}
@@ -265,13 +262,6 @@ export default function MediaCornerPage() {
             setIsNewConceptModalOpen(false);
             setNewConceptInitialData(null);
           }}
-        />
-      )}
-
-      {/* Designer TOV & On-Asset Visual Copy Modal */}
-      {isDesignerTovModalOpen && (
-        <DesignerTovGuideModal
-          onClose={() => setIsDesignerTovModalOpen(false)}
         />
       )}
     </SystemShell>
