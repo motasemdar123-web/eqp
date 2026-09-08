@@ -245,8 +245,16 @@ export function generateReports(payload) {
   });
 }
 
-export function getReports() {
-  return request('/reports');
+export function getReports(options = {}) {
+  const params = new URLSearchParams();
+  if (options.all) params.set('all', 'true');
+  if (options.scope) params.set('scope', options.scope);
+  const qs = params.toString() ? `?${params.toString()}` : '';
+  return request(`/reports${qs}`);
+}
+
+export function getAllFleetReports() {
+  return request('/reports?all=true');
 }
 
 export function getAnalyticsOverview() {

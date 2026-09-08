@@ -14,6 +14,7 @@ import {
   uploadEqpcReport,
   batchUploadEqpcReports,
   getReports,
+  getAllFleetReports,
 } from '../../../lib/api';
 
 export default function EqpCareUploadPage() {
@@ -65,7 +66,7 @@ export default function EqpCareUploadPage() {
 
   // Batch upload state
   const [selectedBatchReportIds, setSelectedBatchReportIds] = useState([]);
-  const [batchProgress, setBatchProgress] = useState({ active: false, current: 0, total: 0, successful: 0, failed: 0 });
+  const [batchProgress, setBatchProgress] = useState({ active: false, current: 0, total: 0, successful: 0, excluded: 0, failed: 0 });
 
   useEffect(() => {
     checkConnection();
@@ -126,10 +127,15 @@ export default function EqpCareUploadPage() {
   async function loadLocalReports() {
     try {
       setLoadingReports(true);
-      const res = await getReports();
+      const res = await getAllFleetReports();
       setGeneratedReports(res || []);
     } catch {
-      // Ignore
+      try {
+        const fallback = await getReports({ all: true });
+        setGeneratedReports(fallback || []);
+      } catch {
+        // Ignore
+      }
     } finally {
       setLoadingReports(false);
     }
@@ -219,7 +225,9 @@ export default function EqpCareUploadPage() {
   }
 
   async function handleSingleUpload(e) {
-    e.preventDefault();
+    if (e && e.preventDefault) e.preventDefault();
+    if (uploading) return; // Prevent double submit
+
     if (!formData.model || !formData.serialNo) {
       setToast({ type: 'error', message: 'Machine model and serial number are required.' });
       return;
@@ -262,6 +270,16 @@ export default function EqpCareUploadPage() {
       };
 
       const res = await uploadEqpcReport(payload);
+
+      if (res.status === 'EXCLUDED') {
+        setToast({
+          type: 'warning',
+          message: res.reason || `Machine #${formData.serialNo} already has a report in this month. Upload excluded to prevent contradiction.`,
+        });
+        addLog(`🛡️ Excluded: ${res.reason || 'Protected against contradictory upload'}`, 'warning');
+        return;
+      }
+
       setToast({
         type: 'success',
         message: `Successfully uploaded ${formData.model} #${formData.serialNo} to Komatsu EQP Care!`,
@@ -277,6 +295,8 @@ export default function EqpCareUploadPage() {
   }
 
   async function handleRunBatchUpload() {
+    if (batchProgress.active) return; // Prevent double click
+
     if (selectedBatchReportIds.length === 0) {
       setToast({ type: 'error', message: 'Please select at least one report to batch upload.' });
       return;
@@ -290,6 +310,7 @@ export default function EqpCareUploadPage() {
       current: 0,
       total: selectedBatchReportIds.length,
       successful: 0,
+      excluded: 0,
       failed: 0,
     });
 
@@ -342,14 +363,21 @@ export default function EqpCareUploadPage() {
         current: batchItems.length,
         total: batchItems.length,
         successful: res.successful || 0,
+        excluded: res.excluded || 0,
         failed: res.failed || 0,
       });
 
+      let summaryMsg = `Batch completed! ${res.successful || 0} succeeded, ${res.failed || 0} failed`;
+      if ((res.excluded || 0) > 0) {
+        summaryMsg += `, ${res.excluded} excluded (contradiction protected)`;
+      }
+      summaryMsg += '.';
+
       setToast({
-        type: 'success',
-        message: `Batch completed! ${res.successful} succeeded, ${res.failed} failed.`,
+        type: (res.failed || 0) > 0 ? 'warning' : 'success',
+        message: summaryMsg,
       });
-      addLog(`✨ Batch upload completed: ${res.successful} succeeded, ${res.failed} failed.`, 'success');
+      addLog(`✨ ${summaryMsg}`, 'success');
       loadLocalReports();
     } catch (err) {
       setBatchProgress((p) => ({ ...p, active: false }));
@@ -813,6 +841,19 @@ export default function EqpCareUploadPage() {
                       style={{ width: `${(batchProgress.current / (batchProgress.total || 1)) * 100}%` }}
                     />
                   </div>
+                </div>
+              )}
+
+              {/* Batch Result Banner */}
+              {!batchProgress.active && batchProgress.total > 0 && (
+                <div className="mb-4 p-3 bg-slate-50 border border-slate-200 rounded-lg flex items-center justify-between text-xs">
+                  <div className="flex items-center gap-4">
+                    <span className="font-semibold text-slate-800">Batch Result:</span>
+                    <span className="text-emerald-700 font-bold">✅ {batchProgress.successful} Succeeded</span>
+                    <span className="text-amber-700 font-bold">🛡️ {batchProgress.excluded || 0} Excluded (Protected)</span>
+                    <span className="text-rose-700 font-bold">❌ {batchProgress.failed} Failed</span>
+                  </div>
+                  <span className="text-slate-500 font-mono text-[11px]">Total: {batchProgress.total}</span>
                 </div>
               )}
 

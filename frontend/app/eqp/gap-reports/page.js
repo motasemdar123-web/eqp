@@ -15,10 +15,12 @@ import SectionHeader from '../../../components/ui/SectionHeader';
 import Toast from '../../../components/ui/Toast';
 import EqpNav from '../../../components/ui/../../components/eqp/EqpNav';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '../../../components/ui/Table';
+import ReportBuildingProgressModal from '../../../components/eqp/ReportBuildingProgressModal';
+import ReportGenerationSummaryModal from '../../../components/eqp/ReportGenerationSummaryModal';
 
-import { generateReports, getMachines, getReports, getReportProfile } from '../../../lib/api';
+import { generateReports, getMachines, getReports, getReportProfile, getAllFleetReports } from '../../../lib/api';
 import { REPORT_TYPES, SERVICE_TYPES, getRequiredReportType } from '../../../lib/reportOptions';
-import { buildDynamicLifecycleRecords, formatLifecycleMonth } from '../../../lib/eqpLifecycleData';
+import { buildDynamicLifecycleRecords, formatLifecycleMonth, getMachineReportMonths } from '../../../lib/eqpLifecycleData';
 
 const MONTH_NAMES = [
   'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
@@ -35,6 +37,7 @@ function GapReportsStudio() {
 
   const [loading, setLoading] = useState(true);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [showSummaryModal, setShowSummaryModal] = useState(false);
   const [downloadingZip, setDownloadingZip] = useState(false);
   const [machines, setMachines] = useState([]);
   const [reports, setReports] = useState([]);
@@ -83,7 +86,7 @@ function GapReportsStudio() {
       setLoading(true);
       const [machinesRes, reportsRes, profileRes] = await Promise.all([
         getMachines().catch(() => ({ machines: [] })),
-        getReports().catch(() => []),
+        getAllFleetReports().catch(() => []),
         getReportProfile().catch(() => null),
       ]);
 
@@ -130,6 +133,19 @@ function GapReportsStudio() {
   const selectedMachines = useMemo(() => {
     return machines.filter((m) => selectedMachineIds.includes(m.id));
   }, [machines, selectedMachineIds]);
+
+  // Map monthKey -> list of machine numbers that ALREADY have an existing report in that month
+  const existingReportMonthsMap = useMemo(() => {
+    const map = new Map();
+    for (const m of selectedMachines) {
+      const months = getMachineReportMonths(m.machine_number, reports);
+      for (const mo of months) {
+        if (!map.has(mo)) map.set(mo, []);
+        map.get(mo).push(m.machine_number);
+      }
+    }
+    return map;
+  }, [selectedMachines, reports]);
 
   // Unique missing months across all currently selected machines
   const detectedGapsAcrossSelected = useMemo(() => {
@@ -288,7 +304,8 @@ function GapReportsStudio() {
 
   // Batch Generation Handler
   async function handleGenerateBatch(e) {
-    e.preventDefault();
+    if (e && e.preventDefault) e.preventDefault();
+    if (isGenerating) return; // Strictly prevent duplicate batch generation / double click
 
     if (!reportProfile?.signatureAvailable) {
       const makerName = reportProfile?.reportMaker?.fullName || 'this user';
@@ -348,34 +365,42 @@ function GapReportsStudio() {
       const data = await generateReports(payload);
 
       setGenerationSummary(data);
+      setShowSummaryModal(true); // Open detailed machine-by-machine breakdown modal
+
+      const genCount = data.totalGenerated ?? data.generatedFiles?.length ?? 0;
+      const exclCount = data.totalExcluded ?? data.excludedJobs?.length ?? 0;
 
       if (data.eqpCare) {
         if (data.eqpCare.successful > 0 && data.eqpCare.failed === 0) {
           setToast({
             type: 'success',
-            message: `🎉 Generated ${data.generatedFiles?.length || totalReportsCount} reports and uploaded all to Komatsu EQP Care successfully!`,
+            message: `🎉 Generated ${genCount} reports and uploaded all to Komatsu EQP Care successfully! (${exclCount} excluded)`,
           });
         } else if (data.eqpCare.failed > 0 && data.eqpCare.successful > 0) {
           setToast({
             type: 'warning',
-            message: `⚠️ Generated ${data.generatedFiles?.length || totalReportsCount} reports. EQP Care: ${data.eqpCare.successful} uploaded, ${data.eqpCare.failed} failed.`,
+            message: `⚠️ Generated ${genCount} reports. EQP Care: ${data.eqpCare.successful} uploaded, ${data.eqpCare.failed} failed (${exclCount} excluded).`,
           });
         } else if (data.eqpCare.failed > 0) {
           const errMsg = data.eqpCare.errors?.[0]?.error || data.eqpCare.error || 'Session expired or invalid';
           setToast({
             type: 'warning',
-            message: `⚠️ Generated ${data.generatedFiles?.length || totalReportsCount} reports, but EQP Care upload failed (${errMsg}). Update session in EQP Care Studio.`,
+            message: `⚠️ Generated ${genCount} reports, but EQP Care upload failed (${errMsg}). Update session in EQP Care Studio.`,
           });
         }
       } else {
+        let msg = `Successfully created ${genCount} certified gap reports without altering live fleet meters!`;
+        if (exclCount > 0) {
+          msg += ` (${exclCount} report date(s) excluded to prevent duplicate reports in the same month).`;
+        }
         setToast({
           type: 'success',
-          message: `Successfully created ${data.generatedFiles?.length || totalReportsCount} certified gap reports without altering live fleet meters!`,
+          message: msg,
         });
       }
 
       // Refresh reports to update lifecycle records
-      const updatedReports = await getReports().catch(() => []);
+      const updatedReports = await getAllFleetReports().catch(() => []);
       setReports(updatedReports);
     } catch (err) {
       setToast({ type: 'error', message: err.message || 'Batch report generation failed.' });
@@ -480,7 +505,12 @@ function GapReportsStudio() {
               <span className="h-4 w-4 rounded-full bg-emerald-500 shrink-0" />
               <div>
                 <h4 className="text-base font-bold text-emerald-950">
-                  Batch Generation Complete ({generationSummary.generatedFiles?.length || 0} Reports Created)
+                  Batch Generation Complete ({generationSummary.totalGenerated ?? generationSummary.generatedFiles?.length ?? 0} Reports Created)
+                  {(generationSummary.totalExcluded ?? 0) > 0 && (
+                    <span className="ml-2 text-xs font-semibold text-amber-800 bg-amber-100 px-2 py-0.5 rounded-full border border-amber-300">
+                      🛡️ {generationSummary.totalExcluded} Month(s) Excluded (Contradiction Protected)
+                    </span>
+                  )}
                 </h4>
                 <p className="text-xs text-emerald-800">
                   Documents named sequentially and cataloged without modifying live machinery meters.
@@ -488,6 +518,14 @@ function GapReportsStudio() {
               </div>
             </div>
             <div className="flex flex-wrap items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShowSummaryModal(true)}
+                className="bg-white hover:bg-slate-50 text-slate-800 font-bold border-emerald-300"
+              >
+                📊 Machine Breakdown
+              </Button>
               <Button
                 variant="primary"
                 size="sm"
@@ -847,23 +885,42 @@ function GapReportsStudio() {
                 const isSelected = isMonthSelected(activeYear, idx);
                 const monthKey = `${activeYear}-${String(idx + 1).padStart(2, '0')}`;
                 const hasGap = detectedGapsAcrossSelected.some((g) => g.month === monthKey);
+                const machinesWithExisting = existingReportMonthsMap.get(monthKey) || [];
+                const allSelectedHaveExisting = selectedMachines.length > 0 && machinesWithExisting.length === selectedMachines.length;
+                const someSelectedHaveExisting = machinesWithExisting.length > 0;
+
+                let tooltip = '';
+                if (allSelectedHaveExisting) {
+                  tooltip = `Protected: All ${selectedMachines.length} selected machines already have a report in ${monthKey}. If queued, this month will be excluded to prevent contradiction.`;
+                } else if (someSelectedHaveExisting) {
+                  tooltip = `Notice: ${machinesWithExisting.length} machine(s) already have a report in ${monthKey} (will be excluded for those units).`;
+                }
 
                 return (
                   <button
                     key={name}
                     type="button"
+                    title={tooltip}
                     onClick={() => toggleMonth(activeYear, idx)}
                     className={`p-2 rounded-lg text-xs font-bold border transition flex flex-col items-center justify-center gap-0.5 cursor-pointer ${
                       isSelected
                         ? 'bg-amber-600 text-white border-amber-600 shadow-2xs'
+                        : allSelectedHaveExisting
+                        ? 'bg-amber-50/70 text-amber-900 border-amber-300 hover:bg-amber-100'
                         : hasGap
                         ? 'bg-rose-50 text-rose-800 border-rose-300 hover:bg-rose-100'
                         : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
                     }`}
                   >
                     <span>{name}</span>
-                    <span className="text-[10px] font-normal opacity-80">
-                      {isSelected ? '✓ Queued' : hasGap ? '⚡ Gap' : ''}
+                    <span className="text-[10px] font-normal opacity-90">
+                      {isSelected
+                        ? '✓ Queued'
+                        : allSelectedHaveExisting
+                        ? '🛡️ Exists'
+                        : hasGap
+                        ? '⚡ Gap'
+                        : ''}
                     </span>
                   </button>
                 );
@@ -1081,6 +1138,21 @@ function GapReportsStudio() {
           </Card>
         </div>
       </div>
+
+      {/* Progress & Summary Modals */}
+      <ReportBuildingProgressModal
+        isOpen={isGenerating}
+        totalMachines={selectedMachineIds.length}
+        totalDates={selectedDates.length}
+      />
+
+      <ReportGenerationSummaryModal
+        isOpen={showSummaryModal}
+        onClose={() => setShowSummaryModal(false)}
+        summary={generationSummary}
+        onDownloadZip={handleDownloadAllZip}
+        downloadingZip={downloadingZip}
+      />
 
       <Toast message={toast?.message} type={toast?.type} onClose={() => setToast(null)} />
     </SystemShell>

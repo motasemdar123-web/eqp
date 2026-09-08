@@ -67,8 +67,13 @@ async function rollbackReportCounters(machineId) {
   });
 }
 
+async function listAllFleetReports() {
+  return reportRepository.findAll();
+}
+
 module.exports = {
   listReports,
+  listAllFleetReports,
   renameReport,
   deleteReport,
 };

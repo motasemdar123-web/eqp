@@ -1575,6 +1575,7 @@ async function generateReports(payload) {
   const commentPickerCache = new Map();
   const templateCache = new Map();
   const reportJobs = [];
+  const skippedJobs = [];
   const machineCounterUpdates = new Map();
   const now = new Date();
   const hh = String(now.getHours()).padStart(2, '0');
@@ -1616,6 +1617,24 @@ async function generateReports(payload) {
       : Math.max(Number(machine.report_counter) || 0, initialCounter);
 
     for (const serviceDate of payload.reportDates) {
+      const monthKey = String(serviceDate).slice(0, 7);
+
+      // Contradiction protection: exclude month if machine already has a report in this month
+      if (payload.preventMonthContradictions !== false) {
+        const existingReport = await reportRepository.findByMachineAndMonth(machine.machine_number, monthKey);
+        if (existingReport) {
+          skippedJobs.push({
+            machineNumber: String(machine.machine_number),
+            machineId: machine.id,
+            model: templateModel,
+            serviceDate,
+            month: monthKey,
+            reason: `Report already exists in month ${monthKey} (${existingReport.report_no || 'existing report'}). Excluded to protect against contradictions.`,
+          });
+          continue;
+        }
+      }
+
       const safeDate = serviceDate.replace(/-/g, '');
 
       if (!skipCounterUpdates) {
@@ -1793,9 +1812,41 @@ async function generateReports(payload) {
     }
   }
 
+  const totalRequested = machines.length * payload.reportDates.length;
+  const machineSummary = machines.map((machine) => {
+    const mNumber = String(machine.machine_number);
+    const successful = generatedFiles.filter((f) => String(f.machine) === mNumber);
+    const excluded = skippedJobs.filter((s) => String(s.machineNumber) === mNumber);
+
+    let status = 'SUCCESS';
+    if (successful.length === 0 && excluded.length > 0) {
+      status = 'EXCLUDED';
+    } else if (successful.length > 0 && excluded.length > 0) {
+      status = 'PARTIAL';
+    } else if (successful.length === 0) {
+      status = 'EMPTY';
+    }
+
+    return {
+      machineNumber: mNumber,
+      model: machine.machine_type,
+      responsibleEngineer: machine.responsible_engineer || null,
+      status,
+      successfulReports: successful,
+      excludedReports: excluded,
+      failedReports: [],
+    };
+  });
+
   return {
     totalMachines: machines.length,
+    totalRequested,
+    totalGenerated: generatedFiles.length,
+    totalExcluded: skippedJobs.length,
+    totalFailed: 0,
     generatedFiles,
+    excludedJobs: skippedJobs,
+    machineSummary,
     eqpCare: eqpCareResult,
     reportMaker: {
       id: user.id,

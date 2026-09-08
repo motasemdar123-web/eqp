@@ -16,6 +16,8 @@ import Toast from '../../../components/ui/Toast';
 import DatesModal from '../../../components/DatesModal';
 import MachineTimelineModal from '../../../components/eqp/MachineTimelineModal';
 import EqpNav from '../../../components/eqp/EqpNav';
+import ReportBuildingProgressModal from '../../../components/eqp/ReportBuildingProgressModal';
+import ReportGenerationSummaryModal from '../../../components/eqp/ReportGenerationSummaryModal';
 import Disclosure from '../../../components/ui/Disclosure';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '../../../components/ui/Table';
 
@@ -26,6 +28,7 @@ import { MACHINE_MODELS, REPORT_TYPES, SERVICE_TYPES, getRequiredReportType } fr
 export default function EqpReportBuilderPage() {
   const [loading, setLoading] = useState(true);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [showSummaryModal, setShowSummaryModal] = useState(false);
   const [machines, setMachines] = useState([]);
   const [selectedMachines, setSelectedMachines] = useState([]);
   const [reportProfile, setReportProfile] = useState(null);
@@ -153,6 +156,8 @@ export default function EqpReportBuilderPage() {
   }
 
   async function submitReports() {
+    if (isGenerating) return; // Strictly prevent duplicate generation / double click
+
     if (reportDates.some((d) => !d)) {
       setToast({ type: 'error', message: 'Please specify all report generation dates.' });
       return;
@@ -170,10 +175,19 @@ export default function EqpReportBuilderPage() {
 
       setGenerationSummary(data);
       setShowDatesModal(false);
+      setShowSummaryModal(true); // Open detailed summary modal
       setSelectedMachines([]);
+
+      const genCount = data.totalGenerated ?? data.generatedFiles?.length ?? 0;
+      const exclCount = data.totalExcluded ?? data.excludedJobs?.length ?? 0;
+      let msg = `Successfully generated ${genCount} certified PDF reports.`;
+      if (exclCount > 0) {
+        msg += ` (${exclCount} excluded due to existing reports in the same month).`;
+      }
+
       setToast({
         type: 'success',
-        message: `Successfully generated ${data.generatedFiles?.length || 0} certified PDF reports.`,
+        message: msg,
       });
       await loadData();
     } catch (err) {
@@ -228,7 +242,12 @@ export default function EqpReportBuilderPage() {
               <span className="h-3 w-3 rounded-full bg-emerald-500 shrink-0" />
               <div>
                 <h4 className="text-sm font-semibold text-emerald-900">
-                  {generationSummary.generatedFiles?.length || 0} Certified PDF Reports Created
+                  {generationSummary.totalGenerated ?? generationSummary.generatedFiles?.length ?? 0} Certified PDF Reports Created
+                  {(generationSummary.totalExcluded ?? 0) > 0 && (
+                    <span className="ml-2 text-xs font-normal text-amber-700">
+                      ({generationSummary.totalExcluded} month(s) excluded to prevent contradiction)
+                    </span>
+                  )}
                 </h4>
                 <p className="text-xs text-emerald-700">
                   Documents named and cataloged with consecutive counter increments.
@@ -236,6 +255,9 @@ export default function EqpReportBuilderPage() {
               </div>
             </div>
             <div className="flex items-center gap-2">
+              <Button variant="outline" size="sm" onClick={() => setShowSummaryModal(true)}>
+                📊 Machine Breakdown
+              </Button>
               <Link href="/eqp/reports">
                 <Button variant="secondary" size="sm">
                   Open PDF Archive
@@ -479,6 +501,19 @@ export default function EqpReportBuilderPage() {
           }}
         />
       )}
+
+      {/* Progress & Summary Modals */}
+      <ReportBuildingProgressModal
+        isOpen={isGenerating}
+        totalMachines={selectedMachines.length}
+        totalDates={reportDates.length}
+      />
+
+      <ReportGenerationSummaryModal
+        isOpen={showSummaryModal}
+        onClose={() => setShowSummaryModal(false)}
+        summary={generationSummary}
+      />
 
       <Toast message={toast?.message} type={toast?.type} onClose={() => setToast(null)} />
     </SystemShell>

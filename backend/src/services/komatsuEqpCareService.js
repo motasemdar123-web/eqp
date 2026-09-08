@@ -383,6 +383,28 @@ async function uploadReportToEqpCare(reportData, customCookie = null) {
     saveCookie(customCookie);
   }
 
+  // Contradiction protection: prevent uploading multiple contradictory reports in the same month
+  const monthKey = String(serviceDate).slice(0, 7);
+  if (reportData.preventMonthContradictions !== false) {
+    try {
+      const existing = await reportRepository.findByMachineAndMonth(serialNo, monthKey);
+      if (existing && String(existing.id) !== String(reportId)) {
+        return {
+          status: 'EXCLUDED',
+          model,
+          serialNo,
+          eventCode,
+          serviceDate,
+          month: monthKey,
+          reason: `A report already exists for machine #${serialNo} in ${monthKey} (${existing.report_no || 'existing report'}). Excluded from upload to protect against contradictory reports.`,
+          message: `Excluded from EQP Care upload: Machine #${serialNo} already has a report in ${monthKey}.`,
+        };
+      }
+    } catch {
+      // Non-fatal
+    }
+  }
+
   // Resolve genuine Komatsu Type and Subtype
   const { type: effectiveType, subtype: effectiveSubtype } = resolveMachineTypeAndSubtype(model, type, subtype);
 
@@ -673,13 +695,18 @@ async function batchUploadReports(items = [], customCookie = null) {
   const results = [];
   const errors = [];
   let successful = 0;
+  let excluded = 0;
   let failed = 0;
 
   for (const item of items) {
     try {
       const res = await uploadReportToEqpCare(item, cookieStr);
       results.push(res);
-      successful++;
+      if (res.status === 'EXCLUDED') {
+        excluded++;
+      } else {
+        successful++;
+      }
     } catch (err) {
       failed++;
       const errObj = {
@@ -697,6 +724,7 @@ async function batchUploadReports(items = [], customCookie = null) {
   return {
     total: items.length,
     successful,
+    excluded,
     failed,
     results,
     errors,

@@ -7,6 +7,10 @@ const {
 } = require('../utils/validation');
 
 async function listReports(req, res) {
+  if (req.query.all === 'true' || req.query.scope === 'fleet') {
+    const allReports = await reportService.listAllFleetReports();
+    return res.json(allReports);
+  }
   const reports = await reportService.listReports(req.user.sub, req.user.fullName);
 
   res.json(reports);

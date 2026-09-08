@@ -172,6 +172,25 @@ async function countByMachineAndReportType({ machineId, machineNumber, reportTyp
   return result.rows[0]?.count || 0;
 }
 
+async function findByMachineAndMonth(machineNumber, monthKey) {
+  try {
+    const table = await resolveEqpTable('eqp_reports', 'reports');
+    const result = await db.query(
+      `
+        SELECT *
+        FROM ${table}
+        WHERE machine_number = $1
+          AND TO_CHAR(service_date, 'YYYY-MM') = $2
+        LIMIT 1
+      `,
+      [String(machineNumber).trim(), String(monthKey).trim()]
+    );
+    return result.rows[0] || null;
+  } catch {
+    return null;
+  }
+}
+
 module.exports = {
   findAll,
   findByOwner,
@@ -181,4 +200,5 @@ module.exports = {
   remove,
   create,
   countByMachineAndReportType,
+  findByMachineAndMonth,
 };

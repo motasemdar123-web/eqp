@@ -7,7 +7,7 @@ import Card from '../../../components/ui/Card';
 import Badge from '../../../components/ui/Badge';
 import EmptyState from '../../../components/ui/EmptyState';
 import Button from '../../../components/ui/Button';
-import { getMachines, getReports } from '../../../lib/api';
+import { getMachines, getReports, getAllFleetReports } from '../../../lib/api';
 import { getStoredPlatformSession, getStoredUser, getMatchingEngineerName } from '../../../lib/auth';
 import {
   buildDynamicLifecycleRecords,
@@ -51,7 +51,7 @@ export default function EqpLifecyclePage() {
     try {
       setLoadingReports(true);
       const [reportsRes, machinesRes] = await Promise.all([
-        getReports().catch(() => []),
+        getAllFleetReports().catch(() => getReports().catch(() => [])),
         getMachines().catch(() => ({ machines: [] })),
       ]);
       setGeneratedReports(reportsRes || []);

@@ -17255,3 +17255,24 @@ export function formatLifecycleMonth(value) {
   if (!value) return '-';
   return new Date(`${value}-01T00:00:00`).toLocaleDateString('en-GB', { month: 'short', year: 'numeric' });
 }
+
+export function getMachineReportMonths(machineNumber, generatedReports = []) {
+  const months = new Set();
+  const mNum = String(machineNumber || '').trim();
+  if (!mNum) return months;
+
+  const baseObserved = OBSERVED_REPORTS[mNum] || [];
+  for (const [, date] of baseObserved) {
+    if (date) months.add(String(date).slice(0, 7));
+  }
+
+  for (const r of generatedReports) {
+    const reportMachine = String(r.machine_number || r.machine?.machineNumber || r.machine?.machine_number || '').trim();
+    if (reportMachine === mNum) {
+      const rawDate = r.service_date || r.created_at;
+      if (rawDate) months.add(String(rawDate).slice(0, 7));
+    }
+  }
+
+  return months;
+}
