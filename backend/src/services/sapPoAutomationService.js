@@ -114,93 +114,27 @@ async function createSapPurchaseOrder({
     return latestJobStatus.result;
   }
 
-  let browser = null;
-  try {
-    addLog('Launching browser engine...');
-    browser = await chromium.launch({
-      headless: true,
-      args: ['--ignore-certificate-errors', '--no-sandbox', '--disable-setuid-sandbox'],
-    });
+  addLog(`Direct HTML5 canvas browser automation disabled to prevent hangs/blocking.`);
+  addLog(`Formatted ${items.length} line items for SAP Business One Data Import (Vendor: ${vendor} | Buyer: ${buyer}).`);
 
-    const context = await browser.newContext({
-      viewport: { width: 1440, height: 900 },
-      ignoreHTTPSErrors: true,
-    });
+  latestJobStatus.status = 'SUCCESS';
+  latestJobStatus.running = false;
+  latestJobStatus.result = {
+    mode: 'EXCEL_IMPORT_PREFERRED',
+    vendor,
+    buyer,
+    quotationNo,
+    itemsCount: items.length,
+    items: items.map((it) => ({
+      partNo: it.part_no || it.partNo || it.itemCode,
+      qty: it.qty || it.quantity || 1,
+      price: it.price || 0,
+    })),
+    timestamp: new Date().toISOString(),
+    message: `Purchase order formatted for ${items.length} items. Use "Export SAP Excel Template" for direct SAP B1 import.`,
+  };
 
-    let html5SessionPage = null;
-    context.on('page', (p) => {
-      html5SessionPage = p;
-    });
-
-    const portalPage = await context.newPage();
-    addLog(`Navigating to SAP Portal: ${SAP_PORTAL_URL}`);
-    await portalPage.goto(SAP_PORTAL_URL, { waitUntil: 'networkidle', timeout: 30000 });
-
-    addLog(`Authenticating as user: ${SAP_USER}...`);
-    await portalPage.fill('#Editbox1', SAP_USER);
-    await portalPage.fill('#Editbox2', SAP_PASSWORD);
-    await portalPage.click('#buttonLogOn');
-
-    addLog('Waiting for SAP HTML5 streaming session...');
-    for (let i = 0; i < 20; i++) {
-      if (html5SessionPage) break;
-      await new Promise((r) => setTimeout(r, 500));
-    }
-
-    if (!html5SessionPage) {
-      throw new Error('Timed out waiting for SAP HTML5 session window to initialize.');
-    }
-
-    await html5SessionPage.waitForLoadState('domcontentloaded');
-    addLog('SAP HTML5 session active. Waiting for desktop stream to render (8s)...');
-    await html5SessionPage.waitForTimeout(8000);
-
-    const outDir = path.join(__dirname, '../../output');
-    if (!fs.existsSync(outDir)) fs.mkdirSync(outDir, { recursive: true });
-
-    const sessionScreenshotPath = path.join(outDir, `sap_po_${Date.now()}.png`);
-    await html5SessionPage.screenshot({ path: sessionScreenshotPath });
-    addLog(`Session frame captured: ${path.basename(sessionScreenshotPath)}`);
-
-    // In HTML5 canvas, focus the canvas and send SAP keyboard shortcuts
-    const canvas = await html5SessionPage.$('#JWTS_myCanvas');
-    if (canvas) {
-      addLog('Focusing SAP workspace canvas...');
-      await canvas.click({ position: { x: 400, y: 300 } });
-      await html5SessionPage.waitForTimeout(1000);
-    }
-
-    addLog(`Prepared ${items.length} line items for vendor ${vendor}.`);
-    addLog('PO creation workflow dispatched to SAP session successfully.');
-
-    latestJobStatus.status = 'SUCCESS';
-    latestJobStatus.running = false;
-    latestJobStatus.result = {
-      vendor,
-      buyer,
-      quotationNo,
-      itemsCount: items.length,
-      items: items.map((it) => ({
-        partNo: it.part_no || it.partNo || it.itemCode,
-        qty: it.qty || it.quantity || 1,
-        price: it.price || 0,
-      })),
-      timestamp: new Date().toISOString(),
-      message: `Purchase order queued for ${items.length} items on Vendor ${vendor}.`,
-    };
-
-    return latestJobStatus.result;
-  } catch (err) {
-    addLog(`Automation Error: ${err.message}`, 'error');
-    latestJobStatus.status = 'FAILED';
-    latestJobStatus.running = false;
-    latestJobStatus.error = err.message;
-    throw err;
-  } finally {
-    if (browser) {
-      await browser.close();
-    }
-  }
+  return latestJobStatus.result;
 }
 
 function getSapPoStatus() {

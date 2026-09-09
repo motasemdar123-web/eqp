@@ -61,17 +61,24 @@ async function request(path, options = {}) {
     : `${API_BASE_URL}${path}`;
 
   let response;
+  const timeoutMs = options.timeoutMs || 45000;
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
   try {
     response = await fetch(targetUrl, {
       ...options,
+      signal: options.signal || controller.signal,
       headers: {
         'Content-Type': 'application/json',
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
         ...(options.headers || {}),
       },
     });
-  } catch {
+  } catch (err) {
+    if (err.name === 'AbortError') {
+      throw new Error(`Request timed out after ${Math.round(timeoutMs / 1000)}s. Please retry.`);
+    }
     if (isLocalDatasetRoute && typeof window !== 'undefined') {
       try {
         response = await fetch(path, options);
@@ -81,6 +88,8 @@ async function request(path, options = {}) {
     } else {
       throw new Error('Cannot reach backend. Check Render deployment, backend URL, and CORS settings.');
     }
+  } finally {
+    clearTimeout(timeoutId);
   }
 
   const data = await response.json().catch(() => ({}));

@@ -344,20 +344,8 @@ async function executeSingleEmergencyOrder(orderData, customCookie = null) {
     'Origin': 'https://www.komatsu.ae',
   };
 
-  // STEP 1: Reset session by calling QuotationCondition/Index
-  const initUrl = `${BASE_PORTAL_URL}/QuotationCondition/Index`;
-  const initResp = await fetch(initUrl, {
-    method: 'GET',
-    headers: { ...defaultHeaders, Cookie: cookieStr },
-    redirect: 'follow',
-  });
-
-  const initSetCookies = initResp.headers.getSetCookie ? initResp.headers.getSetCookie() : [initResp.headers.get('set-cookie')].filter(Boolean);
-  if (initSetCookies.length > 0) {
-    cookieStr = mergeCookies(cookieStr, initSetCookies);
-  }
-
-  // Auto-advance order reference if already consumed on portal
+  // STEP 0: Check latest DB order reference BEFORE opening QuotationCondition session
+  // (Calling Inquiry/SearchResult during an active QuotationCondition session resets/corrupts ASP.NET session state)
   let activeOrderNo = db_order_no;
   try {
     const latest = await getLatestDbOrderNo(customer_code || 'REG', cookieStr);
@@ -371,6 +359,73 @@ async function executeSingleEmergencyOrder(orderData, customCookie = null) {
     }
   } catch {
     // Non-fatal
+  }
+
+  // STEP 1: Initialize clean session by calling QuotationCondition/Index
+  const initUrl = `${BASE_PORTAL_URL}/QuotationCondition/Index`;
+  const initResp = await fetch(initUrl, {
+    method: 'GET',
+    headers: { ...defaultHeaders, Cookie: cookieStr },
+    redirect: 'follow',
+    signal: AbortSignal.timeout(25000),
+  });
+
+  const initSetCookies = initResp.headers.getSetCookie ? initResp.headers.getSetCookie() : [initResp.headers.get('set-cookie')].filter(Boolean);
+  if (initSetCookies.length > 0) {
+    cookieStr = mergeCookies(cookieStr, initSetCookies);
+  }
+
+  // Pre-flight 1: Load customer & pricing info into session
+  try {
+    const custInfoUrl = `${BASE_PORTAL_URL}/QuotationCondition/DistributerCodes_OnChangeLoadCustInfo`;
+    const custResp = await fetch(custInfoUrl, {
+      method: 'POST',
+      headers: {
+        ...defaultHeaders,
+        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+        'X-Requested-With': 'XMLHttpRequest',
+        'Referer': initUrl,
+        'Cookie': cookieStr,
+      },
+      body: new URLSearchParams({
+        strDistributerCode: db_code || '536K',
+        strCustomerCode: customer_code || 'REG',
+      }).toString(),
+      signal: AbortSignal.timeout(15000),
+    });
+    const custCookies = custResp.headers.getSetCookie ? custResp.headers.getSetCookie() : [custResp.headers.get('set-cookie')].filter(Boolean);
+    if (custCookies.length > 0) {
+      cookieStr = mergeCookies(cookieStr, custCookies);
+    }
+  } catch (e) {
+    console.warn('[executeSingleEmergencyOrder] DistributerCodes_OnChangeLoadCustInfo warning:', e.message);
+  }
+
+  // Pre-flight 2: Trigger order type initialization in session
+  try {
+    const orderTypeUrl = `${BASE_PORTAL_URL}/QuotationCondition/OrderTypes_OnChange`;
+    const otResp = await fetch(orderTypeUrl, {
+      method: 'POST',
+      headers: {
+        ...defaultHeaders,
+        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+        'X-Requested-With': 'XMLHttpRequest',
+        'Referer': initUrl,
+        'Cookie': cookieStr,
+      },
+      body: new URLSearchParams({
+        strOTYP: order_type || 'EO',
+        strDCOD: db_code || '536K',
+        strCSCD: customer_code || 'REG',
+      }).toString(),
+      signal: AbortSignal.timeout(15000),
+    });
+    const otCookies = otResp.headers.getSetCookie ? otResp.headers.getSetCookie() : [otResp.headers.get('set-cookie')].filter(Boolean);
+    if (otCookies.length > 0) {
+      cookieStr = mergeCookies(cookieStr, otCookies);
+    }
+  } catch (e) {
+    console.warn('[executeSingleEmergencyOrder] OrderTypes_OnChange warning:', e.message);
   }
 
   // STEP 2: Save Quotation Condition
@@ -459,6 +514,7 @@ async function executeSingleEmergencyOrder(orderData, customCookie = null) {
       'Cookie': cookieStr,
     },
     body: JSON.stringify(payload),
+    signal: AbortSignal.timeout(25000),
   });
 
   const saveSetCookies = saveResp.headers.getSetCookie ? saveResp.headers.getSetCookie() : [saveResp.headers.get('set-cookie')].filter(Boolean);
@@ -481,7 +537,15 @@ async function executeSingleEmergencyOrder(orderData, customCookie = null) {
     ) {
       throw new Error('Komatsu PDX session cookie has expired. Please update your PDX Cookie in the settings.');
     }
+    if (saveText.includes('SmtpException') || saveText.includes('5.7.0 Authentication Required')) {
+      throw new Error(`Komatsu portal server error (SMTP/Session fault on Save). Please verify order ref ${activeOrderNo} and retry.`);
+    }
     throw new Error(`QuotationCondition/Save returned non-JSON (status ${saveResp.status}): ${saveText.slice(0, 200)}`);
+  }
+
+  if (saveJson.ErrorOccured && saveJson.ErrorOccured !== 0) {
+    const errText = saveJson.ErrorMessage || (saveJson.ErrorOccured === 5 ? 'Please select your own DB Code' : saveJson.ErrorOccured === 6 ? 'Invalid Billing Rate' : 'An error occurred while processing quotation');
+    throw new Error(`Komatsu portal rejected quotation: ${errText} (code ${saveJson.ErrorOccured})`);
   }
 
   const newQtn =
@@ -504,6 +568,7 @@ async function executeSingleEmergencyOrder(orderData, customCookie = null) {
   const detailResp = await fetch(detailUrl, {
     method: 'GET',
     headers: { ...defaultHeaders, Cookie: cookieStr },
+    signal: AbortSignal.timeout(25000),
   });
 
   const detailSetCookies = detailResp.headers.getSetCookie ? detailResp.headers.getSetCookie() : [detailResp.headers.get('set-cookie')].filter(Boolean);
@@ -522,6 +587,7 @@ async function executeSingleEmergencyOrder(orderData, customCookie = null) {
       'Cookie': cookieStr,
     },
     body: new URLSearchParams({ qtno: newQtn, subqtno: '0', DBCode: db_code }).toString(),
+    signal: AbortSignal.timeout(25000),
   });
 
   // STEP 4: Add New Parts
@@ -551,6 +617,7 @@ async function executeSingleEmergencyOrder(orderData, customCookie = null) {
       'Cookie': cookieStr,
     },
     body: addData.toString(),
+    signal: AbortSignal.timeout(25000),
   });
 
   if (addResp.status !== 200) {
@@ -581,6 +648,7 @@ async function executeSingleEmergencyOrder(orderData, customCookie = null) {
       'Cookie': cookieStr,
     },
     body: updateData.toString(),
+    signal: AbortSignal.timeout(25000),
   });
 
   if (updResp.status !== 200) {

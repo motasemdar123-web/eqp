@@ -1856,12 +1856,13 @@ export default function SparePartsPage() {
                   variant="secondary"
                   size="sm"
                   onClick={openSapPoModalFromEoQueue}
-                  disabled={eoItems.length === 0}
+                  disabled={plannedOrders.length === 0 && eoItems.length === 0}
+                  title="Download Excel spreadsheet formatted for SAP Business One Data Import"
                 >
                   <svg className="w-4 h-4 mr-1.5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                   </svg>
-                  Create SAP PO
+                  Export SAP Excel
                 </Button>
                 {isExecutingEo ? (
                   <Button
@@ -1973,7 +1974,7 @@ export default function SparePartsPage() {
                               ? 'Submitted'
                               : order.status === 'RUNNING'
                               ? 'Submitting...'
-                              : order.status === 'FAILED'
+                              : order.status === 'FAILED' || order.status === 'ERROR'
                               ? 'Failed'
                               : 'Ready'}
                           </Badge>
@@ -2063,7 +2064,7 @@ export default function SparePartsPage() {
                 onClick={openSapPoModalFromBatch}
                 disabled={selectedQtnNumbers.size === 0 || isConvertingSo}
               >
-                📋 Create SAP PO ({selectedQtnNumbers.size})
+                📋 Export SAP Excel ({selectedQtnNumbers.size})
               </Button>
             </div>
           </div>
@@ -2166,7 +2167,7 @@ export default function SparePartsPage() {
                           className="text-emerald-700 hover:bg-emerald-50 hover:text-emerald-800 font-medium"
                           onClick={() => openSapPoModalForQuotation(q)}
                         >
-                          SAP PO ➔
+                          SAP Excel ➔
                         </Button>
                       </TableCell>
                     </TableRow>
@@ -2591,9 +2592,9 @@ export default function SparePartsPage() {
           <div className="flex items-center gap-2">
             <span className="p-1.5 bg-emerald-100 text-emerald-800 rounded text-sm font-bold">SAP B1</span>
             <div>
-              <DialogTitle>Create SAP Purchase Order</DialogTitle>
+              <DialogTitle>Export SAP Purchase Order Template</DialogTitle>
               <p className="text-xs text-slate-500 mt-0.5">
-                Automatically push PDX order lines into SAP Business One via Playwright Automation
+                Generate and download formatted Excel spreadsheet ready for direct import into SAP Business One
               </p>
             </div>
           </div>
@@ -2689,22 +2690,15 @@ export default function SparePartsPage() {
         </DialogContent>
 
         <DialogFooter className="flex flex-col sm:flex-row items-center justify-between gap-2 border-t border-slate-100 pt-3">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={handleDownloadSapExcel}
-            disabled={isExecutingSapPo}
-            className="text-xs text-slate-600 hover:text-slate-900"
-          >
-            📥 Export SAP Excel Template
-          </Button>
+          <span className="text-xs text-slate-500 font-medium">
+            ✓ Pre-formatted for SAP B1 Data Import & DTW (Vendor: <strong>V000006</strong>)
+          </span>
 
           <div className="flex items-center gap-2">
             <Button
               variant="secondary"
               size="sm"
               onClick={() => setSapModalOpen(false)}
-              disabled={isExecutingSapPo}
             >
               Cancel
             </Button>
@@ -2712,10 +2706,12 @@ export default function SparePartsPage() {
               variant="primary"
               size="sm"
               className="bg-emerald-600 hover:bg-emerald-700 text-white border-emerald-600 font-semibold"
-              onClick={() => handleExecuteSapPo(false)}
-              disabled={isExecutingSapPo}
+              onClick={() => {
+                handleDownloadSapExcel();
+                setSapModalOpen(false);
+              }}
             >
-              {isExecutingSapPo ? 'Creating PO in SAP...' : '🚀 Automate PO in SAP'}
+              📥 Download SAP Import Excel (.xlsx)
             </Button>
           </div>
         </DialogFooter>
