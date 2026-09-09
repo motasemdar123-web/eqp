@@ -16,8 +16,7 @@
     "prisma:seed": "node prisma/seed.js",
     "reconcile:engineers": "node scripts/reconcile-engineers.js",
     "templates:pc400": "node scripts/build-pc400-templates.js",
-    "build": "prisma generate && npx playwright install chromium",
-    "postinstall": "prisma generate && (npx playwright install chromium || true)"
+    "templates:import-pc400": "node scripts/import-pc400-customer-template.js"
   },
   "keywords": [],
   "author": "",

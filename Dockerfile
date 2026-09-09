@@ -11,6 +11,7 @@ RUN npm ci
 
 COPY backend/ ./
 RUN npm run prisma:generate || true
+RUN npx playwright install --with-deps chromium || npx playwright install chromium || true
 
 EXPOSE 5000
 
