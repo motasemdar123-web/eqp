@@ -706,10 +706,27 @@ export async function getLocalSapPoStatus() {
 }
 
 export function getSapBridgeDownloadUrl() {
-  return `${API_BASE_URL}/api/sap/bridge/download`;
+  return '/sap-local-bridge.zip';
 }
 
 export async function downloadSapBridgeZip() {
+  try {
+    const res = await fetch('/sap-local-bridge.zip');
+    if (res.ok) {
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'sap-local-bridge.zip';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+      return;
+    }
+  } catch {}
+
+  // Fallback to backend download endpoint if static file is not present
   let token = '';
   if (typeof window !== 'undefined') {
     try {

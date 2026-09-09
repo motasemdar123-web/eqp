@@ -21,6 +21,7 @@ if %errorlevel% neq 0 (
 if not exist "node_modules" (
     if exist "..\..\backend\node_modules" (
         echo [INFO] Using parent repository node_modules environment...
+        set "NODE_PATH=%~dp0..\..\backend\node_modules;%NODE_PATH%"
     ) else (
         echo [INFO] First-time setup: Installing required bridge dependencies...
         call npm install --no-audit --no-fund
