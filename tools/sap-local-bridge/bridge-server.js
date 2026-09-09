@@ -202,7 +202,7 @@ async function runLocalSapPoAutomation({
       } catch {}
     }
 
-    async function checkPoWindowStatus(p) {
+    async function checkScreenState(p) {
       try {
         const buf = await p.screenshot({ type: 'png' });
         const b64 = buf.toString('base64');
@@ -215,56 +215,76 @@ async function runLocalSapPoAutomation({
               const ctx = c.getContext('2d');
               ctx.drawImage(img, 0, 0);
 
-              // Pixel at (50, 140): white [>200, >200, >200] if PO form window is open
-              const pForm = ctx.getImageData(50, 140, 1, 1).data;
-              const isPoOpen = pForm[0] > 200 && pForm[1] > 200 && pForm[2] > 200;
-
-              // Pixel at (25, 18): menu bar [>150, >150, >150]
+              // 1. Menu bar at (25, 18) - top left "File" / menu bar
               const pMenu = ctx.getImageData(25, 18, 1, 1).data;
-              const isSapLoaded = pMenu[0] > 150 && pMenu[1] > 150 && pMenu[2] > 150;
+              const isMenuLoaded = pMenu[0] > 100 || pMenu[1] > 100 || pMenu[2] > 100;
 
-              resolve({ isSapLoaded, isPoOpen, b64: imgB64 });
+              // 2. Center of screen at (720, 450): TSPlus loading spinner is [247, 243, 247]
+              const pCenter = ctx.getImageData(720, 450, 1, 1).data;
+              const isSpinnerActive = (pCenter[0] >= 240 && pCenter[1] >= 235 && pCenter[2] >= 240);
+
+              // 3. PO Window Title bar at (100, 95): dark navy blue [41, 77, 107]
+              const pTitle = ctx.getImageData(100, 95, 1, 1).data;
+              const isPoTitle = (pTitle[0] >= 30 && pTitle[0] <= 65) &&
+                                (pTitle[1] >= 60 && pTitle[1] <= 100) &&
+                                (pTitle[2] >= 90 && pTitle[2] <= 135);
+
+              // 4. Add & New button at (38, 843) or Add Draft & New at (106, 843)
+              const pAddBtn = ctx.getImageData(38, 843, 1, 1).data;
+              const isAddBtn = (pAddBtn[0] >= 30 && pAddBtn[0] <= 65) &&
+                               (pAddBtn[1] >= 60 && pAddBtn[1] <= 100) &&
+                               (pAddBtn[2] >= 90 && pAddBtn[2] <= 135);
+
+              // 5. Vendor input field at (140, 136): light/yellowish
+              const pVendor = ctx.getImageData(140, 136, 1, 1).data;
+              const isVendorField = (pVendor[0] >= 225 && pVendor[1] >= 225 && pVendor[2] >= 200);
+
+              const isPoOpen = isPoTitle && (isAddBtn || isVendorField);
+              const isSapReady = isMenuLoaded && !isSpinnerActive;
+
+              resolve({ isSapReady, isPoOpen, isSpinnerActive, isPoTitle, isAddBtn, b64: imgB64 });
             };
-            img.onerror = () => resolve({ isSapLoaded: false, isPoOpen: false, b64: imgB64 });
+            img.onerror = () => resolve({ isSapReady: false, isPoOpen: false, isSpinnerActive: true, b64: imgB64 });
             img.src = 'data:image/png;base64,' + imgB64;
           });
         }, b64);
       } catch (err) {
-        return { isSapLoaded: false, isPoOpen: false };
+        return { isSapReady: false, isPoOpen: false, isSpinnerActive: true };
       }
     }
 
-    // ADAPTIVE STEP 1: Wait for SAP B1 remote desktop to actually initialize and render
-    addLog('Waiting for SAP B1 remote desktop to initialize and render (polling canvas state)...');
+    // STEP 1: Wait for SAP B1 remote desktop to actually initialize and render (waiting for loading spinner to clear)
+    addLog('Waiting for SAP B1 remote desktop to initialize and render (waiting for loading spinner to clear)...');
     let desktopReady = false;
-    for (let sec = 0; sec < 30; sec++) {
+    for (let sec = 1; sec <= 30; sec++) {
       await new Promise((r) => setTimeout(r, 2000));
 
       // Dismiss any session takeover modal at (510, 475) or lingering prompt
       await rdpClick(targetPage, 510, 475, 100);
       await targetPage.keyboard.press('Enter');
-      await targetPage.keyboard.press('Escape');
 
-      const status = await checkPoWindowStatus(targetPage);
+      const status = await checkScreenState(targetPage);
       if (status.b64) {
         latestJobStatus.screenshotBase64 = `data:image/png;base64,${status.b64}`;
       }
 
+      addLog(`[${sec * 2}s] SAP Desktop Ready: ${status.isSapReady} | Loading Spinner: ${status.isSpinnerActive} | PO Window Open: ${status.isPoOpen}`);
+
       if (status.isPoOpen) {
         desktopReady = true;
-        addLog(`SAP B1 Desktop ready & PO form already open after ${(sec + 1) * 2}s.`);
+        addLog(`✓ SAP B1 Desktop ready & Purchase Order window already open after ${sec * 2}s.`);
         break;
       }
-      if (status.isSapLoaded) {
+      if (status.isSapReady) {
         desktopReady = true;
-        addLog(`SAP B1 Desktop fully loaded after ${(sec + 1) * 2}s.`);
+        addLog(`✓ SAP B1 Desktop fully loaded and ready after ${sec * 2}s.`);
         break;
       }
-      await updateSnapshot(`Loading SAP B1 Desktop (${(sec + 1) * 2}s)...`);
+      await updateSnapshot(`Loading SAP B1 Desktop (${sec * 2}s)...`);
     }
 
-    // ADAPTIVE STEP 2: Ensure PO window is open via F2
-    let poStatus = await checkPoWindowStatus(targetPage);
+    // STEP 2: Ensure PO window is open via F2 (with fallback navigation)
+    let poStatus = await checkScreenState(targetPage);
     if (!poStatus.isPoOpen) {
       addLog('Purchase Order window not open yet. Triggering F2 shortcut...');
       for (let attempt = 1; attempt <= 4; attempt++) {
@@ -272,7 +292,7 @@ async function runLocalSapPoAutomation({
         await targetPage.keyboard.press('Escape');
         await new Promise((r) => setTimeout(r, 300));
         await targetPage.keyboard.press('Escape');
-        await new Promise((r) => setTimeout(r, 400));
+        await new Promise((r) => setTimeout(r, 300));
 
         // Click empty toolbar space at (400, 65) to ensure focus is in SAP main window
         await rdpClick(targetPage, 400, 65);
@@ -280,13 +300,31 @@ async function runLocalSapPoAutomation({
 
         addLog(`Pressing F2 to open Purchase Order (attempt ${attempt}/4)...`);
         await targetPage.keyboard.press('F2');
-        await new Promise((r) => setTimeout(r, 3500));
+        await new Promise((r) => setTimeout(r, 4000));
         await updateSnapshot(`Triggered F2 (Attempt ${attempt})`);
 
-        poStatus = await checkPoWindowStatus(targetPage);
+        poStatus = await checkScreenState(targetPage);
+        addLog(`Attempt ${attempt} result -> PO Window Open: ${poStatus.isPoOpen}`);
         if (poStatus.isPoOpen) {
-          addLog('✓ Purchase Order window confirmed OPEN!');
+          addLog('✓ Purchase Order window confirmed OPEN via F2!');
           break;
+        }
+
+        if (attempt >= 2) {
+          addLog('Attempting menu fallback: Modules -> Purchasing - A/P -> Purchase Order...');
+          await rdpClick(targetPage, 165, 18); // Modules
+          await new Promise((r) => setTimeout(r, 800));
+          await rdpClick(targetPage, 220, 115); // Purchasing - A/P
+          await new Promise((r) => setTimeout(r, 800));
+          await rdpClick(targetPage, 380, 165); // Purchase Order
+          await new Promise((r) => setTimeout(r, 3500));
+          await updateSnapshot('Opened via Modules Menu');
+
+          poStatus = await checkScreenState(targetPage);
+          if (poStatus.isPoOpen) {
+            addLog('✓ Purchase Order window confirmed OPEN via Modules menu!');
+            break;
+          }
         }
       }
     }
@@ -295,37 +333,36 @@ async function runLocalSapPoAutomation({
       throw new Error('Failed to open Purchase Order window in SAP Business One after multiple attempts.');
     }
 
-    // ADAPTIVE STEP 3: Switch to Add Mode if currently in OK mode (Control+A)
+    // STEP 3: Switch to Add Mode if currently in OK mode (Control+A)
     addLog('Ensuring Purchase Order is in Add Mode (Control+A)...');
     await targetPage.keyboard.press('Control+A');
     await new Promise((r) => setTimeout(r, 1500));
     await updateSnapshot('Purchase Order Form Open & Ready');
 
-    // Vendor Code - Click Vendor input field at (130, 132)
+    // STEP 4: Enter Vendor Code - Click Vendor input field at (140, 136)
     addLog(`Entering Vendor Code: ${vendor}...`);
-    await rdpClick(targetPage, 130, 132);
+    await rdpClick(targetPage, 140, 136);
     await targetPage.keyboard.press('Control+A');
     await targetPage.keyboard.type(vendor, { delay: 50 });
     await targetPage.keyboard.press('Tab');
     await new Promise((r) => setTimeout(r, 2000));
 
-    // Tab through Name and Contact Person to reach Vendor Ref. No.
-    await targetPage.keyboard.press('Tab');
-    await new Promise((r) => setTimeout(r, 200));
-    await targetPage.keyboard.press('Tab');
-    await new Promise((r) => setTimeout(r, 200));
+    // Confirm any selection modal / List of Business Partners with Enter
+    await targetPage.keyboard.press('Enter');
+    await new Promise((r) => setTimeout(r, 500));
 
-    // Vendor Ref. No. (DB Order Reference)
+    // STEP 5: Enter Vendor Ref. No. (DB Order Reference) at (140, 195)
     const targetRef = dbOrderNo || quotationNo || remarks || '';
     if (targetRef) {
       addLog(`Entering Vendor Ref. No. (DB Order): ${targetRef}...`);
+      await rdpClick(targetPage, 140, 195);
       await targetPage.keyboard.press('Control+A');
-      await targetPage.keyboard.type(targetRef, { delay: 80 });
+      await targetPage.keyboard.type(targetRef, { delay: 60 });
       await new Promise((r) => setTimeout(r, 500));
     }
     await updateSnapshot('Vendor & Reference Entered');
 
-    // Grid Line Items - First row at Y=323, row height = 16
+    // STEP 6: Grid Line Items - First row at Y=368, row height = 16
     addLog(`Entering ${items.length} line items into SAP grid...`);
     for (let i = 0; i < items.length; i++) {
       const it = items[i];
@@ -333,24 +370,24 @@ async function runLocalSapPoAutomation({
       const qty = String(it.qty || it.quantity || 1);
       const rawPrice = it.unit_price || it.price || it.unitPrice || 0;
       const priceVal = typeof rawPrice === 'number' ? rawPrice : parseFloat(String(rawPrice).replace(/[^0-9.]/g, '')) || 0;
-      const rowY = 323 + (i * 16);
+      const rowY = 368 + (i * 16);
 
-      addLog(`  [Line ${i + 1}/${items.length}] Part: ${partNo} | Qty: ${qty} | USD Unit Price: ${priceVal > 0 ? priceVal.toFixed(3) + ' USD' : 'Master Default'}`);
-      
-      // Select Item No cell in Row (X=75, Y=rowY)
-      await rdpDblClick(targetPage, 75, rowY);
+      addLog(`  [Line ${i + 1}/${items.length}] Part: ${partNo} | Qty: ${qty} | Unit Price: ${priceVal > 0 ? priceVal.toFixed(3) + ' USD' : 'Master Default'}`);
+
+      // Select Item No cell in Row (X=80, Y=rowY)
+      await rdpDblClick(targetPage, 80, rowY);
       await new Promise((r) => setTimeout(r, 400));
       await targetPage.keyboard.type(partNo, { delay: 70 });
       await new Promise((r) => setTimeout(r, 500));
       await targetPage.keyboard.press('Tab');
       await new Promise((r) => setTimeout(r, 3000));
 
-      // Select Quantity cell in Row (X=180, Y=rowY)
-      await rdpDblClick(targetPage, 180, rowY);
+      // Select Quantity cell in Row (X=250, Y=rowY)
+      await rdpDblClick(targetPage, 250, rowY);
       await new Promise((r) => setTimeout(r, 300));
       await targetPage.keyboard.press('Control+A');
       await targetPage.keyboard.press('Backspace');
-      for (let k = 0; k < 4; k++) {
+      for (let k = 0; k < 6; k++) {
         await targetPage.keyboard.press('Delete');
       }
       await targetPage.keyboard.type(qty, { delay: 60 });
@@ -361,10 +398,12 @@ async function runLocalSapPoAutomation({
       // Enter USD Unit Price if provided
       if (priceVal > 0) {
         const priceStr = `${priceVal.toFixed(3)} USD`;
-        addLog(`    Setting USD Unit Price: ${priceStr}...`);
+        addLog(`    Setting USD Unit Price at (310, ${rowY}): ${priceStr}...`);
+        await rdpDblClick(targetPage, 310, rowY);
+        await new Promise((r) => setTimeout(r, 300));
         await targetPage.keyboard.press('Control+A');
         await targetPage.keyboard.press('Backspace');
-        for (let k = 0; k < 6; k++) {
+        for (let k = 0; k < 8; k++) {
           await targetPage.keyboard.press('Delete');
         }
         await targetPage.keyboard.type(priceStr, { delay: 60 });
@@ -376,7 +415,7 @@ async function runLocalSapPoAutomation({
       await updateSnapshot(`Line Item ${i + 1} Entered (${partNo})`);
     }
 
-    // Remarks at (140, 770)
+    // STEP 7: Remarks at (140, 770)
     const remarksText = remarks || `Komatsu Quotation ${quotationNo || ''} / ${dbOrderNo || ''}`.trim();
     if (remarksText) {
       addLog(`Setting Remarks: ${remarksText}...`);
@@ -388,16 +427,19 @@ async function runLocalSapPoAutomation({
     }
     await updateSnapshot('PO Completed - Ready to Save');
 
-    // Save document: Add Draft & New (106, 832) or Add & New (38, 832)
+    // STEP 8: Save document: Add Draft & New (106, 843) or Add & New (38, 843)
     if (isDraft) {
-      addLog('Saving Purchase Order as Draft (Add Draft & New at 106, 832)...');
-      await rdpClick(targetPage, 106, 832, 150);
+      addLog('Saving Purchase Order as Draft (Add Draft & New at 106, 843)...');
+      await rdpClick(targetPage, 106, 843, 150);
     } else {
-      addLog('Finalizing and posting Purchase Order (Add & New at 38, 832)...');
-      await rdpClick(targetPage, 38, 832, 150);
+      addLog('Finalizing and posting Purchase Order (Add & New at 38, 843)...');
+      await rdpClick(targetPage, 38, 843, 150);
     }
 
-    await new Promise((r) => setTimeout(r, 6000));
+    await new Promise((r) => setTimeout(r, 5000));
+    // Confirm any SAP dialog (e.g. "Exchange rate", "Document saved", etc.)
+    await targetPage.keyboard.press('Enter');
+    await new Promise((r) => setTimeout(r, 2000));
     await updateSnapshot('Saved Confirmation');
 
     // Capture confirmation screenshot
