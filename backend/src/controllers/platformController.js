@@ -252,6 +252,7 @@ const komatsuEoService = require('../services/komatsuEoService');
 const komatsuEqpCareService = require('../services/komatsuEqpCareService');
 const sapPoAutomationService = require('../services/sapPoAutomationService');
 const userSapCredentialsService = require('../services/userSapCredentialsService');
+const komatsuQuotationPartsService = require('../services/komatsuQuotationPartsService');
 
 async function getKomatsuStatus(req, res) {
   const { cookie } = req.query || {};
@@ -417,6 +418,24 @@ async function copyKomatsuQuotationToSo(req, res) {
   } catch (err) {
     console.error(`[copyKomatsuQuotationToSo] Error for ${quotationNo}:`, err.message);
     res.status(500).json({ success: false, error: err.message });
+  }
+}
+
+async function getKomatsuQuotationParts(req, res) {
+  const { quotationNo } = req.params;
+  const { seqNo, cookie } = req.query || {};
+  if (!quotationNo) {
+    return res.status(400).json({ success: false, message: 'Quotation number is required' });
+  }
+  if (cookie) {
+    komatsuInquiryService.saveCookie(cookie);
+  }
+  try {
+    const result = await komatsuQuotationPartsService.getQuotationParts(quotationNo, seqNo || '00', cookie);
+    res.json({ success: true, ...result });
+  } catch (err) {
+    console.warn(`[getKomatsuQuotationParts] Warning for ${quotationNo}:`, err.message);
+    res.json({ success: true, quotation_no: quotationNo, count: 0, parts: [], error: err.message });
   }
 }
 
@@ -627,6 +646,7 @@ module.exports = {
   getKomatsuLatestOrderNo,
   executeKomatsuEoOrder,
   searchKomatsuQuotations,
+  getKomatsuQuotationParts,
   confirmKomatsuQuotation,
   copyKomatsuQuotationToSo,
   getEqpcStatus,

@@ -29,6 +29,7 @@ import {
   executeKomatsuEoOrder,
   addKomatsuCustomMachine,
   getKomatsuQuotations,
+  getKomatsuQuotationParts,
   confirmKomatsuQuotation,
   copyKomatsuQuotationToSo,
   createSapPurchaseOrder,
@@ -184,8 +185,9 @@ export default function SparePartsPage() {
   const [loadingQuotations, setLoadingQuotations] = useState(false);
   const [qtnStatusFilter, setQtnStatusFilter] = useState('1'); // '1' = In-Process, '2' = Confirmed, '' = All
   const [qtnSearchFilter, setQtnSearchFilter] = useState('');
-  const [qtnLimit, setQtnLimit] = useState('10');
+  const [qtnLimit, setQtnLimit] = useState('25');
   const [qtnPage, setQtnPage] = useState(1);
+  const [loadingSapParts, setLoadingSapParts] = useState(false);
   const [selectedQtnNumbers, setSelectedQtnNumbers] = useState(new Set());
   const [isConvertingSo, setIsConvertingSo] = useState(false);
   const [soConversionProgress, setSoConversionProgress] = useState(null);
@@ -1040,10 +1042,10 @@ export default function SparePartsPage() {
   // =========================================================
   // TAB 2: SO CONVERTER FUNCTIONS
   // =========================================================
-  async function loadInProcessQuotations() {
+  async function loadInProcessQuotations(page = qtnPage, limit = qtnLimit, status = qtnStatusFilter) {
     try {
       setLoadingQuotations(true);
-      const res = await getKomatsuQuotations({ status: qtnStatusFilter, limit: qtnLimit, page: qtnPage });
+      const res = await getKomatsuQuotations({ status, limit, page });
       if (res && res.quotations) {
         setInProcessQuotations(res.quotations);
         setSelectedQtnNumbers(new Set(res.quotations.map((q) => q.quotation_no)));
@@ -1119,24 +1121,39 @@ export default function SparePartsPage() {
   // =========================================================
   // SAP PURCHASE ORDER AUTOMATION HANDLERS
   // =========================================================
-  function openSapPoModalForQuotation(quotation) {
-    const items = quotation.parts && quotation.parts.length > 0
-      ? quotation.parts
-      : eoItems.map((it) => ({ part_no: it.part_no, qty: it.quantity, price: it.unit_price, description: it.description }));
+  async function openSapPoModalForQuotation(quotation) {
+    const existingParts = quotation.parts && quotation.parts.length > 0 ? quotation.parts : [];
 
     setSapTargetOrder({
       quotationNo: quotation.quotation_no,
       db_order_no: quotation.db_order_no,
       customer: quotation.customer_name,
       amount: quotation.total_amount,
-      items,
+      items: existingParts,
     });
     setSapLogs([]);
     setSapResult(null);
     setSapModalOpen(true);
+
+    if (existingParts.length === 0) {
+      try {
+        setLoadingSapParts(true);
+        const res = await getKomatsuQuotationParts(quotation.quotation_no, { seqNo: quotation.revision_no || '00' });
+        if (res && res.parts && res.parts.length > 0) {
+          quotation.parts = res.parts;
+          setSapTargetOrder((prev) => (prev ? { ...prev, items: res.parts } : prev));
+        } else {
+          addSapLog(`No line items returned from Komatsu PDX for quotation #${quotation.quotation_no}.`, 'warn');
+        }
+      } catch (err) {
+        addSapLog(`Failed to fetch quotation parts: ${err.message}`, 'error');
+      } finally {
+        setLoadingSapParts(false);
+      }
+    }
   }
 
-  function openSapPoModalFromBatch() {
+  async function openSapPoModalFromBatch() {
     const selectedList = inProcessQuotations.filter((q) => selectedQtnNumbers.has(q.quotation_no));
     if (selectedList.length === 0) {
       setToast({ type: 'error', message: 'Select at least one quotation to create SAP PO.' });
@@ -1144,21 +1161,46 @@ export default function SparePartsPage() {
     }
 
     const firstQ = selectedList[0];
-    const combinedItems = selectedList.flatMap((q) =>
-      q.parts && q.parts.length > 0
-        ? q.parts
-        : eoItems.map((it) => ({ part_no: it.part_no, qty: it.quantity, price: it.unit_price, description: it.description }))
-    );
+    const initialItems = selectedList.flatMap((q) => (q.parts && q.parts.length > 0 ? q.parts : []));
 
     setSapTargetOrder({
       quotationNo: selectedList.map((q) => q.quotation_no).join(', '),
       db_order_no: selectedList.map((q) => q.db_order_no).filter(Boolean).join(', '),
       customer: firstQ.customer_name || 'Komatsu PDX Orders',
-      items: combinedItems,
+      items: initialItems,
     });
     setSapLogs([]);
     setSapResult(null);
     setSapModalOpen(true);
+
+    // Asynchronously fetch real parts for any quotation that hasn't loaded them yet
+    const missing = selectedList.filter((q) => !q.parts || q.parts.length === 0);
+    if (missing.length > 0) {
+      try {
+        setLoadingSapParts(true);
+        await Promise.all(
+          missing.map(async (q) => {
+            try {
+              const res = await getKomatsuQuotationParts(q.quotation_no, { seqNo: q.revision_no || '00' });
+              if (res && res.parts && res.parts.length > 0) {
+                q.parts = res.parts;
+              }
+            } catch (err) {
+              console.error(`Failed to fetch line items for quotation #${q.quotation_no}:`, err);
+            }
+          })
+        );
+        const combined = selectedList.flatMap((q) => (q.parts && q.parts.length > 0 ? q.parts : []));
+        setSapTargetOrder((prev) => (prev ? { ...prev, items: combined } : prev));
+        if (combined.length === 0) {
+          addSapLog('Warning: Could not find line items for the selected quotation(s) on Komatsu PDX.', 'warn');
+        }
+      } catch (err) {
+        addSapLog(`Error retrieving quotation line items: ${err.message}`, 'error');
+      } finally {
+        setLoadingSapParts(false);
+      }
+    }
   }
 
   function openSapPoModalFromEoQueue() {
@@ -2146,7 +2188,7 @@ export default function SparePartsPage() {
               <Button
                 variant="secondary"
                 size="sm"
-                onClick={loadInProcessQuotations}
+                onClick={() => loadInProcessQuotations(qtnPage, qtnLimit, qtnStatusFilter)}
                 disabled={loadingQuotations || isConvertingSo}
               >
                 Refresh
@@ -2327,6 +2369,63 @@ export default function SparePartsPage() {
               )}
             </TableBody>
           </Table>
+
+          {/* Quotations Pagination Controls */}
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pt-3 border-t border-slate-100 text-xs text-slate-600">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="font-medium">Rows per page:</span>
+              <select
+                value={qtnLimit}
+                onChange={(e) => {
+                  const newLimit = e.target.value;
+                  setQtnLimit(newLimit);
+                  setQtnPage(1);
+                  loadInProcessQuotations(1, newLimit, qtnStatusFilter);
+                }}
+                disabled={loadingQuotations || isConvertingSo}
+                className="rounded-md border border-slate-300 bg-white px-2 py-1 text-xs text-slate-800 shadow-2xs focus:border-amber-500 focus:outline-none"
+              >
+                <option value="10">10 per page</option>
+                <option value="25">25 per page</option>
+                <option value="50">50 per page</option>
+                <option value="100">100 per page</option>
+              </select>
+              <span className="text-slate-300">|</span>
+              <span>
+                Showing <strong>{filteredQuotations.length}</strong> quotations (Page <strong>{qtnPage}</strong>)
+              </span>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <Button
+                variant="secondary"
+                size="xs"
+                disabled={qtnPage <= 1 || loadingQuotations || isConvertingSo}
+                onClick={() => {
+                  const newPage = Math.max(1, qtnPage - 1);
+                  setQtnPage(newPage);
+                  loadInProcessQuotations(newPage, qtnLimit, qtnStatusFilter);
+                }}
+              >
+                &larr; Previous Page
+              </Button>
+              <span className="px-2.5 py-1 rounded bg-slate-100 font-mono font-semibold text-slate-800">
+                Page {qtnPage}
+              </span>
+              <Button
+                variant="secondary"
+                size="xs"
+                disabled={inProcessQuotations.length < parseInt(qtnLimit, 10) || loadingQuotations || isConvertingSo}
+                onClick={() => {
+                  const newPage = qtnPage + 1;
+                  setQtnPage(newPage);
+                  loadInProcessQuotations(newPage, qtnLimit, qtnStatusFilter);
+                }}
+              >
+                Next Page &rarr;
+              </Button>
+            </div>
+          </div>
         </Card>
       )}
 
@@ -2826,34 +2925,45 @@ export default function SparePartsPage() {
               <span className="text-xs text-slate-500">Tax Code: <strong>P0</strong> | Whs: <strong>01</strong></span>
             </div>
 
-            <div className="border border-slate-200 rounded-lg overflow-hidden max-h-48 overflow-y-auto">
-              <table className="w-full text-left text-xs border-collapse">
-                <thead className="bg-slate-100 text-slate-700 font-semibold border-b border-slate-200">
-                  <tr>
-                    <th className="py-2 px-3">#</th>
-                    <th className="py-2 px-3">Item No</th>
-                    <th className="py-2 px-3 text-right">Quantity</th>
-                    <th className="py-2 px-3 text-right">Unit Price</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100">
-                  {sapTargetOrder?.items?.map((it, idx) => (
-                    <tr key={idx} className="hover:bg-slate-50">
-                      <td className="py-1.5 px-3 text-slate-400">{idx + 1}</td>
-                      <td className="py-1.5 px-3 font-mono font-semibold text-slate-900">
-                        {it.part_no || it.partNo || it.itemCode}
-                      </td>
-                      <td className="py-1.5 px-3 text-right font-mono font-medium text-slate-800">
-                        {it.qty || it.quantity || 1}
-                      </td>
-                      <td className="py-1.5 px-3 text-right font-mono text-slate-600">
-                        {it.price || it.unit_price || '$0.00'}
-                      </td>
+            {loadingSapParts ? (
+              <div className="p-6 border border-slate-200 rounded-lg text-center bg-slate-50 space-y-2">
+                <div className="inline-block w-5 h-5 border-2 border-emerald-600 border-t-transparent rounded-full animate-spin"></div>
+                <div className="text-xs font-medium text-slate-600">Fetching actual quotation line items from Komatsu PDX...</div>
+              </div>
+            ) : (!sapTargetOrder?.items || sapTargetOrder.items.length === 0) ? (
+              <div className="p-4 border border-amber-200 rounded-lg text-center bg-amber-50/60 text-xs text-amber-800">
+                No line items found for this quotation on Komatsu PDX. Verify the quotation in Komatsu Web Portal.
+              </div>
+            ) : (
+              <div className="border border-slate-200 rounded-lg overflow-hidden max-h-48 overflow-y-auto">
+                <table className="w-full text-left text-xs border-collapse">
+                  <thead className="bg-slate-100 text-slate-700 font-semibold border-b border-slate-200">
+                    <tr>
+                      <th className="py-2 px-3">#</th>
+                      <th className="py-2 px-3">Item No</th>
+                      <th className="py-2 px-3 text-right">Quantity</th>
+                      <th className="py-2 px-3 text-right">Unit Price</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {sapTargetOrder?.items?.map((it, idx) => (
+                      <tr key={idx} className="hover:bg-slate-50">
+                        <td className="py-1.5 px-3 text-slate-400">{idx + 1}</td>
+                        <td className="py-1.5 px-3 font-mono font-semibold text-slate-900">
+                          {it.part_no || it.partNo || it.itemCode}
+                        </td>
+                        <td className="py-1.5 px-3 text-right font-mono font-medium text-slate-800">
+                          {it.qty || it.quantity || 1}
+                        </td>
+                        <td className="py-1.5 px-3 text-right font-mono text-slate-600">
+                          {it.price || it.unit_price || '$0.00'}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
 
           {/* Screenshot Confirmation */}
@@ -2886,7 +2996,7 @@ export default function SparePartsPage() {
             variant="ghost"
             size="sm"
             onClick={handleDownloadSapExcel}
-            disabled={isExecutingSapPo}
+            disabled={isExecutingSapPo || loadingSapParts || !sapTargetOrder?.items || sapTargetOrder.items.length === 0}
             className="text-xs text-slate-600 hover:text-slate-900"
           >
             📥 Export SAP Excel
@@ -2906,7 +3016,7 @@ export default function SparePartsPage() {
               size="sm"
               className="bg-emerald-600 hover:bg-emerald-700 text-white border-emerald-600 font-semibold"
               onClick={() => handleExecuteSapPo(false)}
-              disabled={isExecutingSapPo}
+              disabled={isExecutingSapPo || loadingSapParts || !sapTargetOrder?.items || sapTargetOrder.items.length === 0}
             >
               {isExecutingSapPo ? (
                 <>

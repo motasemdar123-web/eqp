@@ -686,8 +686,10 @@ async function searchQuotations(filters = {}, customCookie = null) {
   } = filters;
 
   const targetLimit = parseInt(limit, 10) || 10;
-  const maxPages = Math.min(10, Math.ceil(targetLimit / 10));
-  const startPage = parseInt(page, 10) || 1;
+  const pagesPerBatch = Math.min(10, Math.ceil(targetLimit / 10));
+  const pageNum = parseInt(page, 10) || 1;
+  const startPage = (pageNum - 1) * pagesPerBatch + 1;
+  const maxPages = pagesPerBatch;
 
   const defaultHeaders = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36 Edg/151.0.0.0',
@@ -770,6 +772,7 @@ async function searchQuotations(filters = {}, customCookie = null) {
   return {
     total: quotations.length,
     status_filter: status,
+    page: pageNum,
     limit: targetLimit,
     quotations,
   };

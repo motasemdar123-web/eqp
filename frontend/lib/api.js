@@ -511,6 +511,15 @@ export function getKomatsuQuotations(params = {}) {
   return request(`/api/komatsu/quotations?${query}`);
 }
 
+export function getKomatsuQuotationParts(quotationNo, params = {}) {
+  const cookie = getStoredPdxCookie();
+  const query = new URLSearchParams({
+    ...params,
+    ...(cookie ? { cookie } : {}),
+  }).toString();
+  return request(`/api/komatsu/quotations/${encodeURIComponent(quotationNo)}/parts?${query}`);
+}
+
 export function confirmKomatsuQuotation(payload) {
   const cookie = payload.cookie || getStoredPdxCookie();
   return request('/api/komatsu/quotations/confirm', {
