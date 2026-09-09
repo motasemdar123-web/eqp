@@ -20,6 +20,7 @@ const publicApiPaths = new Set([
   '/api/komatsu/cookie',
   '/api/komatsu/eqpc/status',
   '/api/komatsu/eqpc/cookie',
+  '/api/sap/bridge/download',
 ]);
 
 function isPublicApiPath(path) {

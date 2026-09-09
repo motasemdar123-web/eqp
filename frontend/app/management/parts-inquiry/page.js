@@ -41,6 +41,7 @@ import {
   executeLocalSapPo,
   getLocalSapPoStatus,
   getSapBridgeDownloadUrl,
+  downloadSapBridgeZip,
 } from '../../../lib/api';
 
 const SAMPLE_EO_ITEMS = [
@@ -3087,14 +3088,20 @@ export default function SparePartsPage() {
               >
                 {isCheckingBridge ? 'Checking...' : '🔄 Check'}
               </button>
-              <a
-                href={getSapBridgeDownloadUrl()}
-                download="sap-local-bridge.zip"
-                className="px-2.5 py-1 bg-emerald-700 hover:bg-emerald-800 text-white rounded text-xs font-semibold flex items-center gap-1 shadow-2xs transition-colors"
+              <button
+                type="button"
+                onClick={async () => {
+                  try {
+                    await downloadSapBridgeZip();
+                  } catch {
+                    window.location.href = getSapBridgeDownloadUrl();
+                  }
+                }}
+                className="px-2.5 py-1 bg-emerald-700 hover:bg-emerald-800 text-white rounded text-xs font-semibold flex items-center gap-1 shadow-2xs transition-colors cursor-pointer"
                 title="Download standalone local bridge runner"
               >
                 📥 Download Bridge (.zip)
-              </a>
+              </button>
             </div>
           </div>
 

@@ -709,6 +709,31 @@ export function getSapBridgeDownloadUrl() {
   return `${API_BASE_URL}/api/sap/bridge/download`;
 }
 
+export async function downloadSapBridgeZip() {
+  let token = '';
+  if (typeof window !== 'undefined') {
+    try {
+      token = localStorage.getItem('platformToken') || JSON.parse(localStorage.getItem('user') || 'null')?.sessionToken || '';
+    } catch {
+      localStorage.removeItem('user');
+    }
+  }
+
+  const response = await fetch(`${API_BASE_URL}/api/sap/bridge/download`, {
+    headers: token ? { Authorization: `Bearer ${token}` } : {},
+  });
+  if (!response.ok) throw new Error('Download failed');
+  const blob = await response.blob();
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'sap-local-bridge.zip';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  window.URL.revokeObjectURL(url);
+}
+
 export async function downloadSapPoExcel(payload) {
   let token = '';
   if (typeof window !== 'undefined') {
