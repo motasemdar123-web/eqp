@@ -88,8 +88,11 @@ async function runLocalSapPoAutomation({
     screenshotBase64: null,
   };
 
+  const effectiveUser = username || process.env.SAP_PORTAL_USER || 'DAH38';
+  const effectivePass = password || process.env.SAP_PORTAL_PASSWORD || 'Dah@200055';
+
   addLog(`Starting Local SAP PO Automation for Quotation #${quotationNo || 'Direct'} (${items.length} items)...`);
-  addLog(`User: ${username} | Vendor: ${vendor} | Buyer: ${buyer} | Mode: ${isDraft ? 'Draft PO' : 'Final PO'}`);
+  addLog(`User: ${effectiveUser} | Vendor: ${vendor} | Buyer: ${buyer} | Mode: ${isDraft ? 'Draft PO' : 'Final PO'}`);
   addLog(`Local Network Origin: Unrestricted direct connection to ${SAP_PORTAL_URL}`);
 
   if (dryRun) {
@@ -138,15 +141,15 @@ async function runLocalSapPoAutomation({
     addLog(`Navigating to TSPlus Logon Portal (${SAP_PORTAL_URL})...`);
     await page.goto(SAP_PORTAL_URL, { waitUntil: 'commit', timeout: 25000 });
 
-    addLog(`Filling credentials for user "${username}"...`);
-    const userInput = await page.waitForSelector('#Editbox1, input[type="text"], #login, #user', { timeout: 15000 });
-    await userInput.fill(username);
+    addLog(`Filling credentials for user "${effectiveUser}"...`);
+    const userInput = await page.waitForSelector('#Editbox1', { timeout: 20000 });
+    await userInput.fill(effectiveUser);
 
-    const passInput = await page.waitForSelector('#Editbox2, input[type="password"], #pass, #password', { timeout: 5000 });
-    await passInput.fill(password);
+    const passInput = await page.waitForSelector('#Editbox2', { timeout: 10000 });
+    await passInput.fill(effectivePass);
 
     addLog('Submitting login form (#buttonLogOn)...');
-    const submitBtn = await page.$('#buttonLogOn, input[type="submit"], button[type="submit"]');
+    const submitBtn = await page.waitForSelector('#buttonLogOn', { timeout: 10000 });
     if (submitBtn) {
       await submitBtn.click();
     } else {
@@ -169,22 +172,49 @@ async function runLocalSapPoAutomation({
 
     addLog(`Connected to active session tab: ${targetPage.url()}`);
     await targetPage.waitForSelector('#JWTS_myCanvas, canvas', { timeout: 35000 });
-    addLog('HTML5 Canvas detected (#JWTS_myCanvas). Waiting for SAP B1 desktop to stabilize...');
+    addLog('HTML5 Canvas detected (#JWTS_myCanvas). Waiting 12s for SAP B1 desktop to stabilize...');
 
     // Wait for the desktop stream to stabilize
-    await new Promise((r) => setTimeout(r, 6000));
+    await new Promise((r) => setTimeout(r, 12000));
 
-    // Open Purchase Order window via SAP Menu search at (75, 150)
-    addLog('Focusing SAP Menu search box...');
-    await targetPage.mouse.click(75, 150);
-    await new Promise((r) => setTimeout(r, 400));
-    await targetPage.keyboard.press('Control+A');
-    await targetPage.keyboard.type('Purchase Order', { delay: 80 });
-    await new Promise((r) => setTimeout(r, 600));
+    // Focus canvas and dismiss any warning / concurrent user dialogs
+    addLog('Focusing SAP canvas and dismissing session dialogs...');
+    await targetPage.mouse.click(500, 300);
+    await new Promise((r) => setTimeout(r, 500));
     await targetPage.keyboard.press('Enter');
+    await new Promise((r) => setTimeout(r, 2000));
 
-    addLog('Navigated to Purchase Order form. Waiting for form render...');
-    await new Promise((r) => setTimeout(r, 3500));
+    // Navigate to Modules -> Purchasing - A/P -> Purchase Order
+    addLog('Navigating to Modules > Purchasing - A/P > Purchase Order...');
+    await targetPage.mouse.click(166, 18);
+    await new Promise((r) => setTimeout(r, 600));
+
+    // Move to Modules dropdown
+    await targetPage.keyboard.press('ArrowRight');
+    await new Promise((r) => setTimeout(r, 200));
+    await targetPage.keyboard.press('ArrowRight');
+    await new Promise((r) => setTimeout(r, 400));
+
+    // Select Purchasing - A/P
+    await targetPage.keyboard.press('p');
+    await new Promise((r) => setTimeout(r, 400));
+
+    // Open Purchasing submenu
+    await targetPage.keyboard.press('ArrowRight');
+    await new Promise((r) => setTimeout(r, 400));
+
+    // Move down 3 items to Purchase Order (Item 1: Blanket, 2: Req, 3: Quot, 4: PO)
+    await targetPage.keyboard.press('ArrowDown');
+    await new Promise((r) => setTimeout(r, 200));
+    await targetPage.keyboard.press('ArrowDown');
+    await new Promise((r) => setTimeout(r, 200));
+    await targetPage.keyboard.press('ArrowDown');
+    await new Promise((r) => setTimeout(r, 400));
+
+    // Open Purchase Order form
+    await targetPage.keyboard.press('Enter');
+    addLog('Purchase Order form triggered. Waiting 4s for window render...');
+    await new Promise((r) => setTimeout(r, 4000));
 
     // Vendor Code
     addLog(`Entering Vendor Code: ${vendor}...`);

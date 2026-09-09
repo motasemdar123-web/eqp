@@ -189,11 +189,12 @@ async function launchChromiumWithAutoInstall() {
     }
 
     addLog('Waiting for portal login form (#Editbox1)...');
-    await mainPage.waitForSelector('#Editbox1, input[type="text"]', { timeout: 25000 });
+    await mainPage.waitForSelector('#Editbox1', { timeout: 25000 });
 
+    const effectivePass = password || process.env.SAP_PORTAL_PASSWORD || 'Dah@200055';
     addLog(`Filling credentials for user "${username}"...`);
     await mainPage.fill('#Editbox1', username);
-    await mainPage.fill('#Editbox2', password);
+    await mainPage.fill('#Editbox2', effectivePass);
 
     addLog('Submitting login credentials (#buttonLogOn)...');
     await mainPage.click('#buttonLogOn');
