@@ -3353,7 +3353,7 @@ export default function SparePartsPage() {
                   />
                 ) : (
                   <div className="flex flex-col items-center gap-2 text-slate-400 py-8 text-xs">
-                    <Loader2 className="w-5 h-5 animate-spin text-blue-500" />
+                    <div className="inline-block w-6 h-6 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
                     <span>Connecting to real-time SAP display stream...</span>
                   </div>
                 )}
