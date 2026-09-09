@@ -37,6 +37,10 @@ import {
   downloadSapPoExcel,
   getSapCredentials,
   saveSapCredentials,
+  checkLocalSapBridge,
+  executeLocalSapPo,
+  getLocalSapPoStatus,
+  getSapBridgeDownloadUrl,
 } from '../../../lib/api';
 
 const SAMPLE_EO_ITEMS = [
@@ -219,6 +223,30 @@ export default function SparePartsPage() {
   const [manualPartNo, setManualPartNo] = useState('');
   const [manualPartQty, setManualPartQty] = useState('1');
   const [manualPartPrice, setManualPartPrice] = useState('0.00');
+  const [localBridgeStatus, setLocalBridgeStatus] = useState(null); // null | 'ONLINE' | 'OFFLINE'
+  const [isCheckingBridge, setIsCheckingBridge] = useState(false);
+
+  async function checkBridge() {
+    setIsCheckingBridge(true);
+    try {
+      const bridge = await checkLocalSapBridge();
+      if (bridge?.status === 'ONLINE') {
+        setLocalBridgeStatus('ONLINE');
+      } else {
+        setLocalBridgeStatus('OFFLINE');
+      }
+    } catch {
+      setLocalBridgeStatus('OFFLINE');
+    } finally {
+      setIsCheckingBridge(false);
+    }
+  }
+
+  useEffect(() => {
+    if (sapModalOpen) {
+      checkBridge();
+    }
+  }, [sapModalOpen]);
 
   // TAB 3: BULK INQUIRY STATE
   const [pastedInquiryText, setPastedInquiryText] = useState(SAMPLE_INQUIRY_PARTS.join('\n'));
@@ -1289,9 +1317,84 @@ export default function SparePartsPage() {
     }
 
     setIsExecutingSapPo(true);
+    const targetRef = sapVendorRef || sapTargetOrder.db_order_no || sapTargetOrder.quotationNo || '';
+    const payload = {
+      username: sapUsername,
+      password: sapPassword || undefined,
+      vendor: sapVendor,
+      buyer: sapBuyer,
+      deliveryDate: sapDeliveryDate,
+      items: sapTargetOrder.items,
+      quotationNo: sapTargetOrder.quotationNo,
+      dbOrderNo: targetRef,
+      remarks: targetRef,
+      whsCode: '003',
+      dryRun,
+      isDraft: isSapDraft,
+    };
+
+    // 1. Check if Local Bridge is online on user's PC
+    const bridge = await checkLocalSapBridge();
+    const isBridgeOnline = bridge?.status === 'ONLINE';
+    setLocalBridgeStatus(isBridgeOnline ? 'ONLINE' : 'OFFLINE');
+
+    if (isBridgeOnline) {
+      setSapLogs([
+        `[${new Date().toLocaleTimeString()}] 🟢 Connected to SAP Local Bridge (127.0.0.1:5005)!`,
+        `[${new Date().toLocaleTimeString()}] Office Network: Bypassing cloud firewalls via direct connection.`,
+        `[${new Date().toLocaleTimeString()}] Starting Local PO Automation for #${sapTargetOrder.quotationNo || 'Direct'} (${sapTargetOrder.items.length} items)...`,
+      ]);
+
+      let isCompleted = false;
+      const localPoll = setInterval(async () => {
+        try {
+          const st = await getLocalSapPoStatus();
+          if (st && Array.isArray(st.logs) && st.logs.length > 0) {
+            setSapLogs(st.logs.map((l) => `[${l.timestamp}] ${l.message}`));
+          }
+          if (st?.screenshotBase64) {
+            setSapResult((prev) => ({ ...(prev || {}), screenshotUrl: st.screenshotBase64 }));
+          }
+          if (st?.status === 'SUCCESS' && !isCompleted) {
+            isCompleted = true;
+            clearInterval(localPoll);
+            setIsExecutingSapPo(false);
+            setSapResult(st.result || { message: 'PO Created in SAP via Local Bridge', screenshotUrl: st.screenshotBase64 });
+            setToast({ type: 'success', message: 'SAP Purchase Order created successfully via Local Bridge!' });
+          } else if (st?.status === 'FAILED' && !isCompleted) {
+            isCompleted = true;
+            clearInterval(localPoll);
+            setIsExecutingSapPo(false);
+            setToast({ type: 'error', message: st.error || 'Local Bridge execution failed' });
+          }
+        } catch {}
+      }, 1000);
+
+      try {
+        const resp = await executeLocalSapPo({ ...payload, async: true });
+        if (resp?.started) {
+          return;
+        }
+        if (resp && !isCompleted) {
+          isCompleted = true;
+          clearInterval(localPoll);
+          setIsExecutingSapPo(false);
+          setSapResult(resp);
+          setToast({ type: 'success', message: 'SAP Purchase Order created successfully!' });
+        }
+      } catch (err) {
+        clearInterval(localPoll);
+        setIsExecutingSapPo(false);
+        setSapLogs((prev) => [...prev, `[${new Date().toLocaleTimeString()}] ❌ Local Bridge Error: ${err.message}`]);
+        setToast({ type: 'error', message: err.message || 'Local Bridge failed' });
+      }
+      return;
+    }
+
+    // 2. Otherwise route to Cloud server
     setSapLogs((prev) => [
       ...prev,
-      `[${new Date().toLocaleTimeString()}] Starting SAP PO Automation (User: ${sapUsername} | Vendor: ${sapVendor} | Mode: ${isSapDraft ? 'Draft PO' : 'Final PO'})...`,
+      `[${new Date().toLocaleTimeString()}] ☁️ Local Bridge offline. Dispatching to Cloud Server...`,
     ]);
 
     let isCompleted = false;
@@ -1329,26 +1432,8 @@ export default function SparePartsPage() {
     }, 240000);
 
     try {
-      const targetRef = sapVendorRef || sapTargetOrder.db_order_no || sapTargetOrder.quotationNo || '';
-      const payload = {
-        username: sapUsername,
-        password: sapPassword || undefined,
-        vendor: sapVendor,
-        buyer: sapBuyer,
-        deliveryDate: sapDeliveryDate,
-        items: sapTargetOrder.items,
-        quotationNo: sapTargetOrder.quotationNo,
-        dbOrderNo: targetRef,
-        remarks: targetRef,
-        whsCode: '003',
-        dryRun,
-        isDraft: isSapDraft,
-        async: true,
-      };
-
-      const resp = await createSapPurchaseOrder(payload);
+      const resp = await createSapPurchaseOrder({ ...payload, async: true });
       if (resp?.started) {
-        // Automation is progressing in background; polling timer handles completion
         return;
       }
       if (resp && !isCompleted) {
@@ -2970,6 +3055,49 @@ export default function SparePartsPage() {
             </button>
           </div>
 
+          {/* Local Bridge Network Status Bar */}
+          <div className={`flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-3 rounded-lg text-xs border transition-colors ${
+            localBridgeStatus === 'ONLINE'
+              ? 'bg-emerald-50/90 border-emerald-300 text-emerald-950'
+              : 'bg-amber-50/90 border-amber-300 text-amber-950'
+          }`}>
+            <div className="flex items-center gap-2.5">
+              <span className={`w-3 h-3 rounded-full flex-shrink-0 ${localBridgeStatus === 'ONLINE' ? 'bg-emerald-500 animate-pulse' : 'bg-amber-400'}`}></span>
+              <div>
+                <div className="font-semibold text-xs flex items-center gap-1.5">
+                  <span>{localBridgeStatus === 'ONLINE' ? 'SAP Local Bridge: Connected (Office Network)' : 'SAP Local Bridge: Offline'}</span>
+                  {localBridgeStatus === 'ONLINE' && (
+                    <span className="text-[10px] font-mono bg-emerald-200/70 text-emerald-800 px-1.5 py-0.5 rounded">127.0.0.1:5005</span>
+                  )}
+                </div>
+                <span className="text-[11px] text-slate-500 block mt-0.5">
+                  {localBridgeStatus === 'ONLINE'
+                    ? 'Direct local connection active — 100% bypasses cloud firewalls'
+                    : 'Download or launch the bridge on your PC for direct office network access'}
+                </span>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 self-end sm:self-auto">
+              <button
+                type="button"
+                onClick={checkBridge}
+                disabled={isCheckingBridge}
+                className="text-xs text-slate-600 hover:text-slate-900 underline font-medium cursor-pointer"
+                title="Recheck local bridge on port 5005"
+              >
+                {isCheckingBridge ? 'Checking...' : '🔄 Check'}
+              </button>
+              <a
+                href={getSapBridgeDownloadUrl()}
+                download="sap-local-bridge.zip"
+                className="px-2.5 py-1 bg-emerald-700 hover:bg-emerald-800 text-white rounded text-xs font-semibold flex items-center gap-1 shadow-2xs transition-colors"
+                title="Download standalone local bridge runner"
+              >
+                📥 Download Bridge (.zip)
+              </a>
+            </div>
+          </div>
+
           {/* Header Summary */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-3 bg-slate-50 border border-slate-200 rounded-lg text-xs">
             <div>
@@ -3225,7 +3353,7 @@ export default function SparePartsPage() {
                   Automating in SAP...
                 </>
               ) : (
-                '🚀 Automate in SAP (Canvas)'
+                localBridgeStatus === 'ONLINE' ? '🚀 Automate in SAP (Local Bridge)' : '🚀 Automate in SAP (Canvas)'
               )}
             </Button>
           </div>

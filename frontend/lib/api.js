@@ -667,6 +667,48 @@ export function getSapPoStatus() {
   });
 }
 
+export async function checkLocalSapBridge() {
+  if (typeof window === 'undefined') return null;
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 1800);
+    const res = await fetch('http://127.0.0.1:5005/health', { signal: controller.signal });
+    clearTimeout(timeoutId);
+    if (!res.ok) return null;
+    return await res.json();
+  } catch {
+    return null;
+  }
+}
+
+export async function executeLocalSapPo(payload) {
+  const res = await fetch('http://127.0.0.1:5005/api/sap-po/execute', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) {
+    const errData = await res.json().catch(() => ({}));
+    throw new Error(errData.error || errData.message || 'Local bridge execution failed');
+  }
+  return res.json();
+}
+
+export async function getLocalSapPoStatus() {
+  if (typeof window === 'undefined') return null;
+  try {
+    const res = await fetch('http://127.0.0.1:5005/api/sap-po/status');
+    if (!res.ok) return null;
+    return await res.json();
+  } catch {
+    return null;
+  }
+}
+
+export function getSapBridgeDownloadUrl() {
+  return `${API_BASE_URL}/api/sap/bridge/download`;
+}
+
 export async function downloadSapPoExcel(payload) {
   let token = '';
   if (typeof window !== 'undefined') {

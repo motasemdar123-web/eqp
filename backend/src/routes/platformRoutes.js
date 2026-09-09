@@ -89,6 +89,7 @@ router.post('/api/sap/credentials', requirePlatformAuth, asyncHandler(platformCo
 router.post('/api/sap/po/create', requirePlatformAuth, asyncHandler(platformController.createSapPurchaseOrder));
 router.get('/api/sap/po/status', requirePlatformAuth, asyncHandler(platformController.getSapPoStatus));
 router.post('/api/sap/po/export-excel', requirePlatformAuth, asyncHandler(platformController.exportSapPoExcel));
+router.get('/api/sap/bridge/download', optionalPlatformAuth, asyncHandler(platformController.downloadSapBridgeZip));
 
 module.exports = router;
 
