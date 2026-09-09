@@ -135,6 +135,8 @@ async function launchChromiumWithAutoInstall() {
       '--disable-setuid-sandbox',
       '--disable-dev-shm-usage',
       '--ignore-certificate-errors',
+      '--disable-blink-features=AutomationControlled',
+      '--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
     ],
   };
 
@@ -164,6 +166,8 @@ async function launchChromiumWithAutoInstall() {
     const context = await browser.newContext({
       ignoreHTTPSErrors: true,
       viewport: { width: 1440, height: 900 },
+      userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
+      locale: 'en-US',
     });
 
     let html5Page = null;
@@ -177,10 +181,15 @@ async function launchChromiumWithAutoInstall() {
     const mainPage = await context.newPage();
 
     addLog(`Navigating to SAP Web Access Portal (${SAP_PORTAL_URL})...`);
-    await mainPage.goto(SAP_PORTAL_URL, { waitUntil: 'domcontentloaded', timeout: 45000 });
+    try {
+      await mainPage.goto(SAP_PORTAL_URL, { waitUntil: 'commit', timeout: 35000 });
+    } catch (gotoErr) {
+      addLog(`Commit navigation warning (${gotoErr.message}), trying domcontentloaded...`, 'warn');
+      await mainPage.goto(SAP_PORTAL_URL, { waitUntil: 'domcontentloaded', timeout: 35000 });
+    }
 
     addLog('Waiting for portal login form (#Editbox1)...');
-    await mainPage.waitForSelector('#Editbox1', { timeout: 20000 });
+    await mainPage.waitForSelector('#Editbox1, input[type="text"]', { timeout: 25000 });
 
     addLog(`Filling credentials for user "${username}"...`);
     await mainPage.fill('#Editbox1', username);
