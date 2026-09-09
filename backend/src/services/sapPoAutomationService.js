@@ -4,7 +4,7 @@ const fs = require('fs');
 const { execSync } = require('child_process');
 const ExcelJS = require('exceljs');
 
-const SAP_PORTAL_URL = process.env.SAP_PORTAL_URL || 'https://daralhai.b1pro.com/';
+const SAP_PORTAL_URL = process.env.SAP_PORTAL_URL || 'https://daralhai.b1pro.com/software/html5.html';
 const DEFAULT_VENDOR = 'V000006';
 
 let latestJobStatus = {
@@ -221,77 +221,205 @@ async function launchChromiumWithAutoInstall() {
     await targetPage.waitForSelector('#JWTS_myCanvas, canvas', { timeout: 45000 });
     addLog('HTML5 Canvas detected (#JWTS_myCanvas). Waiting for SAP B1 client to settle...');
 
-    // Wait for the desktop stream to stabilize
-    await new Promise((r) => setTimeout(r, 7000));
-
-    // Open Purchase Order window via SAP Menu search at (75, 150)
-    addLog('Focusing SAP Menu search box...');
-    await targetPage.mouse.click(75, 150);
-    await new Promise((r) => setTimeout(r, 500));
-    await targetPage.keyboard.press('Control+A');
-    await targetPage.keyboard.type('Purchase Order', { delay: 100 });
-    await new Promise((r) => setTimeout(r, 800));
-    await targetPage.keyboard.press('Enter');
-
-    addLog('Navigated to Purchase Order form. Waiting for form to render...');
-    await new Promise((r) => setTimeout(r, 4000));
-
-    // Vendor Selection
-    addLog(`Entering Vendor Code: ${vendor}...`);
-    await targetPage.keyboard.type(vendor, { delay: 100 });
-    await targetPage.keyboard.press('Tab');
-    await new Promise((r) => setTimeout(r, 1500));
-
-    // Vendor Ref. No. (DB Order Reference)
-    const targetRef = dbOrderNo || remarks || quotationNo || '';
-    if (targetRef) {
-      addLog(`Entering Vendor Ref. No. (DB Order): ${targetRef}...`);
-      await targetPage.keyboard.press('Tab'); // Contact Person
-      await new Promise((r) => setTimeout(r, 300));
-      await targetPage.keyboard.press('Tab'); // Vendor Ref. No.
-      await new Promise((r) => setTimeout(r, 300));
-      await targetPage.keyboard.type(targetRef, { delay: 80 });
-      await targetPage.keyboard.press('Tab'); // BP Currency
-      await new Promise((r) => setTimeout(r, 300));
-      await targetPage.keyboard.press('Tab'); // Item/Service Type
-      await new Promise((r) => setTimeout(r, 300));
-      await targetPage.keyboard.press('Tab'); // Grid Item No
-      await new Promise((r) => setTimeout(r, 600));
+    async function rdpClick(p, x, y, holdMs = 120) {
+      await p.mouse.move(x, y);
+      await new Promise((r) => setTimeout(r, 60));
+      await p.mouse.down();
+      await new Promise((r) => setTimeout(r, holdMs));
+      await p.mouse.up();
+      await new Promise((r) => setTimeout(r, 100));
     }
 
-    // Move to item table and type lines
+    async function rdpDblClick(p, x, y) {
+      await rdpClick(p, x, y, 80);
+      await new Promise((r) => setTimeout(r, 80));
+      await rdpClick(p, x, y, 80);
+    }
+
+    async function checkPoWindowStatus(p) {
+      try {
+        const buf = await p.screenshot({ type: 'png' });
+        const b64 = buf.toString('base64');
+        return await p.evaluate((imgB64) => {
+          return new Promise((resolve) => {
+            const img = new Image();
+            img.onload = () => {
+              const c = document.createElement('canvas');
+              c.width = 1440; c.height = 900;
+              const ctx = c.getContext('2d');
+              ctx.drawImage(img, 0, 0);
+
+              // Pixel at (50, 140): white [>200, >200, >200] if PO form window is open
+              const pForm = ctx.getImageData(50, 140, 1, 1).data;
+              const isPoOpen = pForm[0] > 200 && pForm[1] > 200 && pForm[2] > 200;
+
+              // Pixel at (25, 18): menu bar [>150, >150, >150]
+              const pMenu = ctx.getImageData(25, 18, 1, 1).data;
+              const isSapLoaded = pMenu[0] > 150 && pMenu[1] > 150 && pMenu[2] > 150;
+
+              resolve({ isSapLoaded, isPoOpen, b64: imgB64 });
+            };
+            img.onerror = () => resolve({ isSapLoaded: false, isPoOpen: false, b64: imgB64 });
+            img.src = 'data:image/png;base64,' + imgB64;
+          });
+        }, b64);
+      } catch (err) {
+        return { isSapLoaded: false, isPoOpen: false };
+      }
+    }
+
+    // ADAPTIVE STEP 1: Wait for SAP B1 remote desktop to actually initialize and render
+    addLog('Waiting for SAP B1 remote desktop to initialize and render (polling canvas state)...');
+    let desktopReady = false;
+    for (let sec = 0; sec < 30; sec++) {
+      await new Promise((r) => setTimeout(r, 2000));
+
+      // Dismiss any session takeover modal at (510, 475) or lingering prompt
+      await rdpClick(targetPage, 510, 475, 100);
+      await targetPage.keyboard.press('Enter');
+      await targetPage.keyboard.press('Escape');
+
+      const status = await checkPoWindowStatus(targetPage);
+      if (status.isPoOpen) {
+        desktopReady = true;
+        addLog(`SAP B1 Desktop ready & PO form already open after ${(sec + 1) * 2}s.`);
+        break;
+      }
+      if (status.isSapLoaded) {
+        desktopReady = true;
+        addLog(`SAP B1 Desktop fully loaded after ${(sec + 1) * 2}s.`);
+        break;
+      }
+    }
+
+    // ADAPTIVE STEP 2: Ensure PO window is open via F2
+    let poStatus = await checkPoWindowStatus(targetPage);
+    if (!poStatus.isPoOpen) {
+      addLog('Purchase Order window not open yet. Triggering F2 shortcut...');
+      for (let attempt = 1; attempt <= 4; attempt++) {
+        // Clear any lingering sub-modals (e.g. License information)
+        await targetPage.keyboard.press('Escape');
+        await new Promise((r) => setTimeout(r, 300));
+        await targetPage.keyboard.press('Escape');
+        await new Promise((r) => setTimeout(r, 400));
+
+        // Click empty toolbar space at (400, 65) to ensure focus is in SAP main window
+        await rdpClick(targetPage, 400, 65);
+        await new Promise((r) => setTimeout(r, 300));
+
+        addLog(`Pressing F2 to open Purchase Order (attempt ${attempt}/4)...`);
+        await targetPage.keyboard.press('F2');
+        await new Promise((r) => setTimeout(r, 3500));
+
+        poStatus = await checkPoWindowStatus(targetPage);
+        if (poStatus.isPoOpen) {
+          addLog('✓ Purchase Order window confirmed OPEN!');
+          break;
+        }
+      }
+    }
+
+    if (!poStatus.isPoOpen) {
+      throw new Error('Failed to open Purchase Order window in SAP Business One after multiple attempts.');
+    }
+
+    // ADAPTIVE STEP 3: Switch to Add Mode if currently in OK mode (Control+A)
+    addLog('Ensuring Purchase Order is in Add Mode (Control+A)...');
+    await targetPage.keyboard.press('Control+A');
+    await new Promise((r) => setTimeout(r, 1500));
+
+    // Vendor Code - Click Vendor input field at (130, 132)
+    addLog(`Entering Vendor Code: ${vendor}...`);
+    await rdpClick(targetPage, 130, 132);
+    await targetPage.keyboard.press('Control+A');
+    await targetPage.keyboard.type(vendor, { delay: 50 });
+    await targetPage.keyboard.press('Tab');
+    await new Promise((r) => setTimeout(r, 2000));
+
+    // Tab through Name and Contact Person to reach Vendor Ref. No.
+    await targetPage.keyboard.press('Tab');
+    await new Promise((r) => setTimeout(r, 200));
+    await targetPage.keyboard.press('Tab');
+    await new Promise((r) => setTimeout(r, 200));
+
+    // Vendor Ref. No. (DB Order Reference)
+    const targetRef = dbOrderNo || quotationNo || remarks || '';
+    if (targetRef) {
+      addLog(`Entering Vendor Ref. No. (DB Order): ${targetRef}...`);
+      await targetPage.keyboard.press('Control+A');
+      await targetPage.keyboard.type(targetRef, { delay: 80 });
+      await new Promise((r) => setTimeout(r, 500));
+    }
+
+    // Grid Line Items - First row at Y=323, row height = 16
     addLog(`Entering ${items.length} line items into SAP grid...`);
     for (let i = 0; i < items.length; i++) {
       const it = items[i];
       const partNo = it.part_no || it.partNo || it.itemCode;
       const qty = String(it.qty || it.quantity || 1);
+      const rawPrice = it.unit_price || it.price || it.unitPrice || 0;
+      const priceVal = typeof rawPrice === 'number' ? rawPrice : parseFloat(String(rawPrice).replace(/[^0-9.]/g, '')) || 0;
+      const rowY = 323 + (i * 16);
 
-      addLog(`  [Line ${i + 1}/${items.length}] Part: ${partNo} | Qty: ${qty}`);
-      await targetPage.keyboard.type(partNo, { delay: 80 });
-      await targetPage.keyboard.press('Tab');
-      await new Promise((r) => setTimeout(r, 800));
-
-      // Move past Description to Quantity column
-      await targetPage.keyboard.press('Tab');
-      await targetPage.keyboard.type(qty, { delay: 80 });
-      await targetPage.keyboard.press('Tab');
+      addLog(`  [Line ${i + 1}/${items.length}] Part: ${partNo} | Qty: ${qty} | USD Unit Price: ${priceVal > 0 ? priceVal.toFixed(3) + ' USD' : 'Master Default'}`);
+      // Select Item No cell in Row (X=75, Y=rowY)
+      await rdpDblClick(targetPage, 75, rowY);
       await new Promise((r) => setTimeout(r, 400));
+      await targetPage.keyboard.type(partNo, { delay: 70 });
+      await new Promise((r) => setTimeout(r, 500));
+      await targetPage.keyboard.press('Tab');
+      await new Promise((r) => setTimeout(r, 3000));
 
-      // Down arrow to next row
-      await targetPage.keyboard.press('ArrowDown');
-      await new Promise((r) => setTimeout(r, 400));
-    }
-
-    // Save document
-    if (isDraft) {
-      addLog('Saving Purchase Order as Draft (Ctrl+D)...');
-      await targetPage.keyboard.press('Control+D');
-    } else {
-      addLog('Finalizing and posting Purchase Order (Ctrl+A / Add & New)...');
+      // Select Quantity cell in Row (X=180, Y=rowY)
+      await rdpDblClick(targetPage, 180, rowY);
+      await new Promise((r) => setTimeout(r, 300));
       await targetPage.keyboard.press('Control+A');
+      await targetPage.keyboard.press('Backspace');
+      for (let k = 0; k < 4; k++) {
+        await targetPage.keyboard.press('Delete');
+      }
+      await targetPage.keyboard.type(qty, { delay: 60 });
+      await new Promise((r) => setTimeout(r, 300));
+      await targetPage.keyboard.press('Tab');
+      await new Promise((r) => setTimeout(r, 1000));
+
+      // Enter USD Unit Price if provided
+      if (priceVal > 0) {
+        const priceStr = `${priceVal.toFixed(3)} USD`;
+        addLog(`    Setting USD Unit Price: ${priceStr}...`);
+        await targetPage.keyboard.press('Control+A');
+        await targetPage.keyboard.press('Backspace');
+        for (let k = 0; k < 6; k++) {
+          await targetPage.keyboard.press('Delete');
+        }
+        await targetPage.keyboard.type(priceStr, { delay: 60 });
+        await new Promise((r) => setTimeout(r, 300));
+        await targetPage.keyboard.press('Tab');
+        await new Promise((r) => setTimeout(r, 1000));
+      }
     }
 
-    await new Promise((r) => setTimeout(r, 3000));
+    // Remarks at (140, 770)
+    const remarksText = remarks || `Komatsu Quotation ${quotationNo || ''} / ${dbOrderNo || ''}`.trim();
+    if (remarksText) {
+      addLog(`Setting Remarks: ${remarksText}...`);
+      await rdpClick(targetPage, 140, 770);
+      await new Promise((r) => setTimeout(r, 300));
+      await targetPage.keyboard.press('Control+A');
+      await targetPage.keyboard.type(remarksText, { delay: 40 });
+      await new Promise((r) => setTimeout(r, 500));
+    }
+
+    // Save document: Add Draft & New (106, 832) or Add & New (38, 832)
+    if (isDraft) {
+      addLog('Saving Purchase Order as Draft (Add Draft & New at 106, 832)...');
+      await rdpClick(targetPage, 106, 832, 150);
+    } else {
+      addLog('Finalizing and posting Purchase Order (Add & New at 38, 832)...');
+      await rdpClick(targetPage, 38, 832, 150);
+    }
+
+    await new Promise((r) => setTimeout(r, 6000));
 
     // Capture screenshot confirmation
     const screenshotDir = path.join(__dirname, '../../public/sap_screenshots');

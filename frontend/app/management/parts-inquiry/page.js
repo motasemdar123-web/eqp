@@ -207,6 +207,7 @@ export default function SparePartsPage() {
   const [hasSavedSapPassword, setHasSavedSapPassword] = useState(false);
   const [savingSapCreds, setSavingSapCreds] = useState(false);
   const [isSapDraft, setIsSapDraft] = useState(true);
+  const [sapHeadlessMode, setSapHeadlessMode] = useState(false);
   const [soQuickFilter, setSoQuickFilter] = useState('ALL'); // 'ALL' | 'SO_ONLY'
   const [sapTargetOrder, setSapTargetOrder] = useState(null);
   const [sapBuyer, setSapBuyer] = useState('MOTASEM GHANEM');
@@ -1325,13 +1326,19 @@ export default function SparePartsPage() {
       vendor: sapVendor,
       buyer: sapBuyer,
       deliveryDate: sapDeliveryDate,
-      items: sapTargetOrder.items,
+      items: sapTargetOrder.items.map((it) => ({
+        part_no: it.part_no || it.partNo || it.itemCode,
+        qty: it.qty || it.quantity || 1,
+        unit_price: it.unit_price || it.price || '0.000',
+        description: it.description || it.part_desc || '',
+      })),
       quotationNo: sapTargetOrder.quotationNo,
       dbOrderNo: targetRef,
       remarks: targetRef,
       whsCode: '003',
       dryRun,
       isDraft: isSapDraft,
+      headless: sapHeadlessMode === true,
     };
 
     // 1. Check if Local Bridge is online on user's PC
@@ -1342,7 +1349,7 @@ export default function SparePartsPage() {
     if (isBridgeOnline) {
       setSapLogs([
         `[${new Date().toLocaleTimeString()}] 🟢 Connected to SAP Local Bridge (127.0.0.1:5005)!`,
-        `[${new Date().toLocaleTimeString()}] Office Network: Bypassing cloud firewalls via direct connection.`,
+        `[${new Date().toLocaleTimeString()}] Mode: ${sapHeadlessMode ? 'Background (Headless)' : 'Visible Live Window (Desktop)'}`,
         `[${new Date().toLocaleTimeString()}] Starting Local PO Automation for #${sapTargetOrder.quotationNo || 'Direct'} (${sapTargetOrder.items.length} items)...`,
       ]);
 
@@ -1354,7 +1361,11 @@ export default function SparePartsPage() {
             setSapLogs(st.logs.map((l) => `[${l.timestamp}] ${l.message}`));
           }
           if (st?.screenshotBase64) {
-            setSapResult((prev) => ({ ...(prev || {}), screenshotUrl: st.screenshotBase64 }));
+            setSapResult((prev) => ({
+              ...(prev || {}),
+              screenshotUrl: st.screenshotBase64,
+              currentStep: st.currentStep,
+            }));
           }
           if (st?.status === 'SUCCESS' && !isCompleted) {
             isCompleted = true;
@@ -3161,17 +3172,30 @@ export default function SparePartsPage() {
             </Field>
           </div>
 
-          {/* Draft vs Final Toggle */}
-          <div className="flex items-center gap-3 p-2.5 bg-amber-50/70 border border-amber-200/80 rounded-lg text-xs">
-            <label className="flex items-center gap-2 cursor-pointer font-medium text-amber-950">
-              <input
-                type="checkbox"
-                checked={isSapDraft}
-                onChange={(e) => setIsSapDraft(e.target.checked)}
-                className="rounded text-emerald-600"
-              />
-              <span>Save as <strong>Draft Purchase Order</strong> in SAP (recommended for safety & review)</span>
-            </label>
+          {/* Options: Draft & Visible Desktop Mode */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+            <div className="flex items-center gap-2 p-2.5 bg-amber-50/70 border border-amber-200/80 rounded-lg">
+              <label className="flex items-center gap-2 cursor-pointer font-medium text-amber-950">
+                <input
+                  type="checkbox"
+                  checked={isSapDraft}
+                  onChange={(e) => setIsSapDraft(e.target.checked)}
+                  className="rounded text-emerald-600"
+                />
+                <span>Save as <strong>Draft PO</strong> (Safe Mode)</span>
+              </label>
+            </div>
+            <div className="flex items-center gap-2 p-2.5 bg-blue-50/70 border border-blue-200/80 rounded-lg">
+              <label className="flex items-center gap-2 cursor-pointer font-medium text-blue-950">
+                <input
+                  type="checkbox"
+                  checked={!sapHeadlessMode}
+                  onChange={(e) => setSapHeadlessMode(!e.target.checked)}
+                  className="rounded text-blue-600"
+                />
+                <span>Watch <strong>Live Desktop Window</strong></span>
+              </label>
+            </div>
           </div>
 
           {/* Items Table */}
@@ -3299,12 +3323,40 @@ export default function SparePartsPage() {
             )}
           </div>
 
-          {/* Screenshot Confirmation */}
-          {sapResult?.screenshotUrl && (
+          {/* Real-time Live Screen Share & Confirmation Snapshot */}
+          {(sapResult?.screenshotUrl || isExecutingSapPo) && (
             <div className="space-y-1.5">
-              <span className="text-xs font-semibold text-slate-800 uppercase tracking-wide">SAP Confirmation Screenshot</span>
-              <div className="border border-slate-200 rounded-lg overflow-hidden bg-slate-900">
-                <img src={sapResult.screenshotUrl} alt="SAP Confirmation Snapshot" className="w-full h-auto max-h-60 object-contain mx-auto" />
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-semibold text-slate-800 uppercase tracking-wide flex items-center gap-2">
+                  {isExecutingSapPo ? (
+                    <>
+                      <span className="relative flex h-2.5 w-2.5">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-rose-500"></span>
+                      </span>
+                      <span className="text-rose-600 font-bold">LIVE SAP SCREEN</span>
+                    </>
+                  ) : (
+                    <span className="text-emerald-700 font-bold">✓ SAP Confirmation Screenshot</span>
+                  )}
+                </span>
+                <span className="text-[11px] font-mono text-slate-600 bg-slate-100 border border-slate-200 px-2 py-0.5 rounded">
+                  {sapResult?.currentStep || (isExecutingSapPo ? (sapHeadlessMode ? 'Background Task' : 'Desktop Window Active') : 'Completed')}
+                </span>
+              </div>
+              <div className="border border-slate-700 rounded-lg overflow-hidden bg-slate-950 shadow-inner min-h-[160px] flex items-center justify-center relative">
+                {sapResult?.screenshotUrl ? (
+                  <img
+                    src={sapResult.screenshotUrl}
+                    alt="SAP Automation Live Stream"
+                    className="w-full h-auto max-h-72 object-contain mx-auto"
+                  />
+                ) : (
+                  <div className="flex flex-col items-center gap-2 text-slate-400 py-8 text-xs">
+                    <Loader2 className="w-5 h-5 animate-spin text-blue-500" />
+                    <span>Connecting to real-time SAP display stream...</span>
+                  </div>
+                )}
               </div>
             </div>
           )}
