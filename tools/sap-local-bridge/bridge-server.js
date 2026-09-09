@@ -143,6 +143,15 @@ async function runLocalSapPoAutomation({
     await page.goto(SAP_PORTAL_URL, { waitUntil: 'domcontentloaded', timeout: 30000 });
 
     addLog(`Filling credentials for user "${effectiveUser}"...`);
+    await page.waitForSelector('#Editbox1', { timeout: 20000 });
+
+    // Ensure password container (#tr-password) is displayed if portal init script is slow
+    await page.evaluate(() => {
+      const trPass = document.getElementById('tr-password');
+      if (trPass) trPass.style.display = 'table-row';
+    });
+    await new Promise((r) => setTimeout(r, 200));
+
     const userInput = await page.waitForSelector('#Editbox1', { timeout: 10000 });
     const passInput = await page.waitForSelector('#Editbox2', { timeout: 10000 });
 

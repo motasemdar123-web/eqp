@@ -191,6 +191,13 @@ async function launchChromiumWithAutoInstall() {
     addLog('Waiting for portal login form (#Editbox1)...');
     await mainPage.waitForSelector('#Editbox1', { timeout: 25000 });
 
+    // Ensure password container (#tr-password) is displayed if portal init script is slow
+    await mainPage.evaluate(() => {
+      const trPass = document.getElementById('tr-password');
+      if (trPass) trPass.style.display = 'table-row';
+    });
+    await new Promise((r) => setTimeout(r, 200));
+
     const effectivePass = password || process.env.SAP_PORTAL_PASSWORD || 'Dah@200055';
     addLog(`Filling credentials for user "${username}"...`);
     await mainPage.fill('#Editbox1', username);
