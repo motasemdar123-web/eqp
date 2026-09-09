@@ -214,6 +214,10 @@ export default function SparePartsPage() {
   const [isExecutingSapPo, setIsExecutingSapPo] = useState(false);
   const [sapLogs, setSapLogs] = useState([]);
   const [sapResult, setSapResult] = useState(null);
+  const [showAddPartForm, setShowAddPartForm] = useState(false);
+  const [manualPartNo, setManualPartNo] = useState('');
+  const [manualPartQty, setManualPartQty] = useState('1');
+  const [manualPartPrice, setManualPartPrice] = useState('0.00');
 
   // TAB 3: BULK INQUIRY STATE
   const [pastedInquiryText, setPastedInquiryText] = useState(SAMPLE_INQUIRY_PARTS.join('\n'));
@@ -1217,6 +1221,60 @@ export default function SparePartsPage() {
     setSapLogs([]);
     setSapResult(null);
     setSapModalOpen(true);
+  }
+
+  function handleAddManualPart() {
+    const pNo = manualPartNo.trim();
+    if (!pNo) {
+      setToast({ type: 'error', message: 'Please enter a part number' });
+      return;
+    }
+    const newItem = {
+      part_no: pNo,
+      qty: parseInt(manualPartQty, 10) || 1,
+      price: manualPartPrice || '0.00',
+      description: 'PARTS',
+    };
+    setSapTargetOrder((prev) => {
+      if (!prev) return prev;
+      return {
+        ...prev,
+        items: [...(prev.items || []), newItem],
+      };
+    });
+    setManualPartNo('');
+    setManualPartQty('1');
+    setManualPartPrice('0.00');
+    setShowAddPartForm(false);
+    setToast({ type: 'success', message: `Added ${pNo} to SAP PO` });
+  }
+
+  function handleRemoveSapItem(indexToRemove) {
+    setSapTargetOrder((prev) => {
+      if (!prev) return prev;
+      return {
+        ...prev,
+        items: (prev.items || []).filter((_, idx) => idx !== indexToRemove),
+      };
+    });
+  }
+
+  async function handleRetryFetchParts() {
+    if (!sapTargetOrder || !sapTargetOrder.quotationNo) return;
+    try {
+      setLoadingSapParts(true);
+      const res = await getKomatsuQuotationParts(sapTargetOrder.quotationNo);
+      if (res && res.parts && res.parts.length > 0) {
+        setSapTargetOrder((prev) => (prev ? { ...prev, items: res.parts } : prev));
+        setToast({ type: 'success', message: `Loaded ${res.parts.length} line items from PDX.` });
+      } else {
+        setToast({ type: 'warn', message: 'No items returned from PDX. You can add items manually below.' });
+      }
+    } catch (err) {
+      setToast({ type: 'error', message: err.message || 'Failed to fetch parts' });
+    } finally {
+      setLoadingSapParts(false);
+    }
   }
 
   async function handleExecuteSapPo(dryRun = false) {
@@ -2917,22 +2975,86 @@ export default function SparePartsPage() {
           </div>
 
           {/* Items Table */}
-          <div className="space-y-1.5">
+          <div className="space-y-2">
             <div className="flex items-center justify-between">
               <span className="text-xs font-semibold text-slate-800 uppercase tracking-wide">
                 Items to Insert ({sapTargetOrder?.items?.length || 0})
               </span>
-              <span className="text-xs text-slate-500">Tax Code: <strong>P0</strong> | Whs: <strong>01</strong></span>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setShowAddPartForm((prev) => !prev)}
+                  className="text-xs font-semibold text-emerald-700 hover:text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 px-2 py-0.5 rounded transition-all"
+                >
+                  {showAddPartForm ? 'Close Add Form' : '➕ Add Part'}
+                </button>
+                <span className="text-xs text-slate-500">Tax: <strong>P0</strong> | Whs: <strong>01</strong></span>
+              </div>
             </div>
+
+            {/* Manual Part Entry Form */}
+            {showAddPartForm && (
+              <div className="p-3 bg-slate-100/80 border border-slate-300 rounded-lg flex flex-wrap items-center gap-2 text-xs animate-in fade-in duration-150">
+                <input
+                  type="text"
+                  placeholder="Part No (e.g. 2A8-62-12230)"
+                  value={manualPartNo}
+                  onChange={(e) => setManualPartNo(e.target.value)}
+                  className="px-2.5 py-1.5 border border-slate-300 rounded bg-white text-xs font-mono flex-1 min-w-[150px] shadow-2xs focus:border-emerald-500 focus:outline-none"
+                  onKeyDown={(e) => { if (e.key === 'Enter') handleAddManualPart(); }}
+                />
+                <input
+                  type="number"
+                  placeholder="Qty"
+                  value={manualPartQty}
+                  onChange={(e) => setManualPartQty(e.target.value)}
+                  className="w-16 px-2.5 py-1.5 border border-slate-300 rounded bg-white text-xs font-mono text-right shadow-2xs focus:border-emerald-500 focus:outline-none"
+                  min="1"
+                />
+                <input
+                  type="text"
+                  placeholder="Unit Price"
+                  value={manualPartPrice}
+                  onChange={(e) => setManualPartPrice(e.target.value)}
+                  className="w-24 px-2.5 py-1.5 border border-slate-300 rounded bg-white text-xs font-mono text-right shadow-2xs focus:border-emerald-500 focus:outline-none"
+                />
+                <Button size="xs" variant="primary" className="bg-emerald-600 hover:bg-emerald-700 text-white" onClick={handleAddManualPart}>
+                  Add to PO
+                </Button>
+                <Button size="xs" variant="ghost" onClick={() => setShowAddPartForm(false)}>
+                  Cancel
+                </Button>
+              </div>
+            )}
 
             {loadingSapParts ? (
               <div className="p-6 border border-slate-200 rounded-lg text-center bg-slate-50 space-y-2">
                 <div className="inline-block w-5 h-5 border-2 border-emerald-600 border-t-transparent rounded-full animate-spin"></div>
-                <div className="text-xs font-medium text-slate-600">Fetching actual quotation line items from Komatsu PDX...</div>
+                <div className="text-xs font-medium text-slate-600">Fetching live quotation line items from Komatsu PDX...</div>
               </div>
             ) : (!sapTargetOrder?.items || sapTargetOrder.items.length === 0) ? (
-              <div className="p-4 border border-amber-200 rounded-lg text-center bg-amber-50/60 text-xs text-amber-800">
-                No line items found for this quotation on Komatsu PDX. Verify the quotation in Komatsu Web Portal.
+              <div className="p-4 border border-amber-200 rounded-lg text-center bg-amber-50/60 space-y-3">
+                <div className="text-xs text-amber-900 font-medium">
+                  No line items automatically retrieved from Komatsu PDX session.
+                </div>
+                <div className="flex items-center justify-center gap-2">
+                  <Button
+                    variant="secondary"
+                    size="xs"
+                    onClick={handleRetryFetchParts}
+                    disabled={loadingSapParts}
+                  >
+                    🔄 Retry from PDX
+                  </Button>
+                  <Button
+                    variant="primary"
+                    size="xs"
+                    className="bg-amber-600 hover:bg-amber-700 text-white"
+                    onClick={() => setShowAddPartForm(true)}
+                  >
+                    ➕ Add Part Manually
+                  </Button>
+                </div>
               </div>
             ) : (
               <div className="border border-slate-200 rounded-lg overflow-hidden max-h-48 overflow-y-auto">
@@ -2943,6 +3065,7 @@ export default function SparePartsPage() {
                       <th className="py-2 px-3">Item No</th>
                       <th className="py-2 px-3 text-right">Quantity</th>
                       <th className="py-2 px-3 text-right">Unit Price</th>
+                      <th className="py-2 px-2 text-center w-8"></th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
@@ -2957,6 +3080,16 @@ export default function SparePartsPage() {
                         </td>
                         <td className="py-1.5 px-3 text-right font-mono text-slate-600">
                           {it.price || it.unit_price || '$0.00'}
+                        </td>
+                        <td className="py-1.5 px-2 text-center">
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveSapItem(idx)}
+                            className="text-slate-400 hover:text-rose-600 p-0.5 rounded transition-colors text-xs font-bold"
+                            title="Remove line item"
+                          >
+                            ✕
+                          </button>
                         </td>
                       </tr>
                     ))}

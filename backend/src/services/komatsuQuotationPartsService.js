@@ -51,6 +51,105 @@ function mergeCookies(existingCookieStr, newCookiesArray) {
     .join('; ');
 }
 
+function extractPartsFromText(text, quotationNo) {
+  if (!text) return [];
+  const cleanQtn = String(quotationNo || '').trim();
+  const parts = [];
+  const seenParts = new Set();
+
+  // 1. Try JSON parsing
+  try {
+    const json = typeof text === 'string' ? JSON.parse(text) : text;
+    const dataList = json.Data || json.data || (Array.isArray(json) ? json : null);
+    if (Array.isArray(dataList)) {
+      dataList.forEach((item) => {
+        const partNo = String(
+          item.RequestedPartNo || item.PartNo || item.ItemNo || item.PartNumber || item.Part_No || item.ITEM_NO || ''
+        ).trim();
+        if (!partNo || seenParts.has(partNo)) return;
+        seenParts.add(partNo);
+        parts.push({
+          part_no: partNo,
+          description: String(item.Description || item.PartDescription || item.ItemDescription || item.PART_DESC || 'PARTS').trim(),
+          quantity: Number(item.Requested_Quantity || item.Quantity || item.Qty || item.QTY || 1),
+          unit_price: item.Unit_Price !== undefined ? Number(item.Unit_Price).toFixed(3) : '0.000',
+          total_price: item.Total_Price !== undefined ? Number(item.Total_Price).toFixed(3) : '0.000',
+          unit: item.Unit || 'EA',
+          quotation_no: cleanQtn,
+        });
+      });
+    }
+  } catch {
+    // Not valid root JSON, continue to regex/HTML
+  }
+
+  if (parts.length > 0) return parts;
+
+  // 2. Check for embedded JSON in script tags (Kendo Grid dataSource: [{"RequestedPartNo": ...}])
+  const jsonArrayMatches = String(text).match(/\[\s*\{[^{}]*(?:"RequestedPartNo"|"PartNo"|"PartNumber")[^{}]*\}\s*\]/gi) || [];
+  for (const arrStr of jsonArrayMatches) {
+    try {
+      const arr = JSON.parse(arrStr);
+      if (Array.isArray(arr)) {
+        arr.forEach((item) => {
+          const partNo = String(item.RequestedPartNo || item.PartNo || item.ItemNo || '').trim();
+          if (!partNo || seenParts.has(partNo)) return;
+          seenParts.add(partNo);
+          parts.push({
+            part_no: partNo,
+            description: String(item.Description || item.PartDescription || 'PARTS').trim(),
+            quantity: Number(item.Requested_Quantity || item.Quantity || item.Qty || 1),
+            unit_price: item.Unit_Price !== undefined ? Number(item.Unit_Price).toFixed(3) : '0.000',
+            total_price: item.Total_Price !== undefined ? Number(item.Total_Price).toFixed(3) : '0.000',
+            unit: item.Unit || 'EA',
+            quotation_no: cleanQtn,
+          });
+        });
+      }
+    } catch {
+      // Ignore JSON parse errors for regex chunks
+    }
+  }
+
+  if (parts.length > 0) return parts;
+
+  // 3. Parse HTML table rows (<tr><td>...</td></tr>)
+  const trMatches = String(text).match(/<tr[^>]*>([\s\S]*?)<\/tr>/gi) || [];
+  for (const tr of trMatches) {
+    const tdMatches = tr.match(/<td[^>]*>([\s\S]*?)<\/td>/gi) || [];
+    if (tdMatches.length >= 3) {
+      const cleanTds = tdMatches.map((td) => td.replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').trim());
+      // Look for a cell that resembles a Komatsu part number (e.g. 2A8-62-12230, 07143-10605, 207-70-71110)
+      for (let i = 0; i < cleanTds.length; i++) {
+        const cell = cleanTds[i];
+        if (
+          cell &&
+          /^[A-Z0-9]{2,6}(?:-[A-Z0-9]{2,6}){1,3}$/i.test(cell) &&
+          !cell.toLowerCase().includes('date') &&
+          !seenParts.has(cell)
+        ) {
+          seenParts.add(cell);
+          const desc = cleanTds[i + 1] || 'PARTS';
+          const qty = parseFloat(cleanTds[i + 2]) || parseFloat(cleanTds[i - 1]) || 1;
+          const price = cleanTds[i + 3] && !isNaN(parseFloat(cleanTds[i + 3])) ? cleanTds[i + 3] : '0.000';
+          parts.push({
+            part_no: cell,
+            description: desc,
+            quantity: qty,
+            unit_price: price,
+            total_price: '0.000',
+            unit: 'EA',
+            quotation_no: cleanQtn,
+          });
+          break;
+        }
+      }
+    }
+  }
+
+  return parts;
+}
+
 /**
  * Fetch line items for a specific Komatsu PDX Quotation
  */
@@ -62,6 +161,7 @@ async function getQuotationParts(quotationNo, seqNo = '00', customCookie = null)
 
   const cleanQtn = String(quotationNo).trim();
   const cleanSeq = String(seqNo || '00').trim();
+  const subNo = cleanSeq === '00' || cleanSeq === '0' || !cleanSeq ? '0' : cleanSeq;
 
   const defaultHeaders = {
     'User-Agent':
@@ -71,85 +171,94 @@ async function getQuotationParts(quotationNo, seqNo = '00', customCookie = null)
   };
 
   // STEP 1: Pre-load QuotationDetails session
-  const detailUrl = `${BASE_PORTAL_URL}/QuotationDetails/Index?strQUTN=${cleanQtn}&strQutnSubNo=${cleanSeq}&DBCode=536K`;
-  const initResp = await fetch(detailUrl, {
-    method: 'GET',
-    headers: defaultHeaders,
-    signal: AbortSignal.timeout(20000),
-  });
+  const detailUrl = `${BASE_PORTAL_URL}/QuotationDetails/Index?strQUTN=${cleanQtn}&strQutnSubNo=${subNo}&DBCode=536K`;
+  let initHtml = '';
+  try {
+    const initResp = await fetch(detailUrl, {
+      method: 'GET',
+      headers: defaultHeaders,
+      signal: AbortSignal.timeout(20000),
+    });
 
-  const initSetCookies = initResp.headers.getSetCookie
-    ? initResp.headers.getSetCookie()
-    : [initResp.headers.get('set-cookie')].filter(Boolean);
-  if (initSetCookies.length > 0) {
-    cookieStr = mergeCookies(cookieStr, initSetCookies);
+    const initSetCookies = initResp.headers.getSetCookie
+      ? initResp.headers.getSetCookie()
+      : [initResp.headers.get('set-cookie')].filter(Boolean);
+    if (initSetCookies.length > 0) {
+      cookieStr = mergeCookies(cookieStr, initSetCookies);
+    }
+    initHtml = await initResp.text();
+  } catch (err) {
+    console.warn(`[getQuotationParts] QuotationDetails/Index fetch warning: ${err.message}`);
   }
 
-  // STEP 2: Query line items via QuotationDetails/Search
+  // Check if Index page itself already has the parts
+  let parts = extractPartsFromText(initHtml, cleanQtn);
+  if (parts.length > 0) {
+    return {
+      quotation_no: cleanQtn,
+      revision_no: cleanSeq,
+      count: parts.length,
+      parts,
+    };
+  }
+
+  // STEP 2: Query line items via QuotationDetails/Search (Payload 1: standard Kendo)
   const searchUrl = `${BASE_PORTAL_URL}/QuotationDetails/Search`;
-  const searchResp = await fetch(searchUrl, {
-    method: 'POST',
-    headers: {
-      ...defaultHeaders,
-      'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-      'X-Requested-With': 'XMLHttpRequest',
-      'Referer': detailUrl,
-      'Cookie': cookieStr,
-    },
-    body: new URLSearchParams({
-      strQuotationNo: cleanQtn,
-      strQuotSeqNo: cleanSeq,
-      DBCode: '536K',
-      page: '1',
-      pageSize: '100',
-      group: '',
-      filter: '',
-    }).toString(),
-    signal: AbortSignal.timeout(20000),
-  });
-
-  const rawText = await searchResp.text();
-  const parts = [];
-
-  // Try parsing as JSON first (Kendo Grid data)
   try {
-    const json = JSON.parse(rawText);
-    const dataList = json.Data || json.data || (Array.isArray(json) ? json : null);
-    if (Array.isArray(dataList)) {
-      dataList.forEach((item) => {
-        const partNo = item.RequestedPartNo || item.PartNo || item.ItemNo || item.PartNumber || '';
-        if (!partNo) return;
-        parts.push({
-          part_no: String(partNo).trim(),
-          description: String(item.Description || item.PartDescription || item.ItemDescription || 'PARTS').trim(),
-          quantity: Number(item.Requested_Quantity || item.Quantity || item.Qty || 1),
-          unit_price: item.Unit_Price !== undefined ? Number(item.Unit_Price).toFixed(3) : '0.000',
-          total_price: item.Total_Price !== undefined ? Number(item.Total_Price).toFixed(3) : '0.000',
-          unit: item.Unit || 'EA',
-          quotation_no: cleanQtn,
-        });
+    const searchResp = await fetch(searchUrl, {
+      method: 'POST',
+      headers: {
+        ...defaultHeaders,
+        'Accept': 'application/json, text/javascript, */*; q=0.01',
+        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+        'X-Requested-With': 'XMLHttpRequest',
+        'Referer': detailUrl,
+        'Cookie': cookieStr,
+      },
+      body: new URLSearchParams({
+        qtno: cleanQtn,
+        subqtno: subNo,
+        strQuotationNo: cleanQtn,
+        strQuotSeqNo: cleanSeq,
+        DBCode: '536K',
+        page: '1',
+        pageSize: '100',
+        group: '',
+        filter: '',
+      }).toString(),
+      signal: AbortSignal.timeout(20000),
+    });
+
+    const rawText = await searchResp.text();
+    parts = extractPartsFromText(rawText, cleanQtn);
+  } catch (err) {
+    console.warn(`[getQuotationParts] QuotationDetails/Search payload 1 warning: ${err.message}`);
+  }
+
+  // STEP 3: Fallback Payload 2 (exact python pdx_core signature: { qtno, subqtno, DBCode })
+  if (parts.length === 0) {
+    try {
+      const searchResp2 = await fetch(searchUrl, {
+        method: 'POST',
+        headers: {
+          ...defaultHeaders,
+          'Accept': '*/*',
+          'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+          'X-Requested-With': 'XMLHttpRequest',
+          'Referer': detailUrl,
+          'Cookie': cookieStr,
+        },
+        body: new URLSearchParams({
+          qtno: cleanQtn,
+          subqtno: subNo,
+          DBCode: '536K',
+        }).toString(),
+        signal: AbortSignal.timeout(20000),
       });
-    }
-  } catch {
-    // If not JSON, parse HTML table rows
-    const trMatches = rawText.match(/<tr[^>]*>([\s\S]*?)<\/tr>/gi) || [];
-    for (const tr of trMatches) {
-      const tdMatches = tr.match(/<td[^>]*>([\s\S]*?)<\/td>/gi) || [];
-      if (tdMatches.length >= 4) {
-        const cleanTds = tdMatches.map((td) => td.replace(/<[^>]+>/g, '').trim());
-        const partNo = cleanTds[1] || cleanTds[0];
-        if (partNo && !partNo.toLowerCase().includes('part') && !partNo.toLowerCase().includes('item')) {
-          parts.push({
-            part_no: partNo,
-            description: cleanTds[2] || 'PARTS',
-            quantity: parseFloat(cleanTds[3]) || 1,
-            unit_price: cleanTds[4] || '0.000',
-            total_price: cleanTds[5] || '0.000',
-            unit: 'EA',
-            quotation_no: cleanQtn,
-          });
-        }
-      }
+      const rawText2 = await searchResp2.text();
+      parts = extractPartsFromText(rawText2, cleanQtn);
+    } catch (err) {
+      console.warn(`[getQuotationParts] QuotationDetails/Search payload 2 warning: ${err.message}`);
     }
   }
 
