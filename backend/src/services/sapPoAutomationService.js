@@ -191,17 +191,20 @@ async function launchChromiumWithAutoInstall() {
     addLog('Waiting for portal login form (#Editbox1)...');
     await mainPage.waitForSelector('#Editbox1', { timeout: 25000 });
 
-    // Ensure password container (#tr-password) is displayed if portal init script is slow
-    await mainPage.evaluate(() => {
-      const trPass = document.getElementById('tr-password');
-      if (trPass) trPass.style.display = 'table-row';
-    });
-    await new Promise((r) => setTimeout(r, 200));
-
     const effectivePass = password || process.env.SAP_PORTAL_PASSWORD || 'Dah@200055';
     addLog(`Filling credentials for user "${username}"...`);
     await mainPage.fill('#Editbox1', username);
-    await mainPage.fill('#Editbox2', effectivePass);
+
+    // Trigger onblur to start TSPlus checkLogin() AJAX request that reveals Editbox2
+    await mainPage.evaluate(() => {
+      const u = document.getElementById('Editbox1');
+      if (u) u.blur();
+    });
+
+    addLog('Waiting for password field to be activated by portal...');
+    const passInput = await mainPage.waitForSelector('#Editbox2', { state: 'visible', timeout: 20000 });
+    await passInput.fill(effectivePass);
+    await new Promise((r) => setTimeout(r, 400));
 
     addLog('Submitting login credentials (#buttonLogOn)...');
     await mainPage.click('#buttonLogOn');
@@ -211,21 +214,23 @@ async function launchChromiumWithAutoInstall() {
     for (let w = 0; w < 45; w++) {
       await new Promise((r) => setTimeout(r, 1000));
       const pages = context.pages();
-      targetPage = html5Page || pages.find((p) => p.url().includes('html5.html'));
-      if (targetPage && targetPage.url().includes('html5.html')) break;
+      for (const p of pages) {
+        const hasCanvas = await p.evaluate(() => !!document.querySelector('#JWTS_myCanvas, canvas')).catch(() => false);
+        if (hasCanvas) {
+          targetPage = p;
+          break;
+        }
+      }
+      if (targetPage) break;
     }
 
     if (!targetPage) {
       const pages = context.pages();
-      targetPage = pages[pages.length - 1];
+      targetPage = pages.find((p) => p.url().includes('html5.html')) || pages[pages.length - 1];
     }
 
     addLog(`Connected to active session tab: ${targetPage.url()}`);
-    try {
-      await targetPage.waitForLoadState('domcontentloaded', { timeout: 20000 });
-    } catch (_) {}
-
-    await targetPage.waitForSelector('#JWTS_myCanvas, canvas', { timeout: 45000 });
+    await targetPage.waitForSelector('#JWTS_myCanvas, canvas', { timeout: 15000 });
     addLog('HTML5 Canvas detected (#JWTS_myCanvas). Waiting for SAP B1 client to settle...');
 
     async function rdpClick(p, x, y, holdMs = 120) {

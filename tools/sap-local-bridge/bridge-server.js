@@ -144,46 +144,44 @@ async function runLocalSapPoAutomation({
 
     addLog(`Filling credentials for user "${effectiveUser}"...`);
     await page.waitForSelector('#Editbox1', { timeout: 20000 });
+    await page.fill('#Editbox1', effectiveUser);
 
-    // Ensure password container (#tr-password) is displayed if portal init script is slow
+    // Trigger onblur to start TSPlus checkLogin() AJAX request that reveals Editbox2
     await page.evaluate(() => {
-      const trPass = document.getElementById('tr-password');
-      if (trPass) trPass.style.display = 'table-row';
+      const u = document.getElementById('Editbox1');
+      if (u) u.blur();
     });
-    await new Promise((r) => setTimeout(r, 200));
 
-    const userInput = await page.waitForSelector('#Editbox1', { timeout: 10000 });
-    const passInput = await page.waitForSelector('#Editbox2', { timeout: 10000 });
-
-    await userInput.fill(effectiveUser);
-    await new Promise((r) => setTimeout(r, 200));
+    addLog('Waiting for password field to be activated by portal...');
+    const passInput = await page.waitForSelector('#Editbox2', { state: 'visible', timeout: 20000 });
     await passInput.fill(effectivePass);
-    await new Promise((r) => setTimeout(r, 300));
+    await new Promise((r) => setTimeout(r, 400));
 
     addLog('Submitting login form (#buttonLogOn)...');
-    const submitBtn = await page.waitForSelector('#buttonLogOn', { timeout: 10000 });
-    if (submitBtn) {
-      await submitBtn.click();
-    } else {
-      await passInput.press('Enter');
-    }
+    await page.click('#buttonLogOn');
 
     addLog('Waiting for SAP HTML5 Remote Desktop session to load...');
     let targetPage = null;
-    for (let i = 0; i < 30; i++) {
+    for (let s = 1; s <= 45; s++) {
       await new Promise((r) => setTimeout(r, 1000));
       const pages = context.pages();
-      targetPage = html5Page || pages.find((p) => p.url().includes('html5.html'));
-      if (targetPage && targetPage.url().includes('html5.html')) break;
+      for (const p of pages) {
+        const hasCanvas = await p.evaluate(() => !!document.querySelector('#JWTS_myCanvas, canvas')).catch(() => false);
+        if (hasCanvas) {
+          targetPage = p;
+          break;
+        }
+      }
+      if (targetPage) break;
     }
 
     if (!targetPage) {
       const pages = context.pages();
-      targetPage = pages[pages.length - 1];
+      targetPage = pages.find((p) => p.url().includes('html5.html')) || pages[pages.length - 1];
     }
 
     addLog(`Connected to active session tab: ${targetPage.url()}`);
-    await targetPage.waitForSelector('#JWTS_myCanvas, canvas', { timeout: 35000 });
+    await targetPage.waitForSelector('#JWTS_myCanvas, canvas', { timeout: 15000 });
     addLog('HTML5 Canvas detected (#JWTS_myCanvas). Waiting 12s for SAP B1 desktop to stabilize...');
 
     async function rdpClick(p, x, y, holdMs = 120) {
