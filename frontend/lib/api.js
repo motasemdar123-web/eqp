@@ -633,6 +633,17 @@ export function syncEqpcLifecycle(payload = {}) {
   });
 }
 
+export function getSapCredentials() {
+  return request('/api/sap/credentials');
+}
+
+export function saveSapCredentials(payload) {
+  return request('/api/sap/credentials', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+}
+
 export function createSapPurchaseOrder(payload) {
   return request('/api/sap/po/create', {
     method: 'POST',

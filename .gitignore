@@ -22,6 +22,7 @@ backend/*.png
 **/auth_state.json
 sheet_download.xlsx
 scratch/
+**/user_sap_credentials.json
 
 
 

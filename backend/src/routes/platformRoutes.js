@@ -83,6 +83,8 @@ router.post('/api/komatsu/eqpc/lifecycle-sync', requirePlatformAuth, asyncHandle
 router.get('/api/komatsu/eqpc/lifecycle-sync', requirePlatformAuth, asyncHandler(platformController.syncEqpcLifecycle));
 
 // SAP Business One Purchase Order Automation routes
+router.get('/api/sap/credentials', requirePlatformAuth, asyncHandler(platformController.getSapCredentials));
+router.post('/api/sap/credentials', requirePlatformAuth, asyncHandler(platformController.saveSapCredentials));
 router.post('/api/sap/po/create', requirePlatformAuth, asyncHandler(platformController.createSapPurchaseOrder));
 router.get('/api/sap/po/status', requirePlatformAuth, asyncHandler(platformController.getSapPoStatus));
 router.post('/api/sap/po/export-excel', requirePlatformAuth, asyncHandler(platformController.exportSapPoExcel));

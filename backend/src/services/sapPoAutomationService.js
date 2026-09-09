@@ -3,9 +3,7 @@ const path = require('path');
 const fs = require('fs');
 const ExcelJS = require('exceljs');
 
-const SAP_PORTAL_URL = process.env.SAP_PORTAL_URL || 'https://daralhai.b1pro.com/software/html5.html';
-const SAP_USER = process.env.SAP_PORTAL_USER || 'DAH38';
-const SAP_PASSWORD = process.env.SAP_PORTAL_PASSWORD || 'Dar@20055';
+const SAP_PORTAL_URL = process.env.SAP_PORTAL_URL || 'https://daralhai.b1pro.com/';
 const DEFAULT_VENDOR = 'V000006';
 
 let latestJobStatus = {
@@ -29,7 +27,14 @@ function addLog(message, type = 'info') {
 /**
  * Generate an Excel file formatted for SAP Business One Purchase Order Data Import
  */
-async function generateSapPoExcelBuffer({ vendor = DEFAULT_VENDOR, buyer = 'Motasem Ghanem', deliveryDate, items = [], remarks = '', quotationNo = '' }) {
+async function generateSapPoExcelBuffer({
+  vendor = DEFAULT_VENDOR,
+  buyer = 'Motasem Ghanem',
+  deliveryDate,
+  items = [],
+  remarks = '',
+  quotationNo = '',
+}) {
   const workbook = new ExcelJS.Workbook();
   const sheet = workbook.addWorksheet('Purchase Order');
 
@@ -59,7 +64,7 @@ async function generateSapPoExcelBuffer({ vendor = DEFAULT_VENDOR, buyer = 'Mota
       buyer: buyer || 'Motasem Ghanem',
       itemCode: it.part_no || it.partNo || it.itemCode,
       quantity: Number(it.qty || it.quantity || 1),
-      price: it.price ? Number(it.price) : 0,
+      price: it.price || it.unit_price ? Number(it.price || it.unit_price) : 0,
       taxCode: 'P0',
       whsCode: '01',
       comments: commentText,
@@ -71,9 +76,11 @@ async function generateSapPoExcelBuffer({ vendor = DEFAULT_VENDOR, buyer = 'Mota
 }
 
 /**
- * Launch Playwright and automate Purchase Order creation in SAP B1
+ * Launch Playwright and automate Purchase Order creation in SAP B1 via HTML5 Canvas
  */
 async function createSapPurchaseOrder({
+  username = process.env.SAP_PORTAL_USER || 'DAH38',
+  password = process.env.SAP_PORTAL_PASSWORD || 'Dah@200055',
   vendor = DEFAULT_VENDOR,
   buyer = 'Motasem Ghanem',
   deliveryDate,
@@ -81,6 +88,7 @@ async function createSapPurchaseOrder({
   remarks = '',
   quotationNo = '',
   dryRun = false,
+  isDraft = true,
 }) {
   if (!items || items.length === 0) {
     throw new Error('Cannot create Purchase Order without line items.');
@@ -97,7 +105,7 @@ async function createSapPurchaseOrder({
   };
 
   addLog(`Starting SAP PO Automation for Quotation #${quotationNo || 'Direct'} (${items.length} items)...`);
-  addLog(`Vendor: ${vendor} | Buyer: ${buyer} | Delivery Date: ${deliveryDate || 'Default'}`);
+  addLog(`User: ${username} | Vendor: ${vendor} | Buyer: ${buyer} | Mode: ${isDraft ? 'Draft PO' : 'Final PO'}`);
 
   if (dryRun) {
     addLog('DRY-RUN mode enabled: skipping live browser interaction.');
@@ -114,27 +122,151 @@ async function createSapPurchaseOrder({
     return latestJobStatus.result;
   }
 
-  addLog(`Direct HTML5 canvas browser automation disabled to prevent hangs/blocking.`);
-  addLog(`Formatted ${items.length} line items for SAP Business One Data Import (Vendor: ${vendor} | Buyer: ${buyer}).`);
+  let browser = null;
+  try {
+    addLog('Launching headless Chromium browser session...');
+    browser = await chromium.launch({
+      headless: true,
+      args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage',
+        '--ignore-certificate-errors',
+      ],
+    });
 
-  latestJobStatus.status = 'SUCCESS';
-  latestJobStatus.running = false;
-  latestJobStatus.result = {
-    mode: 'EXCEL_IMPORT_PREFERRED',
-    vendor,
-    buyer,
-    quotationNo,
-    itemsCount: items.length,
-    items: items.map((it) => ({
-      partNo: it.part_no || it.partNo || it.itemCode,
-      qty: it.qty || it.quantity || 1,
-      price: it.price || 0,
-    })),
-    timestamp: new Date().toISOString(),
-    message: `Purchase order formatted for ${items.length} items. Use "Export SAP Excel Template" for direct SAP B1 import.`,
-  };
+    const context = await browser.newContext({
+      ignoreHTTPSErrors: true,
+      viewport: { width: 1440, height: 900 },
+    });
 
-  return latestJobStatus.result;
+    let html5Page = null;
+    context.on('page', (p) => {
+      addLog(`New tab opened: ${p.url() || 'initialization...'}`);
+      if (p.url().includes('html5.html') || p.url() === 'about:blank') {
+        html5Page = p;
+      }
+    });
+
+    const mainPage = await context.newPage();
+
+    addLog(`Navigating to SAP Web Access Portal (${SAP_PORTAL_URL})...`);
+    await mainPage.goto(SAP_PORTAL_URL, { waitUntil: 'networkidle', timeout: 30000 });
+
+    addLog(`Filling credentials for user "${username}"...`);
+    await mainPage.fill('#Editbox1', username);
+    await mainPage.fill('#Editbox2', password);
+
+    addLog('Submitting login credentials (#buttonLogOn)...');
+    await mainPage.click('#buttonLogOn');
+
+    addLog('Waiting for SAP HTML5 Remote Desktop session to initialize (up to 40s)...');
+    let targetPage = null;
+    for (let w = 0; w < 40; w++) {
+      await new Promise((r) => setTimeout(r, 1000));
+      const pages = context.pages();
+      targetPage = pages.find((p) => p.url().includes('html5.html'));
+      if (targetPage) break;
+    }
+
+    if (!targetPage) {
+      const pages = context.pages();
+      targetPage = pages[pages.length - 1];
+    }
+
+    addLog(`Connected to active session tab: ${targetPage.url()}`);
+    await targetPage.waitForSelector('#JWTS_myCanvas', { timeout: 30000 });
+    addLog('HTML5 Canvas detected (#JWTS_myCanvas). Waiting for SAP B1 client to settle...');
+
+    // Wait for the desktop stream to stabilize
+    await new Promise((r) => setTimeout(r, 12000));
+
+    // Open Purchase Order window via SAP Menu search at (75, 150)
+    addLog('Focusing SAP Menu search box...');
+    await targetPage.mouse.click(75, 150);
+    await new Promise((r) => setTimeout(r, 500));
+    await targetPage.keyboard.press('Control+A');
+    await targetPage.keyboard.type('Purchase Order', { delay: 100 });
+    await new Promise((r) => setTimeout(r, 800));
+    await targetPage.keyboard.press('Enter');
+
+    addLog('Navigated to Purchase Order form. Waiting for form to render...');
+    await new Promise((r) => setTimeout(r, 4000));
+
+    // Vendor Selection
+    addLog(`Entering Vendor Code: ${vendor}...`);
+    await targetPage.keyboard.type(vendor, { delay: 100 });
+    await targetPage.keyboard.press('Tab');
+    await new Promise((r) => setTimeout(r, 1500));
+
+    // Move to item table and type lines
+    addLog(`Entering ${items.length} line items into SAP grid...`);
+    for (let i = 0; i < items.length; i++) {
+      const it = items[i];
+      const partNo = it.part_no || it.partNo || it.itemCode;
+      const qty = String(it.qty || it.quantity || 1);
+
+      addLog(`  [Line ${i + 1}/${items.length}] Part: ${partNo} | Qty: ${qty}`);
+      await targetPage.keyboard.type(partNo, { delay: 80 });
+      await targetPage.keyboard.press('Tab');
+      await new Promise((r) => setTimeout(r, 800));
+
+      // Move past Description to Quantity column
+      await targetPage.keyboard.press('Tab');
+      await targetPage.keyboard.type(qty, { delay: 80 });
+      await targetPage.keyboard.press('Tab');
+      await new Promise((r) => setTimeout(r, 400));
+
+      // Down arrow to next row
+      await targetPage.keyboard.press('ArrowDown');
+      await new Promise((r) => setTimeout(r, 400));
+    }
+
+    // Save document
+    if (isDraft) {
+      addLog('Saving Purchase Order as Draft (Ctrl+D)...');
+      await targetPage.keyboard.press('Control+D');
+    } else {
+      addLog('Finalizing and posting Purchase Order (Ctrl+A / Add & New)...');
+      await targetPage.keyboard.press('Control+A');
+    }
+
+    await new Promise((r) => setTimeout(r, 3000));
+
+    // Capture screenshot confirmation
+    const screenshotDir = path.join(__dirname, '../../public/sap_screenshots');
+    if (!fs.existsSync(screenshotDir)) fs.mkdirSync(screenshotDir, { recursive: true });
+    const screenshotName = `sap_po_${Date.now()}.png`;
+    const screenshotPath = path.join(screenshotDir, screenshotName);
+    await targetPage.screenshot({ path: screenshotPath }).catch(() => {});
+
+    latestJobStatus.screenshotUrl = `/sap_screenshots/${screenshotName}`;
+    latestJobStatus.status = 'SUCCESS';
+    latestJobStatus.running = false;
+    latestJobStatus.result = {
+      mode: isDraft ? 'DRAFT_PO_CREATED' : 'PO_CREATED',
+      vendor,
+      buyer,
+      quotationNo,
+      itemsCount: items.length,
+      screenshotUrl: latestJobStatus.screenshotUrl,
+      timestamp: new Date().toISOString(),
+      message: `Successfully processed Purchase Order for ${items.length} items in SAP Business One.`,
+    };
+
+    addLog(`✓ ${latestJobStatus.result.message}`);
+    return latestJobStatus.result;
+  } catch (err) {
+    addLog(`Automation Error: ${err.message}`, 'error');
+    latestJobStatus.status = 'FAILED';
+    latestJobStatus.running = false;
+    latestJobStatus.error = err.message;
+    throw err;
+  } finally {
+    if (browser) {
+      await browser.close().catch(() => {});
+    }
+  }
 }
 
 function getSapPoStatus() {

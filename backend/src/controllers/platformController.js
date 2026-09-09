@@ -251,6 +251,7 @@ const komatsuInquiryService = require('../services/komatsuInquiryService');
 const komatsuEoService = require('../services/komatsuEoService');
 const komatsuEqpCareService = require('../services/komatsuEqpCareService');
 const sapPoAutomationService = require('../services/sapPoAutomationService');
+const userSapCredentialsService = require('../services/userSapCredentialsService');
 
 async function getKomatsuStatus(req, res) {
   const { cookie } = req.query || {};
@@ -507,20 +508,41 @@ async function syncEqpcLifecycle(req, res) {
 // SAP BUSINESS ONE PURCHASE ORDER CONTROLLER METHODS
 // ----------------------------------------------------
 
+async function getSapCredentials(req, res) {
+  const userId = req.platformUser?.sub || req.platformUser?.userNumber || 'default';
+  const creds = userSapCredentialsService.getUserSapCredentialsPublic(userId);
+  res.json({ success: true, ...creds });
+}
+
+async function saveSapCredentials(req, res) {
+  const userId = req.platformUser?.sub || req.platformUser?.userNumber || 'default';
+  const { username, password, buyer } = req.body || {};
+  if (!username) {
+    return res.status(400).json({ success: false, message: 'SAP Web Access username is required.' });
+  }
+  const updated = userSapCredentialsService.saveUserSapCredentials(userId, { username, password, buyer });
+  res.json({ success: true, ...updated, message: 'SAP credentials saved successfully.' });
+}
+
 async function createSapPurchaseOrder(req, res) {
-  const { vendor, buyer, deliveryDate, items, remarks, quotationNo, dryRun } = req.body || {};
+  const userId = req.platformUser?.sub || req.platformUser?.userNumber || 'default';
+  const savedCreds = userSapCredentialsService.getUserSapCredentials(userId);
+  const { vendor, buyer, deliveryDate, items, remarks, quotationNo, dryRun, isDraft, username, password } = req.body || {};
   if (!Array.isArray(items) || items.length === 0) {
     return res.status(400).json({ success: false, message: 'Array of items is required' });
   }
 
   const result = await sapPoAutomationService.createSapPurchaseOrder({
+    username: username || savedCreds.username,
+    password: password || savedCreds.password,
     vendor: vendor || 'V000006',
-    buyer: buyer || 'Motasem Ghanem',
+    buyer: buyer || savedCreds.buyer || 'Motasem Ghanem',
     deliveryDate,
     items,
     remarks,
     quotationNo,
     dryRun: Boolean(dryRun),
+    isDraft: isDraft !== false,
   });
 
   res.json({ success: true, ...result });
@@ -618,6 +640,8 @@ module.exports = {
   createSapPurchaseOrder,
   getSapPoStatus,
   exportSapPoExcel,
+  getSapCredentials,
+  saveSapCredentials,
 };
 
 

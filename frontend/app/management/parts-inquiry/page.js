@@ -34,6 +34,8 @@ import {
   createSapPurchaseOrder,
   getSapPoStatus,
   downloadSapPoExcel,
+  getSapCredentials,
+  saveSapCredentials,
 } from '../../../lib/api';
 
 const SAMPLE_EO_ITEMS = [
@@ -192,6 +194,13 @@ export default function SparePartsPage() {
 
   // SAP PURCHASE ORDER AUTOMATION STATE
   const [sapModalOpen, setSapModalOpen] = useState(false);
+  const [sapCredsModalOpen, setSapCredsModalOpen] = useState(false);
+  const [sapUsername, setSapUsername] = useState('DAH38');
+  const [sapPassword, setSapPassword] = useState('');
+  const [hasSavedSapPassword, setHasSavedSapPassword] = useState(false);
+  const [savingSapCreds, setSavingSapCreds] = useState(false);
+  const [isSapDraft, setIsSapDraft] = useState(true);
+  const [soQuickFilter, setSoQuickFilter] = useState('ALL'); // 'ALL' | 'SO_ONLY'
   const [sapTargetOrder, setSapTargetOrder] = useState(null);
   const [sapBuyer, setSapBuyer] = useState('Motasem Ghanem');
   const [sapVendor, setSapVendor] = useState('V000006');
@@ -222,6 +231,7 @@ export default function SparePartsPage() {
     loadConnectionStatus();
     loadFleetDatabase();
     loadLatestOrderNumber();
+    loadUserSapCredentials();
   }, []);
 
   useEffect(() => {
@@ -322,6 +332,54 @@ export default function SparePartsPage() {
       setToast({ type: 'error', message: err.message || 'Failed to save cookie' });
     } finally {
       setSavingCookie(false);
+    }
+  }
+
+  async function loadUserSapCredentials() {
+    try {
+      const res = await getSapCredentials();
+      if (res && res.success) {
+        if (res.username) setSapUsername(res.username);
+        if (res.buyer) setSapBuyer(res.buyer);
+        setHasSavedSapPassword(Boolean(res.hasPassword));
+      }
+    } catch {
+      // Fallback to local storage if available
+      if (typeof window !== 'undefined') {
+        const storedUser = localStorage.getItem('sapUsername');
+        if (storedUser) setSapUsername(storedUser);
+      }
+    }
+  }
+
+  async function handleSaveSapCredentials(e) {
+    if (e && e.preventDefault) e.preventDefault();
+    const cleanUser = sapUsername.trim();
+    if (!cleanUser) {
+      setToast({ type: 'error', message: 'SAP Web Access username is required.' });
+      return;
+    }
+
+    try {
+      setSavingSapCreds(true);
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('sapUsername', cleanUser);
+      }
+      await saveSapCredentials({
+        username: cleanUser,
+        password: sapPassword.trim() || undefined,
+        buyer: sapBuyer.trim() || 'Motasem Ghanem',
+      });
+      if (sapPassword.trim()) {
+        setHasSavedSapPassword(true);
+        setSapPassword('');
+      }
+      setSapCredsModalOpen(false);
+      setToast({ type: 'success', message: 'SAP Web Access credentials saved successfully.' });
+    } catch (err) {
+      setToast({ type: 'error', message: err.message || 'Failed to save SAP credentials.' });
+    } finally {
+      setSavingSapCreds(false);
     }
   }
 
@@ -999,14 +1057,21 @@ export default function SparePartsPage() {
 
   const filteredQuotations = useMemo(() => {
     const q = qtnSearchFilter.trim().toLowerCase();
-    if (!q) return inProcessQuotations;
-    return inProcessQuotations.filter(
+    let list = inProcessQuotations;
+    if (soQuickFilter === 'SO_ONLY') {
+      list = list.filter((item) => {
+        const st = (item.status || '').toLowerCase();
+        return st.includes('so') || st.includes('transferred') || st.includes('copied');
+      });
+    }
+    if (!q) return list;
+    return list.filter(
       (item) =>
         item.quotation_no?.toLowerCase().includes(q) ||
         item.db_order_no?.toLowerCase().includes(q) ||
         item.customer_name?.toLowerCase().includes(q)
     );
-  }, [inProcessQuotations, qtnSearchFilter]);
+  }, [inProcessQuotations, qtnSearchFilter, soQuickFilter]);
 
   async function startBatchConfirmAndCopy(actionType = 'FULL_CONVERT') {
     const selectedList = inProcessQuotations.filter((q) => selectedQtnNumbers.has(q.quotation_no));
@@ -1119,10 +1184,24 @@ export default function SparePartsPage() {
     }
 
     setIsExecutingSapPo(true);
-    setSapLogs((prev) => [...prev, `[${new Date().toLocaleTimeString()}] Starting SAP PO Automation for Vendor ${sapVendor}...`]);
+    setSapLogs((prev) => [
+      ...prev,
+      `[${new Date().toLocaleTimeString()}] Starting SAP PO Automation (User: ${sapUsername} | Vendor: ${sapVendor} | Mode: ${isSapDraft ? 'Draft PO' : 'Final PO'})...`,
+    ]);
+
+    const pollTimer = setInterval(async () => {
+      try {
+        const st = await getSapPoStatus();
+        if (st && Array.isArray(st.logs) && st.logs.length > 0) {
+          setSapLogs(st.logs.map((l) => `[${l.timestamp}] ${l.message}`));
+        }
+      } catch {}
+    }, 1500);
 
     try {
       const payload = {
+        username: sapUsername,
+        password: sapPassword || undefined,
         vendor: sapVendor,
         buyer: sapBuyer,
         deliveryDate: sapDeliveryDate,
@@ -1130,13 +1209,14 @@ export default function SparePartsPage() {
         quotationNo: sapTargetOrder.quotationNo,
         remarks: `PDX Order #${sapTargetOrder.quotationNo || sapTargetOrder.db_order_no || ''} - ${sapTargetOrder.customer || ''}`,
         dryRun,
+        isDraft: isSapDraft,
       };
 
       const resp = await createSapPurchaseOrder(payload);
       setSapResult(resp);
       setSapLogs((prev) => [
         ...prev,
-        `[${new Date().toLocaleTimeString()}] ✓ SUCCESS: Purchase Order sent to SAP Business One!`,
+        `[${new Date().toLocaleTimeString()}] ✓ SUCCESS: Purchase Order processed in SAP Business One!`,
         `[${new Date().toLocaleTimeString()}] Status: ${resp.message || 'PO Created in SAP'}`,
       ]);
       setToast({ type: 'success', message: 'SAP Purchase Order successfully submitted!' });
@@ -1144,7 +1224,17 @@ export default function SparePartsPage() {
       setSapLogs((prev) => [...prev, `[${new Date().toLocaleTimeString()}] ❌ Error: ${err.message}`]);
       setToast({ type: 'error', message: err.message || 'Failed to create SAP Purchase Order' });
     } finally {
+      clearInterval(pollTimer);
       setIsExecutingSapPo(false);
+      try {
+        const finalSt = await getSapPoStatus();
+        if (finalSt && Array.isArray(finalSt.logs) && finalSt.logs.length > 0) {
+          setSapLogs(finalSt.logs.map((l) => `[${l.timestamp}] ${l.message}`));
+        }
+        if (finalSt?.screenshotUrl) {
+          setSapResult((prev) => ({ ...prev, screenshotUrl: finalSt.screenshotUrl }));
+        }
+      } catch {}
     }
   }
 
@@ -1245,6 +1335,18 @@ export default function SparePartsPage() {
         description="Automate multi-item Emergency Orders (EO) across multiple fleet serial numbers, bundle parts into unified quotations, and convert quotations to Sales Orders."
         actions={
           <div className="flex items-center gap-2">
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => setSapCredsModalOpen(true)}
+              className="border-emerald-200 text-emerald-800 bg-emerald-50 hover:bg-emerald-100 font-medium"
+              title="Configure and save your SAP Web Access credentials"
+            >
+              <svg className="w-4 h-4 mr-1.5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
+              🔑 SAP Login ({sapUsername || 'Configure'})
+            </Button>
             <Button
               variant="secondary"
               size="sm"
@@ -2058,6 +2160,16 @@ export default function SparePartsPage() {
                 {isConvertingSo ? 'Processing...' : `1-Click Convert (${selectedQtnNumbers.size})`}
               </Button>
               <Button
+                variant="primary"
+                size="sm"
+                className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold"
+                onClick={openSapPoModalFromBatch}
+                disabled={selectedQtnNumbers.size === 0 || isConvertingSo}
+                title="Create Purchase Order in SAP for selected orders"
+              >
+                🚀 Create SAP PO ({selectedQtnNumbers.size})
+              </Button>
+              <Button
                 variant="secondary"
                 size="sm"
                 className="bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border-emerald-300 font-semibold"
@@ -2069,13 +2181,40 @@ export default function SparePartsPage() {
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
-            <Input
-              value={qtnSearchFilter}
-              onChange={(e) => setQtnSearchFilter(e.target.value)}
-              placeholder="Search quotation #, customer, order #..."
-              className="max-w-xs text-xs"
-            />
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div className="flex items-center gap-2">
+              <Input
+                value={qtnSearchFilter}
+                onChange={(e) => setQtnSearchFilter(e.target.value)}
+                placeholder="Search quotation #, customer, order #..."
+                className="max-w-xs text-xs"
+              />
+              <div className="inline-flex rounded-md shadow-2xs border border-slate-200 bg-slate-50 p-0.5 text-xs">
+                <button
+                  type="button"
+                  onClick={() => setSoQuickFilter('ALL')}
+                  className={`px-2.5 py-1 rounded font-medium transition-all ${
+                    soQuickFilter === 'ALL'
+                      ? 'bg-white text-slate-900 shadow-2xs font-semibold'
+                      : 'text-slate-500 hover:text-slate-800'
+                  }`}
+                >
+                  All ({inProcessQuotations.length})
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSoQuickFilter('SO_ONLY')}
+                  className={`px-2.5 py-1 rounded font-medium transition-all ${
+                    soQuickFilter === 'SO_ONLY'
+                      ? 'bg-emerald-600 text-white shadow-2xs font-semibold'
+                      : 'text-emerald-700 hover:text-emerald-900'
+                  }`}
+                >
+                  Copied to SO Only ({inProcessQuotations.filter((q) => (q.status || '').toLowerCase().includes('so') || (q.status || '').toLowerCase().includes('transferred')).length})
+                </button>
+              </div>
+            </div>
+
             <div className="text-xs text-slate-500">
               Selected: <strong className="text-slate-900">{selectedQtnNumbers.size}</strong> of {filteredQuotations.length}
             </div>
@@ -2161,14 +2300,26 @@ export default function SparePartsPage() {
                         </Badge>
                       </TableCell>
                       <TableCell className="text-right">
-                        <Button
-                          variant="ghost"
-                          size="xs"
-                          className="text-emerald-700 hover:bg-emerald-50 hover:text-emerald-800 font-medium"
-                          onClick={() => openSapPoModalForQuotation(q)}
-                        >
-                          SAP Excel ➔
-                        </Button>
+                        {((q.status || '').toLowerCase().includes('so') || (q.status || '').toLowerCase().includes('transferred')) ? (
+                          <Button
+                            variant="primary"
+                            size="xs"
+                            className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs shadow-2xs"
+                            onClick={() => openSapPoModalForQuotation(q)}
+                            title="Create Purchase Order in SAP Business One"
+                          >
+                            🚀 Create SAP PO
+                          </Button>
+                        ) : (
+                          <Button
+                            variant="ghost"
+                            size="xs"
+                            className="text-emerald-700 hover:bg-emerald-50 hover:text-emerald-800 font-medium"
+                            onClick={() => openSapPoModalForQuotation(q)}
+                          >
+                            SAP Excel ➔
+                          </Button>
+                        )}
                       </TableCell>
                     </TableRow>
                   );
@@ -2592,15 +2743,33 @@ export default function SparePartsPage() {
           <div className="flex items-center gap-2">
             <span className="p-1.5 bg-emerald-100 text-emerald-800 rounded text-sm font-bold">SAP B1</span>
             <div>
-              <DialogTitle>Export SAP Purchase Order Template</DialogTitle>
+              <DialogTitle>Create SAP Purchase Order</DialogTitle>
               <p className="text-xs text-slate-500 mt-0.5">
-                Generate and download formatted Excel spreadsheet ready for direct import into SAP Business One
+                Automate PO creation directly in SAP Business One or download formatted Excel import
               </p>
             </div>
           </div>
         </DialogHeader>
 
         <DialogContent className="space-y-4 max-h-[75vh] overflow-y-auto">
+          {/* Active Credentials Bar */}
+          <div className="flex items-center justify-between p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-xs">
+            <div className="flex items-center gap-2">
+              <span className="text-slate-500">SAP User:</span>
+              <strong className="text-slate-900 font-mono">{sapUsername || 'Not configured'}</strong>
+              <span className="text-slate-300">|</span>
+              <span className="text-slate-500">Buyer:</span>
+              <strong className="text-slate-900">{sapBuyer}</strong>
+            </div>
+            <button
+              type="button"
+              onClick={() => setSapCredsModalOpen(true)}
+              className="text-xs font-semibold text-emerald-700 hover:text-emerald-900 underline cursor-pointer"
+            >
+              Update Credentials
+            </button>
+          </div>
+
           {/* Header Summary */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-3 bg-slate-50 border border-slate-200 rounded-lg text-xs">
             <div>
@@ -2633,6 +2802,19 @@ export default function SparePartsPage() {
                 onChange={(e) => setSapDeliveryDate(e.target.value)}
               />
             </Field>
+          </div>
+
+          {/* Draft vs Final Toggle */}
+          <div className="flex items-center gap-3 p-2.5 bg-amber-50/70 border border-amber-200/80 rounded-lg text-xs">
+            <label className="flex items-center gap-2 cursor-pointer font-medium text-amber-950">
+              <input
+                type="checkbox"
+                checked={isSapDraft}
+                onChange={(e) => setIsSapDraft(e.target.checked)}
+                className="rounded text-emerald-600"
+              />
+              <span>Save as <strong>Draft Purchase Order</strong> in SAP (recommended for safety & review)</span>
+            </label>
           </div>
 
           {/* Items Table */}
@@ -2674,6 +2856,16 @@ export default function SparePartsPage() {
             </div>
           </div>
 
+          {/* Screenshot Confirmation */}
+          {sapResult?.screenshotUrl && (
+            <div className="space-y-1.5">
+              <span className="text-xs font-semibold text-slate-800 uppercase tracking-wide">SAP Confirmation Screenshot</span>
+              <div className="border border-slate-200 rounded-lg overflow-hidden bg-slate-900">
+                <img src={sapResult.screenshotUrl} alt="SAP Confirmation Snapshot" className="w-full h-auto max-h-60 object-contain mx-auto" />
+              </div>
+            </div>
+          )}
+
           {/* Execution Logs */}
           {sapLogs.length > 0 && (
             <div className="space-y-1.5">
@@ -2690,15 +2882,22 @@ export default function SparePartsPage() {
         </DialogContent>
 
         <DialogFooter className="flex flex-col sm:flex-row items-center justify-between gap-2 border-t border-slate-100 pt-3">
-          <span className="text-xs text-slate-500 font-medium">
-            ✓ Pre-formatted for SAP B1 Data Import & DTW (Vendor: <strong>V000006</strong>)
-          </span>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handleDownloadSapExcel}
+            disabled={isExecutingSapPo}
+            className="text-xs text-slate-600 hover:text-slate-900"
+          >
+            📥 Export SAP Excel
+          </Button>
 
           <div className="flex items-center gap-2">
             <Button
               variant="secondary"
               size="sm"
               onClick={() => setSapModalOpen(false)}
+              disabled={isExecutingSapPo}
             >
               Cancel
             </Button>
@@ -2706,15 +2905,90 @@ export default function SparePartsPage() {
               variant="primary"
               size="sm"
               className="bg-emerald-600 hover:bg-emerald-700 text-white border-emerald-600 font-semibold"
-              onClick={() => {
-                handleDownloadSapExcel();
-                setSapModalOpen(false);
-              }}
+              onClick={() => handleExecuteSapPo(false)}
+              disabled={isExecutingSapPo}
             >
-              📥 Download SAP Import Excel (.xlsx)
+              {isExecutingSapPo ? (
+                <>
+                  <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+                  </svg>
+                  Automating in SAP...
+                </>
+              ) : (
+                '🚀 Automate in SAP (Canvas)'
+              )}
             </Button>
           </div>
         </DialogFooter>
+      </Dialog>
+
+      {/* Modal: SAP Web Access Credentials Dialog */}
+      <Dialog open={sapCredsModalOpen} onClose={() => !savingSapCreds && setSapCredsModalOpen(false)}>
+        <DialogHeader>
+          <div className="flex items-center gap-2">
+            <span className="p-1.5 bg-emerald-100 text-emerald-800 rounded text-sm font-bold">SAP B1</span>
+            <div>
+              <DialogTitle>SAP Web Access Credentials</DialogTitle>
+              <p className="text-xs text-slate-500 mt-0.5">
+                Save your login credentials for <code className="text-emerald-700 font-mono font-semibold">https://daralhai.b1pro.com/</code>
+              </p>
+            </div>
+          </div>
+        </DialogHeader>
+
+        <form onSubmit={handleSaveSapCredentials}>
+          <DialogContent className="space-y-4">
+            <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-lg text-xs text-emerald-950 space-y-1">
+              <p className="font-semibold">Per-User Secure Storage</p>
+              <p>Credentials are saved per user profile to automate Purchase Order creation via the SAP HTML5 remote desktop interface.</p>
+            </div>
+
+            <Field label="SAP Web Access User Name" required hint="E.g. DAH38">
+              <Input
+                type="text"
+                value={sapUsername}
+                onChange={(e) => setSapUsername(e.target.value)}
+                placeholder="User name (e.g. DAH38)"
+                required
+              />
+            </Field>
+
+            <Field
+              label="Password"
+              hint={hasSavedSapPassword ? "Password is saved. Leave blank to keep current password, or enter a new one to update." : "Enter your Web Access password."}
+            >
+              <Input
+                type="password"
+                value={sapPassword}
+                onChange={(e) => setSapPassword(e.target.value)}
+                placeholder={hasSavedSapPassword ? "•••••••• (Saved)" : "Enter password"}
+              />
+            </Field>
+
+            <Field label="Default Buyer Name" hint="Mapped to SAP Purchase Order Buyer dropdown">
+              <Select value={sapBuyer} onChange={(e) => setSapBuyer(e.target.value)}>
+                <option value="Motasem Ghanem">Motasem Ghanem</option>
+                <option value="Mohammad Qraein">Mohammad Qraein</option>
+              </Select>
+            </Field>
+          </DialogContent>
+
+          <DialogFooter className="flex items-center justify-between border-t border-slate-100 pt-3">
+            <span className="text-xs text-slate-500">
+              {hasSavedSapPassword ? "✓ Password configured" : "⚠️ No password set"}
+            </span>
+            <div className="flex items-center gap-2">
+              <Button variant="secondary" size="sm" onClick={() => setSapCredsModalOpen(false)} disabled={savingSapCreds}>
+                Cancel
+              </Button>
+              <Button variant="primary" size="sm" type="submit" disabled={savingSapCreds} className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold">
+                {savingSapCreds ? "Saving..." : "Save Credentials"}
+              </Button>
+            </div>
+          </DialogFooter>
+        </form>
       </Dialog>
 
       <Toast message={toast?.message} type={toast?.type} onClose={() => setToast(null)} />
