@@ -177,7 +177,10 @@ async function launchChromiumWithAutoInstall() {
     const mainPage = await context.newPage();
 
     addLog(`Navigating to SAP Web Access Portal (${SAP_PORTAL_URL})...`);
-    await mainPage.goto(SAP_PORTAL_URL, { waitUntil: 'networkidle', timeout: 30000 });
+    await mainPage.goto(SAP_PORTAL_URL, { waitUntil: 'domcontentloaded', timeout: 45000 });
+
+    addLog('Waiting for portal login form (#Editbox1)...');
+    await mainPage.waitForSelector('#Editbox1', { timeout: 20000 });
 
     addLog(`Filling credentials for user "${username}"...`);
     await mainPage.fill('#Editbox1', username);
@@ -186,13 +189,13 @@ async function launchChromiumWithAutoInstall() {
     addLog('Submitting login credentials (#buttonLogOn)...');
     await mainPage.click('#buttonLogOn');
 
-    addLog('Waiting for SAP HTML5 Remote Desktop session to initialize (up to 40s)...');
+    addLog('Waiting for SAP HTML5 Remote Desktop session to initialize (up to 45s)...');
     let targetPage = null;
-    for (let w = 0; w < 40; w++) {
+    for (let w = 0; w < 45; w++) {
       await new Promise((r) => setTimeout(r, 1000));
       const pages = context.pages();
-      targetPage = pages.find((p) => p.url().includes('html5.html'));
-      if (targetPage) break;
+      targetPage = html5Page || pages.find((p) => p.url().includes('html5.html'));
+      if (targetPage && targetPage.url().includes('html5.html')) break;
     }
 
     if (!targetPage) {
@@ -201,7 +204,11 @@ async function launchChromiumWithAutoInstall() {
     }
 
     addLog(`Connected to active session tab: ${targetPage.url()}`);
-    await targetPage.waitForSelector('#JWTS_myCanvas', { timeout: 30000 });
+    try {
+      await targetPage.waitForLoadState('domcontentloaded', { timeout: 20000 });
+    } catch (_) {}
+
+    await targetPage.waitForSelector('#JWTS_myCanvas, canvas', { timeout: 45000 });
     addLog('HTML5 Canvas detected (#JWTS_myCanvas). Waiting for SAP B1 client to settle...');
 
     // Wait for the desktop stream to stabilize
