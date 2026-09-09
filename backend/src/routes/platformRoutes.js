@@ -1,13 +1,14 @@
 const { Router } = require('express');
 const platformController = require('../controllers/platformController');
 const { asyncHandler } = require('../utils/asyncHandler');
-const { requirePlatformAuth, requirePermission } = require('../middleware/platformAuthMiddleware');
+const { requirePlatformAuth, optionalPlatformAuth, requirePermission } = require('../middleware/platformAuthMiddleware');
 const { audioUpload, manualUpload } = require('../middleware/uploadMiddleware');
 
 const router = Router();
 
 router.post('/api/auth/login', asyncHandler(platformController.login));
 router.post('/api/auth/unified-login', asyncHandler(platformController.unifiedLogin));
+router.post('/api/auth/refresh', asyncHandler(platformController.refreshToken));
 router.post('/api/auth/technician-login', asyncHandler(platformController.technicianLogin));
 router.get('/api/auth/microsoft/start', asyncHandler(platformController.startMicrosoftLogin));
 router.get('/api/auth/microsoft/callback', asyncHandler(platformController.microsoftCallback));
@@ -58,8 +59,8 @@ router.patch('/api/scheduling/tasks/:id', requirePlatformAuth, requirePermission
 router.delete('/api/scheduling/tasks/:id', requirePlatformAuth, requirePermission('SCHEDULE_MANAGE'), asyncHandler(platformController.deleteDailyScheduleTask));
 router.post('/api/scheduling/technician-schedules', requirePlatformAuth, requirePermission('SCHEDULE_MANAGE'), asyncHandler(platformController.upsertTechnicianSchedule));
 
-router.get('/api/komatsu/status', requirePlatformAuth, asyncHandler(platformController.getKomatsuStatus));
-router.post('/api/komatsu/cookie', requirePlatformAuth, asyncHandler(platformController.saveKomatsuCookie));
+router.get('/api/komatsu/status', optionalPlatformAuth, asyncHandler(platformController.getKomatsuStatus));
+router.post('/api/komatsu/cookie', optionalPlatformAuth, asyncHandler(platformController.saveKomatsuCookie));
 router.post('/api/komatsu/inquiry', requirePlatformAuth, asyncHandler(platformController.runKomatsuInquiry));
 router.get('/api/komatsu/fleet', requirePlatformAuth, asyncHandler(platformController.getKomatsuFleet));
 router.post('/api/komatsu/custom-machine', requirePlatformAuth, asyncHandler(platformController.addKomatsuCustomMachine));
@@ -71,8 +72,8 @@ router.post('/api/komatsu/quotations/confirm', requirePlatformAuth, asyncHandler
 router.post('/api/komatsu/quotations/copy-to-so', requirePlatformAuth, asyncHandler(platformController.copyKomatsuQuotationToSo));
 
 // Komatsu Equipment Care (EQP Care) routes
-router.get('/api/komatsu/eqpc/status', requirePlatformAuth, asyncHandler(platformController.getEqpcStatus));
-router.post('/api/komatsu/eqpc/cookie', requirePlatformAuth, asyncHandler(platformController.saveEqpcCookie));
+router.get('/api/komatsu/eqpc/status', optionalPlatformAuth, asyncHandler(platformController.getEqpcStatus));
+router.post('/api/komatsu/eqpc/cookie', optionalPlatformAuth, asyncHandler(platformController.saveEqpcCookie));
 router.get('/api/komatsu/eqpc/event-codes', requirePlatformAuth, asyncHandler(platformController.getEqpcEventCodes));
 router.get('/api/komatsu/eqpc/machine-lookup', requirePlatformAuth, asyncHandler(platformController.lookupEqpcMachine));
 router.post('/api/komatsu/eqpc/upload', requirePlatformAuth, asyncHandler(platformController.uploadEqpcReport));

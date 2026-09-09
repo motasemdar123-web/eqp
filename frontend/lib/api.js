@@ -1,5 +1,49 @@
 export const API_BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://eqp-1.onrender.com';
 
+async function attemptSessionRenewal() {
+  if (typeof window === 'undefined') return null;
+
+  let user = null;
+  try {
+    user = JSON.parse(localStorage.getItem('platformUser') || localStorage.getItem('user') || 'null');
+  } catch {}
+
+  const email = user?.email;
+  const currentToken = localStorage.getItem('platformToken') || user?.sessionToken || '';
+
+  if (!email && !currentToken) return null;
+
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/auth/refresh`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...(currentToken ? { Authorization: `Bearer ${currentToken}` } : {}),
+      },
+      body: JSON.stringify({ email }),
+    });
+
+    const data = await res.json().catch(() => ({}));
+    if (res.ok && data?.token) {
+      localStorage.setItem('platformToken', data.token);
+      if (data.user) {
+        localStorage.setItem('platformUser', JSON.stringify(data.user));
+      }
+      return data;
+    }
+  } catch {}
+
+  // Fallback: If enterprise user recognized locally, renew local profile session
+  if (email && ENTERPRISE_PROFILES[email.toLowerCase()]) {
+    const local = createLocalAuthSession(email.toLowerCase(), ENTERPRISE_PROFILES[email.toLowerCase()]);
+    localStorage.setItem('platformToken', local.token);
+    localStorage.setItem('platformUser', JSON.stringify(local.user));
+    return local;
+  }
+
+  return null;
+}
+
 async function request(path, options = {}) {
   let token = '';
 
@@ -44,7 +88,25 @@ async function request(path, options = {}) {
   if (!response.ok) {
     if (response.status === 401) {
       const err = String(data.error || '');
-      if (err.includes('session token') || err.includes('Session expired') || err.includes('Authentication required') || err.includes('expired token')) {
+      const isAuthErr =
+        err.includes('session token') ||
+        err.includes('Session expired') ||
+        err.includes('Authentication required') ||
+        err.includes('expired token') ||
+        err.includes('Invalid or expired token') ||
+        err.includes('jwt expired');
+
+      // Attempt silent background renewal once if not already retried
+      if (isAuthErr && typeof window !== 'undefined' && !options._retry && path !== '/api/auth/refresh') {
+        try {
+          const renewed = await attemptSessionRenewal();
+          if (renewed?.token) {
+            return request(path, { ...options, _retry: true });
+          }
+        } catch {}
+
+        // If renewal was impossible, clear stale token so user isn't stuck permanently
+        localStorage.removeItem('platformToken');
         throw new Error('Your EQP portal login session has expired. Please refresh the page or sign back in.');
       }
     }
@@ -370,8 +432,8 @@ function getStoredPdxCookie() {
   return '';
 }
 
-export function getKomatsuStatus() {
-  const cookie = getStoredPdxCookie();
+export function getKomatsuStatus(customCookie) {
+  const cookie = customCookie || getStoredPdxCookie();
   const query = cookie ? `?cookie=${encodeURIComponent(cookie)}` : '';
   return request(`/api/komatsu/status${query}`);
 }

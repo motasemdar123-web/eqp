@@ -7,7 +7,7 @@ const SEARCH_API_URL = 'https://www.komatsu.ae/kmewebportal/StockInquiry/MultiPa
 
 const DEFAULT_INITIAL_COOKIES =
   'SelectedLanguage=; ' +
-  'ASP.NET_SessionId=izik1kr2yiinlrtcdv2bs4cw;';
+  'ASP.NET_SessionId=y5wbtej0sk0rnpghb5d1sadi;';
 
 let inMemoryCookie = '';
 

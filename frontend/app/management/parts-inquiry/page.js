@@ -250,10 +250,11 @@ export default function SparePartsPage() {
     }
   }, [activeTab]);
 
-  async function loadConnectionStatus() {
+  async function loadConnectionStatus(customCookie) {
     try {
       setLoadingStatus(true);
-      const res = await getKomatsuStatus();
+      const cookie = customCookie || (typeof window !== 'undefined' ? localStorage.getItem('komatsuPdxCookie') : null);
+      const res = await getKomatsuStatus(cookie);
       setStatus(res || { connected: false, message: 'Offline' });
     } catch (err) {
       setStatus({ connected: false, message: err.message || 'Unable to connect to PDX server' });
@@ -298,6 +299,9 @@ export default function SparePartsPage() {
 
     try {
       setSavingCookie(true);
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('komatsuPdxCookie', cleanCookie);
+      }
       const res = await saveKomatsuCookie(cleanCookie);
       if (typeof window !== 'undefined') {
         localStorage.setItem('komatsuPdxCookie', res?.cookie || cleanCookie);
@@ -312,6 +316,9 @@ export default function SparePartsPage() {
         setToast({ type: 'error', message: res.message || 'Cookie verification failed' });
       }
     } catch (err) {
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('komatsuPdxCookie', cleanCookie);
+      }
       setToast({ type: 'error', message: err.message || 'Failed to save cookie' });
     } finally {
       setSavingCookie(false);

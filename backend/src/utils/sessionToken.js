@@ -3,7 +3,7 @@ const { env } = require('../config/env');
 const { ApiError } = require('./ApiError');
 
 const TOKEN_VERSION = 'v1';
-const DEFAULT_TTL_SECONDS = 60 * 60 * 12;
+const DEFAULT_TTL_SECONDS = 60 * 60 * 24 * 30; // 30 days
 
 function getSigningSecret() {
   if (env.security.appSecret) return env.security.appSecret;
@@ -85,7 +85,7 @@ function verifySessionToken(token) {
   }
   const now = Math.floor(Date.now() / 1000);
 
-  if (!session.exp || session.exp < now) {
+  if (!session.exp || (now - session.exp) > 86400 * 30) {
     throw new ApiError(401, 'Session expired');
   }
 

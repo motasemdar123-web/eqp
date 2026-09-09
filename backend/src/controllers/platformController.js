@@ -11,6 +11,11 @@ async function unifiedLogin(req, res) {
   res.json({ success: true, ...result });
 }
 
+async function refreshToken(req, res) {
+  const result = await platformService.refreshToken(req);
+  res.json({ success: true, ...result });
+}
+
 async function technicianLogin(req, res) {
   requireFields(req.body, ['email', 'employeeCode']);
   const result = await platformService.technicianLogin(req.body);
@@ -549,6 +554,7 @@ async function exportSapPoExcel(req, res) {
 module.exports = {
   login,
   unifiedLogin,
+  refreshToken,
   technicianLogin,
   startMicrosoftLogin,
   microsoftCallback,
