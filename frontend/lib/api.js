@@ -657,11 +657,14 @@ export function createSapPurchaseOrder(payload) {
   return request('/api/sap/po/create', {
     method: 'POST',
     body: JSON.stringify(payload),
+    timeoutMs: 180000,
   });
 }
 
 export function getSapPoStatus() {
-  return request('/api/sap/po/status');
+  return request('/api/sap/po/status', {
+    timeoutMs: 15000,
+  });
 }
 
 export async function downloadSapPoExcel(payload) {

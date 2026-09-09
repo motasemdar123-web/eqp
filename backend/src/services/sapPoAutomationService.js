@@ -212,7 +212,7 @@ async function launchChromiumWithAutoInstall() {
     addLog('HTML5 Canvas detected (#JWTS_myCanvas). Waiting for SAP B1 client to settle...');
 
     // Wait for the desktop stream to stabilize
-    await new Promise((r) => setTimeout(r, 12000));
+    await new Promise((r) => setTimeout(r, 7000));
 
     // Open Purchase Order window via SAP Menu search at (75, 150)
     addLog('Focusing SAP Menu search box...');

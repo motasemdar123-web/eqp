@@ -546,12 +546,12 @@ async function saveSapCredentials(req, res) {
 async function createSapPurchaseOrder(req, res) {
   const userId = req.platformUser?.sub || req.platformUser?.userNumber || 'default';
   const savedCreds = userSapCredentialsService.getUserSapCredentials(userId);
-  const { vendor, buyer, deliveryDate, items, remarks, quotationNo, dryRun, isDraft, username, password } = req.body || {};
+  const { vendor, buyer, deliveryDate, items, remarks, quotationNo, dryRun, isDraft, username, password, async: isAsync } = req.body || {};
   if (!Array.isArray(items) || items.length === 0) {
     return res.status(400).json({ success: false, message: 'Array of items is required' });
   }
 
-  const result = await sapPoAutomationService.createSapPurchaseOrder({
+  const executionPromise = sapPoAutomationService.createSapPurchaseOrder({
     username: username || savedCreds.username,
     password: password || savedCreds.password,
     vendor: vendor || 'V000006',
@@ -564,6 +564,14 @@ async function createSapPurchaseOrder(req, res) {
     isDraft: isDraft !== false,
   });
 
+  if (isAsync || req.query.async === 'true') {
+    executionPromise.catch((err) => {
+      console.error('[SAP-PO-AUTOMATION] Async execution error:', err.message);
+    });
+    return res.json({ success: true, started: true, message: 'SAP Purchase Order automation initiated.' });
+  }
+
+  const result = await executionPromise;
   res.json({ success: true, ...result });
 }
 

@@ -1294,14 +1294,39 @@ export default function SparePartsPage() {
       `[${new Date().toLocaleTimeString()}] Starting SAP PO Automation (User: ${sapUsername} | Vendor: ${sapVendor} | Mode: ${isSapDraft ? 'Draft PO' : 'Final PO'})...`,
     ]);
 
+    let isCompleted = false;
     const pollTimer = setInterval(async () => {
       try {
         const st = await getSapPoStatus();
         if (st && Array.isArray(st.logs) && st.logs.length > 0) {
           setSapLogs(st.logs.map((l) => `[${l.timestamp}] ${l.message}`));
         }
+        if (st?.screenshotUrl) {
+          setSapResult((prev) => ({ ...(prev || {}), screenshotUrl: st.screenshotUrl }));
+        }
+        if (st?.status === 'SUCCESS' && !isCompleted) {
+          isCompleted = true;
+          clearInterval(pollTimer);
+          setIsExecutingSapPo(false);
+          setSapResult(st.result || { message: 'PO Created in SAP', screenshotUrl: st.screenshotUrl });
+          setToast({ type: 'success', message: 'SAP Purchase Order successfully submitted!' });
+        } else if (st?.status === 'FAILED' && !isCompleted) {
+          isCompleted = true;
+          clearInterval(pollTimer);
+          setIsExecutingSapPo(false);
+          setToast({ type: 'error', message: st.error || 'Failed to create SAP Purchase Order' });
+        }
       } catch {}
     }, 1500);
+
+    // 4-minute absolute safety timeout to stop polling
+    const safetyTimeout = setTimeout(() => {
+      if (!isCompleted) {
+        clearInterval(pollTimer);
+        setIsExecutingSapPo(false);
+        setToast({ type: 'error', message: 'SAP PO automation exceeded maximum duration (4m).' });
+      }
+    }, 240000);
 
     try {
       const targetRef = sapVendorRef || sapTargetOrder.db_order_no || sapTargetOrder.quotationNo || '';
@@ -1318,31 +1343,38 @@ export default function SparePartsPage() {
         whsCode: '003',
         dryRun,
         isDraft: isSapDraft,
+        async: true,
       };
 
       const resp = await createSapPurchaseOrder(payload);
-      setSapResult(resp);
-      setSapLogs((prev) => [
-        ...prev,
-        `[${new Date().toLocaleTimeString()}] ✓ SUCCESS: Purchase Order processed in SAP Business One!`,
-        `[${new Date().toLocaleTimeString()}] Status: ${resp.message || 'PO Created in SAP'}`,
-      ]);
-      setToast({ type: 'success', message: 'SAP Purchase Order successfully submitted!' });
+      if (resp?.started) {
+        // Automation is progressing in background; polling timer handles completion
+        return;
+      }
+      if (resp && !isCompleted) {
+        isCompleted = true;
+        clearTimeout(safetyTimeout);
+        clearInterval(pollTimer);
+        setIsExecutingSapPo(false);
+        setSapResult(resp);
+        setSapLogs((prev) => [
+          ...prev,
+          `[${new Date().toLocaleTimeString()}] ✓ SUCCESS: Purchase Order processed in SAP Business One!`,
+          `[${new Date().toLocaleTimeString()}] Status: ${resp.message || 'PO Created in SAP'}`,
+        ]);
+        setToast({ type: 'success', message: 'SAP Purchase Order successfully submitted!' });
+      }
     } catch (err) {
-      setSapLogs((prev) => [...prev, `[${new Date().toLocaleTimeString()}] ❌ Error: ${err.message}`]);
-      setToast({ type: 'error', message: err.message || 'Failed to create SAP Purchase Order' });
-    } finally {
-      clearInterval(pollTimer);
-      setIsExecutingSapPo(false);
-      try {
-        const finalSt = await getSapPoStatus();
-        if (finalSt && Array.isArray(finalSt.logs) && finalSt.logs.length > 0) {
-          setSapLogs(finalSt.logs.map((l) => `[${l.timestamp}] ${l.message}`));
-        }
-        if (finalSt?.screenshotUrl) {
-          setSapResult((prev) => ({ ...prev, screenshotUrl: finalSt.screenshotUrl }));
-        }
-      } catch {}
+      const isTimeout = String(err.message || '').includes('timed out');
+      if (!isTimeout && !isCompleted) {
+        clearTimeout(safetyTimeout);
+        clearInterval(pollTimer);
+        setIsExecutingSapPo(false);
+        setSapLogs((prev) => [...prev, `[${new Date().toLocaleTimeString()}] ❌ Error: ${err.message}`]);
+        setToast({ type: 'error', message: err.message || 'Failed to create SAP Purchase Order' });
+      } else {
+        setSapLogs((prev) => [...prev, `[${new Date().toLocaleTimeString()}] ⏳ Job continues running on server...`]);
+      }
     }
   }
 
