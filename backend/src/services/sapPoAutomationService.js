@@ -1,6 +1,7 @@
 const { chromium } = require('playwright');
 const path = require('path');
 const fs = require('fs');
+const { execSync } = require('child_process');
 const ExcelJS = require('exceljs');
 
 const SAP_PORTAL_URL = process.env.SAP_PORTAL_URL || 'https://daralhai.b1pro.com/';
@@ -122,18 +123,39 @@ async function createSapPurchaseOrder({
     return latestJobStatus.result;
   }
 
+async function launchChromiumWithAutoInstall() {
+  const launchOptions = {
+    headless: true,
+    args: [
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      '--disable-dev-shm-usage',
+      '--ignore-certificate-errors',
+    ],
+  };
+
+  try {
+    return await chromium.launch(launchOptions);
+  } catch (err) {
+    const errMsg = String(err?.message || '');
+    if (errMsg.includes("Executable doesn't exist") || errMsg.includes('download new browsers') || errMsg.includes('playwright install')) {
+      addLog('Playwright Chromium binary not found on host. Downloading now (npx playwright install chromium)...', 'warn');
+      try {
+        execSync('npx playwright install chromium', { stdio: 'inherit', timeout: 120000 });
+        addLog('Chromium binary downloaded successfully. Retrying launch...');
+        return await chromium.launch(launchOptions);
+      } catch (installErr) {
+        throw new Error(`Chromium missing on host and auto-install failed: ${installErr.message}`);
+      }
+    }
+    throw err;
+  }
+}
+
   let browser = null;
   try {
     addLog('Launching headless Chromium browser session...');
-    browser = await chromium.launch({
-      headless: true,
-      args: [
-        '--no-sandbox',
-        '--disable-setuid-sandbox',
-        '--disable-dev-shm-usage',
-        '--ignore-certificate-errors',
-      ],
-    });
+    browser = await launchChromiumWithAutoInstall();
 
     const context = await browser.newContext({
       ignoreHTTPSErrors: true,
