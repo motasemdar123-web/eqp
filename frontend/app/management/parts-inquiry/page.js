@@ -204,7 +204,8 @@ export default function SparePartsPage() {
   const [isSapDraft, setIsSapDraft] = useState(true);
   const [soQuickFilter, setSoQuickFilter] = useState('ALL'); // 'ALL' | 'SO_ONLY'
   const [sapTargetOrder, setSapTargetOrder] = useState(null);
-  const [sapBuyer, setSapBuyer] = useState('Motasem Ghanem');
+  const [sapBuyer, setSapBuyer] = useState('MOTASEM GHANEM');
+  const [sapVendorRef, setSapVendorRef] = useState('');
   const [sapVendor, setSapVendor] = useState('V000006');
   const [sapDeliveryDate, setSapDeliveryDate] = useState(() => {
     const d = new Date();
@@ -1128,6 +1129,7 @@ export default function SparePartsPage() {
   async function openSapPoModalForQuotation(quotation) {
     const existingParts = quotation.parts && quotation.parts.length > 0 ? quotation.parts : [];
 
+    setSapVendorRef(quotation.db_order_no || '');
     setSapTargetOrder({
       quotationNo: quotation.quotation_no,
       db_order_no: quotation.db_order_no,
@@ -1166,10 +1168,12 @@ export default function SparePartsPage() {
 
     const firstQ = selectedList[0];
     const initialItems = selectedList.flatMap((q) => (q.parts && q.parts.length > 0 ? q.parts : []));
+    const combinedDbRefs = selectedList.map((q) => q.db_order_no).filter(Boolean).join(', ');
 
+    setSapVendorRef(combinedDbRefs);
     setSapTargetOrder({
       quotationNo: selectedList.map((q) => q.quotation_no).join(', '),
-      db_order_no: selectedList.map((q) => q.db_order_no).filter(Boolean).join(', '),
+      db_order_no: combinedDbRefs,
       customer: firstQ.customer_name || 'Komatsu PDX Orders',
       items: initialItems,
     });
@@ -1212,6 +1216,7 @@ export default function SparePartsPage() {
       ? plannedOrders.flatMap((o) => o.parts || [])
       : eoItems.map((it) => ({ part_no: it.part_no, qty: it.quantity, price: it.unit_price, description: it.description }));
 
+    setSapVendorRef(eoStartingOrderNo || '');
     setSapTargetOrder({
       quotationNo: `EO-QUEUE-${new Date().toISOString().slice(5, 10).replace('-', '')}`,
       db_order_no: eoStartingOrderNo,
@@ -1299,6 +1304,7 @@ export default function SparePartsPage() {
     }, 1500);
 
     try {
+      const targetRef = sapVendorRef || sapTargetOrder.db_order_no || sapTargetOrder.quotationNo || '';
       const payload = {
         username: sapUsername,
         password: sapPassword || undefined,
@@ -1307,7 +1313,9 @@ export default function SparePartsPage() {
         deliveryDate: sapDeliveryDate,
         items: sapTargetOrder.items,
         quotationNo: sapTargetOrder.quotationNo,
-        remarks: `PDX Order #${sapTargetOrder.quotationNo || sapTargetOrder.db_order_no || ''} - ${sapTargetOrder.customer || ''}`,
+        dbOrderNo: targetRef,
+        remarks: targetRef,
+        whsCode: '003',
         dryRun,
         isDraft: isSapDraft,
       };
@@ -1345,13 +1353,16 @@ export default function SparePartsPage() {
     }
 
     try {
+      const targetRef = sapVendorRef || sapTargetOrder.db_order_no || sapTargetOrder.quotationNo || '';
       await downloadSapPoExcel({
         vendor: sapVendor,
         buyer: sapBuyer,
         deliveryDate: sapDeliveryDate,
         items: sapTargetOrder.items,
         quotationNo: sapTargetOrder.quotationNo,
-        remarks: `PDX Quotation #${sapTargetOrder.quotationNo}`,
+        dbOrderNo: targetRef,
+        remarks: targetRef,
+        whsCode: '003',
       });
       setToast({ type: 'success', message: 'SAP Purchase Order Excel file downloaded!' });
     } catch (err) {
@@ -2928,28 +2939,50 @@ export default function SparePartsPage() {
           </div>
 
           {/* Header Summary */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-3 bg-slate-50 border border-slate-200 rounded-lg text-xs">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-3 bg-slate-50 border border-slate-200 rounded-lg text-xs">
             <div>
               <span className="text-slate-500 block">Vendor (CardCode)</span>
               <strong className="text-slate-900 font-mono">V000006</strong> (Komatsu)
             </div>
             <div>
-              <span className="text-slate-500 block">PDX Reference #</span>
+              <span className="text-slate-500 block">Vendor Ref. No. (DB Order)</span>
+              <strong className="text-emerald-700 font-mono font-bold">{sapVendorRef || sapTargetOrder?.db_order_no || 'N/A'}</strong>
+            </div>
+            <div>
+              <span className="text-slate-500 block">Quotation Reference #</span>
               <strong className="text-slate-900 font-mono">{sapTargetOrder?.quotationNo || 'N/A'}</strong>
             </div>
             <div>
-              <span className="text-slate-500 block">Customer / Machine</span>
-              <strong className="text-slate-900">{sapTargetOrder?.customer || 'Direct Order'}</strong>
+              <span className="text-slate-500 block">Default Warehouse</span>
+              <strong className="text-slate-900 font-mono">003</strong>
             </div>
           </div>
 
           {/* Form Fields */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <Field label="Buyer Selection" hint="Mapped directly to SAP Buyer dropdown">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <Field label="Buyer Selection" hint="Chosen from SAP B1 Buyer list">
               <Select value={sapBuyer} onChange={(e) => setSapBuyer(e.target.value)}>
-                <option value="Motasem Ghanem">Motasem Ghanem</option>
-                <option value="Mohammad Qraein">Mohammad Qraein</option>
+                <option value="MOTASEM GHANEM">MOTASEM GHANEM</option>
+                <option value="Mohammad Rami Qraein">Mohammad Rami Qraein</option>
+                <option value="ABDELRAHMAN ABDALLAH">ABDELRAHMAN ABDALLAH</option>
+                <option value="Abdallah Milhem">Abdallah Milhem</option>
+                <option value="FAISAL INAYA">FAISAL INAYA</option>
+                <option value="Ibrahim Darawsheh">Ibrahim Darawsheh</option>
+                <option value="Mahmoud Khanfar">Mahmoud Khanfar</option>
+                <option value="Mahmoud Qaddour">Mahmoud Qaddour</option>
+                <option value="Mohammad">Mohammad</option>
+                <option value="Motaz">Motaz</option>
+                <option value="Tariq Tsey">Tariq Tsey</option>
               </Select>
+            </Field>
+
+            <Field label="Vendor Ref. No. (DB Order)" hint="Populates Vendor Ref. No. & Remarks in SAP">
+              <Input
+                value={sapVendorRef}
+                onChange={(e) => setSapVendorRef(e.target.value)}
+                placeholder="e.g. R201/2026"
+                className="font-mono font-semibold text-emerald-800"
+              />
             </Field>
 
             <Field label="Delivery Date" hint="Required delivery / due date">
@@ -2988,7 +3021,7 @@ export default function SparePartsPage() {
                 >
                   {showAddPartForm ? 'Close Add Form' : '➕ Add Part'}
                 </button>
-                <span className="text-xs text-slate-500">Tax: <strong>P0</strong> | Whs: <strong>01</strong></span>
+                <span className="text-xs text-slate-500">Tax: <strong>P0</strong> | Whs: <strong>003</strong></span>
               </div>
             </div>
 

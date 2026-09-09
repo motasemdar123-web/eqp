@@ -30,11 +30,13 @@ function addLog(message, type = 'info') {
  */
 async function generateSapPoExcelBuffer({
   vendor = DEFAULT_VENDOR,
-  buyer = 'Motasem Ghanem',
+  buyer = 'MOTASEM GHANEM',
   deliveryDate,
   items = [],
   remarks = '',
   quotationNo = '',
+  dbOrderNo = '',
+  whsCode = '003',
 }) {
   const workbook = new ExcelJS.Workbook();
   const sheet = workbook.addWorksheet('Purchase Order');
@@ -55,21 +57,21 @@ async function generateSapPoExcelBuffer({
 
   const todayStr = new Date().toISOString().split('T')[0];
   const targetDueDate = deliveryDate || todayStr;
-  const commentText = remarks || `PDX Quotation #${quotationNo || 'N/A'}`;
+  const refNo = dbOrderNo || remarks || quotationNo || '';
 
   items.forEach((it) => {
     sheet.addRow({
       cardCode: vendor || DEFAULT_VENDOR,
       docDate: todayStr,
       dueDate: targetDueDate,
-      buyer: buyer || 'Motasem Ghanem',
+      buyer: buyer || 'MOTASEM GHANEM',
       itemCode: it.part_no || it.partNo || it.itemCode,
       quantity: Number(it.qty || it.quantity || 1),
       price: it.price || it.unit_price ? Number(it.price || it.unit_price) : 0,
       taxCode: 'P0',
-      whsCode: '01',
-      comments: commentText,
-      vendorRef: quotationNo || '',
+      whsCode: whsCode || '003',
+      comments: refNo,
+      vendorRef: refNo,
     });
   });
 
@@ -83,11 +85,13 @@ async function createSapPurchaseOrder({
   username = process.env.SAP_PORTAL_USER || 'DAH38',
   password = process.env.SAP_PORTAL_PASSWORD || 'Dah@200055',
   vendor = DEFAULT_VENDOR,
-  buyer = 'Motasem Ghanem',
+  buyer = 'MOTASEM GHANEM',
   deliveryDate,
   items = [],
   remarks = '',
   quotationNo = '',
+  dbOrderNo = '',
+  whsCode = '003',
   dryRun = false,
   isDraft = true,
 }) {
@@ -220,6 +224,23 @@ async function launchChromiumWithAutoInstall() {
     await targetPage.keyboard.type(vendor, { delay: 100 });
     await targetPage.keyboard.press('Tab');
     await new Promise((r) => setTimeout(r, 1500));
+
+    // Vendor Ref. No. (DB Order Reference)
+    const targetRef = dbOrderNo || remarks || quotationNo || '';
+    if (targetRef) {
+      addLog(`Entering Vendor Ref. No. (DB Order): ${targetRef}...`);
+      await targetPage.keyboard.press('Tab'); // Contact Person
+      await new Promise((r) => setTimeout(r, 300));
+      await targetPage.keyboard.press('Tab'); // Vendor Ref. No.
+      await new Promise((r) => setTimeout(r, 300));
+      await targetPage.keyboard.type(targetRef, { delay: 80 });
+      await targetPage.keyboard.press('Tab'); // BP Currency
+      await new Promise((r) => setTimeout(r, 300));
+      await targetPage.keyboard.press('Tab'); // Item/Service Type
+      await new Promise((r) => setTimeout(r, 300));
+      await targetPage.keyboard.press('Tab'); // Grid Item No
+      await new Promise((r) => setTimeout(r, 600));
+    }
 
     // Move to item table and type lines
     addLog(`Entering ${items.length} line items into SAP grid...`);
