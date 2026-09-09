@@ -30,4 +30,12 @@ async function sapConnectivity(req, res) {
   res.json({ results, timestamp: new Date().toISOString() });
 }
 
+async function pdfConverter(req, res) {
+  const converter = await reportGeneratorService.getPdfConverterStatus();
+  res.json({
+    success: true,
+    converter,
+  });
+}
+
 module.exports = { health, pdfConverter, sapConnectivity };

@@ -184,63 +184,49 @@ async function runLocalSapPoAutomation({
     await targetPage.keyboard.press('Enter');
     await new Promise((r) => setTimeout(r, 2000));
 
-    // Navigate to Modules -> Purchasing - A/P -> Purchase Order
-    addLog('Navigating to Modules > Purchasing - A/P > Purchase Order...');
-    await targetPage.mouse.click(166, 18);
-    await new Promise((r) => setTimeout(r, 600));
-
-    // Move to Modules dropdown
-    await targetPage.keyboard.press('ArrowRight');
-    await new Promise((r) => setTimeout(r, 200));
-    await targetPage.keyboard.press('ArrowRight');
-    await new Promise((r) => setTimeout(r, 400));
-
-    // Select Purchasing - A/P
-    await targetPage.keyboard.press('p');
-    await new Promise((r) => setTimeout(r, 400));
-
-    // Open Purchasing submenu
-    await targetPage.keyboard.press('ArrowRight');
-    await new Promise((r) => setTimeout(r, 400));
-
-    // Move down 3 items to Purchase Order (Item 1: Blanket, 2: Req, 3: Quot, 4: PO)
-    await targetPage.keyboard.press('ArrowDown');
-    await new Promise((r) => setTimeout(r, 200));
-    await targetPage.keyboard.press('ArrowDown');
-    await new Promise((r) => setTimeout(r, 200));
-    await targetPage.keyboard.press('ArrowDown');
-    await new Promise((r) => setTimeout(r, 400));
-
-    // Open Purchase Order form
-    await targetPage.keyboard.press('Enter');
+    // Open Purchase Order directly via user's F2 shortcut key
+    addLog('Opening Purchase Order window via F2 shortcut key...');
+    await targetPage.keyboard.press('F2');
     addLog('Purchase Order form triggered. Waiting 4s for window render...');
     await new Promise((r) => setTimeout(r, 4000));
 
-    // Vendor Code
+    // Vendor Code - Click Vendor input field at (140, 133)
     addLog(`Entering Vendor Code: ${vendor}...`);
-    await targetPage.keyboard.type(vendor, { delay: 80 });
+    await targetPage.mouse.click(140, 133);
+    await new Promise((r) => setTimeout(r, 300));
+    await targetPage.keyboard.press('Control+A');
+    await targetPage.keyboard.type(vendor, { delay: 60 });
     await targetPage.keyboard.press('Tab');
-    await new Promise((r) => setTimeout(r, 1200));
+    await new Promise((r) => setTimeout(r, 1500));
 
-    // Vendor Ref. No. (DB Order Reference)
+    // Vendor Ref. No. (DB Order Reference) at (140, 188)
     const targetRef = dbOrderNo || remarks || quotationNo || '';
     if (targetRef) {
       addLog(`Entering Vendor Ref. No. (DB Order): ${targetRef}...`);
-      await targetPage.keyboard.press('Tab'); // Contact Person
-      await new Promise((r) => setTimeout(r, 250));
-      await targetPage.keyboard.press('Tab'); // Vendor Ref. No.
-      await new Promise((r) => setTimeout(r, 250));
+      await targetPage.mouse.click(140, 188);
+      await new Promise((r) => setTimeout(r, 300));
+      await targetPage.keyboard.press('Control+A');
       await targetPage.keyboard.type(targetRef, { delay: 60 });
-      await targetPage.keyboard.press('Tab'); // BP Currency
-      await new Promise((r) => setTimeout(r, 250));
-      await targetPage.keyboard.press('Tab'); // Item/Service Type
-      await new Promise((r) => setTimeout(r, 250));
-      await targetPage.keyboard.press('Tab'); // Grid Item No
+      await targetPage.keyboard.press('Tab');
       await new Promise((r) => setTimeout(r, 500));
     }
 
-    // Grid Items
+    // Buyer selection at (140, 732)
+    if (buyer) {
+      addLog(`Setting Buyer: ${buyer}...`);
+      await targetPage.mouse.click(140, 732);
+      await new Promise((r) => setTimeout(r, 300));
+      await targetPage.keyboard.press('Control+A');
+      await targetPage.keyboard.type(buyer, { delay: 60 });
+      await targetPage.keyboard.press('Tab');
+      await new Promise((r) => setTimeout(r, 500));
+    }
+
+    // Grid Line Items - First row at (60, 360)
     addLog(`Entering ${items.length} line items into SAP grid...`);
+    await targetPage.mouse.click(60, 360);
+    await new Promise((r) => setTimeout(r, 400));
+
     for (let i = 0; i < items.length; i++) {
       const it = items[i];
       const partNo = it.part_no || it.partNo || it.itemCode;
@@ -249,29 +235,42 @@ async function runLocalSapPoAutomation({
       addLog(`  [Line ${i + 1}/${items.length}] Part: ${partNo} | Qty: ${qty}`);
       await targetPage.keyboard.type(partNo, { delay: 60 });
       await targetPage.keyboard.press('Tab');
-      await new Promise((r) => setTimeout(r, 700));
+      await new Promise((r) => setTimeout(r, 1500));
 
-      // Move to Quantity
-      await targetPage.keyboard.press('Tab');
+      // Quantity column
+      await targetPage.mouse.click(184, 360 + (i * 20));
+      await new Promise((r) => setTimeout(r, 300));
+      await targetPage.keyboard.press('Control+A');
       await targetPage.keyboard.type(qty, { delay: 60 });
       await targetPage.keyboard.press('Tab');
-      await new Promise((r) => setTimeout(r, 350));
+      await new Promise((r) => setTimeout(r, 500));
 
-      // Next Row
-      await targetPage.keyboard.press('ArrowDown');
-      await new Promise((r) => setTimeout(r, 350));
+      if (i < items.length - 1) {
+        await targetPage.mouse.click(60, 360 + ((i + 1) * 20));
+        await new Promise((r) => setTimeout(r, 400));
+      }
     }
 
-    // Save document
+    // Remarks at (140, 850)
+    if (remarks || quotationNo) {
+      const remarksText = remarks || `Komatsu Quotation ${quotationNo} / ${dbOrderNo || ''}`;
+      addLog(`Setting Remarks: ${remarksText}...`);
+      await targetPage.mouse.click(140, 850);
+      await new Promise((r) => setTimeout(r, 300));
+      await targetPage.keyboard.type(remarksText, { delay: 40 });
+      await new Promise((r) => setTimeout(r, 500));
+    }
+
+    // Save document: Add Draft & New (104, 928) or Add & New (36, 928)
     if (isDraft) {
-      addLog('Saving Purchase Order as Draft (Ctrl+D)...');
-      await targetPage.keyboard.press('Control+D');
+      addLog('Saving Purchase Order as Draft (Add Draft & New at 104, 928)...');
+      await targetPage.mouse.click(104, 928);
     } else {
-      addLog('Finalizing and posting Purchase Order (Ctrl+A)...');
-      await targetPage.keyboard.press('Control+A');
+      addLog('Finalizing and posting Purchase Order (Add & New at 36, 928)...');
+      await targetPage.mouse.click(36, 928);
     }
 
-    await new Promise((r) => setTimeout(r, 2500));
+    await new Promise((r) => setTimeout(r, 3500));
 
     // Capture confirmation screenshot
     const screenshotBuffer = await targetPage.screenshot({ type: 'png' }).catch(() => null);

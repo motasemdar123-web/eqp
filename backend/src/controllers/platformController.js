@@ -601,29 +601,38 @@ async function exportSapPoExcel(req, res) {
 }
 
 async function downloadSapBridgeZip(req, res) {
-  const archiver = require('archiver');
-  const bridgeDir = path.join(__dirname, '../../../tools/sap-local-bridge');
-
-  res.setHeader('Content-Type', 'application/zip');
-  res.setHeader('Content-Disposition', 'attachment; filename="sap-local-bridge.zip"');
-
-  const archive = archiver('zip', { zlib: { level: 9 } });
-  archive.on('error', (err) => {
-    console.error('Error creating bridge zip:', err);
-    if (!res.headersSent) res.status(500).json({ error: err.message });
-  });
-
-  archive.pipe(res);
-
-  const files = ['start-bridge.bat', 'bridge-server.js', 'package.json', 'README.md'];
-  for (const f of files) {
-    const fPath = path.join(bridgeDir, f);
-    if (fs.existsSync(fPath)) {
-      archive.file(fPath, { name: f });
-    }
+  const staticZipPath = path.join(__dirname, '../../../frontend/public/sap-local-bridge.zip');
+  if (fs.existsSync(staticZipPath)) {
+    return res.download(staticZipPath, 'sap-local-bridge.zip');
   }
 
-  await archive.finalize();
+  try {
+    const archiver = require('archiver');
+    const bridgeDir = path.join(__dirname, '../../../tools/sap-local-bridge');
+
+    res.setHeader('Content-Type', 'application/zip');
+    res.setHeader('Content-Disposition', 'attachment; filename="sap-local-bridge.zip"');
+
+    const archive = archiver('zip', { zlib: { level: 9 } });
+    archive.on('error', (err) => {
+      console.error('Error creating bridge zip:', err);
+      if (!res.headersSent) res.status(500).json({ error: err.message });
+    });
+
+    archive.pipe(res);
+
+    const files = ['start-bridge.bat', 'bridge-server.js', 'package.json', 'README.md'];
+    for (const f of files) {
+      const fPath = path.join(bridgeDir, f);
+      if (fs.existsSync(fPath)) {
+        archive.file(fPath, { name: f });
+      }
+    }
+
+    await archive.finalize();
+  } catch (err) {
+    res.status(500).json({ error: 'Bridge zip not found' });
+  }
 }
 
 module.exports = {
