@@ -214,6 +214,33 @@ function extractPartsFromText(text, quotationNo) {
 
   // 3. Parse HTML table rows (<tr><td>...</td></tr>)
   const trMatches = String(text).match(/<tr[^>]*>([\s\S]*?)<\/tr>/gi) || [];
+
+  // Check if there is a header row with column names
+  let headerColMap = null;
+  for (const tr of trMatches) {
+    const rawThMatches = tr.match(/<t[dh][^>]*>([\s\S]*?)<\/t[dh]>/gi) || [];
+    const cleanThs = rawThMatches.map((th) => th.replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').trim().toLowerCase());
+    if (cleanThs.some((h) => h.includes('part') || h.includes('item') || h.includes('desc') || h.includes('dnet'))) {
+      headerColMap = {
+        partIdx: -1,
+        descIdx: -1,
+        qtyIdx: -1,
+        priceIdx: -1,
+        totalIdx: -1,
+        weightIdx: -1,
+      };
+      cleanThs.forEach((h, idx) => {
+        if (/part\s*(?:no|number)|item\s*(?:no|code)/i.test(h) && headerColMap.partIdx === -1) headerColMap.partIdx = idx;
+        else if (/part\s*desc|description/i.test(h) && headerColMap.descIdx === -1) headerColMap.descIdx = idx;
+        else if (/^(?:qty|quantity|req(?:uested)?\s*qty|order\s*qty)$/i.test(h) && headerColMap.qtyIdx === -1) headerColMap.qtyIdx = idx;
+        else if (/^(?:unit\s*price|dnet(?:\s*price)?|selling\s*price|quotation\s*price|sales\s*price|price)$/i.test(h) && !h.includes('total') && headerColMap.priceIdx === -1) headerColMap.priceIdx = idx;
+        else if (/^(?:total|total\s*price|total\s*amount|ext(?:ended)?\s*price|amount)$/i.test(h) && headerColMap.totalIdx === -1) headerColMap.totalIdx = idx;
+        else if (/weight/i.test(h) && headerColMap.weightIdx === -1) headerColMap.weightIdx = idx;
+      });
+      break;
+    }
+  }
+
   for (const tr of trMatches) {
     const rawTdMatches = tr.match(/<t[dh][^>]*>([\s\S]*?)<\/t[dh]>/gi) || [];
     // Ignore hidden cells (e.g. style="display: none")
@@ -227,7 +254,25 @@ function extractPartsFromText(text, quotationNo) {
         return td.replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').trim();
       });
 
-      // Look for a cell that resembles a Komatsu part number (e.g. 2A8-62-12230, 07143-10605, 207-70-71110)
+      // If headers were found, use headerColMap
+      if (headerColMap && headerColMap.partIdx !== -1 && cleanTds[headerColMap.partIdx]) {
+        const partNo = cleanTds[headerColMap.partIdx];
+        if (
+          partNo &&
+          /^[A-Z0-9]{2,6}(?:-[A-Z0-9]{2,6}){1,3}$/i.test(partNo) &&
+          !partNo.toLowerCase().includes('date') &&
+          !seenParts.has(partNo)
+        ) {
+          const desc = (headerColMap.descIdx !== -1 ? cleanTds[headerColMap.descIdx] : '') || 'PARTS';
+          const rawQty = headerColMap.qtyIdx !== -1 ? cleanTds[headerColMap.qtyIdx] : 1;
+          const rawPrice = headerColMap.priceIdx !== -1 ? cleanTds[headerColMap.priceIdx] : '0.000';
+          const rawTotal = headerColMap.totalIdx !== -1 ? cleanTds[headerColMap.totalIdx] : '0.000';
+          addItem(partNo, desc, rawQty, rawPrice, rawTotal, 'EA');
+          continue;
+        }
+      }
+
+      // Fallback: row scanning without headers
       for (let i = 0; i < cleanTds.length; i++) {
         const cell = cleanTds[i];
         if (
@@ -262,32 +307,36 @@ function extractPartsFromText(text, quotationNo) {
             }
           }
 
-          // Quantity is always the first numeric value following part & description
           const qty = numericCells.length > 0 && numericCells[0] > 0 ? numericCells[0] : 1;
-
           let unitPrice = '0.000';
           let totalPrice = '0.000';
 
           if (numericCells.length >= 2) {
-            // Check if 2nd number * qty ≈ 3rd number (or last number), indicating qty * unitPrice = totalPrice
-            if (numericCells.length >= 3 && Math.abs(qty * numericCells[1] - numericCells[2]) < 0.05) {
-              unitPrice = numericCells[1].toFixed(3);
-              totalPrice = numericCells[2].toFixed(3);
-            } else if (numericCells.length >= 3 && Math.abs(qty * numericCells[1] - numericCells[numericCells.length - 1]) < 0.05) {
-              unitPrice = numericCells[1].toFixed(3);
-              totalPrice = numericCells[numericCells.length - 1].toFixed(3);
-            } else {
-              unitPrice = numericCells[1] > 0 ? numericCells[1].toFixed(3) : '0.000';
-              if (numericCells.length >= 3 && numericCells[numericCells.length - 1] > 0) {
-                totalPrice = numericCells[numericCells.length - 1].toFixed(3);
-              } else if (parseFloat(unitPrice) > 0) {
-                totalPrice = (qty * parseFloat(unitPrice)).toFixed(3);
+            let matched = false;
+            for (let uIdx = 1; uIdx < numericCells.length; uIdx++) {
+              const candU = numericCells[uIdx];
+              if (candU <= 0) continue;
+              for (let tIdx = uIdx + 1; tIdx < numericCells.length; tIdx++) {
+                const candT = numericCells[tIdx];
+                if (Math.abs(qty * candU - candT) < 0.05) {
+                  unitPrice = candU.toFixed(3);
+                  totalPrice = candT.toFixed(3);
+                  matched = true;
+                  break;
+                }
+              }
+              if (matched) break;
+            }
+
+            // If no pair matched, check if numericCells[1] is a valid price and not an obvious gram weight
+            if (!matched && numericCells.length >= 2) {
+              const candU = numericCells[1];
+              // Avoid taking weight (gm) as price: weights are large integers
+              if (candU > 0 && (candU < 500 || candU % 1 !== 0)) {
+                unitPrice = candU.toFixed(3);
+                totalPrice = (qty * candU).toFixed(3);
               }
             }
-          }
-
-          if (parseFloat(unitPrice) <= 0 && parseFloat(totalPrice) > 0 && qty > 0) {
-            unitPrice = (parseFloat(totalPrice) / qty).toFixed(3);
           }
 
           addItem(cell, desc, qty, unitPrice, totalPrice, uom);
@@ -341,16 +390,8 @@ async function getQuotationParts(quotationNo, seqNo = '00', customCookie = null)
     console.warn(`[getQuotationParts] QuotationDetails/Index fetch warning: ${err.message}`);
   }
 
-  // Check if Index page itself already has parts WITH valid quotation prices
+  // Pre-extract from Index page as base items (never return early; always query Search API)
   let parts = extractPartsFromText(initHtml, cleanQtn);
-  if (parts.length > 0 && parts.every((p) => parseFloat(p.unit_price) > 0)) {
-    return {
-      quotation_no: cleanQtn,
-      revision_no: cleanSeq,
-      count: parts.length,
-      parts,
-    };
-  }
 
   // STEP 2: Query line items via QuotationDetails/Search (Payload 1: standard Kendo)
   const searchUrl = `${BASE_PORTAL_URL}/QuotationDetails/Search`;
@@ -446,6 +487,41 @@ async function getQuotationParts(quotationNo, seqNo = '00', customCookie = null)
       }
     } catch (err) {
       console.warn(`[getQuotationParts] QuotationDetails/Search payload 2 warning: ${err.message}`);
+    }
+  }
+
+  // STEP 4: Cross-reference with Part Master to validate prices and guard against weight injection
+  if (parts.length > 0) {
+    try {
+      const { lookupPartMaster } = require('./komatsuEoService');
+      for (const p of parts) {
+        let master = null;
+        try {
+          master = await lookupPartMaster(p.part_no, cookieStr);
+        } catch {
+          // Non-blocking lookup
+        }
+
+        if (master) {
+          const masterPrice = parseFloat(master.price || '0');
+          const masterWeight = parseFloat(master.weight || '0');
+          const curPrice = parseFloat(p.unit_price || '0');
+
+          // If price is missing/zero OR if it was mistakenly set to the item's weight in grams (e.g. 860g)
+          if (curPrice <= 0 || (masterWeight > 0 && Math.abs(curPrice - masterWeight) < 0.001)) {
+            if (masterPrice > 0) {
+              p.unit_price = masterPrice.toFixed(3);
+              p.total_price = (p.quantity * masterPrice).toFixed(3);
+            }
+          }
+
+          if ((!p.description || p.description === 'PARTS') && master.description) {
+            p.description = master.description;
+          }
+        }
+      }
+    } catch (err) {
+      console.warn(`[getQuotationParts] Part Master validation warning: ${err.message}`);
     }
   }
 
