@@ -475,92 +475,54 @@ async function launchChromiumWithAutoInstall() {
       await updateSnapshot(`Loading SAP B1 Desktop (${sec * 2}s)...`);
     }
 
-    // STEP 2: Ensure PO window is open (Open via F2 shortcut)
-    let poStatus = await checkScreenState(targetPage);
+    // STEP 2: Open Purchase Order Window via F2 (Initial focus lands on Vendor Code)
+    addLog('Opening Purchase Order window via F2 shortcut (Vendor Code will be active cell)...');
+    
+    // Close any stray Business Partner or old window with Escape
+    await targetPage.focus('#JWTS_myCanvas, canvas').catch(() => {});
+    await rdpClick(targetPage, 500, 300, 80); // Give canvas Windows keyboard focus
+    await new Promise((r) => setTimeout(r, 300));
+    await targetPage.keyboard.press('Escape');
+    await new Promise((r) => setTimeout(r, 400));
 
-    if (poStatus.isBpListOpen) {
-      addLog('Stray Business Partner list detected. Closing with Escape...');
-      await targetPage.keyboard.press('Escape');
-      await new Promise((r) => setTimeout(r, 800));
+    // Press F2 to open Purchase Order window
+    await targetPage.keyboard.press('F2');
+    await new Promise((r) => setTimeout(r, 1500));
+
+    // Visually verify PO window opened
+    for (let checkSec = 1; checkSec <= 4; checkSec++) {
       poStatus = await checkScreenState(targetPage);
-    }
-
-    if (poStatus.isPoOpen) {
-      addLog('✓ Purchase Order window is already OPEN!');
-    } else {
-      addLog('Opening Purchase Order window via F2 shortcut...');
-      for (let attempt = 1; attempt <= 4; attempt++) {
-        // Clear any lingering sub-modal or popup
-        await targetPage.keyboard.press('Escape');
-        await new Promise((r) => setTimeout(r, 300));
-
-        // Click client area safely so TSPlus canvas receives Windows key focus
-        await targetPage.focus('#JWTS_myCanvas, canvas').catch(() => {});
-        await rdpClick(targetPage, 500, 300, 80);
-        await new Promise((r) => setTimeout(r, 300));
-
-        // Press F2 shortcut
-        addLog(`[Attempt ${attempt}/4] Pressing F2 shortcut to open Purchase Order...`);
-        await targetPage.keyboard.press('F2');
-
-        // Verify visually if PO window opened
-        for (let checkSec = 1; checkSec <= 4; checkSec++) {
-          await new Promise((r) => setTimeout(r, 1200));
-          poStatus = await checkScreenState(targetPage);
-          if (poStatus.b64) {
-            latestJobStatus.screenshotBase64 = `data:image/png;base64,${poStatus.b64}`;
-          }
-
-          if (poStatus.isPoOpen) {
-            addLog(`✓ Purchase Order window confirmed OPEN via F2 shortcut after attempt ${attempt}!`);
-            break;
-          }
-
-          if (poStatus.isBpListOpen) {
-            addLog('List of Business Partners modal opened. Closing with Escape...');
-            await targetPage.keyboard.press('Escape');
-            await new Promise((r) => setTimeout(r, 500));
-            break;
-          }
-        }
-
-        if (poStatus.isPoOpen) break;
-        await updateSnapshot(`F2 Pressed (Attempt ${attempt})`);
+      if (poStatus.b64) {
+        latestJobStatus.screenshotBase64 = `data:image/png;base64,${poStatus.b64}`;
       }
+      if (poStatus.isPoOpen) {
+        addLog('✓ Purchase Order window confirmed OPEN via F2! Vendor Code is active cell.');
+        break;
+      }
+      if (poStatus.isBpListOpen) {
+        await targetPage.keyboard.press('Escape');
+        await new Promise((r) => setTimeout(r, 400));
+      }
+      await new Promise((r) => setTimeout(r, 1000));
     }
-
-    if (!poStatus.isPoOpen) {
-      throw new Error('Failed to open Purchase Order window via F2 shortcut after smart visual verification.');
-    }
-
-    // STEP 3: Switch to Add Mode if currently in OK mode (Control+A)
-    addLog('Ensuring Purchase Order is in Add Mode (Control+A)...');
-    await targetPage.keyboard.press('Control+A');
-    await new Promise((r) => setTimeout(r, 1200));
     await updateSnapshot('Purchase Order Form Open & Ready');
 
-    // STEP 4: Enter Vendor Code - Click first blank (dynamically anchored to Vendor yellow arrow)
-    const targetVendorX = poStatus.vendorInputX || 160;
-    const targetVendorY = poStatus.vendorInputY || 119;
-    addLog(`Entering Vendor Code into first blank (detected at ${targetVendorX}, ${targetVendorY}): ${vendor}...`);
-    await rdpClick(targetPage, targetVendorX, targetVendorY);
-    await new Promise((r) => setTimeout(r, 300));
-    await targetPage.keyboard.press('Control+A');
+    // STEP 3: Immediately type Vendor Code (V000006) - it is already active
+    addLog(`Immediately typing Vendor Code into active cell: ${vendor}...`);
     await targetPage.keyboard.type(vendor, { delay: 50 });
     await new Promise((r) => setTimeout(r, 400));
-    
-    // Press TWO Tabs after Vendor Code (per SAP B1 requirement to commit code, autofill name, and advance focus)
-    addLog('Pressing first Tab after Vendor Code...');
+
+    // STEP 4: Press Tab twice to get the customer details
+    addLog('Pressing Tab twice to get customer details...');
     await targetPage.keyboard.press('Tab');
     await new Promise((r) => setTimeout(r, 600));
-    addLog('Pressing second Tab after Vendor Code...');
     await targetPage.keyboard.press('Tab');
     await new Promise((r) => setTimeout(r, 1200));
 
-    // Confirm any selection modal / List of Business Partners if still open
+    // Confirm any selection modal if it appeared
     let bpState = await checkScreenState(targetPage);
     if (bpState.isBpListOpen) {
-      addLog('Business Partner selection modal detected after tabs. Confirming with Enter...');
+      addLog('Business Partner selection list detected after tabs. Confirming with Enter...');
       await targetPage.keyboard.press('Enter');
       await new Promise((r) => setTimeout(r, 1000));
       bpState = await checkScreenState(targetPage);
@@ -571,110 +533,106 @@ async function launchChromiumWithAutoInstall() {
       }
     }
 
-    // STEP 5: Enter Vendor Ref. No. (dynamically anchored to Row 4)
-    const targetRef = dbOrderNo || quotationNo || remarks || '';
-    if (targetRef) {
-      const targetRefX = poStatus.refInputX || 160;
-      const targetRefY = poStatus.refInputY || 167;
-      addLog(`Entering Vendor Ref. No. (detected at ${targetRefX}, ${targetRefY}): ${targetRef}...`);
-      await rdpClick(targetPage, targetRefX, targetRefY);
-      await new Promise((r) => setTimeout(r, 300));
-      await targetPage.keyboard.press('Control+A');
-      await targetPage.keyboard.type(targetRef, { delay: 50 });
-      await new Promise((r) => setTimeout(r, 400));
-      await targetPage.keyboard.press('Tab');
-      await new Promise((r) => setTimeout(r, 600));
-    }
-    await updateSnapshot('Vendor & Reference Entered');
+    // STEP 5: Press Tab ONCE to reach the vendor ref. no.
+    addLog('Pressing Tab ONCE to reach Vendor Ref. No....');
+    await targetPage.keyboard.press('Tab');
+    await new Promise((r) => setTimeout(r, 400));
 
-    // STEP 6: Grid Line Items (Item No: X=95, Quantity: X=260, Unit Price: X=325)
-    const startRowY = poStatus.row1Y || 324;
-    addLog(`Entering ${items.length} line items into SAP grid (Row 1 detected at Y=${startRowY})...`);
+    // STEP 6: Pasting Vendor Ref. No. (e.g. R144/2026)
+    const targetRef = dbOrderNo || quotationNo || remarks || 'R144/2026';
+    addLog(`Entering Vendor Ref. No.: ${targetRef}...`);
+    await targetPage.keyboard.type(targetRef, { delay: 50 });
+    await new Promise((r) => setTimeout(r, 400));
+
+    // STEP 7: Pressing Tab 5 times to reach the delivery date
+    addLog('Pressing Tab 5 times to reach Delivery Date...');
+    for (let k = 0; k < 5; k++) {
+      await targetPage.keyboard.press('Tab');
+      await new Promise((r) => setTimeout(r, 200));
+    }
+
+    // STEP 8: Pasting the date
+    let effDate = deliveryDate;
+    if (!effDate) {
+      const now = new Date();
+      const dd = String(now.getDate()).padStart(2, '0');
+      const mm = String(now.getMonth() + 1).padStart(2, '0');
+      const yy = String(now.getFullYear()).slice(-2);
+      effDate = `${dd}.${mm}.${yy}`;
+    } else {
+      const match = effDate.match(/^(\d{4})-(\d{2})-(\d{2})/);
+      if (match) {
+        effDate = `${match[3]}.${match[2]}.${match[1].slice(-2)}`;
+      }
+    }
+    addLog(`Entering Delivery Date: ${effDate}...`);
+    await targetPage.keyboard.type(effDate, { delay: 50 });
+    await new Promise((r) => setTimeout(r, 400));
+
+    // STEP 9: Pressing Tab 4 times to reach the first row of the items
+    addLog('Pressing Tab 4 times to reach Line Items grid (Row 1 Item No)...');
+    for (let k = 0; k < 4; k++) {
+      await targetPage.keyboard.press('Tab');
+      await new Promise((r) => setTimeout(r, 200));
+    }
+
+    // STEP 10: Filling parts loop (paste part -> Tab to add -> Tab to Qty -> Tab to Unit Price -> Down arrow if next row)
+    addLog(`Filling ${items.length} line items via pure keyboard workflow...`);
     for (let i = 0; i < items.length; i++) {
       const it = items[i];
       const partNo = it.part_no || it.partNo || it.itemCode;
       const qty = String(it.qty || it.quantity || 1);
       const rawPrice = it.unit_price || it.price || it.unitPrice || 0;
       const priceVal = typeof rawPrice === 'number' ? rawPrice : parseFloat(String(rawPrice).replace(/[^0-9.]/g, '')) || 0;
-      const rowY = startRowY + (i * 16);
 
-      addLog(`  [Line ${i + 1}/${items.length}] Part: ${partNo} | Qty: ${qty} | Unit Price: ${priceVal > 0 ? priceVal.toFixed(3) + ' USD' : 'Master Default'}`);
+      addLog(`  [Line ${i + 1}/${items.length}] Part: ${partNo} | Qty: ${qty} | Unit Price: ${priceVal > 0 ? priceVal.toFixed(3) : 'Default'}`);
 
-      // 1. Select Item No cell in Row (Col 1 center at X=95, Y=rowY)
-      await rdpDblClick(targetPage, 95, rowY);
-      await new Promise((r) => setTimeout(r, 350));
-      await targetPage.keyboard.press('Control+A');
+      // 1. Paste the part no.
       await targetPage.keyboard.type(partNo, { delay: 50 });
-      await new Promise((r) => setTimeout(r, 400));
-      await targetPage.keyboard.press('Tab');
-      await new Promise((r) => setTimeout(r, 1800)); // Allow SAP to fetch item details
+      await new Promise((r) => setTimeout(r, 300));
 
-      // If a modal appeared (e.g. item selection), confirm with Enter
+      // 2. Press Tab once to add (triggers SAP to fetch description)
+      await targetPage.keyboard.press('Tab');
+      await new Promise((r) => setTimeout(r, 1800));
+
+      // Confirm any item selection popup if present
       const itemModalCheck = await checkScreenState(targetPage);
       if (itemModalCheck.isBpListOpen) {
-        addLog('Item selection modal appeared. Confirming with Enter...');
+        addLog('Item selection popup appeared. Confirming with Enter...');
         await targetPage.keyboard.press('Enter');
         await new Promise((r) => setTimeout(r, 800));
       }
 
-      // 2. Select Quantity cell in Row (Col 3 center at X=260, Y=rowY)
-      await rdpDblClick(targetPage, 260, rowY);
-      await new Promise((r) => setTimeout(r, 250));
-      await targetPage.keyboard.press('Control+A');
-      await targetPage.keyboard.press('Backspace');
-      for (let k = 0; k < 6; k++) {
-        await targetPage.keyboard.press('Delete');
-      }
-      await targetPage.keyboard.type(qty, { delay: 50 });
-      await new Promise((r) => setTimeout(r, 250));
+      // 3. Press Tab once again to reach the Qty, fill it
       await targetPage.keyboard.press('Tab');
-      await new Promise((r) => setTimeout(r, 600));
+      await new Promise((r) => setTimeout(r, 300));
+      await targetPage.keyboard.type(qty, { delay: 40 });
+      await new Promise((r) => setTimeout(r, 300));
 
-      // 3. Enter USD Unit Price if provided (Col 4 center at X=325, Y=rowY)
+      // 4. Press Tab once again to reach the unit price in dollar, fill it
+      await targetPage.keyboard.press('Tab');
+      await new Promise((r) => setTimeout(r, 300));
       if (priceVal > 0) {
-        const priceStr = `${priceVal.toFixed(3)} USD`;
-        addLog(`    Setting USD Unit Price at (325, ${rowY}): ${priceStr}...`);
-        await rdpDblClick(targetPage, 325, rowY);
-        await new Promise((r) => setTimeout(r, 250));
-        await targetPage.keyboard.press('Control+A');
-        await targetPage.keyboard.press('Backspace');
-        for (let k = 0; k < 8; k++) {
-          await targetPage.keyboard.press('Delete');
-        }
-        await targetPage.keyboard.type(priceStr, { delay: 50 });
-        await new Promise((r) => setTimeout(r, 250));
-        await targetPage.keyboard.press('Tab');
-        await new Promise((r) => setTimeout(r, 600));
+        await targetPage.keyboard.type(priceVal.toFixed(3), { delay: 40 });
+        await new Promise((r) => setTimeout(r, 300));
+      }
+
+      // 5. Press Down arrow to access the second row if exists
+      if (i < items.length - 1) {
+        addLog(`Pressing Down Arrow to access row ${i + 2}...`);
+        await targetPage.keyboard.press('ArrowDown');
+        await new Promise((r) => setTimeout(r, 500));
       }
 
       await updateSnapshot(`Line Item ${i + 1} Entered (${partNo})`);
     }
 
-    // STEP 7: Remarks
-    const remarksText = remarks || `Komatsu Quotation ${quotationNo || ''} / ${dbOrderNo || ''}`.trim();
-    if (remarksText) {
-      addLog(`Setting Remarks: ${remarksText}...`);
-      const remarksY = (poStatus.draftButtonY ? poStatus.draftButtonY - 40 : 795);
-      await rdpClick(targetPage, 140, remarksY);
-      await new Promise((r) => setTimeout(r, 250));
-      await targetPage.keyboard.press('Control+A');
-      await targetPage.keyboard.type(remarksText, { delay: 35 });
-      await new Promise((r) => setTimeout(r, 400));
-    }
-    await updateSnapshot('PO Completed - Ready to Save');
+    // STEP 11: If you finished filling the parts and now you want to add the PO, just press Enter (no drafting or mouse clicking)
+    addLog('All parts filled. Adding Purchase Order document by pressing Enter...');
+    await targetPage.keyboard.press('Enter');
+    await new Promise((r) => setTimeout(r, 3000));
 
-    // STEP 8: Save document
-    const saveY = poStatus.draftButtonY || 835;
-    if (isDraft) {
-      addLog(`Saving Purchase Order as Draft (Add Draft & New at 110, ${saveY})...`);
-      await rdpClick(targetPage, 110, saveY, 150);
-    } else {
-      addLog(`Finalizing and posting Purchase Order (Add & New at 30, ${saveY})...`);
-      await rdpClick(targetPage, 30, saveY, 150);
-    }
-
-    await new Promise((r) => setTimeout(r, 4000));
-    // Confirm any SAP dialog (e.g. "Exchange rate", "Document saved", etc.)
+    // Confirm any SAP dialog (e.g. currency rate prompt, document saved confirmation)
     await targetPage.keyboard.press('Enter');
     await new Promise((r) => setTimeout(r, 1500));
     await targetPage.keyboard.press('Enter');
