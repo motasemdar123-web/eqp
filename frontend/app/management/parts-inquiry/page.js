@@ -1503,7 +1503,7 @@ export default function SparePartsPage() {
 
     const totalOrdersCount = ordersPayload ? ordersPayload.length : 1;
     const startMsg = isBatch
-      ? `Starting Local Batch PO Automation for ${totalOrdersCount} quotations (1 PO per quotation via Ctrl+A)...`
+      ? `Starting Local Batch PO Automation for ${totalOrdersCount} quotations (1 PO per quotation, Enter saves → immediately fills V000006)...`
       : `Starting Local PO Automation for #${sapTargetOrder?.quotationNo || 'Direct'} (${sapTargetOrder?.items?.length || 0} items)...`;
 
     if (isBridgeOnline) {
@@ -2632,7 +2632,7 @@ export default function SparePartsPage() {
               <div className="flex items-center gap-2">
                 <span className="text-base font-bold text-rose-600">🚫</span>
                 <span>
-                  <strong>1-Click Convert is unclickable:</strong> {convertedSelectedQuotations.length} of {selectedQtnNumbers.size} selected quotation(s) ({convertedSelectedQuotations.map((q) => '#' + q.quotation_no).join(', ')}) are <strong>already converted to Sales Orders</strong>. You must unselect them to proceed.
+                  <strong>1-Click Convert to SO is locked:</strong> {convertedSelectedQuotations.length} of {selectedQtnNumbers.size} selected quotation(s) ({convertedSelectedQuotations.map((q) => '#' + q.quotation_no).join(', ')}) are <strong>already converted to Sales Orders</strong>. You can convert them to PO in SAP using the green <strong>"🚀 Create SAP PO ({selectedQtnNumbers.size})"</strong> button above, or click below to unselect them.
                 </span>
               </div>
               <Button
@@ -2692,25 +2692,23 @@ export default function SparePartsPage() {
                   <input
                     type="checkbox"
                     checked={
-                      filteredQuotations.filter((q) => !isQuotationAlreadySo(q)).length > 0 &&
-                      filteredQuotations
-                        .filter((q) => !isQuotationAlreadySo(q))
-                        .every((q) => selectedQtnNumbers.has(q.quotation_no))
+                      filteredQuotations.length > 0 &&
+                      filteredQuotations.every((q) => selectedQtnNumbers.has(q.quotation_no))
                     }
                     onChange={() => {
-                      const eligible = filteredQuotations.filter((q) => !isQuotationAlreadySo(q));
-                      const allEligibleSelected =
-                        eligible.length > 0 && eligible.every((q) => selectedQtnNumbers.has(q.quotation_no));
+                      const allSelected =
+                        filteredQuotations.length > 0 &&
+                        filteredQuotations.every((q) => selectedQtnNumbers.has(q.quotation_no));
                       const next = new Set(selectedQtnNumbers);
-                      if (allEligibleSelected) {
-                        eligible.forEach((q) => next.delete(q.quotation_no));
+                      if (allSelected) {
+                        filteredQuotations.forEach((q) => next.delete(q.quotation_no));
                       } else {
-                        eligible.forEach((q) => next.add(q.quotation_no));
+                        filteredQuotations.forEach((q) => next.add(q.quotation_no));
                       }
                       setSelectedQtnNumbers(next);
                     }}
                     className="rounded text-amber-600 cursor-pointer"
-                    title="Select all eligible (non-converted) quotations"
+                    title="Select / unselect all displayed quotations"
                   />
                 </TableHead>
                 <TableHead>Quotation #</TableHead>
@@ -2744,10 +2742,8 @@ export default function SparePartsPage() {
                       <TableCell>
                         <input
                           type="checkbox"
-                          checked={!isAlreadySo && isSelected}
-                          disabled={isAlreadySo}
+                          checked={isSelected}
                           onChange={() => {
-                            if (isAlreadySo) return;
                             const next = new Set(selectedQtnNumbers);
                             if (next.has(q.quotation_no)) next.delete(q.quotation_no);
                             else next.add(q.quotation_no);
@@ -2755,12 +2751,10 @@ export default function SparePartsPage() {
                           }}
                           title={
                             isAlreadySo
-                              ? 'Quotation already converted to SO (locked to prevent duplicates)'
-                              : 'Select for SO conversion'
+                              ? 'Select to convert to Purchase Order (PO) in SAP'
+                              : 'Select quotation'
                           }
-                          className={`rounded ${
-                            isAlreadySo ? 'cursor-not-allowed opacity-30 text-slate-400' : 'text-amber-600 cursor-pointer'
-                          }`}
+                          className="rounded text-amber-600 cursor-pointer"
                         />
                       </TableCell>
                       <TableCell className="font-mono font-semibold text-slate-900">
@@ -3325,7 +3319,7 @@ export default function SparePartsPage() {
               </DialogTitle>
               <p className="text-xs text-slate-500 mt-0.5">
                 {sapBatchOrders?.length > 1
-                  ? `Automate individual PO creation in SAP B1 for ${sapBatchOrders.length} selected quotations sequentially using Ctrl+A`
+                  ? `Automate individual PO creation in SAP B1 for ${sapBatchOrders.length} selected quotations sequentially (F2 → Enter → immediate V000006 loop)`
                   : 'Automate PO creation directly in SAP Business One or download formatted Excel import'}
               </p>
             </div>
@@ -3414,7 +3408,7 @@ export default function SparePartsPage() {
                 </div>
                 <div>
                   <span className="text-slate-500 block">Sequence Method</span>
-                  <strong className="text-slate-900 font-mono font-semibold">F2 → Ctrl+A per order</strong>
+                  <strong className="text-slate-900 font-mono font-semibold">F2 → Enter adds PO → V000006 per order</strong>
                 </div>
                 <div>
                   <span className="text-slate-500 block">Default Warehouse</span>
@@ -3432,7 +3426,7 @@ export default function SparePartsPage() {
                   </span>
                 </div>
                 <p className="text-emerald-800 text-[11px] leading-relaxed">
-                  Each selected quotation will be created as its own PO in SAP Business One. The first PO opens via <kbd className="px-1 py-0.5 bg-white border border-emerald-300 rounded font-mono font-bold text-slate-800">F2</kbd>; each subsequent order uses <kbd className="px-1 py-0.5 bg-white border border-emerald-300 rounded font-mono font-bold text-slate-800">Ctrl+A</kbd> to rapidly switch to Add mode.
+                  Each selected quotation will be created as its own PO in SAP Business One. The first PO opens via <kbd className="px-1 py-0.5 bg-white border border-emerald-300 rounded font-mono font-bold text-slate-800">F2</kbd>. Confirming with <kbd className="px-1 py-0.5 bg-white border border-emerald-300 rounded font-mono font-bold text-slate-800">Enter</kbd> saves and clears to a fresh PO, and the automation immediately inputs <kbd className="px-1 py-0.5 bg-white border border-emerald-300 rounded font-mono font-bold text-slate-800">V000006</kbd> to repeat the cycle.
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-1.5 pt-1">
                   {sapBatchOrders.map((q, idx) => {

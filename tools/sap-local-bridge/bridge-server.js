@@ -556,18 +556,6 @@ async function runLocalSapPoAutomation({
       addLog(`PO ${ordIdx + 1} of ${validOrders.length} | Quotation: #${curQuotationNo || 'Direct'} | Ref: ${curRef} | ${curItems.length} items`);
       addLog(`=======================================================`);
 
-      if (ordIdx > 0) {
-        // User's instruction: after creating the first PO, pressing Ctrl+A is enough to start a new PO window
-        addLog(`[PO ${ordIdx + 1}/${validOrders.length}] Pressing Ctrl+A to start new Purchase Order in SAP B1...`);
-        await targetPage.focus('#JWTS_myCanvas, canvas').catch(() => {});
-        await new Promise((r) => setTimeout(r, 400));
-        await targetPage.keyboard.down('Control');
-        await targetPage.keyboard.press('KeyA');
-        await targetPage.keyboard.up('Control');
-        await new Promise((r) => setTimeout(r, 2000));
-        await updateSnapshot(`Starting PO ${ordIdx + 1}/${validOrders.length} (Ctrl+A)`);
-      }
-
       // 1. Immediately type Vendor Code (V000006) - it is already active
       addLog(`[PO ${ordIdx + 1}/${validOrders.length}] Typing Vendor Code into active cell: ${vendor}...`);
       await targetPage.keyboard.type(vendor, { delay: 50 });
@@ -664,18 +652,18 @@ async function runLocalSapPoAutomation({
         await updateSnapshot(`PO ${ordIdx + 1} Line ${i + 1} Entered (${partNo})`);
       }
 
-      // 9. Press Enter to add the PO
+      // 9. Press Enter once to add the PO
       addLog(`[PO ${ordIdx + 1}/${validOrders.length}] Adding Purchase Order document by pressing Enter...`);
       await targetPage.keyboard.press('Enter');
-      await new Promise((r) => setTimeout(r, 3000));
-
-      // Confirm any SAP dialog (e.g. currency rate prompt, document saved confirmation)
-      await targetPage.keyboard.press('Enter');
-      await new Promise((r) => setTimeout(r, 1500));
-      await targetPage.keyboard.press('Enter');
-      await new Promise((r) => setTimeout(r, 1000));
-      await updateSnapshot(`PO ${ordIdx + 1} Saved Confirmation`);
+      await new Promise((r) => setTimeout(r, 2500));
+      await updateSnapshot(`PO ${ordIdx + 1} Saved`);
       addLog(`✓ [PO ${ordIdx + 1}/${validOrders.length}] Saved successfully in SAP B1!`);
+
+      if (ordIdx < validOrders.length - 1) {
+        addLog(`[PO ${ordIdx + 2}/${validOrders.length}] SAP reset to new PO form in Add mode. Next cycle begins immediately with ${vendor}...`);
+        await targetPage.focus('#JWTS_myCanvas, canvas').catch(() => {});
+        await new Promise((r) => setTimeout(r, 600));
+      }
     }
 
     // Capture final confirmation screenshot
