@@ -1313,25 +1313,28 @@ export default function SparePartsPage() {
   }
 
   async function openSapPoModalFromBatch() {
-    const selectedList = inProcessQuotations.filter((q) => selectedQtnNumbers.has(q.quotation_no));
-    if (selectedList.length === 0) {
-      setToast({ type: 'error', message: 'Select at least one quotation to create SAP PO.' });
-      return;
-    }
+    try {
+      const selectedList = inProcessQuotations.filter((q) => selectedQtnNumbers.has(q.quotation_no));
+      if (selectedList.length === 0) {
+        setToast({ type: 'error', message: 'Select at least one quotation to create SAP PO.' });
+        return;
+      }
 
-    const firstQ = selectedList[0];
-    // In batch mode, each order maintains its OWN separate DB order no (never merged with commas)
-    setSapVendorRef('');
-    setSapBatchOrders([...selectedList]);
-    setSapTargetOrder({
-      quotationNo: selectedList.map((q) => q.quotation_no).join(', '),
-      db_order_no: 'Separate per order',
-      customer: firstQ.customer_name || 'Komatsu PDX Orders',
-      items: initialItems,
-    });
-    setSapLogs([]);
-    setSapResult(null);
-    setSapModalOpen(true);
+      const firstQ = selectedList[0];
+      const initialItems = selectedList.flatMap((q) => (q.parts && q.parts.length > 0 ? q.parts : []));
+
+      // In batch mode, each order maintains its OWN separate DB order no (never merged with commas)
+      setSapVendorRef('');
+      setSapBatchOrders([...selectedList]);
+      setSapTargetOrder({
+        quotationNo: selectedList.map((q) => q.quotation_no).join(', '),
+        db_order_no: 'Separate per order',
+        customer: firstQ.customer_name || 'Komatsu PDX Orders',
+        items: initialItems,
+      });
+      setSapLogs([]);
+      setSapResult(null);
+      setSapModalOpen(true);
 
     // Asynchronously fetch real parts for any quotation that hasn't loaded them yet
     const missing = selectedList.filter((q) => !q.parts || q.parts.length === 0);
@@ -1362,7 +1365,11 @@ export default function SparePartsPage() {
         setLoadingSapParts(false);
       }
     }
+  } catch (err) {
+    console.error('Failed to open SAP PO batch modal:', err);
+    setToast({ type: 'error', message: err.message || 'Failed to open SAP PO modal' });
   }
+}
 
   function handleUpdateBatchOrderRef(index, newRef) {
     setSapBatchOrders((prev) => {
