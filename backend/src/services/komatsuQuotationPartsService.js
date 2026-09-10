@@ -108,8 +108,12 @@ function extractPartsFromText(text, quotationNo) {
     const dataList = json.Data || json.data || (Array.isArray(json) ? json : null);
     if (Array.isArray(dataList)) {
       dataList.forEach((item) => {
-        const partNo = item.RequestedPartNo ||
+        const partNo = item.ReqPartNo ||
+          item.Req_Part_No ||
+          item.RequestedPartNo ||
           item.Requested_Part_No ||
+          item.ProcessedPartNo ||
+          item.Processed_Part_No ||
           item.PartNo ||
           item.Part_No ||
           item.ItemNo ||
@@ -117,24 +121,28 @@ function extractPartsFromText(text, quotationNo) {
           item.PartNumber ||
           item.part_no ||
           item.partNo;
-        const desc = item.Description ||
-          item.PartDescription ||
+        const desc = item.PartDescription ||
+          item.Part_Description ||
+          item.Description ||
           item.ItemDescription ||
           item.PART_DESC ||
           item.part_desc ||
           item.ItemDesc;
-        const qty = item.Requested_Quantity ??
+        const qty = item.RQ ??
+          item.ReqQty ??
+          item.RequestedQty ??
+          item.Requested_Quantity ??
           item.RequestedQuantity ??
+          item.AQ ??
           item.Quantity ??
           item.Qty ??
           item.QTY ??
           item.ReqQuantity ??
-          item.ReqQty ??
           item.OrderQty ??
           item.quantity ??
           item.qty;
-        const price = item.Unit_Price ??
-          item.UnitPrice ??
+        const price = item.UnitPrice ??
+          item.Unit_Price ??
           item.unit_price ??
           item.DNetPrice ??
           item.DNet_Price ??
@@ -153,7 +161,9 @@ function extractPartsFromText(text, quotationNo) {
           item.Rate ??
           item.ListPrice ??
           item.List_Price;
-        const total = item.Total_Price ??
+        const total = item.PriceAmount ??
+          item.Price_Amount ??
+          item.Total_Price ??
           item.TotalPrice ??
           item.total_price ??
           item.Amount ??
@@ -176,17 +186,17 @@ function extractPartsFromText(text, quotationNo) {
   if (parts.length > 0 && parts.every((p) => parseFloat(p.unit_price) > 0)) return parts;
 
   // 2. Check for embedded JSON in script tags (Kendo Grid dataSource: [{"RequestedPartNo": ...}])
-  const jsonArrayMatches = String(text).match(/\[\s*\{[^{}]*(?:"RequestedPartNo"|"PartNo"|"PartNumber")[^{}]*\}\s*\]/gi) || [];
+  const jsonArrayMatches = String(text).match(/\[\s*\{[^{}]*(?:"ReqPartNo"|"ProcessedPartNo"|"RequestedPartNo"|"PartNo"|"PartNumber")[^{}]*\}\s*\]/gi) || [];
   for (const arrStr of jsonArrayMatches) {
     try {
       const arr = JSON.parse(arrStr);
       if (Array.isArray(arr)) {
         arr.forEach((item) => {
-          const partNo = item.RequestedPartNo || item.PartNo || item.ItemNo || item.part_no;
-          const desc = item.Description || item.PartDescription || item.ItemDescription || item.PART_DESC;
-          const qty = item.Requested_Quantity ?? item.RequestedQuantity ?? item.Quantity ?? item.Qty ?? item.quantity;
-          const price = item.Unit_Price ??
-            item.UnitPrice ??
+          const partNo = item.ReqPartNo || item.ProcessedPartNo || item.RequestedPartNo || item.PartNo || item.ItemNo || item.part_no;
+          const desc = item.PartDescription || item.Description || item.ItemDescription || item.PART_DESC;
+          const qty = item.RQ ?? item.ReqQty ?? item.Requested_Quantity ?? item.RequestedQuantity ?? item.AQ ?? item.Quantity ?? item.Qty ?? item.quantity;
+          const price = item.UnitPrice ??
+            item.Unit_Price ??
             item.unit_price ??
             item.DNetPrice ??
             item.DNet_Price ??
@@ -198,7 +208,7 @@ function extractPartsFromText(text, quotationNo) {
             item.QuotationPrice ??
             item.Price ??
             item.price;
-          const total = item.Total_Price ?? item.TotalPrice ?? item.Amount ?? item.total_price;
+          const total = item.PriceAmount ?? item.Price_Amount ?? item.Total_Price ?? item.TotalPrice ?? item.Amount ?? item.total_price;
           const uom = item.Unit || item.UOM;
           if (partNo) {
             addItem(partNo, desc, qty, price, total, uom);
@@ -220,7 +230,7 @@ function extractPartsFromText(text, quotationNo) {
   for (const tr of trMatches) {
     const rawThMatches = tr.match(/<t[dh][^>]*>([\s\S]*?)<\/t[dh]>/gi) || [];
     const cleanThs = rawThMatches.map((th) => th.replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').trim().toLowerCase());
-    if (cleanThs.some((h) => h.includes('part') || h.includes('item') || h.includes('desc') || h.includes('dnet'))) {
+    if (cleanThs.some((h) => h.includes('part') || h.includes('item') || h.includes('desc') || h.includes('dnet') || h === 'rq' || h === 'aq')) {
       headerColMap = {
         partIdx: -1,
         descIdx: -1,
@@ -230,11 +240,12 @@ function extractPartsFromText(text, quotationNo) {
         weightIdx: -1,
       };
       cleanThs.forEach((h, idx) => {
-        if (/part\s*(?:no|number)|item\s*(?:no|code)/i.test(h) && headerColMap.partIdx === -1) headerColMap.partIdx = idx;
+        if (/^(?:req\s*part\s*no|processed\s*part\s*no|part\s*(?:no|number)|item\s*(?:no|code))$/i.test(h) && headerColMap.partIdx === -1) headerColMap.partIdx = idx;
+        else if (/part\s*(?:no|number)|item\s*(?:no|code)/i.test(h) && headerColMap.partIdx === -1) headerColMap.partIdx = idx;
         else if (/part\s*desc|description/i.test(h) && headerColMap.descIdx === -1) headerColMap.descIdx = idx;
-        else if (/^(?:qty|quantity|req(?:uested)?\s*qty|order\s*qty)$/i.test(h) && headerColMap.qtyIdx === -1) headerColMap.qtyIdx = idx;
-        else if (/^(?:unit\s*price|dnet(?:\s*price)?|selling\s*price|quotation\s*price|sales\s*price|price)$/i.test(h) && !h.includes('total') && headerColMap.priceIdx === -1) headerColMap.priceIdx = idx;
-        else if (/^(?:total|total\s*price|total\s*amount|ext(?:ended)?\s*price|amount)$/i.test(h) && headerColMap.totalIdx === -1) headerColMap.totalIdx = idx;
+        else if (/^(?:rq|aq|qty|quantity|req(?:uested)?\s*qty|order\s*qty)$/i.test(h) && headerColMap.qtyIdx === -1) headerColMap.qtyIdx = idx;
+        else if (/^(?:unit\s*price|dnet(?:\s*price)?|selling\s*price|quotation\s*price|sales\s*price|price)$/i.test(h) && !h.includes('total') && !h.includes('amount') && headerColMap.priceIdx === -1) headerColMap.priceIdx = idx;
+        else if (/^(?:price\s*amount|total|total\s*price|total\s*amount|ext(?:ended)?\s*price|amount|selling\s*total)$/i.test(h) && headerColMap.totalIdx === -1) headerColMap.totalIdx = idx;
         else if (/weight/i.test(h) && headerColMap.weightIdx === -1) headerColMap.weightIdx = idx;
       });
       break;
@@ -302,7 +313,13 @@ function extractPartsFromText(text, quotationNo) {
               continue;
             }
 
-            if (desc === 'PARTS' && /[a-zA-Z]/.test(trimmed) && !/^(?:USD|KWD|EUR|EA|PC)$/i.test(trimmed) && trimmed.length >= 2) {
+            if (
+              desc === 'PARTS' &&
+              /[a-zA-Z]/.test(trimmed) &&
+              !/^(?:USD|KWD|EUR|EA|PC)$/i.test(trimmed) &&
+              !/^[A-Z0-9]{2,6}(?:-[A-Z0-9]{2,6}){1,3}$/i.test(trimmed) &&
+              trimmed.length >= 2
+            ) {
               desc = trimmed;
             }
           }
@@ -318,6 +335,7 @@ function extractPartsFromText(text, quotationNo) {
               if (candU <= 0) continue;
               for (let tIdx = uIdx + 1; tIdx < numericCells.length; tIdx++) {
                 const candT = numericCells[tIdx];
+                if (candT <= 0) continue;
                 if (Math.abs(qty * candU - candT) < 0.05) {
                   unitPrice = candU.toFixed(3);
                   totalPrice = candT.toFixed(3);
