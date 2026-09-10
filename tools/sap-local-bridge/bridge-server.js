@@ -396,7 +396,7 @@ async function runLocalSapPoAutomation({
       await updateSnapshot(`Loading SAP B1 Desktop (${sec * 2}s)...`);
     }
 
-    // STEP 2: Ensure PO window is open
+    // STEP 2: Ensure PO window is open (Open via F2 shortcut)
     let poStatus = await checkScreenState(targetPage);
 
     if (poStatus.isBpListOpen) {
@@ -406,61 +406,52 @@ async function runLocalSapPoAutomation({
       poStatus = await checkScreenState(targetPage);
     }
 
-    if (!poStatus.isPoOpen) {
-      addLog(`Opening Purchase Order window dynamically (Modules center detected at X=${poStatus.modulesCenter})...`);
-      for (let attempt = 1; attempt <= 3; attempt++) {
+    if (poStatus.isPoOpen) {
+      addLog('✓ Purchase Order window is already OPEN!');
+    } else {
+      addLog('Opening Purchase Order window via F2 shortcut...');
+      for (let attempt = 1; attempt <= 4; attempt++) {
+        // Clear any lingering sub-modal or popup
         await targetPage.keyboard.press('Escape');
-        await new Promise((r) => setTimeout(r, 400));
-
-        // Click dynamically detected Modules center coordinate
-        const targetModX = poStatus.modulesCenter || 229;
-        addLog(`Clicking "Modules" menu at dynamically recognized position (${targetModX}, 18)...`);
-        await rdpClick(targetPage, targetModX, 18);
-        await new Promise((r) => setTimeout(r, 800));
-
-        let modCheck = await checkScreenState(targetPage);
-        if (!modCheck.isDropdownOpen) {
-          addLog('Dropdown not visible via mouse click. Using Alt+M keyboard shortcut...');
-          await targetPage.keyboard.press('Alt+m');
-          await new Promise((r) => setTimeout(r, 800));
-          modCheck = await checkScreenState(targetPage);
-        }
-
-        addLog(`Modules Dropdown Open: ${modCheck.isDropdownOpen}. Navigating to Purchase Order...`);
-        await targetPage.keyboard.press('p'); // Purchasing - A/P
-        await new Promise((r) => setTimeout(r, 500));
-        await targetPage.keyboard.press('ArrowRight'); // Submenu
-        await new Promise((r) => setTimeout(r, 500));
-        await targetPage.keyboard.press('ArrowDown');
-        await targetPage.keyboard.press('ArrowDown');
-        await targetPage.keyboard.press('ArrowDown'); // Purchase Order
         await new Promise((r) => setTimeout(r, 300));
-        await targetPage.keyboard.press('Enter');
-        await new Promise((r) => setTimeout(r, 4000));
-        await updateSnapshot(`Opened via Modules Menu (Attempt ${attempt})`);
 
-        poStatus = await checkScreenState(targetPage);
-        addLog(`Attempt ${attempt} result -> PO Window Confirmed: ${poStatus.isPoOpen}`);
-        if (poStatus.isPoOpen) {
-          addLog('✓ Purchase Order window confirmed OPEN via Smart Screen Reading!');
-          break;
-        }
+        // Click client area safely so TSPlus canvas receives Windows key focus
+        await targetPage.focus('#JWTS_myCanvas, canvas').catch(() => {});
+        await rdpClick(targetPage, 500, 300, 80);
+        await new Promise((r) => setTimeout(r, 300));
 
-        // Fallback: If Modules menu did not open PO, try F2 shortcut
-        if (attempt === 2) {
-          addLog('Trying F2 shortcut fallback...');
-          await rdpClick(targetPage, 400, 65);
-          await new Promise((r) => setTimeout(r, 300));
-          await targetPage.keyboard.press('F2');
-          await new Promise((r) => setTimeout(r, 4000));
+        // Press F2 shortcut
+        addLog(`[Attempt ${attempt}/4] Pressing F2 shortcut to open Purchase Order...`);
+        await targetPage.keyboard.press('F2');
+
+        // Verify visually if PO window opened
+        for (let checkSec = 1; checkSec <= 4; checkSec++) {
+          await new Promise((r) => setTimeout(r, 1200));
           poStatus = await checkScreenState(targetPage);
-          if (poStatus.isPoOpen) break;
+          if (poStatus.b64) {
+            latestJobStatus.screenshotBase64 = `data:image/png;base64,${poStatus.b64}`;
+          }
+
+          if (poStatus.isPoOpen) {
+            addLog(`✓ Purchase Order window confirmed OPEN via F2 shortcut after attempt ${attempt}!`);
+            break;
+          }
+
+          if (poStatus.isBpListOpen) {
+            addLog('List of Business Partners modal opened. Closing with Escape...');
+            await targetPage.keyboard.press('Escape');
+            await new Promise((r) => setTimeout(r, 500));
+            break;
+          }
         }
+
+        if (poStatus.isPoOpen) break;
+        await updateSnapshot(`F2 Pressed (Attempt ${attempt})`);
       }
     }
 
     if (!poStatus.isPoOpen) {
-      throw new Error('Failed to open Purchase Order window in SAP Business One after smart visual verification.');
+      throw new Error('Failed to open Purchase Order window via F2 shortcut after smart visual verification.');
     }
 
     // STEP 3: Switch to Add Mode if currently in OK mode (Control+A)
