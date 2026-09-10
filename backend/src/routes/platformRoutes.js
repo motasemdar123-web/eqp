@@ -71,6 +71,7 @@ router.get('/api/komatsu/quotations', requirePlatformAuth, asyncHandler(platform
 router.get('/api/komatsu/quotations/:quotationNo/parts', requirePlatformAuth, asyncHandler(platformController.getKomatsuQuotationParts));
 router.post('/api/komatsu/quotations/confirm', requirePlatformAuth, asyncHandler(platformController.confirmKomatsuQuotation));
 router.post('/api/komatsu/quotations/copy-to-so', requirePlatformAuth, asyncHandler(platformController.copyKomatsuQuotationToSo));
+router.post('/api/komatsu/quotations/toggle-so-status', requirePlatformAuth, asyncHandler(platformController.toggleQuotationSoStatus));
 
 // Komatsu Equipment Care (EQP Care) routes
 router.get('/api/komatsu/eqpc/status', optionalPlatformAuth, asyncHandler(platformController.getEqpcStatus));

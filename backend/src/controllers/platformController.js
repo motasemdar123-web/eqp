@@ -1,3 +1,5 @@
+const fs = require('fs');
+const path = require('path');
 const platformService = require('../services/platformService');
 const { requireFields } = require('../utils/validation');
 
@@ -383,12 +385,91 @@ async function executeKomatsuEoOrder(req, res) {
   }
 }
 
+const CONVERTED_SO_FILE = path.join(__dirname, '../../data/converted_so_quotations.json');
+
+function loadConvertedSoMap() {
+  try {
+    if (fs.existsSync(CONVERTED_SO_FILE)) {
+      const content = fs.readFileSync(CONVERTED_SO_FILE, 'utf-8').trim();
+      if (content) return JSON.parse(content);
+    }
+  } catch (err) {
+    console.warn('[loadConvertedSoMap] Read error:', err.message);
+  }
+  return {};
+}
+
+function saveConvertedSoRecord(quotationNo, meta = {}) {
+  try {
+    const qtn = String(quotationNo || '').trim();
+    if (!qtn) return;
+    const data = loadConvertedSoMap();
+    data[qtn] = {
+      quotation_no: qtn,
+      converted_at: new Date().toISOString(),
+      sales_order_no: meta.salesOrderNo || meta.sales_order_no || 'Converted',
+      db_order_no: meta.dbOrderNo || meta.db_order_no || '',
+      ...meta,
+    };
+    fs.writeFileSync(CONVERTED_SO_FILE, JSON.stringify(data, null, 2), 'utf-8');
+  } catch (err) {
+    console.warn('[saveConvertedSoRecord] Write error:', err.message);
+  }
+}
+
+function removeConvertedSoRecord(quotationNo) {
+  try {
+    const qtn = String(quotationNo || '').trim();
+    if (!qtn) return;
+    const data = loadConvertedSoMap();
+    if (data[qtn]) {
+      delete data[qtn];
+      fs.writeFileSync(CONVERTED_SO_FILE, JSON.stringify(data, null, 2), 'utf-8');
+    }
+  } catch (err) {
+    console.warn('[removeConvertedSoRecord] Write error:', err.message);
+  }
+}
+
 async function searchKomatsuQuotations(req, res) {
   const { cookie, ...filters } = req.query || {};
   if (cookie) {
     komatsuInquiryService.saveCookie(cookie);
   }
   const data = await komatsuEoService.searchQuotations(filters, cookie);
+  const convertedMap = loadConvertedSoMap();
+
+  if (data && Array.isArray(data.quotations)) {
+    data.quotations = data.quotations.map((q) => {
+      const qtn = String(q.quotation_no || '').trim();
+      const persisted = convertedMap[qtn];
+      const hasSalesOrderNo = q.sales_order_no && 
+        String(q.sales_order_no).trim() !== '' && 
+        String(q.sales_order_no).trim() !== '-' && 
+        String(q.sales_order_no).trim() !== '0' &&
+        String(q.sales_order_no).trim() !== 'null';
+
+      const st = String(q.status || '').trim().toLowerCase();
+      const statusIndicatesSo = 
+        st.includes('transferred') || 
+        st.includes('copied') || 
+        st.includes('completed') || 
+        (st.includes('so') && !st.includes('copy to sales order'));
+
+      const isConverted = Boolean(persisted || hasSalesOrderNo || statusIndicatesSo);
+
+      if (isConverted) {
+        return {
+          ...q,
+          is_converted_to_so: true,
+          status: 'Transferred to SO',
+          sales_order_no: q.sales_order_no || persisted?.sales_order_no || 'Converted',
+        };
+      }
+      return q;
+    });
+  }
+
   res.json({ success: true, ...data });
 }
 
@@ -413,32 +494,66 @@ async function copyKomatsuQuotationToSo(req, res) {
     komatsuInquiryService.saveCookie(cookie);
   }
   try {
-    // Check if quotation is already converted to avoid duplicate Sales Orders on Komatsu PDX
+    const qtn = String(quotationNo).trim();
+    const convertedMap = loadConvertedSoMap();
+
+    // Check if quotation is recorded as already converted
+    if (convertedMap[qtn] && !options?.force) {
+      return res.status(400).json({
+        success: false,
+        alreadyConverted: true,
+        message: `Quotation #${qtn} has already been transferred to Sales Order (locked to protect Komatsu PDX).`,
+      });
+    }
+
+    // Check if quotation is already converted on Komatsu PDX
     if (!options?.force) {
       try {
-        const searchData = await komatsuEoService.searchQuotations({ quotationNo }, cookie);
-        const match = searchData?.quotations?.find((q) => q.quotation_no === quotationNo);
+        const searchData = await komatsuEoService.searchQuotations({ quotationNo: qtn }, cookie);
+        const match = searchData?.quotations?.find((q) => q.quotation_no === qtn);
         if (match) {
+          const hasSo = match.sales_order_no && 
+            String(match.sales_order_no).trim() !== '' && 
+            match.sales_order_no !== '-' &&
+            match.sales_order_no !== '0';
           const st = (match.status || '').toLowerCase();
-          if (st.includes('so') || st.includes('transferred') || st.includes('copied')) {
+          const isMatchSo = hasSo || st.includes('transferred') || st.includes('copied') || (st.includes('so') && !st.includes('copy to sales order'));
+          if (isMatchSo) {
+            saveConvertedSoRecord(qtn, { salesOrderNo: match.sales_order_no || 'Converted' });
             return res.status(400).json({
               success: false,
               alreadyConverted: true,
-              message: `Quotation #${quotationNo} has already been transferred to Sales Order (Status: "${match.status}"). Duplicate SO conversion was blocked to protect Komatsu PDX.`,
+              message: `Quotation #${qtn} has already been transferred to Sales Order (Status: "${match.status}", SO: ${match.sales_order_no || 'Confirmed'}). Duplicate SO conversion was blocked to protect Komatsu PDX.`,
             });
           }
         }
       } catch (checkErr) {
-        console.warn(`[copyKomatsuQuotationToSo] Status pre-check warning for ${quotationNo}:`, checkErr.message);
+        console.warn(`[copyKomatsuQuotationToSo] Status pre-check warning for ${qtn}:`, checkErr.message);
       }
     }
 
-    const result = await komatsuEoService.copyQuotationToSo(quotationNo, seqNo || '00', options || {}, cookie);
+    const result = await komatsuEoService.copyQuotationToSo(qtn, seqNo || '00', options || {}, cookie);
+    // Automatically persist newly converted quotation
+    saveConvertedSoRecord(qtn, { salesOrderNo: result?.sales_order_no || 'Converted' });
     res.json({ success: true, ...result });
   } catch (err) {
     console.error(`[copyKomatsuQuotationToSo] Error for ${quotationNo}:`, err.message);
     res.status(500).json({ success: false, error: err.message });
   }
+}
+
+async function toggleQuotationSoStatus(req, res) {
+  const { quotationNo, isConverted, salesOrderNo, dbOrderNo } = req.body || {};
+  if (!quotationNo) {
+    return res.status(400).json({ success: false, message: 'Quotation number is required' });
+  }
+  const qtn = String(quotationNo).trim();
+  if (isConverted === false) {
+    removeConvertedSoRecord(qtn);
+    return res.json({ success: true, quotationNo: qtn, is_converted_to_so: false, message: `Quotation #${qtn} unmarked from SO status.` });
+  }
+  saveConvertedSoRecord(qtn, { salesOrderNo: salesOrderNo || 'Converted', dbOrderNo });
+  return res.json({ success: true, quotationNo: qtn, is_converted_to_so: true, message: `Quotation #${qtn} marked as converted to SO.` });
 }
 
 async function getKomatsuQuotationParts(req, res) {
@@ -716,6 +831,7 @@ module.exports = {
   getKomatsuQuotationParts,
   confirmKomatsuQuotation,
   copyKomatsuQuotationToSo,
+  toggleQuotationSoStatus,
   getEqpcStatus,
   saveEqpcCookie,
   getEqpcEventCodes,

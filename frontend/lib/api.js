@@ -536,6 +536,13 @@ export function copyKomatsuQuotationToSo(payload) {
   });
 }
 
+export function toggleQuotationSoStatus(payload) {
+  return request('/api/komatsu/quotations/toggle-so-status', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+}
+
 export function getFleetSummary() {
   return request('/api/analytics/fleet-summary');
 }

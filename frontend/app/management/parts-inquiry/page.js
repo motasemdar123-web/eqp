@@ -42,6 +42,7 @@ import {
   getLocalSapPoStatus,
   getSapBridgeDownloadUrl,
   downloadSapBridgeZip,
+  toggleQuotationSoStatus,
 } from '../../../lib/api';
 
 const SAMPLE_EO_ITEMS = [
@@ -194,6 +195,35 @@ export default function SparePartsPage() {
   const [qtnPage, setQtnPage] = useState(1);
   const [loadingSapParts, setLoadingSapParts] = useState(false);
   const [selectedQtnNumbers, setSelectedQtnNumbers] = useState(new Set());
+  const [localConvertedSet, setLocalConvertedSet] = useState(() => {
+    const initialSet = new Set(['0000281449']);
+    if (typeof window !== 'undefined') {
+      try {
+        const saved = localStorage.getItem('komatsu_converted_so_quotations');
+        if (saved) {
+          const arr = JSON.parse(saved);
+          if (Array.isArray(arr)) arr.forEach((q) => initialSet.add(String(q).trim()));
+        }
+      } catch {}
+    }
+    return initialSet;
+  });
+
+  const markQuotationAsConvertedLocal = useCallback((qtnNo, isConverted = true) => {
+    const qtn = String(qtnNo || '').trim();
+    if (!qtn) return;
+    setLocalConvertedSet((prev) => {
+      const next = new Set(prev);
+      if (isConverted) next.add(qtn);
+      else next.delete(qtn);
+      if (typeof window !== 'undefined') {
+        try {
+          localStorage.setItem('komatsu_converted_so_quotations', JSON.stringify([...next]));
+        } catch {}
+      }
+      return next;
+    });
+  }, []);
   const [isConvertingSo, setIsConvertingSo] = useState(false);
   const [soConversionProgress, setSoConversionProgress] = useState(null);
   const [soLogs, setSoLogs] = useState([]);
@@ -1078,10 +1108,33 @@ export default function SparePartsPage() {
   // =========================================================
   // TAB 2: SO CONVERTER FUNCTIONS
   // =========================================================
-  const isQuotationAlreadySo = (q) => {
-    const st = (q?.status || '').toLowerCase();
-    return st.includes('so') || st.includes('transferred') || st.includes('copied');
-  };
+  const isQuotationAlreadySo = useCallback((q) => {
+    if (!q) return false;
+    const qtn = String(q.quotation_no || '').trim();
+    if (q.is_converted_to_so) return true;
+    if (localConvertedSet.has(qtn)) return true;
+
+    // Check if sales_order_no is present
+    const soNo = String(q.sales_order_no || '').trim();
+    if (soNo && soNo !== '-' && soNo !== '0' && soNo !== 'null' && soNo !== 'undefined') return true;
+
+    // Check status text
+    const st = String(q.status || '').trim().toLowerCase();
+    if (st.includes('transferred') || st.includes('copied') || st.includes('completed')) return true;
+    if (st.includes('so') && !st.includes('copy to sales order')) return true;
+
+    return false;
+  }, [localConvertedSet]);
+
+  const selectedQuotations = useMemo(() => {
+    return inProcessQuotations.filter((q) => selectedQtnNumbers.has(q.quotation_no));
+  }, [inProcessQuotations, selectedQtnNumbers]);
+
+  const convertedSelectedQuotations = useMemo(() => {
+    return selectedQuotations.filter((q) => isQuotationAlreadySo(q));
+  }, [selectedQuotations, isQuotationAlreadySo]);
+
+  const hasConvertedSelected = convertedSelectedQuotations.length > 0;
 
   async function loadInProcessQuotations(page = qtnPage, limit = qtnLimit, status = qtnStatusFilter) {
     try {
@@ -1089,6 +1142,12 @@ export default function SparePartsPage() {
       const res = await getKomatsuQuotations({ status, limit, page });
       if (res && res.quotations) {
         setInProcessQuotations(res.quotations);
+        // Sync any returned quotations that are flagged as converted
+        res.quotations.forEach((q) => {
+          if (q.is_converted_to_so || (q.sales_order_no && q.sales_order_no.trim() !== '' && q.sales_order_no !== '-')) {
+            markQuotationAsConvertedLocal(q.quotation_no, true);
+          }
+        });
         // Only pre-select quotations that have NOT already been converted to SO
         const eligible = res.quotations.filter((q) => !isQuotationAlreadySo(q));
         setSelectedQtnNumbers(new Set(eligible.map((q) => q.quotation_no)));
@@ -1098,6 +1157,50 @@ export default function SparePartsPage() {
     } finally {
       setLoadingQuotations(false);
     }
+  }
+
+  async function handleToggleQuotationSo(quotationNo, isConverted) {
+    try {
+      markQuotationAsConvertedLocal(quotationNo, isConverted);
+      setInProcessQuotations((prev) =>
+        prev.map((q) => {
+          if (q.quotation_no === quotationNo) {
+            return {
+              ...q,
+              is_converted_to_so: isConverted,
+              status: isConverted ? 'Transferred to SO' : 'In-Process',
+            };
+          }
+          return q;
+        })
+      );
+      if (isConverted) {
+        setSelectedQtnNumbers((prev) => {
+          const next = new Set(prev);
+          next.delete(quotationNo);
+          return next;
+        });
+      }
+      await toggleQuotationSoStatus({ quotationNo, isConverted });
+      setToast({
+        type: 'success',
+        message: isConverted
+          ? `Quotation #${quotationNo} marked as Transferred to SO.`
+          : `Quotation #${quotationNo} unmarked from SO.`,
+      });
+    } catch (err) {
+      setToast({ type: 'error', message: err.message || 'Failed to update quotation SO status' });
+    }
+  }
+
+  function handleUnselectConvertedQuotations() {
+    const next = new Set(selectedQtnNumbers);
+    convertedSelectedQuotations.forEach((q) => next.delete(q.quotation_no));
+    setSelectedQtnNumbers(next);
+    setToast({
+      type: 'info',
+      message: `Unselected ${convertedSelectedQuotations.length} already-converted quotation(s). Ready to convert!`,
+    });
   }
 
   const filteredQuotations = useMemo(() => {
@@ -1113,7 +1216,7 @@ export default function SparePartsPage() {
         item.db_order_no?.toLowerCase().includes(q) ||
         item.customer_name?.toLowerCase().includes(q)
     );
-  }, [inProcessQuotations, qtnSearchFilter, soQuickFilter]);
+  }, [inProcessQuotations, qtnSearchFilter, soQuickFilter, isQuotationAlreadySo]);
 
   async function startBatchConfirmAndCopy(actionType = 'FULL_CONVERT') {
     const selectedList = inProcessQuotations.filter((q) => selectedQtnNumbers.has(q.quotation_no));
@@ -1122,36 +1225,28 @@ export default function SparePartsPage() {
       return;
     }
 
-    // STRICT CHECK: Filter out quotations already converted to SO to avoid duplicates in Komatsu PDX
-    const eligibleList = selectedList.filter((q) => !isQuotationAlreadySo(q));
-    if (eligibleList.length === 0) {
+    // STRICT CHECK: The user must unselect all already-converted quotations before converting!
+    const convertedInBatch = selectedList.filter((q) => isQuotationAlreadySo(q));
+    if (convertedInBatch.length > 0) {
       setToast({
-        type: 'warning',
-        message: 'All selected quotations are already converted to Sales Orders. Duplicate conversion was blocked.',
+        type: 'error',
+        message: `Conversion Blocked: ${convertedInBatch.length} selected quotation(s) (${convertedInBatch.map(q => '#' + q.quotation_no).join(', ')}) are already converted to Sales Order. Please unselect them to proceed.`,
       });
       return;
     }
 
-    const skippedCount = selectedList.length - eligibleList.length;
-    const confirmMsg = skippedCount > 0
-      ? `Convert ${eligibleList.length} quotations to Sales Orders (SO) on Komatsu PDX?\n\nNote: ${skippedCount} already-converted quotation(s) will be automatically skipped to prevent duplicates.`
-      : `Convert ${eligibleList.length} quotations to Sales Orders (SO) on Komatsu PDX?`;
-
+    const confirmMsg = `Convert ${selectedList.length} quotation(s) to Sales Orders (SO) on Komatsu PDX?`;
     const confirmed = window.confirm(confirmMsg);
     if (!confirmed) return;
-
-    if (skippedCount > 0) {
-      addSoLog(`Skipping ${skippedCount} quotation(s) that are already converted to SO to avoid duplicates.`, 'warn');
-    }
 
     setIsConvertingSo(true);
     shouldStopSoRef.current = false;
     let successCount = 0;
 
-    for (let i = 0; i < eligibleList.length; i++) {
+    for (let i = 0; i < selectedList.length; i++) {
       if (shouldStopSoRef.current) break;
-      const q = eligibleList[i];
-      setSoConversionProgress({ current: i + 1, total: eligibleList.length, quotation: q.quotation_no });
+      const q = selectedList[i];
+      setSoConversionProgress({ current: i + 1, total: selectedList.length, quotation: q.quotation_no });
 
       try {
         if (actionType === 'FULL_CONVERT' || actionType === 'CONFIRM_ONLY') {
@@ -1163,6 +1258,8 @@ export default function SparePartsPage() {
         if (actionType === 'FULL_CONVERT' || actionType === 'COPY_ONLY') {
           await copyKomatsuQuotationToSo({ quotationNo: q.quotation_no, seqNo: q.revision_no || '00' });
           q.status = 'Transferred to SO';
+          q.is_converted_to_so = true;
+          markQuotationAsConvertedLocal(q.quotation_no, true);
         }
         successCount++;
       } catch (err) {
@@ -1174,7 +1271,7 @@ export default function SparePartsPage() {
 
     setIsConvertingSo(false);
     setSoConversionProgress(null);
-    setToast({ type: 'success', message: `Converted ${successCount} / ${eligibleList.length} quotations to SO.` });
+    setToast({ type: 'success', message: `Converted ${successCount} / ${selectedList.length} quotations to SO.` });
   }
 
   // =========================================================
@@ -2481,10 +2578,31 @@ export default function SparePartsPage() {
               <Button
                 variant="primary"
                 size="sm"
-                onClick={() => startBatchConfirmAndCopy('FULL_CONVERT')}
-                disabled={selectedQtnNumbers.size === 0 || isConvertingSo}
+                className={`font-semibold transition-all ${
+                  hasConvertedSelected
+                    ? 'bg-slate-300 text-slate-500 border-slate-300 cursor-not-allowed opacity-60 hover:bg-slate-300'
+                    : 'bg-amber-600 hover:bg-amber-700 text-white shadow-2xs'
+                }`}
+                onClick={() => {
+                  if (hasConvertedSelected) return;
+                  startBatchConfirmAndCopy('FULL_CONVERT');
+                }}
+                disabled={selectedQtnNumbers.size === 0 || isConvertingSo || hasConvertedSelected}
+                title={
+                  hasConvertedSelected
+                    ? `Conversion Blocked: ${convertedSelectedQuotations.length} selected quotation(s) (${convertedSelectedQuotations.map((q) => '#' + q.quotation_no).join(', ')}) are already converted to Sales Order. You must uncheck them before converting.`
+                    : selectedQtnNumbers.size === 0
+                    ? 'Select quotations to convert'
+                    : 'Batch confirm and copy selected quotations to Komatsu Sales Orders'
+                }
               >
-                {isConvertingSo ? 'Processing...' : `1-Click Convert (${selectedQtnNumbers.size})`}
+                {isConvertingSo ? (
+                  'Processing...'
+                ) : hasConvertedSelected ? (
+                  `🚫 Blocked: Unselect ${convertedSelectedQuotations.length} Converted SO`
+                ) : (
+                  `1-Click Convert (${selectedQtnNumbers.size})`
+                )}
               </Button>
               <Button
                 variant="primary"
@@ -2507,6 +2625,26 @@ export default function SparePartsPage() {
               </Button>
             </div>
           </div>
+
+          {/* Warning Banner: Converted Quotations Selected */}
+          {hasConvertedSelected && (
+            <div className="p-3 bg-rose-50 border border-rose-300 rounded-lg text-xs text-rose-950 flex flex-wrap items-center justify-between gap-2 shadow-2xs animate-in fade-in">
+              <div className="flex items-center gap-2">
+                <span className="text-base font-bold text-rose-600">🚫</span>
+                <span>
+                  <strong>1-Click Convert is unclickable:</strong> {convertedSelectedQuotations.length} of {selectedQtnNumbers.size} selected quotation(s) ({convertedSelectedQuotations.map((q) => '#' + q.quotation_no).join(', ')}) are <strong>already converted to Sales Orders</strong>. You must unselect them to proceed.
+                </span>
+              </div>
+              <Button
+                size="xs"
+                variant="secondary"
+                className="bg-white hover:bg-rose-100 text-rose-700 border-rose-300 font-semibold cursor-pointer"
+                onClick={handleUnselectConvertedQuotations}
+              >
+                ✕ Unselect Converted ({convertedSelectedQuotations.length})
+              </Button>
+            </div>
+          )}
 
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-2">
@@ -2537,7 +2675,7 @@ export default function SparePartsPage() {
                       : 'text-emerald-700 hover:text-emerald-900'
                   }`}
                 >
-                  Copied to SO Only ({inProcessQuotations.filter((q) => (q.status || '').toLowerCase().includes('so') || (q.status || '').toLowerCase().includes('transferred')).length})
+                  Copied to SO Only ({inProcessQuotations.filter((q) => isQuotationAlreadySo(q)).length})
                 </button>
               </div>
             </div>
@@ -2571,7 +2709,7 @@ export default function SparePartsPage() {
                       }
                       setSelectedQtnNumbers(next);
                     }}
-                    className="rounded text-amber-600"
+                    className="rounded text-amber-600 cursor-pointer"
                     title="Select all eligible (non-converted) quotations"
                   />
                 </TableHead>
@@ -2602,7 +2740,7 @@ export default function SparePartsPage() {
                   const isAlreadySo = isQuotationAlreadySo(q);
                   const isSelected = selectedQtnNumbers.has(q.quotation_no);
                   return (
-                    <TableRow key={q.quotation_no} className={isAlreadySo ? 'bg-slate-50/60' : undefined}>
+                    <TableRow key={q.quotation_no} className={isAlreadySo ? 'bg-emerald-50/20' : undefined}>
                       <TableCell>
                         <input
                           type="checkbox"
@@ -2617,11 +2755,11 @@ export default function SparePartsPage() {
                           }}
                           title={
                             isAlreadySo
-                              ? 'Quotation already transferred to SO on Komatsu PDX (locked to prevent duplicates)'
+                              ? 'Quotation already converted to SO (locked to prevent duplicates)'
                               : 'Select for SO conversion'
                           }
                           className={`rounded ${
-                            isAlreadySo ? 'cursor-not-allowed opacity-30 text-slate-400' : 'text-amber-600'
+                            isAlreadySo ? 'cursor-not-allowed opacity-30 text-slate-400' : 'text-amber-600 cursor-pointer'
                           }`}
                         />
                       </TableCell>
@@ -2635,39 +2773,68 @@ export default function SparePartsPage() {
                         {q.total_amount || '$0.00'}
                       </TableCell>
                       <TableCell>
-                        <Badge
-                          tone={
-                            isAlreadySo
-                              ? 'ready'
-                              : q.status === 'Confirmed'
-                              ? 'active'
-                              : 'pending'
-                          }
-                        >
-                          {isAlreadySo ? 'Transferred to SO ✓' : (q.status || 'In-Process')}
-                        </Badge>
+                        <div className="space-y-0.5">
+                          <Badge
+                            tone={
+                              isAlreadySo
+                                ? 'ready'
+                                : q.status === 'Confirmed'
+                                ? 'active'
+                                : 'pending'
+                            }
+                          >
+                            {isAlreadySo ? 'Transferred to SO ✓' : (q.status === 'Copy To Sales Order' ? 'In-Process' : (q.status || 'In-Process'))}
+                          </Badge>
+                          {isAlreadySo && q.sales_order_no && q.sales_order_no !== '-' && q.sales_order_no !== 'Converted' && (
+                            <span className="text-[10px] font-mono text-emerald-800 font-semibold block">
+                              SO #{q.sales_order_no}
+                            </span>
+                          )}
+                        </div>
                       </TableCell>
                       <TableCell className="text-right">
-                        {((q.status || '').toLowerCase().includes('so') || (q.status || '').toLowerCase().includes('transferred')) ? (
-                          <Button
-                            variant="primary"
-                            size="xs"
-                            className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs shadow-2xs"
-                            onClick={() => openSapPoModalForQuotation(q)}
-                            title="Create Purchase Order in SAP Business One"
-                          >
-                            🚀 Create SAP PO
-                          </Button>
-                        ) : (
-                          <Button
-                            variant="ghost"
-                            size="xs"
-                            className="text-emerald-700 hover:bg-emerald-50 hover:text-emerald-800 font-medium"
-                            onClick={() => openSapPoModalForQuotation(q)}
-                          >
-                            SAP Excel ➔
-                          </Button>
-                        )}
+                        <div className="flex items-center justify-end gap-1.5">
+                          {isAlreadySo ? (
+                            <>
+                              <Button
+                                variant="primary"
+                                size="xs"
+                                className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs shadow-2xs"
+                                onClick={() => openSapPoModalForQuotation(q)}
+                                title="Create Purchase Order in SAP Business One"
+                              >
+                                🚀 Create SAP PO
+                              </Button>
+                              <button
+                                type="button"
+                                onClick={() => handleToggleQuotationSo(q.quotation_no, false)}
+                                className="text-[10px] text-slate-400 hover:text-rose-600 underline transition-colors cursor-pointer ml-1"
+                                title="Unmark as SO if not actually converted"
+                              >
+                                Unmark
+                              </button>
+                            </>
+                          ) : (
+                            <>
+                              <Button
+                                variant="ghost"
+                                size="xs"
+                                className="text-emerald-700 hover:bg-emerald-50 hover:text-emerald-800 font-medium"
+                                onClick={() => openSapPoModalForQuotation(q)}
+                              >
+                                SAP Excel ➔
+                              </Button>
+                              <button
+                                type="button"
+                                onClick={() => handleToggleQuotationSo(q.quotation_no, true)}
+                                className="text-[10px] text-emerald-700 hover:text-emerald-900 underline font-semibold transition-colors cursor-pointer ml-1"
+                                title="Mark quotation as already converted to SO"
+                              >
+                                Mark SO ✓
+                              </button>
+                            </>
+                          )}
+                        </div>
                       </TableCell>
                     </TableRow>
                   );
