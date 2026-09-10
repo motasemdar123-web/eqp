@@ -466,21 +466,7 @@ async function runLocalSapPoAutomation({
     await targetPage.keyboard.press('Tab');
     await new Promise((r) => setTimeout(r, 600));
     await targetPage.keyboard.press('Tab');
-    await new Promise((r) => setTimeout(r, 1200));
-
-    // Confirm any selection modal if it appeared
-    let bpState = await checkScreenState(targetPage);
-    if (bpState.isBpListOpen) {
-      addLog('Business Partner selection list detected after tabs. Confirming with Enter...');
-      await targetPage.keyboard.press('Enter');
-      await new Promise((r) => setTimeout(r, 1000));
-      bpState = await checkScreenState(targetPage);
-      if (bpState.isBpListOpen) {
-        addLog('Business Partner modal still present. Dismissing with Escape...');
-        await targetPage.keyboard.press('Escape');
-        await new Promise((r) => setTimeout(r, 800));
-      }
-    }
+    await new Promise((r) => setTimeout(r, 1000));
 
     // STEP 5: Press Tab ONCE to reach the vendor ref. no.
     addLog('Pressing Tab ONCE to reach Vendor Ref. No....');
@@ -542,15 +528,7 @@ async function runLocalSapPoAutomation({
 
       // 2. Press Tab once to add (triggers SAP to fetch description)
       await targetPage.keyboard.press('Tab');
-      await new Promise((r) => setTimeout(r, 1800));
-
-      // Confirm any item selection popup if present
-      const itemModalCheck = await checkScreenState(targetPage);
-      if (itemModalCheck.isBpListOpen) {
-        addLog('Item selection popup appeared. Confirming with Enter...');
-        await targetPage.keyboard.press('Enter');
-        await new Promise((r) => setTimeout(r, 800));
-      }
+      await new Promise((r) => setTimeout(r, 1500));
 
       // 3. Press Tab once again to reach the Qty, fill it
       await targetPage.keyboard.press('Tab');
