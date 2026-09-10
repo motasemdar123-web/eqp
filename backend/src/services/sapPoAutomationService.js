@@ -328,29 +328,70 @@ async function launchChromiumWithAutoInstall() {
                 modulesCenter = 229;
               }
 
-              // 2. Check if dropdown is open below modulesCenter
-              let isDropdownOpen = false;
-              if (modulesCenter) {
-                const dropSample = ctx.getImageData(modulesCenter, 45, 1, 1).data;
-                if (dropSample[0] > 210 && dropSample[1] > 210 && dropSample[2] > 210) {
-                  isDropdownOpen = true;
+              // 2. Toolbar icon check along Y=38..65
+              let toolbarIconsCount = 0;
+              for (let y = 38; y <= 65; y += 2) {
+                for (let x = 20; x <= Math.min(img.width - 20, 700); x += 2) {
+                  const p = ctx.getImageData(x, y, 1, 1).data;
+                  const max = Math.max(p[0], p[1], p[2]);
+                  const min = Math.min(p[0], p[1], p[2]);
+                  if (max - min > 25) {
+                    toolbarIconsCount++;
+                  }
                 }
               }
+              const hasToolbarIcons = toolbarIconsCount > 150;
 
-              // 3. Dashboard / Cockpit Window check
-              let isDashboardPresent = false;
-              for (let y = 145; y <= 250; y++) {
-                const p = ctx.getImageData(300, y, 1, 1).data;
-                if (p[0] > 170 && p[1] > 120 && p[2] < 70) {
-                  const pTitle = ctx.getImageData(300, y + 20, 1, 1).data;
-                  if (pTitle[0] >= 20 && pTitle[0] <= 90 && pTitle[1] >= 45 && pTitle[1] <= 130 && pTitle[2] >= 75 && pTitle[2] <= 170) {
-                    isDashboardPresent = true;
-                    break;
+              // 3. Cockpit / Dashboard Widgets Check (Cyan/Blue metric counters)
+              let blueWidgetPixels = 0;
+              for (let y = 140; y <= 400; y += 3) {
+                for (let x = 100; x <= 900; x += 3) {
+                  const p = ctx.getImageData(x, y, 1, 1).data;
+                  if (p[0] < 50 && p[1] > 120 && p[2] > 180) blueWidgetPixels++;
+                }
+              }
+              const isDashboardPresent = blueWidgetPixels > 30;
+
+              // 4. Modal "Please wait . . ." detection
+              let centerWhiteCount = 0;
+              let centerSampleCount = 0;
+              for (let y = Math.round(img.height * 0.22); y <= Math.round(img.height * 0.65); y += 4) {
+                for (let x = Math.round(img.width * 0.25); x <= Math.round(img.width * 0.75); x += 4) {
+                  centerSampleCount++;
+                  const p = ctx.getImageData(x, y, 1, 1).data;
+                  if (p[0] > 240 && p[1] > 240 && p[2] > 240) centerWhiteCount++;
+                }
+              }
+              const centerWhiteRatio = centerWhiteCount / Math.max(centerSampleCount, 1);
+
+              // 5. Purchase Order Document Window & Business Partner Modal check
+              let vendorYellowArrows = 0;
+              for (let y = 110; y < 140; y++) {
+                for (let x = 115; x < 140; x++) {
+                  const p = ctx.getImageData(x, y, 1, 1).data;
+                  if (p[0] > 220 && p[1] > 140 && p[2] < 40) {
+                    vendorYellowArrows++;
                   }
                 }
               }
 
-              // 4. Purchase Order Document Window & Business Partner Modal check
+              let contentsTabPixels = 0;
+              for (let y = 280; y <= 295; y++) {
+                for (let x = 45; x <= 90; x++) {
+                  const d = ctx.getImageData(x, y, 1, 1).data;
+                  if (d[0] < 80 && d[1] < 80 && d[2] < 80) contentsTabPixels++;
+                }
+              }
+
+              let hasAddBtn = false;
+              for (let y = 820; y <= 855; y++) {
+                const p = ctx.getImageData(30, y, 1, 1).data;
+                if (p[0] >= 15 && p[0] <= 55 && p[1] >= 45 && p[1] <= 90 && p[2] >= 80 && p[2] <= 135) {
+                  hasAddBtn = true;
+                  break;
+                }
+              }
+
               let titlePixels = 0;
               for (let y = 96; y <= 107; y++) {
                 for (let x = 7; x <= 95; x++) {
@@ -358,22 +399,18 @@ async function launchChromiumWithAutoInstall() {
                   if (d[0] > 180 && d[1] > 180 && d[2] > 180) titlePixels++;
                 }
               }
-
-              // Check for 'Contents' tab at Y=280..295, X=50..120 (unique to PO document window)
-              let tabPixels = 0;
-              for (let y = 280; y <= 295; y++) {
-                for (let x = 50; x <= 120; x++) {
-                  const d = ctx.getImageData(x, y, 1, 1).data;
-                  if (d[0] < 80 && d[1] < 80 && d[2] < 80) tabPixels++;
-                }
-              }
-
               const hasWindowHeader = (titlePixels > 15);
-              const isPoOpen = hasWindowHeader && (tabPixels > 10);
-              const isBpListOpen = hasWindowHeader && (tabPixels <= 10);
-              const isSapReady = isMenuPresent && (isDashboardPresent || isPoOpen || isBpListOpen || words.length >= 6);
 
-              // 5. Grid Row 1 Header detection
+              const isPoOpen = (vendorYellowArrows > 10) || (contentsTabPixels > 10 && (hasWindowHeader || hasAddBtn));
+              const isBpListOpen = hasWindowHeader && !isPoOpen;
+
+              // Modal "Please wait . . ." is only flagged if PO is NOT already open
+              const isPleaseWait = !isPoOpen && (centerWhiteRatio > 0.35 && blueWidgetPixels < 15);
+
+              // Strict SAP Ready: PO is open OR (Menu is present, No Please Wait dialog, Toolbar icons & Cockpit widgets are rendered)
+              const isSapReady = isPoOpen || (isMenuPresent && !isPleaseWait && hasToolbarIcons && isDashboardPresent);
+
+              // 6. Grid Row 1 Header detection
               let row1Y = 324;
               for (let y = 300; y <= 340; y++) {
                 const d = ctx.getImageData(100, y, 1, 1).data;
@@ -383,7 +420,7 @@ async function launchChromiumWithAutoInstall() {
                 }
               }
 
-              // 6. Action button Y (Add Draft & New)
+              // 7. Action button Y (Add Draft & New)
               let draftButtonY = 835;
               for (let y = 820; y <= 860; y++) {
                 const b = ctx.getImageData(110, y, 1, 1).data;
@@ -393,7 +430,7 @@ async function launchChromiumWithAutoInstall() {
                 }
               }
 
-              // 7. Dynamic Anchor: Locate Vendor yellow link arrow
+              // 8. Dynamic Anchor: Locate Vendor yellow link arrow
               let vendorInputX = 160;
               let vendorInputY = 119;
               let refInputX = 160;
@@ -421,8 +458,14 @@ async function launchChromiumWithAutoInstall() {
                 isMenuPresent,
                 wordsCount: words.length,
                 modulesCenter: modulesCenter || 229,
-                isDropdownOpen,
+                toolbarIconsCount,
+                hasToolbarIcons,
+                blueWidgetPixels,
                 isDashboardPresent,
+                isPleaseWait,
+                vendorYellowArrows,
+                contentsTabPixels,
+                hasAddBtn,
                 isPoOpen,
                 isBpListOpen,
                 row1Y,
@@ -444,7 +487,7 @@ async function launchChromiumWithAutoInstall() {
     }
 
     // STEP 1: Wait for SAP B1 remote desktop to initialize and render (visually verifying Menu Bar & Dashboard)
-    addLog('Waiting for SAP B1 desktop to render (visually reading upper menu bar & dashboard)...');
+    addLog('Waiting for SAP B1 desktop to render (visually verifying Dashboard & Toolbar)...');
     let desktopReady = false;
     let lastLandmarks = null;
     for (let sec = 1; sec <= 35; sec++) {
@@ -460,7 +503,7 @@ async function launchChromiumWithAutoInstall() {
         latestJobStatus.screenshotBase64 = `data:image/png;base64,${status.b64}`;
       }
 
-      addLog(`[${sec * 2}s] Menu Bar: ${status.isMenuPresent} (${status.wordsCount} words, Modules@X=${status.modulesCenter}) | Dashboard: ${status.isDashboardPresent} | PO Window: ${status.isPoOpen}`);
+      addLog(`[${sec * 2}s] Ready: ${status.isSapReady} | Dashboard: ${status.isDashboardPresent} (widgets=${status.blueWidgetPixels}) | Toolbar: ${status.hasToolbarIcons} (${status.toolbarIconsCount}) | PleaseWait: ${status.isPleaseWait} | PO Window: ${status.isPoOpen}`);
 
       if (status.isPoOpen) {
         desktopReady = true;
@@ -469,10 +512,14 @@ async function launchChromiumWithAutoInstall() {
       }
       if (status.isSapReady) {
         desktopReady = true;
-        addLog(`✓ SAP B1 Desktop fully loaded (Menu Bar & Cockpit confirmed) after ${sec * 2}s.`);
+        addLog(`✓ SAP B1 Desktop fully loaded (Cockpit & Toolbar confirmed) after ${sec * 2}s.`);
         break;
       }
       await updateSnapshot(`Loading SAP B1 Desktop (${sec * 2}s)...`);
+    }
+
+    if (!desktopReady) {
+      addLog('Dashboard widgets did not fully confirm ready; checking if PO can be opened directly...', 'warn');
     }
 
     // STEP 2: Open Purchase Order Window via F2 (Initial focus lands on Vendor Code)
@@ -485,26 +532,50 @@ async function launchChromiumWithAutoInstall() {
     await targetPage.keyboard.press('Escape');
     await new Promise((r) => setTimeout(r, 400));
 
-    // Press F2 to open Purchase Order window
-    await targetPage.keyboard.press('F2');
-    await new Promise((r) => setTimeout(r, 1500));
+    let poStatus = await checkScreenState(targetPage);
+    let poConfirmedOpen = poStatus.isPoOpen;
 
-    // Visually verify PO window opened
-    for (let checkSec = 1; checkSec <= 4; checkSec++) {
-      poStatus = await checkScreenState(targetPage);
-      if (poStatus.b64) {
-        latestJobStatus.screenshotBase64 = `data:image/png;base64,${poStatus.b64}`;
+    if (!poConfirmedOpen) {
+      for (let attempt = 1; attempt <= 6; attempt++) {
+        addLog(`Pressing F2 to open Purchase Order window (Attempt ${attempt}/6)...`);
+        await targetPage.focus('#JWTS_myCanvas, canvas').catch(() => {});
+        await targetPage.keyboard.press('F2');
+        await new Promise((r) => setTimeout(r, 1800));
+
+        poStatus = await checkScreenState(targetPage);
+        if (poStatus.b64) {
+          latestJobStatus.screenshotBase64 = `data:image/png;base64,${poStatus.b64}`;
+        }
+
+        if (poStatus.isPoOpen) {
+          poConfirmedOpen = true;
+          addLog('✓ Purchase Order window confirmed OPEN via F2! (Vendor drilldown arrow & Contents tab verified).');
+          break;
+        }
+
+        if (poStatus.isBpListOpen) {
+          addLog('List of Business Partners opened by mistake; pressing Escape to dismiss...', 'warn');
+          await targetPage.keyboard.press('Escape');
+          await new Promise((r) => setTimeout(r, 600));
+        }
+
+        if (poStatus.isPleaseWait) {
+          addLog('SAP is still displaying "Please wait . . ."; waiting 3s before retrying F2...', 'warn');
+          await new Promise((r) => setTimeout(r, 3000));
+        }
       }
-      if (poStatus.isPoOpen) {
-        addLog('✓ Purchase Order window confirmed OPEN via F2! Vendor Code is active cell.');
-        break;
-      }
-      if (poStatus.isBpListOpen) {
-        await targetPage.keyboard.press('Escape');
-        await new Promise((r) => setTimeout(r, 400));
-      }
-      await new Promise((r) => setTimeout(r, 1000));
+    } else {
+      addLog('✓ Purchase Order window is already open!');
     }
+
+    // STRICT GATEKEEPER: DO NOT PROCEED TO TYPE IF PO IS NOT OPEN!
+    if (!poConfirmedOpen) {
+      const errMsg = 'Purchase Order window did not open after pressing F2 (visual verification failed). Automation aborted to prevent typing into the wrong screen.';
+      addLog(errMsg, 'error');
+      await updateSnapshot('PO Window Open Failed');
+      throw new Error(errMsg);
+    }
+
     await updateSnapshot('Purchase Order Form Open & Ready');
 
     // STEP 3: Immediately type Vendor Code (V000006) - it is already active

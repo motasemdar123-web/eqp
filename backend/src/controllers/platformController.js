@@ -413,6 +413,26 @@ async function copyKomatsuQuotationToSo(req, res) {
     komatsuInquiryService.saveCookie(cookie);
   }
   try {
+    // Check if quotation is already converted to avoid duplicate Sales Orders on Komatsu PDX
+    if (!options?.force) {
+      try {
+        const searchData = await komatsuEoService.searchQuotations({ quotationNo }, cookie);
+        const match = searchData?.quotations?.find((q) => q.quotation_no === quotationNo);
+        if (match) {
+          const st = (match.status || '').toLowerCase();
+          if (st.includes('so') || st.includes('transferred') || st.includes('copied')) {
+            return res.status(400).json({
+              success: false,
+              alreadyConverted: true,
+              message: `Quotation #${quotationNo} has already been transferred to Sales Order (Status: "${match.status}"). Duplicate SO conversion was blocked to protect Komatsu PDX.`,
+            });
+          }
+        }
+      } catch (checkErr) {
+        console.warn(`[copyKomatsuQuotationToSo] Status pre-check warning for ${quotationNo}:`, checkErr.message);
+      }
+    }
+
     const result = await komatsuEoService.copyQuotationToSo(quotationNo, seqNo || '00', options || {}, cookie);
     res.json({ success: true, ...result });
   } catch (err) {

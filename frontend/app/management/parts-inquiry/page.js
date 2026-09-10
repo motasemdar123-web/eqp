@@ -1077,13 +1077,20 @@ export default function SparePartsPage() {
   // =========================================================
   // TAB 2: SO CONVERTER FUNCTIONS
   // =========================================================
+  const isQuotationAlreadySo = (q) => {
+    const st = (q?.status || '').toLowerCase();
+    return st.includes('so') || st.includes('transferred') || st.includes('copied');
+  };
+
   async function loadInProcessQuotations(page = qtnPage, limit = qtnLimit, status = qtnStatusFilter) {
     try {
       setLoadingQuotations(true);
       const res = await getKomatsuQuotations({ status, limit, page });
       if (res && res.quotations) {
         setInProcessQuotations(res.quotations);
-        setSelectedQtnNumbers(new Set(res.quotations.map((q) => q.quotation_no)));
+        // Only pre-select quotations that have NOT already been converted to SO
+        const eligible = res.quotations.filter((q) => !isQuotationAlreadySo(q));
+        setSelectedQtnNumbers(new Set(eligible.map((q) => q.quotation_no)));
       }
     } catch (err) {
       setToast({ type: 'error', message: err.message || 'Failed to fetch quotations' });
@@ -1096,10 +1103,7 @@ export default function SparePartsPage() {
     const q = qtnSearchFilter.trim().toLowerCase();
     let list = inProcessQuotations;
     if (soQuickFilter === 'SO_ONLY') {
-      list = list.filter((item) => {
-        const st = (item.status || '').toLowerCase();
-        return st.includes('so') || st.includes('transferred') || st.includes('copied');
-      });
+      list = list.filter((item) => isQuotationAlreadySo(item));
     }
     if (!q) return list;
     return list.filter(
@@ -1117,17 +1121,36 @@ export default function SparePartsPage() {
       return;
     }
 
-    const confirmed = window.confirm(`Convert ${selectedList.length} quotations to Sales Orders (SO) on Komatsu PDX?`);
+    // STRICT CHECK: Filter out quotations already converted to SO to avoid duplicates in Komatsu PDX
+    const eligibleList = selectedList.filter((q) => !isQuotationAlreadySo(q));
+    if (eligibleList.length === 0) {
+      setToast({
+        type: 'warning',
+        message: 'All selected quotations are already converted to Sales Orders. Duplicate conversion was blocked.',
+      });
+      return;
+    }
+
+    const skippedCount = selectedList.length - eligibleList.length;
+    const confirmMsg = skippedCount > 0
+      ? `Convert ${eligibleList.length} quotations to Sales Orders (SO) on Komatsu PDX?\n\nNote: ${skippedCount} already-converted quotation(s) will be automatically skipped to prevent duplicates.`
+      : `Convert ${eligibleList.length} quotations to Sales Orders (SO) on Komatsu PDX?`;
+
+    const confirmed = window.confirm(confirmMsg);
     if (!confirmed) return;
+
+    if (skippedCount > 0) {
+      addSoLog(`Skipping ${skippedCount} quotation(s) that are already converted to SO to avoid duplicates.`, 'warn');
+    }
 
     setIsConvertingSo(true);
     shouldStopSoRef.current = false;
     let successCount = 0;
 
-    for (let i = 0; i < selectedList.length; i++) {
+    for (let i = 0; i < eligibleList.length; i++) {
       if (shouldStopSoRef.current) break;
-      const q = selectedList[i];
-      setSoConversionProgress({ current: i + 1, total: selectedList.length, quotation: q.quotation_no });
+      const q = eligibleList[i];
+      setSoConversionProgress({ current: i + 1, total: eligibleList.length, quotation: q.quotation_no });
 
       try {
         if (actionType === 'FULL_CONVERT' || actionType === 'CONFIRM_ONLY') {
@@ -1150,7 +1173,7 @@ export default function SparePartsPage() {
 
     setIsConvertingSo(false);
     setSoConversionProgress(null);
-    setToast({ type: 'success', message: `Converted ${successCount} / ${selectedList.length} quotations to SO.` });
+    setToast({ type: 'success', message: `Converted ${successCount} / ${eligibleList.length} quotations to SO.` });
   }
 
   // =========================================================
@@ -2466,15 +2489,26 @@ export default function SparePartsPage() {
                 <TableHead className="w-10">
                   <input
                     type="checkbox"
-                    checked={selectedQtnNumbers.size === filteredQuotations.length && filteredQuotations.length > 0}
+                    checked={
+                      filteredQuotations.filter((q) => !isQuotationAlreadySo(q)).length > 0 &&
+                      filteredQuotations
+                        .filter((q) => !isQuotationAlreadySo(q))
+                        .every((q) => selectedQtnNumbers.has(q.quotation_no))
+                    }
                     onChange={() => {
-                      if (selectedQtnNumbers.size === filteredQuotations.length) {
-                        setSelectedQtnNumbers(new Set());
+                      const eligible = filteredQuotations.filter((q) => !isQuotationAlreadySo(q));
+                      const allEligibleSelected =
+                        eligible.length > 0 && eligible.every((q) => selectedQtnNumbers.has(q.quotation_no));
+                      const next = new Set(selectedQtnNumbers);
+                      if (allEligibleSelected) {
+                        eligible.forEach((q) => next.delete(q.quotation_no));
                       } else {
-                        setSelectedQtnNumbers(new Set(filteredQuotations.map((q) => q.quotation_no)));
+                        eligible.forEach((q) => next.add(q.quotation_no));
                       }
+                      setSelectedQtnNumbers(next);
                     }}
                     className="rounded text-amber-600"
+                    title="Select all eligible (non-converted) quotations"
                   />
                 </TableHead>
                 <TableHead>Quotation #</TableHead>
@@ -2501,20 +2535,30 @@ export default function SparePartsPage() {
                 </TableRow>
               ) : (
                 filteredQuotations.map((q) => {
+                  const isAlreadySo = isQuotationAlreadySo(q);
                   const isSelected = selectedQtnNumbers.has(q.quotation_no);
                   return (
-                    <TableRow key={q.quotation_no}>
+                    <TableRow key={q.quotation_no} className={isAlreadySo ? 'bg-slate-50/60' : undefined}>
                       <TableCell>
                         <input
                           type="checkbox"
-                          checked={isSelected}
+                          checked={!isAlreadySo && isSelected}
+                          disabled={isAlreadySo}
                           onChange={() => {
+                            if (isAlreadySo) return;
                             const next = new Set(selectedQtnNumbers);
                             if (next.has(q.quotation_no)) next.delete(q.quotation_no);
                             else next.add(q.quotation_no);
                             setSelectedQtnNumbers(next);
                           }}
-                          className="rounded text-amber-600"
+                          title={
+                            isAlreadySo
+                              ? 'Quotation already transferred to SO on Komatsu PDX (locked to prevent duplicates)'
+                              : 'Select for SO conversion'
+                          }
+                          className={`rounded ${
+                            isAlreadySo ? 'cursor-not-allowed opacity-30 text-slate-400' : 'text-amber-600'
+                          }`}
                         />
                       </TableCell>
                       <TableCell className="font-mono font-semibold text-slate-900">
@@ -2529,14 +2573,14 @@ export default function SparePartsPage() {
                       <TableCell>
                         <Badge
                           tone={
-                            q.status === 'Transferred to SO'
+                            isAlreadySo
                               ? 'ready'
                               : q.status === 'Confirmed'
                               ? 'active'
                               : 'pending'
                           }
                         >
-                          {q.status || 'In-Process'}
+                          {isAlreadySo ? 'Transferred to SO ✓' : (q.status || 'In-Process')}
                         </Badge>
                       </TableCell>
                       <TableCell className="text-right">
