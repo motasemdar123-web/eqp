@@ -392,6 +392,29 @@ async function launchChromiumWithAutoInstall() {
                 }
               }
 
+              // 7. Dynamic Anchor: Locate Vendor yellow link arrow
+              let vendorInputX = 160;
+              let vendorInputY = 119;
+              let refInputX = 160;
+              let refInputY = 167;
+
+              for (let y = 100; y <= 160; y++) {
+                for (let x = 80; x <= 160; x++) {
+                  const d = ctx.getImageData(x, y, 1, 1).data;
+                  if (d[0] > 185 && d[1] > 115 && d[2] < 55) {
+                    const d2 = ctx.getImageData(x + 1, y, 1, 1).data;
+                    if (d2[0] > 185 && d2[1] > 115 && d2[2] < 55) {
+                      vendorInputX = x + 35;
+                      vendorInputY = y;
+                      refInputX = x + 35;
+                      refInputY = y + 48;
+                      break;
+                    }
+                  }
+                }
+                if (vendorInputY !== 119) break;
+              }
+
               resolve({
                 isSapReady,
                 isMenuPresent,
@@ -403,6 +426,10 @@ async function launchChromiumWithAutoInstall() {
                 isBpListOpen,
                 row1Y,
                 draftButtonY: draftButtonY || 844,
+                vendorInputX,
+                vendorInputY,
+                refInputX,
+                refInputY,
                 b64: imgB64,
               });
             };
@@ -505,9 +532,11 @@ async function launchChromiumWithAutoInstall() {
     await new Promise((r) => setTimeout(r, 1200));
     await updateSnapshot('Purchase Order Form Open & Ready');
 
-    // STEP 4: Enter Vendor Code - Click first blank (Vendor Code) at (160, 119)
-    addLog(`Entering Vendor Code into first blank (Vendor): ${vendor}...`);
-    await rdpClick(targetPage, 160, 119);
+    // STEP 4: Enter Vendor Code - Click first blank (dynamically anchored to Vendor yellow arrow)
+    const targetVendorX = poStatus.vendorInputX || 160;
+    const targetVendorY = poStatus.vendorInputY || 119;
+    addLog(`Entering Vendor Code into first blank (detected at ${targetVendorX}, ${targetVendorY}): ${vendor}...`);
+    await rdpClick(targetPage, targetVendorX, targetVendorY);
     await new Promise((r) => setTimeout(r, 300));
     await targetPage.keyboard.press('Control+A');
     await targetPage.keyboard.type(vendor, { delay: 50 });
@@ -523,11 +552,13 @@ async function launchChromiumWithAutoInstall() {
       await new Promise((r) => setTimeout(r, 1200));
     }
 
-    // STEP 5: Enter Vendor Ref. No. (DB Order Reference) at (160, 167)
+    // STEP 5: Enter Vendor Ref. No. (dynamically anchored to Row 4)
     const targetRef = dbOrderNo || quotationNo || remarks || '';
     if (targetRef) {
-      addLog(`Entering Vendor Ref. No. (DB Order): ${targetRef}...`);
-      await rdpClick(targetPage, 160, 167);
+      const targetRefX = poStatus.refInputX || 160;
+      const targetRefY = poStatus.refInputY || 167;
+      addLog(`Entering Vendor Ref. No. (detected at ${targetRefX}, ${targetRefY}): ${targetRef}...`);
+      await rdpClick(targetPage, targetRefX, targetRefY);
       await new Promise((r) => setTimeout(r, 300));
       await targetPage.keyboard.press('Control+A');
       await targetPage.keyboard.type(targetRef, { delay: 50 });
