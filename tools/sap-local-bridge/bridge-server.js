@@ -632,6 +632,7 @@ async function runLocalSapPoAutomation({
         // 3. Press Tab once again to reach the Qty, fill it
         await targetPage.keyboard.press('Tab');
         await new Promise((r) => setTimeout(r, 300));
+        await targetPage.keyboard.press('Backspace');
         await targetPage.keyboard.type(qty, { delay: 40 });
         await new Promise((r) => setTimeout(r, 300));
 
@@ -639,6 +640,7 @@ async function runLocalSapPoAutomation({
         await targetPage.keyboard.press('Tab');
         await new Promise((r) => setTimeout(r, 300));
         if (priceVal > 0) {
+          await targetPage.keyboard.press('Backspace');
           await targetPage.keyboard.type(priceVal.toFixed(3), { delay: 40 });
           await new Promise((r) => setTimeout(r, 300));
         }

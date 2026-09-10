@@ -57,26 +57,95 @@ function extractPartsFromText(text, quotationNo) {
   const parts = [];
   const seenParts = new Set();
 
+  function addItem(rawPartNo, rawDesc, rawQty, rawPrice, rawTotal, rawUom) {
+    const partNo = String(rawPartNo || '').trim();
+    if (!partNo || seenParts.has(partNo)) return;
+    seenParts.add(partNo);
+
+    const desc = String(rawDesc || 'PARTS').trim();
+    const qNum = parseFloat(rawQty);
+    const quantity = !isNaN(qNum) && qNum > 0 ? qNum : 1;
+
+    let unitPrice = '0.000';
+    if (rawPrice !== undefined && rawPrice !== null && rawPrice !== '') {
+      const pNum = typeof rawPrice === 'number' ? rawPrice : parseFloat(String(rawPrice).replace(/[^0-9.]/g, ''));
+      if (!isNaN(pNum) && pNum >= 0) {
+        unitPrice = pNum.toFixed(3);
+      }
+    }
+
+    let totalPrice = '0.000';
+    if (rawTotal !== undefined && rawTotal !== null && rawTotal !== '') {
+      const tNum = typeof rawTotal === 'number' ? rawTotal : parseFloat(String(rawTotal).replace(/[^0-9.]/g, ''));
+      if (!isNaN(tNum) && tNum >= 0) {
+        totalPrice = tNum.toFixed(3);
+      }
+    } else if (parseFloat(unitPrice) > 0) {
+      totalPrice = (quantity * parseFloat(unitPrice)).toFixed(3);
+    }
+
+    const unit = String(rawUom || 'EA').trim().toUpperCase() || 'EA';
+
+    parts.push({
+      part_no: partNo,
+      description: desc,
+      quantity,
+      unit_price: unitPrice,
+      total_price: totalPrice,
+      unit,
+      quotation_no: cleanQtn,
+    });
+  }
+
   // 1. Try JSON parsing
   try {
     const json = typeof text === 'string' ? JSON.parse(text) : text;
     const dataList = json.Data || json.data || (Array.isArray(json) ? json : null);
     if (Array.isArray(dataList)) {
       dataList.forEach((item) => {
-        const partNo = String(
-          item.RequestedPartNo || item.PartNo || item.ItemNo || item.PartNumber || item.Part_No || item.ITEM_NO || ''
-        ).trim();
-        if (!partNo || seenParts.has(partNo)) return;
-        seenParts.add(partNo);
-        parts.push({
-          part_no: partNo,
-          description: String(item.Description || item.PartDescription || item.ItemDescription || item.PART_DESC || 'PARTS').trim(),
-          quantity: Number(item.Requested_Quantity || item.Quantity || item.Qty || item.QTY || 1),
-          unit_price: item.Unit_Price !== undefined ? Number(item.Unit_Price).toFixed(3) : '0.000',
-          total_price: item.Total_Price !== undefined ? Number(item.Total_Price).toFixed(3) : '0.000',
-          unit: item.Unit || 'EA',
-          quotation_no: cleanQtn,
-        });
+        const partNo = item.RequestedPartNo ||
+          item.Requested_Part_No ||
+          item.PartNo ||
+          item.Part_No ||
+          item.ItemNo ||
+          item.ITEM_NO ||
+          item.PartNumber ||
+          item.part_no ||
+          item.partNo;
+        const desc = item.Description ||
+          item.PartDescription ||
+          item.ItemDescription ||
+          item.PART_DESC ||
+          item.part_desc ||
+          item.ItemDesc;
+        const qty = item.Requested_Quantity ??
+          item.RequestedQuantity ??
+          item.Quantity ??
+          item.Qty ??
+          item.QTY ??
+          item.ReqQuantity ??
+          item.ReqQty ??
+          item.OrderQty ??
+          item.quantity ??
+          item.qty;
+        const price = item.Unit_Price ??
+          item.UnitPrice ??
+          item.Price ??
+          item.SellingPrice ??
+          item.SalesPrice ??
+          item.Rate ??
+          item.unit_price ??
+          item.price;
+        const total = item.Total_Price ??
+          item.TotalPrice ??
+          item.Amount ??
+          item.TotalAmount ??
+          item.total_price;
+        const uom = item.Unit || item.UOM || item.UnitOfMeasure;
+
+        if (partNo) {
+          addItem(partNo, desc, qty, price, total, uom);
+        }
       });
     }
   } catch {
@@ -92,18 +161,15 @@ function extractPartsFromText(text, quotationNo) {
       const arr = JSON.parse(arrStr);
       if (Array.isArray(arr)) {
         arr.forEach((item) => {
-          const partNo = String(item.RequestedPartNo || item.PartNo || item.ItemNo || '').trim();
-          if (!partNo || seenParts.has(partNo)) return;
-          seenParts.add(partNo);
-          parts.push({
-            part_no: partNo,
-            description: String(item.Description || item.PartDescription || 'PARTS').trim(),
-            quantity: Number(item.Requested_Quantity || item.Quantity || item.Qty || 1),
-            unit_price: item.Unit_Price !== undefined ? Number(item.Unit_Price).toFixed(3) : '0.000',
-            total_price: item.Total_Price !== undefined ? Number(item.Total_Price).toFixed(3) : '0.000',
-            unit: item.Unit || 'EA',
-            quotation_no: cleanQtn,
-          });
+          const partNo = item.RequestedPartNo || item.PartNo || item.ItemNo || item.part_no;
+          const desc = item.Description || item.PartDescription || item.ItemDescription || item.PART_DESC;
+          const qty = item.Requested_Quantity ?? item.RequestedQuantity ?? item.Quantity ?? item.Qty ?? item.quantity;
+          const price = item.Unit_Price ?? item.UnitPrice ?? item.Price ?? item.unit_price;
+          const total = item.Total_Price ?? item.TotalPrice ?? item.Amount ?? item.total_price;
+          const uom = item.Unit || item.UOM;
+          if (partNo) {
+            addItem(partNo, desc, qty, price, total, uom);
+          }
         });
       }
     } catch {
@@ -116,7 +182,7 @@ function extractPartsFromText(text, quotationNo) {
   // 3. Parse HTML table rows (<tr><td>...</td></tr>)
   const trMatches = String(text).match(/<tr[^>]*>([\s\S]*?)<\/tr>/gi) || [];
   for (const tr of trMatches) {
-    const tdMatches = tr.match(/<td[^>]*>([\s\S]*?)<\/td>/gi) || [];
+    const tdMatches = tr.match(/<t[dh][^>]*>([\s\S]*?)<\/t[dh]>/gi) || [];
     if (tdMatches.length >= 3) {
       const cleanTds = tdMatches.map((td) => td.replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').trim());
       // Look for a cell that resembles a Komatsu part number (e.g. 2A8-62-12230, 07143-10605, 207-70-71110)
@@ -128,19 +194,56 @@ function extractPartsFromText(text, quotationNo) {
           !cell.toLowerCase().includes('date') &&
           !seenParts.has(cell)
         ) {
-          seenParts.add(cell);
-          const desc = cleanTds[i + 1] || 'PARTS';
-          const qty = parseFloat(cleanTds[i + 2]) || parseFloat(cleanTds[i - 1]) || 1;
-          const price = cleanTds[i + 3] && !isNaN(parseFloat(cleanTds[i + 3])) ? cleanTds[i + 3] : '0.000';
-          parts.push({
-            part_no: cell,
-            description: desc,
-            quantity: qty,
-            unit_price: price,
-            total_price: '0.000',
-            unit: 'EA',
-            quotation_no: cleanQtn,
-          });
+          const cellsAfter = cleanTds.slice(i + 1);
+          let desc = 'PARTS';
+          let uom = 'EA';
+          const numericCells = [];
+
+          for (const c of cellsAfter) {
+            const trimmed = String(c || '').trim();
+            if (!trimmed) continue;
+
+            if (/^(EA|PC|PCS|SET|M|KG|NOS|RO|BX|KIT)$/i.test(trimmed)) {
+              uom = trimmed.toUpperCase();
+              continue;
+            }
+
+            const numClean = trimmed.replace(/,/g, '');
+            if (/^-?\d+(?:\.\d+)?$/.test(numClean)) {
+              numericCells.push(parseFloat(numClean));
+              continue;
+            }
+
+            if (desc === 'PARTS' && /[a-zA-Z]/.test(trimmed) && trimmed.length >= 2) {
+              desc = trimmed;
+            }
+          }
+
+          // Quantity is always the first numeric value following part & description
+          const qty = numericCells.length > 0 && numericCells[0] > 0 ? numericCells[0] : 1;
+
+          let unitPrice = '0.000';
+          let totalPrice = '0.000';
+
+          if (numericCells.length >= 2) {
+            // Check if 2nd number * qty ≈ 3rd number (or last number), indicating qty * unitPrice = totalPrice
+            if (numericCells.length >= 3 && Math.abs(qty * numericCells[1] - numericCells[2]) < 0.05) {
+              unitPrice = numericCells[1].toFixed(3);
+              totalPrice = numericCells[2].toFixed(3);
+            } else if (numericCells.length >= 3 && Math.abs(qty * numericCells[1] - numericCells[numericCells.length - 1]) < 0.05) {
+              unitPrice = numericCells[1].toFixed(3);
+              totalPrice = numericCells[numericCells.length - 1].toFixed(3);
+            } else {
+              unitPrice = numericCells[1] >= 0 ? numericCells[1].toFixed(3) : '0.000';
+              if (numericCells.length >= 3) {
+                totalPrice = numericCells[numericCells.length - 1].toFixed(3);
+              } else {
+                totalPrice = (qty * parseFloat(unitPrice)).toFixed(3);
+              }
+            }
+          }
+
+          addItem(cell, desc, qty, unitPrice, totalPrice, uom);
           break;
         }
       }
