@@ -281,6 +281,17 @@ export default function SparePartsPage() {
     }
   }, [sapModalOpen]);
 
+  // Strict Validation: Quotation items can NEVER have 0 or missing prices
+  const invalidPriceItems = useMemo(() => {
+    return (sapTargetOrder?.items || []).filter((it) => {
+      const p = it.unit_price ?? it.price;
+      const val = typeof p === 'number' ? p : parseFloat(String(p || '').replace(/[^0-9.]/g, ''));
+      return isNaN(val) || val <= 0;
+    });
+  }, [sapTargetOrder?.items]);
+
+  const hasMissingPrices = invalidPriceItems.length > 0;
+
   // TAB 3: BULK INQUIRY STATE
   const [pastedInquiryText, setPastedInquiryText] = useState(SAMPLE_INQUIRY_PARTS.join('\n'));
   const [parsedInquiryQueue, setParsedInquiryQueue] = useState([]);
@@ -1532,6 +1543,24 @@ export default function SparePartsPage() {
         setToast({ type: 'error', message: 'No items available to create SAP Purchase Order.' });
         return;
       }
+    }
+
+    // STRICT VALIDATION: Ensure every single item has a non-zero quotation unit price
+    const allItemsToCheck = isBatch
+      ? ordersPayload.flatMap((o) => o.items)
+      : (sapTargetOrder?.items || []);
+    const itemsMissingPrice = allItemsToCheck.filter((it) => {
+      const p = it.unit_price || it.price;
+      const val = typeof p === 'number' ? p : parseFloat(String(p || '').replace(/[^0-9.]/g, ''));
+      return isNaN(val) || val <= 0;
+    });
+    if (itemsMissingPrice.length > 0) {
+      const firstPart = itemsMissingPrice[0].part_no || itemsMissingPrice[0].partNo || 'Item';
+      setToast({
+        type: 'error',
+        message: `Strict Validation: ${itemsMissingPrice.length} item(s) (e.g. ${firstPart}) have a zero or missing quotation unit price. Every quotation item must have a valid non-zero quotation price before creating SAP PO.`,
+      });
+      return;
     }
 
     setIsExecutingSapPo(true);
@@ -3701,61 +3730,90 @@ export default function SparePartsPage() {
                 </div>
               </div>
             ) : (
-              <div className="border border-slate-200 rounded-lg overflow-hidden max-h-48 overflow-y-auto">
-                <table className="w-full text-left text-xs border-collapse">
-                  <thead className="bg-slate-100 text-slate-700 font-semibold border-b border-slate-200">
-                    <tr>
-                      <th className="py-2 px-3">#</th>
-                      <th className="py-2 px-3">Item No</th>
-                      <th className="py-2 px-3 text-right">Quantity</th>
-                      <th className="py-2 px-3 text-right">Unit Price</th>
-                      <th className="py-2 px-2 text-center w-8"></th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100">
-                    {sapTargetOrder?.items?.map((it, idx) => (
-                      <tr key={idx} className="hover:bg-slate-50">
-                        <td className="py-1.5 px-3 text-slate-400">{idx + 1}</td>
-                        <td className="py-1.5 px-3 font-mono font-semibold text-slate-900">
-                          {it.part_no || it.partNo || it.itemCode}
-                        </td>
-                        <td className="py-1.5 px-3 text-right">
-                          <input
-                            type="number"
-                            min="1"
-                            value={it.qty || it.quantity || 1}
-                            onChange={(e) => handleUpdateItemQty(idx, e.target.value)}
-                            className="w-16 px-1.5 py-0.5 border border-slate-200 rounded text-right font-mono font-medium text-slate-800 text-xs bg-white focus:border-emerald-600 focus:outline-none"
-                            title="Edit Quantity"
-                          />
-                        </td>
-                        <td className="py-1.5 px-3 text-right">
-                          <div className="flex items-center justify-end gap-1">
-                            <span className="text-slate-400 text-xs font-mono">$</span>
-                            <input
-                              type="text"
-                              value={it.unit_price ?? it.price ?? ''}
-                              onChange={(e) => handleUpdateItemPrice(idx, e.target.value)}
-                              placeholder="0.000"
-                              className="w-24 px-1.5 py-0.5 border border-slate-200 rounded text-right font-mono font-semibold text-emerald-900 text-xs bg-white focus:border-emerald-600 focus:outline-none"
-                              title="Edit USD Unit Price"
-                            />
-                          </div>
-                        </td>
-                        <td className="py-1.5 px-2 text-center">
-                          <button
-                            type="button"
-                            onClick={() => handleRemoveSapItem(idx)}
-                            className="text-slate-400 hover:text-rose-600 p-0.5 rounded transition-colors text-xs font-bold"
-                            title="Remove line item"
-                          >
-                            ✕
-                          </button>
-                        </td>
+              <div className="space-y-2">
+                {hasMissingPrices && (
+                  <div className="p-2.5 bg-rose-50 border border-rose-200 rounded-lg text-rose-800 text-xs flex items-start gap-2">
+                    <span className="text-base leading-none">⚠️</span>
+                    <div>
+                      <p className="font-semibold">Strict Validation: {invalidPriceItems.length} item(s) missing quotation price</p>
+                      <p className="text-[11px] text-rose-700 mt-0.5 leading-relaxed">
+                        Quotation prices (with discounts) are strictly required. Quotation items cannot have a 0.00 price in SAP. Please enter the quotation unit price for each flagged item below before creating the Purchase Order.
+                      </p>
+                    </div>
+                  </div>
+                )}
+                <div className="border border-slate-200 rounded-lg overflow-hidden max-h-48 overflow-y-auto">
+                  <table className="w-full text-left text-xs border-collapse">
+                    <thead className="bg-slate-100 text-slate-700 font-semibold border-b border-slate-200">
+                      <tr>
+                        <th className="py-2 px-3">#</th>
+                        <th className="py-2 px-3">Item No</th>
+                        <th className="py-2 px-3 text-right">Quantity</th>
+                        <th className="py-2 px-3 text-right">Unit Price</th>
+                        <th className="py-2 px-2 text-center w-8"></th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100">
+                      {sapTargetOrder?.items?.map((it, idx) => {
+                        const p = it.unit_price ?? it.price;
+                        const val = typeof p === 'number' ? p : parseFloat(String(p || '').replace(/[^0-9.]/g, ''));
+                        const isPriceZero = isNaN(val) || val <= 0;
+                        return (
+                          <tr key={idx} className={isPriceZero ? 'bg-rose-50/50 hover:bg-rose-50' : 'hover:bg-slate-50'}>
+                            <td className="py-1.5 px-3 text-slate-400">{idx + 1}</td>
+                            <td className="py-1.5 px-3 font-mono font-semibold text-slate-900">
+                              <div className="flex items-center gap-2">
+                                <span>{it.part_no || it.partNo || it.itemCode}</span>
+                                {isPriceZero && (
+                                  <span className="text-[10px] font-sans font-bold px-1.5 py-0.5 bg-rose-100 text-rose-700 rounded border border-rose-200">
+                                    Price Required
+                                  </span>
+                                )}
+                              </div>
+                            </td>
+                            <td className="py-1.5 px-3 text-right">
+                              <input
+                                type="number"
+                                min="1"
+                                value={it.qty || it.quantity || 1}
+                                onChange={(e) => handleUpdateItemQty(idx, e.target.value)}
+                                className="w-16 px-1.5 py-0.5 border border-slate-200 rounded text-right font-mono font-medium text-slate-800 text-xs bg-white focus:border-emerald-600 focus:outline-none"
+                                title="Edit Quantity"
+                              />
+                            </td>
+                            <td className="py-1.5 px-3 text-right">
+                              <div className="flex items-center justify-end gap-1">
+                                <span className="text-slate-400 text-xs font-mono">$</span>
+                                <input
+                                  type="text"
+                                  value={it.unit_price ?? it.price ?? ''}
+                                  onChange={(e) => handleUpdateItemPrice(idx, e.target.value)}
+                                  placeholder="0.000"
+                                  className={`w-24 px-1.5 py-0.5 border rounded text-right font-mono text-xs bg-white focus:outline-none ${
+                                    isPriceZero
+                                      ? 'border-rose-400 text-rose-700 bg-rose-50 font-bold focus:border-rose-600 focus:ring-1 focus:ring-rose-400'
+                                      : 'border-slate-200 text-emerald-900 font-semibold focus:border-emerald-600'
+                                  }`}
+                                  title={isPriceZero ? 'Quotation unit price is strictly required' : 'Edit USD Unit Price'}
+                                />
+                              </div>
+                            </td>
+                            <td className="py-1.5 px-2 text-center">
+                              <button
+                                type="button"
+                                onClick={() => handleRemoveSapItem(idx)}
+                                className="text-slate-400 hover:text-rose-600 p-0.5 rounded transition-colors text-xs font-bold"
+                                title="Remove line item"
+                              >
+                                ✕
+                              </button>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             )}
           </div>
@@ -3825,6 +3883,12 @@ export default function SparePartsPage() {
           </Button>
 
           <div className="flex items-center gap-2">
+            {hasMissingPrices && (
+              <span className="text-[11px] font-bold text-rose-700 bg-rose-50 border border-rose-200 px-2 py-1 rounded flex items-center gap-1">
+                <span>⚠️</span>
+                <span>{invalidPriceItems.length} price{invalidPriceItems.length > 1 ? 's' : ''} required</span>
+              </span>
+            )}
             <Button
               variant="secondary"
               size="sm"
@@ -3836,9 +3900,14 @@ export default function SparePartsPage() {
             <Button
               variant="primary"
               size="sm"
-              className="bg-emerald-600 hover:bg-emerald-700 text-white border-emerald-600 font-semibold"
+              className={`font-semibold ${
+                hasMissingPrices
+                  ? 'bg-slate-300 hover:bg-slate-300 text-slate-500 border-slate-300 cursor-not-allowed shadow-none'
+                  : 'bg-emerald-600 hover:bg-emerald-700 text-white border-emerald-600'
+              }`}
               onClick={() => handleExecuteSapPo(false)}
-              disabled={isExecutingSapPo || loadingSapParts || !sapTargetOrder?.items || sapTargetOrder.items.length === 0}
+              disabled={isExecutingSapPo || loadingSapParts || !sapTargetOrder?.items || sapTargetOrder.items.length === 0 || hasMissingPrices}
+              title={hasMissingPrices ? 'Strict Validation: All items must have a non-zero quotation price' : undefined}
             >
               {isExecutingSapPo ? (
                 <>

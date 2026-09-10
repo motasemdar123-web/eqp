@@ -105,7 +105,7 @@ async function createSapPurchaseOrder({
   );
 
   if (validOrders.length === 0) {
-    throw new Error('Cannot create Purchase Order: no line items found for the selected order(s).');
+    throw new Error('Cannot create Purchase Order without line items: no line items found for the selected order(s).');
   }
 
   latestJobStatus = {
@@ -125,6 +125,32 @@ async function createSapPurchaseOrder({
     addLog(`  Order ${idx + 1}/${validOrders.length}: Quotation #${vo.quotationNo || 'Direct'} | Ref: ${vo.dbOrderNo || vo.remarks || 'N/A'} | Items: ${vo.items.length}`);
   });
 
+  // STRICT PRE-VALIDATION: Ensure all orders and line items have valid non-zero quotation prices
+  for (const ord of validOrders) {
+    const qNum = ord.quotationNo || 'Direct';
+    if (!ord.items || ord.items.length === 0) {
+      const errMsg = `STRICT VALIDATION FAILED: Quotation #${qNum} has no line items.`;
+      addLog(errMsg, 'error');
+      throw new Error(errMsg);
+    }
+    for (let idx = 0; idx < ord.items.length; idx++) {
+      const it = ord.items[idx];
+      const pNo = it.part_no || it.partNo || it.itemCode;
+      if (!pNo) {
+        const errMsg = `STRICT VALIDATION FAILED: Item #${idx + 1} in Quotation #${qNum} is missing a part number.`;
+        addLog(errMsg, 'error');
+        throw new Error(errMsg);
+      }
+      const rawPrice = it.unit_price || it.price || it.unitPrice || 0;
+      const priceVal = typeof rawPrice === 'number' ? rawPrice : parseFloat(String(rawPrice).replace(/[^0-9.]/g, '')) || 0;
+      if (priceVal <= 0) {
+        const errMsg = `STRICT VALIDATION FAILED: Part "${pNo}" in Quotation #${qNum} has a zero or missing unit price ($${priceVal.toFixed(3)}). Non-zero quotation prices (with discounts) are strictly required.`;
+        addLog(errMsg, 'error');
+        throw new Error(errMsg);
+      }
+    }
+  }
+
   if (dryRun) {
     addLog('DRY-RUN mode enabled: skipping live browser interaction.');
     latestJobStatus.status = 'SUCCESS';
@@ -134,6 +160,8 @@ async function createSapPurchaseOrder({
       vendor,
       buyer,
       totalOrders: validOrders.length,
+      itemsCount: totalItems,
+      quotationNo: validOrders[0]?.quotationNo,
       orders: validOrders.map((o) => ({
         quotationNo: o.quotationNo,
         dbOrderNo: o.dbOrderNo || o.remarks,
@@ -593,6 +621,32 @@ async function launchChromiumWithAutoInstall() {
       throw new Error(errMsg);
     }
 
+    // STRICT PRE-VALIDATION: Ensure all orders and line items have valid non-zero quotation prices
+    for (const ord of validOrders) {
+      const qNum = ord.quotationNo || 'Direct';
+      if (!ord.items || ord.items.length === 0) {
+        const errMsg = `STRICT VALIDATION FAILED: Quotation #${qNum} has no line items.`;
+        addLog(errMsg, 'error');
+        throw new Error(errMsg);
+      }
+      for (let idx = 0; idx < ord.items.length; idx++) {
+        const it = ord.items[idx];
+        const pNo = it.part_no || it.partNo || it.itemCode;
+        if (!pNo) {
+          const errMsg = `STRICT VALIDATION FAILED: Item #${idx + 1} in Quotation #${qNum} is missing a part number.`;
+          addLog(errMsg, 'error');
+          throw new Error(errMsg);
+        }
+        const rawPrice = it.unit_price || it.price || it.unitPrice || 0;
+        const priceVal = typeof rawPrice === 'number' ? rawPrice : parseFloat(String(rawPrice).replace(/[^0-9.]/g, '')) || 0;
+        if (priceVal <= 0) {
+          const errMsg = `STRICT VALIDATION FAILED: Part "${pNo}" in Quotation #${qNum} has a zero or missing unit price ($${priceVal.toFixed(3)}). Non-zero quotation prices (with discounts) are strictly required.`;
+          addLog(errMsg, 'error');
+          throw new Error(errMsg);
+        }
+      }
+    }
+
     await updateSnapshot('Purchase Order Form Open & Ready');
 
     // STEP 3: Create Purchase Orders sequentially (1 PO per quotation, using Ctrl+A between them)
@@ -670,7 +724,7 @@ async function launchChromiumWithAutoInstall() {
         const rawPrice = it.unit_price || it.price || it.unitPrice || 0;
         const priceVal = typeof rawPrice === 'number' ? rawPrice : parseFloat(String(rawPrice).replace(/[^0-9.]/g, '')) || 0;
 
-        addLog(`  [PO ${ordIdx + 1} | Line ${i + 1}/${curItems.length}] Part: ${partNo} | Qty: ${qty} | Unit Price: ${priceVal > 0 ? priceVal.toFixed(3) : 'Default'}`);
+        addLog(`  [PO ${ordIdx + 1} | Line ${i + 1}/${curItems.length}] Part: ${partNo} | Qty: ${qty} | Unit Price: $${priceVal.toFixed(3)}`);
 
         // 1. Paste the part no.
         await targetPage.keyboard.type(partNo, { delay: 50 });
@@ -690,14 +744,22 @@ async function launchChromiumWithAutoInstall() {
         // 4. Press Tab once again to reach the unit price in dollar, fill it
         await targetPage.keyboard.press('Tab');
         await new Promise((r) => setTimeout(r, 300));
-        if (priceVal > 0) {
-          await targetPage.keyboard.press('Backspace');
-          await targetPage.keyboard.type(priceVal.toFixed(3), { delay: 40 });
-          await new Promise((r) => setTimeout(r, 300));
-        }
+        await targetPage.keyboard.press('Backspace');
+        await targetPage.keyboard.type(priceVal.toFixed(3), { delay: 40 });
+        await new Promise((r) => setTimeout(r, 300));
 
-        // 5. Press Down arrow to access the second row if exists
+        // 5. Navigate to the next row if exists:
+        // From Unit Price (col 5), press Shift+Tab 3 times to return to Item No. (col 2), then press ArrowDown to reach Item No. on the next row
         if (i < curItems.length - 1) {
+          await targetPage.keyboard.down('Shift');
+          await targetPage.keyboard.press('Tab');
+          await new Promise((r) => setTimeout(r, 150));
+          await targetPage.keyboard.press('Tab');
+          await new Promise((r) => setTimeout(r, 150));
+          await targetPage.keyboard.press('Tab');
+          await targetPage.keyboard.up('Shift');
+          await new Promise((r) => setTimeout(r, 250));
+
           await targetPage.keyboard.press('ArrowDown');
           await new Promise((r) => setTimeout(r, 500));
         }
@@ -708,11 +770,7 @@ async function launchChromiumWithAutoInstall() {
       // 9. Press Enter once to add the PO
       addLog(`[PO ${ordIdx + 1}/${validOrders.length}] Adding Purchase Order document by pressing Enter...`);
       await targetPage.keyboard.press('Enter');
-      await new Promise((r) => setTimeout(r, 1800));
-
-      // Dismiss any SAP prompt (e.g. "Document total is zero. Continue?", exchange rate warning, etc.)
-      await targetPage.keyboard.press('Enter');
-      await new Promise((r) => setTimeout(r, 1200));
+      await new Promise((r) => setTimeout(r, 2500));
 
       await updateSnapshot(`PO ${ordIdx + 1} Saved`);
       addLog(`✓ [PO ${ordIdx + 1}/${validOrders.length}] Saved successfully in SAP B1!`);

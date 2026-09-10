@@ -16,6 +16,26 @@ describe('SAP Business One Purchase Order Automation Service', () => {
     ).rejects.toThrow('Cannot create Purchase Order without line items');
   });
 
+  test('strictly rejects if any item has zero or missing unit price', async () => {
+    await expect(
+      sapPoAutomationService.createSapPurchaseOrder({
+        vendor: 'V000006',
+        items: [
+          { part_no: '6732-81-8100', qty: 2, price: 0, description: 'STARTER MOTOR' },
+        ],
+      })
+    ).rejects.toThrow('zero or missing unit price');
+
+    await expect(
+      sapPoAutomationService.createSapPurchaseOrder({
+        vendor: 'V000006',
+        items: [
+          { part_no: '6732-81-8100', qty: 2, unit_price: '0.000', description: 'STARTER MOTOR' },
+        ],
+      })
+    ).rejects.toThrow('zero or missing unit price');
+  });
+
   test('dry-run execution validates payload successfully', async () => {
     const result = await sapPoAutomationService.createSapPurchaseOrder({
       vendor: 'V000006',

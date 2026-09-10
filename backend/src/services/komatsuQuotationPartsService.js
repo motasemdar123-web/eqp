@@ -69,7 +69,7 @@ function extractPartsFromText(text, quotationNo) {
     let unitPrice = '0.000';
     if (rawPrice !== undefined && rawPrice !== null && rawPrice !== '') {
       const pNum = typeof rawPrice === 'number' ? rawPrice : parseFloat(String(rawPrice).replace(/[^0-9.]/g, ''));
-      if (!isNaN(pNum) && pNum >= 0) {
+      if (!isNaN(pNum) && pNum > 0) {
         unitPrice = pNum.toFixed(3);
       }
     }
@@ -77,10 +77,15 @@ function extractPartsFromText(text, quotationNo) {
     let totalPrice = '0.000';
     if (rawTotal !== undefined && rawTotal !== null && rawTotal !== '') {
       const tNum = typeof rawTotal === 'number' ? rawTotal : parseFloat(String(rawTotal).replace(/[^0-9.]/g, ''));
-      if (!isNaN(tNum) && tNum >= 0) {
+      if (!isNaN(tNum) && tNum > 0) {
         totalPrice = tNum.toFixed(3);
       }
-    } else if (parseFloat(unitPrice) > 0) {
+    }
+
+    // Derive unitPrice from line total if unit price was zero or missing
+    if (parseFloat(unitPrice) <= 0 && parseFloat(totalPrice) > 0 && quantity > 0) {
+      unitPrice = (parseFloat(totalPrice) / quantity).toFixed(3);
+    } else if (parseFloat(totalPrice) <= 0 && parseFloat(unitPrice) > 0) {
       totalPrice = (quantity * parseFloat(unitPrice)).toFixed(3);
     }
 
@@ -130,17 +135,33 @@ function extractPartsFromText(text, quotationNo) {
           item.qty;
         const price = item.Unit_Price ??
           item.UnitPrice ??
-          item.Price ??
-          item.SellingPrice ??
-          item.SalesPrice ??
-          item.Rate ??
           item.unit_price ??
-          item.price;
+          item.DNetPrice ??
+          item.DNet_Price ??
+          item.DNet ??
+          item.dnet ??
+          item.SellingPrice ??
+          item.Selling_Price ??
+          item.NetPrice ??
+          item.Net_Price ??
+          item.QuotationPrice ??
+          item.Quotation_Price ??
+          item.SalesPrice ??
+          item.Sales_Price ??
+          item.Price ??
+          item.price ??
+          item.Rate ??
+          item.ListPrice ??
+          item.List_Price;
         const total = item.Total_Price ??
           item.TotalPrice ??
+          item.total_price ??
           item.Amount ??
           item.TotalAmount ??
-          item.total_price;
+          item.Total_Amount ??
+          item.ExtPrice ??
+          item.ExtendedPrice ??
+          item.SellingTotal;
         const uom = item.Unit || item.UOM || item.UnitOfMeasure;
 
         if (partNo) {
@@ -152,7 +173,7 @@ function extractPartsFromText(text, quotationNo) {
     // Not valid root JSON, continue to regex/HTML
   }
 
-  if (parts.length > 0) return parts;
+  if (parts.length > 0 && parts.every((p) => parseFloat(p.unit_price) > 0)) return parts;
 
   // 2. Check for embedded JSON in script tags (Kendo Grid dataSource: [{"RequestedPartNo": ...}])
   const jsonArrayMatches = String(text).match(/\[\s*\{[^{}]*(?:"RequestedPartNo"|"PartNo"|"PartNumber")[^{}]*\}\s*\]/gi) || [];
@@ -164,7 +185,19 @@ function extractPartsFromText(text, quotationNo) {
           const partNo = item.RequestedPartNo || item.PartNo || item.ItemNo || item.part_no;
           const desc = item.Description || item.PartDescription || item.ItemDescription || item.PART_DESC;
           const qty = item.Requested_Quantity ?? item.RequestedQuantity ?? item.Quantity ?? item.Qty ?? item.quantity;
-          const price = item.Unit_Price ?? item.UnitPrice ?? item.Price ?? item.unit_price;
+          const price = item.Unit_Price ??
+            item.UnitPrice ??
+            item.unit_price ??
+            item.DNetPrice ??
+            item.DNet_Price ??
+            item.DNet ??
+            item.SellingPrice ??
+            item.Selling_Price ??
+            item.NetPrice ??
+            item.Net_Price ??
+            item.QuotationPrice ??
+            item.Price ??
+            item.price;
           const total = item.Total_Price ?? item.TotalPrice ?? item.Amount ?? item.total_price;
           const uom = item.Unit || item.UOM;
           if (partNo) {
@@ -177,12 +210,14 @@ function extractPartsFromText(text, quotationNo) {
     }
   }
 
-  if (parts.length > 0) return parts;
+  if (parts.length > 0 && parts.every((p) => parseFloat(p.unit_price) > 0)) return parts;
 
   // 3. Parse HTML table rows (<tr><td>...</td></tr>)
   const trMatches = String(text).match(/<tr[^>]*>([\s\S]*?)<\/tr>/gi) || [];
   for (const tr of trMatches) {
-    const tdMatches = tr.match(/<t[dh][^>]*>([\s\S]*?)<\/t[dh]>/gi) || [];
+    const rawTdMatches = tr.match(/<t[dh][^>]*>([\s\S]*?)<\/t[dh]>/gi) || [];
+    // Ignore hidden cells (e.g. style="display: none")
+    const tdMatches = rawTdMatches.filter((td) => !/display\s*:\s*none/i.test(td));
     if (tdMatches.length >= 3) {
       const cleanTds = tdMatches.map((td) => {
         const inputMatch = td.match(/<input[^>]*value=["']([^"']*)["']/i);
@@ -242,13 +277,17 @@ function extractPartsFromText(text, quotationNo) {
               unitPrice = numericCells[1].toFixed(3);
               totalPrice = numericCells[numericCells.length - 1].toFixed(3);
             } else {
-              unitPrice = numericCells[1] >= 0 ? numericCells[1].toFixed(3) : '0.000';
-              if (numericCells.length >= 3) {
+              unitPrice = numericCells[1] > 0 ? numericCells[1].toFixed(3) : '0.000';
+              if (numericCells.length >= 3 && numericCells[numericCells.length - 1] > 0) {
                 totalPrice = numericCells[numericCells.length - 1].toFixed(3);
-              } else {
+              } else if (parseFloat(unitPrice) > 0) {
                 totalPrice = (qty * parseFloat(unitPrice)).toFixed(3);
               }
             }
+          }
+
+          if (parseFloat(unitPrice) <= 0 && parseFloat(totalPrice) > 0 && qty > 0) {
+            unitPrice = (parseFloat(totalPrice) / qty).toFixed(3);
           }
 
           addItem(cell, desc, qty, unitPrice, totalPrice, uom);
@@ -302,9 +341,9 @@ async function getQuotationParts(quotationNo, seqNo = '00', customCookie = null)
     console.warn(`[getQuotationParts] QuotationDetails/Index fetch warning: ${err.message}`);
   }
 
-  // Check if Index page itself already has the parts
+  // Check if Index page itself already has parts WITH valid quotation prices
   let parts = extractPartsFromText(initHtml, cleanQtn);
-  if (parts.length > 0) {
+  if (parts.length > 0 && parts.every((p) => parseFloat(p.unit_price) > 0)) {
     return {
       quotation_no: cleanQtn,
       revision_no: cleanSeq,
@@ -341,13 +380,32 @@ async function getQuotationParts(quotationNo, seqNo = '00', customCookie = null)
     });
 
     const rawText = await searchResp.text();
-    parts = extractPartsFromText(rawText, cleanQtn);
+    const searchParts = extractPartsFromText(rawText, cleanQtn);
+    if (searchParts.length > 0) {
+      if (parts.length === 0) {
+        parts = searchParts;
+      } else {
+        // Merge searchParts prices into parts
+        const priceMap = new Map(searchParts.map((sp) => [sp.part_no, sp]));
+        parts = parts.map((p) => {
+          const match = priceMap.get(p.part_no);
+          if (match && parseFloat(match.unit_price) > 0) {
+            return {
+              ...p,
+              unit_price: match.unit_price,
+              total_price: match.total_price || (p.quantity * parseFloat(match.unit_price)).toFixed(3),
+            };
+          }
+          return p;
+        });
+      }
+    }
   } catch (err) {
     console.warn(`[getQuotationParts] QuotationDetails/Search payload 1 warning: ${err.message}`);
   }
 
   // STEP 3: Fallback Payload 2 (exact python pdx_core signature: { qtno, subqtno, DBCode })
-  if (parts.length === 0) {
+  if (parts.length === 0 || parts.some((p) => parseFloat(p.unit_price) <= 0)) {
     try {
       const searchResp2 = await fetch(searchUrl, {
         method: 'POST',
@@ -367,34 +425,27 @@ async function getQuotationParts(quotationNo, seqNo = '00', customCookie = null)
         signal: AbortSignal.timeout(20000),
       });
       const rawText2 = await searchResp2.text();
-      parts = extractPartsFromText(rawText2, cleanQtn);
-    } catch (err) {
-      console.warn(`[getQuotationParts] QuotationDetails/Search payload 2 warning: ${err.message}`);
-    }
-  }
-
-  // Auto-enrich any line items that have missing / zero price using Komatsu Part Master
-  if (parts.length > 0) {
-    try {
-      const { lookupPartMaster } = require('./komatsuEoService');
-      for (const p of parts) {
-        if (!p.unit_price || parseFloat(p.unit_price) === 0) {
-          try {
-            const master = await lookupPartMaster(p.part_no, cookieStr);
-            if (master && master.price && parseFloat(master.price) > 0) {
-              p.unit_price = parseFloat(master.price).toFixed(3);
-              p.total_price = (p.quantity * parseFloat(p.unit_price)).toFixed(3);
-              if (master.description && p.description === 'PARTS') {
-                p.description = master.description;
-              }
+      const searchParts2 = extractPartsFromText(rawText2, cleanQtn);
+      if (searchParts2.length > 0) {
+        if (parts.length === 0) {
+          parts = searchParts2;
+        } else {
+          const priceMap = new Map(searchParts2.map((sp) => [sp.part_no, sp]));
+          parts = parts.map((p) => {
+            const match = priceMap.get(p.part_no);
+            if (match && parseFloat(match.unit_price) > 0) {
+              return {
+                ...p,
+                unit_price: match.unit_price,
+                total_price: match.total_price || (p.quantity * parseFloat(match.unit_price)).toFixed(3),
+              };
             }
-          } catch {
-            // Ignore single item lookup error
-          }
+            return p;
+          });
         }
       }
-    } catch {
-      // Ignore service import error
+    } catch (err) {
+      console.warn(`[getQuotationParts] QuotationDetails/Search payload 2 warning: ${err.message}`);
     }
   }
 
