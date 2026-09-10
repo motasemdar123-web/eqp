@@ -460,15 +460,15 @@ async function runLocalSapPoAutomation({
     await new Promise((r) => setTimeout(r, 1200));
     await updateSnapshot('Purchase Order Form Open & Ready');
 
-    // STEP 4: Enter Vendor Code - Click Vendor input field at (140, 135)
-    addLog(`Entering Vendor Code: ${vendor}...`);
-    await rdpClick(targetPage, 140, 135);
+    // STEP 4: Enter Vendor Code - Click first blank (Vendor Code) at (160, 119)
+    addLog(`Entering Vendor Code into first blank (Vendor): ${vendor}...`);
+    await rdpClick(targetPage, 160, 119);
     await new Promise((r) => setTimeout(r, 300));
     await targetPage.keyboard.press('Control+A');
     await targetPage.keyboard.type(vendor, { delay: 50 });
     await new Promise((r) => setTimeout(r, 300));
     await targetPage.keyboard.press('Tab');
-    await new Promise((r) => setTimeout(r, 1800));
+    await new Promise((r) => setTimeout(r, 2000));
 
     // Confirm any selection modal / List of Business Partners if it appeared
     const bpState = await checkScreenState(targetPage);
@@ -478,11 +478,11 @@ async function runLocalSapPoAutomation({
       await new Promise((r) => setTimeout(r, 1200));
     }
 
-    // STEP 5: Enter Vendor Ref. No. (DB Order Reference) at (140, 185)
+    // STEP 5: Enter Vendor Ref. No. (DB Order Reference) at (160, 167)
     const targetRef = dbOrderNo || quotationNo || remarks || '';
     if (targetRef) {
       addLog(`Entering Vendor Ref. No. (DB Order): ${targetRef}...`);
-      await rdpClick(targetPage, 140, 185);
+      await rdpClick(targetPage, 160, 167);
       await new Promise((r) => setTimeout(r, 300));
       await targetPage.keyboard.press('Control+A');
       await targetPage.keyboard.type(targetRef, { delay: 50 });
