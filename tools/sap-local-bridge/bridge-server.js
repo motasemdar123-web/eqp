@@ -657,7 +657,12 @@ async function runLocalSapPoAutomation({
       // 9. Press Enter once to add the PO
       addLog(`[PO ${ordIdx + 1}/${validOrders.length}] Adding Purchase Order document by pressing Enter...`);
       await targetPage.keyboard.press('Enter');
-      await new Promise((r) => setTimeout(r, 2500));
+      await new Promise((r) => setTimeout(r, 1800));
+
+      // Dismiss any SAP prompt (e.g. "Document total is zero. Continue?", exchange rate warning, etc.)
+      await targetPage.keyboard.press('Enter');
+      await new Promise((r) => setTimeout(r, 1200));
+
       await updateSnapshot(`PO ${ordIdx + 1} Saved`);
       addLog(`✓ [PO ${ordIdx + 1}/${validOrders.length}] Saved successfully in SAP B1!`);
 

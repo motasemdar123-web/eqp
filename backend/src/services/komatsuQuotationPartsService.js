@@ -184,7 +184,14 @@ function extractPartsFromText(text, quotationNo) {
   for (const tr of trMatches) {
     const tdMatches = tr.match(/<t[dh][^>]*>([\s\S]*?)<\/t[dh]>/gi) || [];
     if (tdMatches.length >= 3) {
-      const cleanTds = tdMatches.map((td) => td.replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').trim());
+      const cleanTds = tdMatches.map((td) => {
+        const inputMatch = td.match(/<input[^>]*value=["']([^"']*)["']/i);
+        if (inputMatch && inputMatch[1] && inputMatch[1].trim() !== '') {
+          return inputMatch[1].trim();
+        }
+        return td.replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').trim();
+      });
+
       // Look for a cell that resembles a Komatsu part number (e.g. 2A8-62-12230, 07143-10605, 207-70-71110)
       for (let i = 0; i < cleanTds.length; i++) {
         const cell = cleanTds[i];
@@ -208,13 +215,14 @@ function extractPartsFromText(text, quotationNo) {
               continue;
             }
 
-            const numClean = trimmed.replace(/,/g, '');
+            // Strip currency words (USD, KWD, EUR, $, etc.) and commas
+            const numClean = trimmed.replace(/(?:USD|KWD|EUR|GBP|SAR|AED|\$|,)/gi, '').trim();
             if (/^-?\d+(?:\.\d+)?$/.test(numClean)) {
               numericCells.push(parseFloat(numClean));
               continue;
             }
 
-            if (desc === 'PARTS' && /[a-zA-Z]/.test(trimmed) && trimmed.length >= 2) {
+            if (desc === 'PARTS' && /[a-zA-Z]/.test(trimmed) && !/^(?:USD|KWD|EUR|EA|PC)$/i.test(trimmed) && trimmed.length >= 2) {
               desc = trimmed;
             }
           }
@@ -362,6 +370,31 @@ async function getQuotationParts(quotationNo, seqNo = '00', customCookie = null)
       parts = extractPartsFromText(rawText2, cleanQtn);
     } catch (err) {
       console.warn(`[getQuotationParts] QuotationDetails/Search payload 2 warning: ${err.message}`);
+    }
+  }
+
+  // Auto-enrich any line items that have missing / zero price using Komatsu Part Master
+  if (parts.length > 0) {
+    try {
+      const { lookupPartMaster } = require('./komatsuEoService');
+      for (const p of parts) {
+        if (!p.unit_price || parseFloat(p.unit_price) === 0) {
+          try {
+            const master = await lookupPartMaster(p.part_no, cookieStr);
+            if (master && master.price && parseFloat(master.price) > 0) {
+              p.unit_price = parseFloat(master.price).toFixed(3);
+              p.total_price = (p.quantity * parseFloat(p.unit_price)).toFixed(3);
+              if (master.description && p.description === 'PARTS') {
+                p.description = master.description;
+              }
+            }
+          } catch {
+            // Ignore single item lookup error
+          }
+        }
+      }
+    } catch {
+      // Ignore service import error
     }
   }
 

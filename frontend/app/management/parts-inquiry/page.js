@@ -1433,6 +1433,55 @@ export default function SparePartsPage() {
     });
   }
 
+  function handleUpdateItemPrice(index, newPrice) {
+    setSapTargetOrder((prev) => {
+      if (!prev || !prev.items) return prev;
+      const updated = [...prev.items];
+      updated[index] = { ...updated[index], unit_price: newPrice, price: newPrice };
+      return { ...prev, items: updated };
+    });
+    setSapBatchOrders((prev) => {
+      const targetItem = sapTargetOrder?.items?.[index];
+      if (!targetItem) return prev;
+      const pNo = targetItem.part_no || targetItem.partNo || targetItem.itemCode;
+      return prev.map((q) => {
+        if (!q.parts) return q;
+        const nextParts = q.parts.map((p) => {
+          if ((p.part_no || p.partNo || p.itemCode) === pNo) {
+            return { ...p, unit_price: newPrice, price: newPrice };
+          }
+          return p;
+        });
+        return { ...q, parts: nextParts };
+      });
+    });
+  }
+
+  function handleUpdateItemQty(index, newQty) {
+    const qVal = parseInt(newQty, 10) || 1;
+    setSapTargetOrder((prev) => {
+      if (!prev || !prev.items) return prev;
+      const updated = [...prev.items];
+      updated[index] = { ...updated[index], quantity: qVal, qty: qVal };
+      return { ...prev, items: updated };
+    });
+    setSapBatchOrders((prev) => {
+      const targetItem = sapTargetOrder?.items?.[index];
+      if (!targetItem) return prev;
+      const pNo = targetItem.part_no || targetItem.partNo || targetItem.itemCode;
+      return prev.map((q) => {
+        if (!q.parts) return q;
+        const nextParts = q.parts.map((p) => {
+          if ((p.part_no || p.partNo || p.itemCode) === pNo) {
+            return { ...p, quantity: qVal, qty: qVal };
+          }
+          return p;
+        });
+        return { ...q, parts: nextParts };
+      });
+    });
+  }
+
   async function handleRetryFetchParts() {
     if (!sapTargetOrder || !sapTargetOrder.quotationNo) return;
     try {
@@ -3670,11 +3719,28 @@ export default function SparePartsPage() {
                         <td className="py-1.5 px-3 font-mono font-semibold text-slate-900">
                           {it.part_no || it.partNo || it.itemCode}
                         </td>
-                        <td className="py-1.5 px-3 text-right font-mono font-medium text-slate-800">
-                          {it.qty || it.quantity || 1}
+                        <td className="py-1.5 px-3 text-right">
+                          <input
+                            type="number"
+                            min="1"
+                            value={it.qty || it.quantity || 1}
+                            onChange={(e) => handleUpdateItemQty(idx, e.target.value)}
+                            className="w-16 px-1.5 py-0.5 border border-slate-200 rounded text-right font-mono font-medium text-slate-800 text-xs bg-white focus:border-emerald-600 focus:outline-none"
+                            title="Edit Quantity"
+                          />
                         </td>
-                        <td className="py-1.5 px-3 text-right font-mono text-slate-600">
-                          {it.price || it.unit_price || '$0.00'}
+                        <td className="py-1.5 px-3 text-right">
+                          <div className="flex items-center justify-end gap-1">
+                            <span className="text-slate-400 text-xs font-mono">$</span>
+                            <input
+                              type="text"
+                              value={it.unit_price ?? it.price ?? ''}
+                              onChange={(e) => handleUpdateItemPrice(idx, e.target.value)}
+                              placeholder="0.000"
+                              className="w-24 px-1.5 py-0.5 border border-slate-200 rounded text-right font-mono font-semibold text-emerald-900 text-xs bg-white focus:border-emerald-600 focus:outline-none"
+                              title="Edit USD Unit Price"
+                            />
+                          </div>
                         </td>
                         <td className="py-1.5 px-2 text-center">
                           <button
