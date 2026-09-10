@@ -269,58 +269,157 @@ async function launchChromiumWithAutoInstall() {
             const img = new Image();
             img.onload = () => {
               const c = document.createElement('canvas');
-              c.width = 1440; c.height = 900;
+              c.width = img.width;
+              c.height = img.height;
               const ctx = c.getContext('2d');
               ctx.drawImage(img, 0, 0);
 
-              // 1. Menu bar at (25, 18) - top left "File" / menu bar
-              const pMenu = ctx.getImageData(25, 18, 1, 1).data;
-              const isMenuLoaded = pMenu[0] > 100 || pMenu[1] > 100 || pMenu[2] > 100;
+              // 1. Menu bar analysis along Y=18
+              const menuBgSample = ctx.getImageData(5, 18, 1, 1).data;
+              const menuBg = [menuBgSample[0], menuBgSample[1], menuBgSample[2]];
+              const isMenuPresent = (menuBg[0] > 15 || menuBg[1] > 30 || menuBg[2] > 50);
 
-              // 2. Center of screen at (720, 450): TSPlus loading spinner is [247, 243, 247]
-              const pCenter = ctx.getImageData(720, 450, 1, 1).data;
-              const isSpinnerActive = (pCenter[0] >= 240 && pCenter[1] >= 235 && pCenter[2] >= 240);
-
-              // 3. PO Window Title bar at (500, 100): dark navy blue [41, 77, 107]
-              const pTitle = ctx.getImageData(500, 100, 1, 1).data;
-              const isBlueTitle = (pTitle[0] >= 30 && pTitle[0] <= 65) &&
-                                  (pTitle[1] >= 60 && pTitle[1] <= 100) &&
-                                  (pTitle[2] >= 90 && pTitle[2] <= 135);
-
-              // 4. Check for 'Vendor' label text pixels at X=14..36, Y=132..138
-              let vendorLabelCount = 0;
-              for (let y = 132; y <= 138; y++) {
-                for (let x = 14; x <= 36; x++) {
-                  const pt = ctx.getImageData(x, y, 1, 1).data;
-                  if (pt[0] < 50 && pt[1] < 50 && pt[2] < 50) vendorLabelCount++;
+              const words = [];
+              if (isMenuPresent) {
+                let inWord = false;
+                let wordStart = 0;
+                for (let x = 10; x < 400; x++) {
+                  let isTextPixel = false;
+                  for (let y = 14; y <= 22; y++) {
+                    const d = ctx.getImageData(x, y, 1, 1).data;
+                    const diff = Math.abs(d[0] - menuBg[0]) + Math.abs(d[1] - menuBg[1]) + Math.abs(d[2] - menuBg[2]);
+                    if (diff > 40) { isTextPixel = true; break; }
+                  }
+                  if (isTextPixel) {
+                    if (!inWord) { inWord = true; wordStart = x; }
+                  } else if (inWord) {
+                    let gap = 0;
+                    for (let g = x; g < Math.min(x + 4, 400); g++) {
+                      let tp = false;
+                      for (let y = 14; y <= 22; y++) {
+                        const d = ctx.getImageData(g, y, 1, 1).data;
+                        const diff = Math.abs(d[0] - menuBg[0]) + Math.abs(d[1] - menuBg[1]) + Math.abs(d[2] - menuBg[2]);
+                        if (diff > 40) { tp = true; break; }
+                      }
+                      if (!tp) gap++; else break;
+                    }
+                    if (gap >= 3 || x === 399) {
+                      inWord = false;
+                      words.push({
+                        start: wordStart,
+                        end: x - 1,
+                        center: Math.round((wordStart + x - 1) / 2),
+                        width: x - wordStart,
+                      });
+                    }
+                  }
                 }
               }
 
-              // 5. Add & New button at (52, 840)
-              const pAddBtn = ctx.getImageData(52, 840, 1, 1).data;
-              const isAddBtn = (pAddBtn[0] >= 30 && pAddBtn[0] <= 65) &&
-                               (pAddBtn[1] >= 60 && pAddBtn[1] <= 100) &&
-                               (pAddBtn[2] >= 90 && pAddBtn[2] <= 135);
+              let modulesCenter = null;
+              const modCandidate = words.find((w) => w.width >= 35 && w.center >= 190 && w.center <= 270);
+              if (modCandidate) {
+                modulesCenter = modCandidate.center;
+              } else if (words.length >= 6) {
+                const w6 = words[6] || words[5];
+                if (w6) modulesCenter = w6.center;
+              }
+              if (!modulesCenter && words.length >= 3) {
+                modulesCenter = 229;
+              }
 
-              const isPoOpen = isBlueTitle && (vendorLabelCount >= 5 || isAddBtn);
-              const isBpListOpen = isBlueTitle && !isPoOpen;
-              const isSapReady = isMenuLoaded && !isSpinnerActive;
+              // 2. Check if dropdown is open below modulesCenter
+              let isDropdownOpen = false;
+              if (modulesCenter) {
+                const dropSample = ctx.getImageData(modulesCenter, 45, 1, 1).data;
+                if (dropSample[0] > 210 && dropSample[1] > 210 && dropSample[2] > 210) {
+                  isDropdownOpen = true;
+                }
+              }
 
-              resolve({ isSapReady, isPoOpen, isBpListOpen, isSpinnerActive, isBlueTitle, isAddBtn, b64: imgB64 });
+              // 3. Dashboard / Cockpit Window check
+              let isDashboardPresent = false;
+              for (let y = 145; y <= 250; y++) {
+                const p = ctx.getImageData(300, y, 1, 1).data;
+                if (p[0] > 170 && p[1] > 120 && p[2] < 70) {
+                  const pTitle = ctx.getImageData(300, y + 20, 1, 1).data;
+                  if (pTitle[0] >= 20 && pTitle[0] <= 90 && pTitle[1] >= 45 && pTitle[1] <= 130 && pTitle[2] >= 75 && pTitle[2] <= 170) {
+                    isDashboardPresent = true;
+                    break;
+                  }
+                }
+              }
+
+              // 4. Purchase Order Document Window & Business Partner Modal check
+              let titlePixels = 0;
+              for (let y = 90; y <= 115; y++) {
+                for (let x = 7; x <= 100; x++) {
+                  const d = ctx.getImageData(x, y, 1, 1).data;
+                  if (d[0] > 180 && d[1] > 180 && d[2] > 180) titlePixels++;
+                }
+              }
+
+              let vendorLabelPixels = 0;
+              for (let y = 130; y <= 140; y++) {
+                for (let x = 5; x <= 45; x++) {
+                  const d = ctx.getImageData(x, y, 1, 1).data;
+                  if (d[0] < 80 && d[1] < 80 && d[2] < 80) vendorLabelPixels++;
+                }
+              }
+
+              const hasWindowHeader = (titlePixels > 100);
+              const isPoOpen = hasWindowHeader && (vendorLabelPixels > 10);
+              const isBpListOpen = hasWindowHeader && (vendorLabelPixels <= 10);
+              const isSapReady = isMenuPresent && (isDashboardPresent || isPoOpen || isBpListOpen || words.length >= 6);
+
+              // 5. Grid Row 1 Header detection
+              let row1Y = 360;
+              for (let y = 320; y <= 370; y++) {
+                const d = ctx.getImageData(50, y, 1, 1).data;
+                if (d[0] > 230 && d[1] > 230 && d[2] > 230) {
+                  row1Y = y + 27;
+                  break;
+                }
+              }
+
+              // 6. Action button Y
+              let draftButtonY = null;
+              for (let y = 820; y <= 940; y += 4) {
+                const b = ctx.getImageData(105, y, 1, 1).data;
+                if (b[0] >= 20 && b[0] <= 85 && b[1] >= 45 && b[1] <= 125 && b[2] >= 75 && b[2] <= 165) {
+                  draftButtonY = y;
+                  break;
+                }
+              }
+
+              resolve({
+                isSapReady,
+                isMenuPresent,
+                wordsCount: words.length,
+                modulesCenter: modulesCenter || 229,
+                isDropdownOpen,
+                isDashboardPresent,
+                isPoOpen,
+                isBpListOpen,
+                row1Y,
+                draftButtonY: draftButtonY || 844,
+                b64: imgB64,
+              });
             };
-            img.onerror = () => resolve({ isSapReady: false, isPoOpen: false, isBpListOpen: false, isSpinnerActive: true, b64: imgB64 });
+            img.onerror = () => resolve({ isSapReady: false, isPoOpen: false, isBpListOpen: false });
             img.src = 'data:image/png;base64,' + imgB64;
           });
         }, b64);
       } catch (err) {
-        return { isSapReady: false, isPoOpen: false, isBpListOpen: false, isSpinnerActive: true };
+        return { isSapReady: false, isPoOpen: false, isBpListOpen: false, error: err.message };
       }
     }
 
-    // STEP 1: Wait for SAP B1 remote desktop to actually initialize and render (waiting for loading spinner to clear)
-    addLog('Waiting for SAP B1 remote desktop to initialize and render (waiting for loading spinner to clear)...');
+    // STEP 1: Wait for SAP B1 remote desktop to initialize and render (visually verifying Menu Bar & Dashboard)
+    addLog('Waiting for SAP B1 desktop to render (visually reading upper menu bar & dashboard)...');
     let desktopReady = false;
-    for (let sec = 1; sec <= 30; sec++) {
+    let lastLandmarks = null;
+    for (let sec = 1; sec <= 35; sec++) {
       await new Promise((r) => setTimeout(r, 2000));
 
       // Dismiss any session takeover modal at (510, 475) or lingering prompt
@@ -328,7 +427,9 @@ async function launchChromiumWithAutoInstall() {
       await targetPage.keyboard.press('Enter');
 
       const status = await checkScreenState(targetPage);
-      addLog(`[${sec * 2}s] SAP Desktop Ready: ${status.isSapReady} | Loading Spinner: ${status.isSpinnerActive} | PO Window Open: ${status.isPoOpen}`);
+      lastLandmarks = status;
+
+      addLog(`[${sec * 2}s] Menu Bar: ${status.isMenuPresent} (${status.wordsCount} words, Modules@X=${status.modulesCenter}) | Dashboard: ${status.isDashboardPresent} | PO Window: ${status.isPoOpen}`);
 
       if (status.isPoOpen) {
         desktopReady = true;
@@ -337,37 +438,46 @@ async function launchChromiumWithAutoInstall() {
       }
       if (status.isSapReady) {
         desktopReady = true;
-        addLog(`✓ SAP B1 Desktop fully loaded and ready after ${sec * 2}s.`);
+        addLog(`✓ SAP B1 Desktop fully loaded (Menu Bar & Cockpit confirmed) after ${sec * 2}s.`);
         break;
       }
       await updateSnapshot(`Loading SAP B1 Desktop (${sec * 2}s)...`);
     }
 
-    // STEP 2: Ensure PO window is open (close stray BP List modal if open)
+    // STEP 2: Ensure PO window is open
     let poStatus = await checkScreenState(targetPage);
 
     if (poStatus.isBpListOpen) {
       addLog('Stray Business Partner list detected. Closing with Escape...');
       await targetPage.keyboard.press('Escape');
       await new Promise((r) => setTimeout(r, 800));
-      await targetPage.keyboard.press('Escape');
-      await new Promise((r) => setTimeout(r, 800));
       poStatus = await checkScreenState(targetPage);
     }
 
     if (!poStatus.isPoOpen) {
-      addLog('Purchase Order window not open yet. Opening via Modules menu...');
+      addLog(`Opening Purchase Order window dynamically (Modules center detected at X=${poStatus.modulesCenter})...`);
       for (let attempt = 1; attempt <= 3; attempt++) {
-        // Clear any lingering sub-modals
         await targetPage.keyboard.press('Escape');
-        await new Promise((r) => setTimeout(r, 300));
+        await new Promise((r) => setTimeout(r, 400));
 
-        // Click Modules menu at (268, 18)
-        await rdpClick(targetPage, 268, 18);
+        // Click dynamically detected Modules center coordinate
+        const targetModX = poStatus.modulesCenter || 229;
+        addLog(`Clicking "Modules" menu at dynamically recognized position (${targetModX}, 18)...`);
+        await rdpClick(targetPage, targetModX, 18);
         await new Promise((r) => setTimeout(r, 800));
+
+        let modCheck = await checkScreenState(targetPage);
+        if (!modCheck.isDropdownOpen) {
+          addLog('Dropdown not visible via mouse click. Using Alt+M keyboard shortcut...');
+          await targetPage.keyboard.press('Alt+m');
+          await new Promise((r) => setTimeout(r, 800));
+          modCheck = await checkScreenState(targetPage);
+        }
+
+        addLog(`Modules Dropdown Open: ${modCheck.isDropdownOpen}. Navigating to Purchase Order...`);
         await targetPage.keyboard.press('p'); // Purchasing - A/P
         await new Promise((r) => setTimeout(r, 500));
-        await targetPage.keyboard.press('ArrowRight'); // Open submenu
+        await targetPage.keyboard.press('ArrowRight'); // Submenu
         await new Promise((r) => setTimeout(r, 500));
         await targetPage.keyboard.press('ArrowDown');
         await targetPage.keyboard.press('ArrowDown');
@@ -378,13 +488,13 @@ async function launchChromiumWithAutoInstall() {
         await updateSnapshot(`Opened via Modules Menu (Attempt ${attempt})`);
 
         poStatus = await checkScreenState(targetPage);
-        addLog(`Attempt ${attempt} result -> PO Window Open: ${poStatus.isPoOpen}`);
+        addLog(`Attempt ${attempt} result -> PO Window Confirmed: ${poStatus.isPoOpen}`);
         if (poStatus.isPoOpen) {
-          addLog('✓ Purchase Order window confirmed OPEN via Modules menu!');
+          addLog('✓ Purchase Order window confirmed OPEN via Smart Screen Reading!');
           break;
         }
 
-        // Fallback: If Modules menu did not open PO, try F2 shortcut fallback
+        // Fallback: If Modules menu did not open PO, try F2 shortcut
         if (attempt === 2) {
           addLog('Trying F2 shortcut fallback...');
           await rdpClick(targetPage, 400, 65);
@@ -398,125 +508,136 @@ async function launchChromiumWithAutoInstall() {
     }
 
     if (!poStatus.isPoOpen) {
-      throw new Error('Failed to open Purchase Order window in SAP Business One after multiple attempts.');
+      throw new Error('Failed to open Purchase Order window in SAP Business One after smart visual verification.');
     }
 
     // STEP 3: Switch to Add Mode if currently in OK mode (Control+A)
-    if (!poStatus.isAddBtn) {
-      addLog('Ensuring Purchase Order is in Add Mode (Control+A)...');
-      await targetPage.keyboard.press('Control+A');
-      await new Promise((r) => setTimeout(r, 1500));
-    }
+    addLog('Ensuring Purchase Order is in Add Mode (Control+A)...');
+    await targetPage.keyboard.press('Control+A');
+    await new Promise((r) => setTimeout(r, 1200));
     await updateSnapshot('Purchase Order Form Open & Ready');
 
-    // STEP 4: Enter Vendor Code - Click Vendor input field at (175, 135)
+    // STEP 4: Enter Vendor Code - Click Vendor input field at (140, 135)
     addLog(`Entering Vendor Code: ${vendor}...`);
-    await rdpClick(targetPage, 175, 135);
+    await rdpClick(targetPage, 140, 135);
     await new Promise((r) => setTimeout(r, 300));
     await targetPage.keyboard.press('Control+A');
     await targetPage.keyboard.type(vendor, { delay: 50 });
     await new Promise((r) => setTimeout(r, 300));
     await targetPage.keyboard.press('Tab');
-    await new Promise((r) => setTimeout(r, 2000));
+    await new Promise((r) => setTimeout(r, 1800));
 
     // Confirm any selection modal / List of Business Partners if it appeared
     const bpState = await checkScreenState(targetPage);
     if (bpState.isBpListOpen) {
-      addLog('Business Partner selection list opened. Selecting matched vendor with Enter...');
+      addLog('Business Partner selection modal detected. Confirming with Enter...');
       await targetPage.keyboard.press('Enter');
-      await new Promise((r) => setTimeout(r, 1500));
+      await new Promise((r) => setTimeout(r, 1200));
     }
 
-    // STEP 5: Enter Vendor Ref. No. (DB Order Reference) at (175, 175)
+    // STEP 5: Enter Vendor Ref. No. (DB Order Reference) at (140, 185)
     const targetRef = dbOrderNo || quotationNo || remarks || '';
     if (targetRef) {
       addLog(`Entering Vendor Ref. No. (DB Order): ${targetRef}...`);
-      await rdpClick(targetPage, 175, 175);
+      await rdpClick(targetPage, 140, 185);
       await new Promise((r) => setTimeout(r, 300));
       await targetPage.keyboard.press('Control+A');
-      await targetPage.keyboard.type(targetRef, { delay: 60 });
-      await new Promise((r) => setTimeout(r, 500));
+      await targetPage.keyboard.type(targetRef, { delay: 50 });
+      await new Promise((r) => setTimeout(r, 400));
+      await targetPage.keyboard.press('Tab');
     }
     await updateSnapshot('Vendor & Reference Entered');
 
-    // STEP 6: Grid Line Items - First row at Y=324, row height = 16
-    addLog(`Entering ${items.length} line items into SAP grid...`);
+    // STEP 6: Grid Line Items
+    const startRowY = poStatus.row1Y || 360;
+    addLog(`Entering ${items.length} line items into SAP grid (Row 1 detected at Y=${startRowY})...`);
     for (let i = 0; i < items.length; i++) {
       const it = items[i];
       const partNo = it.part_no || it.partNo || it.itemCode;
       const qty = String(it.qty || it.quantity || 1);
       const rawPrice = it.unit_price || it.price || it.unitPrice || 0;
       const priceVal = typeof rawPrice === 'number' ? rawPrice : parseFloat(String(rawPrice).replace(/[^0-9.]/g, '')) || 0;
-      const rowY = 324 + (i * 16);
+      const rowY = startRowY + (i * 16);
 
       addLog(`  [Line ${i + 1}/${items.length}] Part: ${partNo} | Qty: ${qty} | Unit Price: ${priceVal > 0 ? priceVal.toFixed(3) + ' USD' : 'Master Default'}`);
 
-      // Select Item No cell in Row (X=95, Y=rowY)
-      await rdpDblClick(targetPage, 95, rowY);
+      // Select Item No cell in Row (X=65, Y=rowY)
+      await rdpDblClick(targetPage, 65, rowY);
+      await new Promise((r) => setTimeout(r, 350));
+      await targetPage.keyboard.type(partNo, { delay: 60 });
       await new Promise((r) => setTimeout(r, 400));
-      await targetPage.keyboard.type(partNo, { delay: 70 });
-      await new Promise((r) => setTimeout(r, 500));
       await targetPage.keyboard.press('Tab');
-      await new Promise((r) => setTimeout(r, 3000));
+      await new Promise((r) => setTimeout(r, 2200)); // Allow SAP to fetch item details
 
-      // Select Quantity cell in Row (X=260, Y=rowY)
-      await rdpDblClick(targetPage, 260, rowY);
-      await new Promise((r) => setTimeout(r, 300));
+      // If a modal appeared (e.g. item selection), confirm with Enter
+      const itemModalCheck = await checkScreenState(targetPage);
+      if (itemModalCheck.isBpListOpen) {
+        await targetPage.keyboard.press('Enter');
+        await new Promise((r) => setTimeout(r, 800));
+      }
+
+      // Select Quantity cell in Row (X=185, Y=rowY)
+      await rdpDblClick(targetPage, 185, rowY);
+      await new Promise((r) => setTimeout(r, 250));
       await targetPage.keyboard.press('Control+A');
       await targetPage.keyboard.press('Backspace');
       for (let k = 0; k < 6; k++) {
         await targetPage.keyboard.press('Delete');
       }
-      await targetPage.keyboard.type(qty, { delay: 60 });
-      await new Promise((r) => setTimeout(r, 300));
+      await targetPage.keyboard.type(qty, { delay: 50 });
+      await new Promise((r) => setTimeout(r, 250));
       await targetPage.keyboard.press('Tab');
-      await new Promise((r) => setTimeout(r, 1000));
+      await new Promise((r) => setTimeout(r, 800));
 
-      // Enter USD Unit Price if provided
+      // Enter USD Unit Price if provided (X=235, Y=rowY)
       if (priceVal > 0) {
         const priceStr = `${priceVal.toFixed(3)} USD`;
-        addLog(`    Setting USD Unit Price at (325, ${rowY}): ${priceStr}...`);
-        await rdpDblClick(targetPage, 325, rowY);
-        await new Promise((r) => setTimeout(r, 300));
+        addLog(`    Setting USD Unit Price at (235, ${rowY}): ${priceStr}...`);
+        await rdpDblClick(targetPage, 235, rowY);
+        await new Promise((r) => setTimeout(r, 250));
         await targetPage.keyboard.press('Control+A');
         await targetPage.keyboard.press('Backspace');
         for (let k = 0; k < 8; k++) {
           await targetPage.keyboard.press('Delete');
         }
-        await targetPage.keyboard.type(priceStr, { delay: 60 });
-        await new Promise((r) => setTimeout(r, 300));
+        await targetPage.keyboard.type(priceStr, { delay: 50 });
+        await new Promise((r) => setTimeout(r, 250));
         await targetPage.keyboard.press('Tab');
-        await new Promise((r) => setTimeout(r, 1000));
+        await new Promise((r) => setTimeout(r, 800));
       }
 
       await updateSnapshot(`Line Item ${i + 1} Entered (${partNo})`);
     }
 
-    // STEP 7: Remarks at (140, 850)
+    // STEP 7: Remarks
     const remarksText = remarks || `Komatsu Quotation ${quotationNo || ''} / ${dbOrderNo || ''}`.trim();
     if (remarksText) {
       addLog(`Setting Remarks: ${remarksText}...`);
-      await rdpClick(targetPage, 140, 850);
-      await new Promise((r) => setTimeout(r, 300));
+      const remarksY = (poStatus.draftButtonY ? poStatus.draftButtonY - 10 : 850);
+      await rdpClick(targetPage, 140, remarksY);
+      await new Promise((r) => setTimeout(r, 250));
       await targetPage.keyboard.press('Control+A');
-      await targetPage.keyboard.type(remarksText, { delay: 40 });
-      await new Promise((r) => setTimeout(r, 500));
+      await targetPage.keyboard.type(remarksText, { delay: 35 });
+      await new Promise((r) => setTimeout(r, 400));
     }
     await updateSnapshot('PO Completed - Ready to Save');
 
-    // STEP 8: Save document: Add Draft & New (149, 840) or Add & New (52, 840)
+    // STEP 8: Save document
+    const saveY = poStatus.draftButtonY || 844;
     if (isDraft) {
-      addLog('Saving Purchase Order as Draft (Add Draft & New at 149, 840)...');
-      await rdpClick(targetPage, 149, 840, 150);
+      addLog(`Saving Purchase Order as Draft (Add Draft & New at 115, ${saveY})...`);
+      await rdpClick(targetPage, 115, saveY, 150);
     } else {
-      addLog('Finalizing and posting Purchase Order (Add & New at 52, 840)...');
-      await rdpClick(targetPage, 52, 840, 150);
+      addLog(`Finalizing and posting Purchase Order (Add & New at 45, ${saveY})...`);
+      await rdpClick(targetPage, 45, saveY, 150);
     }
 
-    await new Promise((r) => setTimeout(r, 5000));
+    await new Promise((r) => setTimeout(r, 4000));
     // Confirm any SAP dialog (e.g. "Exchange rate", "Document saved", etc.)
     await targetPage.keyboard.press('Enter');
-    await new Promise((r) => setTimeout(r, 2000));
+    await new Promise((r) => setTimeout(r, 1500));
+    await targetPage.keyboard.press('Enter');
+    await new Promise((r) => setTimeout(r, 1000));
     await updateSnapshot('Saved Confirmation');
 
     // Capture screenshot confirmation
