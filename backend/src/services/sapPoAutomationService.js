@@ -91,12 +91,21 @@ async function createSapPurchaseOrder({
   remarks = '',
   quotationNo = '',
   dbOrderNo = '',
+  orders = [],
   whsCode = '003',
   dryRun = false,
   isDraft = true,
 }) {
-  if (!items || items.length === 0) {
-    throw new Error('Cannot create Purchase Order without line items.');
+  const batchOrders = (Array.isArray(orders) && orders.length > 0)
+    ? orders
+    : [{ quotationNo, dbOrderNo, remarks, deliveryDate, items }];
+
+  const validOrders = batchOrders.filter(
+    (o) => Array.isArray(o.items) && o.items.length > 0
+  );
+
+  if (validOrders.length === 0) {
+    throw new Error('Cannot create Purchase Order: no line items found for the selected order(s).');
   }
 
   latestJobStatus = {
@@ -109,8 +118,12 @@ async function createSapPurchaseOrder({
     screenshotUrl: null,
   };
 
-  addLog(`Starting SAP PO Automation for Quotation #${quotationNo || 'Direct'} (${items.length} items)...`);
+  const totalItems = validOrders.reduce((sum, o) => sum + (o.items?.length || 0), 0);
+  addLog(`Starting SAP PO Automation for ${validOrders.length} Purchase Order(s) (Total ${totalItems} items across all orders)...`);
   addLog(`User: ${username} | Vendor: ${vendor} | Buyer: ${buyer} | Mode: ${isDraft ? 'Draft PO' : 'Final PO'}`);
+  validOrders.forEach((vo, idx) => {
+    addLog(`  Order ${idx + 1}/${validOrders.length}: Quotation #${vo.quotationNo || 'Direct'} | Ref: ${vo.dbOrderNo || vo.remarks || 'N/A'} | Items: ${vo.items.length}`);
+  });
 
   if (dryRun) {
     addLog('DRY-RUN mode enabled: skipping live browser interaction.');
@@ -120,9 +133,13 @@ async function createSapPurchaseOrder({
       mode: 'DRY_RUN',
       vendor,
       buyer,
-      itemsCount: items.length,
-      quotationNo,
-      status: 'Validated successfully for SAP PO creation.',
+      totalOrders: validOrders.length,
+      orders: validOrders.map((o) => ({
+        quotationNo: o.quotationNo,
+        dbOrderNo: o.dbOrderNo || o.remarks,
+        itemsCount: o.items.length,
+      })),
+      status: `Validated ${validOrders.length} order(s) successfully for SAP PO creation.`,
     };
     return latestJobStatus.result;
   }
@@ -578,115 +595,139 @@ async function launchChromiumWithAutoInstall() {
 
     await updateSnapshot('Purchase Order Form Open & Ready');
 
-    // STEP 3: Immediately type Vendor Code (V000006) - it is already active
-    addLog(`Immediately typing Vendor Code into active cell: ${vendor}...`);
-    await targetPage.keyboard.type(vendor, { delay: 50 });
-    await new Promise((r) => setTimeout(r, 400));
+    // STEP 3: Create Purchase Orders sequentially (1 PO per quotation, using Ctrl+A between them)
+    for (let ordIdx = 0; ordIdx < validOrders.length; ordIdx++) {
+      const curOrder = validOrders[ordIdx];
+      const curQuotationNo = curOrder.quotationNo || '';
+      const curRef = curOrder.dbOrderNo || curOrder.db_order_no || curQuotationNo || curOrder.remarks || remarks || 'R144/2026';
+      const curDeliveryDate = curOrder.deliveryDate || curOrder.delivery_date || deliveryDate;
+      const curItems = curOrder.items || [];
 
-    // STEP 4: Press Tab twice to get the customer details
-    addLog('Pressing Tab twice to get customer details...');
-    await targetPage.keyboard.press('Tab');
-    await new Promise((r) => setTimeout(r, 600));
-    await targetPage.keyboard.press('Tab');
-    await new Promise((r) => setTimeout(r, 1000));
+      addLog(`=======================================================`);
+      addLog(`PO ${ordIdx + 1} of ${validOrders.length} | Quotation: #${curQuotationNo || 'Direct'} | Ref: ${curRef} | ${curItems.length} items`);
+      addLog(`=======================================================`);
 
-    // STEP 5: Press Tab ONCE to reach the vendor ref. no.
-    addLog('Pressing Tab ONCE to reach Vendor Ref. No....');
-    await targetPage.keyboard.press('Tab');
-    await new Promise((r) => setTimeout(r, 400));
-
-    // STEP 6: Pasting Vendor Ref. No. (e.g. R144/2026)
-    const targetRef = dbOrderNo || quotationNo || remarks || 'R144/2026';
-    addLog(`Entering Vendor Ref. No.: ${targetRef}...`);
-    await targetPage.keyboard.type(targetRef, { delay: 50 });
-    await new Promise((r) => setTimeout(r, 400));
-
-    // STEP 7: Pressing Tab 5 times to reach the delivery date
-    addLog('Pressing Tab 5 times to reach Delivery Date...');
-    for (let k = 0; k < 5; k++) {
-      await targetPage.keyboard.press('Tab');
-      await new Promise((r) => setTimeout(r, 200));
-    }
-
-    // STEP 8: Pasting the date
-    let effDate = deliveryDate;
-    if (!effDate) {
-      const now = new Date();
-      const dd = String(now.getDate()).padStart(2, '0');
-      const mm = String(now.getMonth() + 1).padStart(2, '0');
-      const yy = String(now.getFullYear()).slice(-2);
-      effDate = `${dd}.${mm}.${yy}`;
-    } else {
-      const match = effDate.match(/^(\d{4})-(\d{2})-(\d{2})/);
-      if (match) {
-        effDate = `${match[3]}.${match[2]}.${match[1].slice(-2)}`;
+      if (ordIdx > 0) {
+        // User's instruction: after creating the first PO, pressing Ctrl+A is enough to start a new PO window
+        addLog(`[PO ${ordIdx + 1}/${validOrders.length}] Pressing Ctrl+A to start new Purchase Order in SAP B1...`);
+        await targetPage.focus('#JWTS_myCanvas, canvas').catch(() => {});
+        await new Promise((r) => setTimeout(r, 400));
+        await targetPage.keyboard.down('Control');
+        await targetPage.keyboard.press('KeyA');
+        await targetPage.keyboard.up('Control');
+        await new Promise((r) => setTimeout(r, 2000));
+        await updateSnapshot(`Starting PO ${ordIdx + 1}/${validOrders.length} (Ctrl+A)`);
       }
-    }
-    addLog(`Entering Delivery Date: ${effDate}...`);
-    await targetPage.keyboard.type(effDate, { delay: 50 });
-    await new Promise((r) => setTimeout(r, 400));
 
-    // STEP 9: Pressing Tab 4 times to reach the first row of the items
-    addLog('Pressing Tab 4 times to reach Line Items grid (Row 1 Item No)...');
-    for (let k = 0; k < 4; k++) {
+      // 1. Immediately type Vendor Code (V000006) - it is already active
+      addLog(`[PO ${ordIdx + 1}/${validOrders.length}] Typing Vendor Code into active cell: ${vendor}...`);
+      await targetPage.keyboard.type(vendor, { delay: 50 });
+      await new Promise((r) => setTimeout(r, 400));
+
+      // 2. Press Tab twice to get customer details
+      addLog(`[PO ${ordIdx + 1}/${validOrders.length}] Pressing Tab twice to get customer details...`);
       await targetPage.keyboard.press('Tab');
-      await new Promise((r) => setTimeout(r, 200));
-    }
-
-    // STEP 10: Filling parts loop (paste part -> Tab to add -> Tab to Qty -> Tab to Unit Price -> Down arrow if next row)
-    addLog(`Filling ${items.length} line items via pure keyboard workflow...`);
-    for (let i = 0; i < items.length; i++) {
-      const it = items[i];
-      const partNo = it.part_no || it.partNo || it.itemCode;
-      const qty = String(it.qty || it.quantity || 1);
-      const rawPrice = it.unit_price || it.price || it.unitPrice || 0;
-      const priceVal = typeof rawPrice === 'number' ? rawPrice : parseFloat(String(rawPrice).replace(/[^0-9.]/g, '')) || 0;
-
-      addLog(`  [Line ${i + 1}/${items.length}] Part: ${partNo} | Qty: ${qty} | Unit Price: ${priceVal > 0 ? priceVal.toFixed(3) : 'Default'}`);
-
-      // 1. Paste the part no.
-      await targetPage.keyboard.type(partNo, { delay: 50 });
-      await new Promise((r) => setTimeout(r, 300));
-
-      // 2. Press Tab once to add (triggers SAP to fetch description)
+      await new Promise((r) => setTimeout(r, 600));
       await targetPage.keyboard.press('Tab');
-      await new Promise((r) => setTimeout(r, 1500));
+      await new Promise((r) => setTimeout(r, 1000));
 
-      // 3. Press Tab once again to reach the Qty, fill it
+      // 3. Press Tab ONCE to reach Vendor Ref. No.
+      addLog(`[PO ${ordIdx + 1}/${validOrders.length}] Pressing Tab ONCE to reach Vendor Ref. No....`);
       await targetPage.keyboard.press('Tab');
-      await new Promise((r) => setTimeout(r, 300));
-      await targetPage.keyboard.type(qty, { delay: 40 });
-      await new Promise((r) => setTimeout(r, 300));
+      await new Promise((r) => setTimeout(r, 400));
 
-      // 4. Press Tab once again to reach the unit price in dollar, fill it
-      await targetPage.keyboard.press('Tab');
-      await new Promise((r) => setTimeout(r, 300));
-      if (priceVal > 0) {
-        await targetPage.keyboard.type(priceVal.toFixed(3), { delay: 40 });
+      // 4. Pasting Vendor Ref. No.
+      addLog(`[PO ${ordIdx + 1}/${validOrders.length}] Entering Vendor Ref. No.: ${curRef}...`);
+      await targetPage.keyboard.type(curRef, { delay: 50 });
+      await new Promise((r) => setTimeout(r, 400));
+
+      // 5. Pressing Tab 5 times to reach Delivery Date
+      addLog(`[PO ${ordIdx + 1}/${validOrders.length}] Pressing Tab 5 times to reach Delivery Date...`);
+      for (let k = 0; k < 5; k++) {
+        await targetPage.keyboard.press('Tab');
+        await new Promise((r) => setTimeout(r, 200));
+      }
+
+      // 6. Pasting the date
+      let effDate = curDeliveryDate;
+      if (!effDate) {
+        const now = new Date();
+        const dd = String(now.getDate()).padStart(2, '0');
+        const mm = String(now.getMonth() + 1).padStart(2, '0');
+        const yy = String(now.getFullYear()).slice(-2);
+        effDate = `${dd}.${mm}.${yy}`;
+      } else {
+        const match = effDate.match(/^(\d{4})-(\d{2})-(\d{2})/);
+        if (match) {
+          effDate = `${match[3]}.${match[2]}.${match[1].slice(-2)}`;
+        }
+      }
+      addLog(`[PO ${ordIdx + 1}/${validOrders.length}] Entering Delivery Date: ${effDate}...`);
+      await targetPage.keyboard.type(effDate, { delay: 50 });
+      await new Promise((r) => setTimeout(r, 400));
+
+      // 7. Pressing Tab 4 times to reach Line Items grid
+      addLog(`[PO ${ordIdx + 1}/${validOrders.length}] Pressing Tab 4 times to reach Line Items grid...`);
+      for (let k = 0; k < 4; k++) {
+        await targetPage.keyboard.press('Tab');
+        await new Promise((r) => setTimeout(r, 200));
+      }
+
+      // 8. Filling items loop
+      addLog(`[PO ${ordIdx + 1}/${validOrders.length}] Filling ${curItems.length} line items via pure keyboard workflow...`);
+      for (let i = 0; i < curItems.length; i++) {
+        const it = curItems[i];
+        const partNo = it.part_no || it.partNo || it.itemCode;
+        const qty = String(it.qty || it.quantity || 1);
+        const rawPrice = it.unit_price || it.price || it.unitPrice || 0;
+        const priceVal = typeof rawPrice === 'number' ? rawPrice : parseFloat(String(rawPrice).replace(/[^0-9.]/g, '')) || 0;
+
+        addLog(`  [PO ${ordIdx + 1} | Line ${i + 1}/${curItems.length}] Part: ${partNo} | Qty: ${qty} | Unit Price: ${priceVal > 0 ? priceVal.toFixed(3) : 'Default'}`);
+
+        // 1. Paste the part no.
+        await targetPage.keyboard.type(partNo, { delay: 50 });
         await new Promise((r) => setTimeout(r, 300));
+
+        // 2. Press Tab once to add (triggers SAP to fetch description)
+        await targetPage.keyboard.press('Tab');
+        await new Promise((r) => setTimeout(r, 1500));
+
+        // 3. Press Tab once again to reach the Qty, fill it
+        await targetPage.keyboard.press('Tab');
+        await new Promise((r) => setTimeout(r, 300));
+        await targetPage.keyboard.type(qty, { delay: 40 });
+        await new Promise((r) => setTimeout(r, 300));
+
+        // 4. Press Tab once again to reach the unit price in dollar, fill it
+        await targetPage.keyboard.press('Tab');
+        await new Promise((r) => setTimeout(r, 300));
+        if (priceVal > 0) {
+          await targetPage.keyboard.type(priceVal.toFixed(3), { delay: 40 });
+          await new Promise((r) => setTimeout(r, 300));
+        }
+
+        // 5. Press Down arrow to access the second row if exists
+        if (i < curItems.length - 1) {
+          await targetPage.keyboard.press('ArrowDown');
+          await new Promise((r) => setTimeout(r, 500));
+        }
+
+        await updateSnapshot(`PO ${ordIdx + 1} Line ${i + 1} Entered (${partNo})`);
       }
 
-      // 5. Press Down arrow to access the second row if exists
-      if (i < items.length - 1) {
-        addLog(`Pressing Down Arrow to access row ${i + 2}...`);
-        await targetPage.keyboard.press('ArrowDown');
-        await new Promise((r) => setTimeout(r, 500));
-      }
+      // 9. Press Enter to add the PO
+      addLog(`[PO ${ordIdx + 1}/${validOrders.length}] Adding Purchase Order document by pressing Enter...`);
+      await targetPage.keyboard.press('Enter');
+      await new Promise((r) => setTimeout(r, 3000));
 
-      await updateSnapshot(`Line Item ${i + 1} Entered (${partNo})`);
+      // Confirm any SAP dialog (e.g. currency rate prompt, document saved confirmation)
+      await targetPage.keyboard.press('Enter');
+      await new Promise((r) => setTimeout(r, 1500));
+      await targetPage.keyboard.press('Enter');
+      await new Promise((r) => setTimeout(r, 1000));
+      await updateSnapshot(`PO ${ordIdx + 1} Saved Confirmation`);
+      addLog(`✓ [PO ${ordIdx + 1}/${validOrders.length}] Saved successfully in SAP B1!`);
     }
-
-    // STEP 11: If you finished filling the parts and now you want to add the PO, just press Enter (no drafting or mouse clicking)
-    addLog('All parts filled. Adding Purchase Order document by pressing Enter...');
-    await targetPage.keyboard.press('Enter');
-    await new Promise((r) => setTimeout(r, 3000));
-
-    // Confirm any SAP dialog (e.g. currency rate prompt, document saved confirmation)
-    await targetPage.keyboard.press('Enter');
-    await new Promise((r) => setTimeout(r, 1500));
-    await targetPage.keyboard.press('Enter');
-    await new Promise((r) => setTimeout(r, 1000));
-    await updateSnapshot('Saved Confirmation');
 
     // Capture screenshot confirmation
     const screenshotDir = path.join(__dirname, '../../public/sap_screenshots');
@@ -702,11 +743,15 @@ async function launchChromiumWithAutoInstall() {
       mode: isDraft ? 'DRAFT_PO_CREATED' : 'PO_CREATED',
       vendor,
       buyer,
-      quotationNo,
-      itemsCount: items.length,
+      totalOrders: validOrders.length,
+      orders: validOrders.map((o) => ({
+        quotationNo: o.quotationNo,
+        dbOrderNo: o.dbOrderNo || o.remarks,
+        itemsCount: o.items.length,
+      })),
       screenshotUrl: latestJobStatus.screenshotUrl,
       timestamp: new Date().toISOString(),
-      message: `Successfully processed Purchase Order for ${items.length} items in SAP Business One.`,
+      message: `Successfully processed ${validOrders.length} Purchase Order(s) in SAP Business One.`,
     };
 
     addLog(`✓ ${latestJobStatus.result.message}`);

@@ -210,6 +210,7 @@ export default function SparePartsPage() {
   const [sapHeadlessMode, setSapHeadlessMode] = useState(false);
   const [soQuickFilter, setSoQuickFilter] = useState('ALL'); // 'ALL' | 'SO_ONLY'
   const [sapTargetOrder, setSapTargetOrder] = useState(null);
+  const [sapBatchOrders, setSapBatchOrders] = useState([]);
   const [sapBuyer, setSapBuyer] = useState('MOTASEM GHANEM');
   const [sapVendorRef, setSapVendorRef] = useState('');
   const [sapVendor, setSapVendor] = useState('V000006');
@@ -1183,6 +1184,7 @@ export default function SparePartsPage() {
     const existingParts = quotation.parts && quotation.parts.length > 0 ? quotation.parts : [];
 
     setSapVendorRef(quotation.db_order_no || '');
+    setSapBatchOrders([quotation]);
     setSapTargetOrder({
       quotationNo: quotation.quotation_no,
       db_order_no: quotation.db_order_no,
@@ -1201,6 +1203,7 @@ export default function SparePartsPage() {
         if (res && res.parts && res.parts.length > 0) {
           quotation.parts = res.parts;
           setSapTargetOrder((prev) => (prev ? { ...prev, items: res.parts } : prev));
+          setSapBatchOrders([{ ...quotation, parts: res.parts, items: res.parts }]);
         } else {
           addSapLog(`No line items returned from Komatsu PDX for quotation #${quotation.quotation_no}.`, 'warn');
         }
@@ -1224,6 +1227,7 @@ export default function SparePartsPage() {
     const combinedDbRefs = selectedList.map((q) => q.db_order_no).filter(Boolean).join(', ');
 
     setSapVendorRef(combinedDbRefs);
+    setSapBatchOrders([...selectedList]);
     setSapTargetOrder({
       quotationNo: selectedList.map((q) => q.quotation_no).join(', '),
       db_order_no: combinedDbRefs,
@@ -1253,6 +1257,7 @@ export default function SparePartsPage() {
         );
         const combined = selectedList.flatMap((q) => (q.parts && q.parts.length > 0 ? q.parts : []));
         setSapTargetOrder((prev) => (prev ? { ...prev, items: combined } : prev));
+        setSapBatchOrders([...selectedList]);
         if (combined.length === 0) {
           addSapLog('Warning: Could not find line items for the selected quotation(s) on Komatsu PDX.', 'warn');
         }
@@ -1270,6 +1275,7 @@ export default function SparePartsPage() {
       : eoItems.map((it) => ({ part_no: it.part_no, qty: it.quantity, price: it.unit_price, description: it.description }));
 
     setSapVendorRef(eoStartingOrderNo || '');
+    setSapBatchOrders([]);
     setSapTargetOrder({
       quotationNo: `EO-QUEUE-${new Date().toISOString().slice(5, 10).replace('-', '')}`,
       db_order_no: eoStartingOrderNo,
@@ -1336,26 +1342,55 @@ export default function SparePartsPage() {
   }
 
   async function handleExecuteSapPo(dryRun = false) {
-    if (!sapTargetOrder || !sapTargetOrder.items || sapTargetOrder.items.length === 0) {
-      setToast({ type: 'error', message: 'No items available to create SAP Purchase Order.' });
-      return;
+    const isBatch = sapBatchOrders && sapBatchOrders.length > 1;
+
+    let ordersPayload = null;
+    if (isBatch) {
+      ordersPayload = sapBatchOrders.map((q) => {
+        const rawItems = (q.parts && q.parts.length > 0) ? q.parts : (q.items || []);
+        const qItems = rawItems.map((it) => ({
+          part_no: it.part_no || it.partNo || it.itemCode,
+          qty: it.qty || it.quantity || 1,
+          unit_price: it.unit_price || it.price || '0.000',
+          description: it.description || it.part_desc || '',
+        }));
+        const qRef = q.db_order_no || q.dbOrderNo || q.quotation_no || '';
+        return {
+          quotationNo: q.quotation_no || q.quotationNo || '',
+          dbOrderNo: qRef,
+          remarks: qRef,
+          deliveryDate: sapDeliveryDate,
+          items: qItems,
+        };
+      }).filter((o) => o.items.length > 0);
+
+      if (ordersPayload.length === 0) {
+        setToast({ type: 'error', message: 'No items available in selected quotations to create SAP Purchase Order.' });
+        return;
+      }
+    } else {
+      if (!sapTargetOrder || !sapTargetOrder.items || sapTargetOrder.items.length === 0) {
+        setToast({ type: 'error', message: 'No items available to create SAP Purchase Order.' });
+        return;
+      }
     }
 
     setIsExecutingSapPo(true);
-    const targetRef = sapVendorRef || sapTargetOrder.db_order_no || sapTargetOrder.quotationNo || '';
+    const targetRef = sapVendorRef || sapTargetOrder?.db_order_no || sapTargetOrder?.quotationNo || '';
     const payload = {
       username: sapUsername,
       password: sapPassword || undefined,
       vendor: sapVendor,
       buyer: sapBuyer,
       deliveryDate: sapDeliveryDate,
-      items: sapTargetOrder.items.map((it) => ({
+      items: (sapTargetOrder?.items || []).map((it) => ({
         part_no: it.part_no || it.partNo || it.itemCode,
         qty: it.qty || it.quantity || 1,
         unit_price: it.unit_price || it.price || '0.000',
         description: it.description || it.part_desc || '',
       })),
-      quotationNo: sapTargetOrder.quotationNo,
+      orders: ordersPayload || undefined,
+      quotationNo: sapTargetOrder?.quotationNo,
       dbOrderNo: targetRef,
       remarks: targetRef,
       whsCode: '003',
@@ -1369,11 +1404,16 @@ export default function SparePartsPage() {
     const isBridgeOnline = bridge?.status === 'ONLINE';
     setLocalBridgeStatus(isBridgeOnline ? 'ONLINE' : 'OFFLINE');
 
+    const totalOrdersCount = ordersPayload ? ordersPayload.length : 1;
+    const startMsg = isBatch
+      ? `Starting Local Batch PO Automation for ${totalOrdersCount} quotations (1 PO per quotation via Ctrl+A)...`
+      : `Starting Local PO Automation for #${sapTargetOrder?.quotationNo || 'Direct'} (${sapTargetOrder?.items?.length || 0} items)...`;
+
     if (isBridgeOnline) {
       setSapLogs([
         `[${new Date().toLocaleTimeString()}] 🟢 Connected to SAP Local Bridge (127.0.0.1:5005)!`,
         `[${new Date().toLocaleTimeString()}] Mode: ${sapHeadlessMode ? 'Background (Headless)' : 'Visible Live Window (Desktop)'}`,
-        `[${new Date().toLocaleTimeString()}] Starting Local PO Automation for #${sapTargetOrder.quotationNo || 'Direct'} (${sapTargetOrder.items.length} items)...`,
+        `[${new Date().toLocaleTimeString()}] ${startMsg}`,
       ]);
 
       let isCompleted = false;
@@ -1395,7 +1435,12 @@ export default function SparePartsPage() {
             clearInterval(localPoll);
             setIsExecutingSapPo(false);
             setSapResult(st.result || { message: 'PO Created in SAP via Local Bridge', screenshotUrl: st.screenshotBase64 });
-            setToast({ type: 'success', message: 'SAP Purchase Order created successfully via Local Bridge!' });
+            setToast({
+              type: 'success',
+              message: isBatch
+                ? `Successfully created ${totalOrdersCount} SAP Purchase Orders via Local Bridge!`
+                : 'SAP Purchase Order created successfully via Local Bridge!',
+            });
           } else if (st?.status === 'FAILED' && !isCompleted) {
             isCompleted = true;
             clearInterval(localPoll);
@@ -1415,7 +1460,12 @@ export default function SparePartsPage() {
           clearInterval(localPoll);
           setIsExecutingSapPo(false);
           setSapResult(resp);
-          setToast({ type: 'success', message: 'SAP Purchase Order created successfully!' });
+          setToast({
+            type: 'success',
+            message: isBatch
+              ? `Successfully created ${totalOrdersCount} SAP Purchase Orders!`
+              : 'SAP Purchase Order created successfully!',
+          });
         }
       } catch (err) {
         clearInterval(localPoll);
@@ -1427,9 +1477,12 @@ export default function SparePartsPage() {
     }
 
     // 2. Otherwise route to Cloud server
+    const cloudStartMsg = isBatch
+      ? `☁️ Local Bridge offline. Dispatching Batch of ${totalOrdersCount} POs to Cloud Server...`
+      : '☁️ Local Bridge offline. Dispatching to Cloud Server...';
     setSapLogs((prev) => [
       ...prev,
-      `[${new Date().toLocaleTimeString()}] ☁️ Local Bridge offline. Dispatching to Cloud Server...`,
+      `[${new Date().toLocaleTimeString()}] ${cloudStartMsg}`,
     ]);
 
     let isCompleted = false;
@@ -1447,7 +1500,12 @@ export default function SparePartsPage() {
           clearInterval(pollTimer);
           setIsExecutingSapPo(false);
           setSapResult(st.result || { message: 'PO Created in SAP', screenshotUrl: st.screenshotUrl });
-          setToast({ type: 'success', message: 'SAP Purchase Order successfully submitted!' });
+          setToast({
+            type: 'success',
+            message: isBatch
+              ? `Successfully created ${totalOrdersCount} SAP Purchase Orders!`
+              : 'SAP Purchase Order successfully submitted!',
+          });
         } else if (st?.status === 'FAILED' && !isCompleted) {
           isCompleted = true;
           clearInterval(pollTimer);
@@ -1457,14 +1515,15 @@ export default function SparePartsPage() {
       } catch {}
     }, 1500);
 
-    // 4-minute absolute safety timeout to stop polling
+    // Safety timeout to stop polling (6 mins for batch, 4 mins for single)
+    const safetyDuration = isBatch ? 360000 : 240000;
     const safetyTimeout = setTimeout(() => {
       if (!isCompleted) {
         clearInterval(pollTimer);
         setIsExecutingSapPo(false);
-        setToast({ type: 'error', message: 'SAP PO automation exceeded maximum duration (4m).' });
+        setToast({ type: 'error', message: 'SAP PO automation exceeded maximum duration.' });
       }
-    }, 240000);
+    }, safetyDuration);
 
     try {
       const resp = await createSapPurchaseOrder({ ...payload, async: true });
@@ -1482,7 +1541,12 @@ export default function SparePartsPage() {
           `[${new Date().toLocaleTimeString()}] ✓ SUCCESS: Purchase Order processed in SAP Business One!`,
           `[${new Date().toLocaleTimeString()}] Status: ${resp.message || 'PO Created in SAP'}`,
         ]);
-        setToast({ type: 'success', message: 'SAP Purchase Order successfully submitted!' });
+        setToast({
+          type: 'success',
+          message: isBatch
+            ? `Successfully created ${totalOrdersCount} SAP Purchase Orders!`
+            : 'SAP Purchase Order created successfully!',
+        });
       }
     } catch (err) {
       const isTimeout = String(err.message || '').includes('timed out');
@@ -3084,9 +3148,18 @@ export default function SparePartsPage() {
           <div className="flex items-center gap-2">
             <span className="p-1.5 bg-emerald-100 text-emerald-800 rounded text-sm font-bold">SAP B1</span>
             <div>
-              <DialogTitle>Create SAP Purchase Order</DialogTitle>
+              <DialogTitle className="flex items-center gap-2">
+                <span>{sapBatchOrders?.length > 1 ? 'Create SAP Purchase Orders' : 'Create SAP Purchase Order'}</span>
+                {sapBatchOrders?.length > 1 && (
+                  <span className="text-xs bg-emerald-600 text-white font-mono px-2 py-0.5 rounded-full font-bold">
+                    Batch: {sapBatchOrders.length} Orders
+                  </span>
+                )}
+              </DialogTitle>
               <p className="text-xs text-slate-500 mt-0.5">
-                Automate PO creation directly in SAP Business One or download formatted Excel import
+                {sapBatchOrders?.length > 1
+                  ? `Automate individual PO creation in SAP B1 for ${sapBatchOrders.length} selected quotations sequentially using Ctrl+A`
+                  : 'Automate PO creation directly in SAP Business One or download formatted Excel import'}
               </p>
             </div>
           </div>
@@ -3160,25 +3233,78 @@ export default function SparePartsPage() {
             </div>
           </div>
 
-          {/* Header Summary */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-3 bg-slate-50 border border-slate-200 rounded-lg text-xs">
-            <div>
-              <span className="text-slate-500 block">Vendor (CardCode)</span>
-              <strong className="text-slate-900 font-mono">V000006</strong> (Komatsu)
+          {/* Header Summary & Multi-PO Batch Breakdown */}
+          {sapBatchOrders?.length > 1 ? (
+            <div className="space-y-2.5">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-3 bg-slate-50 border border-slate-200 rounded-lg text-xs">
+                <div>
+                  <span className="text-slate-500 block">Vendor (CardCode)</span>
+                  <strong className="text-slate-900 font-mono">V000006</strong> (Komatsu)
+                </div>
+                <div>
+                  <span className="text-slate-500 block">Batch Scope</span>
+                  <strong className="text-emerald-700 font-bold">{sapBatchOrders.length} Separate POs</strong>
+                </div>
+                <div>
+                  <span className="text-slate-500 block">Sequence Method</span>
+                  <strong className="text-slate-900 font-mono font-semibold">F2 → Ctrl+A per order</strong>
+                </div>
+                <div>
+                  <span className="text-slate-500 block">Default Warehouse</span>
+                  <strong className="text-slate-900 font-mono">003</strong>
+                </div>
+              </div>
+
+              <div className="p-3 bg-emerald-50/90 border border-emerald-300 rounded-lg text-xs space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-emerald-950 flex items-center gap-1.5">
+                    📦 Multi-PO Batch: <strong>{sapBatchOrders.length} Individual Purchase Orders</strong>
+                  </span>
+                  <span className="text-[11px] bg-emerald-100 text-emerald-800 font-mono px-2 py-0.5 rounded font-semibold">
+                    1 PO per quotation
+                  </span>
+                </div>
+                <p className="text-emerald-800 text-[11px] leading-relaxed">
+                  Each selected quotation will be created as its own PO in SAP Business One. The first PO opens via <kbd className="px-1 py-0.5 bg-white border border-emerald-300 rounded font-mono font-bold text-slate-800">F2</kbd>; each subsequent order uses <kbd className="px-1 py-0.5 bg-white border border-emerald-300 rounded font-mono font-bold text-slate-800">Ctrl+A</kbd> to rapidly switch to Add mode.
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-1.5 pt-1">
+                  {sapBatchOrders.map((q, idx) => {
+                    const pCount = (q.parts && q.parts.length) || 0;
+                    return (
+                      <div key={idx} className="bg-white border border-emerald-200 rounded px-2.5 py-1.5 text-[11px] flex items-center justify-between shadow-2xs">
+                        <div>
+                          <span className="font-mono font-bold text-slate-800">#{q.quotation_no}</span>
+                          <span className="text-slate-500 font-mono text-[10px] block">{q.db_order_no || 'Direct'}</span>
+                        </div>
+                        <span className={`font-mono text-[10px] px-1.5 py-0.5 rounded font-semibold ${pCount > 0 ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}`}>
+                          {pCount > 0 ? `${pCount} items` : 'loading...'}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
             </div>
-            <div>
-              <span className="text-slate-500 block">Vendor Ref. No. (DB Order)</span>
-              <strong className="text-emerald-700 font-mono font-bold">{sapVendorRef || sapTargetOrder?.db_order_no || 'N/A'}</strong>
+          ) : (
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-3 bg-slate-50 border border-slate-200 rounded-lg text-xs">
+              <div>
+                <span className="text-slate-500 block">Vendor (CardCode)</span>
+                <strong className="text-slate-900 font-mono">V000006</strong> (Komatsu)
+              </div>
+              <div>
+                <span className="text-slate-500 block">Vendor Ref. No. (DB Order)</span>
+                <strong className="text-emerald-700 font-mono font-bold">{sapVendorRef || sapTargetOrder?.db_order_no || 'N/A'}</strong>
+              </div>
+              <div>
+                <span className="text-slate-500 block">Quotation Reference #</span>
+                <strong className="text-slate-900 font-mono">{sapTargetOrder?.quotationNo || 'N/A'}</strong>
+              </div>
+              <div>
+                <span className="text-slate-500 block">Default Warehouse</span>
+                <strong className="text-slate-900 font-mono">003</strong>
+              </div>
             </div>
-            <div>
-              <span className="text-slate-500 block">Quotation Reference #</span>
-              <strong className="text-slate-900 font-mono">{sapTargetOrder?.quotationNo || 'N/A'}</strong>
-            </div>
-            <div>
-              <span className="text-slate-500 block">Default Warehouse</span>
-              <strong className="text-slate-900 font-mono">003</strong>
-            </div>
-          </div>
+          )}
 
           {/* Form Fields */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -3246,7 +3372,9 @@ export default function SparePartsPage() {
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <span className="text-xs font-semibold text-slate-800 uppercase tracking-wide">
-                Items to Insert ({sapTargetOrder?.items?.length || 0})
+                {sapBatchOrders?.length > 1
+                  ? `Total Line Items Across All Orders (${sapTargetOrder?.items?.length || 0})`
+                  : `Items to Insert (${sapTargetOrder?.items?.length || 0})`}
               </span>
               <div className="flex items-center gap-2">
                 <button
@@ -3453,10 +3581,18 @@ export default function SparePartsPage() {
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
                   </svg>
-                  Automating in SAP...
+                  {sapBatchOrders?.length > 1
+                    ? `Creating ${sapBatchOrders.length} POs in SAP...`
+                    : 'Automating in SAP...'}
                 </>
               ) : (
-                localBridgeStatus === 'ONLINE' ? '🚀 Automate in SAP (Local Bridge)' : '🚀 Automate in SAP (Canvas)'
+                sapBatchOrders?.length > 1 ? (
+                  localBridgeStatus === 'ONLINE'
+                    ? `🚀 Create ${sapBatchOrders.length} SAP POs (Local Bridge)`
+                    : `🚀 Create ${sapBatchOrders.length} SAP POs (Canvas)`
+                ) : (
+                  localBridgeStatus === 'ONLINE' ? '🚀 Automate in SAP (Local Bridge)' : '🚀 Automate in SAP (Canvas)'
+                )
               )}
             </Button>
           </div>

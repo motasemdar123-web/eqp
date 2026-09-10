@@ -566,9 +566,11 @@ async function saveSapCredentials(req, res) {
 async function createSapPurchaseOrder(req, res) {
   const userId = req.platformUser?.sub || req.platformUser?.userNumber || 'default';
   const savedCreds = userSapCredentialsService.getUserSapCredentials(userId);
-  const { vendor, buyer, deliveryDate, items, remarks, quotationNo, dryRun, isDraft, username, password, async: isAsync } = req.body || {};
-  if (!Array.isArray(items) || items.length === 0) {
-    return res.status(400).json({ success: false, message: 'Array of items is required' });
+  const { vendor, buyer, deliveryDate, items, remarks, quotationNo, dbOrderNo, orders, dryRun, isDraft, username, password, async: isAsync } = req.body || {};
+  const hasItems = Array.isArray(items) && items.length > 0;
+  const hasOrders = Array.isArray(orders) && orders.length > 0;
+  if (!hasItems && !hasOrders) {
+    return res.status(400).json({ success: false, message: 'Array of items or orders is required' });
   }
 
   const executionPromise = sapPoAutomationService.createSapPurchaseOrder({
@@ -580,6 +582,8 @@ async function createSapPurchaseOrder(req, res) {
     items,
     remarks,
     quotationNo,
+    dbOrderNo,
+    orders,
     dryRun: Boolean(dryRun),
     isDraft: isDraft !== false,
   });
