@@ -1320,14 +1320,12 @@ export default function SparePartsPage() {
     }
 
     const firstQ = selectedList[0];
-    const initialItems = selectedList.flatMap((q) => (q.parts && q.parts.length > 0 ? q.parts : []));
-    const combinedDbRefs = selectedList.map((q) => q.db_order_no).filter(Boolean).join(', ');
-
-    setSapVendorRef(combinedDbRefs);
+    // In batch mode, each order maintains its OWN separate DB order no (never merged with commas)
+    setSapVendorRef('');
     setSapBatchOrders([...selectedList]);
     setSapTargetOrder({
       quotationNo: selectedList.map((q) => q.quotation_no).join(', '),
-      db_order_no: combinedDbRefs,
+      db_order_no: 'Separate per order',
       customer: firstQ.customer_name || 'Komatsu PDX Orders',
       items: initialItems,
     });
@@ -1364,6 +1362,14 @@ export default function SparePartsPage() {
         setLoadingSapParts(false);
       }
     }
+  }
+
+  function handleUpdateBatchOrderRef(index, newRef) {
+    setSapBatchOrders((prev) => {
+      const next = [...prev];
+      next[index] = { ...next[index], db_order_no: newRef };
+      return next;
+    });
   }
 
   function openSapPoModalFromEoQueue() {
@@ -1473,7 +1479,9 @@ export default function SparePartsPage() {
     }
 
     setIsExecutingSapPo(true);
-    const targetRef = sapVendorRef || sapTargetOrder?.db_order_no || sapTargetOrder?.quotationNo || '';
+    const targetRef = isBatch
+      ? (ordersPayload[0]?.dbOrderNo || 'Batch Orders')
+      : (sapVendorRef || sapTargetOrder?.db_order_no || sapTargetOrder?.quotationNo || '');
     const payload = {
       username: sapUsername,
       password: sapPassword || undefined,
@@ -3428,18 +3436,30 @@ export default function SparePartsPage() {
                 <p className="text-emerald-800 text-[11px] leading-relaxed">
                   Each selected quotation will be created as its own PO in SAP Business One. The first PO opens via <kbd className="px-1 py-0.5 bg-white border border-emerald-300 rounded font-mono font-bold text-slate-800">F2</kbd>. Confirming with <kbd className="px-1 py-0.5 bg-white border border-emerald-300 rounded font-mono font-bold text-slate-800">Enter</kbd> saves and clears to a fresh PO, and the automation immediately inputs <kbd className="px-1 py-0.5 bg-white border border-emerald-300 rounded font-mono font-bold text-slate-800">V000006</kbd> to repeat the cycle.
                 </p>
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-1.5 pt-1">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 pt-1">
                   {sapBatchOrders.map((q, idx) => {
                     const pCount = (q.parts && q.parts.length) || 0;
                     return (
-                      <div key={idx} className="bg-white border border-emerald-200 rounded px-2.5 py-1.5 text-[11px] flex items-center justify-between shadow-2xs">
-                        <div>
-                          <span className="font-mono font-bold text-slate-800">#{q.quotation_no}</span>
-                          <span className="text-slate-500 font-mono text-[10px] block">{q.db_order_no || 'Direct'}</span>
+                      <div key={idx} className="bg-white border border-emerald-200 rounded-lg p-2.5 text-xs space-y-1.5 shadow-2xs">
+                        <div className="flex items-center justify-between">
+                          <span className="font-mono font-bold text-slate-900">PO #{idx + 1}: #{q.quotation_no}</span>
+                          <span className={`font-mono text-[10px] px-1.5 py-0.5 rounded font-semibold ${pCount > 0 ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}`}>
+                            {pCount > 0 ? `${pCount} parts` : 'loading...'}
+                          </span>
                         </div>
-                        <span className={`font-mono text-[10px] px-1.5 py-0.5 rounded font-semibold ${pCount > 0 ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}`}>
-                          {pCount > 0 ? `${pCount} items` : 'loading...'}
-                        </span>
+                        <div>
+                          <label className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider block mb-0.5">
+                            Vendor Ref. No. (DB Order):
+                          </label>
+                          <input
+                            type="text"
+                            value={q.db_order_no || ''}
+                            onChange={(e) => handleUpdateBatchOrderRef(idx, e.target.value)}
+                            placeholder="e.g. R197/2026"
+                            className="w-full px-2 py-1 border border-slate-300 rounded font-mono font-bold text-emerald-900 text-xs bg-emerald-50/40 focus:bg-white focus:border-emerald-600 focus:outline-none"
+                            title={`Individual Vendor Ref No for PO #${idx + 1} (${q.quotation_no})`}
+                          />
+                        </div>
                       </div>
                     );
                   })}
@@ -3485,14 +3505,25 @@ export default function SparePartsPage() {
               </Select>
             </Field>
 
-            <Field label="Vendor Ref. No. (DB Order)" hint="Populates Vendor Ref. No. & Remarks in SAP">
-              <Input
-                value={sapVendorRef}
-                onChange={(e) => setSapVendorRef(e.target.value)}
-                placeholder="e.g. R201/2026"
-                className="font-mono font-semibold text-emerald-800"
-              />
-            </Field>
+            {sapBatchOrders?.length > 1 ? (
+              <Field label="Vendor Ref. No. (DB Order)" hint="Each order has its own separate reference above">
+                <div className="px-3 py-2 bg-emerald-50 border border-emerald-300 rounded text-xs font-semibold text-emerald-900 flex items-center justify-between min-h-[38px]">
+                  <span>⚡ 1 Separate Ref Per PO</span>
+                  <span className="font-mono text-[11px] bg-emerald-200/80 text-emerald-900 px-1.5 py-0.5 rounded font-bold">
+                    {sapBatchOrders.length} Individual Refs
+                  </span>
+                </div>
+              </Field>
+            ) : (
+              <Field label="Vendor Ref. No. (DB Order)" hint="Populates Vendor Ref. No. & Remarks in SAP">
+                <Input
+                  value={sapVendorRef}
+                  onChange={(e) => setSapVendorRef(e.target.value)}
+                  placeholder="e.g. R201/2026"
+                  className="font-mono font-semibold text-emerald-800"
+                />
+              </Field>
+            )}
 
             <Field label="Delivery Date" hint="Required delivery / due date">
               <Input

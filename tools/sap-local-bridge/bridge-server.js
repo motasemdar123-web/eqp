@@ -548,7 +548,7 @@ async function runLocalSapPoAutomation({
     for (let ordIdx = 0; ordIdx < validOrders.length; ordIdx++) {
       const curOrder = validOrders[ordIdx];
       const curQuotationNo = curOrder.quotationNo || '';
-      const curRef = curOrder.dbOrderNo || curOrder.db_order_no || curQuotationNo || curOrder.remarks || remarks || 'R144/2026';
+      const curRef = String(curOrder.dbOrderNo || curOrder.db_order_no || curOrder.remarks || curQuotationNo || 'R144/2026').trim();
       const curDeliveryDate = curOrder.deliveryDate || curOrder.delivery_date || deliveryDate;
       const curItems = curOrder.items || [];
 
