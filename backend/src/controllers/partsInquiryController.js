@@ -3,8 +3,12 @@ const { fetchOutlookInquiries } = require('../services/outlookService');
 const { priceInquiryWithPdx } = require('../services/pdxPricingService');
 
 async function syncInquiries(req, res) {
-  const { markSynced = true, limit = 50 } = req.body || {};
+  const { items, totalInFolder, account, folder, markSynced = true, limit = 50 } = req.body || {};
   const result = await partsInquiryService.syncInquiriesFromOutlook({
+    items: Array.isArray(items) ? items : null,
+    totalInFolder: totalInFolder !== undefined ? totalInFolder : null,
+    account,
+    folder,
     markSynced: Boolean(markSynced),
     limit: Number(limit) || 50,
   });

@@ -1,13 +1,17 @@
 param (
-    [string]$AccountName = "Motasem.Ghanem@daralhai.com",
+    [string]$AccountName = "",
     [string]$FolderName = "Parts Inquiries",
-    [string]$OutputDir = "c:\Users\Motasem.ghanem\EQP-System\backend\data\inquiry_attachments",
+    [string]$OutputDir = "",
     [switch]$UnsyncedOnly = $false,
     [switch]$MarkSynced = $false,
     [int]$Limit = 50
 )
 
 $ErrorActionPreference = "Stop"
+
+if (-not $OutputDir) {
+    $OutputDir = Join-Path $PSScriptRoot "attachments"
+}
 
 function Get-SmtpAddress($item) {
     try {
@@ -36,21 +40,61 @@ try {
     $namespace = $outlook.GetNamespace("MAPI")
     
     $targetStore = $null
-    foreach ($store in $namespace.Stores) {
-        if ($store.DisplayName -like "*$AccountName*" -or $store.FilePath -like "*$AccountName*") {
-            $targetStore = $store
-            break
+    if ($AccountName) {
+        foreach ($store in $namespace.Stores) {
+            if ($store.DisplayName -like "*$AccountName*" -or $store.FilePath -like "*$AccountName*") {
+                $targetStore = $store
+                break
+            }
         }
     }
     
     if (-not $targetStore) {
-        throw "Could not find Outlook store matching '$AccountName'."
+        # Check all stores for the Inbox\FolderName
+        foreach ($store in $namespace.Stores) {
+            try {
+                $r = $store.GetRootFolder()
+                foreach ($f in $r.Folders) {
+                    if ($f.Name -eq "Inbox") {
+                        foreach ($sub in $f.Folders) {
+                            if ($sub.Name -eq $FolderName) {
+                                $targetStore = $store
+                                break
+                            }
+                        }
+                    }
+                }
+                if ($targetStore) { break }
+            } catch {}
+        }
+    }
+
+    if (-not $targetStore) {
+        # Fallback to daralhai store or default store
+        foreach ($store in $namespace.Stores) {
+            if ($store.DisplayName -like "*daralhai*" -or $store.DisplayName -like "*motasem*" -or $store.DisplayName -like "*mohammad*") {
+                $targetStore = $store
+                break
+            }
+        }
+    }
+
+    if (-not $targetStore) {
+        $targetStore = $namespace.DefaultStore
+    }
+    
+    if (-not $targetStore) {
+        throw "Could not find an active Outlook mailbox store."
     }
     
     $root = $targetStore.GetRootFolder()
     $inbox = $null
     foreach ($f in $root.Folders) {
         if ($f.Name -eq "Inbox") { $inbox = $f; break }
+    }
+
+    if (-not $inbox) {
+        throw "Could not find 'Inbox' folder in store '$($targetStore.DisplayName)'."
     }
     
     $inquiryFolder = $null
@@ -59,17 +103,24 @@ try {
     }
     
     if (-not $inquiryFolder) {
-        $result = @{
-            status = "OK"
-            message = "Folder '$FolderName' not found or empty."
-            items = @()
+        # Auto-create if not present
+        try {
+            $inquiryFolder = $inbox.Folders.Add($FolderName)
+        } catch {
+            $result = @{
+                status = "OK"
+                account = $targetStore.DisplayName
+                message = "Folder '$FolderName' not found in Inbox."
+                items = @()
+                totalInFolder = 0
+            }
+            $result | ConvertTo-Json -Compress
+            exit 0
         }
-        $result | ConvertTo-Json -Compress
-        exit 0
     }
     
     $items = $inquiryFolder.Items
-    $items.Sort("[ReceivedTime]", $true) # Sort descending
+    $items.Sort("[ReceivedTime]", $true)
     
     $extracted = @()
     $count = 0
@@ -77,26 +128,33 @@ try {
     foreach ($mail in $items) {
         if ($count -ge $Limit) { break }
         
-        # Check if MailItem
-        if ($mail.MessageClass -ne "IPM.Note") { continue }
+        # Only process mail items
+        if ($mail.MessageClass -ne "IPM.Note" -and -not $mail.Subject) { continue }
         
-        $categories = if ($mail.Categories) { $mail.Categories } else { "" }
-        $isSynced = $categories -like "*EQP Synced*"
+        $categories = $mail.Categories
+        $isSynced = $false
+        if ($categories -and $categories -like "*EQP Synced*") {
+            $isSynced = $true
+        }
         
         if ($UnsyncedOnly -and $isSynced) {
             continue
         }
         
         $entryID = $mail.EntryID
-        $subject = if ($mail.Subject) { $mail.Subject } else { "(No Subject)" }
-        $senderName = if ($mail.SenderName) { $mail.SenderName } else { "" }
+        $conversationId = $mail.ConversationID
+        $subject = $mail.Subject
+        $body = $mail.Body
+        $senderName = $mail.SenderName
         $senderEmail = Get-SmtpAddress($mail)
-        $receivedAt = if ($mail.ReceivedTime) { $mail.ReceivedTime.ToString("o") } else { "" }
-        $body = if ($mail.Body) { $mail.Body } else { "" }
-        $conversationId = if ($mail.ConversationID) { $mail.ConversationID } else { "" }
+        $receivedAt = $mail.ReceivedTime.ToString("yyyy-MM-ddTHH:mm:ss.fffffff")
         
-        $toRecipients = if ($mail.To) { $mail.To } else { "" }
-        $ccRecipients = if ($mail.CC) { $mail.CC } else { "" }
+        $toRecipients = ""
+        $ccRecipients = ""
+        try {
+            $toRecipients = $mail.To
+            $ccRecipients = $mail.CC
+        } catch {}
 
         $assignedToName = "Motasem Ghanem"
         $recipientEmail = "motasem.ghanem@daralhai.com"
@@ -108,33 +166,42 @@ try {
 
         $attachments = @()
         if ($mail.Attachments -and $mail.Attachments.Count -gt 0) {
-            $msgFolder = Join-Path $OutputDir ($entryID.Substring(0, [Math]::Min(16, $entryID.Length)))
+            $safeId = $entryID.Substring(0, [Math]::Min(16, $entryID.Length))
+            $msgFolder = Join-Path $OutputDir $safeId
             if (-not (Test-Path $msgFolder)) { New-Item -ItemType Directory -Path $msgFolder -Force | Out-Null }
             
             for ($i = 1; $i -le $mail.Attachments.Count; $i++) {
                 $att = $mail.Attachments.Item($i)
                 $fileName = $att.FileName
-                # Skip embedded small icon images
                 $filePath = Join-Path $msgFolder $fileName
                 try {
                     $att.SaveAsFile($filePath)
-                    $attachments += @{
+                    $attData = @{
                         fileName = $fileName
                         fileSize = $att.Size
                         filePath = $filePath
-                        relativePath = $filePath.Replace("c:\Users\Motasem.ghanem\EQP-System\", "")
+                        relativePath = "attachments/$safeId/$fileName"
                     }
+                    if ($att.Size -gt 0 -and $att.Size -lt 4000000) {
+                        try {
+                            $bytes = [System.IO.File]::ReadAllBytes($filePath)
+                            $attData["base64"] = [Convert]::ToBase64String($bytes)
+                        } catch {}
+                    }
+                    $attachments += $attData
                 } catch {}
             }
         }
         
         if ($MarkSynced -and -not $isSynced) {
-            if ($categories) {
-                $mail.Categories = "$categories, EQP Synced"
-            } else {
-                $mail.Categories = "EQP Synced"
-            }
-            $mail.Save()
+            try {
+                if ($categories) {
+                    $mail.Categories = "$categories, EQP Synced"
+                } else {
+                    $mail.Categories = "EQP Synced"
+                }
+                $mail.Save()
+            } catch {}
         }
         
         $extracted += @{

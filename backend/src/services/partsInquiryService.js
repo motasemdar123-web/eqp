@@ -151,25 +151,55 @@ async function getNextInquiryNo(prisma) {
 }
 
 /**
- * Sync inquiries from Outlook "Parts Inquiries" folder into PostgreSQL
+ * Sync inquiries from Outlook "Parts Inquiries" folder into PostgreSQL.
+ * Supports direct items payload pushed from client's Local Outlook Bridge.
  */
-async function syncInquiriesFromOutlook({ markSynced = true, limit = 50 } = {}) {
+async function syncInquiriesFromOutlook({ items = null, totalInFolder = null, account = null, folder = null, markSynced = true, limit = 50 } = {}) {
   const prisma = requirePrisma();
-  const result = await fetchOutlookInquiries({ unsyncedOnly: false, markSynced, limit });
+  
+  let mailItems = items;
+  let folderCount = totalInFolder;
+  let mailboxAccount = account;
+  let folderPath = folder;
 
-  if (!result || !Array.isArray(result.items)) {
-    return {
-      syncedCount: 0,
-      newCount: 0,
-      totalInFolder: result?.totalInFolder || 0,
-      message: result?.message || 'No items returned from Outlook.',
-    };
+  if (!Array.isArray(mailItems)) {
+    const result = await fetchOutlookInquiries({ unsyncedOnly: false, markSynced, limit });
+
+    if (result?.status === 'BRIDGE_REQUIRED') {
+      return {
+        success: false,
+        error: result.message || 'Outlook Local Bridge (Port 5008) is required. Please ensure the bridge is running on your Windows PC.',
+        syncedCount: 0,
+        newInquiriesCreated: 0,
+        existingUpdated: 0,
+        totalInFolder: 0,
+      };
+    }
+
+    if (!result || !Array.isArray(result.items)) {
+      return {
+        syncedCount: 0,
+        newInquiriesCreated: 0,
+        existingUpdated: 0,
+        totalInFolder: result?.totalInFolder || 0,
+        message: result?.message || 'No items returned from Outlook.',
+      };
+    }
+
+    mailItems = result.items;
+    folderCount = result.totalInFolder || mailItems.length;
+    mailboxAccount = result.account;
+    folderPath = result.folder;
+  }
+
+  if (folderCount === null || folderCount === undefined) {
+    folderCount = mailItems.length;
   }
 
   let newCount = 0;
   let updatedCount = 0;
 
-  for (const mail of result.items) {
+  for (const mail of mailItems) {
     if (!mail.entryID) continue;
 
     let inquiry = await prisma.partsInquiry.findUnique({
@@ -192,10 +222,29 @@ async function syncInquiriesFromOutlook({ markSynced = true, limit = 50 } = {}) 
       const partsSet = new Set(extractedParts.map((p) => p.partNumber));
 
       // 2. Extract parts from attached Excel (.xlsx) or PDF RFQs
+      const savedAttachments = [];
       if (Array.isArray(mail.attachments)) {
         for (const att of mail.attachments) {
-          if (att.filePath) {
-            const attParts = await extractPartsFromAttachmentFile(att.filePath, att.fileName);
+          let resolvedPath = att.filePath;
+
+          // If base64 payload is provided and file does not exist locally (e.g. backend running in Docker/remote)
+          if (att.base64 && (!resolvedPath || !fs.existsSync(resolvedPath))) {
+            try {
+              const safeId = (mail.entryID || 'unknown').substring(0, 16);
+              const dataDir = path.resolve(__dirname, '../../data/inquiry_attachments', safeId);
+              if (!fs.existsSync(dataDir)) {
+                fs.mkdirSync(dataDir, { recursive: true });
+              }
+              const saveTarget = path.join(dataDir, att.fileName);
+              fs.writeFileSync(saveTarget, Buffer.from(att.base64, 'base64'));
+              resolvedPath = saveTarget;
+            } catch (writeErr) {
+              console.warn('[AttachmentSave] Failed to write base64 attachment:', writeErr.message);
+            }
+          }
+
+          if (resolvedPath && fs.existsSync(resolvedPath)) {
+            const attParts = await extractPartsFromAttachmentFile(resolvedPath, att.fileName);
             for (const ap of attParts) {
               if (!partsSet.has(ap.partNumber)) {
                 partsSet.add(ap.partNumber);
@@ -203,6 +252,13 @@ async function syncInquiriesFromOutlook({ markSynced = true, limit = 50 } = {}) 
               }
             }
           }
+
+          savedAttachments.push({
+            fileName: att.fileName,
+            fileSize: att.fileSize,
+            filePath: resolvedPath || att.filePath || '',
+            fileUrl: att.relativePath ? `/${att.relativePath.replace(/\\/g, '/')}` : null,
+          });
         }
       }
 
@@ -228,12 +284,7 @@ async function syncInquiriesFromOutlook({ markSynced = true, limit = 50 } = {}) 
             })),
           },
           attachments: {
-            create: (mail.attachments || []).map((att) => ({
-              fileName: att.fileName,
-              fileSize: att.fileSize,
-              filePath: att.filePath,
-              fileUrl: att.relativePath ? `/${att.relativePath.replace(/\\/g, '/')}` : null,
-            })),
+            create: savedAttachments,
           },
         },
       });
@@ -263,11 +314,11 @@ async function syncInquiriesFromOutlook({ markSynced = true, limit = 50 } = {}) 
 
   return {
     success: true,
-    totalInFolder: result.totalInFolder || 0,
+    totalInFolder: folderCount,
     newInquiriesCreated: newCount,
     existingUpdated: updatedCount,
-    account: result.account,
-    folder: result.folder,
+    account: mailboxAccount,
+    folder: folderPath,
   };
 }
 

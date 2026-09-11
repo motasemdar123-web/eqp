@@ -23,6 +23,8 @@ backend/*.png
 sheet_download.xlsx
 scratch/
 **/user_sap_credentials.json
+backend/data/inquiry_attachments/
+tools/outlook-bridge/attachments/
 
 
 

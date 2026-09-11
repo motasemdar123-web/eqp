@@ -903,11 +903,64 @@ export async function deleteComment(id) {
 }
 
 // --- PARTS INQUIRIES API ---
-export function getOutlookInquiriesStatus() {
-  return request('/api/inquiries/outlook/status');
+export async function getOutlookInquiriesStatus() {
+  try {
+    const local = await checkLocalOutlookBridge();
+    if (local && (local.status === 'ONLINE' || local.bridge === 'OUTLOOK_LOCAL_BRIDGE')) {
+      return {
+        online: true,
+        account: local.account || 'Local Outlook',
+        bridge: 'OUTLOOK_LOCAL_BRIDGE',
+      };
+    }
+  } catch {}
+
+  try {
+    return await request('/api/inquiries/outlook/status');
+  } catch {
+    return { online: false };
+  }
 }
 
-export function syncOutlookInquiries(payload = {}) {
+export async function syncOutlookInquiries(payload = {}) {
+  // 1. Check if Local Outlook Bridge is active on user's machine (port 5008)
+  try {
+    const bridgeStatus = await checkLocalOutlookBridge();
+    if (bridgeStatus && (bridgeStatus.status === 'ONLINE' || bridgeStatus.bridge === 'OUTLOOK_LOCAL_BRIDGE')) {
+      const unsynced = payload.unsyncedOnly ? 'true' : 'false';
+      const mark = payload.markSynced !== false ? 'true' : 'false';
+      const limit = payload.limit || 50;
+
+      const bridgeRes = await fetch(
+        `http://127.0.0.1:5008/api/outlook/inquiries?unsynced=${unsynced}&mark=${mark}&limit=${limit}`
+      );
+      if (bridgeRes.ok) {
+        const bridgeData = await bridgeRes.json();
+        if (bridgeData.success && Array.isArray(bridgeData.items)) {
+          // Push locally read items to central backend to persist in PostgreSQL
+          return await request('/api/inquiries/sync', {
+            method: 'POST',
+            body: JSON.stringify({
+              ...payload,
+              items: bridgeData.items,
+              totalInFolder: bridgeData.totalInFolder,
+              account: bridgeData.account,
+              folder: bridgeData.folder,
+            }),
+          });
+        } else if (bridgeData.error) {
+          throw new Error(`Outlook Bridge Error: ${bridgeData.error}`);
+        }
+      }
+    }
+  } catch (bridgeErr) {
+    if (bridgeErr.message && bridgeErr.message.includes('Outlook Bridge Error')) {
+      throw bridgeErr;
+    }
+    console.warn('[OutlookSync] Local bridge attempt bypassed, trying direct server sync:', bridgeErr.message);
+  }
+
+  // 2. Fallback to direct backend sync (when backend runs directly on local Windows)
   return request('/api/inquiries/sync', {
     method: 'POST',
     body: JSON.stringify(payload),

@@ -2,15 +2,38 @@ const path = require('path');
 const fs = require('fs');
 const { execFile } = require('child_process');
 
-const PS_SCRIPT = path.resolve(__dirname, '../../../tools/outlook-bridge/read_inquiries.ps1');
+function getScriptPath() {
+  const candidates = [
+    path.resolve(__dirname, '../../../tools/outlook-bridge/read_inquiries.ps1'),
+    path.resolve(__dirname, '../../tools/outlook-bridge/read_inquiries.ps1'),
+    path.resolve(process.cwd(), 'tools/outlook-bridge/read_inquiries.ps1'),
+    path.resolve(process.cwd(), '../tools/outlook-bridge/read_inquiries.ps1'),
+  ];
+  return candidates.find((p) => fs.existsSync(p)) || null;
+}
 
 function runPowerShellReader(args = []) {
   return new Promise((resolve, reject) => {
-    if (!fs.existsSync(PS_SCRIPT)) {
-      return reject(new Error(`Outlook PowerShell script not found at ${PS_SCRIPT}`));
+    if (process.platform !== 'win32') {
+      return resolve({
+        status: 'BRIDGE_REQUIRED',
+        message: 'Server environment is Linux/Docker. Outlook MAPI sync must be executed via the Local Outlook Bridge on your Windows PC (Port 5008).',
+        items: [],
+        totalInFolder: 0,
+      });
     }
 
-    const fullArgs = ['-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', PS_SCRIPT, ...args];
+    const scriptPath = getScriptPath();
+    if (!scriptPath) {
+      return resolve({
+        status: 'BRIDGE_REQUIRED',
+        message: 'Outlook companion script not found on backend server. Please run the Local Outlook Bridge on your PC.',
+        items: [],
+        totalInFolder: 0,
+      });
+    }
+
+    const fullArgs = ['-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', scriptPath, ...args];
     execFile('powershell.exe', fullArgs, { maxBuffer: 15 * 1024 * 1024 }, (err, stdout, stderr) => {
       if (err) {
         return reject(new Error(stderr || err.message));
