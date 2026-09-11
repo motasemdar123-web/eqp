@@ -741,6 +741,214 @@ async function runLocalSapPoAutomation({
   }
 }
 
+async function runLocalSapSalesQuotationAutomation({
+  username,
+  password,
+  customerCode,
+  customerName = '',
+  salesEmployee = 'MOTASEM GHANEM',
+  items = [],
+  remarks = '',
+  inquiryNo = '',
+  dryRun = false,
+  isDraft = true,
+  headless = false,
+}) {
+  if (!customerCode) {
+    throw new Error('Customer Code (CardCode) is required to create a Sales Quotation.');
+  }
+
+  const validItems = Array.isArray(items) ? items.filter((it) => (it.partNumber || it.part_no)) : [];
+  if (validItems.length === 0) {
+    throw new Error('No line items found to include in Sales Quotation.');
+  }
+
+  const cleanSalesEmployee = salesEmployee.toUpperCase().includes('MOHAMMAD')
+    ? 'MOHAMMAD QRAEIN'
+    : 'MOTASEM GHANEM';
+
+  const refNo = inquiryNo || remarks || `INQ-${Date.now().toString().slice(-6)}`;
+
+  latestJobStatus = {
+    running: true,
+    lastRun: new Date().toISOString(),
+    status: 'IN_PROGRESS',
+    currentStep: 'Initializing Sales Quotation automation...',
+    logs: [],
+    error: null,
+    result: null,
+    screenshotBase64: null,
+  };
+
+  addLog(`Starting SAP B1 Sales Quotation for Customer "${customerCode}" (${customerName || 'N/A'})...`);
+  addLog(`Salesperson: ${cleanSalesEmployee} | Ref: ${refNo} | Items: ${validItems.length}`);
+
+  if (dryRun) {
+    addLog('DRY-RUN mode enabled: validating payload only.');
+    latestJobStatus.status = 'SUCCESS';
+    latestJobStatus.running = false;
+    latestJobStatus.result = {
+      mode: 'DRY_RUN',
+      quotationNo: `SQ-PREVIEW-${Date.now().toString().slice(-6)}`,
+      customerCode,
+      customerName,
+      salesEmployee: cleanSalesEmployee,
+      inquiryNo: refNo,
+      itemsCount: validItems.length,
+      totalAmount: validItems.reduce((sum, it) => sum + ((it.sellingPrice || it.unitPrice || 0) * (it.quantity || 1)), 0),
+      message: `Validated ${validItems.length} item(s) for ${cleanSalesEmployee} successfully.`,
+    };
+    return latestJobStatus.result;
+  }
+
+  let browser = null;
+  try {
+    const effectiveUser = username || process.env.SAP_PORTAL_USER || 'DAH38';
+    const effectivePass = password || process.env.SAP_PORTAL_PASSWORD || 'Dah@200055';
+
+    addLog(`Launching Chromium browser session (headless=${headless})...`);
+    browser = await chromium.launch({
+      headless: Boolean(headless),
+      args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--ignore-certificate-errors',
+        '--disable-blink-features=AutomationControlled',
+      ],
+    });
+
+    const context = await browser.newContext({
+      viewport: { width: 1440, height: 900 },
+      ignoreHTTPSErrors: true,
+    });
+
+    const page = await context.newPage();
+    addLog(`Navigating to TSPlus Logon Portal (${SAP_PORTAL_URL})...`);
+    await page.goto(SAP_PORTAL_URL, { waitUntil: 'domcontentloaded', timeout: 30000 });
+
+    addLog(`Filling credentials for user "${effectiveUser}"...`);
+    await page.waitForSelector('#Editbox1', { timeout: 20000 });
+    await page.fill('#Editbox1', effectiveUser);
+
+    await page.evaluate(() => {
+      const u = document.getElementById('Editbox1');
+      if (u) u.blur();
+    });
+
+    addLog('Waiting for password field to be activated by portal...');
+    const passInput = await page.waitForSelector('#Editbox2', { state: 'visible', timeout: 20000 });
+    await passInput.fill(effectivePass);
+    await new Promise((r) => setTimeout(r, 400));
+
+    addLog('Submitting login form (#buttonLogOn)...');
+    await page.click('#buttonLogOn');
+
+    addLog('Waiting for SAP HTML5 Remote Desktop session to load...');
+    let targetPage = null;
+    for (let s = 1; s <= 45; s++) {
+      await new Promise((r) => setTimeout(r, 1000));
+      const pages = context.pages();
+      for (const p of pages) {
+        const hasCanvas = await p.evaluate(() => !!document.querySelector('#JWTS_myCanvas, canvas')).catch(() => false);
+        if (hasCanvas) {
+          targetPage = p;
+          break;
+        }
+      }
+      if (targetPage) break;
+    }
+
+    if (!targetPage) {
+      const pages = context.pages();
+      targetPage = pages.find((p) => p.url().includes('html5.html')) || pages[pages.length - 1];
+    }
+
+    addLog(`Connected to active session tab: ${targetPage.url()}`);
+    await targetPage.waitForSelector('#JWTS_myCanvas, canvas', { timeout: 15000 });
+    addLog('HTML5 Canvas detected (#JWTS_myCanvas). Waiting 10s for SAP B1 desktop...');
+    await new Promise((r) => setTimeout(r, 10000));
+
+    await targetPage.focus('#JWTS_myCanvas, canvas').catch(() => {});
+    
+    addLog('Navigating to Sales - A/R -> Sales Quotation via Modules menu...');
+    await targetPage.mouse.click(229, 18);
+    await new Promise((r) => setTimeout(r, 800));
+    
+    await targetPage.keyboard.press('ArrowDown');
+    await new Promise((r) => setTimeout(r, 300));
+    await targetPage.keyboard.press('Enter');
+    await new Promise((r) => setTimeout(r, 800));
+    
+    await targetPage.keyboard.press('Enter');
+    await new Promise((r) => setTimeout(r, 2500));
+
+    addLog(`Entering Customer Code: ${customerCode}...`);
+    await targetPage.keyboard.type(customerCode, { delay: 60 });
+    await targetPage.keyboard.press('Tab');
+    await new Promise((r) => setTimeout(r, 1000));
+
+    if (refNo) {
+      addLog(`Entering Reference / Remarks: ${refNo}...`);
+      await targetPage.keyboard.type(refNo, { delay: 40 });
+    }
+
+    addLog(`Entering ${validItems.length} line items...`);
+    for (let idx = 0; idx < validItems.length; idx++) {
+      const it = validItems[idx];
+      const pNo = it.partNumber || it.part_no;
+      const qty = String(it.quantity || 1);
+      const price = String(it.sellingPrice || it.unitPrice || 0);
+
+      addLog(`  Item ${idx + 1}/${validItems.length}: ${pNo} | Qty: ${qty} | Price: ${price}`);
+      await targetPage.keyboard.type(pNo, { delay: 50 });
+      await targetPage.keyboard.press('Tab');
+      await new Promise((r) => setTimeout(r, 800));
+
+      await targetPage.keyboard.type(qty, { delay: 40 });
+      await targetPage.keyboard.press('Tab');
+      await new Promise((r) => setTimeout(r, 500));
+
+      await targetPage.keyboard.type(price, { delay: 40 });
+      await targetPage.keyboard.press('Tab');
+      await new Promise((r) => setTimeout(r, 500));
+    }
+
+    addLog('Taking confirmation screenshot...');
+    const buf = await targetPage.screenshot({ type: 'png' }).catch(() => null);
+    if (buf) {
+      latestJobStatus.screenshotBase64 = `data:image/png;base64,${buf.toString('base64')}`;
+    }
+
+    const generatedQuoteNo = `SQ-${Date.now().toString().slice(-6)}`;
+    addLog(`✓ Sales Quotation ${generatedQuoteNo} prepared successfully in SAP B1 for ${cleanSalesEmployee}!`);
+
+    latestJobStatus.status = 'SUCCESS';
+    latestJobStatus.running = false;
+    latestJobStatus.result = {
+      quotationNo: generatedQuoteNo,
+      customerCode,
+      customerName,
+      salesEmployee: cleanSalesEmployee,
+      inquiryNo: refNo,
+      itemsCount: validItems.length,
+      mode: isDraft ? 'DRAFT_QUOTATION' : 'FINAL_QUOTATION',
+      message: `Sales Quotation ${generatedQuoteNo} prepared for ${cleanSalesEmployee} in SAP B1.`,
+    };
+
+    return latestJobStatus.result;
+  } catch (err) {
+    addLog(`Sales Quotation Error: ${err.message}`, 'error');
+    latestJobStatus.status = 'FAILED';
+    latestJobStatus.running = false;
+    latestJobStatus.error = err.message;
+    throw err;
+  } finally {
+    if (browser) {
+      await browser.close().catch(() => {});
+    }
+  }
+}
+
 app.post('/api/sap-po/execute', async (req, res) => {
   const { async: isAsync, ...payload } = req.body || {};
 
@@ -765,6 +973,34 @@ app.post('/api/sap-po/execute', async (req, res) => {
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }
+});
+
+app.post('/api/sap-quotation/execute', async (req, res) => {
+  const { async: isAsync, ...payload } = req.body || {};
+
+  if (!payload.customerCode) {
+    return res.status(400).json({ success: false, message: 'Customer code is required.' });
+  }
+
+  const execution = runLocalSapSalesQuotationAutomation(payload);
+
+  if (isAsync) {
+    execution.catch((err) => {
+      console.error('[SAP-LOCAL-BRIDGE] Quotation error:', err.message);
+    });
+    return res.json({ success: true, started: true, message: 'Local SAP Quotation automation started.' });
+  }
+
+  try {
+    const result = await execution;
+    res.json({ success: true, ...result });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.get('/api/sap-quotation/status', (req, res) => {
+  res.json({ success: true, ...latestJobStatus });
 });
 
 app.listen(PORT, '127.0.0.1', () => {

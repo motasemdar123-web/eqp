@@ -865,6 +865,85 @@ export async function deleteComment(id) {
   }
 }
 
+// --- PARTS INQUIRIES API ---
+export function getOutlookInquiriesStatus() {
+  return request('/api/inquiries/outlook/status');
+}
+
+export function syncOutlookInquiries(payload = {}) {
+  return request('/api/inquiries/sync', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+}
+
+export function getInquiries(params = {}) {
+  const query = new URLSearchParams(params).toString();
+  return request(`/api/inquiries${query ? `?${query}` : ''}`);
+}
+
+export function getInquiryDetails(id) {
+  return request(`/api/inquiries/${id}`);
+}
+
+export function updateInquiryStatus(id, payload = {}) {
+  return request(`/api/inquiries/${id}/status`, {
+    method: 'PATCH',
+    body: JSON.stringify(payload),
+  });
+}
+
+export function addInquiryItem(id, itemData) {
+  return request(`/api/inquiries/${id}/items`, {
+    method: 'POST',
+    body: JSON.stringify(itemData),
+  });
+}
+
+export function updateInquiryItem(itemId, itemData) {
+  return request(`/api/inquiries/items/${itemId}`, {
+    method: 'PATCH',
+    body: JSON.stringify(itemData),
+  });
+}
+
+export function deleteInquiryItem(itemId) {
+  return request(`/api/inquiries/items/${itemId}`, {
+    method: 'DELETE',
+  });
+}
+
+export function priceInquiryWithPdx(id, payload = {}) {
+  return request(`/api/inquiries/${id}/pdx-price`, {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+}
+
+export async function executeLocalSapQuotation(payload) {
+  const res = await fetch('http://127.0.0.1:5005/api/sap-quotation/execute', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) {
+    const errData = await res.json().catch(() => ({}));
+    throw new Error(errData.error || errData.message || 'Local SAP Quotation execution failed');
+  }
+  return res.json();
+}
+
+export async function getLocalSapQuotationStatus() {
+  if (typeof window === 'undefined') return null;
+  try {
+    const res = await fetch('http://127.0.0.1:5005/api/sap-quotation/status');
+    if (!res.ok) return null;
+    return await res.json();
+  } catch {
+    return null;
+  }
+}
+
 
 
 

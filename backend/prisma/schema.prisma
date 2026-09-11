@@ -591,3 +591,86 @@ model FleetCylinderInspection {
   @@map("fleet_cylinder_inspections")
 }
 
+enum PartsInquiryStatus {
+  NEW
+  IN_REVIEW
+  PRICED
+  QUOTED
+  PO_RECEIVED
+  CONVERTED_TO_SO
+  CLOSED_LOST
+}
+
+model PartsInquiry {
+  id               String                   @id @default(uuid())
+  inquiryNo        String                   @unique @map("inquiry_no")
+  sourceMessageId  String?                  @unique @map("source_message_id")
+  conversationId   String?                  @map("conversation_id")
+  recipientEmail   String?                  @map("recipient_email")
+  assignedToName   String?                  @default("Motasem Ghanem") @map("assigned_to_name")
+  customerCode     String?                  @map("customer_code")
+  customerEmail    String                   @map("customer_email")
+  customerName     String?                  @map("customer_name")
+  companyName      String?                  @map("company_name")
+  subject          String
+  bodyText         String?                  @map("body_text")
+  status           PartsInquiryStatus       @default(NEW)
+  priority         String                   @default("NORMAL")
+  markupPercentage Float?                   @default(15.0) @map("markup_percentage")
+  assignedToId     String?                  @map("assigned_to_id")
+  quotationNo      String?                  @map("quotation_no")
+  sapOrderNo       String?                  @map("sap_order_no")
+  receivedAt       DateTime                 @default(now()) @map("received_at")
+  items            PartsInquiryItem[]
+  attachments      PartsInquiryAttachment[]
+  createdAt        DateTime                 @default(now()) @map("created_at")
+  updatedAt        DateTime                 @updatedAt @map("updated_at")
+  createdById      String?                  @map("created_by")
+  updatedById      String?                  @map("updated_by")
+  deletedAt        DateTime?                @map("deleted_at")
+
+  @@index([customerEmail])
+  @@index([status])
+  @@index([receivedAt])
+  @@index([assignedToName])
+  @@map("parts_inquiries")
+}
+
+model PartsInquiryItem {
+  id               String       @id @default(uuid())
+  inquiryId        String       @map("inquiry_id")
+  inquiry          PartsInquiry @relation(fields: [inquiryId], references: [id], onDelete: Cascade)
+  partNumber       String       @map("part_number")
+  description      String?
+  quantity         Int          @default(1)
+  costPrice        Float?       @map("cost_price")
+  sellingPrice     Float?       @map("selling_price")
+  unitPrice        Float?       @map("unit_price")
+  totalPrice       Float?       @map("total_price")
+  currency         String       @default("KWD")
+  komatsuStock     String?      @map("komatsu_stock")
+  compatibleModels String?      @map("compatible_models")
+  notes            String?
+  createdAt        DateTime     @default(now()) @map("created_at")
+  updatedAt        DateTime     @updatedAt @map("updated_at")
+
+  @@index([inquiryId])
+  @@index([partNumber])
+  @@map("parts_inquiry_items")
+}
+
+model PartsInquiryAttachment {
+  id        String       @id @default(uuid())
+  inquiryId String       @map("inquiry_id")
+  inquiry   PartsInquiry @relation(fields: [inquiryId], references: [id], onDelete: Cascade)
+  fileName  String       @map("file_name")
+  fileSize  Int?         @map("file_size")
+  filePath  String?      @map("file_path")
+  fileUrl   String?      @map("file_url")
+  mimeType  String?      @map("mime_type")
+  createdAt DateTime     @default(now()) @map("created_at")
+
+  @@index([inquiryId])
+  @@map("parts_inquiry_attachments")
+}
+

@@ -18,6 +18,7 @@ const navigationSections = [
   {
     title: 'Supply',
     items: [
+      { href: '/management/parts-inquiries', label: 'Quotation Inquiries', icon: 'inbox', badge: 'Inbox' },
       { href: '/management/parts-inquiry', label: 'Spare Parts & PDX', icon: 'parts' },
     ],
   },
@@ -91,6 +92,12 @@ const iconPaths = {
   workshop: (
     <>
       <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
+    </>
+  ),
+  inbox: (
+    <>
+      <polyline points="22 12 16 12 14 15 10 15 8 12 2 12" />
+      <path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z" />
     </>
   ),
   parts: (
@@ -247,6 +254,7 @@ const COMMAND_ITEMS = [
   { id: 'nav-scheduling', title: 'Dispatch & Scheduling', subtitle: 'Daily work orders, technician assignments & shop manuals', href: '/management/scheduling', category: 'Navigation', badge: 'Schedule' },
   { id: 'nav-daily-planner', title: 'Daily Planner', subtitle: 'Shift task sequencing and supervisor inbox', href: '/management/daily-planner', category: 'Navigation', badge: 'Planner' },
   { id: 'nav-workshop', title: 'Workshop Operations', subtitle: 'Service vehicles, fuel consumption & tools master', href: '/management/workshop', category: 'Navigation', badge: 'Workshop' },
+  { id: 'nav-parts-inquiries', title: 'Quotation Inquiries', subtitle: 'Customer parts RFQ email tracker and inquiries hub', href: '/management/parts-inquiries', category: 'Navigation', badge: 'RFQ' },
   { id: 'nav-parts-inquiry', title: 'Spare Parts & PDX', subtitle: 'Komatsu PDX parts inquiry, Emergency Orders (EO) automation & quotes', href: '/management/parts-inquiry', category: 'Navigation', badge: 'Parts' },
   { id: 'nav-sheets-hub', title: 'Master Sheets Hub', subtitle: 'Raw 34-sheet operations database', href: '/management/sheets-hub', category: 'Navigation', badge: 'Database' },
   { id: 'nav-eqp', title: 'EQP Hub', subtitle: 'Equipment preventive maintenance command center', href: '/eqp', category: 'Navigation', badge: 'EQP' },
