@@ -91,6 +91,7 @@ router.post('/api/sap/po/create', requirePlatformAuth, asyncHandler(platformCont
 router.get('/api/sap/po/status', requirePlatformAuth, asyncHandler(platformController.getSapPoStatus));
 router.post('/api/sap/po/export-excel', requirePlatformAuth, asyncHandler(platformController.exportSapPoExcel));
 router.get('/api/sap/bridge/download', optionalPlatformAuth, asyncHandler(platformController.downloadSapBridgeZip));
+router.get('/api/outlook/bridge/download', optionalPlatformAuth, asyncHandler(platformController.downloadOutlookBridgeZip));
 
 module.exports = router;
 

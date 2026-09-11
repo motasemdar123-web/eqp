@@ -9,6 +9,7 @@ import Skeleton from '../../../components/ui/Skeleton';
 import Toast from '../../../components/ui/Toast';
 import DetailDrawer from '../../../components/ui/DetailDrawer';
 import Dialog, { DialogHeader, DialogTitle, DialogContent, DialogFooter } from '../../../components/ui/Dialog';
+import BridgesModal, { BridgesStatusBadge } from '../../../components/BridgesModal';
 import {
   getInquiries,
   getInquiryDetails,
@@ -72,6 +73,9 @@ export default function PartsInquiriesPage() {
   const [newPartDesc, setNewPartDesc] = useState('');
   const [addingPart, setAddingPart] = useState(false);
 
+  // Local Automation Bridges Modal
+  const [bridgesModalOpen, setBridgesModalOpen] = useState(false);
+
   const loadData = useCallback(async () => {
     try {
       setLoading(true);
@@ -121,6 +125,15 @@ export default function PartsInquiriesPage() {
 
     return () => clearInterval(interval);
   }, [loadData]);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('bridges') === 'true' || params.get('modal') === 'bridges') {
+        setBridgesModalOpen(true);
+      }
+    }
+  }, []);
 
   // Load Inquiry Details Drawer
   const openDetail = async (id) => {
@@ -391,22 +404,14 @@ export default function PartsInquiriesPage() {
 
           {/* Header Action Buttons */}
           <div className="flex items-center gap-3">
-            {/* Outlook Connection Indicator */}
-            <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-card text-xs">
-              <span className={`h-2 w-2 rounded-full ${outlookStatus?.online ? 'bg-emerald-500 animate-pulse' : 'bg-amber-500'}`} />
-              <span className="text-muted-foreground">
-                {outlookStatus?.online ? `Outlook: ${outlookStatus.account?.split('@')[0]}` : 'Outlook: Standby'}
-              </span>
-              {outlookStatus?.totalInFolder !== undefined && (
-                <span className="font-semibold text-foreground">({outlookStatus.totalInFolder} waiting)</span>
-              )}
-            </div>
+            {/* Local Bridges Status Badge & Dialog Trigger */}
+            <BridgesStatusBadge onClick={() => setBridgesModalOpen(true)} />
 
             {/* Sync Now Button */}
             <button
               onClick={handleSyncFromOutlook}
               disabled={syncing}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold bg-primary text-primary-foreground shadow-sm hover:bg-primary/90 transition-colors disabled:opacity-50"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold bg-primary text-primary-foreground shadow-sm hover:bg-primary/90 transition-colors disabled:opacity-50 cursor-pointer"
             >
               <svg className={`h-4 w-4 ${syncing ? 'animate-spin' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
@@ -955,14 +960,20 @@ export default function PartsInquiriesPage() {
               {/* Local Bridge Status */}
               <div className="p-3 rounded-lg border border-border bg-muted/30 flex items-center justify-between text-xs">
                 <div className="flex items-center gap-2">
-                  <span className={`h-2.5 w-2.5 rounded-full ${sapBridgeStatus?.status === 'ONLINE' ? 'bg-emerald-500 animate-pulse' : 'bg-red-500'}`} />
+                  <span className={`h-2.5 w-2.5 rounded-full ${sapBridgeStatus?.status === 'ONLINE' ? 'bg-emerald-500 animate-pulse' : 'bg-amber-500'}`} />
                   <span className="font-semibold text-foreground">
-                    {sapBridgeStatus?.status === 'ONLINE' ? 'SAP Local Bridge is Online' : 'SAP Local Bridge Offline'}
+                    {sapBridgeStatus?.status === 'ONLINE' ? 'SAP Local Bridge is Online (Port 5005)' : 'SAP Local Bridge Offline'}
                   </span>
                 </div>
-                {sapBridgeStatus?.status !== 'ONLINE' && (
-                  <span className="text-amber-600 font-medium">Run start-sap-bridge.bat</span>
-                )}
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setBridgesModalOpen(true)}
+                    className="text-primary hover:underline font-semibold cursor-pointer"
+                  >
+                    Bridge Hub & Download
+                  </button>
+                </div>
               </div>
 
               {/* Customer Code & Salesperson */}
@@ -1042,6 +1053,9 @@ export default function PartsInquiriesPage() {
             </DialogFooter>
           </DialogContent>
         </Dialog>
+
+        {/* Local Bridges Hub Modal */}
+        <BridgesModal open={bridgesModalOpen} onClose={() => setBridgesModalOpen(false)} />
 
         {/* Toast feedback */}
         {toast && (

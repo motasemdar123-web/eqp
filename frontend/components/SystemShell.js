@@ -20,6 +20,7 @@ const navigationSections = [
     items: [
       { href: '/management/parts-inquiries', label: 'Quotation Inquiries', icon: 'inbox', badge: 'Inbox' },
       { href: '/management/parts-inquiry', label: 'Spare Parts & PDX', icon: 'parts' },
+      { href: '/management/parts-inquiries?bridges=true', label: 'Local Bridges Hub', icon: 'hub', badge: 'Bridges' },
     ],
   },
   {
@@ -256,6 +257,7 @@ const COMMAND_ITEMS = [
   { id: 'nav-workshop', title: 'Workshop Operations', subtitle: 'Service vehicles, fuel consumption & tools master', href: '/management/workshop', category: 'Navigation', badge: 'Workshop' },
   { id: 'nav-parts-inquiries', title: 'Quotation Inquiries', subtitle: 'Customer parts RFQ email tracker and inquiries hub', href: '/management/parts-inquiries', category: 'Navigation', badge: 'RFQ' },
   { id: 'nav-parts-inquiry', title: 'Spare Parts & PDX', subtitle: 'Komatsu PDX parts inquiry, Emergency Orders (EO) automation & quotes', href: '/management/parts-inquiry', category: 'Navigation', badge: 'Parts' },
+  { id: 'nav-bridges', title: 'Local Automation Bridges', subtitle: 'SAP B1 Bridge (5005) & Outlook Bridge (5008) status, downloads & setup', href: '/management/parts-inquiries?bridges=true', category: 'Tools', badge: 'Bridges' },
   { id: 'nav-sheets-hub', title: 'Master Sheets Hub', subtitle: 'Raw 34-sheet operations database', href: '/management/sheets-hub', category: 'Navigation', badge: 'Database' },
   { id: 'nav-eqp', title: 'EQP Hub', subtitle: 'Equipment preventive maintenance command center', href: '/eqp', category: 'Navigation', badge: 'EQP' },
   { id: 'nav-eqp-gen', title: 'EQP Report Builder', subtitle: 'Generate certified Komatsu inspection PDFs', href: '/eqp/generate-reports', category: 'Navigation', badge: 'Reports' },

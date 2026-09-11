@@ -716,6 +716,43 @@ export function getSapBridgeDownloadUrl() {
   return '/sap-local-bridge.zip';
 }
 
+export function getOutlookBridgeDownloadUrl() {
+  return '/outlook-bridge.zip';
+}
+
+export async function downloadOutlookBridgeZip() {
+  try {
+    const res = await fetch('/outlook-bridge.zip');
+    if (res.ok) {
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'outlook-bridge.zip';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+      return;
+    }
+  } catch {}
+  window.location.href = '/api/outlook/bridge/download';
+}
+
+export async function checkLocalOutlookBridge() {
+  if (typeof window === 'undefined') return null;
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 1800);
+    const res = await fetch('http://127.0.0.1:5008/health', { signal: controller.signal });
+    clearTimeout(timeoutId);
+    if (!res.ok) return null;
+    return await res.json();
+  } catch {
+    return null;
+  }
+}
+
 export async function downloadSapBridgeZip() {
   try {
     const res = await fetch('/sap-local-bridge.zip');

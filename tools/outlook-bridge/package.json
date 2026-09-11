@@ -1,0 +1,13 @@
+{
+  "name": "outlook-local-bridge",
+  "version": "1.0.0",
+  "description": "Local Desktop Outlook MAPI Ingestion Bridge for EQP System",
+  "main": "bridge-server.js",
+  "scripts": {
+    "start": "node bridge-server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2"
+  }
+}

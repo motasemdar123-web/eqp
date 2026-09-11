@@ -18,6 +18,7 @@ import DetailDrawer from '../../../components/ui/DetailDrawer';
 import Disclosure from '../../../components/ui/Disclosure';
 import StatusIndicator from '../../../components/ui/StatusIndicator';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '../../../components/ui/Table';
+import BridgesModal, { BridgesStatusBadge } from '../../../components/BridgesModal';
 
 import {
   getKomatsuStatus,
@@ -258,6 +259,7 @@ export default function SparePartsPage() {
   const [manualPartPrice, setManualPartPrice] = useState('0.00');
   const [localBridgeStatus, setLocalBridgeStatus] = useState(null); // null | 'ONLINE' | 'OFFLINE'
   const [isCheckingBridge, setIsCheckingBridge] = useState(false);
+  const [bridgesModalOpen, setBridgesModalOpen] = useState(false);
 
   async function checkBridge() {
     setIsCheckingBridge(true);
@@ -1852,6 +1854,7 @@ export default function SparePartsPage() {
         description="Automate multi-item Emergency Orders (EO) across multiple fleet serial numbers, bundle parts into unified quotations, and convert quotations to Sales Orders."
         actions={
           <div className="flex items-center gap-2">
+            <BridgesStatusBadge onClick={() => setBridgesModalOpen(true)} />
             <Button
               variant="secondary"
               size="sm"
@@ -3463,6 +3466,14 @@ export default function SparePartsPage() {
             <div className="flex items-center gap-2 self-end sm:self-auto">
               <button
                 type="button"
+                onClick={() => setBridgesModalOpen(true)}
+                className="text-xs text-slate-600 hover:text-slate-900 underline font-medium cursor-pointer"
+                title="Open Local Automation Bridges Hub"
+              >
+                ⚙️ Bridges Hub
+              </button>
+              <button
+                type="button"
                 onClick={checkBridge}
                 disabled={isCheckingBridge}
                 className="text-xs text-slate-600 hover:text-slate-900 underline font-medium cursor-pointer"
@@ -3999,6 +4010,8 @@ export default function SparePartsPage() {
           </DialogFooter>
         </form>
       </Dialog>
+
+      <BridgesModal open={bridgesModalOpen} onClose={() => setBridgesModalOpen(false)} />
 
       <Toast message={toast?.message} type={toast?.type} onClose={() => setToast(null)} />
     </SystemShell>

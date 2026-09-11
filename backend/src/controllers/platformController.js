@@ -774,6 +774,41 @@ async function downloadSapBridgeZip(req, res) {
   }
 }
 
+async function downloadOutlookBridgeZip(req, res) {
+  const staticZipPath = path.join(__dirname, '../../../frontend/public/outlook-bridge.zip');
+  if (fs.existsSync(staticZipPath)) {
+    return res.download(staticZipPath, 'outlook-bridge.zip');
+  }
+
+  try {
+    const archiver = require('archiver');
+    const bridgeDir = path.join(__dirname, '../../../tools/outlook-bridge');
+
+    res.setHeader('Content-Type', 'application/zip');
+    res.setHeader('Content-Disposition', 'attachment; filename="outlook-bridge.zip"');
+
+    const archive = archiver('zip', { zlib: { level: 9 } });
+    archive.on('error', (err) => {
+      console.error('Error creating outlook bridge zip:', err);
+      if (!res.headersSent) res.status(500).json({ error: err.message });
+    });
+
+    archive.pipe(res);
+
+    const files = ['start-bridge.bat', 'bridge-server.js', 'read_inquiries.ps1', 'package.json', 'README.md'];
+    for (const f of files) {
+      const fPath = path.join(bridgeDir, f);
+      if (fs.existsSync(fPath)) {
+        archive.file(fPath, { name: f });
+      }
+    }
+
+    await archive.finalize();
+  } catch (err) {
+    res.status(500).json({ error: 'Outlook bridge zip not found' });
+  }
+}
+
 module.exports = {
   login,
   unifiedLogin,
@@ -844,6 +879,7 @@ module.exports = {
   getSapPoStatus,
   exportSapPoExcel,
   downloadSapBridgeZip,
+  downloadOutlookBridgeZip,
   getSapCredentials,
   saveSapCredentials,
 };
