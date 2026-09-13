@@ -121,7 +121,7 @@ async function request(path, options = {}) {
         throw new Error('Your EQP portal login session has expired. Please refresh the page or sign back in.');
       }
     }
-    throw new Error(data.error || 'Request failed');
+    throw new Error(data.message || data.error || 'Request failed');
   }
 
   return data;

@@ -184,6 +184,52 @@ describe('Komatsu Equipment Care (EQP Care) Service', () => {
   });
 
   describe('In-Place Service Log & SMR Editing', () => {
+    test('parseDwrResponse accurately deserializes Komatsu DWR response DTOs and arrays', () => {
+      const mockDwrReply = `//#DWR-INSERT
+//#DWR-REPLY
+var s0={};
+var s1=[];
+var s2=[];
+s1[0]="1";
+s2[0]="report_9582.pdf";
+s0.actionMode="update";
+s0.machineId="3780894";
+s0.hisInfoCd="W41X";
+s0.hisDate="08/13/2026";
+s0.hisSmr="10";
+s0.dataSrc="01";
+s0.subsidiary="9961";
+s0.subsidiaryNm="KME";
+s0.cntryCd="KW";
+s0.cntryNm="KUWAIT";
+s0.db="5194";
+s0.dbNm="DAR ALHAI GENERAL TRADING KW";
+s0.siteCd="##1";
+s0.siteNm="##1";
+s0.custCd="DAH-1404";
+s0.custNm="LA'ALA AL-KUWAIT REAL ESTATE CO.";
+s0.seqNo=s1;
+s0.fileName=s2;
+s0.strEvdId="EVD12345";
+s0.commentId="98765";
+s0.comment1="PM Verified";
+s0.hisDateRule="2";
+s0.dbRule="2";
+dwr.engine._remoteHandleCallback('0','0',s0);
+`;
+      const dto = komatsuEqpCareService.parseDwrResponse(mockDwrReply);
+      expect(dto.actionMode).toBe('update');
+      expect(dto.machineId).toBe('3780894');
+      expect(dto.hisSmr).toBe('10');
+      expect(dto.dataSrc).toBe('01');
+      expect(dto.subsidiary).toBe('9961');
+      expect(dto.seqNo).toEqual(['1']);
+      expect(dto.fileName).toEqual(['report_9582.pdf']);
+      expect(dto.strEvdId).toBe('EVD12345');
+      expect(dto.commentId).toBe('98765');
+      expect(dto.comment1).toBe('PM Verified');
+    });
+
     test('rejects update missing required fields', async () => {
       await expect(komatsuEqpCareService.updateServiceLogInEqpCare({})).rejects.toThrow(
         'Machine serial number is required.'

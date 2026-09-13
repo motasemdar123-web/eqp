@@ -666,6 +666,7 @@ async function updateEqpcServiceLog(req, res) {
   } catch (err) {
     res.status(400).json({
       success: false,
+      error: err.message || 'Failed to update service log.',
       message: err.message || 'Failed to update service log.',
     });
   }

@@ -723,8 +723,77 @@ async function uploadReportToEqpCare(reportData, customCookie = null) {
 }
 
 /**
+ * Parses DWR (Direct Web Remoting) response scripts into a structured JavaScript object.
+ * Extracts primitive values, nested arrays, and callback parameters.
+ */
+function parseDwrResponse(dwrText) {
+  const vars = {};
+  if (!dwrText || typeof dwrText !== 'string') return {};
+
+  const lines = dwrText.split(/[\r\n;]+/);
+  for (let line of lines) {
+    line = line.trim();
+    if (!line || line.startsWith('//#')) continue;
+
+    // var s0={}; or s0={}; or var s1=[];
+    let m = line.match(/^(?:var\s+)?([a-zA-Z0-9_]+)\s*=\s*(\{\}|\[\]);?$/);
+    if (m) {
+      vars[m[1]] = m[2] === '[]' ? [] : {};
+      continue;
+    }
+
+    // Array item assignment: s1[0]="foo" or s1[0]=123 or s1[0]=s2
+    m = line.match(/^([a-zA-Z0-9_]+)\[(\d+)\]\s*=\s*(.*?);?$/);
+    if (m) {
+      const arrName = m[1];
+      const idx = parseInt(m[2], 10);
+      let val = m[3].trim();
+      if ((val.startsWith('"') && val.endsWith('"')) || (val.startsWith("'") && val.endsWith("'"))) {
+        val = val.slice(1, -1);
+      } else if (!isNaN(Number(val)) && val !== '') {
+        val = Number(val);
+      } else if (vars[val] !== undefined) {
+        val = vars[val];
+      }
+      if (!vars[arrName]) vars[arrName] = [];
+      vars[arrName][idx] = val;
+      continue;
+    }
+
+    // Property assignment: s0.key = "value" or s0.key = s1 or s0.key = null
+    m = line.match(/^([a-zA-Z0-9_]+)\.([a-zA-Z0-9_]+)\s*=\s*(.*?);?$/);
+    if (m) {
+      const objName = m[1];
+      const prop = m[2];
+      let val = m[3].trim();
+
+      if ((val.startsWith('"') && val.endsWith('"')) || (val.startsWith("'") && val.endsWith("'"))) {
+        val = val.slice(1, -1);
+      } else if (val === 'null') {
+        val = null;
+      } else if (val === 'true') {
+        val = true;
+      } else if (val === 'false') {
+        val = false;
+      } else if (!isNaN(Number(val)) && val !== '') {
+        val = Number(val);
+      } else if (vars[val] !== undefined) {
+        val = vars[val];
+      }
+
+      if (!vars[objName]) vars[objName] = {};
+      vars[objName][prop] = val;
+    }
+  }
+
+  const cbMatch = dwrText.match(/_remoteHandleCallback\([^)]*,\s*([a-zA-Z0-9_]+)\)/);
+  const rootVar = cbMatch ? cbMatch[1] : 's0';
+  return vars[rootVar] || vars['s0'] || {};
+}
+
+/**
  * Checks whether a given report is the last (most recent) report generated for a machine.
- * Compares against all records in eqp_machine_history and eqp_care_live_lifecycle.json cache.
+ * Compares against all records in eqp_machine_history, eqp_reports, and eqp_care_live_lifecycle.json cache.
  */
 async function isLastReportForMachine(serialNo, eventCode, serviceDate) {
   const sNo = String(serialNo || '').trim();
@@ -762,6 +831,26 @@ async function isLastReportForMachine(serialNo, eventCode, serviceDate) {
     }
   } catch {
     // Non-fatal if database is offline or in mock test environment
+  }
+
+  // 1b. Query PostgreSQL eqp_reports
+  try {
+    const reportsTable = await resolveEqpTable('eqp_reports', 'reports');
+    const repResult = await db.query(
+      `
+        SELECT report_type, to_char(service_date, 'YYYY-MM-DD') AS rep_date
+        FROM ${reportsTable}
+        WHERE machine_number ILIKE $1
+        ORDER BY service_date DESC, id DESC
+        LIMIT 10
+      `,
+      [sNo]
+    );
+    for (const row of repResult.rows) {
+      if (row.rep_date) allReports.push({ date: row.rep_date, code: row.report_type });
+    }
+  } catch {
+    // Non-fatal if table not present
   }
 
   // 2. Query live lifecycle cache records
@@ -942,10 +1031,8 @@ async function updateServiceLogInEqpCare(updateData, customCookie = null) {
       throw new Error(`Could not resolve Komatsu machineId for serial #${sNo}. Please verify the machine serial number.`);
     }
 
-    // Query DWR to load existing record rules
-    let evdId = '';
-    let commentId = '-1';
-    let existingComment = '';
+    // Query DWR to load existing record rules & data
+    let dto = {};
     try {
       const dwrBody = `callCount=1\nc0-scriptName=EMDW0902DWR\nc0-methodName=getEquipmentHistory\nc0-id=0\nc0-param0=string:${machineId}\nc0-param1=string:${eCode}\nc0-param2=string:${formattedDate}\nc0-param3=string:update\nc0-param4=string:E0904\nsubsessionID=defaultID\nxml=true\n`;
       const dwrResp = await fetch(`${BASE_EQPC_URL}/dwr/exec/EMDW0902DWR.getEquipmentHistory.dwr`, {
@@ -954,18 +1041,18 @@ async function updateServiceLogInEqpCare(updateData, customCookie = null) {
         body: dwrBody,
       });
       const dwrText = await dwrResp.text();
-      if (dwrText.includes('login.do') || dwrText.includes('Your session was over')) {
+      if (
+        dwrResp.url.includes('login') ||
+        dwrText.includes('login.do') ||
+        dwrText.includes('Your session was over') ||
+        dwrText.includes('Your session is expired')
+      ) {
         throw new Error('Komatsu EQP Care session expired during history lookup. Please refresh your session cookie.');
       }
-      const evdMatch = dwrText.match(/s0\.strEvdId="([^"]*)"/);
-      if (evdMatch) evdId = evdMatch[1];
-      const commentIdMatch = dwrText.match(/s0\.commentId="?(-?\d+)"?/);
-      if (commentIdMatch) commentId = commentIdMatch[1];
-      const commentMatch = dwrText.match(/s0\.comment1="([^"]*)"/);
-      if (commentMatch) existingComment = commentMatch[1];
+      dto = parseDwrResponse(dwrText);
     } catch (dwrErr) {
       console.warn('[updateServiceLogInEqpCare] DWR notice:', dwrErr.message);
-      if (dwrErr.message.includes('session expired')) {
+      if (dwrErr.message.includes('session expired') || dwrErr.message.includes('session was over')) {
         throw dwrErr;
       }
     }
@@ -976,55 +1063,79 @@ async function updateServiceLogInEqpCare(updateData, customCookie = null) {
     updateForm.append('eqpMenuCtg', 'E');
     updateForm.append('buttonId', 'save');
     updateForm.append('actionMode', 'update');
-    updateForm.append('machineId', String(machineId || ''));
-    updateForm.append('model', String(effectiveModel).trim());
-    updateForm.append('type', String(effectiveType).trim());
-    updateForm.append('stype', String(effectiveSubtype).trim());
+    updateForm.append('machineId', String(machineId || dto.machineId || ''));
+    updateForm.append('model', String(dto.model || effectiveModel).trim());
+    updateForm.append('type', dto.type != null ? String(dto.type) : '');
+    updateForm.append('stype', dto.stype != null ? String(dto.stype) : '');
     updateForm.append('serial', String(sNo).trim());
     updateForm.append('hisInfoCd', String(eCode).trim());
-    updateForm.append('hisDate', formattedDate);
+    updateForm.append('hisDate', dto.hisDate || formattedDate);
     updateForm.append('previousHisDate', dbDateFormat);
     updateForm.append('hisSmr', String(numericSmr).trim());
-    updateForm.append('ordNo', '');
-    updateForm.append('seller', '');
-    updateForm.append('sellerNm', '');
-    updateForm.append('subsidiary', '9961');
-    updateForm.append('subsidiaryNm', 'KME');
-    updateForm.append('cntryCd', 'KW');
-    updateForm.append('cntryNm', 'KUWAIT');
-    updateForm.append('point', '');
-    updateForm.append('pointNm', '');
-    updateForm.append('db', '5194');
-    updateForm.append('dbNm', 'DAR ALHAI GENERAL TRADING KW');
-    updateForm.append('branchNm', '##1');
-    updateForm.append('branchCd', '##1');
-    updateForm.append('subDealer', '');
-    updateForm.append('subDealerNm', '');
-    updateForm.append('siteNm', '##1');
-    updateForm.append('siteCd', '##1');
-    updateForm.append('custNm', "LA'ALA AL-KUWAIT REAL ESTATE CO.");
-    updateForm.append('custCd', 'DAH-1404');
-    updateForm.append('custUnitNo', '');
-    updateForm.append('comment', comments || existingComment || 'Periodic maintenance service verified and updated.');
-    updateForm.append('commentId', commentId);
-    updateForm.append('evdId', evdId);
-    updateForm.append('strEvdId', evdId);
-    updateForm.append('selLangCd', 'ENG');
-    updateForm.append('hisDateRule', '2');
-    updateForm.append('ordNoRule', '0');
-    updateForm.append('sellerRule', '0');
-    updateForm.append('subsidiaryRule', '0');
-    updateForm.append('cntryRule', '0');
-    updateForm.append('pointRule', '0');
-    updateForm.append('dbRule', '2');
-    updateForm.append('branchNmRule', '1');
-    updateForm.append('subDealerRule', '1');
-    updateForm.append('siteNmRule', '1');
-    updateForm.append('custNmRule', '2');
-    updateForm.append('custUnitNoRule', '1');
-    updateForm.append('creAuth', '1');
-    updateForm.append('updAuth', '1');
-    updateForm.append('refAuth', '1');
+    updateForm.append('ordNo', dto.ordNo != null ? String(dto.ordNo) : '');
+    updateForm.append('seller', dto.seller != null ? String(dto.seller) : '');
+    updateForm.append('sellerNm', dto.sellerNm != null ? String(dto.sellerNm) : '');
+    updateForm.append('subsidiary', dto.subsidiary != null ? String(dto.subsidiary) : '9961');
+    updateForm.append('subsidiaryNm', dto.subsidiaryNm != null ? String(dto.subsidiaryNm) : 'KME');
+    updateForm.append('cntryCd', dto.cntryCd != null ? String(dto.cntryCd) : 'KW');
+    updateForm.append('cntryNm', dto.cntryNm != null ? String(dto.cntryNm) : 'KUWAIT');
+    updateForm.append('point', dto.point != null ? String(dto.point) : '');
+    updateForm.append('pointNm', dto.pointNm != null ? String(dto.pointNm) : '');
+    updateForm.append('db', dto.db != null ? String(dto.db) : '5194');
+    updateForm.append('dbNm', dto.dbNm != null ? String(dto.dbNm) : 'DAR ALHAI GENERAL TRADING KW');
+    updateForm.append('branchNm', dto.branchNm != null ? String(dto.branchNm) : '##1');
+    updateForm.append('branchCd', dto.branchCd != null ? String(dto.branchCd) : '##1');
+    updateForm.append('subDealer', dto.subDealer != null ? String(dto.subDealer) : '');
+    updateForm.append('subDealerNm', dto.subDealerNm != null ? String(dto.subDealerNm) : '');
+    updateForm.append('siteNm', dto.siteNm != null ? String(dto.siteNm) : '##1');
+    updateForm.append('siteCd', dto.siteCd != null ? String(dto.siteCd) : '##1');
+    updateForm.append('custNm', dto.custNm != null ? String(dto.custNm) : "LA'ALA AL-KUWAIT REAL ESTATE CO.");
+    updateForm.append('custCd', dto.custCd != null ? String(dto.custCd) : 'DAH-1404');
+    updateForm.append('muserCd', dto.muserCd != null ? String(dto.muserCd) : '');
+    updateForm.append('muserNm', dto.muserNm != null ? String(dto.muserNm) : '');
+    updateForm.append('custUnitNo', dto.custUnitNo != null ? String(dto.custUnitNo) : '');
+    updateForm.append('dataSrc', dto.dataSrc != null ? String(dto.dataSrc) : '01');
+    updateForm.append('comment', comments || dto.comment1 || 'Periodic maintenance service verified and updated.');
+    updateForm.append('commentId', (dto.commentId != null && dto.commentId !== '') ? String(dto.commentId) : '-1');
+    updateForm.append('evdId', dto.strEvdId || dto.evdId || '');
+    updateForm.append('strEvdId', dto.strEvdId || dto.evdId || '');
+    updateForm.append('selLangCd', dto.langCd || 'ENG');
+    updateForm.append('vhmsRegSts', dto.vhmsRegSts != null ? String(dto.vhmsRegSts) : '');
+    updateForm.append('vhmsRegStsNm', dto.vhmsRegStsNm != null ? String(dto.vhmsRegStsNm) : '');
+
+    // Rules
+    updateForm.append('hisDateRule', dto.hisDateRule != null ? String(dto.hisDateRule) : '2');
+    updateForm.append('ordNoRule', dto.ordNoRule != null ? String(dto.ordNoRule) : '0');
+    updateForm.append('sellerRule', dto.sellerRule != null ? String(dto.sellerRule) : '0');
+    updateForm.append('subsidiaryRule', dto.subsidiaryRule != null ? String(dto.subsidiaryRule) : '0');
+    updateForm.append('cntryRule', dto.cntryRule != null ? String(dto.cntryRule) : '0');
+    updateForm.append('pointRule', dto.pointRule != null ? String(dto.pointRule) : '0');
+    updateForm.append('dbRule', dto.dbRule != null ? String(dto.dbRule) : '2');
+    updateForm.append('branchNmRule', dto.branchNmRule != null ? String(dto.branchNmRule) : '1');
+    updateForm.append('subDealerRule', dto.subDealerRule != null ? String(dto.subDealerRule) : '1');
+    updateForm.append('siteNmRule', dto.siteNmRule != null ? String(dto.siteNmRule) : '1');
+    updateForm.append('custNmRule', dto.custNmRule != null ? String(dto.custNmRule) : '2');
+    updateForm.append('custUnitNoRule', dto.custUnitNoRule != null ? String(dto.custUnitNoRule) : '1');
+    updateForm.append('muserCdRule', dto.muserCdRule != null ? String(dto.muserCdRule) : '0');
+    updateForm.append('muserNmRule', dto.muserNmRule != null ? String(dto.muserNmRule) : '0');
+
+    // Auth
+    updateForm.append('refAuth', dto.refAuth != null ? String(dto.refAuth) : '1');
+    updateForm.append('creAuth', dto.creAuth != null ? String(dto.creAuth) : '1');
+    updateForm.append('updAuth', dto.updAuth != null ? String(dto.updAuth) : '1');
+    updateForm.append('delAuth', dto.delAuth != null ? String(dto.delAuth) : '1');
+
+    // Event checkboxes
+    updateForm.append('eventChk', '');
+    updateForm.append('claimChk', dto.claimChk != null ? String(dto.claimChk) : '');
+    updateForm.append('tsiChk', '');
+    updateForm.append('fcChk', '');
+
+    // Sequence numbers: seqNo[0]..seqNo[8]
+    for (let i = 0; i < 9; i++) {
+      const seqVal = (dto.seqNo && dto.seqNo[i] != null) ? String(dto.seqNo[i]) : '0';
+      updateForm.append(`seqNo[${i}]`, seqVal);
+    }
 
     if (effectiveFileBuffer) {
       const blob = new Blob([effectiveFileBuffer], { type: 'application/pdf' });
@@ -1039,12 +1150,36 @@ async function updateServiceLogInEqpCare(updateData, customCookie = null) {
       });
       const saveText = await saveResp.text();
 
-      if (saveResp.url.includes('login') || saveText.includes('login.do') || saveText.includes('Your session was over')) {
+      if (
+        saveResp.url.includes('login') ||
+        saveText.includes('login.do') ||
+        saveText.includes('Your session was over') ||
+        saveText.includes('Your session is expired')
+      ) {
         throw new Error('Komatsu session expired. Please re-login to Komatsu EQP Care and copy your updated session cookie.');
       }
 
-      if (saveText.includes('error.do')) {
-        throw new Error('Komatsu portal rejected the update (redirected to error.do). Please verify your permissions and session cookie.');
+      if (saveResp.url.includes('error.do') || saveText.includes('error.do') || saveResp.status !== 200) {
+        let detailedError = '';
+        try {
+          const errRes = await fetch(`${BASE_EQPC_URL}/error.do?subsessionID=defaultID`, {
+            headers: defaultHeaders,
+          });
+          const errText = await errRes.text();
+          const errMsgMatch = errText.match(/<textarea[^>]*>([\s\S]*?)<\/textarea>/i);
+          const rawMsg = errMsgMatch ? errMsgMatch[1].trim() : '';
+          if (rawMsg) {
+            detailedError = rawMsg;
+          }
+        } catch {}
+
+        if (detailedError) {
+          throw new Error(`Komatsu portal rejected the update: ${detailedError}`);
+        }
+        if (saveResp.status !== 200) {
+          throw new Error(`Komatsu portal update failed (HTTP ${saveResp.status}).`);
+        }
+        throw new Error('Komatsu portal rejected the update (redirected to error.do). Please verify permissions and session cookie.');
       }
 
       const popupMatch = saveText.match(/Common\.popupMessage\("([^"]*)"\)/);
@@ -1538,5 +1673,6 @@ module.exports = {
   fetchMachineLifecycleFromEqpc,
   syncFleetLifecycleFromEqpc,
   isLastReportForMachine,
+  parseDwrResponse,
 };
 
