@@ -519,7 +519,7 @@ async function uploadReportToEqpCare(reportData, customCookie = null) {
   saveForm.append('dbNm', 'DAR ALHAI GENERAL TRADING KW');
   saveForm.append('branchNm', String(branch || '##1').trim());
   saveForm.append('branchCd', String(branch || '##1').trim());
-  saveForm.append('subDealer', String(subDealer || '').trim());
+  saveForm.append('subDealer', '');
   saveForm.append('subDealerNm', '');
   saveForm.append('siteNm', String(site || '##1').trim());
   saveForm.append('siteCd', String(site || '##1').trim());
@@ -536,9 +536,9 @@ async function uploadReportToEqpCare(reportData, customCookie = null) {
   saveForm.append('subsidiaryRule', '0');
   saveForm.append('cntryRule', '0');
   saveForm.append('pointRule', '0');
-  saveForm.append('dbRule', '2');
+  saveForm.append('dbRule', '0');
   saveForm.append('branchNmRule', '1');
-  saveForm.append('subDealerRule', '1');
+  saveForm.append('subDealerRule', '0');
   saveForm.append('siteNmRule', '1');
   saveForm.append('custNmRule', '2');
   saveForm.append('custUnitNoRule', '1');
@@ -792,6 +792,78 @@ function parseDwrResponse(dwrText) {
 }
 
 /**
+ * Normalizes any service date format (YYYY-MM-DD, DD/MM/YYYY, MM/DD/YYYY, YYYYMMDD, ISO string)
+ * into standard formats needed by Komatsu portal and local database.
+ */
+function normalizeServiceDate(rawDate) {
+  const str = String(rawDate || '').trim();
+  let y = '', m = '', d = '';
+
+  // 1. ISO format: YYYY-MM-DD or YYYY-MM-DDTHH:mm:ss...
+  const isoMatch = str.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
+  if (isoMatch) {
+    y = isoMatch[1];
+    m = isoMatch[2].padStart(2, '0');
+    d = isoMatch[3].padStart(2, '0');
+  }
+
+  // 2. YYYYMMDD compact format
+  if (!y) {
+    const compactMatch = str.match(/^(\d{4})(\d{2})(\d{2})$/);
+    if (compactMatch) {
+      y = compactMatch[1];
+      m = compactMatch[2];
+      d = compactMatch[3];
+    }
+  }
+
+  // 3. DD/MM/YYYY or MM/DD/YYYY format
+  if (!y) {
+    const slashMatch = str.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
+    if (slashMatch) {
+      const p1 = parseInt(slashMatch[1], 10);
+      const p2 = parseInt(slashMatch[2], 10);
+      y = slashMatch[3];
+
+      if (p1 > 12) {
+        // Definitely DD/MM/YYYY
+        d = String(p1).padStart(2, '0');
+        m = String(p2).padStart(2, '0');
+      } else if (p2 > 12) {
+        // Definitely MM/DD/YYYY
+        m = String(p1).padStart(2, '0');
+        d = String(p2).padStart(2, '0');
+      } else {
+        // In this system and British English locales used in Kuwait, day is first (DD/MM/YYYY)
+        d = String(p1).padStart(2, '0');
+        m = String(p2).padStart(2, '0');
+      }
+    }
+  }
+
+  // 4. JS Date fallback
+  if (!y) {
+    const dt = new Date(str);
+    if (!isNaN(dt.getTime())) {
+      y = String(dt.getFullYear());
+      m = String(dt.getMonth() + 1).padStart(2, '0');
+      d = String(dt.getDate()).padStart(2, '0');
+    }
+  }
+
+  if (!y || !m || !d) {
+    throw new Error(`Invalid service date: "${rawDate}". Expected format YYYY-MM-DD or DD/MM/YYYY.`);
+  }
+
+  const isoDate = `${y}-${m}-${d}`;
+  const formattedDate = `${m}/${d}/${y}`; // MM/DD/YYYY for Komatsu UI and DWR
+  const dbDateFormat = `${y}${m}${d}`;   // YYYYMMDD for previousHisDate
+  const monthKey = `${y}-${m}`;
+
+  return { isoDate, formattedDate, dbDateFormat, monthKey };
+}
+
+/**
  * Checks whether a given report is the last (most recent) report generated for a machine.
  * Compares against all records in eqp_machine_history, eqp_reports, and eqp_care_live_lifecycle.json cache.
  */
@@ -799,12 +871,11 @@ async function isLastReportForMachine(serialNo, eventCode, serviceDate) {
   const sNo = String(serialNo || '').trim();
   if (!sNo || !serviceDate) return false;
 
-  let isoDate = String(serviceDate).trim().slice(0, 10);
-  if (/^\d{4}-\d{2}-\d{2}$/.test(isoDate) === false) {
-    const d = new Date(serviceDate);
-    if (!isNaN(d.getTime())) {
-      isoDate = d.toISOString().slice(0, 10);
-    }
+  let isoDate = '';
+  try {
+    isoDate = normalizeServiceDate(serviceDate).isoDate;
+  } catch {
+    isoDate = String(serviceDate).trim().slice(0, 10);
   }
 
   const allReports = [];
@@ -922,34 +993,8 @@ async function updateServiceLogInEqpCare(updateData, customCookie = null) {
   const numericSmr = Number(newSmr);
   const eventObj = EVENT_CODES.find((e) => e.code === eCode) || { code: eCode, name: eCode };
 
-  // Format dates
-  const dateObj = new Date(serviceDate);
-  let formattedDate = '';
-  let dbDateFormat = ''; // YYYYMMDD
-  let isoDate = '';      // YYYY-MM-DD
-  let monthKey = '';
-
-  const str = String(serviceDate).trim();
-  if (/^\d{4}-\d{2}-\d{2}$/.test(str)) {
-    isoDate = str;
-    const [y, m, d] = str.split('-');
-    formattedDate = `${m}/${d}/${y}`;
-    dbDateFormat = `${y}${m}${d}`;
-    monthKey = `${y}-${m}`;
-  } else if (!isNaN(dateObj.getTime())) {
-    const y = dateObj.getFullYear();
-    const m = String(dateObj.getMonth() + 1).padStart(2, '0');
-    const d = String(dateObj.getDate()).padStart(2, '0');
-    isoDate = `${y}-${m}-${d}`;
-    formattedDate = `${m}/${d}/${y}`;
-    dbDateFormat = `${y}${m}${d}`;
-    monthKey = `${y}-${m}`;
-  } else {
-    isoDate = str.slice(0, 10);
-    formattedDate = str;
-    dbDateFormat = isoDate.replace(/-/g, '');
-    monthKey = isoDate.slice(0, 7);
-  }
+  // Format dates using multi-format normalizer
+  const { isoDate, formattedDate, dbDateFormat, monthKey } = normalizeServiceDate(serviceDate);
 
   // Look up machine details
   const machineDetails = await lookupMachineDetails({ model, serialNo: sNo });
@@ -1069,7 +1114,7 @@ async function updateServiceLogInEqpCare(updateData, customCookie = null) {
     updateForm.append('stype', dto.stype != null ? String(dto.stype) : '');
     updateForm.append('serial', String(sNo).trim());
     updateForm.append('hisInfoCd', String(eCode).trim());
-    updateForm.append('hisDate', dto.hisDate || formattedDate);
+    updateForm.append('hisDate', formattedDate);
     updateForm.append('previousHisDate', dbDateFormat);
     updateForm.append('hisSmr', String(numericSmr).trim());
     updateForm.append('ordNo', dto.ordNo != null ? String(dto.ordNo) : '');
@@ -1081,12 +1126,12 @@ async function updateServiceLogInEqpCare(updateData, customCookie = null) {
     updateForm.append('cntryNm', dto.cntryNm != null ? String(dto.cntryNm) : 'KUWAIT');
     updateForm.append('point', dto.point != null ? String(dto.point) : '');
     updateForm.append('pointNm', dto.pointNm != null ? String(dto.pointNm) : '');
-    updateForm.append('db', dto.db != null ? String(dto.db) : '5194');
-    updateForm.append('dbNm', dto.dbNm != null ? String(dto.dbNm) : 'DAR ALHAI GENERAL TRADING KW');
+    updateForm.append('db', dto.db != null && String(dto.db).trim() ? String(dto.db).trim() : '5194');
+    updateForm.append('dbNm', dto.dbNm != null && String(dto.dbNm).trim() ? String(dto.dbNm).trim() : 'DAR ALHAI GENERAL TRADING KW');
     updateForm.append('branchNm', dto.branchNm != null ? String(dto.branchNm) : '##1');
     updateForm.append('branchCd', dto.branchCd != null ? String(dto.branchCd) : '##1');
-    updateForm.append('subDealer', dto.subDealer != null ? String(dto.subDealer) : '');
-    updateForm.append('subDealerNm', dto.subDealerNm != null ? String(dto.subDealerNm) : '');
+    updateForm.append('subDealer', '');
+    updateForm.append('subDealerNm', '');
     updateForm.append('siteNm', dto.siteNm != null ? String(dto.siteNm) : '##1');
     updateForm.append('siteCd', dto.siteCd != null ? String(dto.siteCd) : '##1');
     updateForm.append('custNm', dto.custNm != null ? String(dto.custNm) : "LA'ALA AL-KUWAIT REAL ESTATE CO.");
@@ -1103,21 +1148,21 @@ async function updateServiceLogInEqpCare(updateData, customCookie = null) {
     updateForm.append('vhmsRegSts', dto.vhmsRegSts != null ? String(dto.vhmsRegSts) : '');
     updateForm.append('vhmsRegStsNm', dto.vhmsRegStsNm != null ? String(dto.vhmsRegStsNm) : '');
 
-    // Rules
+    // Rules: match live Komatsu portal form (EMDW0904) for Dar Alhai KW
     updateForm.append('hisDateRule', dto.hisDateRule != null ? String(dto.hisDateRule) : '2');
-    updateForm.append('ordNoRule', dto.ordNoRule != null ? String(dto.ordNoRule) : '0');
-    updateForm.append('sellerRule', dto.sellerRule != null ? String(dto.sellerRule) : '0');
-    updateForm.append('subsidiaryRule', dto.subsidiaryRule != null ? String(dto.subsidiaryRule) : '0');
-    updateForm.append('cntryRule', dto.cntryRule != null ? String(dto.cntryRule) : '0');
-    updateForm.append('pointRule', dto.pointRule != null ? String(dto.pointRule) : '0');
-    updateForm.append('dbRule', dto.dbRule != null ? String(dto.dbRule) : '2');
+    updateForm.append('ordNoRule', '0');
+    updateForm.append('sellerRule', '0');
+    updateForm.append('subsidiaryRule', '0');
+    updateForm.append('cntryRule', '0');
+    updateForm.append('pointRule', '0');
+    updateForm.append('dbRule', '0'); // Field 8 (Distributor) is disabled/read-only (Rule 0) on portal; prevents master table validation error
     updateForm.append('branchNmRule', dto.branchNmRule != null ? String(dto.branchNmRule) : '1');
-    updateForm.append('subDealerRule', dto.subDealerRule != null ? String(dto.subDealerRule) : '1');
+    updateForm.append('subDealerRule', '0'); // Field 10 (Sub Dealer) is not used in Kuwait and disabled (Rule 0); prevents "Sub Dealer code is not existing in master table"
     updateForm.append('siteNmRule', dto.siteNmRule != null ? String(dto.siteNmRule) : '1');
     updateForm.append('custNmRule', dto.custNmRule != null ? String(dto.custNmRule) : '2');
     updateForm.append('custUnitNoRule', dto.custUnitNoRule != null ? String(dto.custUnitNoRule) : '1');
-    updateForm.append('muserCdRule', dto.muserCdRule != null ? String(dto.muserCdRule) : '0');
-    updateForm.append('muserNmRule', dto.muserNmRule != null ? String(dto.muserNmRule) : '0');
+    updateForm.append('muserCdRule', '0');
+    updateForm.append('muserNmRule', '0');
 
     // Auth
     updateForm.append('refAuth', dto.refAuth != null ? String(dto.refAuth) : '1');
@@ -1674,5 +1719,6 @@ module.exports = {
   syncFleetLifecycleFromEqpc,
   isLastReportForMachine,
   parseDwrResponse,
+  normalizeServiceDate,
 };
 

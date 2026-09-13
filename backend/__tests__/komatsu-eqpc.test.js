@@ -230,6 +230,73 @@ dwr.engine._remoteHandleCallback('0','0',s0);
       expect(dto.comment1).toBe('PM Verified');
     });
 
+    test('normalizeServiceDate accurately parses all valid date formats including DD/MM/YYYY and ISO', () => {
+      const d1 = komatsuEqpCareService.normalizeServiceDate('13/08/2026');
+      expect(d1.isoDate).toBe('2026-08-13');
+      expect(d1.formattedDate).toBe('08/13/2026');
+      expect(d1.dbDateFormat).toBe('20260813');
+      expect(d1.monthKey).toBe('2026-08');
+
+      const d2 = komatsuEqpCareService.normalizeServiceDate('2026-08-13');
+      expect(d2.isoDate).toBe('2026-08-13');
+      expect(d2.formattedDate).toBe('08/13/2026');
+      expect(d2.dbDateFormat).toBe('20260813');
+
+      const d3 = komatsuEqpCareService.normalizeServiceDate('08/13/2026');
+      expect(d3.isoDate).toBe('2026-08-13');
+      expect(d3.formattedDate).toBe('08/13/2026');
+
+      const d4 = komatsuEqpCareService.normalizeServiceDate('20260813');
+      expect(d4.isoDate).toBe('2026-08-13');
+      expect(d4.formattedDate).toBe('08/13/2026');
+
+      const d5 = komatsuEqpCareService.normalizeServiceDate('2026-08-13T10:00:00.000Z');
+      expect(d5.isoDate).toBe('2026-08-13');
+      expect(d5.formattedDate).toBe('08/13/2026');
+    });
+
+    test('updateServiceLogInEqpCare accepts DD/MM/YYYY input (e.g. 13/08/2026) and updates cache cleanly', async () => {
+      const originalCache = komatsuEqpCareService.loadCachedLiveLifecycle();
+      const testCache = {
+        lastSync: new Date().toISOString(),
+        totalMachines: 1,
+        machines: {
+          '9582': {
+            machineNumber: '9582',
+            model: 'HM400',
+            totalReports: 1,
+            reports: [
+              { eventCode: 'W41X', eventName: 'EXTRA SERVICE', date: '2026-08-13', rawDate: '08/13/2026', smr: 10 },
+            ],
+          },
+        },
+      };
+      komatsuEqpCareService.saveCachedLiveLifecycle(testCache);
+
+      try {
+        const res = await komatsuEqpCareService.updateServiceLogInEqpCare({
+          serialNo: '9582',
+          model: 'HM400',
+          eventCode: 'W41X',
+          serviceDate: '13/08/2026', // Passed in DD/MM/YYYY display format
+          newSmr: 14,
+          currentSmr: 10,
+          syncToEqpc: false,
+        });
+
+        expect(res.success).toBe(true);
+        expect(res.newSmr).toBe(14);
+        expect(res.serviceDate).toBe('2026-08-13');
+        expect(res.cacheUpdated).toBe(true);
+
+        const updatedCache = komatsuEqpCareService.loadCachedLiveLifecycle();
+        expect(updatedCache.machines['9582'].reports.length).toBe(1);
+        expect(updatedCache.machines['9582'].reports[0].smr).toBe(14);
+      } finally {
+        komatsuEqpCareService.saveCachedLiveLifecycle(originalCache);
+      }
+    });
+
     test('rejects update missing required fields', async () => {
       await expect(komatsuEqpCareService.updateServiceLogInEqpCare({})).rejects.toThrow(
         'Machine serial number is required.'
