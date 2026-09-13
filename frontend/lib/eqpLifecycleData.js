@@ -160,7 +160,7 @@ const BASE_LIFECYCLE_ROWS = [
     "W41X",
     "Add. Service",
     10,
-    23
+    24
   ],
   [
     "9583",
@@ -170,11 +170,11 @@ const BASE_LIFECYCLE_ROWS = [
     "2024-04-22",
     "2024-09-05",
     "2025-01-10",
-    "2026-01-26",
+    "2026-08-18",
     "W41X",
     "Add. Service",
-    8,
-    17
+    12,
+    24
   ],
   [
     "9586",
@@ -184,11 +184,11 @@ const BASE_LIFECYCLE_ROWS = [
     "2024-04-22",
     "2024-09-05",
     "2025-01-10",
-    "2026-05-20",
+    "2026-08-18",
     "W41X",
     "Add. Service",
-    8,
-    18
+    12,
+    21
   ],
   [
     "9589",
@@ -198,11 +198,11 @@ const BASE_LIFECYCLE_ROWS = [
     "2024-04-22",
     "2024-09-05",
     "2025-01-10",
-    "2026-05-20",
+    "2026-08-18",
     "W41X",
     "Add. Service",
-    8,
-    20
+    12,
+    23
   ],
   [
     "9590",
@@ -212,11 +212,11 @@ const BASE_LIFECYCLE_ROWS = [
     "2024-04-24",
     "2024-09-05",
     "2025-01-10",
-    "2026-05-20",
+    "2026-08-18",
     "W41X",
     "Add. Service",
-    8,
-    21
+    12,
+    24
   ],
   [
     "9630",
@@ -226,11 +226,11 @@ const BASE_LIFECYCLE_ROWS = [
     "2024-05-19",
     "2024-09-05",
     "2025-01-10",
-    "2026-05-20",
+    "2026-08-18",
     "W41X",
     "Add. Service",
-    8,
-    20
+    12,
+    23
   ],
   [
     "9631",
@@ -240,11 +240,11 @@ const BASE_LIFECYCLE_ROWS = [
     "2024-05-19",
     "2024-09-05",
     "2025-01-10",
-    "2026-05-20",
+    "2026-08-18",
     "W41X",
     "Add. Service",
-    8,
-    18
+    12,
+    21
   ],
   [
     "9634",
@@ -254,11 +254,11 @@ const BASE_LIFECYCLE_ROWS = [
     "2024-05-19",
     "2024-09-05",
     "2025-01-10",
-    "2026-05-20",
+    "2026-08-18",
     "W41X",
     "Add. Service",
-    8,
-    20
+    12,
+    23
   ],
   [
     "9635",
@@ -268,11 +268,11 @@ const BASE_LIFECYCLE_ROWS = [
     "2024-05-19",
     "2024-09-05",
     "2025-01-10",
-    "2026-05-20",
+    "2026-08-18",
     "W41X",
     "Add. Service",
-    8,
-    16
+    12,
+    19
   ],
   [
     "9636",
@@ -3721,54 +3721,6 @@ const OBSERVED_REPORTS = {
   ],
   "9582": [
     [
-      "W70F",
-      "2023-12-11",
-      null,
-      "FACTORY FORWARDING"
-    ],
-    [
-      "W70",
-      "2023-12-26",
-      null,
-      "SHIPPING INFO FROM ONE SUBSIDIARY TO OTHERS."
-    ],
-    [
-      "W21",
-      "2024-01-27",
-      4,
-      "MACHINE RECEIVING INSPECTION AT EACH DIST/SUB."
-    ],
-    [
-      "W41P",
-      "2024-02-28",
-      4,
-      "PRE-DELIVERY SERVICE"
-    ],
-    [
-      "W41N",
-      "2024-02-29",
-      5,
-      "NEW MACHINE DELIVERY SERVICE"
-    ],
-    [
-      "W411",
-      "2024-04-22",
-      5,
-      "1ST PERIODIC SERVICE"
-    ],
-    [
-      "W412",
-      "2024-09-05",
-      5,
-      "2ND PERIODIC SERVICE"
-    ],
-    [
-      "W413",
-      "2025-01-10",
-      5,
-      "SERVICE REPORT(3RD PERIODIC SERVICE)"
-    ],
-    [
       "W41X",
       "2026-08-13",
       10,
@@ -3806,6 +3758,12 @@ const OBSERVED_REPORTS = {
     ],
     [
       "W41X",
+      "2026-02-15",
+      8,
+      "EXTRA SERVICE"
+    ],
+    [
+      "W41X",
       "2026-01-26",
       8,
       "EXTRA SERVICE"
@@ -3869,6 +3827,12 @@ const OBSERVED_REPORTS = {
       "2025-02-16",
       5,
       "EXTRA SERVICE"
+    ],
+    [
+      "W413",
+      "2025-01-10",
+      5,
+      "SERVICE REPORT(3RD PERIODIC SERVICE)"
     ],
     [
       "W41X",
@@ -3889,6 +3853,12 @@ const OBSERVED_REPORTS = {
       "EXTRA SERVICE"
     ],
     [
+      "W412",
+      "2024-09-05",
+      5,
+      "2ND PERIODIC SERVICE"
+    ],
+    [
       "LTST",
       "2024-08-17",
       5,
@@ -3911,38 +3881,6 @@ const OBSERVED_REPORTS = {
       "2024-05-18",
       5,
       "EXTRA SERVICE"
-    ]
-  ],
-  "9583": [
-    [
-      "W70F",
-      "2023-12-12",
-      null,
-      "FACTORY FORWARDING"
-    ],
-    [
-      "W70",
-      "2023-12-26",
-      null,
-      "SHIPPING INFO FROM ONE SUBSIDIARY TO OTHERS."
-    ],
-    [
-      "W21",
-      "2024-01-27",
-      4,
-      "MACHINE RECEIVING INSPECTION AT EACH DIST/SUB."
-    ],
-    [
-      "W41P",
-      "2024-02-28",
-      4,
-      "PRE-DELIVERY SERVICE"
-    ],
-    [
-      "W41N",
-      "2024-02-29",
-      5,
-      "NEW MACHINE DELIVERY SERVICE"
     ],
     [
       "W411",
@@ -3951,16 +3889,78 @@ const OBSERVED_REPORTS = {
       "1ST PERIODIC SERVICE"
     ],
     [
-      "W412",
-      "2024-09-05",
+      "W41N",
+      "2024-02-29",
       5,
-      "2ND PERIODIC SERVICE"
+      "NEW MACHINE DELIVERY SERVICE"
     ],
     [
-      "W413",
-      "2025-01-10",
-      5,
-      "SERVICE REPORT(3RD PERIODIC SERVICE)"
+      "W41P",
+      "2024-02-28",
+      4,
+      "PRE-DELIVERY SERVICE"
+    ],
+    [
+      "W21",
+      "2024-01-27",
+      4,
+      "MACHINE RECEIVING INSPECTION AT EACH DIST/SUB."
+    ],
+    [
+      "W70",
+      "2023-12-26",
+      null,
+      "SHIPPING INFO FROM ONE SUBSIDIARY TO OTHERS."
+    ],
+    [
+      "W70F",
+      "2023-12-11",
+      null,
+      "FACTORY FORWARDING"
+    ]
+  ],
+  "9583": [
+    [
+      "W41X",
+      "2026-08-18",
+      12,
+      "EXTRA SERVICE"
+    ],
+    [
+      "W41X",
+      "2026-07-09",
+      11,
+      "EXTRA SERVICE"
+    ],
+    [
+      "W41X",
+      "2026-06-12",
+      11,
+      "EXTRA SERVICE"
+    ],
+    [
+      "W41X",
+      "2026-05-10",
+      10,
+      "EXTRA SERVICE"
+    ],
+    [
+      "W41X",
+      "2026-04-18",
+      10,
+      "EXTRA SERVICE"
+    ],
+    [
+      "W41X",
+      "2026-03-14",
+      10,
+      "EXTRA SERVICE"
+    ],
+    [
+      "W41X",
+      "2026-02-15",
+      9,
+      "EXTRA SERVICE"
     ],
     [
       "W41X",
@@ -4029,6 +4029,12 @@ const OBSERVED_REPORTS = {
       "EXTRA SERVICE"
     ],
     [
+      "W413",
+      "2025-01-10",
+      5,
+      "SERVICE REPORT(3RD PERIODIC SERVICE)"
+    ],
+    [
       "W41X",
       "2024-12-03",
       5,
@@ -4045,6 +4051,12 @@ const OBSERVED_REPORTS = {
       "2024-10-10",
       5,
       "EXTRA SERVICE"
+    ],
+    [
+      "W412",
+      "2024-09-05",
+      5,
+      "2ND PERIODIC SERVICE"
     ],
     [
       "LTST",
@@ -4069,38 +4081,6 @@ const OBSERVED_REPORTS = {
       "2024-05-18",
       5,
       "EXTRA SERVICE"
-    ]
-  ],
-  "9586": [
-    [
-      "W70F",
-      "2023-12-12",
-      null,
-      "FACTORY FORWARDING"
-    ],
-    [
-      "W70",
-      "2023-12-26",
-      null,
-      "SHIPPING INFO FROM ONE SUBSIDIARY TO OTHERS."
-    ],
-    [
-      "W21",
-      "2024-01-27",
-      4,
-      "MACHINE RECEIVING INSPECTION AT EACH DIST/SUB."
-    ],
-    [
-      "W41P",
-      "2024-02-28",
-      4,
-      "PRE-DELIVERY SERVICE"
-    ],
-    [
-      "W41N",
-      "2024-02-29",
-      5,
-      "NEW MACHINE DELIVERY SERVICE"
     ],
     [
       "W411",
@@ -4109,16 +4089,54 @@ const OBSERVED_REPORTS = {
       "1ST PERIODIC SERVICE"
     ],
     [
-      "W412",
-      "2024-09-05",
+      "W41N",
+      "2024-02-29",
       5,
-      "2ND PERIODIC SERVICE"
+      "NEW MACHINE DELIVERY SERVICE"
     ],
     [
-      "W413",
-      "2025-01-10",
-      5,
-      "SERVICE REPORT(3RD PERIODIC SERVICE)"
+      "W41P",
+      "2024-02-28",
+      4,
+      "PRE-DELIVERY SERVICE"
+    ],
+    [
+      "W21",
+      "2024-01-27",
+      4,
+      "MACHINE RECEIVING INSPECTION AT EACH DIST/SUB."
+    ],
+    [
+      "W70",
+      "2023-12-26",
+      null,
+      "SHIPPING INFO FROM ONE SUBSIDIARY TO OTHERS."
+    ],
+    [
+      "W70F",
+      "2023-12-12",
+      null,
+      "FACTORY FORWARDING"
+    ]
+  ],
+  "9586": [
+    [
+      "W41X",
+      "2026-08-18",
+      12,
+      "EXTRA SERVICE"
+    ],
+    [
+      "W41X",
+      "2026-07-09",
+      11,
+      "EXTRA SERVICE"
+    ],
+    [
+      "W41X",
+      "2026-06-12",
+      11,
+      "EXTRA SERVICE"
     ],
     [
       "W41X",
@@ -4199,6 +4217,12 @@ const OBSERVED_REPORTS = {
       "EXTRA SERVICE"
     ],
     [
+      "W413",
+      "2025-01-10",
+      5,
+      "SERVICE REPORT(3RD PERIODIC SERVICE)"
+    ],
+    [
       "W41X",
       "2024-11-01",
       5,
@@ -4209,6 +4233,12 @@ const OBSERVED_REPORTS = {
       "2024-09-24",
       5,
       "EXTRA SERVICE"
+    ],
+    [
+      "W412",
+      "2024-09-05",
+      5,
+      "2ND PERIODIC SERVICE"
     ],
     [
       "LTST",
@@ -4233,38 +4263,6 @@ const OBSERVED_REPORTS = {
       "2024-05-18",
       5,
       "EXTRA SERVICE"
-    ]
-  ],
-  "9589": [
-    [
-      "W70F",
-      "2023-12-13",
-      null,
-      "FACTORY FORWARDING"
-    ],
-    [
-      "W70",
-      "2023-12-26",
-      null,
-      "SHIPPING INFO FROM ONE SUBSIDIARY TO OTHERS."
-    ],
-    [
-      "W21",
-      "2024-01-27",
-      4,
-      "MACHINE RECEIVING INSPECTION AT EACH DIST/SUB."
-    ],
-    [
-      "W41P",
-      "2024-02-28",
-      4,
-      "PRE-DELIVERY SERVICE"
-    ],
-    [
-      "W41N",
-      "2024-02-29",
-      5,
-      "NEW MACHINE DELIVERY SERVICE"
     ],
     [
       "W411",
@@ -4273,16 +4271,54 @@ const OBSERVED_REPORTS = {
       "1ST PERIODIC SERVICE"
     ],
     [
-      "W412",
-      "2024-09-05",
+      "W41N",
+      "2024-02-29",
       5,
-      "2ND PERIODIC SERVICE"
+      "NEW MACHINE DELIVERY SERVICE"
     ],
     [
-      "W413",
-      "2025-01-10",
-      5,
-      "SERVICE REPORT(3RD PERIODIC SERVICE)"
+      "W41P",
+      "2024-02-28",
+      4,
+      "PRE-DELIVERY SERVICE"
+    ],
+    [
+      "W21",
+      "2024-01-27",
+      4,
+      "MACHINE RECEIVING INSPECTION AT EACH DIST/SUB."
+    ],
+    [
+      "W70",
+      "2023-12-26",
+      null,
+      "SHIPPING INFO FROM ONE SUBSIDIARY TO OTHERS."
+    ],
+    [
+      "W70F",
+      "2023-12-12",
+      null,
+      "FACTORY FORWARDING"
+    ]
+  ],
+  "9589": [
+    [
+      "W41X",
+      "2026-08-18",
+      12,
+      "EXTRA SERVICE"
+    ],
+    [
+      "W41X",
+      "2026-07-09",
+      11,
+      "EXTRA SERVICE"
+    ],
+    [
+      "W41X",
+      "2026-06-12",
+      11,
+      "EXTRA SERVICE"
     ],
     [
       "W41X",
@@ -4375,6 +4411,12 @@ const OBSERVED_REPORTS = {
       "EXTRA SERVICE"
     ],
     [
+      "W413",
+      "2025-01-10",
+      5,
+      "SERVICE REPORT(3RD PERIODIC SERVICE)"
+    ],
+    [
       "W41X",
       "2024-11-01",
       5,
@@ -4385,6 +4427,12 @@ const OBSERVED_REPORTS = {
       "2024-09-24",
       5,
       "EXTRA SERVICE"
+    ],
+    [
+      "W412",
+      "2024-09-05",
+      5,
+      "2ND PERIODIC SERVICE"
     ],
     [
       "LTST",
@@ -4409,32 +4457,12 @@ const OBSERVED_REPORTS = {
       "2024-05-19",
       5,
       "EXTRA SERVICE"
-    ]
-  ],
-  "9590": [
-    [
-      "W70F",
-      "2023-12-13",
-      null,
-      "FACTORY FORWARDING"
     ],
     [
-      "W70",
-      "2023-12-26",
-      null,
-      "SHIPPING INFO FROM ONE SUBSIDIARY TO OTHERS."
-    ],
-    [
-      "W21",
-      "2024-01-27",
-      4,
-      "MACHINE RECEIVING INSPECTION AT EACH DIST/SUB."
-    ],
-    [
-      "W41P",
-      "2024-02-28",
-      4,
-      "PRE-DELIVERY SERVICE"
+      "W411",
+      "2024-04-22",
+      5,
+      "1ST PERIODIC SERVICE"
     ],
     [
       "W41N",
@@ -4443,22 +4471,48 @@ const OBSERVED_REPORTS = {
       "NEW MACHINE DELIVERY SERVICE"
     ],
     [
-      "W411",
-      "2024-04-24",
-      5,
-      "1ST PERIODIC SERVICE"
+      "W41P",
+      "2024-02-28",
+      4,
+      "PRE-DELIVERY SERVICE"
     ],
     [
-      "W412",
-      "2024-09-05",
-      5,
-      "2ND PERIODIC SERVICE"
+      "W21",
+      "2024-01-27",
+      4,
+      "MACHINE RECEIVING INSPECTION AT EACH DIST/SUB."
     ],
     [
-      "W413",
-      "2025-01-10",
-      5,
-      "SERVICE REPORT(3RD PERIODIC SERVICE)"
+      "W70",
+      "2023-12-26",
+      null,
+      "SHIPPING INFO FROM ONE SUBSIDIARY TO OTHERS."
+    ],
+    [
+      "W70F",
+      "2023-12-13",
+      null,
+      "FACTORY FORWARDING"
+    ]
+  ],
+  "9590": [
+    [
+      "W41X",
+      "2026-08-18",
+      12,
+      "EXTRA SERVICE"
+    ],
+    [
+      "W41X",
+      "2026-07-09",
+      11,
+      "EXTRA SERVICE"
+    ],
+    [
+      "W41X",
+      "2026-06-12",
+      11,
+      "EXTRA SERVICE"
     ],
     [
       "W41X",
@@ -4551,6 +4605,12 @@ const OBSERVED_REPORTS = {
       "EXTRA SERVICE"
     ],
     [
+      "W413",
+      "2025-01-10",
+      5,
+      "SERVICE REPORT(3RD PERIODIC SERVICE)"
+    ],
+    [
       "W41X",
       "2024-12-03",
       5,
@@ -4567,6 +4627,12 @@ const OBSERVED_REPORTS = {
       "2024-09-24",
       5,
       "EXTRA SERVICE"
+    ],
+    [
+      "W412",
+      "2024-09-05",
+      5,
+      "2ND PERIODIC SERVICE"
     ],
     [
       "LTST",
@@ -4591,56 +4657,62 @@ const OBSERVED_REPORTS = {
       "2024-05-19",
       5,
       "EXTRA SERVICE"
-    ]
-  ],
-  "9630": [
-    [
-      "W70F",
-      "2024-01-09",
-      null,
-      "FACTORY FORWARDING"
-    ],
-    [
-      "W70",
-      "2024-01-20",
-      null,
-      "SHIPPING INFO FROM ONE SUBSIDIARY TO OTHERS."
-    ],
-    [
-      "W21",
-      "2024-03-07",
-      3,
-      "MACHINE RECEIVING INSPECTION AT EACH DIST/SUB."
-    ],
-    [
-      "W41P",
-      "2024-03-16",
-      3,
-      "PRE-DELIVERY SERVICE"
-    ],
-    [
-      "W41N",
-      "2024-03-17",
-      4,
-      "NEW MACHINE DELIVERY SERVICE"
     ],
     [
       "W411",
-      "2024-05-19",
+      "2024-04-24",
       5,
       "1ST PERIODIC SERVICE"
     ],
     [
-      "W412",
-      "2024-09-05",
+      "W41N",
+      "2024-02-29",
       5,
-      "2ND PERIODIC SERVICE"
+      "NEW MACHINE DELIVERY SERVICE"
     ],
     [
-      "W413",
-      "2025-01-10",
-      5,
-      "SERVICE REPORT(3RD PERIODIC SERVICE)"
+      "W41P",
+      "2024-02-28",
+      4,
+      "PRE-DELIVERY SERVICE"
+    ],
+    [
+      "W21",
+      "2024-01-27",
+      4,
+      "MACHINE RECEIVING INSPECTION AT EACH DIST/SUB."
+    ],
+    [
+      "W70",
+      "2023-12-26",
+      null,
+      "SHIPPING INFO FROM ONE SUBSIDIARY TO OTHERS."
+    ],
+    [
+      "W70F",
+      "2023-12-13",
+      null,
+      "FACTORY FORWARDING"
+    ]
+  ],
+  "9630": [
+    [
+      "W41X",
+      "2026-08-18",
+      12,
+      "EXTRA SERVICE"
+    ],
+    [
+      "W41X",
+      "2026-07-09",
+      11,
+      "EXTRA SERVICE"
+    ],
+    [
+      "W41X",
+      "2026-06-12",
+      11,
+      "EXTRA SERVICE"
     ],
     [
       "W41X",
@@ -4733,6 +4805,12 @@ const OBSERVED_REPORTS = {
       "EXTRA SERVICE"
     ],
     [
+      "W413",
+      "2025-01-10",
+      5,
+      "SERVICE REPORT(3RD PERIODIC SERVICE)"
+    ],
+    [
       "W41X",
       "2024-12-03",
       5,
@@ -4751,6 +4829,12 @@ const OBSERVED_REPORTS = {
       "EXTRA SERVICE"
     ],
     [
+      "W412",
+      "2024-09-05",
+      5,
+      "2ND PERIODIC SERVICE"
+    ],
+    [
       "LTST",
       "2024-08-17",
       5,
@@ -4767,32 +4851,12 @@ const OBSERVED_REPORTS = {
       "2024-07-01",
       5,
       "EXTRA SERVICE"
-    ]
-  ],
-  "9631": [
-    [
-      "W70F",
-      "2024-01-09",
-      null,
-      "FACTORY FORWARDING"
     ],
     [
-      "W70",
-      "2024-01-20",
-      null,
-      "SHIPPING INFO FROM ONE SUBSIDIARY TO OTHERS."
-    ],
-    [
-      "W21",
-      "2024-03-07",
-      3,
-      "MACHINE RECEIVING INSPECTION AT EACH DIST/SUB."
-    ],
-    [
-      "W41P",
-      "2024-03-16",
-      3,
-      "PRE-DELIVERY SERVICE"
+      "W411",
+      "2024-05-19",
+      5,
+      "1ST PERIODIC SERVICE"
     ],
     [
       "W41N",
@@ -4801,22 +4865,48 @@ const OBSERVED_REPORTS = {
       "NEW MACHINE DELIVERY SERVICE"
     ],
     [
-      "W411",
-      "2024-05-19",
-      4,
-      "1ST PERIODIC SERVICE"
+      "W41P",
+      "2024-03-16",
+      3,
+      "PRE-DELIVERY SERVICE"
     ],
     [
-      "W412",
-      "2024-09-05",
-      4,
-      "2ND PERIODIC SERVICE"
+      "W21",
+      "2024-03-07",
+      3,
+      "MACHINE RECEIVING INSPECTION AT EACH DIST/SUB."
     ],
     [
-      "W413",
-      "2025-01-10",
-      4,
-      "SERVICE REPORT(3RD PERIODIC SERVICE)"
+      "W70",
+      "2024-01-20",
+      null,
+      "SHIPPING INFO FROM ONE SUBSIDIARY TO OTHERS."
+    ],
+    [
+      "W70F",
+      "2024-01-09",
+      null,
+      "FACTORY FORWARDING"
+    ]
+  ],
+  "9631": [
+    [
+      "W41X",
+      "2026-08-18",
+      12,
+      "EXTRA SERVICE"
+    ],
+    [
+      "W41X",
+      "2026-07-09",
+      11,
+      "EXTRA SERVICE"
+    ],
+    [
+      "W41X",
+      "2026-06-12",
+      11,
+      "EXTRA SERVICE"
     ],
     [
       "W41X",
@@ -4885,6 +4975,12 @@ const OBSERVED_REPORTS = {
       "EXTRA SERVICE"
     ],
     [
+      "W413",
+      "2025-01-10",
+      4,
+      "SERVICE REPORT(3RD PERIODIC SERVICE)"
+    ],
+    [
       "W41X",
       "2024-12-03",
       4,
@@ -4901,6 +4997,12 @@ const OBSERVED_REPORTS = {
       "2024-09-24",
       4,
       "EXTRA SERVICE"
+    ],
+    [
+      "W412",
+      "2024-09-05",
+      4,
+      "2ND PERIODIC SERVICE"
     ],
     [
       "LTST",
@@ -4931,38 +5033,6 @@ const OBSERVED_REPORTS = {
       "2024-06-01",
       4,
       "EXTRA SERVICE"
-    ]
-  ],
-  "9634": [
-    [
-      "W70F",
-      "2024-01-09",
-      null,
-      "FACTORY FORWARDING"
-    ],
-    [
-      "W70",
-      "2024-01-20",
-      null,
-      "SHIPPING INFO FROM ONE SUBSIDIARY TO OTHERS."
-    ],
-    [
-      "W21",
-      "2024-03-07",
-      3,
-      "MACHINE RECEIVING INSPECTION AT EACH DIST/SUB."
-    ],
-    [
-      "W41P",
-      "2024-03-16",
-      3,
-      "PRE-DELIVERY SERVICE"
-    ],
-    [
-      "W41N",
-      "2024-03-17",
-      4,
-      "NEW MACHINE DELIVERY SERVICE"
     ],
     [
       "W411",
@@ -4971,16 +5041,54 @@ const OBSERVED_REPORTS = {
       "1ST PERIODIC SERVICE"
     ],
     [
-      "W412",
-      "2024-09-05",
+      "W41N",
+      "2024-03-17",
       4,
-      "2ND PERIODIC SERVICE"
+      "NEW MACHINE DELIVERY SERVICE"
     ],
     [
-      "W413",
-      "2025-01-10",
-      4,
-      "SERVICE REPORT(3RD PERIODIC SERVICE)"
+      "W41P",
+      "2024-03-16",
+      3,
+      "PRE-DELIVERY SERVICE"
+    ],
+    [
+      "W21",
+      "2024-03-07",
+      3,
+      "MACHINE RECEIVING INSPECTION AT EACH DIST/SUB."
+    ],
+    [
+      "W70",
+      "2024-01-20",
+      null,
+      "SHIPPING INFO FROM ONE SUBSIDIARY TO OTHERS."
+    ],
+    [
+      "W70F",
+      "2024-01-09",
+      null,
+      "FACTORY FORWARDING"
+    ]
+  ],
+  "9634": [
+    [
+      "W41X",
+      "2026-08-18",
+      12,
+      "EXTRA SERVICE"
+    ],
+    [
+      "W41X",
+      "2026-07-09",
+      11,
+      "EXTRA SERVICE"
+    ],
+    [
+      "W41X",
+      "2026-06-12",
+      11,
+      "EXTRA SERVICE"
     ],
     [
       "W41X",
@@ -5073,6 +5181,12 @@ const OBSERVED_REPORTS = {
       "EXTRA SERVICE"
     ],
     [
+      "W413",
+      "2025-01-10",
+      4,
+      "SERVICE REPORT(3RD PERIODIC SERVICE)"
+    ],
+    [
       "W41X",
       "2024-12-03",
       4,
@@ -5091,6 +5205,12 @@ const OBSERVED_REPORTS = {
       "EXTRA SERVICE"
     ],
     [
+      "W412",
+      "2024-09-05",
+      4,
+      "2ND PERIODIC SERVICE"
+    ],
+    [
       "LTST",
       "2024-08-17",
       4,
@@ -5107,38 +5227,6 @@ const OBSERVED_REPORTS = {
       "2024-07-01",
       4,
       "EXTRA SERVICE"
-    ]
-  ],
-  "9635": [
-    [
-      "W70F",
-      "2024-01-10",
-      null,
-      "FACTORY FORWARDING"
-    ],
-    [
-      "W70",
-      "2024-01-20",
-      null,
-      "SHIPPING INFO FROM ONE SUBSIDIARY TO OTHERS."
-    ],
-    [
-      "W21",
-      "2024-03-07",
-      3,
-      "MACHINE RECEIVING INSPECTION AT EACH DIST/SUB."
-    ],
-    [
-      "W41P",
-      "2024-03-16",
-      3,
-      "PRE-DELIVERY SERVICE"
-    ],
-    [
-      "W41N",
-      "2024-03-17",
-      4,
-      "NEW MACHINE DELIVERY SERVICE"
     ],
     [
       "W411",
@@ -5147,16 +5235,54 @@ const OBSERVED_REPORTS = {
       "1ST PERIODIC SERVICE"
     ],
     [
-      "W412",
-      "2024-09-05",
+      "W41N",
+      "2024-03-17",
       4,
-      "2ND PERIODIC SERVICE"
+      "NEW MACHINE DELIVERY SERVICE"
     ],
     [
-      "W413",
-      "2025-01-10",
-      4,
-      "SERVICE REPORT(3RD PERIODIC SERVICE)"
+      "W41P",
+      "2024-03-16",
+      3,
+      "PRE-DELIVERY SERVICE"
+    ],
+    [
+      "W21",
+      "2024-03-07",
+      3,
+      "MACHINE RECEIVING INSPECTION AT EACH DIST/SUB."
+    ],
+    [
+      "W70",
+      "2024-01-20",
+      null,
+      "SHIPPING INFO FROM ONE SUBSIDIARY TO OTHERS."
+    ],
+    [
+      "W70F",
+      "2024-01-09",
+      null,
+      "FACTORY FORWARDING"
+    ]
+  ],
+  "9635": [
+    [
+      "W41X",
+      "2026-08-18",
+      12,
+      "EXTRA SERVICE"
+    ],
+    [
+      "W41X",
+      "2026-07-09",
+      11,
+      "EXTRA SERVICE"
+    ],
+    [
+      "W41X",
+      "2026-06-12",
+      11,
+      "EXTRA SERVICE"
     ],
     [
       "W41X",
@@ -5225,6 +5351,12 @@ const OBSERVED_REPORTS = {
       "EXTRA SERVICE"
     ],
     [
+      "W413",
+      "2025-01-10",
+      4,
+      "SERVICE REPORT(3RD PERIODIC SERVICE)"
+    ],
+    [
       "W41X",
       "2024-12-03",
       4,
@@ -5243,6 +5375,12 @@ const OBSERVED_REPORTS = {
       "EXTRA SERVICE"
     ],
     [
+      "W412",
+      "2024-09-05",
+      4,
+      "2ND PERIODIC SERVICE"
+    ],
+    [
       "LTST",
       "2024-08-17",
       4,
@@ -5259,6 +5397,42 @@ const OBSERVED_REPORTS = {
       "2024-07-01",
       4,
       "EXTRA SERVICE"
+    ],
+    [
+      "W411",
+      "2024-05-19",
+      4,
+      "1ST PERIODIC SERVICE"
+    ],
+    [
+      "W41N",
+      "2024-03-17",
+      4,
+      "NEW MACHINE DELIVERY SERVICE"
+    ],
+    [
+      "W41P",
+      "2024-03-16",
+      3,
+      "PRE-DELIVERY SERVICE"
+    ],
+    [
+      "W21",
+      "2024-03-07",
+      3,
+      "MACHINE RECEIVING INSPECTION AT EACH DIST/SUB."
+    ],
+    [
+      "W70",
+      "2024-01-20",
+      null,
+      "SHIPPING INFO FROM ONE SUBSIDIARY TO OTHERS."
+    ],
+    [
+      "W70F",
+      "2024-01-10",
+      null,
+      "FACTORY FORWARDING"
     ]
   ],
   "9636": [
@@ -25708,15 +25882,25 @@ export function buildDynamicLifecycleRecords(generatedReports = [], machinesList
     }
 
     const observedSet = new Set(baseObserved.map(([code, date]) => `${code}_${date}`));
+    const observedMonthCodes = new Set(baseObserved.map(([code, date]) => `${code}_${String(date).slice(0, 7)}`));
 
     for (const gr of genReports) {
       const code = mapReportToEventCode(gr);
       const rawDate = gr.service_date || gr.created_at;
       if (!rawDate) continue;
-      const date = String(rawDate).slice(0, 10);
+      let date = '';
+      if (rawDate instanceof Date || (typeof rawDate === 'object' && typeof rawDate.toISOString === 'function')) {
+        date = rawDate.toISOString().slice(0, 10);
+      } else {
+        date = String(rawDate).slice(0, 10);
+      }
+      if (!date || date.length < 10) continue;
+      const monthKey = date.slice(0, 7);
       const key = `${code}_${date}`;
-      if (!observedSet.has(key)) {
+      const monthCodeKey = `${code}_${monthKey}`;
+      if (!observedSet.has(key) && !observedMonthCodes.has(monthCodeKey)) {
         observedSet.add(key);
+        observedMonthCodes.add(monthCodeKey);
         baseObserved.push([code, date, gr.smr ? Number(gr.smr) : null, gr.report_type || gr.service_type || 'Generated Report']);
       }
     }
@@ -25745,7 +25929,19 @@ export function buildDynamicLifecycleRecords(generatedReports = [], machinesList
         }
       }
     }
-    let latestSmr = liveMaxSmr ?? (baseRow?.[10] ?? (machineObj?.last_smr ? Number(machineObj.last_smr) : null));
+    const candidateSmrs = [
+      liveMaxSmr,
+      baseRow?.[10] != null ? Number(baseRow[10]) : null,
+      machineObj?.last_smr != null ? Number(machineObj.last_smr) : null,
+    ].filter((val) => val != null && !isNaN(val));
+
+    let latestSmr = candidateSmrs.length > 0 ? Math.max(...candidateSmrs) : null;
+
+    for (const [, , smr] of baseObserved) {
+      if (smr != null && !isNaN(Number(smr)) && Number(smr) > (latestSmr || 0)) {
+        latestSmr = Number(smr);
+      }
+    }
 
     for (const gr of genReports) {
       if (gr.smr && Number(gr.smr) > (latestSmr || 0)) {

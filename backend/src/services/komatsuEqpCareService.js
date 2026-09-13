@@ -652,6 +652,46 @@ async function uploadReportToEqpCare(reportData, customCookie = null) {
         // Ignore column mismatch if comments is not present
       }
     }
+
+    // Update live lifecycle cache file directly so tracker is immediately current
+    try {
+      const cache = loadCachedLiveLifecycle();
+      if (!cache.machines) cache.machines = {};
+      const sNo = String(serialNo).trim();
+      if (!cache.machines[sNo]) {
+        cache.machines[sNo] = {
+          machineNumber: sNo,
+          model,
+          machineId: null,
+          totalReports: 0,
+          reports: [],
+          syncedAt: new Date().toISOString(),
+        };
+      }
+
+      const isoDate = !isNaN(dateObj.getTime()) ? dateObj.toISOString().slice(0, 10) : formattedDate;
+      const reports = cache.machines[sNo].reports || [];
+      const exists = reports.some((r) => r.eventCode === eventCode && (r.date === isoDate || r.rawDate === formattedDate));
+      if (!exists) {
+        reports.unshift({
+          eventCode,
+          eventName: eventObj.name,
+          rawDate: formattedDate,
+          date: isoDate,
+          smr: Number(smr) || null,
+          country: String(country || 'KUWAIT (KW)'),
+          distributor: `${distributor} (DAR ALHAI)`,
+        });
+        reports.sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')));
+        cache.machines[sNo].reports = reports;
+        cache.machines[sNo].totalReports = reports.length;
+        cache.machines[sNo].syncedAt = new Date().toISOString();
+        cache.lastSync = new Date().toISOString();
+        saveCachedLiveLifecycle(cache);
+      }
+    } catch (cacheErr) {
+      console.warn('[uploadReportToEqpCare] Cache update notice:', cacheErr.message);
+    }
   } catch (dbErr) {
     console.warn('[uploadReportToEqpCare] DB tracking notice:', dbErr.message);
   }
@@ -672,6 +712,337 @@ async function uploadReportToEqpCare(reportData, customCookie = null) {
     fileName,
     uploadedAt: new Date().toISOString(),
     message: komatsuMessage || `Successfully uploaded ${model} #${serialNo} (${eventObj.name}) to Komatsu EQP Care.`,
+  };
+}
+
+/**
+ * Updates an existing, already uploaded service log on Komatsu Equipment Care in place (EMDW0904.do with actionMode='update').
+ * Updates PostgreSQL eqp_machine_history, eqp_reports, eqp_machines, and eqp_care_live_lifecycle.json without creating duplicate logs.
+ */
+async function updateServiceLogInEqpCare(updateData, customCookie = null) {
+  const {
+    model,
+    type = null,
+    subtype = null,
+    serialNo,
+    eventCode,
+    serviceDate,
+    newSmr,
+    fileBuffer = null,
+    fileName = null,
+    comments = null,
+    syncToEqpc = true,
+  } = updateData;
+
+  const sNo = String(serialNo || '').trim();
+  const eCode = String(eventCode || '').trim();
+  if (!sNo) {
+    throw new Error('Machine serial number is required.');
+  }
+  if (!eCode) {
+    throw new Error('Event code is required.');
+  }
+  if (!serviceDate) {
+    throw new Error('Service date is required.');
+  }
+  if (newSmr == null || isNaN(Number(newSmr))) {
+    throw new Error('Valid new SMR number is required.');
+  }
+
+  const numericSmr = Number(newSmr);
+  const eventObj = EVENT_CODES.find((e) => e.code === eCode) || { code: eCode, name: eCode };
+
+  // Format dates
+  const dateObj = new Date(serviceDate);
+  let formattedDate = '';
+  let dbDateFormat = ''; // YYYYMMDD
+  let isoDate = '';      // YYYY-MM-DD
+  let monthKey = '';
+
+  const str = String(serviceDate).trim();
+  if (/^\d{4}-\d{2}-\d{2}$/.test(str)) {
+    isoDate = str;
+    const [y, m, d] = str.split('-');
+    formattedDate = `${m}/${d}/${y}`;
+    dbDateFormat = `${y}${m}${d}`;
+    monthKey = `${y}-${m}`;
+  } else if (!isNaN(dateObj.getTime())) {
+    const y = dateObj.getFullYear();
+    const m = String(dateObj.getMonth() + 1).padStart(2, '0');
+    const d = String(dateObj.getDate()).padStart(2, '0');
+    isoDate = `${y}-${m}-${d}`;
+    formattedDate = `${m}/${d}/${y}`;
+    dbDateFormat = `${y}${m}${d}`;
+    monthKey = `${y}-${m}`;
+  } else {
+    isoDate = str.slice(0, 10);
+    formattedDate = str;
+    dbDateFormat = isoDate.replace(/-/g, '');
+    monthKey = isoDate.slice(0, 7);
+  }
+
+  // Look up machine details
+  const machineDetails = await lookupMachineDetails({ model, serialNo: sNo });
+  const effectiveModel = model || machineDetails.model || 'HM400';
+  const { type: effectiveType, subtype: effectiveSubtype } = resolveMachineTypeAndSubtype(effectiveModel, type, subtype);
+
+  let komatsuUpdated = false;
+  let komatsuNotice = '';
+
+  // 1. In-place update on Komatsu Equipment Care portal if requested and cookie is available
+  if (syncToEqpc !== false) {
+    const cookieStr = customCookie ? parseCookieInput(customCookie) : loadCookie();
+    if (cookieStr && !cookieStr.includes('test_session')) {
+      if (customCookie && !customCookie.includes('test_session')) {
+        saveCookie(customCookie);
+      }
+
+      const defaultHeaders = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36 Edg/151.0.0.0',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+        'Accept-Language': 'en-US,en;q=0.9',
+        'Origin': 'https://eqp-care.komatsu.co.jp',
+        'Referer': 'https://eqp-care.komatsu.co.jp/eqpc/link.do?linkPath=EMDW0904tiles',
+        'Cookie': cookieStr,
+      };
+
+      // Resolve machineId
+      let machineId = updateData.machineId || '';
+      if (!machineId) {
+        try {
+          const tileUrl = `${BASE_EQPC_URL}/link.do?linkPath=EMDW0904tiles&model=${encodeURIComponent(effectiveModel)}&type=${encodeURIComponent(effectiveType)}&subtype=${encodeURIComponent(effectiveSubtype)}&serial=${encodeURIComponent(sNo)}`;
+          const tileResp = await fetch(tileUrl, { method: 'GET', headers: defaultHeaders });
+          const tileHtml = await tileResp.text();
+          const idMatch = tileHtml.match(/name="machineId"\s+value="([^"]+)"/i) || tileHtml.match(/id="machineId"\s+value="([^"]+)"/i);
+          if (idMatch && idMatch[1]) {
+            machineId = idMatch[1];
+          }
+        } catch (searchErr) {
+          console.warn('[updateServiceLogInEqpCare] Machine tile lookup notice:', searchErr.message);
+        }
+      }
+
+      // Query DWR to load existing record rules
+      let evdId = '';
+      let commentId = '-1';
+      let existingComment = '';
+      try {
+        const dwrBody = `callCount=1\nc0-scriptName=EMDW0902DWR\nc0-methodName=getEquipmentHistory\nc0-id=0\nc0-param0=string:${machineId}\nc0-param1=string:${eCode}\nc0-param2=string:${formattedDate}\nc0-param3=string:update\nc0-param4=string:E0904\nsubsessionID=defaultID\nxml=true\n`;
+        const dwrResp = await fetch(`${BASE_EQPC_URL}/dwr/exec/EMDW0902DWR.getEquipmentHistory.dwr`, {
+          method: 'POST',
+          headers: { ...defaultHeaders, 'Content-Type': 'text/plain' },
+          body: dwrBody,
+        });
+        const dwrText = await dwrResp.text();
+        const evdMatch = dwrText.match(/s0\.strEvdId="([^"]*)"/);
+        if (evdMatch) evdId = evdMatch[1];
+        const commentIdMatch = dwrText.match(/s0\.commentId="?(-?\d+)"?/);
+        if (commentIdMatch) commentId = commentIdMatch[1];
+        const commentMatch = dwrText.match(/s0\.comment1="([^"]*)"/);
+        if (commentMatch) existingComment = commentMatch[1];
+      } catch (dwrErr) {
+        console.warn('[updateServiceLogInEqpCare] DWR notice:', dwrErr.message);
+      }
+
+      // Submit update to EMDW0904.do
+      const updateForm = new FormData();
+      updateForm.append('subsessionID', 'defaultID');
+      updateForm.append('eqpMenuCtg', 'E');
+      updateForm.append('buttonId', 'save');
+      updateForm.append('actionMode', 'update');
+      updateForm.append('machineId', String(machineId || ''));
+      updateForm.append('model', String(effectiveModel).trim());
+      updateForm.append('type', String(effectiveType).trim());
+      updateForm.append('stype', String(effectiveSubtype).trim());
+      updateForm.append('serial', String(sNo).trim());
+      updateForm.append('hisInfoCd', String(eCode).trim());
+      updateForm.append('hisDate', formattedDate);
+      updateForm.append('previousHisDate', dbDateFormat);
+      updateForm.append('hisSmr', String(numericSmr).trim());
+      updateForm.append('ordNo', '');
+      updateForm.append('seller', '');
+      updateForm.append('sellerNm', '');
+      updateForm.append('subsidiary', '9961');
+      updateForm.append('subsidiaryNm', 'KME');
+      updateForm.append('cntryCd', 'KW');
+      updateForm.append('cntryNm', 'KUWAIT');
+      updateForm.append('point', '');
+      updateForm.append('pointNm', '');
+      updateForm.append('db', '5194');
+      updateForm.append('dbNm', 'DAR ALHAI GENERAL TRADING KW');
+      updateForm.append('branchNm', '##1');
+      updateForm.append('branchCd', '##1');
+      updateForm.append('subDealer', '');
+      updateForm.append('subDealerNm', '');
+      updateForm.append('siteNm', '##1');
+      updateForm.append('siteCd', '##1');
+      updateForm.append('custNm', "LA'ALA AL-KUWAIT REAL ESTATE CO.");
+      updateForm.append('custCd', 'DAH-1404');
+      updateForm.append('custUnitNo', '');
+      updateForm.append('comment', comments || existingComment || 'Periodic maintenance service verified and updated.');
+      updateForm.append('commentId', commentId);
+      updateForm.append('evdId', evdId);
+      updateForm.append('strEvdId', evdId);
+      updateForm.append('selLangCd', 'ENG');
+      updateForm.append('hisDateRule', '2');
+      updateForm.append('ordNoRule', '0');
+      updateForm.append('sellerRule', '0');
+      updateForm.append('subsidiaryRule', '0');
+      updateForm.append('cntryRule', '0');
+      updateForm.append('pointRule', '0');
+      updateForm.append('dbRule', '2');
+      updateForm.append('branchNmRule', '1');
+      updateForm.append('subDealerRule', '1');
+      updateForm.append('siteNmRule', '1');
+      updateForm.append('custNmRule', '2');
+      updateForm.append('custUnitNoRule', '1');
+      updateForm.append('creAuth', '1');
+      updateForm.append('updAuth', '1');
+      updateForm.append('refAuth', '1');
+
+      if (fileBuffer) {
+        const blob = new Blob([fileBuffer], { type: 'application/pdf' });
+        updateForm.append('files[0]', blob, fileName || `report_${sNo}_${isoDate}.pdf`);
+      }
+
+      try {
+        const saveResp = await fetch(`${BASE_EQPC_URL}/EMDW0904.do`, {
+          method: 'POST',
+          headers: defaultHeaders,
+          body: updateForm,
+        });
+        const saveText = await saveResp.text();
+        const popupMatch = saveText.match(/Common\.popupMessage\("([^"]*)"\)/);
+        const popupText = popupMatch ? popupMatch[1].replace(/\\r\\n/g, ' ').trim() : '';
+
+        if (popupText && (popupText.toLowerCase().includes('succeeded') || popupText.toLowerCase().includes('success'))) {
+          komatsuUpdated = true;
+          komatsuNotice = popupText.replace(/^\*\s*/, '');
+        } else if (saveText.includes('error.do')) {
+          console.warn('[updateServiceLogInEqpCare] Komatsu redirected to error.do on update.');
+        }
+      } catch (postErr) {
+        console.warn('[updateServiceLogInEqpCare] Post notice:', postErr.message);
+      }
+    }
+  }
+
+  // 2. Local Database In-Place Update (Zero Duplicates)
+  let dbUpdated = false;
+  try {
+    const historyTable = await resolveEqpTable('eqp_machine_history', 'machine_history');
+    const machineTable = await resolveEqpTable('eqp_machines', 'machines');
+
+    // Find existing history entry
+    const histFind = await db.query(
+      `
+        SELECT emh.id
+        FROM ${historyTable} emh
+        JOIN ${machineTable} em ON em.id = emh.machine_id
+        WHERE em.machine_number ILIKE $1
+          AND emh.service_type = $2
+          AND (
+            to_char(emh.operation_date, 'YYYY-MM-DD') = $3
+            OR to_char(emh.operation_date, 'YYYY-MM') = $4
+          )
+        ORDER BY emh.operation_date DESC
+        LIMIT 1
+      `,
+      [sNo, eCode, isoDate, monthKey]
+    );
+
+    if (histFind.rows[0]) {
+      await db.query(
+        `
+          UPDATE ${historyTable}
+          SET smr = $1, updated_at = CURRENT_TIMESTAMP
+          WHERE id = $2
+        `,
+        [numericSmr, histFind.rows[0].id]
+      );
+      dbUpdated = true;
+    }
+
+    // Check eqp_reports if present
+    const reportsTable = await resolveEqpTable('eqp_reports', 'reports');
+    try {
+      const repFind = await db.query(
+        `
+          SELECT id
+          FROM ${reportsTable}
+          WHERE machine_number ILIKE $1
+            AND (
+              to_char(service_date, 'YYYY-MM-DD') = $2
+              OR to_char(service_date, 'YYYY-MM') = $3
+            )
+          LIMIT 1
+        `,
+        [sNo, isoDate, monthKey]
+      );
+
+      if (repFind.rows[0]) {
+        await db.query(
+          `
+            UPDATE ${reportsTable}
+            SET smr = $1, updated_at = CURRENT_TIMESTAMP
+            WHERE id = $2
+          `,
+          [numericSmr, repFind.rows[0].id]
+        );
+      }
+    } catch {
+      // Non-fatal if table doesn't exist
+    }
+
+    // Update eqp_machines last_smr if applicable
+    await db.query(
+      `
+        UPDATE ${machineTable}
+        SET last_smr = GREATEST(COALESCE(last_smr, 0), $1), updated_at = CURRENT_TIMESTAMP
+        WHERE machine_number ILIKE $2
+      `,
+      [numericSmr, sNo]
+    );
+  } catch (dbErr) {
+    console.warn('[updateServiceLogInEqpCare] Database update notice:', dbErr.message);
+  }
+
+  // 3. Live Cache In-Place Update
+  let cacheUpdated = false;
+  try {
+    const cache = loadCachedLiveLifecycle();
+    if (cache.machines && cache.machines[sNo]) {
+      const mObj = cache.machines[sNo];
+      const reports = mObj.reports || [];
+      const targetReport = reports.find(
+        (r) => r.eventCode === eCode && (r.date === isoDate || r.rawDate === formattedDate || r.date?.startsWith(monthKey))
+      );
+
+      if (targetReport) {
+        targetReport.smr = numericSmr;
+        mObj.syncedAt = new Date().toISOString();
+        cache.lastSync = new Date().toISOString();
+        saveCachedLiveLifecycle(cache);
+        cacheUpdated = true;
+      }
+    }
+  } catch (cacheErr) {
+    console.warn('[updateServiceLogInEqpCare] Cache update notice:', cacheErr.message);
+  }
+
+  return {
+    success: true,
+    machineNumber: sNo,
+    model: effectiveModel,
+    eventCode: eCode,
+    eventName: eventObj.name,
+    serviceDate: isoDate,
+    previousSmr: updateData.currentSmr ?? null,
+    newSmr: numericSmr,
+    komatsuUpdated,
+    dbUpdated,
+    cacheUpdated,
+    message: komatsuNotice || `Successfully updated ${effectiveModel} #${sNo} ${eventObj.name} SMR to ${numericSmr} hrs.`,
   };
 }
 
@@ -780,6 +1151,9 @@ function parseHistoryTableFromHtml(html, serialNo, model) {
   } else {
     const tableIndex = html.search(/id\s*=\s*["']resultTable["']/i);
     if (tableIndex === -1) {
+      if (html.includes('error.do') || html.includes('session is expired') || html.includes('Your session was over')) {
+        throw new Error('Komatsu EQP Care session expired or invalid response returned.');
+      }
       return {
         machineNumber: normSerial,
         model: normModel,
@@ -900,7 +1274,12 @@ async function fetchMachineLifecycleFromEqpc({ serialNo, model = '', customCooki
   }
 
   const html = await res.text();
-  if (html.includes('session is expired') || html.includes('Your session was over')) {
+  if (
+    html.includes('error.do') ||
+    html.includes('session is expired') ||
+    html.includes('Your session was over') ||
+    html.includes('Your session has expired')
+  ) {
     throw new Error('Komatsu EQP Care session expired. Please update your session cookie.');
   }
 
@@ -997,6 +1376,7 @@ module.exports = {
   testEqpcConnection,
   lookupMachineDetails,
   uploadReportToEqpCare,
+  updateServiceLogInEqpCare,
   batchUploadReports,
   resolveMachineTypeAndSubtype,
   EVENT_CODES,

@@ -3,13 +3,66 @@ const { resolveEqpTable } = require('./eqpTableResolver');
 
 async function findAll() {
   const table = await resolveEqpTable('eqp_reports', 'reports');
-  const result = await db.query(`
+  const mainResult = await db.query(`
     SELECT *
     FROM ${table}
     ORDER BY created_at DESC
   `);
 
-  return result.rows;
+  // Include successfully uploaded reports from eqp_machine_history
+  try {
+    const historyTable = await resolveEqpTable('eqp_machine_history', 'machine_history');
+    const machineTable = await resolveEqpTable('eqp_machines', 'machines');
+    const historyResult = await db.query(`
+      SELECT 
+        emh.id::text as id,
+        ('EQPC-' || emh.id) as report_no,
+        em.machine_type,
+        emh.machine_id,
+        em.engine_number,
+        emh.smr,
+        to_char(emh.operation_date, 'YYYY-MM-DD') as service_date,
+        ('Uploaded to Komatsu EQP Care by ' || COALESCE(emh.performed_by, 'technician')) as comments,
+        emh.created_at,
+        emh.performed_by as created_by,
+        em.machine_number,
+        emh.service_type as report_type,
+        emh.report_type as service_type,
+        null as file_name,
+        null as file_url
+      FROM ${historyTable} emh
+      JOIN ${machineTable} em ON em.id = emh.machine_id
+      WHERE emh.operation_type LIKE 'EQP Care Upload%'
+      ORDER BY emh.operation_date DESC
+    `);
+
+    // Combine avoiding duplicate records if a report exists in both tables
+    const existingKeys = new Set(
+      mainResult.rows.map((r) => {
+        const mNum = String(r.machine_number || '').trim();
+        const d = r.service_date ? String(r.service_date).slice(0, 10) : '';
+        const code = String(r.report_type || '').trim().toUpperCase();
+        return `${mNum}_${code}_${d}`;
+      })
+    );
+
+    const merged = [...mainResult.rows];
+    for (const hr of historyResult.rows) {
+      const mNum = String(hr.machine_number || '').trim();
+      const d = hr.service_date ? String(hr.service_date).slice(0, 10) : '';
+      const code = String(hr.report_type || '').trim().toUpperCase();
+      const key = `${mNum}_${code}_${d}`;
+      if (!existingKeys.has(key)) {
+        existingKeys.add(key);
+        merged.push(hr);
+      }
+    }
+
+    return merged;
+  } catch (err) {
+    console.warn('[reportRepository.findAll] Notice loading history reports:', err.message);
+    return mainResult.rows;
+  }
 }
 
 async function findByOwner(ownerId, ownerName) {
@@ -185,7 +238,31 @@ async function findByMachineAndMonth(machineNumber, monthKey) {
       `,
       [String(machineNumber).trim(), String(monthKey).trim()]
     );
-    return result.rows[0] || null;
+    if (result.rows[0]) return result.rows[0];
+
+    // Check history table as well
+    const historyTable = await resolveEqpTable('eqp_machine_history', 'machine_history');
+    const machineTable = await resolveEqpTable('eqp_machines', 'machines');
+    const histResult = await db.query(
+      `
+        SELECT 
+          emh.id::text as id,
+          ('EQPC-' || emh.id) as report_no,
+          em.machine_type,
+          emh.machine_id,
+          emh.smr,
+          to_char(emh.operation_date, 'YYYY-MM-DD') as service_date,
+          em.machine_number,
+          emh.service_type as report_type
+        FROM ${historyTable} emh
+        JOIN ${machineTable} em ON em.id = emh.machine_id
+        WHERE em.machine_number = $1
+          AND TO_CHAR(emh.operation_date, 'YYYY-MM') = $2
+        LIMIT 1
+      `,
+      [String(machineNumber).trim(), String(monthKey).trim()]
+    );
+    return histResult.rows[0] || null;
   } catch {
     return null;
   }

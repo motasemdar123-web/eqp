@@ -7,7 +7,7 @@ import Card from '../../../components/ui/Card';
 import Badge from '../../../components/ui/Badge';
 import EmptyState from '../../../components/ui/EmptyState';
 import Button from '../../../components/ui/Button';
-import { getMachines, getReports, getAllFleetReports, getEqpcLifecycleCache, syncEqpcLifecycle } from '../../../lib/api';
+import { getMachines, getReports, getAllFleetReports, getEqpcLifecycleCache, syncEqpcLifecycle, updateEqpcServiceLog } from '../../../lib/api';
 import { getStoredPlatformSession, getStoredUser, getMatchingEngineerName } from '../../../lib/auth';
 import {
   buildDynamicLifecycleRecords,
@@ -35,6 +35,14 @@ export default function EqpLifecyclePage() {
   const [isSyncingLive, setIsSyncingLive] = useState(false);
   const [syncStatusMsg, setSyncStatusMsg] = useState('');
   const [singleSyncMachine, setSingleSyncMachine] = useState(null);
+
+  // In-Place Service Log & SMR Edit States
+  const [editingMilestone, setEditingMilestone] = useState(null);
+  const [editSmrValue, setEditSmrValue] = useState('');
+  const [editSyncToKomatsu, setEditSyncToKomatsu] = useState(true);
+  const [editReplacementFile, setEditReplacementFile] = useState(null);
+  const [isUpdatingLog, setIsUpdatingLog] = useState(false);
+  const [editNotice, setEditNotice] = useState({ type: '', message: '' });
 
   useEffect(() => {
     const timerId = window.setTimeout(() => {
@@ -117,6 +125,106 @@ export default function EqpLifecyclePage() {
       setIsSyncingLive(false);
       setSingleSyncMachine(null);
       setTimeout(() => setSyncStatusMsg(''), 7000);
+    }
+  }
+
+  function handleOpenEditModal(milestone) {
+    setEditingMilestone(milestone);
+    setEditSmrValue(milestone.smr != null ? String(milestone.smr) : '');
+    setEditSyncToKomatsu(true);
+    setEditReplacementFile(null);
+    setEditNotice({ type: '', message: '' });
+  }
+
+  function handleCloseEditModal() {
+    if (isUpdatingLog) return;
+    setEditingMilestone(null);
+    setEditSmrValue('');
+    setEditReplacementFile(null);
+    setEditNotice({ type: '', message: '' });
+  }
+
+  async function handleSaveServiceLogUpdate(e) {
+    if (e) e.preventDefault();
+    if (!editingMilestone || !selectedMachine) return;
+
+    const numSmr = Number(editSmrValue);
+    if (isNaN(numSmr) || numSmr < 0) {
+      setEditNotice({ type: 'error', message: 'Please enter a valid non-negative SMR number.' });
+      return;
+    }
+
+    try {
+      setIsUpdatingLog(true);
+      setEditNotice({ type: '', message: '' });
+
+      const payload = new FormData();
+      payload.append('machineNumber', selectedMachine.machineNumber);
+      payload.append('serialNo', selectedMachine.machineNumber);
+      payload.append('model', selectedMachine.model);
+      payload.append('eventCode', editingMilestone.code);
+      payload.append('serviceDate', editingMilestone.date);
+      payload.append('newSmr', String(numSmr));
+      payload.append('currentSmr', String(editingMilestone.smr ?? ''));
+      payload.append('syncToEqpc', editSyncToKomatsu ? 'true' : 'false');
+
+      const userCookie = typeof window !== 'undefined' ? localStorage.getItem('eqpc_user_cookie') || '' : '';
+      if (userCookie) {
+        payload.append('cookie', userCookie);
+      }
+
+      if (editReplacementFile) {
+        payload.append('file', editReplacementFile);
+      }
+
+      const res = await updateEqpcServiceLog(payload);
+
+      if (res && res.success) {
+        // In-place update of liveEqpData cache state
+        setLiveEqpData((prevCache) => {
+          if (!prevCache) return prevCache;
+          const copy = JSON.parse(JSON.stringify(prevCache));
+          const mKey = selectedMachine.machineNumber;
+          if (copy.machines && copy.machines[mKey]) {
+            const mReports = copy.machines[mKey].reports || [];
+            const iso = editingMilestone.date;
+            const target = mReports.find(
+              (r) => r.eventCode === editingMilestone.code && (r.date === iso || r.date?.slice(0, 7) === iso?.slice(0, 7))
+            );
+            if (target) {
+              target.smr = numSmr;
+            }
+          }
+          return copy;
+        });
+
+        // In-place update of generatedReports state
+        setGeneratedReports((prevReports) => {
+          return prevReports.map((r) => {
+            const mNum = String(r.machine_number || r.machine?.machineNumber || '').trim();
+            const rCode = String(r.report_type || r.service_type || '').toUpperCase();
+            const rDate = String(r.service_date || r.created_at || '').slice(0, 10);
+            if (
+              mNum === selectedMachine.machineNumber &&
+              rCode.includes(editingMilestone.code) &&
+              (rDate === editingMilestone.date || rDate.slice(0, 7) === editingMilestone.date?.slice(0, 7))
+            ) {
+              return { ...r, smr: numSmr };
+            }
+            return r;
+          });
+        });
+
+        setSyncStatusMsg(`✓ Service log for #${selectedMachine.machineNumber} (${editingMilestone.code}) updated to ${numSmr} hrs.`);
+        setTimeout(() => setSyncStatusMsg(''), 7000);
+        handleCloseEditModal();
+      } else {
+        setEditNotice({ type: 'error', message: res?.message || 'Update failed' });
+      }
+    } catch (err) {
+      setEditNotice({ type: 'error', message: err.message || 'Failed to update service log' });
+    } finally {
+      setIsUpdatingLog(false);
     }
   }
 
@@ -717,7 +825,7 @@ export default function EqpLifecyclePage() {
                         <p className="font-bold text-slate-900">{milestone.label}</p>
                         <p className="font-mono text-slate-400 text-[10px]">{milestone.code}</p>
                       </div>
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-1.5">
                         {milestone.smr != null ? (
                           <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-amber-100 text-amber-900 border border-amber-200" title="Equipment Operating Hours">
                             {milestone.smr} hrs
@@ -730,6 +838,20 @@ export default function EqpLifecyclePage() {
                         <span className="font-semibold text-slate-700 font-mono text-[11px]">
                           {formatLifecycleDate(milestone.date)}
                         </span>
+                        {milestone.date && (
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleOpenEditModal(milestone);
+                            }}
+                            className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold text-slate-600 hover:text-amber-900 bg-slate-100 hover:bg-amber-100 border border-slate-200 hover:border-amber-300 transition-colors cursor-pointer ml-1"
+                            title="Edit SMR & Report in-place"
+                          >
+                            <span>✏️</span>
+                            <span>Edit SMR</span>
+                          </button>
+                        )}
                       </div>
                     </div>
                   ))}
@@ -754,6 +876,143 @@ export default function EqpLifecyclePage() {
             </Card>
           )}
         </section>
+
+        {/* In-Place Service Log & SMR Editing Modal */}
+        {editingMilestone && selectedMachine && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-in fade-in duration-150">
+            <div className="bg-white rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden border border-slate-200">
+              <div className="p-5 border-b border-slate-100 bg-slate-50/80 flex items-center justify-between">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-9 h-9 rounded-xl bg-amber-500/10 text-amber-700 flex items-center justify-center font-bold text-base border border-amber-500/20">
+                    ✏️
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-bold text-slate-900">Edit Service Log & SMR</h3>
+                    <p className="text-xs text-slate-500">
+                      In-place update for {selectedMachine.model} #{selectedMachine.machineNumber}
+                    </p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleCloseEditModal}
+                  disabled={isUpdatingLog}
+                  className="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-100 transition-colors text-sm"
+                >
+                  ✕
+                </button>
+              </div>
+
+              <form onSubmit={handleSaveServiceLogUpdate} className="p-5 space-y-4">
+                {/* Event Details Card */}
+                <div className="grid grid-cols-2 gap-2.5 p-3 rounded-xl bg-slate-50 border border-slate-200 text-xs">
+                  <div>
+                    <span className="text-slate-400 text-[10px] uppercase font-bold block">Service Event</span>
+                    <span className="font-bold text-slate-800">{editingMilestone.label}</span>
+                    <span className="ml-1 font-mono text-slate-500">({editingMilestone.code})</span>
+                  </div>
+                  <div>
+                    <span className="text-slate-400 text-[10px] uppercase font-bold block">Service Date</span>
+                    <span className="font-semibold text-slate-700 font-mono">
+                      {formatLifecycleDate(editingMilestone.date)}
+                    </span>
+                  </div>
+                </div>
+
+                {/* SMR Input */}
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">
+                    Operating Hours (SMR) <span className="text-rose-500">*</span>
+                  </label>
+                  <div className="relative">
+                    <input
+                      type="number"
+                      min="0"
+                      step="1"
+                      required
+                      value={editSmrValue}
+                      onChange={(e) => setEditSmrValue(e.target.value)}
+                      placeholder="e.g. 15"
+                      className="ds-input pr-12 font-mono font-bold text-sm"
+                      disabled={isUpdatingLog}
+                    />
+                    <span className="absolute right-3 top-2.5 text-xs text-slate-400 font-bold pointer-events-none">
+                      hrs
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-slate-400 mt-1">
+                    Current recorded value: <span className="font-semibold text-slate-600">{editingMilestone.smr != null ? `${editingMilestone.smr} hrs` : 'Not recorded'}</span>.
+                    The existing service log will be updated in place without creating a duplicate record.
+                  </p>
+                </div>
+
+                {/* Optional Report Replacement Document */}
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">
+                    Replacement Report PDF <span className="text-slate-400 font-normal">(Optional)</span>
+                  </label>
+                  <input
+                    type="file"
+                    accept=".pdf,application/pdf"
+                    onChange={(e) => setEditReplacementFile(e.target.files?.[0] || null)}
+                    className="block w-full text-xs text-slate-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-amber-50 file:text-amber-700 hover:file:bg-amber-100 border border-slate-200 rounded-xl p-1"
+                    disabled={isUpdatingLog}
+                  />
+                  <p className="text-[10px] text-slate-400 mt-1">
+                    Attach a new PDF to replace the report document in the system and on Komatsu, or leave empty to update SMR only.
+                  </p>
+                </div>
+
+                {/* Direct Komatsu Sync Checkbox */}
+                <div className="p-3 rounded-xl bg-blue-50/70 border border-blue-200/80 flex items-start gap-2.5">
+                  <input
+                    type="checkbox"
+                    id="syncToEqpcCheckbox"
+                    checked={editSyncToKomatsu}
+                    onChange={(e) => setEditSyncToKomatsu(e.target.checked)}
+                    className="mt-0.5 rounded border-blue-300 text-blue-600 focus:ring-blue-500"
+                    disabled={isUpdatingLog}
+                  />
+                  <label htmlFor="syncToEqpcCheckbox" className="text-xs text-blue-900 cursor-pointer">
+                    <span className="font-bold block">Sync in-place to Komatsu Equipment Care</span>
+                    <span className="text-[11px] text-blue-700 block mt-0.5">
+                      Updates the existing service record directly on the Komatsu portal (<code className="font-mono text-[10px] bg-blue-100 px-1 rounded">actionMode=update</code>).
+                    </span>
+                  </label>
+                </div>
+
+                {/* Error / Notice Display */}
+                {editNotice.message && (
+                  <div className={`p-3 rounded-xl text-xs font-medium ${editNotice.type === 'error' ? 'bg-rose-50 border border-rose-200 text-rose-800' : 'bg-emerald-50 border border-emerald-200 text-emerald-800'}`}>
+                    {editNotice.message}
+                  </div>
+                )}
+
+                {/* Modal Actions */}
+                <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    size="sm"
+                    onClick={handleCloseEditModal}
+                    disabled={isUpdatingLog}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    type="submit"
+                    variant="primary"
+                    size="sm"
+                    disabled={isUpdatingLog || !editSmrValue}
+                    className="font-bold bg-amber-600 hover:bg-amber-700 text-white cursor-pointer"
+                  >
+                    {isUpdatingLog ? '⏳ Updating Log...' : 'Save & Update SMR'}
+                  </Button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
       </div>
     </SystemShell>
   );

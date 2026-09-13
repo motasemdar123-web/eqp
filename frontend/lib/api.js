@@ -65,12 +65,14 @@ async function request(path, options = {}) {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
+  const isFormData = typeof FormData !== 'undefined' && options.body instanceof FormData;
+
   try {
     response = await fetch(targetUrl, {
       ...options,
       signal: options.signal || controller.signal,
       headers: {
-        'Content-Type': 'application/json',
+        ...(isFormData ? {} : { 'Content-Type': 'application/json' }),
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
         ...(options.headers || {}),
       },
@@ -628,6 +630,14 @@ export function uploadEqpcReport(payload) {
   return request('/api/komatsu/eqpc/upload', {
     method: 'POST',
     body: JSON.stringify(payload),
+  });
+}
+
+export function updateEqpcServiceLog(payload) {
+  const isFormData = typeof FormData !== 'undefined' && payload instanceof FormData;
+  return request('/api/komatsu/eqpc/update-service-log', {
+    method: 'POST',
+    body: isFormData ? payload : JSON.stringify(payload),
   });
 }
 

@@ -7,6 +7,7 @@ const platformController = require('../controllers/platformController');
 const { asyncHandler } = require('../utils/asyncHandler');
 const { requireAuth, requireEqpAccess } = require('../middleware/authMiddleware');
 const { reportGenerationRateLimit } = require('../middleware/securityMiddleware');
+const { reportUpload } = require('../middleware/uploadMiddleware');
 
 const router = Router();
 
@@ -32,6 +33,7 @@ router.post('/api/eqp/care/cookie', requireAuth, requireEqpAccess, asyncHandler(
 router.get('/api/eqp/care/event-codes', requireAuth, requireEqpAccess, asyncHandler(platformController.getEqpcEventCodes));
 router.get('/api/eqp/care/machine-lookup', requireAuth, requireEqpAccess, asyncHandler(platformController.lookupEqpcMachine));
 router.post('/api/eqp/care/upload', requireAuth, requireEqpAccess, asyncHandler(platformController.uploadEqpcReport));
+router.post('/api/eqp/care/update-service-log', requireAuth, requireEqpAccess, reportUpload.single('file'), asyncHandler(platformController.updateEqpcServiceLog));
 router.post('/api/eqp/care/batch-upload', requireAuth, requireEqpAccess, asyncHandler(platformController.batchUploadEqpcReports));
 router.get('/api/eqp/care/lifecycle-cache', requireAuth, requireEqpAccess, asyncHandler(platformController.getEqpcLifecycleCache));
 router.post('/api/eqp/care/lifecycle-sync', requireAuth, requireEqpAccess, asyncHandler(platformController.syncEqpcLifecycle));

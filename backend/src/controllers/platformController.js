@@ -627,6 +627,41 @@ async function uploadEqpcReport(req, res) {
   res.json({ success: true, ...result });
 }
 
+async function updateEqpcServiceLog(req, res) {
+  const updateData = req.body || {};
+  const serialNo = updateData.serialNo || updateData.machineNumber || updateData.machine_number;
+  const eventCode = updateData.eventCode || updateData.serviceType || updateData.service_type;
+  const serviceDate = updateData.serviceDate || updateData.service_date || updateData.date;
+  const newSmr = updateData.newSmr ?? updateData.smr;
+
+  if (!serialNo || !eventCode || !serviceDate || newSmr == null) {
+    return res.status(400).json({
+      success: false,
+      message: 'Machine serial number, event code, service date, and new SMR are required.',
+    });
+  }
+
+  const customCookie = updateData.cookie || req.headers['x-eqpc-cookie'] || null;
+  const fileBuffer = req.file?.buffer || null;
+  const fileName = req.file?.originalname || updateData.fileName || null;
+
+  const result = await komatsuEqpCareService.updateServiceLogInEqpCare(
+    {
+      ...updateData,
+      serialNo,
+      eventCode,
+      serviceDate,
+      newSmr,
+      fileBuffer,
+      fileName,
+      performedBy: req.platformUser?.fullName || req.user?.fullName || 'IBRAHIM AHMAD ALDARAWSHEH',
+    },
+    customCookie
+  );
+
+  res.json({ success: true, ...result });
+}
+
 async function batchUploadEqpcReports(req, res) {
   const { items, cookie } = req.body || {};
   if (!Array.isArray(items) || items.length === 0) {
@@ -872,6 +907,7 @@ module.exports = {
   getEqpcEventCodes,
   lookupEqpcMachine,
   uploadEqpcReport,
+  updateEqpcServiceLog,
   batchUploadEqpcReports,
   getEqpcLifecycleCache,
   syncEqpcLifecycle,

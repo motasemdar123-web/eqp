@@ -181,4 +181,75 @@ describe('Komatsu Equipment Care (EQP Care) Service', () => {
       expect(result.reports[1].date).toBe('2023-02-04');
     });
   });
+
+  describe('In-Place Service Log & SMR Editing', () => {
+    test('rejects update missing required fields', async () => {
+      await expect(komatsuEqpCareService.updateServiceLogInEqpCare({})).rejects.toThrow(
+        'Machine serial number is required.'
+      );
+      await expect(
+        komatsuEqpCareService.updateServiceLogInEqpCare({ serialNo: '9631' })
+      ).rejects.toThrow('Event code is required.');
+      await expect(
+        komatsuEqpCareService.updateServiceLogInEqpCare({ serialNo: '9631', eventCode: 'W41X' })
+      ).rejects.toThrow('Service date is required.');
+      await expect(
+        komatsuEqpCareService.updateServiceLogInEqpCare({
+          serialNo: '9631',
+          eventCode: 'W41X',
+          serviceDate: '2026-08-18',
+        })
+      ).rejects.toThrow('Valid new SMR number is required.');
+    });
+
+    test('updates existing report SMR in place without creating extra reports', async () => {
+      // Mock cache with existing machine and 2 reports
+      const originalCache = komatsuEqpCareService.loadCachedLiveLifecycle();
+      const testCache = {
+        lastSync: new Date().toISOString(),
+        totalMachines: 1,
+        machines: {
+          '9999': {
+            machineNumber: '9999',
+            model: 'HM400',
+            totalReports: 2,
+            reports: [
+              { eventCode: 'W41X', eventName: 'EXTRA SERVICE', date: '2026-08-18', rawDate: '08/18/2026', smr: 10 },
+              { eventCode: 'W41X', eventName: 'EXTRA SERVICE', date: '2026-07-09', rawDate: '07/09/2026', smr: 9 },
+            ],
+          },
+        },
+      };
+      komatsuEqpCareService.saveCachedLiveLifecycle(testCache);
+
+      try {
+        const res = await komatsuEqpCareService.updateServiceLogInEqpCare({
+          serialNo: '9999',
+          model: 'HM400',
+          eventCode: 'W41X',
+          serviceDate: '2026-08-18',
+          newSmr: 18,
+          currentSmr: 10,
+          syncToEqpc: false, // local in-place update
+        });
+
+        expect(res.success).toBe(true);
+        expect(res.newSmr).toBe(18);
+        expect(res.cacheUpdated).toBe(true);
+
+        const updatedCache = komatsuEqpCareService.loadCachedLiveLifecycle();
+        const mObj = updatedCache.machines['9999'];
+        expect(mObj).toBeDefined();
+        // Total reports count MUST remain exactly 2 (NO duplicate report created!)
+        expect(mObj.reports.length).toBe(2);
+        expect(mObj.reports[0].date).toBe('2026-08-18');
+        expect(mObj.reports[0].smr).toBe(18);
+        expect(mObj.reports[1].smr).toBe(9);
+      } finally {
+        // Restore original cache
+        komatsuEqpCareService.saveCachedLiveLifecycle(originalCache);
+      }
+    });
+  });
 });
+

@@ -50,7 +50,25 @@ const audioUpload = multer({
   },
 });
 
+const reportUpload = multer({
+  storage: multer.memoryStorage(),
+  limits: {
+    fileSize: 25 * 1024 * 1024,
+    files: 1,
+  },
+  fileFilter(req, file, callback) {
+    const isPdf = file.mimetype === 'application/pdf' || /\.pdf$/i.test(file.originalname);
+    if (!isPdf) {
+      callback(new ApiError(400, 'Only PDF report files can be uploaded.'));
+      return;
+    }
+    callback(null, true);
+  },
+});
+
 module.exports = {
   manualUpload,
   audioUpload,
+  reportUpload,
 };
+

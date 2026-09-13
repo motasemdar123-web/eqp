@@ -1,5 +1,5 @@
 {
-  "lastSync": "2026-09-08T12:46:01.552Z",
+  "lastSync": "2026-09-13T11:42:08.222Z",
   "totalMachines": 113,
   "machines": {
     "9485": {
@@ -3255,80 +3255,8 @@
       "machineNumber": "9582",
       "model": "HM400",
       "machineId": "3780894",
-      "totalReports": 32,
+      "totalReports": 33,
       "reports": [
-        {
-          "eventCode": "W70F",
-          "eventName": "FACTORY FORWARDING",
-          "rawDate": "12/11/2023",
-          "date": "2023-12-11",
-          "smr": null,
-          "country": "KUWAIT (KW)",
-          "distributor": ""
-        },
-        {
-          "eventCode": "W70",
-          "eventName": "SHIPPING INFO FROM ONE SUBSIDIARY TO OTHERS.",
-          "rawDate": "12/26/2023",
-          "date": "2023-12-26",
-          "smr": null,
-          "country": "KUWAIT (KW)",
-          "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
-        },
-        {
-          "eventCode": "W21",
-          "eventName": "MACHINE RECEIVING INSPECTION AT EACH DIST/SUB.",
-          "rawDate": "01/27/2024",
-          "date": "2024-01-27",
-          "smr": 4,
-          "country": "KUWAIT (KW)",
-          "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
-        },
-        {
-          "eventCode": "W41P",
-          "eventName": "PRE-DELIVERY SERVICE",
-          "rawDate": "02/28/2024",
-          "date": "2024-02-28",
-          "smr": 4,
-          "country": "KUWAIT (KW)",
-          "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
-        },
-        {
-          "eventCode": "W41N",
-          "eventName": "NEW MACHINE DELIVERY SERVICE",
-          "rawDate": "02/29/2024",
-          "date": "2024-02-29",
-          "smr": 5,
-          "country": "KUWAIT (KW)",
-          "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
-        },
-        {
-          "eventCode": "W411",
-          "eventName": "1ST PERIODIC SERVICE",
-          "rawDate": "04/22/2024",
-          "date": "2024-04-22",
-          "smr": 5,
-          "country": "KUWAIT (KW)",
-          "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
-        },
-        {
-          "eventCode": "W412",
-          "eventName": "2ND PERIODIC SERVICE",
-          "rawDate": "09/05/2024",
-          "date": "2024-09-05",
-          "smr": 5,
-          "country": "KUWAIT (KW)",
-          "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
-        },
-        {
-          "eventCode": "W413",
-          "eventName": "SERVICE REPORT(3RD PERIODIC SERVICE)",
-          "rawDate": "01/10/2025",
-          "date": "2025-01-10",
-          "smr": 5,
-          "country": "KUWAIT (KW)",
-          "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
-        },
         {
           "eventCode": "W41X",
           "eventName": "EXTRA SERVICE",
@@ -3386,6 +3314,15 @@
         {
           "eventCode": "W41X",
           "eventName": "EXTRA SERVICE",
+          "rawDate": "02/15/2026",
+          "date": "2026-02-15",
+          "smr": 8,
+          "country": "KUWAIT (KW)",
+          "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
+        },
+        {
+          "eventCode": "W41X",
+          "eventName": "EXTRA SERVICE",
           "rawDate": "01/26/2026",
           "date": "2026-01-26",
           "smr": 8,
@@ -3478,6 +3415,15 @@
           "eventName": "EXTRA SERVICE",
           "rawDate": "02/16/2025",
           "date": "2025-02-16",
+          "smr": 5,
+          "country": "KUWAIT (KW)",
+          "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
+        },
+        {
+          "eventCode": "W413",
+          "eventName": "SERVICE REPORT(3RD PERIODIC SERVICE)",
+          "rawDate": "01/10/2025",
+          "date": "2025-01-10",
           "smr": 5,
           "country": "KUWAIT (KW)",
           "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
@@ -3510,6 +3456,15 @@
           "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
         },
         {
+          "eventCode": "W412",
+          "eventName": "2ND PERIODIC SERVICE",
+          "rawDate": "09/05/2024",
+          "date": "2024-09-05",
+          "smr": 5,
+          "country": "KUWAIT (KW)",
+          "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
+        },
+        {
           "eventCode": "LTST",
           "eventName": "LATEST MACHINE OPERATION CONFIRMATION",
           "rawDate": "08/17/2024",
@@ -3544,49 +3499,13 @@
           "smr": 5,
           "country": "KUWAIT (KW)",
           "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
-        }
-      ],
-      "syncedAt": "2026-09-08T12:45:34.932Z"
-    },
-    "9583": {
-      "machineNumber": "9583",
-      "model": "HM400",
-      "machineId": "3781196",
-      "totalReports": 26,
-      "reports": [
-        {
-          "eventCode": "W70F",
-          "eventName": "FACTORY FORWARDING",
-          "rawDate": "12/12/2023",
-          "date": "2023-12-12",
-          "smr": null,
-          "country": "KUWAIT (KW)",
-          "distributor": ""
         },
         {
-          "eventCode": "W70",
-          "eventName": "SHIPPING INFO FROM ONE SUBSIDIARY TO OTHERS.",
-          "rawDate": "12/26/2023",
-          "date": "2023-12-26",
-          "smr": null,
-          "country": "KUWAIT (KW)",
-          "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
-        },
-        {
-          "eventCode": "W21",
-          "eventName": "MACHINE RECEIVING INSPECTION AT EACH DIST/SUB.",
-          "rawDate": "01/27/2024",
-          "date": "2024-01-27",
-          "smr": 4,
-          "country": "KUWAIT (KW)",
-          "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
-        },
-        {
-          "eventCode": "W41P",
-          "eventName": "PRE-DELIVERY SERVICE",
-          "rawDate": "02/28/2024",
-          "date": "2024-02-28",
-          "smr": 4,
+          "eventCode": "W411",
+          "eventName": "1ST PERIODIC SERVICE",
+          "rawDate": "04/22/2024",
+          "date": "2024-04-22",
+          "smr": 5,
           "country": "KUWAIT (KW)",
           "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
         },
@@ -3600,29 +3519,110 @@
           "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
         },
         {
-          "eventCode": "W411",
-          "eventName": "1ST PERIODIC SERVICE",
-          "rawDate": "04/22/2024",
-          "date": "2024-04-22",
-          "smr": 5,
+          "eventCode": "W41P",
+          "eventName": "PRE-DELIVERY SERVICE",
+          "rawDate": "02/28/2024",
+          "date": "2024-02-28",
+          "smr": 4,
           "country": "KUWAIT (KW)",
           "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
         },
         {
-          "eventCode": "W412",
-          "eventName": "2ND PERIODIC SERVICE",
-          "rawDate": "09/05/2024",
-          "date": "2024-09-05",
-          "smr": 5,
+          "eventCode": "W21",
+          "eventName": "MACHINE RECEIVING INSPECTION AT EACH DIST/SUB.",
+          "rawDate": "01/27/2024",
+          "date": "2024-01-27",
+          "smr": 4,
           "country": "KUWAIT (KW)",
           "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
         },
         {
-          "eventCode": "W413",
-          "eventName": "SERVICE REPORT(3RD PERIODIC SERVICE)",
-          "rawDate": "01/10/2025",
-          "date": "2025-01-10",
-          "smr": 5,
+          "eventCode": "W70",
+          "eventName": "SHIPPING INFO FROM ONE SUBSIDIARY TO OTHERS.",
+          "rawDate": "12/26/2023",
+          "date": "2023-12-26",
+          "smr": null,
+          "country": "KUWAIT (KW)",
+          "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
+        },
+        {
+          "eventCode": "W70F",
+          "eventName": "FACTORY FORWARDING",
+          "rawDate": "12/11/2023",
+          "date": "2023-12-11",
+          "smr": null,
+          "country": "KUWAIT (KW)",
+          "distributor": ""
+        }
+      ],
+      "syncedAt": "2026-09-13T11:06:01.679Z"
+    },
+    "9583": {
+      "machineNumber": "9583",
+      "model": "HM400",
+      "machineId": "3781196",
+      "totalReports": 33,
+      "reports": [
+        {
+          "eventCode": "W41X",
+          "eventName": "EXTRA SERVICE",
+          "rawDate": "08/18/2026",
+          "date": "2026-08-18",
+          "smr": 12,
+          "country": "KUWAIT (KW)",
+          "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
+        },
+        {
+          "eventCode": "W41X",
+          "eventName": "EXTRA SERVICE",
+          "rawDate": "07/09/2026",
+          "date": "2026-07-09",
+          "smr": 11,
+          "country": "KUWAIT (KW)",
+          "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
+        },
+        {
+          "eventCode": "W41X",
+          "eventName": "EXTRA SERVICE",
+          "rawDate": "06/12/2026",
+          "date": "2026-06-12",
+          "smr": 11,
+          "country": "KUWAIT (KW)",
+          "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
+        },
+        {
+          "eventCode": "W41X",
+          "eventName": "EXTRA SERVICE",
+          "rawDate": "05/10/2026",
+          "date": "2026-05-10",
+          "smr": 10,
+          "country": "KUWAIT (KW)",
+          "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
+        },
+        {
+          "eventCode": "W41X",
+          "eventName": "EXTRA SERVICE",
+          "rawDate": "04/18/2026",
+          "date": "2026-04-18",
+          "smr": 10,
+          "country": "KUWAIT (KW)",
+          "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
+        },
+        {
+          "eventCode": "W41X",
+          "eventName": "EXTRA SERVICE",
+          "rawDate": "03/14/2026",
+          "date": "2026-03-14",
+          "smr": 10,
+          "country": "KUWAIT (KW)",
+          "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
+        },
+        {
+          "eventCode": "W41X",
+          "eventName": "EXTRA SERVICE",
+          "rawDate": "02/15/2026",
+          "date": "2026-02-15",
+          "smr": 9,
           "country": "KUWAIT (KW)",
           "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
         },
@@ -3726,6 +3726,15 @@
           "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
         },
         {
+          "eventCode": "W413",
+          "eventName": "SERVICE REPORT(3RD PERIODIC SERVICE)",
+          "rawDate": "01/10/2025",
+          "date": "2025-01-10",
+          "smr": 5,
+          "country": "KUWAIT (KW)",
+          "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
+        },
+        {
           "eventCode": "W41X",
           "eventName": "EXTRA SERVICE",
           "rawDate": "12/03/2024",
@@ -3748,6 +3757,15 @@
           "eventName": "EXTRA SERVICE",
           "rawDate": "10/10/2024",
           "date": "2024-10-10",
+          "smr": 5,
+          "country": "KUWAIT (KW)",
+          "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
+        },
+        {
+          "eventCode": "W412",
+          "eventName": "2ND PERIODIC SERVICE",
+          "rawDate": "09/05/2024",
+          "date": "2024-09-05",
           "smr": 5,
           "country": "KUWAIT (KW)",
           "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
@@ -3787,49 +3805,13 @@
           "smr": 5,
           "country": "KUWAIT (KW)",
           "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
-        }
-      ],
-      "syncedAt": "2026-09-08T12:45:35.435Z"
-    },
-    "9586": {
-      "machineNumber": "9586",
-      "model": "HM400",
-      "machineId": "3781198",
-      "totalReports": 27,
-      "reports": [
-        {
-          "eventCode": "W70F",
-          "eventName": "FACTORY FORWARDING",
-          "rawDate": "12/12/2023",
-          "date": "2023-12-12",
-          "smr": null,
-          "country": "KUWAIT (KW)",
-          "distributor": ""
         },
         {
-          "eventCode": "W70",
-          "eventName": "SHIPPING INFO FROM ONE SUBSIDIARY TO OTHERS.",
-          "rawDate": "12/26/2023",
-          "date": "2023-12-26",
-          "smr": null,
-          "country": "KUWAIT (KW)",
-          "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
-        },
-        {
-          "eventCode": "W21",
-          "eventName": "MACHINE RECEIVING INSPECTION AT EACH DIST/SUB.",
-          "rawDate": "01/27/2024",
-          "date": "2024-01-27",
-          "smr": 4,
-          "country": "KUWAIT (KW)",
-          "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
-        },
-        {
-          "eventCode": "W41P",
-          "eventName": "PRE-DELIVERY SERVICE",
-          "rawDate": "02/28/2024",
-          "date": "2024-02-28",
-          "smr": 4,
+          "eventCode": "W411",
+          "eventName": "1ST PERIODIC SERVICE",
+          "rawDate": "04/22/2024",
+          "date": "2024-04-22",
+          "smr": 5,
           "country": "KUWAIT (KW)",
           "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
         },
@@ -3843,29 +3825,74 @@
           "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
         },
         {
-          "eventCode": "W411",
-          "eventName": "1ST PERIODIC SERVICE",
-          "rawDate": "04/22/2024",
-          "date": "2024-04-22",
-          "smr": 5,
+          "eventCode": "W41P",
+          "eventName": "PRE-DELIVERY SERVICE",
+          "rawDate": "02/28/2024",
+          "date": "2024-02-28",
+          "smr": 4,
           "country": "KUWAIT (KW)",
           "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
         },
         {
-          "eventCode": "W412",
-          "eventName": "2ND PERIODIC SERVICE",
-          "rawDate": "09/05/2024",
-          "date": "2024-09-05",
-          "smr": 5,
+          "eventCode": "W21",
+          "eventName": "MACHINE RECEIVING INSPECTION AT EACH DIST/SUB.",
+          "rawDate": "01/27/2024",
+          "date": "2024-01-27",
+          "smr": 4,
           "country": "KUWAIT (KW)",
           "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
         },
         {
-          "eventCode": "W413",
-          "eventName": "SERVICE REPORT(3RD PERIODIC SERVICE)",
-          "rawDate": "01/10/2025",
-          "date": "2025-01-10",
-          "smr": 5,
+          "eventCode": "W70",
+          "eventName": "SHIPPING INFO FROM ONE SUBSIDIARY TO OTHERS.",
+          "rawDate": "12/26/2023",
+          "date": "2023-12-26",
+          "smr": null,
+          "country": "KUWAIT (KW)",
+          "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
+        },
+        {
+          "eventCode": "W70F",
+          "eventName": "FACTORY FORWARDING",
+          "rawDate": "12/12/2023",
+          "date": "2023-12-12",
+          "smr": null,
+          "country": "KUWAIT (KW)",
+          "distributor": ""
+        }
+      ],
+      "syncedAt": "2026-09-13T11:06:01.679Z"
+    },
+    "9586": {
+      "machineNumber": "9586",
+      "model": "HM400",
+      "machineId": "3781198",
+      "totalReports": 30,
+      "reports": [
+        {
+          "eventCode": "W41X",
+          "eventName": "EXTRA SERVICE",
+          "rawDate": "08/18/2026",
+          "date": "2026-08-18",
+          "smr": 12,
+          "country": "KUWAIT (KW)",
+          "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
+        },
+        {
+          "eventCode": "W41X",
+          "eventName": "EXTRA SERVICE",
+          "rawDate": "07/09/2026",
+          "date": "2026-07-09",
+          "smr": 11,
+          "country": "KUWAIT (KW)",
+          "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
+        },
+        {
+          "eventCode": "W41X",
+          "eventName": "EXTRA SERVICE",
+          "rawDate": "06/12/2026",
+          "date": "2026-06-12",
+          "smr": 11,
           "country": "KUWAIT (KW)",
           "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
         },
@@ -3987,6 +4014,15 @@
           "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
         },
         {
+          "eventCode": "W413",
+          "eventName": "SERVICE REPORT(3RD PERIODIC SERVICE)",
+          "rawDate": "01/10/2025",
+          "date": "2025-01-10",
+          "smr": 5,
+          "country": "KUWAIT (KW)",
+          "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
+        },
+        {
           "eventCode": "W41X",
           "eventName": "EXTRA SERVICE",
           "rawDate": "11/01/2024",
@@ -4000,6 +4036,15 @@
           "eventName": "EXTRA SERVICE",
           "rawDate": "09/24/2024",
           "date": "2024-09-24",
+          "smr": 5,
+          "country": "KUWAIT (KW)",
+          "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
+        },
+        {
+          "eventCode": "W412",
+          "eventName": "2ND PERIODIC SERVICE",
+          "rawDate": "09/05/2024",
+          "date": "2024-09-05",
           "smr": 5,
           "country": "KUWAIT (KW)",
           "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
@@ -4039,49 +4084,13 @@
           "smr": 5,
           "country": "KUWAIT (KW)",
           "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
-        }
-      ],
-      "syncedAt": "2026-09-08T12:45:36.014Z"
-    },
-    "9589": {
-      "machineNumber": "9589",
-      "model": "HM400",
-      "machineId": "3781890",
-      "totalReports": 29,
-      "reports": [
-        {
-          "eventCode": "W70F",
-          "eventName": "FACTORY FORWARDING",
-          "rawDate": "12/13/2023",
-          "date": "2023-12-13",
-          "smr": null,
-          "country": "KUWAIT (KW)",
-          "distributor": ""
         },
         {
-          "eventCode": "W70",
-          "eventName": "SHIPPING INFO FROM ONE SUBSIDIARY TO OTHERS.",
-          "rawDate": "12/26/2023",
-          "date": "2023-12-26",
-          "smr": null,
-          "country": "KUWAIT (KW)",
-          "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
-        },
-        {
-          "eventCode": "W21",
-          "eventName": "MACHINE RECEIVING INSPECTION AT EACH DIST/SUB.",
-          "rawDate": "01/27/2024",
-          "date": "2024-01-27",
-          "smr": 4,
-          "country": "KUWAIT (KW)",
-          "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
-        },
-        {
-          "eventCode": "W41P",
-          "eventName": "PRE-DELIVERY SERVICE",
-          "rawDate": "02/28/2024",
-          "date": "2024-02-28",
-          "smr": 4,
+          "eventCode": "W411",
+          "eventName": "1ST PERIODIC SERVICE",
+          "rawDate": "04/22/2024",
+          "date": "2024-04-22",
+          "smr": 5,
           "country": "KUWAIT (KW)",
           "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
         },
@@ -4095,29 +4104,74 @@
           "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
         },
         {
-          "eventCode": "W411",
-          "eventName": "1ST PERIODIC SERVICE",
-          "rawDate": "04/22/2024",
-          "date": "2024-04-22",
-          "smr": 5,
+          "eventCode": "W41P",
+          "eventName": "PRE-DELIVERY SERVICE",
+          "rawDate": "02/28/2024",
+          "date": "2024-02-28",
+          "smr": 4,
           "country": "KUWAIT (KW)",
           "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
         },
         {
-          "eventCode": "W412",
-          "eventName": "2ND PERIODIC SERVICE",
-          "rawDate": "09/05/2024",
-          "date": "2024-09-05",
-          "smr": 5,
+          "eventCode": "W21",
+          "eventName": "MACHINE RECEIVING INSPECTION AT EACH DIST/SUB.",
+          "rawDate": "01/27/2024",
+          "date": "2024-01-27",
+          "smr": 4,
           "country": "KUWAIT (KW)",
           "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
         },
         {
-          "eventCode": "W413",
-          "eventName": "SERVICE REPORT(3RD PERIODIC SERVICE)",
-          "rawDate": "01/10/2025",
-          "date": "2025-01-10",
-          "smr": 5,
+          "eventCode": "W70",
+          "eventName": "SHIPPING INFO FROM ONE SUBSIDIARY TO OTHERS.",
+          "rawDate": "12/26/2023",
+          "date": "2023-12-26",
+          "smr": null,
+          "country": "KUWAIT (KW)",
+          "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
+        },
+        {
+          "eventCode": "W70F",
+          "eventName": "FACTORY FORWARDING",
+          "rawDate": "12/12/2023",
+          "date": "2023-12-12",
+          "smr": null,
+          "country": "KUWAIT (KW)",
+          "distributor": ""
+        }
+      ],
+      "syncedAt": "2026-09-13T11:06:01.679Z"
+    },
+    "9589": {
+      "machineNumber": "9589",
+      "model": "HM400",
+      "machineId": "3781890",
+      "totalReports": 32,
+      "reports": [
+        {
+          "eventCode": "W41X",
+          "eventName": "EXTRA SERVICE",
+          "rawDate": "08/18/2026",
+          "date": "2026-08-18",
+          "smr": 12,
+          "country": "KUWAIT (KW)",
+          "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
+        },
+        {
+          "eventCode": "W41X",
+          "eventName": "EXTRA SERVICE",
+          "rawDate": "07/09/2026",
+          "date": "2026-07-09",
+          "smr": 11,
+          "country": "KUWAIT (KW)",
+          "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
+        },
+        {
+          "eventCode": "W41X",
+          "eventName": "EXTRA SERVICE",
+          "rawDate": "06/12/2026",
+          "date": "2026-06-12",
+          "smr": 11,
           "country": "KUWAIT (KW)",
           "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
         },
@@ -4257,6 +4311,15 @@
           "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
         },
         {
+          "eventCode": "W413",
+          "eventName": "SERVICE REPORT(3RD PERIODIC SERVICE)",
+          "rawDate": "01/10/2025",
+          "date": "2025-01-10",
+          "smr": 5,
+          "country": "KUWAIT (KW)",
+          "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
+        },
+        {
           "eventCode": "W41X",
           "eventName": "EXTRA SERVICE",
           "rawDate": "11/01/2024",
@@ -4270,6 +4333,15 @@
           "eventName": "EXTRA SERVICE",
           "rawDate": "09/24/2024",
           "date": "2024-09-24",
+          "smr": 5,
+          "country": "KUWAIT (KW)",
+          "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
+        },
+        {
+          "eventCode": "W412",
+          "eventName": "2ND PERIODIC SERVICE",
+          "rawDate": "09/05/2024",
+          "date": "2024-09-05",
           "smr": 5,
           "country": "KUWAIT (KW)",
           "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
@@ -4309,49 +4381,13 @@
           "smr": 5,
           "country": "KUWAIT (KW)",
           "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
-        }
-      ],
-      "syncedAt": "2026-09-08T12:45:36.567Z"
-    },
-    "9590": {
-      "machineNumber": "9590",
-      "model": "HM400",
-      "machineId": "3781891",
-      "totalReports": 30,
-      "reports": [
-        {
-          "eventCode": "W70F",
-          "eventName": "FACTORY FORWARDING",
-          "rawDate": "12/13/2023",
-          "date": "2023-12-13",
-          "smr": null,
-          "country": "KUWAIT (KW)",
-          "distributor": ""
         },
         {
-          "eventCode": "W70",
-          "eventName": "SHIPPING INFO FROM ONE SUBSIDIARY TO OTHERS.",
-          "rawDate": "12/26/2023",
-          "date": "2023-12-26",
-          "smr": null,
-          "country": "KUWAIT (KW)",
-          "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
-        },
-        {
-          "eventCode": "W21",
-          "eventName": "MACHINE RECEIVING INSPECTION AT EACH DIST/SUB.",
-          "rawDate": "01/27/2024",
-          "date": "2024-01-27",
-          "smr": 4,
-          "country": "KUWAIT (KW)",
-          "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
-        },
-        {
-          "eventCode": "W41P",
-          "eventName": "PRE-DELIVERY SERVICE",
-          "rawDate": "02/28/2024",
-          "date": "2024-02-28",
-          "smr": 4,
+          "eventCode": "W411",
+          "eventName": "1ST PERIODIC SERVICE",
+          "rawDate": "04/22/2024",
+          "date": "2024-04-22",
+          "smr": 5,
           "country": "KUWAIT (KW)",
           "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
         },
@@ -4365,29 +4401,74 @@
           "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
         },
         {
-          "eventCode": "W411",
-          "eventName": "1ST PERIODIC SERVICE",
-          "rawDate": "04/24/2024",
-          "date": "2024-04-24",
-          "smr": 5,
+          "eventCode": "W41P",
+          "eventName": "PRE-DELIVERY SERVICE",
+          "rawDate": "02/28/2024",
+          "date": "2024-02-28",
+          "smr": 4,
           "country": "KUWAIT (KW)",
           "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
         },
         {
-          "eventCode": "W412",
-          "eventName": "2ND PERIODIC SERVICE",
-          "rawDate": "09/05/2024",
-          "date": "2024-09-05",
-          "smr": 5,
+          "eventCode": "W21",
+          "eventName": "MACHINE RECEIVING INSPECTION AT EACH DIST/SUB.",
+          "rawDate": "01/27/2024",
+          "date": "2024-01-27",
+          "smr": 4,
           "country": "KUWAIT (KW)",
           "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
         },
         {
-          "eventCode": "W413",
-          "eventName": "SERVICE REPORT(3RD PERIODIC SERVICE)",
-          "rawDate": "01/10/2025",
-          "date": "2025-01-10",
-          "smr": 5,
+          "eventCode": "W70",
+          "eventName": "SHIPPING INFO FROM ONE SUBSIDIARY TO OTHERS.",
+          "rawDate": "12/26/2023",
+          "date": "2023-12-26",
+          "smr": null,
+          "country": "KUWAIT (KW)",
+          "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
+        },
+        {
+          "eventCode": "W70F",
+          "eventName": "FACTORY FORWARDING",
+          "rawDate": "12/13/2023",
+          "date": "2023-12-13",
+          "smr": null,
+          "country": "KUWAIT (KW)",
+          "distributor": ""
+        }
+      ],
+      "syncedAt": "2026-09-13T11:06:01.679Z"
+    },
+    "9590": {
+      "machineNumber": "9590",
+      "model": "HM400",
+      "machineId": "3781891",
+      "totalReports": 33,
+      "reports": [
+        {
+          "eventCode": "W41X",
+          "eventName": "EXTRA SERVICE",
+          "rawDate": "08/18/2026",
+          "date": "2026-08-18",
+          "smr": 12,
+          "country": "KUWAIT (KW)",
+          "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
+        },
+        {
+          "eventCode": "W41X",
+          "eventName": "EXTRA SERVICE",
+          "rawDate": "07/09/2026",
+          "date": "2026-07-09",
+          "smr": 11,
+          "country": "KUWAIT (KW)",
+          "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
+        },
+        {
+          "eventCode": "W41X",
+          "eventName": "EXTRA SERVICE",
+          "rawDate": "06/12/2026",
+          "date": "2026-06-12",
+          "smr": 11,
           "country": "KUWAIT (KW)",
           "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
         },
@@ -4527,6 +4608,15 @@
           "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
         },
         {
+          "eventCode": "W413",
+          "eventName": "SERVICE REPORT(3RD PERIODIC SERVICE)",
+          "rawDate": "01/10/2025",
+          "date": "2025-01-10",
+          "smr": 5,
+          "country": "KUWAIT (KW)",
+          "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
+        },
+        {
           "eventCode": "W41X",
           "eventName": "EXTRA SERVICE",
           "rawDate": "12/03/2024",
@@ -4549,6 +4639,15 @@
           "eventName": "EXTRA SERVICE",
           "rawDate": "09/24/2024",
           "date": "2024-09-24",
+          "smr": 5,
+          "country": "KUWAIT (KW)",
+          "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
+        },
+        {
+          "eventCode": "W412",
+          "eventName": "2ND PERIODIC SERVICE",
+          "rawDate": "09/05/2024",
+          "date": "2024-09-05",
           "smr": 5,
           "country": "KUWAIT (KW)",
           "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
@@ -4588,85 +4687,94 @@
           "smr": 5,
           "country": "KUWAIT (KW)",
           "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
-        }
-      ],
-      "syncedAt": "2026-09-08T12:45:37.123Z"
-    },
-    "9630": {
-      "machineNumber": "9630",
-      "model": "HM400",
-      "machineId": "3785300",
-      "totalReports": 29,
-      "reports": [
-        {
-          "eventCode": "W70F",
-          "eventName": "FACTORY FORWARDING",
-          "rawDate": "01/09/2024",
-          "date": "2024-01-09",
-          "smr": null,
-          "country": "KUWAIT (KW)",
-          "distributor": ""
         },
         {
-          "eventCode": "W70",
-          "eventName": "SHIPPING INFO FROM ONE SUBSIDIARY TO OTHERS.",
-          "rawDate": "01/20/2024",
-          "date": "2024-01-20",
-          "smr": null,
-          "country": "KUWAIT (KW)",
-          "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
-        },
-        {
-          "eventCode": "W21",
-          "eventName": "MACHINE RECEIVING INSPECTION AT EACH DIST/SUB.",
-          "rawDate": "03/07/2024",
-          "date": "2024-03-07",
-          "smr": 3,
-          "country": "KUWAIT (KW)",
-          "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
-        },
-        {
-          "eventCode": "W41P",
-          "eventName": "PRE-DELIVERY SERVICE",
-          "rawDate": "03/16/2024",
-          "date": "2024-03-16",
-          "smr": 3,
+          "eventCode": "W411",
+          "eventName": "1ST PERIODIC SERVICE",
+          "rawDate": "04/24/2024",
+          "date": "2024-04-24",
+          "smr": 5,
           "country": "KUWAIT (KW)",
           "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
         },
         {
           "eventCode": "W41N",
           "eventName": "NEW MACHINE DELIVERY SERVICE",
-          "rawDate": "03/17/2024",
-          "date": "2024-03-17",
+          "rawDate": "02/29/2024",
+          "date": "2024-02-29",
+          "smr": 5,
+          "country": "KUWAIT (KW)",
+          "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
+        },
+        {
+          "eventCode": "W41P",
+          "eventName": "PRE-DELIVERY SERVICE",
+          "rawDate": "02/28/2024",
+          "date": "2024-02-28",
           "smr": 4,
           "country": "KUWAIT (KW)",
           "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
         },
         {
-          "eventCode": "W411",
-          "eventName": "1ST PERIODIC SERVICE",
-          "rawDate": "05/19/2024",
-          "date": "2024-05-19",
-          "smr": 5,
+          "eventCode": "W21",
+          "eventName": "MACHINE RECEIVING INSPECTION AT EACH DIST/SUB.",
+          "rawDate": "01/27/2024",
+          "date": "2024-01-27",
+          "smr": 4,
           "country": "KUWAIT (KW)",
           "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
         },
         {
-          "eventCode": "W412",
-          "eventName": "2ND PERIODIC SERVICE",
-          "rawDate": "09/05/2024",
-          "date": "2024-09-05",
-          "smr": 5,
+          "eventCode": "W70",
+          "eventName": "SHIPPING INFO FROM ONE SUBSIDIARY TO OTHERS.",
+          "rawDate": "12/26/2023",
+          "date": "2023-12-26",
+          "smr": null,
           "country": "KUWAIT (KW)",
           "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
         },
         {
-          "eventCode": "W413",
-          "eventName": "SERVICE REPORT(3RD PERIODIC SERVICE)",
-          "rawDate": "01/10/2025",
-          "date": "2025-01-10",
-          "smr": 5,
+          "eventCode": "W70F",
+          "eventName": "FACTORY FORWARDING",
+          "rawDate": "12/13/2023",
+          "date": "2023-12-13",
+          "smr": null,
+          "country": "KUWAIT (KW)",
+          "distributor": ""
+        }
+      ],
+      "syncedAt": "2026-09-13T11:06:01.679Z"
+    },
+    "9630": {
+      "machineNumber": "9630",
+      "model": "HM400",
+      "machineId": "3785300",
+      "totalReports": 32,
+      "reports": [
+        {
+          "eventCode": "W41X",
+          "eventName": "EXTRA SERVICE",
+          "rawDate": "08/18/2026",
+          "date": "2026-08-18",
+          "smr": 12,
+          "country": "KUWAIT (KW)",
+          "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
+        },
+        {
+          "eventCode": "W41X",
+          "eventName": "EXTRA SERVICE",
+          "rawDate": "07/09/2026",
+          "date": "2026-07-09",
+          "smr": 11,
+          "country": "KUWAIT (KW)",
+          "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
+        },
+        {
+          "eventCode": "W41X",
+          "eventName": "EXTRA SERVICE",
+          "rawDate": "06/12/2026",
+          "date": "2026-06-12",
+          "smr": 11,
           "country": "KUWAIT (KW)",
           "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
         },
@@ -4806,6 +4914,15 @@
           "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
         },
         {
+          "eventCode": "W413",
+          "eventName": "SERVICE REPORT(3RD PERIODIC SERVICE)",
+          "rawDate": "01/10/2025",
+          "date": "2025-01-10",
+          "smr": 5,
+          "country": "KUWAIT (KW)",
+          "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
+        },
+        {
           "eventCode": "W41X",
           "eventName": "EXTRA SERVICE",
           "rawDate": "12/03/2024",
@@ -4828,6 +4945,15 @@
           "eventName": "EXTRA SERVICE",
           "rawDate": "09/24/2024",
           "date": "2024-09-24",
+          "smr": 5,
+          "country": "KUWAIT (KW)",
+          "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
+        },
+        {
+          "eventCode": "W412",
+          "eventName": "2ND PERIODIC SERVICE",
+          "rawDate": "09/05/2024",
+          "date": "2024-09-05",
           "smr": 5,
           "country": "KUWAIT (KW)",
           "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
@@ -4858,49 +4984,13 @@
           "smr": 5,
           "country": "KUWAIT (KW)",
           "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
-        }
-      ],
-      "syncedAt": "2026-09-08T12:45:37.691Z"
-    },
-    "9631": {
-      "machineNumber": "9631",
-      "model": "HM400",
-      "machineId": "3785301",
-      "totalReports": 27,
-      "reports": [
-        {
-          "eventCode": "W70F",
-          "eventName": "FACTORY FORWARDING",
-          "rawDate": "01/09/2024",
-          "date": "2024-01-09",
-          "smr": null,
-          "country": "KUWAIT (KW)",
-          "distributor": ""
         },
         {
-          "eventCode": "W70",
-          "eventName": "SHIPPING INFO FROM ONE SUBSIDIARY TO OTHERS.",
-          "rawDate": "01/20/2024",
-          "date": "2024-01-20",
-          "smr": null,
-          "country": "KUWAIT (KW)",
-          "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
-        },
-        {
-          "eventCode": "W21",
-          "eventName": "MACHINE RECEIVING INSPECTION AT EACH DIST/SUB.",
-          "rawDate": "03/07/2024",
-          "date": "2024-03-07",
-          "smr": 3,
-          "country": "KUWAIT (KW)",
-          "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
-        },
-        {
-          "eventCode": "W41P",
-          "eventName": "PRE-DELIVERY SERVICE",
-          "rawDate": "03/16/2024",
-          "date": "2024-03-16",
-          "smr": 3,
+          "eventCode": "W411",
+          "eventName": "1ST PERIODIC SERVICE",
+          "rawDate": "05/19/2024",
+          "date": "2024-05-19",
+          "smr": 5,
           "country": "KUWAIT (KW)",
           "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
         },
@@ -4914,29 +5004,74 @@
           "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
         },
         {
-          "eventCode": "W411",
-          "eventName": "1ST PERIODIC SERVICE",
-          "rawDate": "05/19/2024",
-          "date": "2024-05-19",
-          "smr": 4,
+          "eventCode": "W41P",
+          "eventName": "PRE-DELIVERY SERVICE",
+          "rawDate": "03/16/2024",
+          "date": "2024-03-16",
+          "smr": 3,
           "country": "KUWAIT (KW)",
           "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
         },
         {
-          "eventCode": "W412",
-          "eventName": "2ND PERIODIC SERVICE",
-          "rawDate": "09/05/2024",
-          "date": "2024-09-05",
-          "smr": 4,
+          "eventCode": "W21",
+          "eventName": "MACHINE RECEIVING INSPECTION AT EACH DIST/SUB.",
+          "rawDate": "03/07/2024",
+          "date": "2024-03-07",
+          "smr": 3,
           "country": "KUWAIT (KW)",
           "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
         },
         {
-          "eventCode": "W413",
-          "eventName": "SERVICE REPORT(3RD PERIODIC SERVICE)",
-          "rawDate": "01/10/2025",
-          "date": "2025-01-10",
-          "smr": 4,
+          "eventCode": "W70",
+          "eventName": "SHIPPING INFO FROM ONE SUBSIDIARY TO OTHERS.",
+          "rawDate": "01/20/2024",
+          "date": "2024-01-20",
+          "smr": null,
+          "country": "KUWAIT (KW)",
+          "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
+        },
+        {
+          "eventCode": "W70F",
+          "eventName": "FACTORY FORWARDING",
+          "rawDate": "01/09/2024",
+          "date": "2024-01-09",
+          "smr": null,
+          "country": "KUWAIT (KW)",
+          "distributor": ""
+        }
+      ],
+      "syncedAt": "2026-09-13T11:06:01.680Z"
+    },
+    "9631": {
+      "machineNumber": "9631",
+      "model": "HM400",
+      "machineId": "3785301",
+      "totalReports": 30,
+      "reports": [
+        {
+          "eventCode": "W41X",
+          "eventName": "EXTRA SERVICE",
+          "rawDate": "08/18/2026",
+          "date": "2026-08-18",
+          "smr": 12,
+          "country": "KUWAIT (KW)",
+          "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
+        },
+        {
+          "eventCode": "W41X",
+          "eventName": "EXTRA SERVICE",
+          "rawDate": "07/09/2026",
+          "date": "2026-07-09",
+          "smr": 11,
+          "country": "KUWAIT (KW)",
+          "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
+        },
+        {
+          "eventCode": "W41X",
+          "eventName": "EXTRA SERVICE",
+          "rawDate": "06/12/2026",
+          "date": "2026-06-12",
+          "smr": 11,
           "country": "KUWAIT (KW)",
           "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
         },
@@ -5040,6 +5175,15 @@
           "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
         },
         {
+          "eventCode": "W413",
+          "eventName": "SERVICE REPORT(3RD PERIODIC SERVICE)",
+          "rawDate": "01/10/2025",
+          "date": "2025-01-10",
+          "smr": 4,
+          "country": "KUWAIT (KW)",
+          "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
+        },
+        {
           "eventCode": "W41X",
           "eventName": "EXTRA SERVICE",
           "rawDate": "12/03/2024",
@@ -5062,6 +5206,15 @@
           "eventName": "EXTRA SERVICE",
           "rawDate": "09/24/2024",
           "date": "2024-09-24",
+          "smr": 4,
+          "country": "KUWAIT (KW)",
+          "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
+        },
+        {
+          "eventCode": "W412",
+          "eventName": "2ND PERIODIC SERVICE",
+          "rawDate": "09/05/2024",
+          "date": "2024-09-05",
           "smr": 4,
           "country": "KUWAIT (KW)",
           "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
@@ -5110,49 +5263,13 @@
           "smr": 4,
           "country": "KUWAIT (KW)",
           "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
-        }
-      ],
-      "syncedAt": "2026-09-08T12:45:38.206Z"
-    },
-    "9634": {
-      "machineNumber": "9634",
-      "model": "HM400",
-      "machineId": "3785304",
-      "totalReports": 29,
-      "reports": [
-        {
-          "eventCode": "W70F",
-          "eventName": "FACTORY FORWARDING",
-          "rawDate": "01/09/2024",
-          "date": "2024-01-09",
-          "smr": null,
-          "country": "KUWAIT (KW)",
-          "distributor": ""
         },
         {
-          "eventCode": "W70",
-          "eventName": "SHIPPING INFO FROM ONE SUBSIDIARY TO OTHERS.",
-          "rawDate": "01/20/2024",
-          "date": "2024-01-20",
-          "smr": null,
-          "country": "KUWAIT (KW)",
-          "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
-        },
-        {
-          "eventCode": "W21",
-          "eventName": "MACHINE RECEIVING INSPECTION AT EACH DIST/SUB.",
-          "rawDate": "03/07/2024",
-          "date": "2024-03-07",
-          "smr": 3,
-          "country": "KUWAIT (KW)",
-          "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
-        },
-        {
-          "eventCode": "W41P",
-          "eventName": "PRE-DELIVERY SERVICE",
-          "rawDate": "03/16/2024",
-          "date": "2024-03-16",
-          "smr": 3,
+          "eventCode": "W411",
+          "eventName": "1ST PERIODIC SERVICE",
+          "rawDate": "05/19/2024",
+          "date": "2024-05-19",
+          "smr": 4,
           "country": "KUWAIT (KW)",
           "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
         },
@@ -5166,29 +5283,74 @@
           "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
         },
         {
-          "eventCode": "W411",
-          "eventName": "1ST PERIODIC SERVICE",
-          "rawDate": "05/19/2024",
-          "date": "2024-05-19",
-          "smr": 4,
+          "eventCode": "W41P",
+          "eventName": "PRE-DELIVERY SERVICE",
+          "rawDate": "03/16/2024",
+          "date": "2024-03-16",
+          "smr": 3,
           "country": "KUWAIT (KW)",
           "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
         },
         {
-          "eventCode": "W412",
-          "eventName": "2ND PERIODIC SERVICE",
-          "rawDate": "09/05/2024",
-          "date": "2024-09-05",
-          "smr": 4,
+          "eventCode": "W21",
+          "eventName": "MACHINE RECEIVING INSPECTION AT EACH DIST/SUB.",
+          "rawDate": "03/07/2024",
+          "date": "2024-03-07",
+          "smr": 3,
           "country": "KUWAIT (KW)",
           "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
         },
         {
-          "eventCode": "W413",
-          "eventName": "SERVICE REPORT(3RD PERIODIC SERVICE)",
-          "rawDate": "01/10/2025",
-          "date": "2025-01-10",
-          "smr": 4,
+          "eventCode": "W70",
+          "eventName": "SHIPPING INFO FROM ONE SUBSIDIARY TO OTHERS.",
+          "rawDate": "01/20/2024",
+          "date": "2024-01-20",
+          "smr": null,
+          "country": "KUWAIT (KW)",
+          "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
+        },
+        {
+          "eventCode": "W70F",
+          "eventName": "FACTORY FORWARDING",
+          "rawDate": "01/09/2024",
+          "date": "2024-01-09",
+          "smr": null,
+          "country": "KUWAIT (KW)",
+          "distributor": ""
+        }
+      ],
+      "syncedAt": "2026-09-13T11:42:08.222Z"
+    },
+    "9634": {
+      "machineNumber": "9634",
+      "model": "HM400",
+      "machineId": "3785304",
+      "totalReports": 32,
+      "reports": [
+        {
+          "eventCode": "W41X",
+          "eventName": "EXTRA SERVICE",
+          "rawDate": "08/18/2026",
+          "date": "2026-08-18",
+          "smr": 12,
+          "country": "KUWAIT (KW)",
+          "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
+        },
+        {
+          "eventCode": "W41X",
+          "eventName": "EXTRA SERVICE",
+          "rawDate": "07/09/2026",
+          "date": "2026-07-09",
+          "smr": 11,
+          "country": "KUWAIT (KW)",
+          "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
+        },
+        {
+          "eventCode": "W41X",
+          "eventName": "EXTRA SERVICE",
+          "rawDate": "06/12/2026",
+          "date": "2026-06-12",
+          "smr": 11,
           "country": "KUWAIT (KW)",
           "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
         },
@@ -5328,6 +5490,15 @@
           "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
         },
         {
+          "eventCode": "W413",
+          "eventName": "SERVICE REPORT(3RD PERIODIC SERVICE)",
+          "rawDate": "01/10/2025",
+          "date": "2025-01-10",
+          "smr": 4,
+          "country": "KUWAIT (KW)",
+          "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
+        },
+        {
           "eventCode": "W41X",
           "eventName": "EXTRA SERVICE",
           "rawDate": "12/03/2024",
@@ -5350,6 +5521,15 @@
           "eventName": "EXTRA SERVICE",
           "rawDate": "09/24/2024",
           "date": "2024-09-24",
+          "smr": 4,
+          "country": "KUWAIT (KW)",
+          "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
+        },
+        {
+          "eventCode": "W412",
+          "eventName": "2ND PERIODIC SERVICE",
+          "rawDate": "09/05/2024",
+          "date": "2024-09-05",
           "smr": 4,
           "country": "KUWAIT (KW)",
           "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
@@ -5380,49 +5560,13 @@
           "smr": 4,
           "country": "KUWAIT (KW)",
           "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
-        }
-      ],
-      "syncedAt": "2026-09-08T12:45:38.765Z"
-    },
-    "9635": {
-      "machineNumber": "9635",
-      "model": "HM400",
-      "machineId": "3785516",
-      "totalReports": 25,
-      "reports": [
-        {
-          "eventCode": "W70F",
-          "eventName": "FACTORY FORWARDING",
-          "rawDate": "01/10/2024",
-          "date": "2024-01-10",
-          "smr": null,
-          "country": "KUWAIT (KW)",
-          "distributor": ""
         },
         {
-          "eventCode": "W70",
-          "eventName": "SHIPPING INFO FROM ONE SUBSIDIARY TO OTHERS.",
-          "rawDate": "01/20/2024",
-          "date": "2024-01-20",
-          "smr": null,
-          "country": "KUWAIT (KW)",
-          "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
-        },
-        {
-          "eventCode": "W21",
-          "eventName": "MACHINE RECEIVING INSPECTION AT EACH DIST/SUB.",
-          "rawDate": "03/07/2024",
-          "date": "2024-03-07",
-          "smr": 3,
-          "country": "KUWAIT (KW)",
-          "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
-        },
-        {
-          "eventCode": "W41P",
-          "eventName": "PRE-DELIVERY SERVICE",
-          "rawDate": "03/16/2024",
-          "date": "2024-03-16",
-          "smr": 3,
+          "eventCode": "W411",
+          "eventName": "1ST PERIODIC SERVICE",
+          "rawDate": "05/19/2024",
+          "date": "2024-05-19",
+          "smr": 4,
           "country": "KUWAIT (KW)",
           "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
         },
@@ -5436,29 +5580,74 @@
           "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
         },
         {
-          "eventCode": "W411",
-          "eventName": "1ST PERIODIC SERVICE",
-          "rawDate": "05/19/2024",
-          "date": "2024-05-19",
-          "smr": 4,
+          "eventCode": "W41P",
+          "eventName": "PRE-DELIVERY SERVICE",
+          "rawDate": "03/16/2024",
+          "date": "2024-03-16",
+          "smr": 3,
           "country": "KUWAIT (KW)",
           "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
         },
         {
-          "eventCode": "W412",
-          "eventName": "2ND PERIODIC SERVICE",
-          "rawDate": "09/05/2024",
-          "date": "2024-09-05",
-          "smr": 4,
+          "eventCode": "W21",
+          "eventName": "MACHINE RECEIVING INSPECTION AT EACH DIST/SUB.",
+          "rawDate": "03/07/2024",
+          "date": "2024-03-07",
+          "smr": 3,
           "country": "KUWAIT (KW)",
           "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
         },
         {
-          "eventCode": "W413",
-          "eventName": "SERVICE REPORT(3RD PERIODIC SERVICE)",
-          "rawDate": "01/10/2025",
-          "date": "2025-01-10",
-          "smr": 4,
+          "eventCode": "W70",
+          "eventName": "SHIPPING INFO FROM ONE SUBSIDIARY TO OTHERS.",
+          "rawDate": "01/20/2024",
+          "date": "2024-01-20",
+          "smr": null,
+          "country": "KUWAIT (KW)",
+          "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
+        },
+        {
+          "eventCode": "W70F",
+          "eventName": "FACTORY FORWARDING",
+          "rawDate": "01/09/2024",
+          "date": "2024-01-09",
+          "smr": null,
+          "country": "KUWAIT (KW)",
+          "distributor": ""
+        }
+      ],
+      "syncedAt": "2026-09-13T11:06:01.680Z"
+    },
+    "9635": {
+      "machineNumber": "9635",
+      "model": "HM400",
+      "machineId": "3785516",
+      "totalReports": 28,
+      "reports": [
+        {
+          "eventCode": "W41X",
+          "eventName": "EXTRA SERVICE",
+          "rawDate": "08/18/2026",
+          "date": "2026-08-18",
+          "smr": 12,
+          "country": "KUWAIT (KW)",
+          "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
+        },
+        {
+          "eventCode": "W41X",
+          "eventName": "EXTRA SERVICE",
+          "rawDate": "07/09/2026",
+          "date": "2026-07-09",
+          "smr": 11,
+          "country": "KUWAIT (KW)",
+          "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
+        },
+        {
+          "eventCode": "W41X",
+          "eventName": "EXTRA SERVICE",
+          "rawDate": "06/12/2026",
+          "date": "2026-06-12",
+          "smr": 11,
           "country": "KUWAIT (KW)",
           "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
         },
@@ -5562,6 +5751,15 @@
           "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
         },
         {
+          "eventCode": "W413",
+          "eventName": "SERVICE REPORT(3RD PERIODIC SERVICE)",
+          "rawDate": "01/10/2025",
+          "date": "2025-01-10",
+          "smr": 4,
+          "country": "KUWAIT (KW)",
+          "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
+        },
+        {
           "eventCode": "W41X",
           "eventName": "EXTRA SERVICE",
           "rawDate": "12/03/2024",
@@ -5584,6 +5782,15 @@
           "eventName": "EXTRA SERVICE",
           "rawDate": "09/24/2024",
           "date": "2024-09-24",
+          "smr": 4,
+          "country": "KUWAIT (KW)",
+          "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
+        },
+        {
+          "eventCode": "W412",
+          "eventName": "2ND PERIODIC SERVICE",
+          "rawDate": "09/05/2024",
+          "date": "2024-09-05",
           "smr": 4,
           "country": "KUWAIT (KW)",
           "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
@@ -5614,9 +5821,63 @@
           "smr": 4,
           "country": "KUWAIT (KW)",
           "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
+        },
+        {
+          "eventCode": "W411",
+          "eventName": "1ST PERIODIC SERVICE",
+          "rawDate": "05/19/2024",
+          "date": "2024-05-19",
+          "smr": 4,
+          "country": "KUWAIT (KW)",
+          "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
+        },
+        {
+          "eventCode": "W41N",
+          "eventName": "NEW MACHINE DELIVERY SERVICE",
+          "rawDate": "03/17/2024",
+          "date": "2024-03-17",
+          "smr": 4,
+          "country": "KUWAIT (KW)",
+          "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
+        },
+        {
+          "eventCode": "W41P",
+          "eventName": "PRE-DELIVERY SERVICE",
+          "rawDate": "03/16/2024",
+          "date": "2024-03-16",
+          "smr": 3,
+          "country": "KUWAIT (KW)",
+          "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
+        },
+        {
+          "eventCode": "W21",
+          "eventName": "MACHINE RECEIVING INSPECTION AT EACH DIST/SUB.",
+          "rawDate": "03/07/2024",
+          "date": "2024-03-07",
+          "smr": 3,
+          "country": "KUWAIT (KW)",
+          "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
+        },
+        {
+          "eventCode": "W70",
+          "eventName": "SHIPPING INFO FROM ONE SUBSIDIARY TO OTHERS.",
+          "rawDate": "01/20/2024",
+          "date": "2024-01-20",
+          "smr": null,
+          "country": "KUWAIT (KW)",
+          "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
+        },
+        {
+          "eventCode": "W70F",
+          "eventName": "FACTORY FORWARDING",
+          "rawDate": "01/10/2024",
+          "date": "2024-01-10",
+          "smr": null,
+          "country": "KUWAIT (KW)",
+          "distributor": ""
         }
       ],
-      "syncedAt": "2026-09-08T12:45:39.307Z"
+      "syncedAt": "2026-09-13T11:06:01.680Z"
     },
     "9636": {
       "machineNumber": "9636",

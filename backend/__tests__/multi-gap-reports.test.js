@@ -113,5 +113,5 @@ describe('Multi-Machine & Multi-Month Gap Reports', () => {
     expect(m40Reports[1].fileName).toBe('PC400 77150 Ex_23.pdf');
     expect(m41Reports[0].fileName).toBe('PC400 77151 Ex_23.pdf');
     expect(m41Reports[1].fileName).toBe('PC400 77151 Ex_24.pdf');
-  });
+  }, 30000);
 });

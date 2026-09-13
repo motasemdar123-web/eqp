@@ -3,7 +3,7 @@ const platformController = require('../controllers/platformController');
 const mediaController = require('../controllers/mediaController');
 const { asyncHandler } = require('../utils/asyncHandler');
 const { requirePlatformAuth, optionalPlatformAuth, requirePermission } = require('../middleware/platformAuthMiddleware');
-const { audioUpload, manualUpload } = require('../middleware/uploadMiddleware');
+const { audioUpload, manualUpload, reportUpload } = require('../middleware/uploadMiddleware');
 
 const router = Router();
 
@@ -80,6 +80,7 @@ router.post('/api/komatsu/eqpc/cookie', optionalPlatformAuth, asyncHandler(platf
 router.get('/api/komatsu/eqpc/event-codes', requirePlatformAuth, asyncHandler(platformController.getEqpcEventCodes));
 router.get('/api/komatsu/eqpc/machine-lookup', requirePlatformAuth, asyncHandler(platformController.lookupEqpcMachine));
 router.post('/api/komatsu/eqpc/upload', requirePlatformAuth, asyncHandler(platformController.uploadEqpcReport));
+router.post('/api/komatsu/eqpc/update-service-log', requirePlatformAuth, reportUpload.single('file'), asyncHandler(platformController.updateEqpcServiceLog));
 router.post('/api/komatsu/eqpc/batch-upload', requirePlatformAuth, asyncHandler(platformController.batchUploadEqpcReports));
 router.get('/api/komatsu/eqpc/lifecycle-cache', requirePlatformAuth, asyncHandler(platformController.getEqpcLifecycleCache));
 router.post('/api/komatsu/eqpc/lifecycle-sync', requirePlatformAuth, asyncHandler(platformController.syncEqpcLifecycle));
