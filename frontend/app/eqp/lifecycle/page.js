@@ -40,6 +40,8 @@ export default function EqpLifecyclePage() {
   const [editingMilestone, setEditingMilestone] = useState(null);
   const [editSmrValue, setEditSmrValue] = useState('');
   const [editSyncToKomatsu, setEditSyncToKomatsu] = useState(true);
+  const [editCookieInput, setEditCookieInput] = useState('');
+  const [showCookieInput, setShowCookieInput] = useState(false);
   const [isUpdatingLog, setIsUpdatingLog] = useState(false);
   const [editNotice, setEditNotice] = useState({ type: '', message: '' });
 
@@ -132,12 +134,18 @@ export default function EqpLifecyclePage() {
     setEditSmrValue(milestone.smr != null ? String(milestone.smr) : '');
     setEditSyncToKomatsu(true);
     setEditNotice({ type: '', message: '' });
+
+    const storedCookie = typeof window !== 'undefined' ? localStorage.getItem('eqpc_user_cookie') || '' : '';
+    setEditCookieInput(storedCookie);
+    setShowCookieInput(!storedCookie || storedCookie.includes('test_session'));
   }
 
   function handleCloseEditModal() {
     if (isUpdatingLog) return;
     setEditingMilestone(null);
     setEditSmrValue('');
+    setEditCookieInput('');
+    setShowCookieInput(false);
     setEditNotice({ type: '', message: '' });
   }
 
@@ -148,6 +156,16 @@ export default function EqpLifecyclePage() {
     const numSmr = Number(editSmrValue);
     if (isNaN(numSmr) || numSmr < 0) {
       setEditNotice({ type: 'error', message: 'Please enter a valid non-negative SMR number.' });
+      return;
+    }
+
+    const cleanCookie = editCookieInput.trim();
+    if (editSyncToKomatsu && (!cleanCookie || cleanCookie.includes('test_session'))) {
+      setEditNotice({
+        type: 'error',
+        message: 'Active Komatsu session cookie (JSESSIONID) is required to sync with Komatsu Equipment Care. Please paste your cookie below.',
+      });
+      setShowCookieInput(true);
       return;
     }
 
@@ -165,20 +183,35 @@ export default function EqpLifecyclePage() {
       payload.append('currentSmr', String(editingMilestone.smr ?? ''));
       payload.append('syncToEqpc', editSyncToKomatsu ? 'true' : 'false');
 
-      const userCookie = typeof window !== 'undefined' ? localStorage.getItem('eqpc_user_cookie') || '' : '';
-      if (userCookie) {
-        payload.append('cookie', userCookie);
+      if (cleanCookie) {
+        payload.append('cookie', cleanCookie);
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('eqpc_user_cookie', cleanCookie);
+        }
       }
 
       const res = await updateEqpcServiceLog(payload);
 
       if (res && res.success) {
-        // In-place update of liveEqpData cache state
+        // If Komatsu sync was requested but not confirmed
+        if (editSyncToKomatsu && !res.komatsuUpdated) {
+          setEditNotice({
+            type: 'error',
+            message: res.message || 'Komatsu portal update did not succeed. Please verify your session cookie.',
+          });
+          setShowCookieInput(true);
+          return;
+        }
+
+        // 1. In-place update of liveEqpData cache state
         setLiveEqpData((prevCache) => {
           if (!prevCache) return prevCache;
           const copy = JSON.parse(JSON.stringify(prevCache));
           const mKey = selectedMachine.machineNumber;
           if (copy.machines && copy.machines[mKey]) {
+            if (res.isLastReportGenerated) {
+              copy.machines[mKey].latestSmr = numSmr;
+            }
             const mReports = copy.machines[mKey].reports || [];
             const iso = editingMilestone.date;
             const target = mReports.find(
@@ -191,7 +224,7 @@ export default function EqpLifecyclePage() {
           return copy;
         });
 
-        // In-place update of generatedReports state
+        // 2. In-place update of generatedReports state
         setGeneratedReports((prevReports) => {
           return prevReports.map((r) => {
             const mNum = String(r.machine_number || r.machine?.machineNumber || '').trim();
@@ -208,14 +241,36 @@ export default function EqpLifecyclePage() {
           });
         });
 
-        setSyncStatusMsg(`✓ Service log for #${selectedMachine.machineNumber} (${editingMilestone.code}) updated to ${numSmr} hrs.`);
+        // 3. If this was the last report generated, update machine's SMR in system & frontend
+        if (res.isLastReportGenerated) {
+          setSelectedMachine((prev) => (prev ? { ...prev, latestSmr: numSmr, last_smr: numSmr } : prev));
+          setMachinesList((prev) =>
+            prev.map((m) =>
+              (m.machine_number === selectedMachine.machineNumber || m.machineNumber === selectedMachine.machineNumber)
+                ? { ...m, last_smr: numSmr, latestSmr: numSmr }
+                : m
+            )
+          );
+        }
+
+        const successNotice = res.isLastReportGenerated
+          ? `✓ Service log for #${selectedMachine.machineNumber} (${editingMilestone.code}) updated to ${numSmr} hrs, and machine SMR updated in system.`
+          : `✓ Service log for #${selectedMachine.machineNumber} (${editingMilestone.code}) updated to ${numSmr} hrs (older report: machine SMR preserved).`;
+
+        setSyncStatusMsg(successNotice);
         setTimeout(() => setSyncStatusMsg(''), 7000);
         handleCloseEditModal();
       } else {
         setEditNotice({ type: 'error', message: res?.message || 'Update failed' });
+        if (editSyncToKomatsu) {
+          setShowCookieInput(true);
+        }
       }
     } catch (err) {
       setEditNotice({ type: 'error', message: err.message || 'Failed to update service log' });
+      if (editSyncToKomatsu) {
+        setShowCookieInput(true);
+      }
     } finally {
       setIsUpdatingLog(false);
     }
@@ -950,26 +1005,82 @@ export default function EqpLifecyclePage() {
                   </p>
                   <p className="text-[10px] text-emerald-800 font-semibold flex items-center gap-1 pt-0.5">
                     <span>🛡️</span>
-                    <span>Machine operational counters and overall SMR are strictly protected and will not be altered.</span>
+                    <span>
+                      If this is the last report generated, the machine's SMR in our system will be updated to {editSmrValue || '...'} hrs. Older reports will update that log only while preserving the machine SMR.
+                    </span>
                   </p>
                 </div>
 
-                {/* Direct Komatsu Sync Checkbox */}
-                <div className="p-3 rounded-xl bg-blue-50/70 border border-blue-200/80 flex items-start gap-2.5">
-                  <input
-                    type="checkbox"
-                    id="syncToEqpcCheckbox"
-                    checked={editSyncToKomatsu}
-                    onChange={(e) => setEditSyncToKomatsu(e.target.checked)}
-                    className="mt-0.5 rounded border-blue-300 text-blue-600 focus:ring-blue-500"
-                    disabled={isUpdatingLog}
-                  />
-                  <label htmlFor="syncToEqpcCheckbox" className="text-xs text-blue-900 cursor-pointer">
-                    <span className="font-bold block">Sync in-place to Komatsu Equipment Care</span>
-                    <span className="text-[11px] text-blue-700 block mt-0.5">
-                      Updates the existing service record directly on the Komatsu portal (<code className="font-mono text-[10px] bg-blue-100 px-1 rounded">actionMode=update</code>).
-                    </span>
-                  </label>
+                {/* Direct Komatsu Sync Checkbox & Cookie Manager */}
+                <div className="p-3.5 rounded-xl bg-blue-50/70 border border-blue-200/80 space-y-3">
+                  <div className="flex items-start gap-2.5">
+                    <input
+                      type="checkbox"
+                      id="syncToEqpcCheckbox"
+                      checked={editSyncToKomatsu}
+                      onChange={(e) => setEditSyncToKomatsu(e.target.checked)}
+                      className="mt-0.5 rounded border-blue-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
+                      disabled={isUpdatingLog}
+                    />
+                    <label htmlFor="syncToEqpcCheckbox" className="text-xs text-blue-900 cursor-pointer flex-1">
+                      <span className="font-bold block">Sync in-place to Komatsu Equipment Care</span>
+                      <span className="text-[11px] text-blue-700 block mt-0.5">
+                        Updates the existing service record directly on the Komatsu portal (<code className="font-mono text-[10px] bg-blue-100 px-1 rounded">actionMode=update</code>).
+                      </span>
+                    </label>
+                  </div>
+
+                  {editSyncToKomatsu && (
+                    <div className="pt-2 border-t border-blue-200/60 space-y-2">
+                      <div className="flex items-center justify-between text-xs">
+                        <div className="flex items-center gap-1.5 font-semibold text-slate-700">
+                          {editCookieInput && !editCookieInput.includes('test_session') ? (
+                            <span className="inline-flex items-center gap-1.5 text-emerald-700 font-bold text-[11px]">
+                              <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block animate-pulse" />
+                              Komatsu Session Cookie Configured
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center gap-1.5 text-amber-700 font-bold text-[11px]">
+                              <span className="w-2 h-2 rounded-full bg-amber-500 inline-block" />
+                              Active Session Cookie Required
+                            </span>
+                          )}
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => setShowCookieInput((prev) => !prev)}
+                          className="text-[11px] font-bold text-blue-600 hover:text-blue-800 underline cursor-pointer"
+                        >
+                          {showCookieInput ? 'Hide Cookie' : (editCookieInput && !editCookieInput.includes('test_session') ? 'Edit / View Cookie' : 'Paste Cookie')}
+                        </button>
+                      </div>
+
+                      {showCookieInput && (
+                        <div className="space-y-1">
+                          <label className="block text-[11px] font-bold text-slate-600">
+                            Komatsu Session Cookie / JSESSIONID:
+                          </label>
+                          <textarea
+                            rows="2"
+                            value={editCookieInput}
+                            onChange={(e) => {
+                              const val = e.target.value;
+                              setEditCookieInput(val);
+                              if (typeof window !== 'undefined' && val) {
+                                localStorage.setItem('eqpc_user_cookie', val.trim());
+                              }
+                            }}
+                            placeholder="Paste JSESSIONID=... or cURL header here"
+                            className="w-full text-xs font-mono p-2 border border-slate-300 rounded-lg bg-white focus:ring-1 focus:ring-blue-500 focus:outline-none"
+                            disabled={isUpdatingLog}
+                          />
+                          <p className="text-[10px] text-slate-500">
+                            Tip: In Edge/Chrome on Komatsu portal, press F12 → Network → copy cookie header with <code className="font-mono">JSESSIONID</code>.
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
 
                 {/* Error / Notice Display */}

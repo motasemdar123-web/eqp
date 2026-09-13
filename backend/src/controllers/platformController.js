@@ -644,22 +644,31 @@ async function updateEqpcServiceLog(req, res) {
   const customCookie = updateData.cookie || req.headers['x-eqpc-cookie'] || null;
   const fileBuffer = req.file?.buffer || null;
   const fileName = req.file?.originalname || updateData.fileName || null;
+  const syncToEqpc = updateData.syncToEqpc !== false && updateData.syncToEqpc !== 'false';
 
-  const result = await komatsuEqpCareService.updateServiceLogInEqpCare(
-    {
-      ...updateData,
-      serialNo,
-      eventCode,
-      serviceDate,
-      newSmr,
-      fileBuffer,
-      fileName,
-      performedBy: req.platformUser?.fullName || req.user?.fullName || 'IBRAHIM AHMAD ALDARAWSHEH',
-    },
-    customCookie
-  );
+  try {
+    const result = await komatsuEqpCareService.updateServiceLogInEqpCare(
+      {
+        ...updateData,
+        serialNo,
+        eventCode,
+        serviceDate,
+        newSmr,
+        fileBuffer,
+        fileName,
+        syncToEqpc,
+        performedBy: req.platformUser?.fullName || req.user?.fullName || 'IBRAHIM AHMAD ALDARAWSHEH',
+      },
+      customCookie
+    );
 
-  res.json({ success: true, ...result });
+    res.json({ success: true, ...result });
+  } catch (err) {
+    res.status(400).json({
+      success: false,
+      message: err.message || 'Failed to update service log.',
+    });
+  }
 }
 
 async function batchUploadEqpcReports(req, res) {

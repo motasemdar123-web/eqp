@@ -25929,24 +25929,19 @@ export function buildDynamicLifecycleRecords(generatedReports = [], machinesList
         }
       }
     }
-    const candidateSmrs = [
-      liveMaxSmr,
-      baseRow?.[10] != null ? Number(baseRow[10]) : null,
-      machineObj?.last_smr != null ? Number(machineObj.last_smr) : null,
-    ].filter((val) => val != null && !isNaN(val));
-
-    let latestSmr = candidateSmrs.length > 0 ? Math.max(...candidateSmrs) : null;
-
-    for (const [, , smr] of baseObserved) {
-      if (smr != null && !isNaN(Number(smr)) && Number(smr) > (latestSmr || 0)) {
-        latestSmr = Number(smr);
-      }
-    }
-
-    for (const gr of genReports) {
-      if (gr.smr && Number(gr.smr) > (latestSmr || 0)) {
-        latestSmr = Number(gr.smr);
-      }
+    let latestSmr = null;
+    if (baseObserved[0] && baseObserved[0][2] != null && !isNaN(Number(baseObserved[0][2]))) {
+      latestSmr = Number(baseObserved[0][2]);
+    } else if (machineObj?.last_smr != null && !isNaN(Number(machineObj.last_smr))) {
+      latestSmr = Number(machineObj.last_smr);
+    } else if (liveMachine?.latestSmr != null && !isNaN(Number(liveMachine.latestSmr))) {
+      latestSmr = Number(liveMachine.latestSmr);
+    } else {
+      const candidateSmrs = [
+        liveMaxSmr,
+        baseRow?.[10] != null ? Number(baseRow[10]) : null,
+      ].filter((val) => val != null && !isNaN(val));
+      latestSmr = candidateSmrs.length > 0 ? Math.max(...candidateSmrs) : null;
     }
 
     const addServiceCount = baseObserved.filter(([c]) => ['W41X', 'W30', 'W51D'].includes(c)).length;

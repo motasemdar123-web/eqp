@@ -312,6 +312,73 @@ describe('Komatsu Equipment Care (EQP Care) Service', () => {
         komatsuEqpCareService.saveCachedLiveLifecycle(originalCache);
       }
     });
+
+    test('should reject updateServiceLogInEqpCare with an error when syncToEqpc is true and session cookie is missing or invalid', async () => {
+      await expect(
+        komatsuEqpCareService.updateServiceLogInEqpCare(
+          {
+            serialNo: '9631',
+            model: 'HM400',
+            eventCode: 'W41X',
+            serviceDate: '2026-02-14',
+            newSmr: 18,
+            syncToEqpc: true,
+          },
+          'test_session_xyz'
+        )
+      ).rejects.toThrow('Komatsu session cookie is missing or invalid');
+    });
+
+    test('should identify isLastReportGenerated correctly for latest vs older reports', async () => {
+      const originalCache = komatsuEqpCareService.loadCachedLiveLifecycle();
+      const testCache = {
+        lastSync: new Date().toISOString(),
+        machines: {
+          '9999': {
+            machineNumber: '9999',
+            model: 'HM400',
+            latestSmr: 20,
+            reports: [
+              { eventCode: 'W41X', date: '2026-08-15', smr: 20 },
+              { eventCode: 'W41X', date: '2026-05-10', smr: 15 },
+            ],
+          },
+        },
+      };
+      komatsuEqpCareService.saveCachedLiveLifecycle(testCache);
+
+      try {
+        // 1. Edit the older report (2026-05-10) -> isLastReportGenerated should be false
+        const resOld = await komatsuEqpCareService.updateServiceLogInEqpCare({
+          serialNo: '9999',
+          model: 'HM400',
+          eventCode: 'W41X',
+          serviceDate: '2026-05-10',
+          newSmr: 17,
+          syncToEqpc: false,
+        });
+        expect(resOld.isLastReportGenerated).toBe(false);
+        const cacheAfterOld = komatsuEqpCareService.loadCachedLiveLifecycle();
+        expect(cacheAfterOld.machines['9999'].latestSmr).toBe(20); // Unchanged!
+        expect(cacheAfterOld.machines['9999'].reports.find((r) => r.date === '2026-05-10').smr).toBe(17);
+
+        // 2. Edit the latest report (2026-08-15) -> isLastReportGenerated should be true
+        const resLatest = await komatsuEqpCareService.updateServiceLogInEqpCare({
+          serialNo: '9999',
+          model: 'HM400',
+          eventCode: 'W41X',
+          serviceDate: '2026-08-15',
+          newSmr: 25,
+          syncToEqpc: false,
+        });
+        expect(resLatest.isLastReportGenerated).toBe(true);
+        const cacheAfterLatest = komatsuEqpCareService.loadCachedLiveLifecycle();
+        expect(cacheAfterLatest.machines['9999'].latestSmr).toBe(25); // Updated!
+        expect(cacheAfterLatest.machines['9999'].reports.find((r) => r.date === '2026-08-15').smr).toBe(25);
+      } finally {
+        komatsuEqpCareService.saveCachedLiveLifecycle(originalCache);
+      }
+    });
   });
 });
 
