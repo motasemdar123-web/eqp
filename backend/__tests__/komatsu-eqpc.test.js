@@ -1,4 +1,5 @@
 const komatsuEqpCareService = require('../src/services/komatsuEqpCareService');
+const reportGeneratorService = require('../src/services/reportGeneratorService');
 
 describe('Komatsu Equipment Care (EQP Care) Service', () => {
   describe('Cookie Management', () => {
@@ -247,6 +248,67 @@ describe('Komatsu Equipment Care (EQP Care) Service', () => {
         expect(mObj.reports[1].smr).toBe(9);
       } finally {
         // Restore original cache
+        komatsuEqpCareService.saveCachedLiveLifecycle(originalCache);
+      }
+    });
+
+    test('generateReplacementReportPdf creates valid PDF buffer with updated SMR', async () => {
+      const result = await reportGeneratorService.generateReplacementReportPdf({
+        machineNumber: '9631',
+        eventCode: 'W41X',
+        serviceDate: '2026-02-14',
+        newSmr: 15,
+        comments: 'Verified periodic maintenance completed.',
+        performedBy: 'IBRAHIM AHMAD ALDARAWSHEH',
+      });
+
+      expect(result).toBeDefined();
+      expect(result.smr).toBe(15);
+      expect(result.fileName).toContain('9631');
+      expect(result.fileName).toContain('.pdf');
+      expect(Buffer.isBuffer(result.pdfBuffer)).toBe(true);
+      expect(result.pdfBuffer.subarray(0, 4).toString('utf8')).toBe('%PDF');
+    });
+
+    test('auto-generates replacement PDF and preserves zero counter updates', async () => {
+      const originalCache = komatsuEqpCareService.loadCachedLiveLifecycle();
+      const testCache = {
+        lastSync: new Date().toISOString(),
+        totalMachines: 1,
+        machines: {
+          '9631': {
+            machineNumber: '9631',
+            model: 'HM400',
+            totalReports: 1,
+            reports: [
+              { eventCode: 'W41X', eventName: 'EXTRA SERVICE', date: '2026-02-14', rawDate: '02/14/2026', smr: 10 },
+            ],
+          },
+        },
+      };
+      komatsuEqpCareService.saveCachedLiveLifecycle(testCache);
+
+      try {
+        const res = await komatsuEqpCareService.updateServiceLogInEqpCare({
+          serialNo: '9631',
+          model: 'HM400',
+          eventCode: 'W41X',
+          serviceDate: '2026-02-14',
+          newSmr: 16,
+          currentSmr: 10,
+          syncToEqpc: false,
+        });
+
+        expect(res.success).toBe(true);
+        expect(res.newSmr).toBe(16);
+        // Replacement file must be automatically generated
+        expect(res.replacementFile).toBeDefined();
+        expect(res.replacementFile).toContain('.pdf');
+
+        const updatedCache = komatsuEqpCareService.loadCachedLiveLifecycle();
+        expect(updatedCache.machines['9631'].reports.length).toBe(1);
+        expect(updatedCache.machines['9631'].reports[0].smr).toBe(16);
+      } finally {
         komatsuEqpCareService.saveCachedLiveLifecycle(originalCache);
       }
     });

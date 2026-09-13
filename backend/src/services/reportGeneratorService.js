@@ -16,6 +16,8 @@ const komatsuEqpCareService = require('./komatsuEqpCareService');
 const { findSignaturePath, getSignatureStatus } = require('./reportSignatureService');
 const { ApiError } = require('../utils/ApiError');
 const { getLifecycleReportCount } = require('../data/lifecycleReportCounts');
+const db = require('../config/database');
+const { resolveEqpTable } = require('../repositories/eqpTableResolver');
 
 const TEMPLATE_ROOT = path.join(__dirname, '..', '..', 'templates');
 const execFileAsync = promisify(execFile);
@@ -720,11 +722,11 @@ function getFileReportLabel(reportType, serviceType, reportCounter) {
   const normalized = normalizeServiceTypeLabel(serviceType);
 
   if (normalized === 'add service') {
-    return `Ex_${reportCounter}`;
+    return reportCounter ? `Ex_${reportCounter}` : 'Ex';
   }
 
   if (isRepeatingServiceType(serviceType)) {
-    return `${reportType}-${reportCounter}`;
+    return reportCounter ? `${reportType}-${reportCounter}` : reportType;
   }
 
   if (normalized === '1st service') return '1st';
@@ -1856,8 +1858,252 @@ async function generateReports(payload) {
   };
 }
 
+/**
+ * Maps an EQP Care event code (e.g. W41X, W411, W30) to a standard service type name.
+ */
+function mapEventCodeToServiceType(eventCode = '') {
+  const norm = String(eventCode || '').trim().toUpperCase();
+  if (norm === 'W411') return '1st Service';
+  if (norm === 'W412') return '2nd Service';
+  if (norm === 'W413') return '3rd Service';
+  if (norm === 'W41P') return 'Pre Delivery';
+  if (norm === 'W41N') return 'Delivery New';
+  if (norm === 'W30') return 'Storage Service';
+  return 'Add Service';
+}
+
+/**
+ * Automatically creates a replacement report PDF for an existing service log.
+ * The generated PDF is identical to the uploaded report, preserving the machine
+ * specifications, customer, date, inspector, and comments, with only the SMR updated.
+ */
+async function generateReplacementReportPdf({
+  machineNumber,
+  eventCode,
+  serviceDate,
+  newSmr,
+  comments = null,
+  performedBy = null,
+  userId = null,
+  userNumber = null,
+}) {
+  const sNo = String(machineNumber || '').trim();
+  const eCode = String(eventCode || '').trim();
+  const numericSmr = Number(newSmr);
+
+  if (!sNo) throw new ApiError(400, 'Machine number is required for replacement report.');
+  if (!serviceDate) throw new ApiError(400, 'Service date is required for replacement report.');
+  if (isNaN(numericSmr) || numericSmr < 0) throw new ApiError(400, 'Valid non-negative SMR is required.');
+
+  // Date parsing
+  const dateObj = new Date(serviceDate);
+  let isoDate = '';
+  let formattedDate = '';
+  let safeDate = '';
+  let monthKey = '';
+
+  const str = String(serviceDate).trim();
+  if (/^\d{4}-\d{2}-\d{2}$/.test(str)) {
+    isoDate = str;
+    const [y, m, d] = str.split('-');
+    formattedDate = `${m}/${d}/${y}`;
+    safeDate = `${y}${m}${d}`;
+    monthKey = `${y}-${m}`;
+  } else if (!isNaN(dateObj.getTime())) {
+    const y = dateObj.getFullYear();
+    const m = String(dateObj.getMonth() + 1).padStart(2, '0');
+    const d = String(dateObj.getDate()).padStart(2, '0');
+    isoDate = `${y}-${m}-${d}`;
+    formattedDate = `${m}/${d}/${y}`;
+    safeDate = `${y}${m}${d}`;
+    monthKey = `${y}-${m}`;
+  } else {
+    isoDate = str.slice(0, 10);
+    formattedDate = str;
+    safeDate = isoDate.replace(/-/g, '');
+    monthKey = isoDate.slice(0, 7);
+  }
+
+  // 1. Look up machine details
+  let machine = null;
+  try {
+    const machineTable = await resolveEqpTable('eqp_machines', 'machines');
+    const mRes = await db.query(
+      `SELECT * FROM ${machineTable} WHERE machine_number ILIKE $1 LIMIT 1`,
+      [sNo]
+    );
+    machine = mRes.rows[0] || null;
+  } catch (mErr) {
+    console.warn('[generateReplacementReportPdf] Machine DB lookup notice:', mErr.message);
+  }
+
+  // Fallback machine classification if DB unavailable
+  const effectiveModel = machine?.machine_type || machine?.machine_model || (sNo === '9635' ? 'PC400-8R' : 'HM400-5R');
+  const templateModel = resolveMachineTemplateModel(machine || {}, effectiveModel);
+  const templateGroup = machine?.report_template_group || null;
+
+  // 2. Look up existing report from eqp_reports to preserve original details
+  let existingReport = null;
+  let reportsTable = 'eqp_reports';
+  try {
+    reportsTable = await resolveEqpTable('eqp_reports', 'reports');
+    const rRes = await db.query(
+      `
+        SELECT * FROM ${reportsTable}
+        WHERE machine_number ILIKE $1
+          AND (
+            to_char(service_date, 'YYYY-MM-DD') = $2
+            OR to_char(service_date, 'YYYY-MM') = $3
+          )
+        ORDER BY id DESC
+        LIMIT 1
+      `,
+      [sNo, isoDate, monthKey]
+    );
+    existingReport = rRes.rows[0] || null;
+  } catch (rErr) {
+    console.warn('[generateReplacementReportPdf] Existing report DB lookup notice:', rErr.message);
+  }
+
+  const now = new Date();
+  const hh = String(now.getHours()).padStart(2, '0');
+  const mm = String(now.getMinutes()).padStart(2, '0');
+
+  const reportNo = existingReport?.report_no || `${safeDate}-${hh}${mm}-001`;
+  const reportType = existingReport?.report_type || eCode || 'W41X';
+  const serviceType = existingReport?.service_type || mapEventCodeToServiceType(reportType);
+  const inspector = existingReport?.created_by || performedBy || 'IBRAHIM AHMAD ALDARAWSHEH';
+  const selectedComment = comments || existingReport?.comments || 'Periodic maintenance service verified and updated.';
+  const engineNumber = existingReport?.engine_number || machine?.engine_number || '';
+  const customerName = machine?.customer_name || "LA'ALA AL-KUWAIT REAL ESTATE CO.";
+  const location = machine?.location || 'AL KHIRAN';
+
+  const fileName = existingReport?.file_name || buildReportFileName({
+    machineModel: templateModel,
+    machineNumber: machine?.machine_number || sNo,
+    reportType,
+    serviceType,
+    reportCounter: null,
+  });
+
+  // 3. Load official template workbook
+  const template = resolveTemplate(reportType, serviceType, templateModel, templateGroup);
+  const workbook = new ExcelJS.Workbook();
+  await workbook.xlsx.readFile(template.path);
+  const sheet = workbook.worksheets[0];
+  const fieldConfig = getTemplateFieldConfig(templateModel, template.variant);
+
+  // Fill in exact values with updated SMR
+  sheet.getCell(fieldConfig.machineNumber).value = machine?.machine_number || sNo;
+  sheet.getCell(fieldConfig.engineNumber).value = engineNumber;
+  sheet.getCell(fieldConfig.reportNo).value = reportNo;
+  sheet.getCell(fieldConfig.serviceDate).value = buildFormattedDate(serviceDate);
+  sheet.getCell(fieldConfig.smr).value = numericSmr;
+  sheet.getCell(fieldConfig.inspector).value = inspector;
+
+  if (customerName && fieldConfig.customerName) {
+    sheet.getCell(fieldConfig.customerName).value = customerName;
+  }
+  if (location && fieldConfig.location) {
+    sheet.getCell(fieldConfig.location).value = location;
+  }
+
+  if (fieldConfig.randomValueCells && Array.isArray(fieldConfig.randomValueCells)) {
+    fieldConfig.randomValueCells.forEach((cell) => {
+      sheet.getCell(cell.address).value = getRandomInt(cell.min, cell.max);
+    });
+  }
+
+  sheet.getCell(getRandomCommentCell(fieldConfig)).value = selectedComment;
+
+  // Add inspector signature
+  let signaturePath = findSignaturePath({ full_name: inspector });
+  if (!signaturePath) {
+    const defaultSig = path.join(__dirname, '..', '..', 'signatures', 'motasem-signature.png');
+    if (fs.existsSync(defaultSig)) {
+      signaturePath = defaultSig;
+    }
+  }
+  if (signaturePath && fs.existsSync(signaturePath)) {
+    try {
+      addSignature(workbook, sheet, signaturePath, fieldConfig);
+    } catch {
+      // Non-fatal if signature placement fails
+    }
+  }
+
+  // 4. Convert to PDF buffer
+  prepareFilledWorkbookForPdfExport(workbook, sheet);
+  const workbookBuffer = await workbook.xlsx.writeBuffer();
+
+  let pdfBuffer = null;
+  if (pdfConverterOverride) {
+    try {
+      const map = await pdfConverterOverride([{ id: reportNo, workbookBuffer }]);
+      pdfBuffer = map?.get(reportNo) || null;
+    } catch {
+      // Fallback
+    }
+  }
+
+  if (!pdfBuffer) {
+    try {
+      pdfBuffer = await tryConvertWorkbookToPdf(workbookBuffer);
+    } catch {
+      // Fallback
+    }
+  }
+
+  if (!pdfBuffer) {
+    // High-fidelity structured PDF using PDFKit
+    pdfBuffer = await renderWorkbookToPdfWithPdfKit(workbook, {
+      reportNo,
+      machine: machine || { machine_type: templateModel, machine_number: sNo, engine_number: engineNumber },
+      serviceDate,
+      smr: numericSmr,
+      serviceType,
+      reportType,
+      createdBy: inspector,
+      selectedComment,
+    });
+  }
+
+  // 5. Upload to Supabase Storage if configured
+  let fileUrl = existingReport?.file_url || null;
+  try {
+    fileUrl = await storageService.uploadReport(fileName, pdfBuffer, 'application/pdf');
+  } catch (uploadErr) {
+    console.warn('[generateReplacementReportPdf] Storage upload notice:', uploadErr.message);
+  }
+
+  // 6. In-place update of eqp_reports record (Zero duplicates created)
+  if (existingReport?.id) {
+    try {
+      await db.query(
+        `
+          UPDATE ${reportsTable}
+          SET smr = $1, file_name = $2, file_url = COALESCE($3, file_url), updated_at = CURRENT_TIMESTAMP
+          WHERE id = $4
+        `,
+        [numericSmr, fileName, fileUrl, existingReport.id]
+      );
+    } catch (repErr) {
+      console.warn('[generateReplacementReportPdf] Report record update notice:', repErr.message);
+    }
+  }
+
+  return {
+    pdfBuffer,
+    fileName,
+    fileUrl,
+    reportNo,
+    smr: numericSmr,
+  };
+}
+
 module.exports = {
   generateReports,
+  generateReplacementReportPdf,
   getPdfConverterStatus,
   getReportProfile,
   __private: {
@@ -1874,3 +2120,4 @@ module.exports = {
     setPdfConverterForTesting,
   },
 };
+

@@ -40,7 +40,6 @@ export default function EqpLifecyclePage() {
   const [editingMilestone, setEditingMilestone] = useState(null);
   const [editSmrValue, setEditSmrValue] = useState('');
   const [editSyncToKomatsu, setEditSyncToKomatsu] = useState(true);
-  const [editReplacementFile, setEditReplacementFile] = useState(null);
   const [isUpdatingLog, setIsUpdatingLog] = useState(false);
   const [editNotice, setEditNotice] = useState({ type: '', message: '' });
 
@@ -132,7 +131,6 @@ export default function EqpLifecyclePage() {
     setEditingMilestone(milestone);
     setEditSmrValue(milestone.smr != null ? String(milestone.smr) : '');
     setEditSyncToKomatsu(true);
-    setEditReplacementFile(null);
     setEditNotice({ type: '', message: '' });
   }
 
@@ -140,7 +138,6 @@ export default function EqpLifecyclePage() {
     if (isUpdatingLog) return;
     setEditingMilestone(null);
     setEditSmrValue('');
-    setEditReplacementFile(null);
     setEditNotice({ type: '', message: '' });
   }
 
@@ -171,10 +168,6 @@ export default function EqpLifecyclePage() {
       const userCookie = typeof window !== 'undefined' ? localStorage.getItem('eqpc_user_cookie') || '' : '';
       if (userCookie) {
         payload.append('cookie', userCookie);
-      }
-
-      if (editReplacementFile) {
-        payload.append('file', editReplacementFile);
       }
 
       const res = await updateEqpcServiceLog(payload);
@@ -946,20 +939,18 @@ export default function EqpLifecyclePage() {
                   </p>
                 </div>
 
-                {/* Optional Report Replacement Document */}
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">
-                    Replacement Report PDF <span className="text-slate-400 font-normal">(Optional)</span>
-                  </label>
-                  <input
-                    type="file"
-                    accept=".pdf,application/pdf"
-                    onChange={(e) => setEditReplacementFile(e.target.files?.[0] || null)}
-                    className="block w-full text-xs text-slate-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-amber-50 file:text-amber-700 hover:file:bg-amber-100 border border-slate-200 rounded-xl p-1"
-                    disabled={isUpdatingLog}
-                  />
-                  <p className="text-[10px] text-slate-400 mt-1">
-                    Attach a new PDF to replace the report document in the system and on Komatsu, or leave empty to update SMR only.
+                {/* Automated Replacement Report Creation Banner */}
+                <div className="p-3.5 rounded-xl bg-amber-50/80 border border-amber-200 text-xs space-y-1.5">
+                  <div className="flex items-center gap-1.5 font-bold text-amber-900">
+                    <span>📄</span>
+                    <span>Automated Replacement Report PDF</span>
+                  </div>
+                  <p className="text-[11px] text-amber-800 leading-relaxed">
+                    The replacement inspection report will be created automatically on its own, exactly matching the uploaded report with the new SMR ({editSmrValue || '...'} hrs) and preserving machine specifications, customer, date, inspector, and comments.
+                  </p>
+                  <p className="text-[10px] text-emerald-800 font-semibold flex items-center gap-1 pt-0.5">
+                    <span>🛡️</span>
+                    <span>Machine operational counters and overall SMR are strictly protected and will not be altered.</span>
                   </p>
                 </div>
 

@@ -788,6 +788,30 @@ async function updateServiceLogInEqpCare(updateData, customCookie = null) {
 
   let komatsuUpdated = false;
   let komatsuNotice = '';
+  // Auto-generate replacement report PDF if not provided manually
+  let effectiveFileBuffer = fileBuffer;
+  let effectiveFileName = fileName;
+  let replacementReport = null;
+
+  if (!effectiveFileBuffer) {
+    try {
+      const reportGeneratorService = require('./reportGeneratorService');
+      replacementReport = await reportGeneratorService.generateReplacementReportPdf({
+        machineNumber: sNo,
+        eventCode: eCode,
+        serviceDate: isoDate,
+        newSmr: numericSmr,
+        comments,
+        performedBy: updateData.performedBy,
+      });
+      if (replacementReport?.pdfBuffer) {
+        effectiveFileBuffer = replacementReport.pdfBuffer;
+        effectiveFileName = replacementReport.fileName || effectiveFileName;
+      }
+    } catch (genErr) {
+      console.warn('[updateServiceLogInEqpCare] Auto replacement PDF generation notice:', genErr.message);
+    }
+  }
 
   // 1. In-place update on Komatsu Equipment Care portal if requested and cookie is available
   if (syncToEqpc !== false) {
@@ -900,9 +924,9 @@ async function updateServiceLogInEqpCare(updateData, customCookie = null) {
       updateForm.append('updAuth', '1');
       updateForm.append('refAuth', '1');
 
-      if (fileBuffer) {
-        const blob = new Blob([fileBuffer], { type: 'application/pdf' });
-        updateForm.append('files[0]', blob, fileName || `report_${sNo}_${isoDate}.pdf`);
+      if (effectiveFileBuffer) {
+        const blob = new Blob([effectiveFileBuffer], { type: 'application/pdf' });
+        updateForm.append('files[0]', blob, effectiveFileName || `report_${sNo}_${isoDate}.pdf`);
       }
 
       try {
@@ -993,16 +1017,6 @@ async function updateServiceLogInEqpCare(updateData, customCookie = null) {
     } catch {
       // Non-fatal if table doesn't exist
     }
-
-    // Update eqp_machines last_smr if applicable
-    await db.query(
-      `
-        UPDATE ${machineTable}
-        SET last_smr = GREATEST(COALESCE(last_smr, 0), $1), updated_at = CURRENT_TIMESTAMP
-        WHERE machine_number ILIKE $2
-      `,
-      [numericSmr, sNo]
-    );
   } catch (dbErr) {
     console.warn('[updateServiceLogInEqpCare] Database update notice:', dbErr.message);
   }
@@ -1042,6 +1056,8 @@ async function updateServiceLogInEqpCare(updateData, customCookie = null) {
     komatsuUpdated,
     dbUpdated,
     cacheUpdated,
+    replacementFile: effectiveFileName,
+    replacementUrl: replacementReport?.fileUrl || null,
     message: komatsuNotice || `Successfully updated ${effectiveModel} #${sNo} ${eventObj.name} SMR to ${numericSmr} hrs.`,
   };
 }
