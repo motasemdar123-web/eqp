@@ -8,8 +8,8 @@ async function startServer() {
   try {
     const app = createApp();
 
-    const server = app.listen(env.port, () => {
-      console.log(`Server running on port ${env.port}`);
+    const server = app.listen(env.port, env.host, () => {
+      console.log(`Server running on ${env.host}:${env.port}`);
     });
 
     server.on('error', (error) => {
