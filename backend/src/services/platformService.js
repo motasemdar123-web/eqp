@@ -256,10 +256,12 @@ async function buildPlatformAuthResult(prisma, user, preferredModule, authType =
   const roleNames = isJessica
     ? ['MEDIA_SPECIALIST']
     : userRoles.map((userRole) => userRole.role.code);
-  const permissions = await prisma.rolePermission.findMany({
-    where: { role: { code: { in: roleNames } } },
-    include: { permission: true },
-  });
+  const permissions = isJessica
+    ? []
+    : await prisma.rolePermission.findMany({
+        where: { role: { code: { in: roleNames } } },
+        include: { permission: true },
+      });
   const permissionNames = isJessica
     ? ['MEDIA_MANAGE']
     : [...new Set(permissions.map((rolePermission) => rolePermission.permission.code))];

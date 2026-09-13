@@ -1,10 +1,12 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import SystemShell from '../../components/SystemShell';
 import Button from '../../components/ui/Button';
 import Badge from '../../components/ui/Badge';
 import { INITIAL_MONTHLY_CAMPAIGNS } from '../../lib/mediaMonthlyData';
+import { getMediaCampaigns, saveMediaCampaigns as apiSaveMediaCampaigns, resetMediaCampaigns as apiResetMediaCampaigns } from '../../lib/api';
+import { getStoredUser } from '../../lib/auth';
 import MediaCalendarGrid from '../../components/media/MediaCalendarGrid';
 import MediaListView from '../../components/media/MediaListView';
 import SimplePostModal from '../../components/media/SimplePostModal';
@@ -19,6 +21,11 @@ export default function MediaCornerPage() {
   const [viewMode, setViewMode] = useState('calendar'); // 'calendar' | 'list'
   const [loading, setLoading] = useState(true);
 
+  // Cloud sync state
+  const [syncStatus, setSyncStatus] = useState('syncing'); // 'synced' | 'syncing' | 'offline'
+  const [lastSyncTime, setLastSyncTime] = useState(null);
+  const [syncAuthor, setSyncAuthor] = useState(null);
+
   // Post modal state
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
   const [activePost, setActivePost] = useState(null);
@@ -27,7 +34,28 @@ export default function MediaCornerPage() {
   // New month modal state
   const [isNewMonthModalOpen, setIsNewMonthModalOpen] = useState(false);
 
-  // Load from localStorage or initial template
+  // Fetch latest campaigns from central cloud database
+  const loadRemoteCampaigns = useCallback(async () => {
+    setSyncStatus('syncing');
+    try {
+      const res = await getMediaCampaigns();
+      if (res && res.success && res.campaigns && Object.keys(res.campaigns).length > 0) {
+        setCampaigns(res.campaigns);
+        try {
+          localStorage.setItem(CAMPAIGNS_STORAGE_KEY, JSON.stringify(res.campaigns));
+        } catch {}
+        setSyncStatus('synced');
+        setLastSyncTime(new Date(res.updatedAt || Date.now()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
+        if (res.updatedBy) setSyncAuthor(res.updatedBy);
+        return;
+      }
+    } catch (err) {
+      console.warn('[Media] Remote sync warning:', err.message);
+    }
+    setSyncStatus('offline');
+  }, []);
+
+  // Load from localStorage first for instant render, then fetch from server
   useEffect(() => {
     try {
       const storedCampaigns = localStorage.getItem(CAMPAIGNS_STORAGE_KEY);
@@ -52,11 +80,36 @@ export default function MediaCornerPage() {
     } finally {
       setLoading(false);
     }
-  }, []);
 
-  const saveCampaigns = (newCampaigns) => {
+    // Immediately pull latest shared team updates from cloud database
+    loadRemoteCampaigns();
+  }, [loadRemoteCampaigns]);
+
+  const saveCampaigns = async (newCampaigns) => {
+    // 1. Instant optimistic update
     setCampaigns(newCampaigns);
-    localStorage.setItem(CAMPAIGNS_STORAGE_KEY, JSON.stringify(newCampaigns));
+    try {
+      localStorage.setItem(CAMPAIGNS_STORAGE_KEY, JSON.stringify(newCampaigns));
+    } catch {}
+
+    // 2. Persist to shared database
+    setSyncStatus('syncing');
+    const user = getStoredUser();
+    const authorName = user?.fullName || user?.full_name || 'Editorial Team';
+
+    try {
+      const res = await apiSaveMediaCampaigns(newCampaigns, authorName);
+      if (res && res.success) {
+        setSyncStatus('synced');
+        setLastSyncTime(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
+        setSyncAuthor(authorName);
+        return;
+      }
+    } catch (err) {
+      console.warn('[Media] Save remote notice:', err.message);
+    }
+
+    setSyncStatus('offline');
   };
 
   const handleSelectMonth = (monthId) => {
@@ -102,13 +155,15 @@ export default function MediaCornerPage() {
     handleSelectMonth(nextMonthId);
   };
 
-  const activeCampaign = campaigns[selectedMonthId] || {
-    monthId: selectedMonthId,
-    monthName: 'Current Month',
-    concepts: [],
-  };
+  const activeCampaign = useMemo(() => {
+    return campaigns[selectedMonthId] || {
+      monthId: selectedMonthId,
+      monthName: 'Current Month',
+      concepts: [],
+    };
+  }, [campaigns, selectedMonthId]);
 
-  const currentConcepts = activeCampaign.concepts || [];
+  const currentConcepts = useMemo(() => activeCampaign.concepts || [], [activeCampaign]);
 
   const availableMonths = useMemo(() => {
     return Object.values(campaigns)
@@ -180,11 +235,26 @@ export default function MediaCornerPage() {
   };
 
   // Reset to master template
-  const handleResetCampaign = () => {
-    if (!window.confirm('Reset all campaigns back to master template?')) return;
+  const handleResetCampaign = async () => {
+    if (!window.confirm('Reset all campaigns back to master template across all team accounts?')) return;
+    setSyncStatus('syncing');
+    try {
+      const res = await apiResetMediaCampaigns();
+      if (res && res.campaigns) {
+        setCampaigns(res.campaigns);
+        localStorage.setItem(CAMPAIGNS_STORAGE_KEY, JSON.stringify(res.campaigns));
+        setSelectedMonthId('2026-09');
+        setSyncStatus('synced');
+        setLastSyncTime(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
+        return;
+      }
+    } catch (err) {
+      console.warn('[Media] Cloud reset error:', err.message);
+    }
     setCampaigns(INITIAL_MONTHLY_CAMPAIGNS);
     localStorage.setItem(CAMPAIGNS_STORAGE_KEY, JSON.stringify(INITIAL_MONTHLY_CAMPAIGNS));
     setSelectedMonthId('2026-09');
+    setSyncStatus('synced');
   };
 
   // Create new month
@@ -331,6 +401,40 @@ export default function MediaCornerPage() {
             >
               + Add Post Idea
             </Button>
+
+            {/* Cloud Sync Status Indicator & Refresh */}
+            <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border text-xs font-semibold bg-slate-50 border-slate-200">
+              {syncStatus === 'synced' ? (
+                <>
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 shadow-sm shadow-emerald-500/50" />
+                  <span className="text-slate-700 hidden sm:inline">Synced</span>
+                  {lastSyncTime && (
+                    <span className="text-[10px] text-slate-400 font-normal hidden xl:inline">
+                      ({lastSyncTime})
+                    </span>
+                  )}
+                </>
+              ) : syncStatus === 'syncing' ? (
+                <>
+                  <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping" />
+                  <span className="text-amber-700 font-medium">Syncing...</span>
+                </>
+              ) : (
+                <>
+                  <span className="w-2 h-2 rounded-full bg-slate-400" />
+                  <span className="text-slate-500">Local</span>
+                </>
+              )}
+
+              <button
+                type="button"
+                onClick={() => loadRemoteCampaigns()}
+                title="Refresh latest team edits from cloud"
+                className="ml-0.5 p-1 text-slate-400 hover:text-slate-700 hover:bg-slate-200 rounded transition-colors cursor-pointer text-xs"
+              >
+                ⟳
+              </button>
+            </div>
 
             {/* Reset Template Button */}
             <button

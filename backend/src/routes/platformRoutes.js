@@ -1,5 +1,6 @@
 const { Router } = require('express');
 const platformController = require('../controllers/platformController');
+const mediaController = require('../controllers/mediaController');
 const { asyncHandler } = require('../utils/asyncHandler');
 const { requirePlatformAuth, optionalPlatformAuth, requirePermission } = require('../middleware/platformAuthMiddleware');
 const { audioUpload, manualUpload } = require('../middleware/uploadMiddleware');
@@ -92,6 +93,12 @@ router.get('/api/sap/po/status', requirePlatformAuth, asyncHandler(platformContr
 router.post('/api/sap/po/export-excel', requirePlatformAuth, asyncHandler(platformController.exportSapPoExcel));
 router.get('/api/sap/bridge/download', optionalPlatformAuth, asyncHandler(platformController.downloadSapBridgeZip));
 router.get('/api/outlook/bridge/download', optionalPlatformAuth, asyncHandler(platformController.downloadOutlookBridgeZip));
+
+// Media Corner shared editorial calendar routes
+router.get('/api/media/campaigns', optionalPlatformAuth, asyncHandler(mediaController.getMediaCampaigns));
+router.put('/api/media/campaigns', optionalPlatformAuth, asyncHandler(mediaController.saveMediaCampaigns));
+router.post('/api/media/campaigns', optionalPlatformAuth, asyncHandler(mediaController.saveMediaCampaigns));
+router.post('/api/media/campaigns/reset', optionalPlatformAuth, asyncHandler(mediaController.resetMediaCampaigns));
 
 module.exports = router;
 

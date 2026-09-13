@@ -1034,6 +1034,83 @@ export async function getLocalSapQuotationStatus() {
   }
 }
 
+// Media Corner Shared Campaign Storage
+export async function getMediaCampaigns() {
+  try {
+    const res = await request('/api/media/campaigns', { timeoutMs: 8000 });
+    if (res && res.success && res.campaigns) {
+      return res;
+    }
+  } catch (err) {
+    console.warn('[getMediaCampaigns] Backend fetch notice:', err.message);
+  }
+
+  // Fallback to Next.js route
+  try {
+    const localRes = await fetch('/api/media/campaigns');
+    if (localRes.ok) {
+      return await localRes.json();
+    }
+  } catch {}
+
+  return null;
+}
+
+export async function saveMediaCampaigns(campaigns, updatedBy) {
+  try {
+    const res = await request('/api/media/campaigns', {
+      method: 'PUT',
+      body: JSON.stringify({ campaigns, updatedBy }),
+      timeoutMs: 12000,
+    });
+    if (res && res.success) {
+      return res;
+    }
+  } catch (err) {
+    console.warn('[saveMediaCampaigns] Backend save notice:', err.message);
+  }
+
+  // Fallback to Next.js route
+  try {
+    const localRes = await fetch('/api/media/campaigns', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ campaigns, updatedBy }),
+    });
+    if (localRes.ok) {
+      return await localRes.json();
+    }
+  } catch {}
+
+  return null;
+}
+
+export async function resetMediaCampaigns() {
+  try {
+    const res = await request('/api/media/campaigns/reset', {
+      method: 'POST',
+      timeoutMs: 8000,
+    });
+    if (res && res.success) {
+      return res;
+    }
+  } catch (err) {
+    console.warn('[resetMediaCampaigns] Backend reset notice:', err.message);
+  }
+
+  try {
+    const localRes = await fetch('/api/media/campaigns/reset', {
+      method: 'POST',
+    });
+    if (localRes.ok) {
+      return await localRes.json();
+    }
+  } catch {}
+
+  return null;
+}
+
+
 
 
 

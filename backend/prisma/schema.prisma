@@ -674,3 +674,13 @@ model PartsInquiryAttachment {
   @@map("parts_inquiry_attachments")
 }
 
+model MediaCampaign {
+  id        String   @id @default("current_editorial_plan")
+  data      Json
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+  updatedBy String?  @map("updated_by")
+
+  @@map("media_campaigns")
+}
+
+
