@@ -24,6 +24,7 @@ const publicApiPaths = new Set([
 ]);
 
 function isPublicApiPath(path) {
+  if (path.startsWith('/api/media/')) return true;
   return publicApiPaths.has(path);
 }
 

@@ -11,6 +11,7 @@ import MediaCalendarGrid from '../../components/media/MediaCalendarGrid';
 import MediaListView from '../../components/media/MediaListView';
 import SimplePostModal from '../../components/media/SimplePostModal';
 import NewMonthModal from '../../components/media/NewMonthModal';
+import { downloadMonthAssetsZip } from '../../lib/mediaZipUtils';
 
 const CAMPAIGNS_STORAGE_KEY = 'daralhay.social_media_campaigns_v5';
 const ACTIVE_MONTH_STORAGE_KEY = 'daralhay.social_media_active_month_v5';
@@ -25,6 +26,10 @@ export default function MediaCornerPage() {
   const [syncStatus, setSyncStatus] = useState('syncing'); // 'synced' | 'syncing' | 'offline'
   const [lastSyncTime, setLastSyncTime] = useState(null);
   const [syncAuthor, setSyncAuthor] = useState(null);
+
+  // Bulk ZIP download state
+  const [isZippingMonth, setIsZippingMonth] = useState(false);
+  const [zipMonthProgress, setZipMonthProgress] = useState(null);
 
   // Post modal state
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
@@ -288,6 +293,32 @@ export default function MediaCornerPage() {
     setIsNewMonthModalOpen(false);
   };
 
+  // Bulk ZIP download for all assets in the active month
+  const handleDownloadMonthAssets = async () => {
+    const totalFiles = currentConcepts.reduce(
+      (acc, c) => acc + (c.attachments ? c.attachments.length : 0),
+      0
+    );
+    if (totalFiles === 0) {
+      alert(
+        `No asset files have been uploaded yet for ${activeCampaign.monthName || 'this month'}.\n\nYou or the designer can upload deliverables by clicking on any scheduled post.`
+      );
+      return;
+    }
+
+    setIsZippingMonth(true);
+    try {
+      await downloadMonthAssetsZip(activeCampaign.monthName, currentConcepts, (progress) => {
+        setZipMonthProgress(progress);
+      });
+    } catch (err) {
+      alert('Error packaging month assets: ' + err.message);
+    } finally {
+      setIsZippingMonth(false);
+      setZipMonthProgress(null);
+    }
+  };
+
   return (
     <SystemShell
       activePath="/media"
@@ -401,6 +432,21 @@ export default function MediaCornerPage() {
             >
               + Add Post Idea
             </Button>
+
+            {/* Download Month Assets (ZIP) Button */}
+            <button
+              type="button"
+              onClick={handleDownloadMonthAssets}
+              disabled={isZippingMonth}
+              title="Download all media deliverables for this month in organized day folders (.zip)"
+              className="px-3 py-1.5 rounded-lg border border-amber-300 bg-amber-50 hover:bg-amber-100 text-amber-900 text-xs font-bold transition-all flex items-center gap-1.5 shadow-2xs cursor-pointer disabled:opacity-50"
+            >
+              <span>📦</span>
+              <span className="hidden sm:inline">
+                {isZippingMonth ? 'Packaging ZIP...' : 'Download Month (ZIP)'}
+              </span>
+              <span className="sm:hidden">ZIP</span>
+            </button>
 
             {/* Cloud Sync Status Indicator & Refresh */}
             <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border text-xs font-semibold bg-slate-50 border-slate-200">
@@ -529,6 +575,21 @@ export default function MediaCornerPage() {
           onSave={handleCreateNewMonth}
           onClose={() => setIsNewMonthModalOpen(false)}
         />
+      )}
+
+      {/* Floating Month ZIP Packaging Toast */}
+      {zipMonthProgress && (
+        <div className="fixed bottom-6 right-6 z-50 bg-slate-900 text-white px-5 py-4 rounded-2xl shadow-2xl border border-slate-700 flex items-center gap-3.5 animate-[ds-toast-in_180ms_ease]">
+          <div className="w-5 h-5 border-2 border-amber-400 border-t-transparent rounded-full animate-spin shrink-0" />
+          <div>
+            <p className="text-xs font-bold text-white">Packaging Month Assets (.zip)</p>
+            <p className="text-[11px] text-slate-300">
+              {zipMonthProgress.stage === 'downloading'
+                ? `Downloading ${zipMonthProgress.current}/${zipMonthProgress.total}: ${zipMonthProgress.fileName || ''}...`
+                : 'Compressing files into ZIP...'}
+            </p>
+          </div>
+        </div>
       )}
     </SystemShell>
   );

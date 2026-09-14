@@ -5,6 +5,7 @@ import Button from '../ui/Button';
 import Badge from '../ui/Badge';
 import StatusIndicator from '../ui/StatusIndicator';
 import { FORMAT_TYPES, PIPELINE_STAGES } from '../../lib/mediaMonthlyData';
+import { downloadPostAssetsZip } from '../../lib/mediaZipUtils';
 
 export default function MediaListView({
   concepts,
@@ -125,6 +126,7 @@ export default function MediaListView({
                   <th className="py-4 px-4">Tone of Voice (TOV)</th>
                   <th className="py-4 px-4 whitespace-nowrap">Format</th>
                   <th className="py-4 px-4 whitespace-nowrap">Status</th>
+                  <th className="py-4 px-4 whitespace-nowrap">Assets</th>
                   <th className="py-4 px-4 text-right whitespace-nowrap">Actions</th>
                 </tr>
               </thead>
@@ -189,6 +191,23 @@ export default function MediaListView({
                           label={stageMeta.label}
                           size="sm"
                         />
+                      </td>
+
+                      <td className="py-4 px-4 whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
+                        {post.attachments && post.attachments.length > 0 ? (
+                          <button
+                            type="button"
+                            onClick={() => downloadPostAssetsZip(post)}
+                            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-bold text-amber-800 bg-amber-50 hover:bg-amber-100 border border-amber-200 transition-colors cursor-pointer"
+                            title="Download all attached assets for this day (.zip)"
+                          >
+                            <span>📦</span>
+                            <span>{post.attachments.length} {post.attachments.length === 1 ? 'file' : 'files'}</span>
+                            <span className="text-[10px] text-amber-600 font-normal">ZIP</span>
+                          </button>
+                        ) : (
+                          <span className="text-slate-300 text-[11px] pl-2">—</span>
+                        )}
                       </td>
 
                       <td

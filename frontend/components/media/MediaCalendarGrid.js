@@ -185,6 +185,14 @@ export default function MediaCalendarGrid({
                           🎙️ {post.tov}
                         </p>
                       )}
+
+                      {/* Attachments / Deliverables badge */}
+                      {post.attachments && post.attachments.length > 0 && (
+                        <div className="flex items-center gap-1 text-[9px] font-bold text-amber-800 bg-amber-50 border border-amber-200/80 px-1.5 py-0.5 rounded mt-1">
+                          <span>📎</span>
+                          <span>{post.attachments.length} {post.attachments.length === 1 ? 'file' : 'files'}</span>
+                        </div>
+                      )}
                     </div>
                   );
                 })}

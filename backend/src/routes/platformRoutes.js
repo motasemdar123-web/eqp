@@ -3,7 +3,7 @@ const platformController = require('../controllers/platformController');
 const mediaController = require('../controllers/mediaController');
 const { asyncHandler } = require('../utils/asyncHandler');
 const { requirePlatformAuth, optionalPlatformAuth, requirePermission } = require('../middleware/platformAuthMiddleware');
-const { audioUpload, manualUpload, reportUpload } = require('../middleware/uploadMiddleware');
+const { audioUpload, manualUpload, reportUpload, mediaAssetUpload } = require('../middleware/uploadMiddleware');
 
 const router = Router();
 
@@ -101,6 +101,11 @@ router.get('/api/media/campaigns', optionalPlatformAuth, asyncHandler(mediaContr
 router.put('/api/media/campaigns', optionalPlatformAuth, asyncHandler(mediaController.saveMediaCampaigns));
 router.post('/api/media/campaigns', optionalPlatformAuth, asyncHandler(mediaController.saveMediaCampaigns));
 router.post('/api/media/campaigns/reset', optionalPlatformAuth, asyncHandler(mediaController.resetMediaCampaigns));
+
+// Media Corner file assets upload and download routes
+router.post('/api/media/upload', optionalPlatformAuth, mediaAssetUpload.single('file'), asyncHandler(mediaController.uploadMediaAsset));
+router.get('/api/media/files/:id', asyncHandler(mediaController.getMediaAssetFile));
+router.delete('/api/media/files/:id', optionalPlatformAuth, asyncHandler(mediaController.deleteMediaAsset));
 
 module.exports = router;
 

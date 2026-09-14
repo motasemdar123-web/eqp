@@ -1,9 +1,12 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Button from '../ui/Button';
 import Badge from '../ui/Badge';
 import { FORMAT_TYPES, PIPELINE_STAGES } from '../../lib/mediaMonthlyData';
+import { uploadMediaAsset, deleteMediaAsset } from '../../lib/api';
+import { downloadSingleAsset, downloadPostAssetsZip } from '../../lib/mediaZipUtils';
+import { getStoredPlatformSession, getStoredUser } from '../../lib/auth';
 
 const TOV_PRESETS = [
   'Authoritative Industrial & Fleet Economics',
@@ -12,6 +15,34 @@ const TOV_PRESETS = [
   'Behind-The-Scenes Workshop & Engineering',
   'Direct Inquiries & Spare Parts Offer',
 ];
+
+function formatFileSize(bytes) {
+  if (!bytes || bytes === 0) return '0 B';
+  const k = 1024;
+  const sizes = ['B', 'KB', 'MB', 'GB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+}
+
+function getAssetBadge(type = '', name = '') {
+  const lower = (name || '').toLowerCase();
+  if (type.startsWith('video/') || /\.(mp4|mov|webm|avi|mkv)$/i.test(lower)) {
+    return { icon: '🎬', label: 'Video', bg: 'bg-indigo-50 text-indigo-700 border-indigo-200' };
+  }
+  if (type.startsWith('image/') || /\.(png|jpe?g|gif|webp|svg)$/i.test(lower)) {
+    return { icon: '🖼️', label: 'Image', bg: 'bg-emerald-50 text-emerald-700 border-emerald-200' };
+  }
+  if (type === 'application/pdf' || /\.pdf$/i.test(lower)) {
+    return { icon: '📄', label: 'PDF', bg: 'bg-rose-50 text-rose-700 border-rose-200' };
+  }
+  if (/\.(psd|ai|fig)$/i.test(lower)) {
+    return { icon: '🎨', label: 'Design', bg: 'bg-purple-50 text-purple-700 border-purple-200' };
+  }
+  if (/\.(zip|rar|7z)$/i.test(lower)) {
+    return { icon: '📦', label: 'Archive', bg: 'bg-amber-50 text-amber-700 border-amber-200' };
+  }
+  return { icon: '📎', label: 'File', bg: 'bg-slate-50 text-slate-700 border-slate-200' };
+}
 
 export default function SimplePostModal({
   isOpen,
@@ -33,10 +64,19 @@ export default function SimplePostModal({
     tov: 'Authoritative Industrial & Fleet Economics',
     captionEn: '',
     captionAr: '',
+    attachments: [],
   });
 
   const [copiedEn, setCopiedEn] = useState(false);
   const [copiedAr, setCopiedAr] = useState(false);
+
+  // Asset upload states
+  const [uploading, setUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(null);
+  const [uploadError, setUploadError] = useState(null);
+  const [zipProgress, setZipProgress] = useState(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
     if (post) {
@@ -56,6 +96,7 @@ export default function SimplePostModal({
         scenes: post.scenes || [],
         slides: post.slides || [],
         photoShots: post.photoShots || [],
+        attachments: post.attachments || [],
       });
     } else {
       setFormData({
@@ -71,6 +112,7 @@ export default function SimplePostModal({
         captionAr: '',
         platforms: ['instagram', 'linkedin', 'facebook'],
         pillar: 'pillar_engineering',
+        attachments: [],
       });
     }
   }, [post, defaultDate, isOpen]);
@@ -86,6 +128,76 @@ export default function SimplePostModal({
     } else {
       setCopiedAr(true);
       setTimeout(() => setCopiedAr(false), 2000);
+    }
+  };
+
+  const handleFilesSelect = async (filesList) => {
+    if (!filesList || filesList.length === 0) return;
+    setUploading(true);
+    setUploadError(null);
+
+    const session = getStoredPlatformSession() || {};
+    const user = session?.user || getStoredUser();
+    const uploaderName = user?.fullName || user?.full_name || 'Jessica Fawzy';
+
+    const newAssets = [];
+    const filesArray = Array.from(filesList);
+
+    for (let i = 0; i < filesArray.length; i++) {
+      const file = filesArray[i];
+      setUploadProgress(`Uploading ${file.name} (${i + 1}/${filesArray.length})...`);
+      try {
+        const res = await uploadMediaAsset(file, {
+          conceptId: formData.id,
+          publishDate: formData.publishDate,
+          uploadedBy: uploaderName,
+        });
+        if (res && res.asset) {
+          newAssets.push(res.asset);
+        }
+      } catch (err) {
+        console.error('File upload error:', err);
+        setUploadError(`Failed to upload "${file.name}": ${err.message}`);
+      }
+    }
+
+    if (newAssets.length > 0) {
+      setFormData((prev) => ({
+        ...prev,
+        attachments: [...(prev.attachments || []), ...newAssets],
+      }));
+    }
+
+    setUploading(false);
+    setUploadProgress(null);
+  };
+
+  const handleRemoveAsset = async (assetId) => {
+    if (!window.confirm('Remove this asset file from the post?')) return;
+    setFormData((prev) => ({
+      ...prev,
+      attachments: (prev.attachments || []).filter((a) => a.id !== assetId),
+    }));
+    try {
+      await deleteMediaAsset(assetId);
+    } catch {}
+  };
+
+  const handleDownloadAllZip = async () => {
+    if (!formData.attachments || formData.attachments.length === 0) return;
+    setZipProgress('Packaging ZIP archive...');
+    try {
+      await downloadPostAssetsZip(formData, (p) => {
+        if (p.stage === 'downloading') {
+          setZipProgress(`Downloading ${p.current}/${p.total}: ${p.fileName}...`);
+        } else if (p.stage === 'zipping') {
+          setZipProgress(`Compressing deliverables into ZIP...`);
+        }
+      });
+    } catch (err) {
+      alert('Failed to package ZIP: ' + err.message);
+    } finally {
+      setZipProgress(null);
     }
   };
 
@@ -310,6 +422,189 @@ export default function SimplePostModal({
                 />
               </div>
             </div>
+          </div>
+
+          {/* Row 6: Creative Deliverables & Assets */}
+          <div className="border-t border-slate-200 pt-5 space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-slate-900">
+                  Creative Deliverables & Assets
+                </h3>
+                <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200">
+                  {formData.attachments?.length || 0} files
+                </span>
+              </div>
+
+              {formData.attachments?.length > 0 && (
+                <button
+                  type="button"
+                  onClick={handleDownloadAllZip}
+                  disabled={Boolean(zipProgress)}
+                  className="inline-flex items-center gap-1.5 text-xs font-bold text-amber-700 hover:text-amber-800 bg-amber-50 hover:bg-amber-100 border border-amber-200 px-3 py-1 rounded-lg transition-colors cursor-pointer disabled:opacity-50"
+                  title="Download all files for this day as a ZIP archive"
+                >
+                  <span>📦</span>
+                  <span>{zipProgress ? 'Packaging ZIP...' : 'Download Day Assets (.zip)'}</span>
+                </button>
+              )}
+            </div>
+
+            {/* ZIP Progress / Toast message */}
+            {zipProgress && (
+              <div className="p-2.5 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-800 flex items-center gap-2 animate-pulse">
+                <span className="w-2 h-2 rounded-full bg-amber-500 animate-ping" />
+                <span className="font-semibold">{zipProgress}</span>
+              </div>
+            )}
+
+            {/* Upload Error banner */}
+            {uploadError && (
+              <div className="p-2.5 bg-rose-50 border border-rose-200 rounded-xl text-xs text-rose-700 flex items-center justify-between">
+                <span>⚠️ {uploadError}</span>
+                <button
+                  type="button"
+                  onClick={() => setUploadError(null)}
+                  className="text-rose-500 hover:text-rose-800 font-bold ml-2 cursor-pointer"
+                >
+                  ✕
+                </button>
+              </div>
+            )}
+
+            {/* Drag & Drop Upload Zone */}
+            <div
+              onDragOver={(e) => {
+                e.preventDefault();
+                setIsDragging(true);
+              }}
+              onDragLeave={() => setIsDragging(false)}
+              onDrop={(e) => {
+                e.preventDefault();
+                setIsDragging(false);
+                if (e.dataTransfer.files) {
+                  handleFilesSelect(e.dataTransfer.files);
+                }
+              }}
+              onClick={() => fileInputRef.current?.click()}
+              className={`border-2 border-dashed rounded-xl p-4 text-center cursor-pointer transition-all duration-150 ${
+                isDragging
+                  ? 'border-amber-500 bg-amber-50/50 ring-2 ring-amber-300/50'
+                  : 'border-slate-300 hover:border-amber-400 bg-slate-50/60 hover:bg-amber-50/20'
+              }`}
+            >
+              <input
+                ref={fileInputRef}
+                type="file"
+                multiple
+                className="hidden"
+                onChange={(e) => {
+                  if (e.target.files) {
+                    handleFilesSelect(e.target.files);
+                  }
+                  e.target.value = '';
+                }}
+              />
+
+              {uploading ? (
+                <div className="py-2 flex flex-col items-center justify-center gap-2">
+                  <div className="w-6 h-6 border-2 border-amber-500 border-t-transparent rounded-full animate-spin" />
+                  <span className="text-xs font-semibold text-slate-700">
+                    {uploadProgress || 'Uploading creative deliverables...'}
+                  </span>
+                </div>
+              ) : (
+                <div className="py-1 flex flex-col items-center justify-center gap-1.5">
+                  <div className="w-9 h-9 rounded-full bg-white shadow-xs border border-slate-200 flex items-center justify-center text-base">
+                    📁
+                  </div>
+                  <div className="text-xs text-slate-700">
+                    <span className="font-bold text-amber-700 hover:underline">Click to upload</span> or drag and drop
+                  </div>
+                  <p className="text-[11px] text-slate-400">
+                    Supports Reels & Videos (MP4, MOV), Images (PNG, JPG, WEBP), PDFs, PSD, AI, ZIP (up to 100MB)
+                  </p>
+                </div>
+              )}
+            </div>
+
+            {/* Uploaded Attachments List */}
+            {formData.attachments && formData.attachments.length > 0 && (
+              <div className="space-y-2 pt-1">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                  Uploaded Deliverables ({formData.attachments.length})
+                </span>
+                <div className="grid grid-cols-1 gap-2">
+                  {formData.attachments.map((asset) => {
+                    const badge = getAssetBadge(asset.type, asset.name);
+                    return (
+                      <div
+                        key={asset.id}
+                        className="flex items-center justify-between p-3 rounded-xl border border-slate-200 bg-white hover:border-slate-300 transition-colors shadow-2xs group"
+                      >
+                        <div className="flex items-center gap-3 min-w-0 flex-1 pr-3">
+                          <span
+                            className={`w-9 h-9 rounded-lg flex items-center justify-center text-sm shrink-0 border ${badge.bg}`}
+                          >
+                            {badge.icon}
+                          </span>
+                          <div className="min-w-0 flex-1">
+                            <div className="text-xs font-bold text-slate-800 truncate" title={asset.name}>
+                              {asset.name}
+                            </div>
+                            <div className="text-[11px] text-slate-400 flex items-center gap-2 mt-0.5">
+                              <span className="font-medium text-slate-600">{formatFileSize(asset.size)}</span>
+                              <span>•</span>
+                              <span>By {asset.uploadedBy || 'Designer'}</span>
+                              {asset.uploadedAt && (
+                                <>
+                                  <span>•</span>
+                                  <span>{new Date(asset.uploadedAt).toLocaleDateString()}</span>
+                                </>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Action buttons */}
+                        <div className="flex items-center gap-1.5 shrink-0">
+                          {/* Preview in new tab */}
+                          <button
+                            type="button"
+                            onClick={() => window.open(asset.url, '_blank')}
+                            className="p-1.5 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer text-xs font-medium"
+                            title="Preview / Open in new tab"
+                          >
+                            👁️ Open
+                          </button>
+
+                          {/* Direct download single file */}
+                          <button
+                            type="button"
+                            onClick={() => downloadSingleAsset(asset)}
+                            className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-bold text-slate-700 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-lg transition-colors cursor-pointer"
+                            title="Download this file individually"
+                          >
+                            <span>⬇️</span>
+                            <span>Download</span>
+                          </button>
+
+                          {/* Delete */}
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveAsset(asset.id)}
+                            className="p-1.5 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors cursor-pointer text-xs"
+                            title="Remove file"
+                          >
+                            🗑️
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
           </div>
         </form>
 

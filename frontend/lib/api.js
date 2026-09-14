@@ -1128,6 +1128,54 @@ export async function resetMediaCampaigns() {
   return null;
 }
 
+export async function uploadMediaAsset(file, { conceptId, publishDate, uploadedBy } = {}) {
+  const formData = new FormData();
+  formData.append('file', file);
+  if (conceptId) formData.append('conceptId', String(conceptId));
+  if (publishDate) formData.append('publishDate', String(publishDate));
+  if (uploadedBy) formData.append('uploadedBy', uploadedBy);
+
+  // 1. First try direct backend upload (bypasses Vercel payload limits for large creative assets)
+  try {
+    const res = await request('/api/media/upload', {
+      method: 'POST',
+      body: formData,
+      timeoutMs: 120000,
+    });
+    if (res && res.success && res.asset) {
+      return res;
+    }
+  } catch (err) {
+    console.warn('[uploadMediaAsset] Direct backend upload notice:', err.message);
+  }
+
+  // 2. Fallback to Next.js API route
+  try {
+    const localRes = await fetch('/api/media/upload', {
+      method: 'POST',
+      body: formData,
+    });
+    if (localRes.ok) {
+      return await localRes.json();
+    }
+    const errData = await localRes.json().catch(() => ({ error: 'Upload failed' }));
+    throw new Error(errData.error || 'Failed to upload asset');
+  } catch (err) {
+    throw new Error('Upload failed: ' + err.message);
+  }
+}
+
+export async function deleteMediaAsset(id) {
+  try {
+    return await request(`/api/media/files/${id}`, {
+      method: 'DELETE',
+    });
+  } catch (err) {
+    console.warn('[deleteMediaAsset] Backend delete notice:', err.message);
+    return null;
+  }
+}
+
 
 
 

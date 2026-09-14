@@ -66,9 +66,36 @@ const reportUpload = multer({
   },
 });
 
+const mediaAssetUpload = multer({
+  storage: multer.memoryStorage(),
+  limits: {
+    fileSize: 100 * 1024 * 1024, // 100MB max per asset
+    files: 1,
+  },
+  fileFilter(req, file, callback) {
+    // Allow images, videos, audio, PDFs, design files (PSD, AI, FIG), and archives (ZIP, RAR)
+    const allowedRegex = /\.(jpe?g|png|gif|webp|svg|mp4|mov|webm|avi|mkv|pdf|psd|ai|fig|zip|rar)$/i;
+    const isMimeAllowed =
+      file.mimetype.startsWith('image/') ||
+      file.mimetype.startsWith('video/') ||
+      file.mimetype.startsWith('audio/') ||
+      file.mimetype === 'application/pdf' ||
+      file.mimetype === 'application/zip' ||
+      file.mimetype === 'application/x-zip-compressed' ||
+      file.mimetype === 'application/octet-stream';
+
+    if (!isMimeAllowed && !allowedRegex.test(file.originalname)) {
+      callback(new ApiError(400, 'File format not supported for media asset uploads.'));
+      return;
+    }
+    callback(null, true);
+  },
+});
+
 module.exports = {
   manualUpload,
   audioUpload,
   reportUpload,
+  mediaAssetUpload,
 };
 
