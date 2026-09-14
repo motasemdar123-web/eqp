@@ -493,5 +493,49 @@ dwr.engine._remoteHandleCallback('0','0',s0);
       }
     });
   });
+
+  describe('parseDwrResponse', () => {
+    test('accurately parses DWR responses with interned primitive variables', () => {
+      const dwrSnippet = `//#DWR-INSERT
+//#DWR-REPLY
+var s0={};
+var s1="5194";
+var s2="DAR ALHAI GENERAL TRADING KW";
+var s3=[];
+var s4="W41X";
+var s5="08/13/2026";
+var s6=10;
+var s7="2";
+s3[0]="1";
+s0.actionMode="update";
+s0.db=s1;
+s0.dbNm=s2;
+s0.seqNo=s3;
+s0.hisInfoCd=s4;
+s0.hisDate=s5;
+s0.hisSmr=s6;
+s0.dbRule=s7;
+dwr.engine._remoteHandleCallback('0','0',s0);
+`;
+      const parsed = komatsuEqpCareService.parseDwrResponse(dwrSnippet);
+      expect(parsed.actionMode).toBe('update');
+      expect(parsed.db).toBe('5194');
+      expect(parsed.dbNm).toBe('DAR ALHAI GENERAL TRADING KW');
+      expect(parsed.hisInfoCd).toBe('W41X');
+      expect(parsed.hisDate).toBe('08/13/2026');
+      expect(parsed.hisSmr).toBe(10);
+      expect(parsed.dbRule).toBe('2');
+      expect(Array.isArray(parsed.seqNo)).toBe(true);
+      expect(parsed.seqNo[0]).toBe('1');
+    });
+
+    test('detects server error and session expiration in DWR responses', () => {
+      const dwrError = `var s0 = "Your session is expired. Please login again."; DWREngine._handleServerError('0', s0);`;
+      expect(() => {
+        komatsuEqpCareService.parseDwrResponse(dwrError);
+      }).toThrow(/expired|session/i);
+    });
+  });
 });
+
 

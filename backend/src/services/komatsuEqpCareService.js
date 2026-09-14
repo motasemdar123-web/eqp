@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const vm = require('node:vm');
 const machineRepository = require('../repositories/machineRepository');
 const reportRepository = require('../repositories/reportRepository');
 const db = require('../config/database');
@@ -727,18 +728,80 @@ async function uploadReportToEqpCare(reportData, customCookie = null) {
  * Extracts primitive values, nested arrays, and callback parameters.
  */
 function parseDwrResponse(dwrText) {
-  const vars = {};
   if (!dwrText || typeof dwrText !== 'string') return {};
 
+  // 1. Try secure VM context execution first (matches native browser DWR engine behavior)
+  try {
+    let result = null;
+    let serverError = null;
+
+    const sandbox = {
+      dwr: {
+        engine: {
+          _remoteHandleCallback: (callId, batchId, data) => {
+            result = data;
+          },
+          _remoteHandleServerException: (callId, batchId, ex) => {
+            serverError = ex?.message || ex || 'DWR Server Exception';
+          },
+        },
+      },
+      DWREngine: {
+        _handleServerError: (id, error) => {
+          serverError = typeof error === 'string' ? error : error?.message || 'DWR Server Error';
+        },
+      },
+    };
+
+    vm.createContext(sandbox);
+    vm.runInContext(dwrText, sandbox, { timeout: 2000 });
+
+    if (serverError) {
+      throw new Error(String(serverError));
+    }
+    if (result && typeof result === 'object') {
+      return result;
+    }
+  } catch (vmErr) {
+    if (vmErr.message.includes('session') || vmErr.message.includes('expired') || vmErr.message.includes('login')) {
+      throw vmErr;
+    }
+    console.warn('[parseDwrResponse] VM parsing notice, falling back to AST regex:', vmErr.message);
+  }
+
+  // 2. Enhanced Fallback regex parser that handles primitive variable assignments (e.g. var s1 = "5194")
+  const vars = {};
   const lines = dwrText.split(/[\r\n;]+/);
   for (let line of lines) {
     line = line.trim();
     if (!line || line.startsWith('//#')) continue;
 
-    // var s0={}; or s0={}; or var s1=[];
+    // var s0 = {} or s0 = []
     let m = line.match(/^(?:var\s+)?([a-zA-Z0-9_]+)\s*=\s*(\{\}|\[\]);?$/);
     if (m) {
       vars[m[1]] = m[2] === '[]' ? [] : {};
+      continue;
+    }
+
+    // var s1 = "value" or var s1 = 123 or var s1 = null / true / false
+    m = line.match(/^(?:var\s+)?([a-zA-Z0-9_]+)\s*=\s*(.*?);?$/);
+    if (m && !m[1].includes('.') && !m[1].includes('[')) {
+      const varName = m[1];
+      let val = m[2].trim();
+      if ((val.startsWith('"') && val.endsWith('"')) || (val.startsWith("'") && val.endsWith("'"))) {
+        val = val.slice(1, -1);
+      } else if (val === 'null') {
+        val = null;
+      } else if (val === 'true') {
+        val = true;
+      } else if (val === 'false') {
+        val = false;
+      } else if (!isNaN(Number(val)) && val !== '') {
+        val = Number(val);
+      } else if (vars[val] !== undefined) {
+        val = vars[val];
+      }
+      vars[varName] = val;
       continue;
     }
 
@@ -1102,67 +1165,78 @@ async function updateServiceLogInEqpCare(updateData, customCookie = null) {
       }
     }
 
+    // Helper to sanitize DTO values so that raw DWR variable names (e.g. s0, s1, s2) never leak as form values
+    const cleanDtoVal = (val, fallback = '') => {
+      if (val == null) return fallback;
+      const str = String(val).trim();
+      if (!str || /^s\d+$/i.test(str)) return fallback;
+      return str;
+    };
+
     // Submit update to EMDW0904.do
     const updateForm = new FormData();
     updateForm.append('subsessionID', 'defaultID');
     updateForm.append('eqpMenuCtg', 'E');
     updateForm.append('buttonId', 'save');
     updateForm.append('actionMode', 'update');
-    updateForm.append('machineId', String(machineId || dto.machineId || ''));
-    updateForm.append('model', String(dto.model || effectiveModel).trim());
-    updateForm.append('type', dto.type != null ? String(dto.type) : '');
-    updateForm.append('stype', dto.stype != null ? String(dto.stype) : '');
+    updateForm.append('machineId', cleanDtoVal(dto.machineId, String(machineId || '')));
+    updateForm.append('model', cleanDtoVal(dto.model, String(effectiveModel)).trim());
+    updateForm.append('type', cleanDtoVal(dto.type, String(effectiveType)));
+    updateForm.append('stype', cleanDtoVal(dto.stype, String(effectiveSubtype)));
     updateForm.append('serial', String(sNo).trim());
     updateForm.append('hisInfoCd', String(eCode).trim());
+    updateForm.append('hisInfoNm', eventObj.name || String(eCode).trim());
     updateForm.append('hisDate', formattedDate);
     updateForm.append('previousHisDate', dbDateFormat);
     updateForm.append('hisSmr', String(numericSmr).trim());
-    updateForm.append('ordNo', dto.ordNo != null ? String(dto.ordNo) : '');
-    updateForm.append('seller', dto.seller != null ? String(dto.seller) : '');
-    updateForm.append('sellerNm', dto.sellerNm != null ? String(dto.sellerNm) : '');
-    updateForm.append('subsidiary', dto.subsidiary != null ? String(dto.subsidiary) : '9961');
-    updateForm.append('subsidiaryNm', dto.subsidiaryNm != null ? String(dto.subsidiaryNm) : 'KME');
-    updateForm.append('cntryCd', dto.cntryCd != null ? String(dto.cntryCd) : 'KW');
-    updateForm.append('cntryNm', dto.cntryNm != null ? String(dto.cntryNm) : 'KUWAIT');
-    updateForm.append('point', dto.point != null ? String(dto.point) : '');
-    updateForm.append('pointNm', dto.pointNm != null ? String(dto.pointNm) : '');
-    updateForm.append('db', dto.db != null && String(dto.db).trim() ? String(dto.db).trim() : '5194');
-    updateForm.append('dbNm', dto.dbNm != null && String(dto.dbNm).trim() ? String(dto.dbNm).trim() : 'DAR ALHAI GENERAL TRADING KW');
-    updateForm.append('branchNm', dto.branchNm != null ? String(dto.branchNm) : '##1');
-    updateForm.append('branchCd', dto.branchCd != null ? String(dto.branchCd) : '##1');
+    updateForm.append('ordNo', cleanDtoVal(dto.ordNo, ''));
+    updateForm.append('seller', cleanDtoVal(dto.seller, ''));
+    updateForm.append('sellerNm', cleanDtoVal(dto.sellerNm, ''));
+    updateForm.append('subsidiary', cleanDtoVal(dto.subsidiary, '9961'));
+    updateForm.append('subsidiaryNm', cleanDtoVal(dto.subsidiaryNm, 'KME'));
+    updateForm.append('cntryCd', cleanDtoVal(dto.cntryCd, 'KW'));
+    updateForm.append('cntryNm', cleanDtoVal(dto.cntryNm, 'KUWAIT'));
+    updateForm.append('point', cleanDtoVal(dto.point, ''));
+    updateForm.append('pointNm', cleanDtoVal(dto.pointNm, ''));
+    updateForm.append('db', cleanDtoVal(dto.db, '5194'));
+    updateForm.append('dbNm', cleanDtoVal(dto.dbNm, 'DAR ALHAI GENERAL TRADING KW'));
+    updateForm.append('branchNm', cleanDtoVal(dto.branchNm, '##1'));
+    updateForm.append('branchCd', cleanDtoVal(dto.branchCd, '##1'));
     updateForm.append('subDealer', '');
     updateForm.append('subDealerNm', '');
-    updateForm.append('siteNm', dto.siteNm != null ? String(dto.siteNm) : '##1');
-    updateForm.append('siteCd', dto.siteCd != null ? String(dto.siteCd) : '##1');
-    updateForm.append('custNm', dto.custNm != null ? String(dto.custNm) : "LA'ALA AL-KUWAIT REAL ESTATE CO.");
-    updateForm.append('custCd', dto.custCd != null ? String(dto.custCd) : 'DAH-1404');
-    updateForm.append('muserCd', dto.muserCd != null ? String(dto.muserCd) : '');
-    updateForm.append('muserNm', dto.muserNm != null ? String(dto.muserNm) : '');
-    updateForm.append('custUnitNo', dto.custUnitNo != null ? String(dto.custUnitNo) : '');
-    updateForm.append('dataSrc', dto.dataSrc != null ? String(dto.dataSrc) : '01');
-    updateForm.append('comment', comments || dto.comment1 || 'Periodic maintenance service verified and updated.');
-    updateForm.append('commentId', (dto.commentId != null && dto.commentId !== '') ? String(dto.commentId) : '-1');
-    updateForm.append('evdId', dto.strEvdId || dto.evdId || '');
-    updateForm.append('strEvdId', dto.strEvdId || dto.evdId || '');
-    updateForm.append('selLangCd', dto.langCd || 'ENG');
-    updateForm.append('vhmsRegSts', dto.vhmsRegSts != null ? String(dto.vhmsRegSts) : '');
-    updateForm.append('vhmsRegStsNm', dto.vhmsRegStsNm != null ? String(dto.vhmsRegStsNm) : '');
+    updateForm.append('siteNm', cleanDtoVal(dto.siteNm, '##1'));
+    updateForm.append('siteCd', cleanDtoVal(dto.siteCd, '##1'));
+    updateForm.append('custNm', cleanDtoVal(dto.custNm, "LA'ALA AL-KUWAIT REAL ESTATE CO."));
+    updateForm.append('custCd', cleanDtoVal(dto.custCd, 'DAH-1404'));
+    updateForm.append('muserCd', cleanDtoVal(dto.muserCd, ''));
+    updateForm.append('muserNm', cleanDtoVal(dto.muserNm, ''));
+    updateForm.append('custUnitNo', cleanDtoVal(dto.custUnitNo, ''));
+    updateForm.append('dataSrc', cleanDtoVal(dto.dataSrc, '01'));
+    updateForm.append('comment', comments || cleanDtoVal(dto.comment1, 'Periodic maintenance service verified and updated.'));
+    updateForm.append('commentId', (dto.commentId != null && dto.commentId !== '' && !/^s\d+$/i.test(String(dto.commentId))) ? String(dto.commentId) : '-1');
+    updateForm.append('evdId', cleanDtoVal(dto.strEvdId || dto.evdId, ''));
+    updateForm.append('strEvdId', cleanDtoVal(dto.strEvdId || dto.evdId, ''));
+    updateForm.append('selLangCd', cleanDtoVal(dto.langCd, 'ENG'));
+    updateForm.append('vhmsRegSts', cleanDtoVal(dto.vhmsRegSts, ''));
+    updateForm.append('vhmsRegStsNm', cleanDtoVal(dto.vhmsRegStsNm, ''));
 
     // Rules: match live Komatsu portal form (EMDW0904) for Dar Alhai KW
-    updateForm.append('hisDateRule', dto.hisDateRule != null ? String(dto.hisDateRule) : '2');
+    updateForm.append('hisDateRule', cleanDtoVal(dto.hisDateRule, '2'));
     updateForm.append('ordNoRule', '0');
     updateForm.append('sellerRule', '0');
     updateForm.append('subsidiaryRule', '0');
     updateForm.append('cntryRule', '0');
     updateForm.append('pointRule', '0');
-    updateForm.append('dbRule', '0'); // Field 8 (Distributor) is disabled/read-only (Rule 0) on portal; prevents master table validation error
-    updateForm.append('branchNmRule', dto.branchNmRule != null ? String(dto.branchNmRule) : '1');
-    updateForm.append('subDealerRule', '0'); // Field 10 (Sub Dealer) is not used in Kuwait and disabled (Rule 0); prevents "Sub Dealer code is not existing in master table"
-    updateForm.append('siteNmRule', dto.siteNmRule != null ? String(dto.siteNmRule) : '1');
-    updateForm.append('custNmRule', dto.custNmRule != null ? String(dto.custNmRule) : '2');
-    updateForm.append('custUnitNoRule', dto.custUnitNoRule != null ? String(dto.custUnitNoRule) : '1');
+    updateForm.append('dbRule', cleanDtoVal(dto.dbRule, '2'));
+    updateForm.append('branchNmRule', cleanDtoVal(dto.branchNmRule, '1'));
+    updateForm.append('subDealerRule', '0'); // Sub Dealer is not used in Kuwait and disabled (Rule 0)
+    updateForm.append('siteNmRule', cleanDtoVal(dto.siteNmRule, '1'));
+    updateForm.append('custNmRule', cleanDtoVal(dto.custNmRule, '2'));
+    updateForm.append('custUnitNoRule', cleanDtoVal(dto.custUnitNoRule, '1'));
     updateForm.append('muserCdRule', '0');
     updateForm.append('muserNmRule', '0');
+
+    console.log(`[updateServiceLogInEqpCare] Submitting in-place update for #${sNo} (${effectiveModel}) | Event: ${eCode} (${eventObj.name}) | SMR: ${numericSmr} | db="${cleanDtoVal(dto.db, '5194')}" | dbRule="${cleanDtoVal(dto.dbRule, '2')}"`);
 
     // Auth
     updateForm.append('refAuth', dto.refAuth != null ? String(dto.refAuth) : '1');
