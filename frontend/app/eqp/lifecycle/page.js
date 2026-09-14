@@ -16,6 +16,7 @@ import {
 } from '../../../lib/eqpLifecycleData';
 import { LifecycleMilestoneProgressBar } from '../../../components/eqp/EqpCharts';
 import EqpNav from '../../../components/eqp/EqpNav';
+import BatchEditSmrModal from '../../../components/eqp/BatchEditSmrModal';
 
 const DISMISSED_MONTHLY_GAPS_KEY = 'eqp.dismissedMonthlyGaps';
 
@@ -44,6 +45,8 @@ export default function EqpLifecyclePage() {
   const [showCookieInput, setShowCookieInput] = useState(false);
   const [isUpdatingLog, setIsUpdatingLog] = useState(false);
   const [editNotice, setEditNotice] = useState({ type: '', message: '' });
+  const [batchEditModalOpen, setBatchEditModalOpen] = useState(false);
+  const [batchEditReports, setBatchEditReports] = useState([]);
 
   useEffect(() => {
     const timerId = window.setTimeout(() => {
@@ -147,6 +150,31 @@ export default function EqpLifecyclePage() {
     setEditCookieInput('');
     setShowCookieInput(false);
     setEditNotice({ type: '', message: '' });
+  }
+
+  function handleOpenBatchEditModal(milestonesToEdit) {
+    if (!selectedMachine || !milestonesToEdit || milestonesToEdit.length === 0) return;
+    const formatted = milestonesToEdit.slice(0, 12).map((m) => ({
+      id: m.id || `${selectedMachine.machineNumber}-${m.code}-${m.date}`,
+      machineNumber: selectedMachine.machineNumber,
+      machine_number: selectedMachine.machineNumber,
+      model: selectedMachine.model,
+      eventCode: m.code,
+      report_type: m.code,
+      serviceDate: m.date,
+      service_date: m.date,
+      currentSmr: m.smr,
+      smr: m.smr,
+    }));
+    setBatchEditReports(formatted);
+    setBatchEditModalOpen(true);
+  }
+
+  function handleBatchUpdated(res) {
+    if (!res || !res.results) return;
+    loadReportsData();
+    setSyncStatusMsg(`🎉 Batch update complete: ${res.successful} reports updated in-place.`);
+    setTimeout(() => setSyncStatusMsg(''), 7000);
   }
 
   async function handleSaveServiceLogUpdate(e) {
@@ -862,7 +890,20 @@ export default function EqpLifecyclePage() {
               <div>
                 <div className="flex items-center justify-between mb-3">
                   <p className="text-xs font-bold uppercase text-slate-500">Service Events Timeline</p>
-                  <span className="text-[11px] font-mono text-slate-400 font-semibold">{selectedTimelineItems.length} Reports</span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[11px] font-mono text-slate-400 font-semibold">{selectedTimelineItems.length} Reports</span>
+                    {selectedTimelineItems.filter((m) => m.date).length > 0 && (
+                      <button
+                        type="button"
+                        onClick={() => handleOpenBatchEditModal(selectedTimelineItems.filter((m) => m.date))}
+                        className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold text-amber-900 bg-amber-100 hover:bg-amber-200 border border-amber-300 transition-colors shadow-2xs cursor-pointer"
+                        title="Batch edit up to 12 reports for this machine"
+                      >
+                        <span>✏️</span>
+                        <span>Batch Edit SMRs</span>
+                      </button>
+                    )}
+                  </div>
                 </div>
                 <div className="relative pl-5 space-y-2.5 before:absolute before:left-2 before:top-2 before:bottom-2 before:w-0.5 before:bg-slate-200 max-h-72 overflow-y-auto pr-1">
                   {selectedTimelineItems.map((milestone) => (
@@ -1114,6 +1155,14 @@ export default function EqpLifecyclePage() {
             </div>
           </div>
         )}
+
+        {/* Batch Edit SMRs Modal */}
+        <BatchEditSmrModal
+          isOpen={batchEditModalOpen}
+          onClose={() => setBatchEditModalOpen(false)}
+          reports={batchEditReports}
+          onBatchUpdated={handleBatchUpdated}
+        />
       </div>
     </SystemShell>
   );

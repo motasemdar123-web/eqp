@@ -672,6 +672,43 @@ async function updateEqpcServiceLog(req, res) {
   }
 }
 
+async function batchUpdateEqpcServiceLogs(req, res) {
+  const { items, options, cookie } = req.body || {};
+  if (!Array.isArray(items) || items.length === 0) {
+    return res.status(400).json({ success: false, message: 'Array of report items is required.' });
+  }
+
+  if (items.length > 12) {
+    return res.status(400).json({
+      success: false,
+      message: 'Maximum of 12 reports can be edited in a single batch.',
+      error: 'Maximum of 12 reports can be edited in a single batch.',
+    });
+  }
+
+  const customCookie = cookie || options?.cookie || req.headers['x-eqpc-cookie'] || null;
+  const mergedOptions = {
+    ...(options || {}),
+    performedBy: req.platformUser?.fullName || req.user?.fullName || 'IBRAHIM AHMAD ALDARAWSHEH',
+  };
+
+  try {
+    const result = await komatsuEqpCareService.batchUpdateServiceLogsInEqpCare(
+      items,
+      mergedOptions,
+      customCookie
+    );
+
+    res.json({ success: true, ...result });
+  } catch (err) {
+    res.status(400).json({
+      success: false,
+      error: err.message || 'Failed to process batch service log updates.',
+      message: err.message || 'Failed to process batch service log updates.',
+    });
+  }
+}
+
 async function batchUploadEqpcReports(req, res) {
   const { items, cookie } = req.body || {};
   if (!Array.isArray(items) || items.length === 0) {
@@ -919,6 +956,7 @@ module.exports = {
   uploadEqpcReport,
   updateEqpcServiceLog,
   batchUploadEqpcReports,
+  batchUpdateEqpcServiceLogs,
   getEqpcLifecycleCache,
   syncEqpcLifecycle,
   createSapPurchaseOrder,

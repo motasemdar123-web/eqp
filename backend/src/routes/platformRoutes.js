@@ -81,6 +81,7 @@ router.get('/api/komatsu/eqpc/event-codes', requirePlatformAuth, asyncHandler(pl
 router.get('/api/komatsu/eqpc/machine-lookup', requirePlatformAuth, asyncHandler(platformController.lookupEqpcMachine));
 router.post('/api/komatsu/eqpc/upload', requirePlatformAuth, asyncHandler(platformController.uploadEqpcReport));
 router.post('/api/komatsu/eqpc/update-service-log', requirePlatformAuth, reportUpload.single('file'), asyncHandler(platformController.updateEqpcServiceLog));
+router.post('/api/komatsu/eqpc/batch-update-service-logs', requirePlatformAuth, asyncHandler(platformController.batchUpdateEqpcServiceLogs));
 router.post('/api/komatsu/eqpc/batch-upload', requirePlatformAuth, asyncHandler(platformController.batchUploadEqpcReports));
 router.get('/api/komatsu/eqpc/lifecycle-cache', requirePlatformAuth, asyncHandler(platformController.getEqpcLifecycleCache));
 router.post('/api/komatsu/eqpc/lifecycle-sync', requirePlatformAuth, asyncHandler(platformController.syncEqpcLifecycle));

@@ -20,6 +20,7 @@ import EmptyState from '../../components/ui/EmptyState';
 import Badge from '../../components/ui/Badge';
 import Toast from '../../components/ui/Toast';
 import OverflowMenu from '../../components/ui/OverflowMenu';
+import BatchEditSmrModal from '../../components/eqp/BatchEditSmrModal';
 
 
 export default function ReportsPage() {
@@ -36,6 +37,7 @@ export default function ReportsPage() {
   const [renameValue, setRenameValue] = useState('');
   const [selectedReportIds, setSelectedReportIds] = useState([]);
   const [downloadBusy, setDownloadBusy] = useState(false);
+  const [batchEditModalOpen, setBatchEditModalOpen] = useState(false);
 
   // EQP Care Upload States
   const [eqpUploadModal, setEqpUploadModal] = useState(null);
@@ -508,6 +510,26 @@ export default function ReportsPage() {
                     </button>
                   )}
 
+                  {/* Batch Edit SMRs */}
+                  {selectedReports.length > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => setBatchEditModalOpen(true)}
+                      className={`ds-button font-bold text-xs py-1.5 px-3 flex items-center gap-1.5 shadow-xs rounded-lg transition-all ${
+                        selectedReports.length > 12
+                          ? 'bg-amber-100 border border-amber-300 text-amber-800 hover:bg-amber-200'
+                          : 'bg-amber-600 hover:bg-amber-700 text-white'
+                      }`}
+                      title={
+                        selectedReports.length > 12
+                          ? 'Select up to 12 reports for batch SMR update'
+                          : 'Batch edit SMRs and reports in-place'
+                      }
+                    >
+                      <span>✏️</span> Batch Edit SMRs ({selectedReports.length}{selectedReports.length > 12 ? ' (Max 12)' : ''})
+                    </button>
+                  )}
+
                   <Button
                     variant="secondary"
                     size="sm"
@@ -783,6 +805,22 @@ export default function ReportsPage() {
           </form>
         </div>
       )}
+
+      {/* Batch Edit SMR Modal */}
+      <BatchEditSmrModal
+        isOpen={batchEditModalOpen}
+        onClose={() => setBatchEditModalOpen(false)}
+        reports={selectedReports}
+        onBatchUpdated={(res) => {
+          loadReports();
+          setToast({
+            type: res.failed === 0 ? 'success' : 'warning',
+            message: res.failed === 0
+              ? `🎉 Successfully updated all ${res.successful} reports in batch!`
+              : `⚠️ Batch update completed: ${res.successful} succeeded, ${res.failed} failed.`,
+          });
+        }}
+      />
     </SystemShell>
   );
 }

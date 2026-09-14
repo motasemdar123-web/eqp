@@ -641,6 +641,14 @@ export function updateEqpcServiceLog(payload) {
   });
 }
 
+export function batchUpdateEqpcServiceLogs(payload) {
+  const isFormData = typeof FormData !== 'undefined' && payload instanceof FormData;
+  return request('/api/komatsu/eqpc/batch-update-service-logs', {
+    method: 'POST',
+    body: isFormData ? payload : JSON.stringify(payload),
+  });
+}
+
 export function batchUploadEqpcReports(payload) {
   return request('/api/komatsu/eqpc/batch-upload', {
     method: 'POST',

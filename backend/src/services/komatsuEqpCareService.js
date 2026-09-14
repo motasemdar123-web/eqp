@@ -1509,6 +1509,101 @@ async function batchUploadReports(items = [], customCookie = null) {
 }
 
 /**
+ * Batch updates up to 12 machine service logs and SMRs in-place.
+ * Preserves counters, conditionally updates machine SMR for the latest report,
+ * and generates certified replacement inspection report PDFs.
+ */
+async function batchUpdateServiceLogsInEqpCare(items = [], options = {}, customCookie = null) {
+  if (!items || !Array.isArray(items) || items.length === 0) {
+    return {
+      total: 0,
+      successful: 0,
+      failed: 0,
+      results: [],
+      errors: [],
+    };
+  }
+
+  if (items.length > 12) {
+    throw new Error('Maximum of 12 reports can be edited in a single batch.');
+  }
+
+  const cookieStr = customCookie
+    ? parseCookieInput(customCookie)
+    : (options?.cookie ? parseCookieInput(options.cookie) : loadCookie());
+
+  if (customCookie && !customCookie.includes('test_session')) {
+    saveCookie(customCookie);
+  }
+
+  const syncToEqpc = options?.syncToEqpc !== false && options?.syncToEqpc !== 'false';
+  const performedBy = options?.performedBy || 'IBRAHIM AHMAD ALDARAWSHEH';
+
+  const results = [];
+  const errors = [];
+  let successful = 0;
+  let failed = 0;
+
+  for (const item of items) {
+    const sNo = String(item.serialNo || item.machine_number || item.machineNumber || '').trim();
+    const eCode = String(item.eventCode || item.report_type || item.service_type || '').trim().toUpperCase();
+    const sDate = item.serviceDate || item.service_date || item.date;
+    const nSmr = item.newSmr != null ? Number(item.newSmr) : (item.smr != null ? Number(item.smr) : null);
+
+    try {
+      if (!sNo || !eCode || !sDate || nSmr == null || isNaN(nSmr) || nSmr < 0) {
+        throw new Error(
+          `Machine #${sNo || 'unknown'}, eventCode, serviceDate, and a valid non-negative new SMR are required.`
+        );
+      }
+
+      const itemSync = item.syncToEqpc !== undefined
+        ? (item.syncToEqpc !== false && item.syncToEqpc !== 'false')
+        : syncToEqpc;
+
+      const updatePayload = {
+        ...item,
+        serialNo: sNo,
+        model: item.model || item.machine_type || item.machineType,
+        eventCode: eCode,
+        serviceDate: sDate,
+        newSmr: nSmr,
+        currentSmr: item.currentSmr != null ? Number(item.currentSmr) : (item.previousSmr != null ? Number(item.previousSmr) : undefined),
+        syncToEqpc: itemSync,
+        performedBy: item.performedBy || performedBy,
+        comments: item.comments || item.comment,
+      };
+
+      const res = await updateServiceLogInEqpCare(updatePayload, cookieStr);
+      results.push(res);
+      successful++;
+    } catch (err) {
+      failed++;
+      const errObj = {
+        success: false,
+        status: 'FAILED',
+        serialNo: sNo,
+        eventCode: eCode,
+        serviceDate: sDate,
+        newSmr: nSmr,
+        error: err.message,
+        message: `Failed to update #${sNo || 'unknown'} (${eCode}): ${err.message}`,
+      };
+      results.push(errObj);
+      errors.push(errObj);
+    }
+  }
+
+  return {
+    total: items.length,
+    successful,
+    failed,
+    results,
+    errors,
+  };
+}
+
+/**
  * Loads the cached live lifecycle data pulled from Komatsu Equipment Care.
  */
 function loadCachedLiveLifecycle() {
@@ -1783,6 +1878,7 @@ module.exports = {
   uploadReportToEqpCare,
   updateServiceLogInEqpCare,
   batchUploadReports,
+  batchUpdateServiceLogsInEqpCare,
   resolveMachineTypeAndSubtype,
   EVENT_CODES,
   mapServiceTypeToEventCode,
