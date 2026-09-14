@@ -536,6 +536,40 @@ dwr.engine._remoteHandleCallback('0','0',s0);
       }).toThrow(/expired|session/i);
     });
   });
+
+  describe('Field Sanitization & Filename Preservation', () => {
+    test('sanitizeCustomerName cleans escaped backslashes and corrupt quotes', () => {
+      expect(komatsuEqpCareService.sanitizeCustomerName("LA\\\'ALA AL-KUWAIT REAL ESTATE CO.")).toBe("LA'ALA AL-KUWAIT REAL ESTATE CO.");
+      expect(komatsuEqpCareService.sanitizeCustomerName("LA\\'ALA AL-KUWAIT REAL ESTATE CO.")).toBe("LA'ALA AL-KUWAIT REAL ESTATE CO.");
+      expect(komatsuEqpCareService.sanitizeCustomerName("LA\\\\\\\'ALA AL-KUWAIT REAL ESTATE CO.")).toBe("LA'ALA AL-KUWAIT REAL ESTATE CO.");
+      expect(komatsuEqpCareService.sanitizeCustomerName('"LA\'ALA AL-KUWAIT REAL ESTATE CO."')).toBe("LA'ALA AL-KUWAIT REAL ESTATE CO.");
+      expect(komatsuEqpCareService.sanitizeCustomerName(null)).toBe("LA'ALA AL-KUWAIT REAL ESTATE CO.");
+    });
+
+    test('sanitizeComment removes leading/trailing quotes, escaped slashes, and weird symbols', () => {
+      expect(komatsuEqpCareService.sanitizeComment('\\"Storage service completed')).toBe('Storage service completed');
+      expect(komatsuEqpCareService.sanitizeComment('"Storage service completed"')).toBe('Storage service completed');
+      expect(komatsuEqpCareService.sanitizeComment('\\"Storage service completed\\"')).toBe('Storage service completed');
+      expect(komatsuEqpCareService.sanitizeComment('Periodic maintenance\\r\\ncompleted')).toBe('Periodic maintenance completed');
+    });
+
+    test('parseDwrResponse decodes escaped quotes in customer name and comment', () => {
+      const dwrWithEscapes = `//#DWR-REPLY
+var s0={};
+var s1="LA\\'ALA AL-KUWAIT REAL ESTATE CO.";
+var s2="\\"Storage service completed";
+var s3=["HM400 9582 Ex_18.pdf"];
+s0.custNm=s1;
+s0.comment=s2;
+s0.fileName=s3;
+dwr.engine._remoteHandleCallback('0','0',s0);
+`;
+      const parsed = komatsuEqpCareService.parseDwrResponse(dwrWithEscapes);
+      expect(komatsuEqpCareService.sanitizeCustomerName(parsed.custNm)).toBe("LA'ALA AL-KUWAIT REAL ESTATE CO.");
+      expect(komatsuEqpCareService.sanitizeComment(parsed.comment)).toBe("Storage service completed");
+      expect(parsed.fileName[0]).toBe("HM400 9582 Ex_18.pdf");
+    });
+  });
 });
 
 

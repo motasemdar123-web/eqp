@@ -739,6 +739,28 @@ function getFileReportLabel(reportType, serviceType, reportCounter) {
   return String(serviceType || reportType || 'Report').trim();
 }
 
+function sanitizeReportCustomerName(str, fallback = "LA'ALA AL-KUWAIT REAL ESTATE CO.") {
+  if (!str) return fallback;
+  let s = String(str).trim();
+  if (!s || /^s\d+$/i.test(s)) return fallback;
+  s = s.replace(/\\+/g, '');
+  s = s.replace(/^["']+|["']+$/g, '').trim();
+  s = s.replace(/[`’]/g, "'");
+  s = s.replace(/LA['\s]*ALA/i, "LA'ALA");
+  return s || fallback;
+}
+
+function sanitizeReportComment(str, fallback = 'Periodic maintenance service verified and updated.') {
+  if (!str) return fallback;
+  let s = String(str).trim();
+  if (!s || /^s\d+$/i.test(s)) return fallback;
+  s = s.replace(/\\+(['"])/g, '$1');
+  s = s.replace(/^[\s"'\\]+|[\s"'\\]+$/g, '').trim();
+  s = s.replace(/\\r\\n/g, ' ').replace(/\\n/g, ' ').replace(/\\r/g, ' ');
+  s = s.replace(/\\\\+/g, '\\');
+  return s || fallback;
+}
+
 function buildReportFileName({ machineModel, machineNumber, reportType, serviceType, reportCounter }) {
   const parts = [
     machineModel,
@@ -1886,6 +1908,9 @@ async function generateReplacementReportPdf({
   performedBy = null,
   userId = null,
   userNumber = null,
+  fileName = null,
+  existingFileName = null,
+  reportCounter = null,
 }) {
   const sNo = String(machineNumber || '').trim();
   const eCode = String(eventCode || '').trim();
@@ -1973,18 +1998,30 @@ async function generateReplacementReportPdf({
   const reportType = existingReport?.report_type || eCode || 'W41X';
   const serviceType = existingReport?.service_type || mapEventCodeToServiceType(reportType);
   const inspector = existingReport?.created_by || performedBy || 'IBRAHIM AHMAD ALDARAWSHEH';
-  const selectedComment = comments || existingReport?.comments || 'Periodic maintenance service verified and updated.';
+  const rawComment = comments || existingReport?.comments || 'Periodic maintenance service verified and updated.';
+  const selectedComment = sanitizeReportComment(rawComment);
   const engineNumber = existingReport?.engine_number || machine?.engine_number || '';
-  const customerName = machine?.customer_name || "LA'ALA AL-KUWAIT REAL ESTATE CO.";
+  const customerName = sanitizeReportCustomerName(machine?.customer_name || "LA'ALA AL-KUWAIT REAL ESTATE CO.");
   const location = machine?.location || 'AL KHIRAN';
 
-  const fileName = existingReport?.file_name || buildReportFileName({
-    machineModel: templateModel,
-    machineNumber: machine?.machine_number || sNo,
-    reportType,
-    serviceType,
-    reportCounter: null,
-  });
+  // Preserve existing old file name if provided by caller, portal, or database record
+  let resolvedFileName = String(fileName || existingFileName || existingReport?.file_name || '').trim();
+  if (!resolvedFileName || /\bEx\.pdf$/i.test(resolvedFileName)) {
+    // Resolve counter for repeating service types so it preserves proper numbered name (e.g. Ex_18.pdf)
+    const countToUse = reportCounter != null
+      ? reportCounter
+      : (isRepeatingServiceType(serviceType) ? (getLifecycleReportCount(sNo, reportType) || null) : null);
+
+    resolvedFileName = buildReportFileName({
+      machineModel: templateModel,
+      machineNumber: machine?.machine_number || sNo,
+      reportType,
+      serviceType,
+      reportCounter: countToUse,
+    });
+  }
+
+  const finalFileName = resolvedFileName;
 
   // 3. Load official template workbook
   const template = resolveTemplate(reportType, serviceType, templateModel, templateGroup);
@@ -2071,7 +2108,7 @@ async function generateReplacementReportPdf({
   // 5. Upload to Supabase Storage if configured
   let fileUrl = existingReport?.file_url || null;
   try {
-    fileUrl = await storageService.uploadReport(fileName, pdfBuffer, 'application/pdf');
+    fileUrl = await storageService.uploadReport(finalFileName, pdfBuffer, 'application/pdf');
   } catch (uploadErr) {
     console.warn('[generateReplacementReportPdf] Storage upload notice:', uploadErr.message);
   }
@@ -2085,7 +2122,7 @@ async function generateReplacementReportPdf({
           SET smr = $1, file_name = $2, file_url = COALESCE($3, file_url), updated_at = CURRENT_TIMESTAMP
           WHERE id = $4
         `,
-        [numericSmr, fileName, fileUrl, existingReport.id]
+        [numericSmr, finalFileName, fileUrl, existingReport.id]
       );
     } catch (repErr) {
       console.warn('[generateReplacementReportPdf] Report record update notice:', repErr.message);
@@ -2094,7 +2131,7 @@ async function generateReplacementReportPdf({
 
   return {
     pdfBuffer,
-    fileName,
+    fileName: finalFileName,
     fileUrl,
     reportNo,
     smr: numericSmr,

@@ -524,10 +524,10 @@ async function uploadReportToEqpCare(reportData, customCookie = null) {
   saveForm.append('subDealerNm', '');
   saveForm.append('siteNm', String(site || '##1').trim());
   saveForm.append('siteCd', String(site || '##1').trim());
-  saveForm.append('custNm', String(customer || "LA'ALA AL-KUWAIT REAL ESTATE CO.").trim());
+  saveForm.append('custNm', sanitizeCustomerName(customer));
   saveForm.append('custCd', 'DAH-1404');
   saveForm.append('custUnitNo', String(customerUnitNo || '').trim());
-  saveForm.append('comment', String(comments || '').trim());
+  saveForm.append('comment', sanitizeComment(comments, ''));
   saveForm.append('selLangCd', 'ENG');
   saveForm.append('actionMode', 'insert');
   saveForm.append('previousHisDate', '');
@@ -724,6 +724,161 @@ async function uploadReportToEqpCare(reportData, customCookie = null) {
 }
 
 /**
+ * Unescapes standard JavaScript / DWR escape sequences in string literals.
+ */
+function unescapeDwrString(val) {
+  if (!val || typeof val !== 'string') return val;
+  let s = val.trim();
+  if ((s.startsWith('"') && s.endsWith('"')) || (s.startsWith("'") && s.endsWith("'"))) {
+    s = s.slice(1, -1);
+  }
+  return s
+    .replace(/\\'/g, "'")
+    .replace(/\\"/g, '"')
+    .replace(/\\r\\n/g, '\n')
+    .replace(/\\n/g, '\n')
+    .replace(/\\r/g, '\n')
+    .replace(/\\t/g, '\t')
+    .replace(/\\\\/g, '\\');
+}
+
+/**
+ * Strips all backslashes and corrupt escaping from customer name, ensuring clean LA'ALA formatting.
+ */
+function sanitizeCustomerName(str, fallback = "LA'ALA AL-KUWAIT REAL ESTATE CO.") {
+  if (!str) return fallback;
+  let s = String(str).trim();
+  if (!s || /^s\d+$/i.test(s)) return fallback;
+
+  // Strip all backslashes (e.g. LA\\\'ALA -> LA'ALA)
+  s = s.replace(/\\+/g, '');
+  // Strip surrounding quotes
+  s = s.replace(/^["']+|["']+$/g, '').trim();
+  // Normalize quotes/ticks
+  s = s.replace(/[`’]/g, "'");
+  // Normalize standard LA'ALA AL-KUWAIT name
+  s = s.replace(/LA['\s]*ALA/i, "LA'ALA");
+
+  return s || fallback;
+}
+
+/**
+ * Strips weird symbols, leading/trailing escaped quotes (\", "), and stray slashes from comments.
+ */
+function sanitizeComment(str, fallback = 'Periodic maintenance service verified and updated.') {
+  if (!str) return fallback;
+  let s = String(str).trim();
+  if (!s || /^s\d+$/i.test(s)) return fallback;
+
+  // Unescape backslash-escaped quotes repeatedly
+  s = s.replace(/\\+(['"])/g, '$1');
+  // Strip leading/trailing quotation marks, slashes, or whitespace
+  s = s.replace(/^[\s"'\\]+|[\s"'\\]+$/g, '').trim();
+  // Normalize CRLF newlines
+  s = s.replace(/\\r\\n/g, ' ').replace(/\\n/g, ' ').replace(/\\r/g, ' ');
+  // Unescape double backslashes
+  s = s.replace(/\\\\+/g, '\\');
+
+  return s || fallback;
+}
+
+/**
+ * Extracts the first real filename from Komatsu portal dto.fileName array or string.
+ */
+function extractExistingAttachmentName(rawFileName) {
+  if (!rawFileName) return null;
+  if (Array.isArray(rawFileName)) {
+    const first = rawFileName.find((f) => f && typeof f === 'string' && f.trim() !== '' && !/^s\d+$/i.test(f));
+    return first ? String(first).trim() : null;
+  }
+  if (typeof rawFileName === 'string' && rawFileName.trim() !== '' && !/^s\d+$/i.test(rawFileName)) {
+    return rawFileName.trim();
+  }
+  return null;
+}
+
+/**
+ * Checks if a filename is a generic uncountered placeholder like "HM400 9582 Ex.pdf".
+ */
+function isGenericUncounteredFileName(name) {
+  if (!name || typeof name !== 'string') return true;
+  const trimmed = name.trim();
+  if (/\bEx\.pdf$/i.test(trimmed)) return true;
+  if (/^report(?:_\w+)?\.pdf$/i.test(trimmed)) return true;
+  return false;
+}
+
+/**
+ * Resolves the operational report counter for a given machine and event code from cache/baseline.
+ */
+function resolveReportCounter(machineNumber, eventCode, serviceDate) {
+  const sNo = String(machineNumber || '').trim();
+  const eCode = String(eventCode || '').trim().toUpperCase();
+  const dateStr = String(serviceDate || '').slice(0, 10);
+
+  try {
+    const cache = loadCachedLiveLifecycle();
+    const reports = cache?.machines?.[sNo]?.reports || [];
+    const matchingReports = reports.filter((r) => String(r.eventCode || '').toUpperCase() === eCode);
+    if (matchingReports.length > 0) {
+      const idx = matchingReports.findIndex(
+        (r) => r.date === dateStr || r.rawDate === dateStr || r.date?.startsWith(dateStr.slice(0, 7))
+      );
+      if (idx !== -1) {
+        return matchingReports.length - idx;
+      }
+    }
+  } catch {}
+
+  const { getLifecycleReportCount } = require('../data/lifecycleReportCounts');
+  const baseCount = getLifecycleReportCount(sNo, eCode);
+  return baseCount || null;
+}
+
+/**
+ * Resolves the effective report filename to preserve the exact old name.
+ */
+function resolveEffectiveReportFileName({
+  callerFileName,
+  portalFileName,
+  dbFileName,
+  machineModel,
+  machineNumber,
+  reportType,
+  serviceType,
+  serviceDate,
+}) {
+  // 1. If caller provided a specific filename that is not a generic placeholder, use it
+  if (callerFileName && !isGenericUncounteredFileName(callerFileName)) {
+    return callerFileName;
+  }
+  // 2. If DB had a specific filename that is not a generic placeholder, use it
+  if (dbFileName && !isGenericUncounteredFileName(dbFileName)) {
+    return dbFileName;
+  }
+  // 3. If Komatsu portal had an existing attached file that is not a generic placeholder, use it
+  if (portalFileName && !isGenericUncounteredFileName(portalFileName)) {
+    return portalFileName;
+  }
+
+  // 4. If portal or caller had generic Ex.pdf (without counter) or none, rebuild with proper counter
+  const counter = resolveReportCounter(machineNumber, reportType, serviceDate);
+  const reportGeneratorService = require('./reportGeneratorService');
+  const buildReportFileName = reportGeneratorService.__private?.buildReportFileName;
+  if (typeof buildReportFileName === 'function') {
+    return buildReportFileName({
+      machineModel,
+      machineNumber,
+      reportType,
+      serviceType,
+      reportCounter: counter,
+    });
+  }
+
+  return callerFileName || portalFileName || `report_${machineNumber}_${reportType}.pdf`;
+}
+
+/**
  * Parses DWR (Direct Web Remoting) response scripts into a structured JavaScript object.
  * Extracts primitive values, nested arrays, and callback parameters.
  */
@@ -789,7 +944,7 @@ function parseDwrResponse(dwrText) {
       const varName = m[1];
       let val = m[2].trim();
       if ((val.startsWith('"') && val.endsWith('"')) || (val.startsWith("'") && val.endsWith("'"))) {
-        val = val.slice(1, -1);
+        val = unescapeDwrString(val);
       } else if (val === 'null') {
         val = null;
       } else if (val === 'true') {
@@ -812,7 +967,7 @@ function parseDwrResponse(dwrText) {
       const idx = parseInt(m[2], 10);
       let val = m[3].trim();
       if ((val.startsWith('"') && val.endsWith('"')) || (val.startsWith("'") && val.endsWith("'"))) {
-        val = val.slice(1, -1);
+        val = unescapeDwrString(val);
       } else if (!isNaN(Number(val)) && val !== '') {
         val = Number(val);
       } else if (vars[val] !== undefined) {
@@ -831,7 +986,7 @@ function parseDwrResponse(dwrText) {
       let val = m[3].trim();
 
       if ((val.startsWith('"') && val.endsWith('"')) || (val.startsWith("'") && val.endsWith("'"))) {
-        val = val.slice(1, -1);
+        val = unescapeDwrString(val);
       } else if (val === 'null') {
         val = null;
       } else if (val === 'true') {
@@ -1066,31 +1221,10 @@ async function updateServiceLogInEqpCare(updateData, customCookie = null) {
 
   let komatsuUpdated = false;
   let komatsuNotice = '';
-  // Auto-generate replacement report PDF if not provided manually
+  // Replacement report PDF state
   let effectiveFileBuffer = fileBuffer;
   let effectiveFileName = fileName;
   let replacementReport = null;
-
-  // Auto-generate replacement report PDF if not provided manually
-  if (!effectiveFileBuffer) {
-    try {
-      const reportGeneratorService = require('./reportGeneratorService');
-      replacementReport = await reportGeneratorService.generateReplacementReportPdf({
-        machineNumber: sNo,
-        eventCode: eCode,
-        serviceDate: isoDate,
-        newSmr: numericSmr,
-        comments,
-        performedBy: updateData.performedBy,
-      });
-      if (replacementReport?.pdfBuffer) {
-        effectiveFileBuffer = replacementReport.pdfBuffer;
-        effectiveFileName = replacementReport.fileName || effectiveFileName;
-      }
-    } catch (genErr) {
-      console.warn('[updateServiceLogInEqpCare] Auto replacement PDF generation notice:', genErr.message);
-    }
-  }
 
   // 1. In-place update on Komatsu Equipment Care portal if requested
   if (syncToEqpc !== false) {
@@ -1176,6 +1310,50 @@ async function updateServiceLogInEqpCare(updateData, customCookie = null) {
       }
     }
 
+    // Extract and sanitize existing portal data
+    const existingPortalFileName = extractExistingAttachmentName(dto.fileName);
+    const cleanCustomerName = sanitizeCustomerName(
+      dto.custNm || updateData.customer || updateData.customer_name || machineDetails.customer_name
+    );
+    const cleanComment = sanitizeComment(
+      comments || updateData.comments || updateData.comment || dto.comment1
+    );
+
+    // Resolve old filename to maintain exact name
+    effectiveFileName = resolveEffectiveReportFileName({
+      callerFileName: fileName,
+      portalFileName: existingPortalFileName,
+      dbFileName: null,
+      machineModel: effectiveModel,
+      machineNumber: sNo,
+      reportType: eCode,
+      serviceType: eventObj.name,
+      serviceDate: isoDate,
+    });
+
+    // Auto-generate replacement report PDF if not provided manually
+    if (!effectiveFileBuffer) {
+      try {
+        const reportGeneratorService = require('./reportGeneratorService');
+        replacementReport = await reportGeneratorService.generateReplacementReportPdf({
+          machineNumber: sNo,
+          eventCode: eCode,
+          serviceDate: isoDate,
+          newSmr: numericSmr,
+          comments: cleanComment,
+          performedBy: updateData.performedBy,
+          fileName: effectiveFileName,
+          existingFileName: effectiveFileName,
+        });
+        if (replacementReport?.pdfBuffer) {
+          effectiveFileBuffer = replacementReport.pdfBuffer;
+          effectiveFileName = replacementReport.fileName || effectiveFileName;
+        }
+      } catch (genErr) {
+        console.warn('[updateServiceLogInEqpCare] Auto replacement PDF generation notice:', genErr.message);
+      }
+    }
+
     // Helper to sanitize DTO values so that raw DWR variable names (e.g. s0, s1, s2) never leak as form values
     const cleanDtoVal = (val, fallback = '') => {
       if (val == null) return fallback;
@@ -1217,13 +1395,13 @@ async function updateServiceLogInEqpCare(updateData, customCookie = null) {
     updateForm.append('subDealerNm', '');
     updateForm.append('siteNm', cleanDtoVal(dto.siteNm, '##1'));
     updateForm.append('siteCd', cleanDtoVal(dto.siteCd, '##1'));
-    updateForm.append('custNm', cleanDtoVal(dto.custNm, "LA'ALA AL-KUWAIT REAL ESTATE CO."));
+    updateForm.append('custNm', cleanCustomerName);
     updateForm.append('custCd', cleanDtoVal(dto.custCd, 'DAH-1404'));
     updateForm.append('muserCd', cleanDtoVal(dto.muserCd, ''));
     updateForm.append('muserNm', cleanDtoVal(dto.muserNm, ''));
     updateForm.append('custUnitNo', cleanDtoVal(dto.custUnitNo, ''));
     updateForm.append('dataSrc', cleanDtoVal(dto.dataSrc, '01'));
-    updateForm.append('comment', comments || cleanDtoVal(dto.comment1, 'Periodic maintenance service verified and updated.'));
+    updateForm.append('comment', cleanComment);
     updateForm.append('commentId', (dto.commentId != null && dto.commentId !== '' && !/^s\d+$/i.test(String(dto.commentId))) ? String(dto.commentId) : '-1');
     updateForm.append('evdId', cleanDtoVal(dto.strEvdId || dto.evdId, ''));
     updateForm.append('strEvdId', cleanDtoVal(dto.strEvdId || dto.evdId, ''));
@@ -1247,7 +1425,7 @@ async function updateServiceLogInEqpCare(updateData, customCookie = null) {
     updateForm.append('muserCdRule', '0');
     updateForm.append('muserNmRule', '0');
 
-    console.log(`[updateServiceLogInEqpCare] Submitting in-place update for #${sNo} (${effectiveModel}) | Event: ${eCode} (${eventObj.name}) | SMR: ${numericSmr} | db="${cleanDtoVal(dto.db, '5194')}" | dbRule="${cleanDtoVal(dto.dbRule, '2')}"`);
+    console.log(`[updateServiceLogInEqpCare] Submitting in-place update for #${sNo} (${effectiveModel}) | Event: ${eCode} (${eventObj.name}) | SMR: ${numericSmr} | Cust: "${cleanCustomerName}" | File: "${effectiveFileName}"`);
 
     // Auth
     updateForm.append('refAuth', dto.refAuth != null ? String(dto.refAuth) : '1');
@@ -1267,10 +1445,9 @@ async function updateServiceLogInEqpCare(updateData, customCookie = null) {
       updateForm.append(`seqNo[${i}]`, seqVal);
     }
 
-    // If a replacement file was explicitly provided, upload to Komatsu portal files[0].
-    // Otherwise, preserve existing Komatsu attachment via seqNo without overriding files[0].
-    if (fileBuffer) {
-      const blob = new Blob([fileBuffer], { type: 'application/pdf' });
+    // Attach replacement file or explicitly provided buffer to files[0]
+    if (effectiveFileBuffer) {
+      const blob = new Blob([effectiveFileBuffer], { type: 'application/pdf' });
       updateForm.append('files[0]', blob, effectiveFileName || `report_${sNo}_${isoDate}.pdf`);
     }
 
@@ -1331,6 +1508,43 @@ async function updateServiceLogInEqpCare(updateData, customCookie = null) {
     } catch (postErr) {
       console.warn('[updateServiceLogInEqpCare] Post notice:', postErr.message);
       throw postErr;
+    }
+  } else {
+    // Local offline replacement PDF generation
+    const cleanCustomerName = sanitizeCustomerName(updateData.customer || machineDetails?.customer_name);
+    const cleanComment = sanitizeComment(comments || updateData.comments);
+
+    effectiveFileName = resolveEffectiveReportFileName({
+      callerFileName: fileName,
+      portalFileName: null,
+      dbFileName: null,
+      machineModel: effectiveModel,
+      machineNumber: sNo,
+      reportType: eCode,
+      serviceType: eventObj.name,
+      serviceDate: isoDate,
+    });
+
+    if (!effectiveFileBuffer) {
+      try {
+        const reportGeneratorService = require('./reportGeneratorService');
+        replacementReport = await reportGeneratorService.generateReplacementReportPdf({
+          machineNumber: sNo,
+          eventCode: eCode,
+          serviceDate: isoDate,
+          newSmr: numericSmr,
+          comments: cleanComment,
+          performedBy: updateData.performedBy,
+          fileName: effectiveFileName,
+          existingFileName: effectiveFileName,
+        });
+        if (replacementReport?.pdfBuffer) {
+          effectiveFileBuffer = replacementReport.pdfBuffer;
+          effectiveFileName = replacementReport.fileName || effectiveFileName;
+        }
+      } catch (genErr) {
+        console.warn('[updateServiceLogInEqpCare] Auto replacement PDF generation notice:', genErr.message);
+      }
     }
   }
 
@@ -1581,6 +1795,9 @@ async function batchUpdateServiceLogsInEqpCare(items = [], options = {}, customC
         syncToEqpc: itemSync,
         performedBy: item.performedBy || performedBy,
         comments: item.comments || item.comment,
+        fileName: item.fileName || item.file_name || null,
+        file_name: item.file_name || item.fileName || null,
+        customer: item.customer || item.customer_name || null,
       };
 
       const res = await updateServiceLogInEqpCare(updatePayload, cookieStr);
@@ -1959,5 +2176,7 @@ module.exports = {
   isLastReportForMachine,
   parseDwrResponse,
   normalizeServiceDate,
+  sanitizeCustomerName,
+  sanitizeComment,
 };
 

@@ -127,6 +127,10 @@ export default function BatchEditSmrModal({ isOpen, onClose, reports = [], onBat
         newSmr: Number(it.newSmr),
         currentSmr: it.currentSmr !== '' ? Number(it.currentSmr) : undefined,
         syncToEqpc: syncToKomatsu,
+        fileName: it.originalReport?.file_name || it.originalReport?.fileName || '',
+        file_name: it.originalReport?.file_name || it.originalReport?.fileName || '',
+        comments: it.originalReport?.comments || it.originalReport?.comment || '',
+        customer: it.originalReport?.customer || it.originalReport?.customer_name || '',
       }));
 
       const res = await batchUpdateEqpcServiceLogs({
