@@ -243,7 +243,6 @@ export default function EqpLifecyclePage() {
 
         // 3. If this was the last report generated, update machine's SMR in system & frontend
         if (res.isLastReportGenerated) {
-          setSelectedMachine((prev) => (prev ? { ...prev, latestSmr: numSmr, last_smr: numSmr } : prev));
           setMachinesList((prev) =>
             prev.map((m) =>
               (m.machine_number === selectedMachine.machineNumber || m.machineNumber === selectedMachine.machineNumber)
