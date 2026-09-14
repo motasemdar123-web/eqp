@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useState, useEffect, useMemo } from 'react';
 import Badge from '../ui/Badge';
@@ -24,7 +24,7 @@ export default function BatchEditSmrModal({ isOpen, onClose, reports = [], onBat
   useEffect(() => {
     if (!isOpen) return;
 
-    const initial = reports.slice(0, 12).map((r, idx) => {
+    const initial = reports.map((r, idx) => {
       const sNo = String(r.machine_number || r.machineNumber || r.serialNo || r.machine?.machineNumber || '').trim();
       const model = String(r.machine_type || r.model || r.machineType || r.machine?.machineType || '').trim();
       const eCode = String(r.report_type || r.eventCode || r.service_type || r.code || 'W41X').trim().toUpperCase();
@@ -54,8 +54,6 @@ export default function BatchEditSmrModal({ isOpen, onClose, reports = [], onBat
     setCookieInput(storedCookie);
     setShowCookieInput(!storedCookie || storedCookie.includes('test_session'));
   }, [isOpen, reports]);
-
-  const hasExceededLimit = reports.length > 12;
 
   const handleSmrChange = (idx, value) => {
     setItems((prev) => {
@@ -94,11 +92,6 @@ export default function BatchEditSmrModal({ isOpen, onClose, reports = [], onBat
   const handleSubmitBatch = async (e) => {
     if (e) e.preventDefault();
     if (items.length === 0 || isSubmitting) return;
-
-    if (items.length > 12) {
-      setErrorNotice('Maximum of 12 reports can be edited in a single batch.');
-      return;
-    }
 
     // Validate all items
     for (let i = 0; i < items.length; i++) {
@@ -197,8 +190,8 @@ export default function BatchEditSmrModal({ isOpen, onClose, reports = [], onBat
             <div>
               <div className="flex items-center gap-2">
                 <h3 className="text-base font-bold text-slate-900">Batch Edit SMRs & Reports</h3>
-                <Badge tone={hasExceededLimit ? 'danger' : 'yellow'}>
-                  {items.length} / 12 Reports Selected
+                <Badge tone="yellow">
+                  {items.length} Reports Selected
                 </Badge>
               </div>
               <p className="text-xs text-slate-500 mt-0.5">
@@ -234,19 +227,10 @@ export default function BatchEditSmrModal({ isOpen, onClose, reports = [], onBat
                 <strong>Conditional Machine SMR:</strong> If a report is the <em>latest report generated</em> for its machine, that machine's SMR is updated. Older reports preserve the machine's overall SMR.
               </li>
               <li>
-                <strong>Batch Limit:</strong> Up to <strong>12 reports</strong> per batch.
+                <strong>All Records Included:</strong> Edit SMRs across all selected existing records simultaneously with zero restrictions.
               </li>
             </ul>
           </div>
-
-          {hasExceededLimit && (
-            <div className="p-3 bg-rose-50 border border-rose-200 text-rose-800 text-xs rounded-lg font-medium flex items-center gap-2">
-              <span>⚠️</span>
-              <span>
-                You have selected {reports.length} reports. Only the first 12 reports will be processed. Please narrow your selection to 12 or fewer reports.
-              </span>
-            </div>
-          )}
 
           {/* Quick-Fill Helpers Toolbar */}
           <div className="p-3.5 bg-slate-50 border border-slate-200 rounded-xl flex flex-wrap items-center justify-between gap-3 text-xs">

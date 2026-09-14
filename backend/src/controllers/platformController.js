@@ -678,14 +678,6 @@ async function batchUpdateEqpcServiceLogs(req, res) {
     return res.status(400).json({ success: false, message: 'Array of report items is required.' });
   }
 
-  if (items.length > 12) {
-    return res.status(400).json({
-      success: false,
-      message: 'Maximum of 12 reports can be edited in a single batch.',
-      error: 'Maximum of 12 reports can be edited in a single batch.',
-    });
-  }
-
   const customCookie = cookie || options?.cookie || req.headers['x-eqpc-cookie'] || null;
   const mergedOptions = {
     ...(options || {}),

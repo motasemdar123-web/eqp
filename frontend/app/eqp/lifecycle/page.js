@@ -154,7 +154,7 @@ export default function EqpLifecyclePage() {
 
   function handleOpenBatchEditModal(milestonesToEdit) {
     if (!selectedMachine || !milestonesToEdit || milestonesToEdit.length === 0) return;
-    const formatted = milestonesToEdit.slice(0, 12).map((m) => ({
+    const formatted = milestonesToEdit.map((m) => ({
       id: m.id || `${selectedMachine.machineNumber}-${m.code}-${m.date}`,
       machineNumber: selectedMachine.machineNumber,
       machine_number: selectedMachine.machineNumber,
@@ -911,7 +911,7 @@ export default function EqpLifecyclePage() {
                         type="button"
                         onClick={() => handleOpenBatchEditModal(selectedTimelineItems.filter((m) => m.date))}
                         className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold text-amber-900 bg-amber-100 hover:bg-amber-200 border border-amber-300 transition-colors shadow-2xs cursor-pointer"
-                        title="Batch edit up to 12 reports for this machine"
+                        title="Batch edit all reports for this machine"
                       >
                         <span>✏️</span>
                         <span>Batch Edit SMRs</span>

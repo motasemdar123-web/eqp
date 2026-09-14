@@ -2,18 +2,38 @@ const komatsuEqpCareService = require('../src/services/komatsuEqpCareService');
 const reportGeneratorService = require('../src/services/reportGeneratorService');
 
 describe('batchUpdateServiceLogsInEqpCare', () => {
-  test('rejects if batch size exceeds 12 reports', async () => {
-    const items = Array.from({ length: 13 }, (_, i) => ({
-      serialNo: `900${i}`,
-      eventCode: 'W41X',
-      serviceDate: '2026-02-14',
-      newSmr: 10 + i,
-    }));
+  test('supports processing more than 12 reports with no batch limit', async () => {
+    const originalCache = komatsuEqpCareService.loadCachedLiveLifecycle();
+    const testCache = {
+      lastSync: new Date().toISOString(),
+      machines: {},
+    };
+    const items = Array.from({ length: 15 }, (_, i) => {
+      const sNo = `90${i < 10 ? '0' + i : i}`;
+      testCache.machines[sNo] = {
+        machineNumber: sNo,
+        model: 'HM400',
+        latestSmr: 10,
+        reports: [{ eventCode: 'W41X', date: '2026-08-15', smr: 10 }],
+      };
+      return {
+        serialNo: sNo,
+        eventCode: 'W41X',
+        serviceDate: '2026-08-15',
+        newSmr: 20 + i,
+      };
+    });
+    komatsuEqpCareService.saveCachedLiveLifecycle(testCache);
 
-    await expect(
-      komatsuEqpCareService.batchUpdateServiceLogsInEqpCare(items, { syncToEqpc: false })
-    ).rejects.toThrow(/Maximum of 12 reports can be edited in a single batch/i);
-  });
+    try {
+      const res = await komatsuEqpCareService.batchUpdateServiceLogsInEqpCare(items, { syncToEqpc: false });
+      expect(res.total).toBe(15);
+      expect(res.successful).toBe(15);
+      expect(res.failed).toBe(0);
+    } finally {
+      komatsuEqpCareService.saveCachedLiveLifecycle(originalCache);
+    }
+  }, 30000);
 
   test('handles empty items array gracefully', async () => {
     const res = await komatsuEqpCareService.batchUpdateServiceLogsInEqpCare([], { syncToEqpc: false });
@@ -26,7 +46,7 @@ describe('batchUpdateServiceLogsInEqpCare', () => {
     });
   });
 
-  test('successfully batch updates multiple reports (up to 12) with replacement PDFs and zero counter increments', async () => {
+  test('successfully batch updates multiple reports across machines with replacement PDFs and zero counter increments', async () => {
     const originalCache = komatsuEqpCareService.loadCachedLiveLifecycle();
     const testCache = {
       lastSync: new Date().toISOString(),

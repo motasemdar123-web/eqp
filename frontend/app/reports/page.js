@@ -515,18 +515,10 @@ export default function ReportsPage() {
                     <button
                       type="button"
                       onClick={() => setBatchEditModalOpen(true)}
-                      className={`ds-button font-bold text-xs py-1.5 px-3 flex items-center gap-1.5 shadow-xs rounded-lg transition-all ${
-                        selectedReports.length > 12
-                          ? 'bg-amber-100 border border-amber-300 text-amber-800 hover:bg-amber-200'
-                          : 'bg-amber-600 hover:bg-amber-700 text-white'
-                      }`}
-                      title={
-                        selectedReports.length > 12
-                          ? 'Select up to 12 reports for batch SMR update'
-                          : 'Batch edit SMRs and reports in-place'
-                      }
+                      className="ds-button font-bold text-xs py-1.5 px-3 flex items-center gap-1.5 shadow-xs rounded-lg transition-all bg-amber-600 hover:bg-amber-700 text-white cursor-pointer"
+                      title="Batch edit SMRs and reports in-place"
                     >
-                      <span>✏️</span> Batch Edit SMRs ({selectedReports.length}{selectedReports.length > 12 ? ' (Max 12)' : ''})
+                      <span>✏️</span> Batch Edit SMRs ({selectedReports.length})
                     </button>
                   )}
 

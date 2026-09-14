@@ -1522,7 +1522,7 @@ async function batchUploadReports(items = [], customCookie = null) {
 }
 
 /**
- * Batch updates up to 12 machine service logs and SMRs in-place.
+ * Batch updates machine service logs and SMRs in-place for all specified existing records.
  * Preserves counters, conditionally updates machine SMR for the latest report,
  * and generates certified replacement inspection report PDFs.
  */
@@ -1535,10 +1535,6 @@ async function batchUpdateServiceLogsInEqpCare(items = [], options = {}, customC
       results: [],
       errors: [],
     };
-  }
-
-  if (items.length > 12) {
-    throw new Error('Maximum of 12 reports can be edited in a single batch.');
   }
 
   const cookieStr = customCookie
