@@ -369,7 +369,7 @@ async function uploadReportToEqpCare(reportData, customCookie = null) {
     site = '##1',
     customer = "LA'ALA AL-KUWAIT REAL ESTATE CO.",
     customerUnitNo = '',
-    comments = 'Scheduled periodic maintenance service completed according to Komatsu standards.',
+    comments = '-',
     reportId = null,
     fileName = 'machine_report.pdf',
     fileBuffer = null,
@@ -527,7 +527,7 @@ async function uploadReportToEqpCare(reportData, customCookie = null) {
   saveForm.append('custNm', sanitizeCustomerName(customer));
   saveForm.append('custCd', 'DAH-1404');
   saveForm.append('custUnitNo', String(customerUnitNo || '').trim());
-  saveForm.append('comment', sanitizeComment(comments, ''));
+  saveForm.append('comment', resolveKomatsuPortalComment(comments));
   saveForm.append('selLangCd', 'ENG');
   saveForm.append('actionMode', 'insert');
   saveForm.append('previousHisDate', '');
@@ -651,10 +651,10 @@ async function uploadReportToEqpCare(reportData, customCookie = null) {
         await db.query(
           `
             UPDATE ${reportsTable}
-            SET comments = COALESCE(comments, '') || $1
-            WHERE id = $2
+            SET comments = '-', updated_at = CURRENT_TIMESTAMP
+            WHERE id = $1
           `,
-          [` [Uploaded to EQP Care: ${eventCode} on ${new Date().toLocaleDateString()}]`, Number(reportId)]
+          [Number(reportId)]
         );
       } catch {
         // Ignore column mismatch if comments is not present
@@ -780,6 +780,27 @@ function sanitizeComment(str, fallback = 'Periodic maintenance service verified 
   s = s.replace(/\\\\+/g, '\\');
 
   return s || fallback;
+}
+
+/**
+ * Resolves the clean comment to send to Komatsu Equipment Care website form (EMDW0904 / EMDW0902).
+ * Strictly ensures "-" is used instead of AI or automated boilerplate.
+ */
+function resolveKomatsuPortalComment(comment) {
+  if (!comment) return '-';
+  const s = String(comment).trim();
+  if (
+    !s ||
+    s === '-' ||
+    /^s\d+$/i.test(s) ||
+    /uploaded to komatsu/i.test(s) ||
+    /periodic maintenance service verified/i.test(s) ||
+    /scheduled periodic maintenance/i.test(s) ||
+    /storage service completed/i.test(s)
+  ) {
+    return '-';
+  }
+  return sanitizeComment(s, '-');
 }
 
 /**
@@ -1401,7 +1422,7 @@ async function updateServiceLogInEqpCare(updateData, customCookie = null) {
     updateForm.append('muserNm', cleanDtoVal(dto.muserNm, ''));
     updateForm.append('custUnitNo', cleanDtoVal(dto.custUnitNo, ''));
     updateForm.append('dataSrc', cleanDtoVal(dto.dataSrc, '01'));
-    updateForm.append('comment', cleanComment);
+    updateForm.append('comment', resolveKomatsuPortalComment(cleanComment));
     updateForm.append('commentId', (dto.commentId != null && dto.commentId !== '' && !/^s\d+$/i.test(String(dto.commentId))) ? String(dto.commentId) : '-1');
     updateForm.append('evdId', cleanDtoVal(dto.strEvdId || dto.evdId, ''));
     updateForm.append('strEvdId', cleanDtoVal(dto.strEvdId || dto.evdId, ''));
@@ -1794,7 +1815,7 @@ async function batchUpdateServiceLogsInEqpCare(items = [], options = {}, customC
         currentSmr: item.currentSmr != null ? Number(item.currentSmr) : (item.previousSmr != null ? Number(item.previousSmr) : undefined),
         syncToEqpc: itemSync,
         performedBy: item.performedBy || performedBy,
-        comments: item.comments || item.comment,
+        comments: (item.comments && !/uploaded to komatsu/i.test(item.comments)) ? item.comments : (item.comment && !/uploaded to komatsu/i.test(item.comment) ? item.comment : '-'),
         fileName: item.fileName || item.file_name || null,
         file_name: item.file_name || item.fileName || null,
         customer: item.customer || item.customer_name || null,
@@ -2178,5 +2199,6 @@ module.exports = {
   normalizeServiceDate,
   sanitizeCustomerName,
   sanitizeComment,
+  resolveKomatsuPortalComment,
 };
 

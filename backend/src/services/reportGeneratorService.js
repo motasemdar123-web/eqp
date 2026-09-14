@@ -753,7 +753,7 @@ function sanitizeReportCustomerName(str, fallback = "LA'ALA AL-KUWAIT REAL ESTAT
 function sanitizeReportComment(str, fallback = 'Periodic maintenance service verified and updated.') {
   if (!str) return fallback;
   let s = String(str).trim();
-  if (!s || /^s\d+$/i.test(s)) return fallback;
+  if (!s || /^s\d+$/i.test(s) || s === '-' || /uploaded to komatsu/i.test(s)) return fallback;
   s = s.replace(/\\+(['"])/g, '$1');
   s = s.replace(/^[\s"'\\]+|[\s"'\\]+$/g, '').trim();
   s = s.replace(/\\r\\n/g, ' ').replace(/\\n/g, ' ').replace(/\\r/g, ' ');

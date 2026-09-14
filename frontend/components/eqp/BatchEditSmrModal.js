@@ -179,7 +179,7 @@ export default function BatchEditSmrModal({ isOpen, onClose, reports = [], onBat
           syncToEqpc: syncToKomatsu,
           fileName: it.originalReport?.file_name || it.originalReport?.fileName || '',
           file_name: it.originalReport?.file_name || it.originalReport?.fileName || '',
-          comments: it.originalReport?.comments || it.originalReport?.comment || '',
+          comments: (it.originalReport?.comments && !/uploaded to komatsu/i.test(it.originalReport.comments)) ? it.originalReport.comments : '-',
           customer: it.originalReport?.customer || it.originalReport?.customer_name || '',
         }));
 

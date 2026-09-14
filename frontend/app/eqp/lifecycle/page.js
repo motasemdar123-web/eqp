@@ -203,7 +203,7 @@ export default function EqpLifecyclePage() {
         smr: m.smr,
         fileName: matched?.file_name || m.fileName || m.file_name || '',
         file_name: matched?.file_name || m.file_name || m.fileName || '',
-        comments: matched?.comments || '',
+        comments: (matched?.comments && !/uploaded to komatsu/i.test(matched.comments)) ? matched.comments : '-',
       };
     });
     setBatchEditReports(formatted);
@@ -261,6 +261,7 @@ export default function EqpLifecyclePage() {
         payload.append('fileName', existingName);
         payload.append('file_name', existingName);
       }
+      payload.append('comments', '-');
 
       if (cleanCookie) {
         payload.append('cookie', cleanCookie);

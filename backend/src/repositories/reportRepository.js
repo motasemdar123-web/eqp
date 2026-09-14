@@ -22,7 +22,7 @@ async function findAll() {
         em.engine_number,
         emh.smr,
         to_char(emh.operation_date, 'YYYY-MM-DD') as service_date,
-        ('Uploaded to Komatsu EQP Care by ' || COALESCE(emh.performed_by, 'technician')) as comments,
+        '-' as comments,
         emh.created_at,
         emh.performed_by as created_by,
         em.machine_number,

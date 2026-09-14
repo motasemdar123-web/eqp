@@ -569,6 +569,18 @@ dwr.engine._remoteHandleCallback('0','0',s0);
       expect(komatsuEqpCareService.sanitizeComment(parsed.comment)).toBe("Storage service completed");
       expect(parsed.fileName[0]).toBe("HM400 9582 Ex_18.pdf");
     });
+
+    test('resolveKomatsuPortalComment replaces AI boilerplate and empty comments with "-"', () => {
+      expect(komatsuEqpCareService.resolveKomatsuPortalComment('Uploaded to Komatsu EQP Care by IBRAHIM AHMAD ALDARAWSHEH')).toBe('-');
+      expect(komatsuEqpCareService.resolveKomatsuPortalComment('Scheduled periodic maintenance service completed according to Komatsu standards.')).toBe('-');
+      expect(komatsuEqpCareService.resolveKomatsuPortalComment('Periodic maintenance service verified and updated.')).toBe('-');
+      expect(komatsuEqpCareService.resolveKomatsuPortalComment('Storage service completed')).toBe('-');
+      expect(komatsuEqpCareService.resolveKomatsuPortalComment('s1')).toBe('-');
+      expect(komatsuEqpCareService.resolveKomatsuPortalComment('')).toBe('-');
+      expect(komatsuEqpCareService.resolveKomatsuPortalComment(null)).toBe('-');
+      expect(komatsuEqpCareService.resolveKomatsuPortalComment('-')).toBe('-');
+      expect(komatsuEqpCareService.resolveKomatsuPortalComment('Custom technician note')).toBe('Custom technician note');
+    });
   });
 });
 
