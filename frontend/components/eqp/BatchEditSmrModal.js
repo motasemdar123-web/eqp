@@ -20,6 +20,11 @@ export default function BatchEditSmrModal({ isOpen, onClose, reports = [], onBat
   const [sequenceBase, setSequenceBase] = useState('');
   const [sequenceStep, setSequenceStep] = useState('250');
 
+  // Derived selection state
+  const selectedCount = useMemo(() => items.filter((it) => it.selected).length, [items]);
+  const isAllSelected = items.length > 0 && selectedCount === items.length;
+  const isSomeSelected = selectedCount > 0 && selectedCount < items.length;
+
   // Initialize editable list whenever reports change
   useEffect(() => {
     if (!isOpen) return;
@@ -33,6 +38,7 @@ export default function BatchEditSmrModal({ isOpen, onClose, reports = [], onBat
 
       return {
         id: r.id || `${sNo}-${eCode}-${sDate}-${idx}`,
+        selected: r.selected !== undefined ? Boolean(r.selected) : true,
         originalReport: r,
         machineNumber: sNo,
         model,
@@ -55,6 +61,18 @@ export default function BatchEditSmrModal({ isOpen, onClose, reports = [], onBat
     setShowCookieInput(!storedCookie || storedCookie.includes('test_session'));
   }, [isOpen, reports]);
 
+  const handleToggleSelectAll = (checked) => {
+    setItems((prev) => prev.map((it) => ({ ...it, selected: checked })));
+  };
+
+  const handleToggleItem = (idx) => {
+    setItems((prev) => {
+      const copy = [...prev];
+      copy[idx] = { ...copy[idx], selected: !copy[idx].selected };
+      return copy;
+    });
+  };
+
   const handleSmrChange = (idx, value) => {
     setItems((prev) => {
       const copy = [...prev];
@@ -63,12 +81,13 @@ export default function BatchEditSmrModal({ isOpen, onClose, reports = [], onBat
     });
   };
 
-  const applyOffsetToAll = () => {
+  const applyOffsetToSelected = () => {
     const numOffset = Number(offsetValue);
     if (isNaN(numOffset) || offsetValue === '') return;
 
     setItems((prev) =>
       prev.map((item) => {
+        if (!item.selected) return item;
         const cur = Number(item.currentSmr);
         const calculated = !isNaN(cur) && cur >= 0 ? Math.max(0, cur + numOffset) : '';
         return { ...item, newSmr: calculated !== '' ? String(calculated) : item.newSmr };
@@ -76,16 +95,19 @@ export default function BatchEditSmrModal({ isOpen, onClose, reports = [], onBat
     );
   };
 
-  const applyAutoSequence = () => {
+  const applyAutoSequenceToSelected = () => {
     const base = Number(sequenceBase);
     const step = Number(sequenceStep);
     if (isNaN(base) || isNaN(step) || sequenceBase === '') return;
 
+    let seqIdx = 0;
     setItems((prev) =>
-      prev.map((item, idx) => ({
-        ...item,
-        newSmr: String(Math.max(0, base + idx * step)),
-      }))
+      prev.map((item) => {
+        if (!item.selected) return item;
+        const val = String(Math.max(0, base + seqIdx * step));
+        seqIdx++;
+        return { ...item, newSmr: val };
+      })
     );
   };
 
@@ -93,9 +115,16 @@ export default function BatchEditSmrModal({ isOpen, onClose, reports = [], onBat
     if (e) e.preventDefault();
     if (items.length === 0 || isSubmitting) return;
 
-    // Validate all items
+    const selectedItems = items.filter((it) => it.selected);
+    if (selectedItems.length === 0) {
+      setErrorNotice('Please select at least one report to update.');
+      return;
+    }
+
+    // Validate ONLY selected items
     for (let i = 0; i < items.length; i++) {
       const item = items[i];
+      if (!item.selected) continue; // Skip unselected rows
       const nSmr = Number(item.newSmr);
       if (item.newSmr === '' || isNaN(nSmr) || nSmr < 0) {
         setErrorNotice(`Row #${i + 1} (#${item.machineNumber} ${item.eventCode}) has an invalid SMR.`);
@@ -113,13 +142,13 @@ export default function BatchEditSmrModal({ isOpen, onClose, reports = [], onBat
     try {
       setIsSubmitting(true);
       setErrorNotice('');
-      setProgressMsg(`Submitting batch update for ${items.length} reports to Komatsu EQP Care & generating replacement PDFs...`);
+      setProgressMsg(`Submitting batch update for ${selectedItems.length} selected report(s) to Komatsu EQP Care & generating replacement PDFs...`);
 
       if (cleanCookie && typeof window !== 'undefined') {
         localStorage.setItem('eqpc_user_cookie', cleanCookie);
       }
 
-      const payloadItems = items.map((it) => ({
+      const payloadItems = selectedItems.map((it) => ({
         serialNo: it.machineNumber,
         model: it.model,
         eventCode: it.eventCode,
@@ -143,9 +172,11 @@ export default function BatchEditSmrModal({ isOpen, onClose, reports = [], onBat
         setResultsSummary(res);
         setProgressMsg('');
 
-        // Map per-item status
-        const updatedItems = items.map((item, idx) => {
-          const itemResult = res.results?.[idx];
+        // Map per-item status back to corresponding selected items
+        let resIndex = 0;
+        const updatedItems = items.map((item) => {
+          if (!item.selected) return item;
+          const itemResult = res.results?.[resIndex++];
           if (itemResult && (itemResult.success || itemResult.status !== 'FAILED')) {
             return {
               ...item,
@@ -194,8 +225,8 @@ export default function BatchEditSmrModal({ isOpen, onClose, reports = [], onBat
             <div>
               <div className="flex items-center gap-2">
                 <h3 className="text-base font-bold text-slate-900">Batch Edit SMRs & Reports</h3>
-                <Badge tone="yellow">
-                  {items.length} Reports Selected
+                <Badge tone={selectedCount > 0 ? 'yellow' : 'neutral'}>
+                  {selectedCount} of {items.length} Selected
                 </Badge>
               </div>
               <p className="text-xs text-slate-500 mt-0.5">
@@ -222,7 +253,10 @@ export default function BatchEditSmrModal({ isOpen, onClose, reports = [], onBat
             </div>
             <ul className="list-disc pl-4 space-y-1 text-[11px] text-amber-800">
               <li>
-                <strong>Automated Replacement PDFs:</strong> Each report's PDF is regenerated on its own with the new SMR, preserving machine specs, customer, date, inspector, and comments without duplicate logs.
+                <strong>Selective Batch Updates:</strong> Only checked reports are modified, validated, and updated. Unchecked records are safely skipped without validation blocks.
+              </li>
+              <li>
+                <strong>Automated Replacement PDFs:</strong> Each selected report's PDF is regenerated with the new SMR, retaining existing attachment names without duplicate logs.
               </li>
               <li>
                 <strong>Protected Operational Counters:</strong> Machine operational counters (<code className="font-mono bg-amber-100 px-1 py-0.5 rounded">report_counter</code>, <code className="font-mono bg-amber-100 px-1 py-0.5 rounded">smr_step</code>) are <strong>never</strong> incremented or modified.
@@ -230,15 +264,34 @@ export default function BatchEditSmrModal({ isOpen, onClose, reports = [], onBat
               <li>
                 <strong>Conditional Machine SMR:</strong> If a report is the <em>latest report generated</em> for its machine, that machine's SMR is updated. Older reports preserve the machine's overall SMR.
               </li>
-              <li>
-                <strong>All Records Included:</strong> Edit SMRs across all selected existing records simultaneously with zero restrictions.
-              </li>
             </ul>
           </div>
 
           {/* Quick-Fill Helpers Toolbar */}
           <div className="p-3.5 bg-slate-50 border border-slate-200 rounded-xl flex flex-wrap items-center justify-between gap-3 text-xs">
-            <span className="font-bold text-slate-700">⚡ Quick Fill Tools:</span>
+            <div className="flex items-center gap-2">
+              <span className="font-bold text-slate-700">⚡ Quick Fill Tools:</span>
+              <div className="flex items-center gap-1.5 text-xs bg-white px-2.5 py-1 rounded-lg border border-slate-200">
+                <span className="text-slate-400 font-medium">Select:</span>
+                <button
+                  type="button"
+                  onClick={() => handleToggleSelectAll(true)}
+                  disabled={isSubmitting || isAllSelected}
+                  className="text-amber-700 hover:text-amber-800 font-bold hover:underline disabled:opacity-40 disabled:no-underline cursor-pointer"
+                >
+                  All ({items.length})
+                </button>
+                <span className="text-slate-300">/</span>
+                <button
+                  type="button"
+                  onClick={() => handleToggleSelectAll(false)}
+                  disabled={isSubmitting || selectedCount === 0}
+                  className="text-slate-500 hover:text-slate-700 font-medium hover:underline disabled:opacity-40 disabled:no-underline cursor-pointer"
+                >
+                  None
+                </button>
+              </div>
+            </div>
 
             {/* Offset Tool */}
             <div className="flex items-center gap-2">
@@ -252,16 +305,17 @@ export default function BatchEditSmrModal({ isOpen, onClose, reports = [], onBat
               />
               <button
                 type="button"
-                onClick={applyOffsetToAll}
-                className="px-2.5 py-1 bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 rounded font-semibold text-xs transition-colors"
+                onClick={applyOffsetToSelected}
+                disabled={selectedCount === 0}
+                className="px-2.5 py-1 bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 rounded font-semibold text-xs transition-colors disabled:opacity-40 cursor-pointer"
               >
-                Apply Offset
+                Apply to Selected ({selectedCount})
               </button>
             </div>
 
             {/* Sequence Tool */}
             <div className="flex items-center gap-2">
-              <span className="text-slate-500">Auto-Sequence (Base):</span>
+              <span className="text-slate-500">Sequence (Base):</span>
               <input
                 type="number"
                 value={sequenceBase}
@@ -279,10 +333,11 @@ export default function BatchEditSmrModal({ isOpen, onClose, reports = [], onBat
               />
               <button
                 type="button"
-                onClick={applyAutoSequence}
-                className="px-2.5 py-1 bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 rounded font-semibold text-xs transition-colors"
+                onClick={applyAutoSequenceToSelected}
+                disabled={selectedCount === 0}
+                className="px-2.5 py-1 bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 rounded font-semibold text-xs transition-colors disabled:opacity-40 cursor-pointer"
               >
-                Apply Sequence
+                Apply to Selected ({selectedCount})
               </button>
             </div>
           </div>
@@ -293,7 +348,20 @@ export default function BatchEditSmrModal({ isOpen, onClose, reports = [], onBat
               <table className="w-full text-left border-collapse text-xs">
                 <thead>
                   <tr className="bg-slate-100/80 border-b border-slate-200 text-slate-700 font-bold uppercase text-[10px] tracking-wider">
-                    <th className="py-2.5 px-3 w-8">#</th>
+                    <th className="py-2.5 px-3 w-10 text-center">
+                      <input
+                        type="checkbox"
+                        checked={isAllSelected}
+                        ref={(el) => {
+                          if (el) el.indeterminate = isSomeSelected;
+                        }}
+                        onChange={(e) => handleToggleSelectAll(e.target.checked)}
+                        disabled={isSubmitting || items.length === 0}
+                        className="rounded border-slate-300 text-amber-600 focus:ring-amber-500 cursor-pointer"
+                        title={isAllSelected ? "Deselect all reports" : "Select all reports"}
+                      />
+                    </th>
+                    <th className="py-2.5 px-2 w-8">#</th>
                     <th className="py-2.5 px-3">Machine</th>
                     <th className="py-2.5 px-3">Event / Service</th>
                     <th className="py-2.5 px-3">Date</th>
@@ -306,11 +374,26 @@ export default function BatchEditSmrModal({ isOpen, onClose, reports = [], onBat
                   {items.map((item, idx) => (
                     <tr
                       key={item.id}
-                      className={`hover:bg-slate-50/80 transition-colors ${
-                        item.status === 'success' ? 'bg-emerald-50/40' : item.status === 'failed' ? 'bg-rose-50/40' : ''
+                      className={`transition-colors ${
+                        !item.selected
+                          ? 'opacity-45 bg-slate-50/60'
+                          : item.status === 'success'
+                          ? 'bg-emerald-50/40'
+                          : item.status === 'failed'
+                          ? 'bg-rose-50/40'
+                          : 'hover:bg-slate-50/80'
                       }`}
                     >
-                      <td className="py-2 px-3 text-slate-400 font-mono text-[11px]">{idx + 1}</td>
+                      <td className="py-2 px-3 text-center">
+                        <input
+                          type="checkbox"
+                          checked={item.selected}
+                          onChange={() => handleToggleItem(idx)}
+                          disabled={isSubmitting}
+                          className="rounded border-slate-300 text-amber-600 focus:ring-amber-500 cursor-pointer"
+                        />
+                      </td>
+                      <td className="py-2 px-2 text-slate-400 font-mono text-[11px]">{idx + 1}</td>
                       <td className="py-2 px-3">
                         <span className="font-bold text-slate-800">{item.model}</span>
                         <span className="font-mono text-slate-500 ml-1">#{item.machineNumber}</span>
@@ -328,10 +411,14 @@ export default function BatchEditSmrModal({ isOpen, onClose, reports = [], onBat
                             type="number"
                             min="0"
                             step="1"
-                            disabled={isSubmitting}
+                            disabled={isSubmitting || !item.selected}
                             value={item.newSmr}
                             onChange={(e) => handleSmrChange(idx, e.target.value)}
-                            className="w-full pl-2.5 pr-8 py-1 bg-white border border-slate-300 rounded font-mono font-bold text-slate-900 focus:outline-hidden focus:ring-2 focus:ring-amber-500 text-xs text-right"
+                            className={`w-full pl-2.5 pr-8 py-1 border rounded font-mono font-bold text-xs text-right focus:outline-hidden focus:ring-2 focus:ring-amber-500 ${
+                              !item.selected
+                                ? 'bg-slate-100 border-slate-200 text-slate-400 cursor-not-allowed'
+                                : 'bg-white border-slate-300 text-slate-900'
+                            }`}
                             placeholder="0"
                           />
                           <span className="absolute right-2 top-1 text-[10px] font-medium text-slate-400 pointer-events-none">
@@ -340,10 +427,11 @@ export default function BatchEditSmrModal({ isOpen, onClose, reports = [], onBat
                         </div>
                       </td>
                       <td className="py-2 px-3 text-center">
-                        {item.status === 'idle' && <span className="text-slate-400 text-[11px]">Ready</span>}
-                        {item.status === 'updating' && <span className="text-amber-600 animate-pulse text-[11px]">Updating...</span>}
-                        {item.status === 'success' && <span className="text-emerald-600 font-bold text-[11px]">✓ Done</span>}
-                        {item.status === 'failed' && (
+                        {!item.selected && <span className="text-slate-400 text-[11px] italic">Skipped</span>}
+                        {item.selected && item.status === 'idle' && <span className="text-slate-400 text-[11px]">Ready</span>}
+                        {item.selected && item.status === 'updating' && <span className="text-amber-600 animate-pulse text-[11px]">Updating...</span>}
+                        {item.selected && item.status === 'success' && <span className="text-emerald-600 font-bold text-[11px]">✓ Done</span>}
+                        {item.selected && item.status === 'failed' && (
                           <span className="text-rose-600 font-bold text-[11px]" title={item.statusMessage}>
                             ✕ Error
                           </span>
@@ -453,16 +541,16 @@ export default function BatchEditSmrModal({ isOpen, onClose, reports = [], onBat
           <Button
             variant="primary"
             onClick={handleSubmitBatch}
-            disabled={isSubmitting || items.length === 0}
-            className="bg-amber-600 hover:bg-amber-700 text-white font-bold"
+            disabled={isSubmitting || selectedCount === 0}
+            className="bg-amber-600 hover:bg-amber-700 text-white font-bold cursor-pointer"
           >
             {isSubmitting ? (
               <>
                 <span className="animate-spin mr-1.5">⏳</span>
-                Updating {items.length} Reports...
+                Updating {selectedCount} Reports...
               </>
             ) : (
-              `Save & Update (${items.length}) Reports`
+              `Save & Update (${selectedCount}) Reports`
             )}
           </Button>
         </div>

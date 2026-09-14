@@ -47,6 +47,11 @@ export default function EqpLifecyclePage() {
   const [editNotice, setEditNotice] = useState({ type: '', message: '' });
   const [batchEditModalOpen, setBatchEditModalOpen] = useState(false);
   const [batchEditReports, setBatchEditReports] = useState([]);
+  const [selectedTimelineMilestones, setSelectedTimelineMilestones] = useState(new Set());
+
+  useEffect(() => {
+    setSelectedTimelineMilestones(new Set());
+  }, [selectedMachineNumber]);
 
   useEffect(() => {
     const timerId = window.setTimeout(() => {
@@ -152,16 +157,41 @@ export default function EqpLifecyclePage() {
     setEditNotice({ type: '', message: '' });
   }
 
+  function handleToggleTimelineMilestone(key) {
+    setSelectedTimelineMilestones((prev) => {
+      const next = new Set(prev);
+      if (next.has(key)) {
+        next.delete(key);
+      } else {
+        next.add(key);
+      }
+      return next;
+    });
+  }
+
+  function handleSelectAllTimelineMilestones(milestones) {
+    const next = new Set(milestones.map((m) => m.id || `${m.code}-${m.date}`));
+    setSelectedTimelineMilestones(next);
+  }
+
+  function handleClearTimelineMilestones() {
+    setSelectedTimelineMilestones(new Set());
+  }
+
   function handleOpenBatchEditModal(milestonesToEdit) {
     if (!selectedMachine || !milestonesToEdit || milestonesToEdit.length === 0) return;
+    const hasTimelineSelection = selectedTimelineMilestones.size > 0;
     const formatted = milestonesToEdit.map((m) => {
+      const mKey = m.id || `${m.code}-${m.date}`;
       const matched = (generatedReports || []).find(
         (r) =>
           String(r.machine_number || r.machineNumber).trim() === String(selectedMachine.machineNumber).trim() &&
           (r.service_date === m.date || r.date === m.date)
       );
+      const isSelected = hasTimelineSelection ? selectedTimelineMilestones.has(mKey) : true;
       return {
         id: m.id || `${selectedMachine.machineNumber}-${m.code}-${m.date}`,
+        selected: isSelected,
         machineNumber: selectedMachine.machineNumber,
         machine_number: selectedMachine.machineNumber,
         model: selectedMachine.model,
@@ -924,60 +954,112 @@ export default function EqpLifecyclePage() {
               {/* Chronological Timeline Feed */}
               <div>
                 <div className="flex items-center justify-between mb-3">
-                  <p className="text-xs font-bold uppercase text-slate-500">Service Events Timeline</p>
+                  <div>
+                    <p className="text-xs font-bold uppercase text-slate-500">Service Events Timeline</p>
+                    {selectedTimelineMilestones.size > 0 && (
+                      <span className="text-[11px] text-amber-700 font-bold">
+                        {selectedTimelineMilestones.size} selected
+                      </span>
+                    )}
+                  </div>
                   <div className="flex items-center gap-2">
                     <span className="text-[11px] font-mono text-slate-400 font-semibold">{selectedTimelineItems.length} Reports</span>
                     {selectedTimelineItems.filter((m) => m.date).length > 0 && (
-                      <button
-                        type="button"
-                        onClick={() => handleOpenBatchEditModal(selectedTimelineItems.filter((m) => m.date))}
-                        className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold text-amber-900 bg-amber-100 hover:bg-amber-200 border border-amber-300 transition-colors shadow-2xs cursor-pointer"
-                        title="Batch edit all reports for this machine"
-                      >
-                        <span>✏️</span>
-                        <span>Batch Edit SMRs</span>
-                      </button>
+                      <div className="flex items-center gap-1.5">
+                        {selectedTimelineMilestones.size > 0 ? (
+                          <button
+                            type="button"
+                            onClick={handleClearTimelineMilestones}
+                            className="text-[11px] text-slate-500 hover:text-slate-700 font-medium hover:underline cursor-pointer mr-1"
+                          >
+                            Clear
+                          </button>
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={() => handleSelectAllTimelineMilestones(selectedTimelineItems.filter((m) => m.date))}
+                            className="text-[11px] text-amber-700 hover:text-amber-800 font-bold hover:underline cursor-pointer mr-1"
+                          >
+                            Select All
+                          </button>
+                        )}
+                        <button
+                          type="button"
+                          onClick={() => handleOpenBatchEditModal(selectedTimelineItems.filter((m) => m.date))}
+                          className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold text-amber-900 bg-amber-100 hover:bg-amber-200 border border-amber-300 transition-colors shadow-2xs cursor-pointer"
+                          title="Batch edit SMRs for selected reports"
+                        >
+                          <span>✏️</span>
+                          <span>
+                            {selectedTimelineMilestones.size > 0
+                              ? `Batch Edit (${selectedTimelineMilestones.size})`
+                              : 'Batch Edit SMRs'}
+                          </span>
+                        </button>
+                      </div>
                     )}
                   </div>
                 </div>
                 <div className="relative pl-5 space-y-2.5 before:absolute before:left-2 before:top-2 before:bottom-2 before:w-0.5 before:bg-slate-200 max-h-72 overflow-y-auto pr-1">
-                  {selectedTimelineItems.map((milestone) => (
-                    <div key={milestone.id} className="relative group flex items-center justify-between rounded-lg border border-slate-200 p-2.5 bg-white text-xs shadow-2xs hover:border-amber-300 transition-colors">
-                      <span className={`absolute -left-5 top-3 w-2 h-2 rounded-full ring-4 ring-white ${milestone.date ? 'bg-amber-500' : 'bg-slate-300'}`} />
-                      <div>
-                        <p className="font-bold text-slate-900">{milestone.label}</p>
-                        <p className="font-mono text-slate-400 text-[10px]">{milestone.code}</p>
-                      </div>
-                      <div className="flex items-center gap-1.5">
-                        {milestone.smr != null ? (
-                          <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-amber-100 text-amber-900 border border-amber-200" title="Equipment Operating Hours">
-                            {milestone.smr} hrs
+                  {selectedTimelineItems.map((milestone) => {
+                    const mKey = milestone.id || `${milestone.code}-${milestone.date}`;
+                    const isChecked = milestone.date ? selectedTimelineMilestones.has(mKey) : false;
+                    return (
+                      <div
+                        key={milestone.id}
+                        className={`relative group flex items-center justify-between rounded-lg border p-2.5 bg-white text-xs shadow-2xs transition-colors ${
+                          isChecked
+                            ? 'border-amber-400 ring-1 ring-amber-400/50 bg-amber-50/20'
+                            : 'border-slate-200 hover:border-amber-300'
+                        }`}
+                      >
+                        <span className={`absolute -left-5 top-3 w-2 h-2 rounded-full ring-4 ring-white ${milestone.date ? 'bg-amber-500' : 'bg-slate-300'}`} />
+                        <div className="flex items-center gap-2">
+                          {milestone.date && (
+                            <input
+                              type="checkbox"
+                              checked={isChecked}
+                              onChange={() => handleToggleTimelineMilestone(mKey)}
+                              className="rounded border-slate-300 text-amber-600 focus:ring-amber-500 cursor-pointer"
+                              title="Select for batch edit"
+                            />
+                          )}
+                          <div>
+                            <p className="font-bold text-slate-900">{milestone.label}</p>
+                            <p className="font-mono text-slate-400 text-[10px]">{milestone.code}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          {milestone.smr != null ? (
+                            <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-amber-100 text-amber-900 border border-amber-200" title="Equipment Operating Hours">
+                              {milestone.smr} hrs
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-mono text-slate-400 bg-slate-50 border border-slate-200" title="Operating hours not stamped">
+                              - hrs
+                            </span>
+                          )}
+                          <span className="font-semibold text-slate-700 font-mono text-[11px]">
+                            {formatLifecycleDate(milestone.date)}
                           </span>
-                        ) : (
-                          <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-mono text-slate-400 bg-slate-50 border border-slate-200" title="Operating hours not stamped">
-                            - hrs
-                          </span>
-                        )}
-                        <span className="font-semibold text-slate-700 font-mono text-[11px]">
-                          {formatLifecycleDate(milestone.date)}
-                        </span>
-                        {milestone.date && (
-                          <button
-                            type="button"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleOpenEditModal(milestone);
-                            }}
-                            className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold text-slate-600 hover:text-amber-900 bg-slate-100 hover:bg-amber-100 border border-slate-200 hover:border-amber-300 transition-colors cursor-pointer ml-1"
-                            title="Edit SMR & Report in-place"
-                          >
-                            <span>✏️</span>
-                            <span>Edit SMR</span>
-                          </button>
-                        )}
+                          {milestone.date && (
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleOpenEditModal(milestone);
+                              }}
+                              className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold text-slate-600 hover:text-amber-900 bg-slate-100 hover:bg-amber-100 border border-slate-200 hover:border-amber-300 transition-colors cursor-pointer ml-1"
+                              title="Edit SMR & Report in-place"
+                            >
+                              <span>✏️</span>
+                              <span>Edit SMR</span>
+                            </button>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
 

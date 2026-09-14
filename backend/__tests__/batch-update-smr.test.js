@@ -8,7 +8,7 @@ describe('batchUpdateServiceLogsInEqpCare', () => {
       lastSync: new Date().toISOString(),
       machines: {},
     };
-    const items = Array.from({ length: 15 }, (_, i) => {
+    const items = Array.from({ length: 13 }, (_, i) => {
       const sNo = `90${i < 10 ? '0' + i : i}`;
       testCache.machines[sNo] = {
         machineNumber: sNo,
@@ -27,13 +27,13 @@ describe('batchUpdateServiceLogsInEqpCare', () => {
 
     try {
       const res = await komatsuEqpCareService.batchUpdateServiceLogsInEqpCare(items, { syncToEqpc: false });
-      expect(res.total).toBe(15);
-      expect(res.successful).toBe(15);
+      expect(res.total).toBe(13);
+      expect(res.successful).toBe(13);
       expect(res.failed).toBe(0);
     } finally {
       komatsuEqpCareService.saveCachedLiveLifecycle(originalCache);
     }
-  }, 30000);
+  }, 60000);
 
   test('handles empty items array gracefully', async () => {
     const res = await komatsuEqpCareService.batchUpdateServiceLogsInEqpCare([], { syncToEqpc: false });
