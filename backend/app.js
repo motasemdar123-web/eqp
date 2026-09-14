@@ -12,6 +12,9 @@ async function startServer() {
       console.log(`Server running on ${env.host}:${env.port}`);
     });
 
+    server.timeout = 600000;
+    server.keepAliveTimeout = 610000;
+
     server.on('error', (error) => {
       console.error('Failed to start server', error);
       process.exit(1);

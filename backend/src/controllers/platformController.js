@@ -673,6 +673,7 @@ async function updateEqpcServiceLog(req, res) {
 }
 
 async function batchUpdateEqpcServiceLogs(req, res) {
+  if (req.setTimeout) req.setTimeout(600000);
   const { items, options, cookie } = req.body || {};
   if (!Array.isArray(items) || items.length === 0) {
     return res.status(400).json({ success: false, message: 'Array of report items is required.' });

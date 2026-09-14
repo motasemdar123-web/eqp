@@ -142,67 +142,124 @@ export default function BatchEditSmrModal({ isOpen, onClose, reports = [], onBat
     try {
       setIsSubmitting(true);
       setErrorNotice('');
-      setProgressMsg(`Submitting batch update for ${selectedItems.length} selected report(s) to Komatsu EQP Care & generating replacement PDFs...`);
 
       if (cleanCookie && typeof window !== 'undefined') {
         localStorage.setItem('eqpc_user_cookie', cleanCookie);
       }
 
-      const payloadItems = selectedItems.map((it) => ({
-        serialNo: it.machineNumber,
-        model: it.model,
-        eventCode: it.eventCode,
-        serviceDate: it.serviceDate,
-        newSmr: Number(it.newSmr),
-        currentSmr: it.currentSmr !== '' ? Number(it.currentSmr) : undefined,
-        syncToEqpc: syncToKomatsu,
-        fileName: it.originalReport?.file_name || it.originalReport?.fileName || '',
-        file_name: it.originalReport?.file_name || it.originalReport?.fileName || '',
-        comments: it.originalReport?.comments || it.originalReport?.comment || '',
-        customer: it.originalReport?.customer || it.originalReport?.customer_name || '',
-      }));
+      // Process in manageable chunks of 4 reports so each sub-request completes within 10-15s,
+      // completely eliminating any 45s browser/proxy timeouts while providing live feedback.
+      const CHUNK_SIZE = 4;
+      const allResults = [];
+      let totalSuccess = 0;
+      let totalFailed = 0;
+      const totalSelected = selectedItems.length;
 
-      const res = await batchUpdateEqpcServiceLogs({
-        items: payloadItems,
-        options: { syncToEqpc: syncToKomatsu, cookie: cleanCookie },
-        cookie: cleanCookie,
-      });
+      for (let c = 0; c < totalSelected; c += CHUNK_SIZE) {
+        const chunk = selectedItems.slice(c, c + CHUNK_SIZE);
+        const chunkEnd = Math.min(c + CHUNK_SIZE, totalSelected);
+        const chunkIds = new Set(chunk.map((it) => it.id));
 
-      if (res && res.success) {
-        setResultsSummary(res);
-        setProgressMsg('');
+        // Mark items in current chunk as 'updating'
+        setItems((prev) =>
+          prev.map((item) => (chunkIds.has(item.id) ? { ...item, status: 'updating' } : item))
+        );
 
-        // Map per-item status back to corresponding selected items
-        let resIndex = 0;
-        const updatedItems = items.map((item) => {
-          if (!item.selected) return item;
-          const itemResult = res.results?.[resIndex++];
-          if (itemResult && (itemResult.success || itemResult.status !== 'FAILED')) {
-            return {
-              ...item,
-              status: 'success',
-              statusMessage: itemResult.message || 'Updated successfully',
-            };
+        setProgressMsg(
+          `Updating reports ${c + 1}–${chunkEnd} of ${totalSelected} (${Math.round((c / totalSelected) * 100)}%)...`
+        );
+
+        const payloadItems = chunk.map((it) => ({
+          serialNo: it.machineNumber,
+          model: it.model,
+          eventCode: it.eventCode,
+          serviceDate: it.serviceDate,
+          newSmr: Number(it.newSmr),
+          currentSmr: it.currentSmr !== '' ? Number(it.currentSmr) : undefined,
+          syncToEqpc: syncToKomatsu,
+          fileName: it.originalReport?.file_name || it.originalReport?.fileName || '',
+          file_name: it.originalReport?.file_name || it.originalReport?.fileName || '',
+          comments: it.originalReport?.comments || it.originalReport?.comment || '',
+          customer: it.originalReport?.customer || it.originalReport?.customer_name || '',
+        }));
+
+        try {
+          const res = await batchUpdateEqpcServiceLogs(
+            {
+              items: payloadItems,
+              options: { syncToEqpc: syncToKomatsu, cookie: cleanCookie },
+              cookie: cleanCookie,
+            },
+            { timeoutMs: 180000 }
+          );
+
+          if (res && res.results) {
+            allResults.push(...res.results);
+            totalSuccess += res.successful || 0;
+            totalFailed += res.failed || 0;
+
+            // Immediately mark current chunk rows as completed/failed in the UI
+            setItems((prev) =>
+              prev.map((item) => {
+                const chunkIndex = chunk.findIndex((ch) => ch.id === item.id);
+                if (chunkIndex !== -1) {
+                  const itemResult = res.results?.[chunkIndex];
+                  if (itemResult && (itemResult.success || itemResult.status !== 'FAILED')) {
+                    return {
+                      ...item,
+                      status: 'success',
+                      statusMessage: itemResult.message || 'Updated successfully',
+                    };
+                  }
+                  return {
+                    ...item,
+                    status: 'failed',
+                    statusMessage: itemResult?.error || itemResult?.message || 'Update failed',
+                  };
+                }
+                return item;
+              })
+            );
+          } else {
+            throw new Error(res?.message || 'Invalid batch response');
           }
-          return {
-            ...item,
-            status: 'failed',
-            statusMessage: itemResult?.error || itemResult?.message || 'Update failed',
-          };
-        });
-        setItems(updatedItems);
-
-        if (onBatchUpdated) {
-          onBatchUpdated(res);
+        } catch (chunkErr) {
+          totalFailed += chunk.length;
+          setItems((prev) =>
+            prev.map((item) => {
+              if (chunkIds.has(item.id)) {
+                return {
+                  ...item,
+                  status: 'failed',
+                  statusMessage: chunkErr.message || 'Chunk request failed',
+                };
+              }
+              return item;
+            })
+          );
         }
+      }
 
-        if (res.failed === 0) {
-          setTimeout(() => {
-            onClose();
-          }, 1800);
-        }
+      setProgressMsg('');
+      const finalSummary = {
+        success: totalSuccess > 0,
+        total: totalSelected,
+        successful: totalSuccess,
+        failed: totalFailed,
+        results: allResults,
+      };
+      setResultsSummary(finalSummary);
+
+      if (onBatchUpdated) {
+        onBatchUpdated(finalSummary);
+      }
+
+      if (totalFailed === 0) {
+        setTimeout(() => {
+          onClose();
+        }, 1800);
       } else {
-        setErrorNotice(res?.message || 'Batch update failed.');
+        setErrorNotice(`Completed with notices: ${totalSuccess} succeeded, ${totalFailed} failed. Please review errors above.`);
       }
     } catch (err) {
       setErrorNotice(err.message || 'Failed to execute batch SMR update.');

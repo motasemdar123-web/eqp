@@ -641,18 +641,26 @@ export function updateEqpcServiceLog(payload) {
   });
 }
 
-export function batchUpdateEqpcServiceLogs(payload) {
+export function batchUpdateEqpcServiceLogs(payload, options = {}) {
   const isFormData = typeof FormData !== 'undefined' && payload instanceof FormData;
+  const itemsCount = Array.isArray(payload?.items) ? payload.items.length : 1;
+  const dynamicTimeout = Math.max(180000, itemsCount * 20000);
+
   return request('/api/komatsu/eqpc/batch-update-service-logs', {
     method: 'POST',
     body: isFormData ? payload : JSON.stringify(payload),
+    timeoutMs: options.timeoutMs || dynamicTimeout,
   });
 }
 
-export function batchUploadEqpcReports(payload) {
+export function batchUploadEqpcReports(payload, options = {}) {
+  const itemsCount = Array.isArray(payload?.items) ? payload.items.length : 1;
+  const dynamicTimeout = Math.max(180000, itemsCount * 20000);
+
   return request('/api/komatsu/eqpc/batch-upload', {
     method: 'POST',
     body: JSON.stringify(payload),
+    timeoutMs: options.timeoutMs || dynamicTimeout,
   });
 }
 
