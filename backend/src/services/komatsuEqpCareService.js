@@ -1071,6 +1071,7 @@ async function updateServiceLogInEqpCare(updateData, customCookie = null) {
   let effectiveFileName = fileName;
   let replacementReport = null;
 
+  // Auto-generate replacement report PDF if not provided manually
   if (!effectiveFileBuffer) {
     try {
       const reportGeneratorService = require('./reportGeneratorService');
@@ -1102,16 +1103,17 @@ async function updateServiceLogInEqpCare(updateData, customCookie = null) {
       saveCookie(customCookie);
     }
 
+    const tileUrl = `${BASE_EQPC_URL}/link.do?linkPath=EMDW0904tiles&model=${encodeURIComponent(effectiveModel)}&type=${encodeURIComponent(effectiveType)}&subtype=${encodeURIComponent(effectiveSubtype)}&serial=${encodeURIComponent(sNo)}`;
     const defaultHeaders = {
       'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36 Edg/151.0.0.0',
       'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
       'Accept-Language': 'en-US,en;q=0.9',
       'Origin': 'https://eqp-care.komatsu.co.jp',
-      'Referer': 'https://eqp-care.komatsu.co.jp/eqpc/link.do?linkPath=EMDW0904tiles',
+      'Referer': tileUrl,
       'Cookie': cookieStr,
     };
 
-    // Resolve machineId: 1. From updateData, 2. From cached live lifecycle, 3. From tile query
+    // Prime Komatsu portal HTTP session for this machine & resolve machineId
     let machineId = updateData.machineId || '';
     if (!machineId) {
       try {
@@ -1121,17 +1123,26 @@ async function updateServiceLogInEqpCare(updateData, customCookie = null) {
         }
       } catch {}
     }
-    if (!machineId) {
-      try {
-        const tileUrl = `${BASE_EQPC_URL}/link.do?linkPath=EMDW0904tiles&model=${encodeURIComponent(effectiveModel)}&type=${encodeURIComponent(effectiveType)}&subtype=${encodeURIComponent(effectiveSubtype)}&serial=${encodeURIComponent(sNo)}`;
-        const tileResp = await fetch(tileUrl, { method: 'GET', headers: defaultHeaders });
-        const tileHtml = await tileResp.text();
-        const idMatch = tileHtml.match(/name="machineId"\s+value="([^"]+)"/i) || tileHtml.match(/id="machineId"\s+value="([^"]+)"/i);
-        if (idMatch && idMatch[1]) {
-          machineId = idMatch[1];
-        }
-      } catch (searchErr) {
-        console.warn('[updateServiceLogInEqpCare] Machine tile lookup notice:', searchErr.message);
+
+    try {
+      const tileResp = await fetch(tileUrl, { method: 'GET', headers: defaultHeaders });
+      const tileHtml = await tileResp.text();
+      if (
+        tileResp.url.includes('login') ||
+        tileHtml.includes('login.do') ||
+        tileHtml.includes('Your session was over') ||
+        tileHtml.includes('Your session is expired')
+      ) {
+        throw new Error('Komatsu EQP Care session expired. Please re-login to Komatsu Equipment Care and copy your updated session cookie.');
+      }
+      const idMatch = tileHtml.match(/name="machineId"\s+value="([^"]+)"/i) || tileHtml.match(/id="machineId"\s+value="([^"]+)"/i);
+      if (idMatch && idMatch[1]) {
+        machineId = idMatch[1];
+      }
+    } catch (searchErr) {
+      console.warn('[updateServiceLogInEqpCare] Machine tile lookup notice:', searchErr.message);
+      if (searchErr.message.includes('expired') || searchErr.message.includes('session')) {
+        throw searchErr;
       }
     }
 
@@ -1256,8 +1267,10 @@ async function updateServiceLogInEqpCare(updateData, customCookie = null) {
       updateForm.append(`seqNo[${i}]`, seqVal);
     }
 
-    if (effectiveFileBuffer) {
-      const blob = new Blob([effectiveFileBuffer], { type: 'application/pdf' });
+    // If a replacement file was explicitly provided, upload to Komatsu portal files[0].
+    // Otherwise, preserve existing Komatsu attachment via seqNo without overriding files[0].
+    if (fileBuffer) {
+      const blob = new Blob([fileBuffer], { type: 'application/pdf' });
       updateForm.append('files[0]', blob, effectiveFileName || `report_${sNo}_${isoDate}.pdf`);
     }
 
@@ -1634,6 +1647,65 @@ function saveCachedLiveLifecycle(data) {
 }
 
 /**
+ * Loads cached live lifecycle and dynamically overlays the latest records from
+ * PostgreSQL eqp_machines (for latest SMR) and eqp_machine_history (for updated reports).
+ * Guarantees that saved database edits are immediately reflected even across server redeploys.
+ */
+async function getLiveLifecycleCacheWithDbMerge() {
+  const cache = loadCachedLiveLifecycle();
+  try {
+    const historyTable = await resolveEqpTable('eqp_machine_history', 'machine_history');
+    const machineTable = await resolveEqpTable('eqp_machines', 'machines');
+
+    // 1. Merge machines and latestSmr from eqp_machines
+    const mRes = await db.query(`SELECT machine_number, last_smr, machine_type FROM ${machineTable}`);
+    if (!cache.machines) cache.machines = {};
+    for (const m of mRes.rows) {
+      const sNo = String(m.machine_number || '').trim();
+      if (!sNo) continue;
+      if (!cache.machines[sNo]) {
+        cache.machines[sNo] = {
+          machineNumber: sNo,
+          model: m.machine_type || 'HM400',
+          totalReports: 0,
+          reports: [],
+          syncedAt: new Date().toISOString(),
+        };
+      }
+      if (m.last_smr != null && !isNaN(Number(m.last_smr))) {
+        cache.machines[sNo].latestSmr = Number(m.last_smr);
+      }
+    }
+
+    // 2. Overlay history records from eqp_machine_history
+    const hRes = await db.query(`
+      SELECT 
+        em.machine_number,
+        emh.service_type,
+        emh.smr,
+        to_char(emh.operation_date, 'YYYY-MM-DD') as op_date
+      FROM ${historyTable} emh
+      JOIN ${machineTable} em ON em.id = emh.machine_id
+      ORDER BY emh.operation_date DESC
+    `);
+    for (const h of hRes.rows) {
+      const sNo = String(h.machine_number || '').trim();
+      if (!sNo || !cache.machines?.[sNo]) continue;
+      const reports = cache.machines[sNo].reports || [];
+      const match = reports.find(
+        (r) => r.eventCode === h.service_type && (r.date === h.op_date || r.date?.slice(0, 7) === h.op_date?.slice(0, 7))
+      );
+      if (match && h.smr != null && !isNaN(Number(h.smr))) {
+        match.smr = Number(h.smr);
+      }
+    }
+  } catch (err) {
+    console.warn('[getLiveLifecycleCacheWithDbMerge] DB merge notice:', err.message);
+  }
+  return cache;
+}
+
+/**
  * Parses the HTML response of EMDW0904tiles to extract all live equipment history reports.
  * 100% read-only parsing with zero writes to Komatsu.
  */
@@ -1884,6 +1956,7 @@ module.exports = {
   mapServiceTypeToEventCode,
   loadCachedLiveLifecycle,
   saveCachedLiveLifecycle,
+  getLiveLifecycleCacheWithDbMerge,
   parseHistoryTableFromHtml,
   fetchMachineLifecycleFromEqpc,
   syncFleetLifecycleFromEqpc,

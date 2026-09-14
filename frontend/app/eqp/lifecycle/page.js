@@ -231,6 +231,16 @@ export default function EqpLifecyclePage() {
           return;
         }
 
+        const normalizeToIso = (d) => {
+          if (!d) return '';
+          const s = String(d).trim();
+          const slashM = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+          if (slashM) return `${slashM[3]}-${slashM[2].padStart(2, '0')}-${slashM[1].padStart(2, '0')}`;
+          return s.slice(0, 10);
+        };
+        const targetIso = normalizeToIso(editingMilestone.date);
+        const targetMonth = targetIso.slice(0, 7);
+
         // 1. In-place update of liveEqpData cache state
         setLiveEqpData((prevCache) => {
           if (!prevCache) return prevCache;
@@ -241,9 +251,12 @@ export default function EqpLifecyclePage() {
               copy.machines[mKey].latestSmr = numSmr;
             }
             const mReports = copy.machines[mKey].reports || [];
-            const iso = editingMilestone.date;
             const target = mReports.find(
-              (r) => r.eventCode === editingMilestone.code && (r.date === iso || r.date?.slice(0, 7) === iso?.slice(0, 7))
+              (r) => r.eventCode === editingMilestone.code && (
+                normalizeToIso(r.date) === targetIso ||
+                normalizeToIso(r.rawDate) === targetIso ||
+                normalizeToIso(r.date).slice(0, 7) === targetMonth
+              )
             );
             if (target) {
               target.smr = numSmr;
@@ -257,11 +270,11 @@ export default function EqpLifecyclePage() {
           return prevReports.map((r) => {
             const mNum = String(r.machine_number || r.machine?.machineNumber || '').trim();
             const rCode = String(r.report_type || r.service_type || '').toUpperCase();
-            const rDate = String(r.service_date || r.created_at || '').slice(0, 10);
+            const rIso = normalizeToIso(r.service_date || r.created_at);
             if (
               mNum === selectedMachine.machineNumber &&
               rCode.includes(editingMilestone.code) &&
-              (rDate === editingMilestone.date || rDate.slice(0, 7) === editingMilestone.date?.slice(0, 7))
+              (rIso === targetIso || rIso.slice(0, 7) === targetMonth)
             ) {
               return { ...r, smr: numSmr };
             }
@@ -287,6 +300,7 @@ export default function EqpLifecyclePage() {
         setSyncStatusMsg(successNotice);
         setTimeout(() => setSyncStatusMsg(''), 7000);
         handleCloseEditModal();
+        loadReportsData();
       } else {
         setEditNotice({ type: 'error', message: res?.message || 'Update failed' });
         if (editSyncToKomatsu) {

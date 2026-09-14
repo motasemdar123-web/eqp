@@ -3262,7 +3262,7 @@
           "eventName": "EXTRA SERVICE",
           "rawDate": "08/13/2026",
           "date": "2026-08-13",
-          "smr": 10,
+          "smr": 14,
           "country": "KUWAIT (KW)",
           "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
         },
@@ -3271,7 +3271,7 @@
           "eventName": "EXTRA SERVICE",
           "rawDate": "07/15/2026",
           "date": "2026-07-15",
-          "smr": 10,
+          "smr": 14,
           "country": "KUWAIT (KW)",
           "distributor": "DAR ALHAI GENERAL TRADING KW (5194)"
         },
@@ -3555,7 +3555,8 @@
           "distributor": ""
         }
       ],
-      "syncedAt": "2026-09-13T11:06:01.679Z"
+      "syncedAt": "2026-09-13T11:06:01.679Z",
+      "latestSmr": 14
     },
     "9583": {
       "machineNumber": "9583",

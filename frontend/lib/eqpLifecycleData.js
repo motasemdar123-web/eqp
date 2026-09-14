@@ -159,7 +159,7 @@ const BASE_LIFECYCLE_ROWS = [
     "2026-08-13",
     "W41X",
     "Add. Service",
-    10,
+    14,
     24
   ],
   [
@@ -3723,13 +3723,13 @@ const OBSERVED_REPORTS = {
     [
       "W41X",
       "2026-08-13",
-      10,
+      14,
       "EXTRA SERVICE"
     ],
     [
       "W41X",
       "2026-07-15",
-      10,
+      14,
       "EXTRA SERVICE"
     ],
     [
@@ -25898,7 +25898,14 @@ export function buildDynamicLifecycleRecords(generatedReports = [], machinesList
       const monthKey = date.slice(0, 7);
       const key = `${code}_${date}`;
       const monthCodeKey = `${code}_${monthKey}`;
-      if (!observedSet.has(key) && !observedMonthCodes.has(monthCodeKey)) {
+      const existingMatch = baseObserved.find(
+        ([c, d]) => c === code && (d === date || d?.slice(0, 7) === monthKey)
+      );
+      if (existingMatch) {
+        if (gr.smr != null && !isNaN(Number(gr.smr))) {
+          existingMatch[2] = Number(gr.smr);
+        }
+      } else if (!observedSet.has(key) && !observedMonthCodes.has(monthCodeKey)) {
         observedSet.add(key);
         observedMonthCodes.add(monthCodeKey);
         baseObserved.push([code, date, gr.smr ? Number(gr.smr) : null, gr.report_type || gr.service_type || 'Generated Report']);
@@ -25930,10 +25937,14 @@ export function buildDynamicLifecycleRecords(generatedReports = [], machinesList
       }
     }
     let latestSmr = null;
-    if (baseObserved[0] && baseObserved[0][2] != null && !isNaN(Number(baseObserved[0][2]))) {
+    if (machineObj?.last_smr != null && !isNaN(Number(machineObj.last_smr))) {
+      const machineSmr = Number(machineObj.last_smr);
+      if (baseObserved[0] && (baseObserved[0][2] == null || baseObserved[0][2] !== machineSmr)) {
+        baseObserved[0][2] = machineSmr;
+      }
+      latestSmr = machineSmr;
+    } else if (baseObserved[0] && baseObserved[0][2] != null && !isNaN(Number(baseObserved[0][2]))) {
       latestSmr = Number(baseObserved[0][2]);
-    } else if (machineObj?.last_smr != null && !isNaN(Number(machineObj.last_smr))) {
-      latestSmr = Number(machineObj.last_smr);
     } else if (liveMachine?.latestSmr != null && !isNaN(Number(liveMachine.latestSmr))) {
       latestSmr = Number(liveMachine.latestSmr);
     } else {

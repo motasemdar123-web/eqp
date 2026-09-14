@@ -721,7 +721,7 @@ async function batchUploadEqpcReports(req, res) {
 }
 
 async function getEqpcLifecycleCache(req, res) {
-  const cache = komatsuEqpCareService.loadCachedLiveLifecycle();
+  const cache = await komatsuEqpCareService.getLiveLifecycleCacheWithDbMerge();
   res.json({ success: true, ...cache });
 }
 

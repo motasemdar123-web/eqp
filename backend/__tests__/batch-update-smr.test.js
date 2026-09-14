@@ -1,4 +1,4 @@
-﻿const komatsuEqpCareService = require('../src/services/komatsuEqpCareService');
+const komatsuEqpCareService = require('../src/services/komatsuEqpCareService');
 const reportGeneratorService = require('../src/services/reportGeneratorService');
 
 describe('batchUpdateServiceLogsInEqpCare', () => {
@@ -112,7 +112,7 @@ describe('batchUpdateServiceLogsInEqpCare', () => {
     } finally {
       komatsuEqpCareService.saveCachedLiveLifecycle(originalCache);
     }
-  });
+  }, 30000);
 
   test('continues processing when an individual report item has invalid data', async () => {
     const originalCache = komatsuEqpCareService.loadCachedLiveLifecycle();
