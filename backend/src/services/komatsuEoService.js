@@ -335,7 +335,7 @@ async function executeSingleEmergencyOrder(orderData, customCookie = null) {
     customer_code = 'REG',
     db_code = '536K',
     db_name = 'DAR AL HAI',
-    user_id = 'motasemgha',
+    user_id: explicitUserId,
   } = orderData;
 
   const defaultHeaders = {
@@ -374,6 +374,24 @@ async function executeSingleEmergencyOrder(orderData, customCookie = null) {
   if (initSetCookies.length > 0) {
     cookieStr = mergeCookies(cookieStr, initSetCookies);
   }
+
+  let initHtml = '';
+  try {
+    initHtml = await initResp.text();
+  } catch {
+    // Non-fatal
+  }
+
+  // Auto-detect portal username from active session HTML
+  const detectedUser = (
+    initHtml.match(/currentUserID\s*=\s*["']([^"']+)["']/i)?.[1] ||
+    initHtml.match(/PersonIncharge[^\>]*value=["']([^"']+)["']/i)?.[1] ||
+    initHtml.match(/id=["']PersonIncharge["'][^\>]*value=["']([^"']+)["']/i)?.[1] ||
+    initHtml.match(/name=["']PersonIncharge["'][^\>]*value=["']([^"']+)["']/i)?.[1]
+  )?.trim();
+
+  const activeUserId = explicitUserId || detectedUser || 'motasemgha';
+  console.log(`[executeSingleEmergencyOrder] Portal session user: ${activeUserId} (detected: ${detectedUser || 'none'}, explicit: ${explicitUserId || 'none'})`);
 
   // Pre-flight 1: Load customer & pricing info into session
   try {
@@ -464,7 +482,7 @@ async function executeSingleEmergencyOrder(orderData, customCookie = null) {
       UnloadingPort: 'KWI',
       SubstitutionCodes: '',
       PriceSettingCodes: '',
-      PersonIncharge: user_id || 'motasemgha',
+      PersonIncharge: activeUserId,
       QuotationValidity: formatPortalDate(7),
       RequestedDeliveryTime: formatPortalDate(0),
       PriceCalculationMethod: 'D',
@@ -602,7 +620,7 @@ async function executeSingleEmergencyOrder(orderData, customCookie = null) {
   }));
 
   const addData = new URLSearchParams({
-    userID: user_id,
+    userID: activeUserId,
     strNewParts: JSON.stringify(newPartsPayload),
     page: '',
   });
@@ -620,14 +638,22 @@ async function executeSingleEmergencyOrder(orderData, customCookie = null) {
     signal: AbortSignal.timeout(25000),
   });
 
+  const addText = await addResp.text();
   if (addResp.status !== 200) {
     throw new Error(`AddNewParts failed with status: ${addResp.status}`);
+  }
+  if (addText.includes('SessionExpiredRedirect') || addText.includes('Account/Login') || addText.includes('/SSO/')) {
+    throw new Error('Komatsu PDX session expired while adding parts. Please update your cookie.');
+  }
+  if (addText.includes('DisplayModal') && addText.includes('txtErrorType = "0"')) {
+    const errMatch = addText.match(/txtError\s*=\s*"([^"]+)"/);
+    throw new Error(`Komatsu portal rejected parts: ${errMatch ? errMatch[1] : 'Validation error'}`);
   }
 
   // STEP 5: Update Details
   const updateUrl = `${BASE_PORTAL_URL}/QuotationDetails/UpdateDetails`;
   const updateData = new URLSearchParams({
-    userID: user_id,
+    userID: activeUserId,
     currency: 'USD',
     tax: '0.00',
     nameOfOtherCharges1: '',
@@ -911,7 +937,7 @@ async function confirmQuotation(quotationNo, seqNo = '00', customCookie = null) 
       Status: '2', // 2 = Confirmed
       LoadingPort: 'JEA',
       UnloadingPort: 'KWI',
-      PersonIncharge: 'motasemgha',
+      PersonIncharge: searchData.PersonIncharge || 'motasemgha',
       QuotationValidity: searchData.QuotationValidity || formatPortalDate(14),
       RequestedDeliveryTime: searchData.RequestedDeliveryTime || formatPortalDate(7),
       PriceCalculationMethod: 'D',

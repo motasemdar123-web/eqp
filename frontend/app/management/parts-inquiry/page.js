@@ -964,6 +964,18 @@ export default function SparePartsPage() {
       setPlannedOrders([...updatedOrders]);
 
       try {
+        let activeUserId = null;
+        if (typeof window !== 'undefined') {
+          try {
+            const stored = JSON.parse(localStorage.getItem('user') || localStorage.getItem('platformUser') || 'null');
+            const email = (stored?.email || '').toLowerCase();
+            if (email.includes('m.rami') || email.includes('mrami')) activeUserId = 'mrami';
+            else if (email.includes('motasem')) activeUserId = 'motasemgha';
+          } catch {
+            // ignore
+          }
+        }
+
         const payload = {
           db_order_no: current.db_order_no,
           model_code: current.model,
@@ -972,6 +984,7 @@ export default function SparePartsPage() {
           comments: eoComments,
           parts: current.parts.map((p) => ({ part_no: p.part_no, quantity: p.quantity })),
           dryRun: eoDryRun,
+          ...(activeUserId ? { user_id: activeUserId } : {}),
         };
 
         const res = await executeKomatsuEoOrder(payload);
@@ -1025,6 +1038,18 @@ export default function SparePartsPage() {
       setPlannedOrders([...updatedOrders]);
 
       try {
+        let activeUserId = null;
+        if (typeof window !== 'undefined') {
+          try {
+            const stored = JSON.parse(localStorage.getItem('user') || localStorage.getItem('platformUser') || 'null');
+            const email = (stored?.email || '').toLowerCase();
+            if (email.includes('m.rami') || email.includes('mrami')) activeUserId = 'mrami';
+            else if (email.includes('motasem')) activeUserId = 'motasemgha';
+          } catch {
+            // ignore
+          }
+        }
+
         const payload = {
           db_order_no: current.db_order_no,
           model_code: current.model,
@@ -1033,6 +1058,7 @@ export default function SparePartsPage() {
           comments: eoComments,
           parts: current.parts.map((p) => ({ part_no: p.part_no, quantity: p.quantity })),
           dryRun: eoDryRun,
+          ...(activeUserId ? { user_id: activeUserId } : {}),
         };
 
         const res = await executeKomatsuEoOrder(payload);
