@@ -294,6 +294,7 @@ export default function SystemShell({
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [labsOpen, setLabsOpen] = useState(false);
+  const sidebarNavRef = useRef(null);
 
   // Command Palette
   const [cmdOpen, setCmdOpen] = useState(false);
@@ -345,7 +346,7 @@ export default function SystemShell({
     };
   }, [hasHydrated, user]);
 
-  // Global Keyboard Shortcuts (Ctrl+K / Cmd+K)
+  // Global Keyboard Shortcuts (Ctrl+K / Cmd+K / ESC)
   useEffect(() => {
     function handleKeyDown(e) {
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
@@ -355,11 +356,26 @@ export default function SystemShell({
       if (e.key === 'Escape') {
         setCmdOpen(false);
         setNotificationsOpen(false);
+        setMobileMenuOpen(false);
       }
     }
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
+
+  // Lock background body scroll when mobile menu is open
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      const originalOverflow = document.body.style.overflow;
+      const originalTouchAction = document.body.style.touchAction;
+      document.body.style.overflow = 'hidden';
+      document.body.style.touchAction = 'none';
+      return () => {
+        document.body.style.overflow = originalOverflow;
+        document.body.style.touchAction = originalTouchAction;
+      };
+    }
+  }, [mobileMenuOpen]);
 
   useEffect(() => {
     if (cmdOpen) {
@@ -517,7 +533,14 @@ export default function SystemShell({
       )}
 
       {/* Sidebar */}
-      <aside className={`ds-app-sidebar !bg-white !text-slate-900 border-r border-slate-200 ${mobileMenuOpen ? 'ds-sidebar-mobile-open' : ''}`}>
+      <aside
+        className={`ds-app-sidebar ${mobileMenuOpen ? 'ds-sidebar-mobile-open' : ''}`}
+        onWheel={(e) => {
+          if (sidebarNavRef.current && !sidebarNavRef.current.contains(e.target)) {
+            sidebarNavRef.current.scrollTop += e.deltaY;
+          }
+        }}
+      >
         {/* Brand Header */}
         <div className="ds-sidebar-header">
           <Link
@@ -527,7 +550,8 @@ export default function SystemShell({
             onClick={() => setMobileMenuOpen(false)}
           >
             <span className="ds-sidebar-brand-mark">
-              <span className="h-2 w-2 rounded-full bg-amber-400" />
+              <span>DH</span>
+              <span className="ds-sidebar-brand-dot" />
             </span>
             <span className="ds-sidebar-brand-text">
               <span className="block text-sm font-bold leading-none text-slate-900 tracking-tight">Dar Al Hai</span>
@@ -536,14 +560,33 @@ export default function SystemShell({
               </span>
             </span>
           </Link>
+
+          {/* Desktop collapse toggle */}
+          <button
+            type="button"
+            onClick={toggleSidebar}
+            className="hidden lg:inline-flex ds-sidebar-collapse-btn"
+            aria-label={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+            title={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+          >
+            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              {sidebarCollapsed ? (
+                <path strokeLinecap="round" strokeLinejoin="round" d="M13 5l7 7-7 7M5 5l7 7-7 7" />
+              ) : (
+                <path strokeLinecap="round" strokeLinejoin="round" d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
+              )}
+            </svg>
+          </button>
+
+          {/* Mobile close button */}
           {mobileMenuOpen && (
             <button
               type="button"
               onClick={() => setMobileMenuOpen(false)}
-              className="lg:hidden rounded-md p-1 text-slate-400 hover:text-slate-900 hover:bg-slate-100 cursor-pointer"
+              className="lg:hidden ds-sidebar-close-btn"
               aria-label="Close mobile menu"
             >
-              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
@@ -551,21 +594,21 @@ export default function SystemShell({
         </div>
 
         {/* Categorized Navigation */}
-        <nav className="ds-sidebar-nav" aria-label="Primary navigation">
+        <nav ref={sidebarNavRef} className="ds-sidebar-nav" aria-label="Primary navigation">
           {visibleNavSections.map((section) => {
             if (section.isLabs) {
               return (
-                <div key={section.title} className="mt-4 pt-3 border-t border-slate-200">
+                <div key={section.title} className="mt-3 pt-2.5 border-t border-slate-200/80 ds-sidebar-section">
                   <button
                     type="button"
                     onClick={toggleLabs}
-                    className="w-full flex items-center justify-between px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-slate-400 hover:text-slate-700 transition-colors select-none cursor-pointer"
+                    className="w-full flex items-center justify-between px-2.5 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-slate-400 hover:text-slate-700 transition-colors select-none cursor-pointer rounded-md hover:bg-slate-50 box-border"
                   >
-                    <span>{section.title}</span>
-                    <span className="text-slate-400 font-mono text-[9px]">{labsOpen ? '▲' : '▼'}</span>
+                    <span className="ds-labs-toggle-text truncate flex-1 text-left min-w-0">{section.title}</span>
+                    <span className="text-slate-400 font-mono text-[9px] ds-labs-arrow ml-1 shrink-0">{labsOpen ? '▲' : '▼'}</span>
                   </button>
                   {labsOpen && (
-                    <div className="mt-1 space-y-0.5 animate-[ds-toast-in_100ms_ease]">
+                    <div className="mt-1 space-y-0.5 w-full min-w-0 animate-[ds-toast-in_100ms_ease]">
                       {section.items.map((item) => {
                         const active = isActivePath(pathname, item.href, activePath);
                         return (
@@ -577,9 +620,9 @@ export default function SystemShell({
                             onClick={() => setMobileMenuOpen(false)}
                           >
                             <span className="ds-side-nav-icon"><NavIcon name={item.icon} /></span>
-                            <span className="ds-nav-label truncate flex-1">{item.label}</span>
+                            <span className="ds-nav-label truncate flex-1 min-w-0">{item.label}</span>
                             {item.badge && (
-                              <span className="text-[10px] font-mono font-medium px-1.5 py-0.2 rounded bg-slate-100 text-slate-600 border border-slate-200">
+                              <span className="ds-nav-badge">
                                 {item.badge}
                               </span>
                             )}
@@ -593,9 +636,9 @@ export default function SystemShell({
             }
 
             return (
-              <div key={section.title} className="mb-3">
+              <div key={section.title} className="ds-sidebar-section">
                 <p className="ds-sidebar-section-label">{section.title}</p>
-                <div className="space-y-0.5">
+                <div className="space-y-0.5 w-full min-w-0">
                   {section.items.map((item) => {
                     const active = isActivePath(pathname, item.href, activePath);
                     return (
@@ -607,9 +650,9 @@ export default function SystemShell({
                         onClick={() => setMobileMenuOpen(false)}
                       >
                         <span className="ds-side-nav-icon"><NavIcon name={item.icon} /></span>
-                        <span className="ds-nav-label truncate flex-1">{item.label}</span>
+                        <span className="ds-nav-label truncate flex-1 min-w-0">{item.label}</span>
                         {item.badge && (
-                          <span className="text-[10px] font-mono font-medium px-1.5 py-0.2 rounded bg-slate-100 text-slate-600 border border-slate-200">
+                          <span className="ds-nav-badge">
                             {item.badge}
                           </span>
                         )}
@@ -625,17 +668,21 @@ export default function SystemShell({
         {/* Sidebar Footer */}
         <div className="ds-sidebar-footer">
           <div className="flex items-center gap-2">
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" aria-hidden="true" />
-            <span className="text-[11px] font-medium text-slate-500">System Live</span>
+            <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse shrink-0" aria-hidden="true" />
+            <span className="text-[11px] font-medium text-slate-500 ds-footer-text">System Live</span>
           </div>
           {user && (
             <button
               type="button"
               onClick={logout}
-              className="text-[11px] font-medium text-slate-400 hover:text-red-600 transition-colors cursor-pointer"
+              className="text-[11px] font-medium text-slate-400 hover:text-red-600 transition-colors cursor-pointer ds-sidebar-logout flex items-center gap-1.5"
               aria-label="Logout"
+              title="Sign out"
             >
-              Sign out
+              <span className="ds-footer-text">Sign out</span>
+              <svg className="h-3.5 w-3.5 hidden ds-footer-collapsed-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+              </svg>
             </button>
           )}
         </div>
@@ -656,6 +703,21 @@ export default function SystemShell({
                 <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
               </svg>
             </button>
+
+            {/* Quick Expand button when desktop sidebar is collapsed */}
+            {sidebarCollapsed && (
+              <button
+                type="button"
+                className="hidden lg:inline-flex ds-icon-button"
+                onClick={toggleSidebar}
+                aria-label="Expand sidebar"
+                title="Expand sidebar"
+              >
+                <svg className="h-4 w-4 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h7" />
+                </svg>
+              </button>
+            )}
 
             {/* Breadcrumbs */}
             <nav aria-label="Breadcrumb navigation" className="hidden sm:flex items-center gap-1.5 text-xs text-slate-500 font-normal">
