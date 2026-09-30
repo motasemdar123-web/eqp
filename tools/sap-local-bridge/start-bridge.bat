@@ -12,7 +12,7 @@ cd /d "%~dp0"
 where node >nul 2>nul
 if %errorlevel% neq 0 (
     echo [ERROR] Node.js is required but not found in PATH!
-    echo Please install Node.js (v18+) from https://nodejs.org
+    echo Please install Node.js v18 or newer from https://nodejs.org
     echo.
     pause
     exit /b 1

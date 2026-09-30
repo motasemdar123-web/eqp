@@ -20,6 +20,16 @@ const cors = resolveModule('cors');
 const app = express();
 const PORT = process.env.OUTLOOK_BRIDGE_PORT || 5008;
 
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+  res.setHeader('Access-Control-Allow-Private-Network', 'true');
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(204);
+  }
+  next();
+});
 app.use(cors({ origin: '*' }));
 app.use(express.json({ limit: '10mb' }));
 

@@ -259,6 +259,30 @@ async function launchChromiumWithAutoInstall() {
     for (let w = 0; w < 45; w++) {
       await new Promise((r) => setTimeout(r, 1000));
       const pages = context.pages();
+
+      // Check for login error on main page
+      const logonErr = await mainPage.evaluate(() => {
+        const ko = document.getElementById('span-credentials-ko');
+        if (ko && window.getComputedStyle(ko).display !== 'none') {
+          return ko.innerText || 'Invalid credentials';
+        }
+        return null;
+      }).catch(() => null);
+
+      if (logonErr) {
+        const errMsg = `SAP Web Access Login Failed: "${logonErr}" for user "${username}". Please update your credentials with your current active SAP password.`;
+        addLog(errMsg, 'error');
+        throw new Error(errMsg);
+      }
+
+      // Check for password expiration popin
+      await mainPage.evaluate(() => {
+        const expBtn = document.getElementById('password-expiration-choice-connect');
+        if (expBtn && window.getComputedStyle(expBtn).display !== 'none') {
+          expBtn.click();
+        }
+      }).catch(() => {});
+
       for (const p of pages) {
         const hasCanvas = await p.evaluate(() => !!document.querySelector('#JWTS_myCanvas, canvas')).catch(() => false);
         if (hasCanvas) {

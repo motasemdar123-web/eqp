@@ -229,9 +229,9 @@ export default function BridgesModal({ open, onClose }) {
 
               <div className="p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-[11px] space-y-1">
                 <div className="font-semibold text-slate-800">Quick Launch Instructions:</div>
-                <div className="text-slate-600">1. Download & extract <code className="font-mono text-slate-900 bg-white px-1 py-0.2 rounded border border-slate-200">sap-local-bridge.zip</code></div>
-                <div className="text-slate-600">2. Double-click <code className="font-mono text-slate-900 bg-white px-1 py-0.2 rounded border border-slate-200">start-bridge.bat</code></div>
-                <div className="text-slate-600">3. Keep SAP B1 Web Client session open</div>
+                <div className="text-slate-600">1. Run <code className="font-mono text-slate-900 bg-white px-1 py-0.2 rounded border border-slate-200">start-sap-bridge.bat</code> on your PC (or extract <code className="font-mono text-slate-900 bg-white px-1 py-0.2 rounded border border-slate-200">sap-local-bridge.zip</code> & run)</div>
+                <div className="text-slate-600">2. Keep the command prompt window OPEN</div>
+                <div className="text-slate-600">3. If using an HTTPS site, click the lock/settings icon next to URL &rarr; Site settings &rarr; Insecure content &rarr; <strong>Allow</strong></div>
               </div>
             </div>
 

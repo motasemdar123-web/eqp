@@ -700,22 +700,31 @@ export function getSapPoStatus() {
   });
 }
 
+let activeSapBridgeBase = 'http://127.0.0.1:5005';
+let activeOutlookBridgeBase = 'http://127.0.0.1:5008';
+
 export async function checkLocalSapBridge() {
   if (typeof window === 'undefined') return null;
-  try {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 1800);
-    const res = await fetch('http://127.0.0.1:5005/health', { signal: controller.signal });
-    clearTimeout(timeoutId);
-    if (!res.ok) return null;
-    return await res.json();
-  } catch {
-    return null;
+  const candidates = ['http://127.0.0.1:5005', 'http://localhost:5005'];
+  for (const base of candidates) {
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 1800);
+      const res = await fetch(`${base}/health`, { signal: controller.signal });
+      clearTimeout(timeoutId);
+      if (res.ok) {
+        const data = await res.json();
+        activeSapBridgeBase = base;
+        return data;
+      }
+    } catch {}
   }
+  return null;
 }
 
 export async function executeLocalSapPo(payload) {
-  const res = await fetch('http://127.0.0.1:5005/api/sap-po/execute', {
+  const base = activeSapBridgeBase || 'http://127.0.0.1:5005';
+  const res = await fetch(`${base}/api/sap-po/execute`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
@@ -729,8 +738,42 @@ export async function executeLocalSapPo(payload) {
 
 export async function getLocalSapPoStatus() {
   if (typeof window === 'undefined') return null;
+  const base = activeSapBridgeBase || 'http://127.0.0.1:5005';
   try {
-    const res = await fetch('http://127.0.0.1:5005/api/sap-po/status');
+    const res = await fetch(`${base}/api/sap-po/status`);
+    if (!res.ok) return null;
+    return await res.json();
+  } catch {
+    return null;
+  }
+}
+
+export async function syncSapCredentialsToBridge(creds) {
+  if (typeof window === 'undefined') return null;
+  const candidates = activeSapBridgeBase
+    ? [activeSapBridgeBase]
+    : ['http://127.0.0.1:5005', 'http://localhost:5005'];
+  for (const base of candidates) {
+    try {
+      const res = await fetch(`${base}/api/credentials`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(creds),
+      });
+      if (res.ok) {
+        activeSapBridgeBase = base;
+        return await res.json();
+      }
+    } catch {}
+  }
+  return null;
+}
+
+export async function getLocalBridgeCredentials() {
+  if (typeof window === 'undefined') return null;
+  const base = activeSapBridgeBase || 'http://127.0.0.1:5005';
+  try {
+    const res = await fetch(`${base}/api/credentials`);
     if (!res.ok) return null;
     return await res.json();
   } catch {
@@ -767,16 +810,21 @@ export async function downloadOutlookBridgeZip() {
 
 export async function checkLocalOutlookBridge() {
   if (typeof window === 'undefined') return null;
-  try {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 1800);
-    const res = await fetch('http://127.0.0.1:5008/health', { signal: controller.signal });
-    clearTimeout(timeoutId);
-    if (!res.ok) return null;
-    return await res.json();
-  } catch {
-    return null;
+  const candidates = ['http://127.0.0.1:5008', 'http://localhost:5008'];
+  for (const base of candidates) {
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 1800);
+      const res = await fetch(`${base}/health`, { signal: controller.signal });
+      clearTimeout(timeoutId);
+      if (res.ok) {
+        const data = await res.json();
+        activeOutlookBridgeBase = base;
+        return data;
+      }
+    } catch {}
   }
+  return null;
 }
 
 export async function downloadSapBridgeZip() {
@@ -1037,7 +1085,8 @@ export function priceInquiryWithPdx(id, payload = {}) {
 }
 
 export async function executeLocalSapQuotation(payload) {
-  const res = await fetch('http://127.0.0.1:5005/api/sap-quotation/execute', {
+  const base = activeSapBridgeBase || 'http://127.0.0.1:5005';
+  const res = await fetch(`${base}/api/sap-quotation/execute`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
@@ -1051,8 +1100,9 @@ export async function executeLocalSapQuotation(payload) {
 
 export async function getLocalSapQuotationStatus() {
   if (typeof window === 'undefined') return null;
+  const base = activeSapBridgeBase || 'http://127.0.0.1:5005';
   try {
-    const res = await fetch('http://127.0.0.1:5005/api/sap-quotation/status');
+    const res = await fetch(`${base}/api/sap-quotation/status`);
     if (!res.ok) return null;
     return await res.json();
   } catch {

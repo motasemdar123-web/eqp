@@ -41,6 +41,8 @@ import {
   checkLocalSapBridge,
   executeLocalSapPo,
   getLocalSapPoStatus,
+  syncSapCredentialsToBridge,
+  getLocalBridgeCredentials,
   getSapBridgeDownloadUrl,
   downloadSapBridgeZip,
   toggleQuotationSoStatus,
@@ -431,6 +433,24 @@ export default function SparePartsPage() {
         if (storedUser) setSapUsername(storedUser);
       }
     }
+
+    // Also check local bridge credentials
+    try {
+      const bridgeCreds = await getLocalBridgeCredentials();
+      if (bridgeCreds && bridgeCreds.success) {
+        if (bridgeCreds.hasPassword) {
+          setHasSavedSapPassword(true);
+        }
+        if (bridgeCreds.username && !sapUsername) {
+          setSapUsername(bridgeCreds.username);
+        }
+      }
+    } catch {}
+
+    // Check if password exists in session storage
+    if (typeof window !== 'undefined' && sessionStorage.getItem('sap_active_password')) {
+      setHasSavedSapPassword(true);
+    }
   }
 
   async function handleSaveSapCredentials(e) {
@@ -443,20 +463,30 @@ export default function SparePartsPage() {
 
     try {
       setSavingSapCreds(true);
+      const cleanPass = sapPassword.trim();
       if (typeof window !== 'undefined') {
         localStorage.setItem('sapUsername', cleanUser);
+        if (cleanPass) {
+          sessionStorage.setItem('sap_active_password', cleanPass);
+        }
       }
       await saveSapCredentials({
         username: cleanUser,
-        password: sapPassword.trim() || undefined,
+        password: cleanPass || undefined,
         buyer: sapBuyer.trim() || 'Motasem Ghanem',
       });
-      if (sapPassword.trim()) {
+      // Also sync to local bridge companion directly
+      await syncSapCredentialsToBridge({
+        username: cleanUser,
+        password: cleanPass || undefined,
+        buyer: sapBuyer.trim() || 'Motasem Ghanem',
+      });
+      if (cleanPass) {
         setHasSavedSapPassword(true);
         setSapPassword('');
       }
       setSapCredsModalOpen(false);
-      setToast({ type: 'success', message: 'SAP Web Access credentials saved successfully.' });
+      setToast({ type: 'success', message: 'SAP Web Access credentials saved & synced to Local Bridge!' });
     } catch (err) {
       setToast({ type: 'error', message: err.message || 'Failed to save SAP credentials.' });
     } finally {
@@ -1591,13 +1621,27 @@ export default function SparePartsPage() {
       return;
     }
 
+    const activePass = sapPassword.trim() 
+      || (typeof window !== 'undefined' ? sessionStorage.getItem('sap_active_password') : null)
+      || undefined;
+
+    if (!hasSavedSapPassword && !activePass) {
+      setSapCredsModalOpen(true);
+      setToast({
+        type: 'error',
+        message: 'Please set your SAP Web Access password before starting automation.',
+      });
+      return;
+    }
+
     setIsExecutingSapPo(true);
+    setSapResult(null);
     const targetRef = isBatch
       ? (ordersPayload[0]?.dbOrderNo || 'Batch Orders')
       : (sapVendorRef || sapTargetOrder?.db_order_no || sapTargetOrder?.quotationNo || '');
     const payload = {
       username: sapUsername,
-      password: sapPassword || undefined,
+      password: activePass,
       vendor: sapVendor,
       buyer: sapBuyer,
       deliveryDate: sapDeliveryDate,
@@ -1663,6 +1707,12 @@ export default function SparePartsPage() {
             isCompleted = true;
             clearInterval(localPoll);
             setIsExecutingSapPo(false);
+            setSapResult((prev) => ({
+              ...(prev || {}),
+              error: st.error || 'Local Bridge execution failed',
+              screenshotUrl: st.screenshotBase64 || prev?.screenshotUrl,
+              currentStep: st.currentStep || 'Automation Stopped',
+            }));
             setToast({ type: 'error', message: st.error || 'Local Bridge execution failed' });
           }
         } catch {}
@@ -1688,6 +1738,11 @@ export default function SparePartsPage() {
       } catch (err) {
         clearInterval(localPoll);
         setIsExecutingSapPo(false);
+        setSapResult((prev) => ({
+          ...(prev || {}),
+          error: err.message || 'Local Bridge failed',
+          currentStep: 'Failed to start',
+        }));
         setSapLogs((prev) => [...prev, `[${new Date().toLocaleTimeString()}] ❌ Local Bridge Error: ${err.message}`]);
         setToast({ type: 'error', message: err.message || 'Local Bridge failed' });
       }
@@ -1728,6 +1783,12 @@ export default function SparePartsPage() {
           isCompleted = true;
           clearInterval(pollTimer);
           setIsExecutingSapPo(false);
+          setSapResult((prev) => ({
+            ...(prev || {}),
+            error: st.error || 'Failed to create SAP Purchase Order',
+            screenshotUrl: st.screenshotUrl || prev?.screenshotUrl,
+            currentStep: 'Automation Stopped',
+          }));
           setToast({ type: 'error', message: st.error || 'Failed to create SAP Purchase Order' });
         }
       } catch {}
@@ -3450,20 +3511,34 @@ export default function SparePartsPage() {
 
         <DialogContent className="space-y-4 max-h-[75vh] overflow-y-auto">
           {/* Active Credentials Bar */}
-          <div className="flex items-center justify-between p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-xs">
-            <div className="flex items-center gap-2">
+          <div className={`flex items-center justify-between p-2.5 rounded-lg text-xs border ${
+            hasSavedSapPassword
+              ? 'bg-slate-50 border-slate-200'
+              : 'bg-amber-50 border-amber-300 text-amber-950'
+          }`}>
+            <div className="flex flex-wrap items-center gap-2">
               <span className="text-slate-500">SAP User:</span>
               <strong className="text-slate-900 font-mono">{sapUsername || 'Not configured'}</strong>
               <span className="text-slate-300">|</span>
               <span className="text-slate-500">Buyer:</span>
               <strong className="text-slate-900">{sapBuyer}</strong>
+              <span className="text-slate-300">|</span>
+              <span className={`px-2 py-0.5 rounded text-[11px] font-semibold ${
+                hasSavedSapPassword
+                  ? 'bg-emerald-100 text-emerald-800'
+                  : 'bg-amber-200 text-amber-900 font-bold'
+              }`}>
+                {hasSavedSapPassword ? '✓ Password Saved' : '⚠️ Password Not Saved'}
+              </span>
             </div>
             <button
               type="button"
               onClick={() => setSapCredsModalOpen(true)}
-              className="text-xs font-semibold text-emerald-700 hover:text-emerald-900 underline cursor-pointer"
+              className={`text-xs font-semibold underline cursor-pointer shrink-0 ${
+                hasSavedSapPassword ? 'text-emerald-700 hover:text-emerald-900' : 'text-amber-800 hover:text-amber-950 font-bold'
+              }`}
             >
-              Update Credentials
+              {hasSavedSapPassword ? 'Update Credentials' : '🔐 Set Password'}
             </button>
           </div>
 
@@ -3856,7 +3931,7 @@ export default function SparePartsPage() {
           </div>
 
           {/* Real-time Live Screen Share & Confirmation Snapshot */}
-          {(sapResult?.screenshotUrl || isExecutingSapPo) && (
+          {(sapResult?.screenshotUrl || isExecutingSapPo || sapResult?.error) && (
             <div className="space-y-1.5">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-semibold text-slate-800 uppercase tracking-wide flex items-center gap-2">
@@ -3868,14 +3943,47 @@ export default function SparePartsPage() {
                       </span>
                       <span className="text-rose-600 font-bold">LIVE SAP SCREEN</span>
                     </>
+                  ) : sapResult?.error ? (
+                    <span className="text-rose-700 font-bold flex items-center gap-1.5">
+                      <span>❌ Automation Stopped</span>
+                    </span>
                   ) : (
                     <span className="text-emerald-700 font-bold">✓ SAP Confirmation Screenshot</span>
                   )}
                 </span>
-                <span className="text-[11px] font-mono text-slate-600 bg-slate-100 border border-slate-200 px-2 py-0.5 rounded">
-                  {sapResult?.currentStep || (isExecutingSapPo ? (sapHeadlessMode ? 'Background Task' : 'Desktop Window Active') : 'Completed')}
+                <span className={`text-[11px] font-mono px-2 py-0.5 rounded border ${
+                  sapResult?.error ? 'text-rose-700 bg-rose-50 border-rose-200 font-semibold' : 'text-slate-600 bg-slate-100 border-slate-200'
+                }`}>
+                  {sapResult?.currentStep || (isExecutingSapPo ? (sapHeadlessMode ? 'Background Task' : 'Desktop Window Active') : (sapResult?.error ? 'Failed' : 'Completed'))}
                 </span>
               </div>
+
+              {sapResult?.error && (
+                <div className="p-3 bg-rose-50 border border-rose-200 rounded-lg text-xs space-y-2">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+                    <div className="text-rose-800">
+                      <p className="font-bold text-rose-950">
+                        {String(sapResult.error).toLowerCase().includes('credential') || String(sapResult.error).toLowerCase().includes('password')
+                          ? 'SAP Logon Rejected: Invalid Credentials'
+                          : 'Automation Stopped'}
+                      </p>
+                      <p className="text-[11px] text-rose-700 mt-0.5 leading-relaxed">
+                        {sapResult.error}
+                      </p>
+                    </div>
+                    {(String(sapResult.error).toLowerCase().includes('credential') || String(sapResult.error).toLowerCase().includes('password')) && (
+                      <Button
+                        size="sm"
+                        className="bg-rose-600 hover:bg-rose-700 text-white font-semibold shrink-0 cursor-pointer self-start sm:self-auto"
+                        onClick={() => setSapCredsModalOpen(true)}
+                      >
+                        🔐 Update Credentials
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              )}
+
               <div className="border border-slate-700 rounded-lg overflow-hidden bg-slate-950 shadow-inner min-h-[160px] flex items-center justify-center relative">
                 {sapResult?.screenshotUrl ? (
                   <img
@@ -3883,10 +3991,15 @@ export default function SparePartsPage() {
                     alt="SAP Automation Live Stream"
                     className="w-full h-auto max-h-72 object-contain mx-auto"
                   />
-                ) : (
+                ) : isExecutingSapPo ? (
                   <div className="flex flex-col items-center gap-2 text-slate-400 py-8 text-xs">
                     <div className="inline-block w-6 h-6 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
                     <span>Connecting to real-time SAP display stream...</span>
+                  </div>
+                ) : (
+                  <div className="flex flex-col items-center gap-2 text-rose-400 py-8 text-xs">
+                    <span className="text-lg">❌</span>
+                    <span>No screen display available</span>
                   </div>
                 )}
               </div>

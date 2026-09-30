@@ -22,6 +22,16 @@ const app = express();
 const PORT = process.env.BRIDGE_PORT || 5005;
 const SAP_PORTAL_URL = process.env.SAP_PORTAL_URL || 'https://daralhai.b1pro.com/software/html5.html';
 
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+  res.setHeader('Access-Control-Allow-Private-Network', 'true');
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(204);
+  }
+  next();
+});
 app.use(cors({ origin: '*' }));
 app.use(express.json({ limit: '10mb' }));
 
@@ -43,6 +53,34 @@ function addLog(message, type = 'info') {
   console.log(`[SAP-LOCAL-BRIDGE] [${timestamp}] [${type.toUpperCase()}]: ${message}`);
 }
 
+const CREDS_FILE = path.join(__dirname, 'local_credentials.json');
+
+function getLocalCredentials() {
+  try {
+    if (fs.existsSync(CREDS_FILE)) {
+      return JSON.parse(fs.readFileSync(CREDS_FILE, 'utf8'));
+    }
+  } catch {}
+  return {};
+}
+
+function saveLocalCredentials(data) {
+  try {
+    const existing = getLocalCredentials();
+    const updated = {
+      username: data.username !== undefined ? String(data.username).trim() : (existing.username || 'DAH38'),
+      password: data.password !== undefined ? String(data.password).trim() : (existing.password || ''),
+      buyer: data.buyer !== undefined ? String(data.buyer).trim() : (existing.buyer || 'MOTASEM GHANEM'),
+      updatedAt: new Date().toISOString(),
+    };
+    fs.writeFileSync(CREDS_FILE, JSON.stringify(updated, null, 2), 'utf8');
+    return updated;
+  } catch (err) {
+    console.error('[SAP-LOCAL-BRIDGE] Failed to save credentials:', err.message);
+    return null;
+  }
+}
+
 app.get('/health', (req, res) => {
   res.json({
     status: 'ONLINE',
@@ -52,6 +90,32 @@ app.get('/health', (req, res) => {
     localNetwork: true,
     running: latestJobStatus.running,
     message: 'Local Bridge is running and connected to your office network',
+  });
+});
+
+app.get('/api/credentials', (req, res) => {
+  const creds = getLocalCredentials();
+  res.json({
+    success: true,
+    username: creds.username || process.env.SAP_PORTAL_USER || 'DAH38',
+    hasPassword: Boolean(creds.password || process.env.SAP_PORTAL_PASSWORD),
+    buyer: creds.buyer || 'MOTASEM GHANEM',
+    updatedAt: creds.updatedAt || null,
+  });
+});
+
+app.post('/api/credentials', (req, res) => {
+  const { username, password, buyer } = req.body || {};
+  if (!username && !password) {
+    return res.status(400).json({ success: false, message: 'Username or password required.' });
+  }
+  const updated = saveLocalCredentials({ username, password, buyer });
+  res.json({
+    success: true,
+    message: 'Local bridge credentials updated successfully.',
+    username: updated.username,
+    hasPassword: Boolean(updated.password),
+    buyer: updated.buyer,
   });
 });
 
@@ -98,8 +162,9 @@ async function runLocalSapPoAutomation({
     screenshotBase64: null,
   };
 
-  const effectiveUser = username || process.env.SAP_PORTAL_USER || 'DAH38';
-  const effectivePass = password || process.env.SAP_PORTAL_PASSWORD || 'Dah@200055';
+  const localCreds = getLocalCredentials();
+  const effectiveUser = username || localCreds.username || process.env.SAP_PORTAL_USER || 'DAH38';
+  const effectivePass = password || localCreds.password || process.env.SAP_PORTAL_PASSWORD || 'Dah@200055';
 
   const totalItems = validOrders.reduce((sum, o) => sum + (o.items?.length || 0), 0);
   addLog(`Starting Local SAP PO Automation for ${validOrders.length} Purchase Order(s) (Total ${totalItems} items across all orders)...`);
@@ -155,9 +220,23 @@ async function runLocalSapPoAutomation({
       }
     });
 
+    let targetPage = null;
+    async function updateSnapshot(stepName, customPage = null) {
+      try {
+        latestJobStatus.currentStep = stepName;
+        const p = customPage || targetPage || page;
+        if (!p || p.isClosed()) return;
+        const buf = await p.screenshot({ type: 'png' }).catch(() => null);
+        if (buf) {
+          latestJobStatus.screenshotBase64 = `data:image/png;base64,${buf.toString('base64')}`;
+        }
+      } catch {}
+    }
+
     const page = await context.newPage();
     addLog(`Navigating to TSPlus Logon Portal (${SAP_PORTAL_URL})...`);
     await page.goto(SAP_PORTAL_URL, { waitUntil: 'domcontentloaded', timeout: 30000 });
+    await updateSnapshot('Logon Portal Loaded', page);
 
     addLog(`Filling credentials for user "${effectiveUser}"...`);
     await page.waitForSelector('#Editbox1', { timeout: 20000 });
@@ -173,15 +252,50 @@ async function runLocalSapPoAutomation({
     const passInput = await page.waitForSelector('#Editbox2', { state: 'visible', timeout: 20000 });
     await passInput.fill(effectivePass);
     await new Promise((r) => setTimeout(r, 400));
+    await updateSnapshot('Credentials entered', page);
+
+    // Ensure HTML5 radio is selected
+    await page.evaluate(() => {
+      const radio = document.getElementById('accesstypeuserchoice_html5');
+      if (radio && !radio.checked) {
+        radio.checked = true;
+        if (typeof remoteAppPluginPopinHide === 'function') remoteAppPluginPopinHide();
+      }
+    }).catch(() => {});
 
     addLog('Submitting login form (#buttonLogOn)...');
     await page.click('#buttonLogOn');
+    await updateSnapshot('Submitting credentials...', page);
 
     addLog('Waiting for SAP HTML5 Remote Desktop session to load...');
-    let targetPage = null;
     for (let s = 1; s <= 45; s++) {
       await new Promise((r) => setTimeout(r, 1000));
       const pages = context.pages();
+
+      // Check for login error on main page
+      const logonErr = await page.evaluate(() => {
+        const ko = document.getElementById('span-credentials-ko');
+        if (ko && window.getComputedStyle(ko).display !== 'none') {
+          return ko.innerText || 'Invalid credentials';
+        }
+        return null;
+      }).catch(() => null);
+
+      if (logonErr) {
+        await updateSnapshot(`Login Failed: ${logonErr}`, page);
+        const errMsg = `SAP Web Access Login Failed: "${logonErr}" for user "${effectiveUser}". Please click 'Update Credentials' in the web app and enter your current active SAP password.`;
+        addLog(errMsg, 'error');
+        throw new Error(errMsg);
+      }
+
+      // Check for password expiration popin
+      await page.evaluate(() => {
+        const expBtn = document.getElementById('password-expiration-choice-connect');
+        if (expBtn && window.getComputedStyle(expBtn).display !== 'none') {
+          expBtn.click();
+        }
+      }).catch(() => {});
+
       for (const p of pages) {
         const hasCanvas = await p.evaluate(() => !!document.querySelector('#JWTS_myCanvas, canvas')).catch(() => false);
         if (hasCanvas) {
@@ -190,6 +304,9 @@ async function runLocalSapPoAutomation({
         }
       }
       if (targetPage) break;
+
+      const activeP = pages[pages.length - 1] || page;
+      await updateSnapshot(`Waiting for session (${s}s)...`, activeP);
     }
 
     if (!targetPage) {
@@ -214,16 +331,6 @@ async function runLocalSapPoAutomation({
       await rdpClick(p, x, y, 80);
       await new Promise((r) => setTimeout(r, 80));
       await rdpClick(p, x, y, 80);
-    }
-
-    async function updateSnapshot(stepName) {
-      try {
-        latestJobStatus.currentStep = stepName;
-        const buf = await targetPage.screenshot({ type: 'png' }).catch(() => null);
-        if (buf) {
-          latestJobStatus.screenshotBase64 = `data:image/png;base64,${buf.toString('base64')}`;
-        }
-      } catch {}
     }
 
     async function checkScreenState(p) {
@@ -803,8 +910,9 @@ async function runLocalSapSalesQuotationAutomation({
 
   let browser = null;
   try {
-    const effectiveUser = username || process.env.SAP_PORTAL_USER || 'DAH38';
-    const effectivePass = password || process.env.SAP_PORTAL_PASSWORD || 'Dah@200055';
+    const localCreds = getLocalCredentials();
+    const effectiveUser = username || localCreds.username || process.env.SAP_PORTAL_USER || 'DAH38';
+    const effectivePass = password || localCreds.password || process.env.SAP_PORTAL_PASSWORD || 'Dah@200055';
 
     addLog(`Launching Chromium browser session (headless=${headless})...`);
     browser = await chromium.launch({
@@ -840,6 +948,15 @@ async function runLocalSapSalesQuotationAutomation({
     await passInput.fill(effectivePass);
     await new Promise((r) => setTimeout(r, 400));
 
+    // Ensure HTML5 radio is selected
+    await page.evaluate(() => {
+      const radio = document.getElementById('accesstypeuserchoice_html5');
+      if (radio && !radio.checked) {
+        radio.checked = true;
+        if (typeof remoteAppPluginPopinHide === 'function') remoteAppPluginPopinHide();
+      }
+    }).catch(() => {});
+
     addLog('Submitting login form (#buttonLogOn)...');
     await page.click('#buttonLogOn');
 
@@ -848,6 +965,30 @@ async function runLocalSapSalesQuotationAutomation({
     for (let s = 1; s <= 45; s++) {
       await new Promise((r) => setTimeout(r, 1000));
       const pages = context.pages();
+
+      // Check for login error on main page
+      const logonErr = await page.evaluate(() => {
+        const ko = document.getElementById('span-credentials-ko');
+        if (ko && window.getComputedStyle(ko).display !== 'none') {
+          return ko.innerText || 'Invalid credentials';
+        }
+        return null;
+      }).catch(() => null);
+
+      if (logonErr) {
+        const errMsg = `SAP Web Access Login Failed: "${logonErr}" for user "${effectiveUser}". Please click 'Update Credentials' in the web app and enter your current active SAP password.`;
+        addLog(errMsg, 'error');
+        throw new Error(errMsg);
+      }
+
+      // Check for password expiration popin
+      await page.evaluate(() => {
+        const expBtn = document.getElementById('password-expiration-choice-connect');
+        if (expBtn && window.getComputedStyle(expBtn).display !== 'none') {
+          expBtn.click();
+        }
+      }).catch(() => {});
+
       for (const p of pages) {
         const hasCanvas = await p.evaluate(() => !!document.querySelector('#JWTS_myCanvas, canvas')).catch(() => false);
         if (hasCanvas) {
@@ -1003,10 +1144,10 @@ app.get('/api/sap-quotation/status', (req, res) => {
   res.json({ success: true, ...latestJobStatus });
 });
 
-app.listen(PORT, '127.0.0.1', () => {
+app.listen(PORT, () => {
   console.log('=======================================================');
   console.log(`  SAP Local Bridge Companion Server is ACTIVE!`);
-  console.log(`  Listening on: http://127.0.0.1:${PORT}`);
+  console.log(`  Listening on: http://127.0.0.1:${PORT} and http://localhost:${PORT}`);
   console.log(`  Office Network Access: READY`);
   console.log('=======================================================');
 });
