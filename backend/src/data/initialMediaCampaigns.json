@@ -1383,15 +1383,14 @@
   "2026-10": {
     "monthId": "2026-10",
     "monthName": "October 2026",
-    "themeTitle": "The Overhaul Season: Shuwaikh Master Workshop & Certified Rebuilds",
-    "strategicGoal": "Drive high-margin workshop rebuild contracts and promote genuine undercarriage/engine overhaul kits ahead of winter infrastructure peak.",
-    "targetKpi": "15 Overhaul Contracts Booked • 150,000 Reach • 40 Spare Parts Quotes Dispatched",
+    "themeTitle": "Komatsu Campaign Plan: Heavy Iron Dominance & Total Fleet Reliability",
+    "strategicGoal": "Highlight power, fuel economy, and Japanese engineering durability in quarrying and earthworks, while educating on genuine parts/fluids and building contractor confidence with mobile service response.",
+    "targetKpi": "12 Core Deliverables • 3 Posts / Week • 250,000+ Reach in Kuwait • 30+ Qualified Fleet Inquiries",
     "pillarDistribution": {
-      "pillar_authority": 15,
-      "pillar_engineering": 20,
-      "pillar_workshop": 35,
-      "pillar_projects": 15,
-      "pillar_leadgen": 15
+      "pillar_heavy_iron": 35,
+      "pillar_parts_fluids": 25,
+      "pillar_service_field": 25,
+      "pillar_commercial": 15
     },
     "concepts": [
       {
@@ -1400,34 +1399,737 @@
         "week": "Week 1",
         "day": "Sunday",
         "publishDate": "2026-10-04",
-        "title": "Zero-Hour Master Rebuild – Inside the Central Engine Bay",
-        "pillar": "pillar_workshop",
+        "deliverableCode": "DELIVERABLE 01 • DAY 02 (SUN)",
+        "title": "D155A-6 Heavy Crawler Bulldozer – قوة الدفع في أقصى التضاريس الصخرية",
+        "pillar": "pillar_heavy_iron",
+        "format": "photography",
+        "platforms": [
+          "instagram",
+          "linkedin",
+          "facebook"
+        ],
+        "goal": "brand_awareness",
+        "status": "ready",
+        "targetAudience": "Earthmoving Contractors, Mine Foremen",
+        "tov": "Powerful, Bold, Industrial",
+        "summary": "Dramatic wide-angle ground shot of the D155A-6 engaging dense rock with its single-shank giant ripper. Highlights structural frame rigidity, lock-up torque converter efficiency, and sheer tractive effort under high resistance.",
+        "hook": {
+          "spokenEn": "When the rock refuses to yield, the Komatsu D155A-6 exerts sheer tractive dominance.",
+          "spokenAr": "عندما تتوقف الحلول التقليدية أمام صلابة الأرض.. بلدوزر كوماتسو D155A-6 يفرض سيطرته بقوة دفع لا تلين.",
+          "visualHook": "Dramatic wide-angle ground-level shot of the single-shank giant ripper fracturing dense bedrock."
+        },
+        "photoShots": [
+          {
+            "shotNo": 1,
+            "angle": "Ultra-low ground angle 24mm",
+            "focus": "Single-shank giant ripper penetrating dense bedrock with track grousers biting ground."
+          },
+          {
+            "shotNo": 2,
+            "angle": "Side 45-degree heroic profile",
+            "focus": "Heavy blade curvature, reinforced push arms, and operator ROPS cabin."
+          },
+          {
+            "shotNo": 3,
+            "angle": "Macro mechanical detail",
+            "focus": "Lock-up torque converter housing and heavy undercarriage track links."
+          }
+        ],
+        "brollChecklist": [
+          "Ground-level slow shutter of giant ripper fracture line",
+          "Track shoe grousers clawing into rocky quarry floor",
+          "Komatsu D155A-6 emblem with golden hour lighting"
+        ],
+        "postProductionNotes": "High-contrast cinematic grade with deep industrial shadows and vibrant Komatsu yellow highlights.",
+        "captionEn": "Dense rock and extreme quarry terrain demand unmatched tractive effort.\n\nThe Komatsu D155A-6 heavy crawler dozer combines structural frame rigidity, a lock-up torque converter for maximum fuel efficiency, and a massive single-shank giant ripper engineered to break through the toughest bedrock.\n\nBuilt with Japanese engineering heritage to deliver non-stop pushing power across Kuwait's earthmoving and civil projects.\n\n📍 Dar Al Hay – Official Komatsu Distributor in Kuwait.",
+        "captionAr": "الصخور الصلبة والتضاريس القاسية تتطلب قوة دفع لا تعرف التراجع.\n\nبلدوزر كوماتسو D155A-6 يجمع بين صلابة الهيكل الهندسية الفائقة، ومحول عزم الإغلاق (Lock-up Torque Converter) لتوفير الوقود، مع كسارة صخور خلفية عملاقة (Single-Shank Ripper) صُممت لاختراق أعتى الطبقات الصخرية.\n\nقوة يابانية رائدة تضمن إنتاجية مستمرة لأضخم مشاريع الحفر والتسوية في الكويت.\n\n📍 شركة دار الحي – الموزع المعتمد لكوماتسو في الكويت.",
+        "hashtags": "#Komatsu #D155A #HeavyCrawler #Bulldozer #Earthmoving #HeavyMachinery #DarAlHay #KuwaitConstruction #QuarryOperations",
+        "ctaText": "Contact Dar Al Hay heavy machinery division for Komatsu D155A technical specifications and availability.",
+        "onAssetCopy": {
+          "headlineEn": "SHEER TRACTIVE EFFORT UNDER HIGH RESISTANCE",
+          "headlineAr": "قوة الدفع في أقصى التضاريس الصخرية",
+          "badge": "KOMATSU D155A-6 • GIANT RIPPER",
+          "callouts": [
+            "Single-Shank Giant Ripper",
+            "Lock-Up Torque Converter",
+            "High-Rigidity Box Frame"
+          ],
+          "visualCta": "Inquire Today • Dar Al Hay Kuwait",
+          "designNotes": "Ultra-wide ground-angle shot with high contrast; bold headline at top with Komatsu yellow badge."
+        },
+        "scenes": [],
+        "slides": []
+      },
+      {
+        "id": 302,
+        "conceptNumber": 2,
+        "week": "Week 1",
+        "day": "Tuesday",
+        "publishDate": "2026-10-06",
+        "deliverableCode": "DELIVERABLE 02 • DAY 04 (TUE)",
+        "title": "Komtrax Telematics: Fleet Intelligence – إدارة الأسطول الذكية ومراقبة استهلاك الوقود",
+        "pillar": "pillar_service_field",
         "format": "reel",
+        "platforms": [
+          "instagram",
+          "linkedin",
+          "facebook"
+        ],
+        "goal": "product_education",
+        "status": "ready",
+        "targetAudience": "Fleet Managers, Operations Heads",
+        "tov": "Instructive, Tech-Forward",
+        "summary": "Split-screen video combining actual Komtrax desktop/mobile dashboard notifications with real-world machine operation. Demonstrates live fuel burn tracking, idle time alerts, and proactive maintenance error notifications before jobsite breakdowns happen.",
+        "hook": {
+          "spokenEn": "What if you could spot machine trouble before your operator even notices it?",
+          "spokenAr": "ماذا لو استطعت اكتشاف أعطال المعدات وتجاوزات استهلاك الوقود قبل أن يلاحظها السائق؟",
+          "visualHook": "Split screen snaps into view: Left is mobile phone getting an urgent yellow Komtrax alert; Right is an excavator operating on site."
+        },
+        "scenes": [
+          {
+            "sceneNo": 1,
+            "time": "0:00 - 0:04",
+            "visual": "Split-screen layout: Komtrax app screen showing real-time fuel burn rate (L/hr) synced with excavator digging on Kuwait site.",
+            "talentAction": "Fleet manager glancing at tablet while machine swings behind office window.",
+            "audioVoiceoverEn": "Total control over every drop of fuel and operating minute across your entire fleet.",
+            "audioVoiceoverAr": "تحكم كامل في كل قطرة وقود ودقيقة تشغيل في أسطولك الميداني.",
+            "onScreenTextEn": "LIVE SATELLITE FLEET TELEMETRY",
+            "onScreenTextAr": "تتبع فوري للأساطيل عبر الأقمار الصناعية",
+            "sfxMusic": "Modern digital notification ping + subtle machine hum"
+          },
+          {
+            "sceneNo": 2,
+            "time": "0:04 - 0:10",
+            "visual": "Close-up of Komtrax dashboard highlight: Idle Time alert (32% idle) followed by proactive hydraulic pressure warning code.",
+            "talentAction": "User taps alert to reveal exact machine coordinates and diagnostic error code.",
+            "audioVoiceoverEn": "Spot excessive idling and catch sensor anomalies before they turn into costly breakdowns.",
+            "audioVoiceoverAr": "راقب الهدر أثناء التوقف، واكتشف التحذيرات المبكرة قبل حدوث التوقف المفاجئ.",
+            "onScreenTextEn": "PROACTIVE ERROR CODES • ZERO BREAKDOWNS",
+            "onScreenTextAr": "تنبيهات صيانة استباقية • بدون توقف مفاجئ",
+            "sfxMusic": "Fast electronic riser"
+          },
+          {
+            "sceneNo": 3,
+            "time": "0:10 - 0:16",
+            "visual": "Dar Al Hay service desk receiving the same telematics alert and dispatching service unit immediately.",
+            "talentAction": "Service coordinator tapping 'Dispatch Technician' button.",
+            "audioVoiceoverEn": "Connected machines. Proactive service. That’s the Komtrax advantage with Dar Al Hay.",
+            "audioVoiceoverAr": "معدات متصلة.. واستجابة ميدانية استباقية. هذه هي ميزة كوماتسو مع دار الحي.",
+            "onScreenTextEn": "KOMTRAX FLEET INTELLIGENCE",
+            "onScreenTextAr": "كومتركس: الإدارة الذكية للأسطول",
+            "sfxMusic": "Affirmative chime + outro beat"
+          }
+        ],
+        "brollChecklist": [
+          "Screen capture of live Komtrax map with machine pins in Kuwait",
+          "Macro of machine cabin satellite antenna receiver",
+          "Operator in cab with Komtrax display terminal lit up"
+        ],
+        "postProductionNotes": "High-tech clean overlays, precise UI mockups synced with real machinery audio.",
+        "captionEn": "Stop guessing fleet expenses. Komtrax satellite telemetry gives fleet owners full visibility over machine health, fuel burn, idle time, and proactive maintenance error codes 24/7.\n\nDiscover how intelligent telematics keeps your machines earning and cuts unnecessary operating costs.\n\n📲 Activated on every Komatsu machine via Dar Al Hay.",
+        "captionAr": "لا تترك تكاليف التشغيل للصدفة. يمنحك نظام كومتركس (Komtrax) للأقمار الصناعية رؤية كاملة على مدار الساعة لاستهلاك الوقود، ساعات العمل الفعلي مقابل التوقف (Idle Time)، وتنبيهات الأعطال المسبقة قبل حدوثها.\n\nإدارة أسطول ذكية تحافظ على ميزانيتك وتضمن استمرار الإنتاجية.\n\n📲 مفعل في جميع معدات كوماتسو عبر دار الحي.",
+        "hashtags": "#Komtrax #FleetManagement #Telematics #Komatsu #DarAlHay #KuwaitContractors #SmartFleet #Operations",
+        "ctaText": "Request a live Komtrax fleet management demo for your company.",
+        "slides": []
+      },
+      {
+        "id": 303,
+        "conceptNumber": 3,
+        "week": "Week 1",
+        "day": "Thursday",
+        "publishDate": "2026-10-08",
+        "deliverableCode": "DELIVERABLE 03 • DAY 06 (THU)",
+        "title": "Genuine Fluids Under Summer Heat – الزيوت الأصلية: صمام الأمان في حرارة الصيف",
+        "pillar": "pillar_parts_fluids",
+        "format": "carousel",
         "platforms": [
           "linkedin",
           "instagram",
           "facebook"
         ],
-        "goal": "trust_humanize",
-        "status": "idea",
-        "targetAudience": "Fleet Owners, Plant Managers, Chief Engineers",
-        "tov": "High Craftsmanship, Precision Engineering, Industrial",
-        "summary": "Macro cinematic walkthrough of a Komatsu SAA6D140E engine overhaul from bare crankcase to dyno test bench in Shuwaikh.",
-        "hook": {
-          "spokenEn": "Watch a 10,000-hour Komatsu engine get rebuilt to Japanese factory zero-hour standards in Kuwait.",
-          "spokenAr": "شاهد كيف نعيد محرك كوماتسو بعد 10,000 ساعة عمل إلى معايير المصنع الياباني في الكويت.",
-          "visualHook": "Split-screen showing heavily carbonized piston next to brand new mirror-polished genuine Komatsu piston assembly."
-        },
-        "scenes": [],
-        "brollChecklist": [
-          "Engine cylinder liner honing close-up",
-          "Digital torque wrench clicking on cylinder head bolts"
+        "goal": "product_education",
+        "status": "ready",
+        "targetAudience": "Maintenance Engineers, Procurement",
+        "tov": "Analytical, Educational",
+        "summary": "Slide breakdown of viscosity retention at 50°C ambient temperatures. Compares Komatsu genuine hydraulic fluid with generic lubricants, showing anti-wear additive packages, valve cavitation prevention, and extended hydraulic pump longevity.",
+        "slides": [
+          {
+            "slideNo": 1,
+            "title": "50°C Ambient Heat: Why Generic Fluids Fail",
+            "body": "When ambient desert heat reaches 50°C, hydraulic oil temperatures exceed 90°C inside cylinders. Low-grade commercial oils experience rapid viscosity thinning, leading to metal-on-metal friction and valve cavitation."
+          },
+          {
+            "slideNo": 2,
+            "title": "Viscosity Retention & Thermal Stability",
+            "body": "Komatsu Genuine Hydraulic Fluid utilizes high-viscosity-index mineral base stocks that maintain a stable lubricating film even under continuous maximum working pressure and desert thermal stress."
+          },
+          {
+            "slideNo": 3,
+            "title": "Proprietary Anti-Wear Additive Package",
+            "body": "Formulated specifically for Komatsu axial piston pumps and control valves. Prevents micro-pitting, reduces foaming, and shields spool tolerances measured in microns against abrasive soot and dust."
+          },
+          {
+            "slideNo": 4,
+            "title": "The True TCO: Double Pump Service Life",
+            "body": "Saving 15% on generic oil risks a $12,000 hydraulic pump rebuild and costly jobsite downtime. Genuine Komatsu fluids protect factory warranties and extend component lifecycles to 10,000+ operating hours."
+          }
         ],
-        "postProductionNotes": "Sharp industrial sound design with rhythmic ratchet clicks.",
-        "captionEn": "Why replace an entire machine when you can restore its heart to factory zero-hour specifications?\n\nStep inside Dar Al Hay’s central Shuwaikh overhaul facility. 100% genuine parts, certified master technicians, and comprehensive post-rebuild warranty.",
-        "captionAr": "لماذا تستبدل المعدة بالكامل بينما يمكنك تجديد محركها إلى كفاءة الصفر ساعة؟\n\nنظرة من داخل مركز الصيانة المتطور لدار الحي بالشويخ. قطع أصلية 100%، فنيون معتمدون، وضمان شامل بعد التجديد.",
-        "hashtags": "#EngineRebuild #KomatsuWorkshop #Shuwaikh #ZeroHour #HeavyMachineryOverhaul #DarAlHay",
-        "ctaText": "Book your fleet engine overhaul before the winter project rush.",
+        "brollChecklist": [
+          "Macro of golden Komatsu genuine hydraulic fluid pouring into clean sight gauge",
+          "Laboratory viscosity graph showing generic vs genuine oil curve at 100°C",
+          "Sealed genuine Komatsu DH / HO blue-and-yellow drums in Shuwaikh warehouse"
+        ],
+        "postProductionNotes": "Clean scientific comparison graphics with temperature gradients (cool blue to heat red).",
+        "captionEn": "In Kuwait's severe climate, hydraulic fluid is not just a lubricant — it is a critical machine component.\n\nAt 50°C ambient temperatures, generic lubricants lose film strength, causing valve cavitation and pump wear. Komatsu Genuine Fluids are engineered specifically to maintain viscosity and protect high-pressure components.\n\nSwipe through the technical breakdown to understand the science behind genuine protection ➡️",
+        "captionAr": "في مناخ الكويت الصيفي، زيت الهيدروليك ليس مجرد سائل تشحيم.. بل هو صمام الأمان لمنظومة المعدة بالكامل.\n\nعندما تلامس الحرارة 50 درجة مئوية، تفقد الزيوت التجارية غير المعتمدة لزوجتها سريعاً مسببة تآكل المضخات وتجويف الصمامات (Cavitation). زيوت كوماتسو الأصلية صُممت خصيصاً لتحافظ على ثباتها الحراري تحت أقصى ضغوط العمل.\n\nاسحب الشاشة للتعرف على الفرق الهندسي الدقيق ➡️",
+        "hashtags": "#GenuineFluids #KomatsuParts #HydraulicOil #PreventiveMaintenance #TCO #DarAlHay #HeavyEquipment #KuwaitEngineers",
+        "ctaText": "Order genuine Komatsu hydraulic and engine oil packs directly from Dar Al Hay central warehouse in Shuwaikh.",
+        "scenes": []
+      },
+      {
+        "id": 304,
+        "conceptNumber": 4,
+        "week": "Week 2",
+        "day": "Sunday",
+        "publishDate": "2026-10-11",
+        "deliverableCode": "DELIVERABLE 04 • DAY 09 (SUN)",
+        "title": "WA480 Wheel Loader: Fast Loading Cycles – إنتاجية الكسارات وسرعة التحميل القياسية",
+        "pillar": "pillar_heavy_iron",
+        "format": "reel",
+        "platforms": [
+          "instagram",
+          "linkedin",
+          "facebook"
+        ],
+        "goal": "case_study",
+        "status": "ready",
+        "targetAudience": "Quarry Operators, Batch Plant Leads",
+        "tov": "Dynamic, High-Speed, Robust",
+        "summary": "Fast-cut field reel documenting rapid V-shape truck loading in quarry aggregates. Showcases the high bucket-fill factor, quick forward/reverse directional shifts, and responsive hydraulics that save critical seconds per truck turn.",
+        "hook": {
+          "spokenEn": "Every 5 seconds saved per truck load adds up to hundreds of tons per shift.",
+          "spokenAr": "كل 5 ثوانٍ توفرها في دورة التحميل تعني مئات الأطنان الإضافية في كل وردية.",
+          "visualHook": "Rapid-cut high-speed montage: Heavy WA480 bucket plunging into aggregate pile, boom rocketing upwards, gravel cascading into tipper truck."
+        },
+        "scenes": [
+          {
+            "sceneNo": 1,
+            "time": "0:00 - 0:04",
+            "visual": "Fast-paced ground shot of Komatsu WA480 piercing aggregate stock pile with powerful tractive push; bucket rolls back fully filled.",
+            "talentAction": "Operator effortlessly executes smooth high-curl bucket movement.",
+            "audioVoiceoverEn": "Maximum bucket-fill factor on the first push.",
+            "audioVoiceoverAr": "امتلاء كامل للمغرفة من أول دفعة.",
+            "onScreenTextEn": "HIGH BUCKET-FILL FACTOR",
+            "onScreenTextAr": "أعلى معامل امتلاء للمغرفة",
+            "sfxMusic": "Punchy industrial drum hit + gravel crash"
+          },
+          {
+            "sceneNo": 2,
+            "time": "0:04 - 0:10",
+            "visual": "Wide angle showing seamless V-shape loading cycle: quick directional reverse shift, rapid travel, dumping clean into waiting tipper truck.",
+            "talentAction": "Smooth direction change with electronic clutch modulation.",
+            "audioVoiceoverEn": "Instant direction shifts and ultra-responsive hydraulics save critical seconds on every cycle.",
+            "audioVoiceoverAr": "استجابة هيدروليكية فائقة وسلاسة في التبديل توفر ثوانٍ ثمينة في كل دورة.",
+            "onScreenTextEn": "FAST V-SHAPE LOADING CYCLE",
+            "onScreenTextAr": "سرعة قياسية في دورات التحميل",
+            "sfxMusic": "Rising rhythmic synth pulse"
+          },
+          {
+            "sceneNo": 3,
+            "time": "0:10 - 0:16",
+            "visual": "Loaded tipper pulling away as WA480 is already positioning for the next truck; on-screen stats ticker.",
+            "talentAction": "Thumbs up from truck driver, loader in fluid continuous motion.",
+            "audioVoiceoverEn": "Komatsu WA480: The heartbeat of high-output quarry and batch plant operations.",
+            "audioVoiceoverAr": "كوماتسو WA480: شريان الإنتاجية في الكسارات ومحطات الخرسانة.",
+            "onScreenTextEn": "KOMATSU WA480 • MAXIMUM TONNAGE",
+            "onScreenTextAr": "كوماتسو WA480 • إنتاجية بلا توقف",
+            "sfxMusic": "Heavy low-end impact + engine roar fade"
+          }
+        ],
+        "brollChecklist": [
+          "High-speed 120fps slow-motion of gravel falling from 4.5m³ bucket",
+          "Operator cabin controls: ergonomic joystick finger adjustments",
+          "Side-view tire grip under heavy crowd force into aggregate pile"
+        ],
+        "postProductionNotes": "Punchy speed ramps, crisp foley sound of crushing gravel and roaring Komatsu SAA6D125E engine.",
+        "captionEn": "In quarries and concrete batch plants, seconds translate directly into profit.\n\nThe Komatsu WA480 wheel loader is engineered for ultra-fast V-shape loading cycles, outstanding breakout force, and superior fuel economy. Watch how quick directional shifts and high bucket-fill factors keep haul trucks rolling without delay.\n\n🚜 Power your production with Dar Al Hay Kuwait.",
+        "captionAr": "في الكسارات ومحطات الخرسانة الجاهزة، كل ثانية توفرها في دورة التحميل تتحول مباشرة إلى أرباح إضافية.\n\nتتميز لودر كوماتسو WA480 بسرعة استثنائية في دورات التحميل (V-Shape Cycle)، وقوة رفع هيدروليكية هائلة تضمن سرعة ملء الشاحنات دون أي هدر للوقت أو الوقود.\n\n🚜 ارفع معدلات إنتاجية مشروعك مع دار الحي الكويت.",
+        "hashtags": "#WA480 #WheelLoader #QuarryOperations #Aggregate #BatchPlant #Komatsu #DarAlHay #KuwaitConstruction #Earthmoving",
+        "ctaText": "Explore Komatsu WA480 wheel loader configurations and bucket attachments.",
+        "slides": []
+      },
+      {
+        "id": 305,
+        "conceptNumber": 5,
+        "week": "Week 2",
+        "day": "Tuesday",
+        "publishDate": "2026-10-13",
+        "deliverableCode": "DELIVERABLE 05 • DAY 11 (TUE)",
+        "title": "5-Minute Pre-Shift Machine Walkaround – 5 دقائق فحص يومي تجنبك توقف الموقع المفاجئ",
+        "pillar": "pillar_service_field",
+        "format": "carousel",
+        "platforms": [
+          "linkedin",
+          "instagram",
+          "facebook"
+        ],
+        "goal": "expertise",
+        "status": "ready",
+        "targetAudience": "Site Foremen, Operators",
+        "tov": "Practical, Field-Ready",
+        "summary": "Bookmarkable checklist for operators: 1. Fluid sight gauges, 2. Track sagging and link tension, 3. Hydraulic line friction and weeping, 4. Radiator core airflow clearance, 5. Central grease point distribution.",
+        "slides": [
+          {
+            "slideNo": 1,
+            "title": "Check 1: Fluid Sight Gauges & Levels",
+            "body": "Inspect engine oil dipstick, coolant expansion tank, and hydraulic sight gauge with the machine on level ground and cylinders retracted. Verify fluid clarity and ensure no foaming or discoloration."
+          },
+          {
+            "slideNo": 2,
+            "title": "Check 2: Track Sagging & Link Tension",
+            "body": "Measure track sag between carrier rollers according to factory manual (usually 20-30mm). Tracks that are too tight accelerate bushing wear; tracks that are too loose risk de-tracking in sand."
+          },
+          {
+            "slideNo": 3,
+            "title": "Check 3: Hydraulic Line Friction & Weeping",
+            "body": "Inspect main boom and arm high-pressure flexible hoses. Check routing clamps for looseness and look for weeping at hose swage fittings before micro-leaks blow out under 350-bar pressure."
+          },
+          {
+            "slideNo": 4,
+            "title": "Check 4: Radiator Core Airflow Clearance",
+            "body": "Kuwait desert dust quickly clogs cooling fins. Check oil cooler and radiator screens. Clear compacted sand before shift startup to prevent engine temperature derating in high ambient heat."
+          },
+          {
+            "slideNo": 5,
+            "title": "Check 5: Central Grease Points & Pins",
+            "body": "Purge bucket pivot pins, boom foot, and swing bearing with fresh Komatsu heavy grease until clean lubricant emerges. Daily purging expels abrasive silica sand and extends pin life by 300%."
+          }
+        ],
+        "brollChecklist": [
+          "Hands measuring track sag with metal ruler",
+          "Clear macro shot of clean hydraulic sight glass oil meniscus",
+          "Grease gun coupler snapping onto zerk fitting with fresh grease purging"
+        ],
+        "postProductionNotes": "Numbered checklist format with checkmark icons and clean step-by-step layout.",
+        "captionEn": "5 minutes of disciplined inspection before every shift can save hours of unplanned downtime and thousands of dinars in repairs.\n\nSave this practical 5-point walkaround checklist for your site foremen, operators, and maintenance teams. Share it across your jobsite WhatsApp groups 📌\n\nEquipped and supported by Dar Al Hay Kuwait.",
+        "captionAr": "5 دقائق فقط من الفحص اليومي الواعي قبل بداية الوردية تحميك من توقف مفاجئ للمعدة وتوفر آلاف الدنانير من تكاليف الصيانة.\n\nاحفظ هذا الدليل العملي المكون من 5 نقاط وشاركه مع مشرفي المواقع وسائقي المعدات في مشروعك 📌\n\nدعم هندسي مستمر من شركة دار الحي كوماتسو الكويت.",
+        "hashtags": "#MaintenanceGuide #PreShiftWalkaround #OperatorTips #JobsiteSafety #KomatsuKuwait #PreventiveCare #DarAlHay #FleetUptime",
+        "ctaText": "Bookmark this guide and request laminated cab-check cards from Dar Al Hay for your operators.",
+        "scenes": []
+      },
+      {
+        "id": 306,
+        "conceptNumber": 6,
+        "week": "Week 2",
+        "day": "Thursday",
+        "publishDate": "2026-10-15",
+        "deliverableCode": "DELIVERABLE 06 • DAY 13 (THU)",
+        "title": "Mobile Service Vans: Jobsite Ready – ورش الصيانة المتنقلة: نصل إليك أينما كان مشروعك",
+        "pillar": "pillar_service_field",
+        "format": "photography",
+        "platforms": [
+          "instagram",
+          "linkedin",
+          "facebook"
+        ],
+        "goal": "trust_humanize",
+        "status": "ready",
+        "targetAudience": "General Contractors, Project Directors",
+        "tov": "Reassuring, Professional",
+        "summary": "Clean, high-impact visual of a fully kitted Komatsu field service van dispatched right next to heavy equipment on a desert project. Highlights onboard diagnostic tooling, crane support, genuine parts stock, and rapid on-site emergency repair capabilities.",
+        "photoShots": [
+          {
+            "shotNo": 1,
+            "angle": "Crisp wide environmental landscape",
+            "focus": "Branded Dar Al Hay / Komatsu mobile service truck parked alongside PC350LC in remote desert site."
+          },
+          {
+            "shotNo": 2,
+            "angle": "Side profile of open vehicle compartments",
+            "focus": "Mounted air compressor, lube dispensing reels, onboard crane hoist, and organized genuine parts bins."
+          },
+          {
+            "shotNo": 3,
+            "angle": "Medium shot of certified technician",
+            "focus": "Technician in high-visibility Komatsu gear holding diagnostic computer tablet connected to equipment."
+          }
+        ],
+        "brollChecklist": [
+          "Van emergency strobe lights reflecting off evening sand",
+          "Onboard hydraulic hose crimping machine in action",
+          "Technician smiling with confidence next to machine tracks"
+        ],
+        "postProductionNotes": "Premium twilight/golden-hour grading, sharp vehicle graphics, high-visibility PPE colors popping.",
+        "captionEn": "No matter how remote your jobsite in Kuwait — from the northern border works to South Mutlaa and coastal projects — Dar Al Hay’s mobile service fleet brings full workshop capabilities directly to your machine.\n\nEquipped with onboard diagnostic computers, crane hoists, emergency hose crimping, and fast-moving genuine spares, our factory-certified technicians minimize jobsite interruption.\n\n📍 We reach you wherever your project builds.",
+        "captionAr": "مهما كان موقع مشروعك بعيداً في صحراء الكويت — من أقصى الشمال إلى جنوب المطلاع والمشاريع الساحلية — ورش دار الحي المتنقلة تجلب إمكانيات مركز الصيانة مباشرة إلى موقع معدتك.\n\nمجهزة بأحدث أجهزة الفحص الإلكتروني، وروافع هيدروليكية، ومخزون لقطع الغيار السريعة، مع فنيين معتمدين جاهزين للتعامل مع أي طارئ بسرعة وكفاءة.\n\n📍 نصل إليك أينما كان مشروعك.. لنضمن استمرار العمل.",
+        "hashtags": "#MobileService #FieldService #KomatsuKuwait #24_7Support #JobsiteReady #DarAlHay #KuwaitContractors #EmergencyRepair",
+        "ctaText": "Save Dar Al Hay's 24/7 Mobile Field Dispatch direct hotline.",
+        "scenes": [],
+        "slides": []
+      },
+      {
+        "id": 307,
+        "conceptNumber": 7,
+        "week": "Week 3",
+        "day": "Sunday",
+        "publishDate": "2026-10-18",
+        "deliverableCode": "DELIVERABLE 07 • DAY 16 (SUN)",
+        "title": "PC350LC Heavy Duty Boom & Arm – الصلابة الهيكلية لذراع الحفر في أصعب البيئات",
+        "pillar": "pillar_heavy_iron",
+        "format": "designed_post",
+        "platforms": [
+          "linkedin",
+          "instagram",
+          "facebook"
+        ],
+        "goal": "product_education",
+        "status": "ready",
+        "targetAudience": "Civil & Infrastructure Contractors",
+        "tov": "Premium, Rugged, Unmatched",
+        "summary": "Close-up engineering aesthetic focusing on high-tensile steel boom casting, internal baffle reinforcement plates, and large-diameter pins. Accompanying copy breaks down structural stress dissipation during tough rock excavation.",
+        "photoShots": [
+          {
+            "shotNo": 1,
+            "angle": "Close-up 50mm technical angle",
+            "focus": "Massive robotic weld seams connecting the boom pivot casting to heavy high-tensile steel side plates."
+          },
+          {
+            "shotNo": 2,
+            "angle": "Cutaway infographic overlay",
+            "focus": "Internal baffle plates distributing torsional digging stress along the arm box structure."
+          },
+          {
+            "shotNo": 3,
+            "angle": "Arm foot pivot pin macro",
+            "focus": "Induction-hardened large diameter chrome pin and tungsten-carbide coated bushings."
+          }
+        ],
+        "brollChecklist": [
+          "Macro zoom on factory robotic weld seams",
+          "Infographic callout labels pointing to high-stress dissipation zones",
+          "PC350LC boom in deep rock trench lifting heavy basalt boulder"
+        ],
+        "postProductionNotes": "Blueprint / technical infographic overlay with callout arrows and steel tensile strength ratings (MPa).",
+        "captionEn": "Excavating dense rock and hardpan caliche in Kuwait places immense torsional stress on an excavator’s boom and arm.\n\nThe Komatsu PC350LC-8M0 features thick high-tensile steel plates, continuous robotic submerged-arc welding, internal partition baffle plates, and large-diameter induction-hardened pins designed to dissipate stress and eliminate fatigue cracking.\n\nEngineered in Japan. Proven across Kuwait's hardest civil excavations.\n\n🏗️ Discover the structural superiority of Komatsu with Dar Al Hay.",
+        "captionAr": "أعمال الحفر في الصخور والطبقات الصلبة (الصلبوخ) في الكويت تفرض إجهاداً هائلاً على ذراع الحفار.\n\nتم تصميم ذراع وبوم كوماتسو PC350LC-8M0 بهيكل صندوقي معزز بصفائح فولاذية عالية الشد، ولحامات روبوتية متواصلة، مع ألواح دعم داخلية (Internal Baffles) لتشتيت الإجهاد، ومحاور مفصلية معالجة حرارياً لمنع أي تشققات هيكلية على المدى الطويل.\n\nمتانة يابانية متفوقة تضمن بقاء الحفار يعمل بكامل طاقته لسنوات طويلة.\n\n🏗️ اكتشف تفاصيل الهندسة اليابانية مع دار الحي كوماتسو الكويت.",
+        "hashtags": "#PC350LC #Excavator #BoomAndArm #StructuralEngineering #HeavyExcavation #JapaneseEngineering #DarAlHay #Komatsu",
+        "ctaText": "View full technical specifications of the Komatsu PC350LC-8M0 at Dar Al Hay.",
+        "scenes": [],
+        "slides": []
+      },
+      {
+        "id": 308,
+        "conceptNumber": 8,
+        "week": "Week 3",
+        "day": "Tuesday",
+        "publishDate": "2026-10-20",
+        "deliverableCode": "DELIVERABLE 08 • DAY 18 (TUE)",
+        "title": "Inside the Central Spares Distribution Hub – من الرف إلى موقع العمل: جاهزية فورية لأصعب التحديات",
+        "pillar": "pillar_parts_fluids",
+        "format": "reel",
+        "platforms": [
+          "instagram",
+          "linkedin",
+          "facebook"
+        ],
+        "goal": "trust_humanize",
+        "status": "ready",
+        "targetAudience": "Spare Parts Buyers, Fleet Managers",
+        "tov": "Fast-Paced, Customer-Centric",
+        "summary": "Fast, rhythmic warehouse walkthrough tracking an order from automated picking to courier packaging and field dispatch. Emphasizes 95%+ first-pick availability and zero-downtime commitment for critical wear parts.",
+        "hook": {
+          "spokenEn": "When your machine is down on site, every minute waiting for parts costs real money.",
+          "spokenAr": "عندما تتوقف معدتك في الموقع، كل دقيقة انتظار لقطعة الغيار تكلفك الكثير.",
+          "visualHook": "Fast tracking shot following an automated barcode picker gliding down tall multi-level warehouse aisles filled with genuine Komatsu yellow boxes in Shuwaikh."
+        },
+        "scenes": [
+          {
+            "sceneNo": 1,
+            "time": "0:00 - 0:04",
+            "visual": "Wide high-bay warehouse shot in Shuwaikh: Barcode scanner beeping, inventory specialist picking genuine part package.",
+            "talentAction": "Specialist scanning item barcode; digital display confirms item match.",
+            "audioVoiceoverEn": "Over 15,000 line items ready in stock right here in Shuwaikh.",
+            "audioVoiceoverAr": "أكثر من 15,000 صنف أصلي متوفر في مستودعاتنا المركزية بالشويخ.",
+            "onScreenTextEn": "95%+ FIRST-PICK AVAILABILITY",
+            "onScreenTextAr": "جاهزية فورية تفوق 95% لقطع الغيار",
+            "sfxMusic": "Satisfying barcode beep + dynamic electronic beat"
+          },
+          {
+            "sceneNo": 2,
+            "time": "0:04 - 0:10",
+            "visual": "Quick cuts: Quality verification inspection, boxing in heavy-duty packaging, tagging with delivery barcode.",
+            "talentAction": "Careful packaging with official Komatsu holographic tamper seal applied.",
+            "audioVoiceoverEn": "From order confirmation to dispatch in under 45 minutes for critical jobsite breakdowns.",
+            "audioVoiceoverAr": "من تأكيد الطلب إلى التجهيز والشحن في أقل من 45 دقيقة للحالات الطارئة.",
+            "onScreenTextEn": "RAPID EXPEDITION & PACKAGING",
+            "onScreenTextAr": "تجهيز وشحن فوري للحالات الطارئة",
+            "sfxMusic": "Percussive riser + tape dispensing foley"
+          },
+          {
+            "sceneNo": 3,
+            "time": "0:10 - 0:16",
+            "visual": "Dispatch door rolling up; driver loading container into express service van driving straight to Kuwait project.",
+            "talentAction": "Driver closing rear door, van wheels rolling onto Shuwaikh street.",
+            "audioVoiceoverEn": "Your parts on site when you need them. Dar Al Hay: Protecting your uptime.",
+            "audioVoiceoverAr": "قطعك تصل لموقعك فوراً.. دار الحي: شريكك الدائم لاستمرارية العمل.",
+            "onScreenTextEn": "ZERO DOWNTIME COMMITMENT",
+            "onScreenTextAr": "التزامنا: صفر توقف لأعمالك",
+            "sfxMusic": "Energetic cymbal smash + outro"
+          }
+        ],
+        "brollChecklist": [
+          "Overhead drone / high gimbal glide along Shuwaikh warehouse racking",
+          "Macro of genuine Komatsu hologram tamper-evident label",
+          "Inventory screen updating stock count automatically"
+        ],
+        "postProductionNotes": "Fast snappy editing, rhythmic sound effects synced to footsteps and barcode scans.",
+        "captionEn": "Waiting days for overseas parts shipment is a thing of the past.\n\nInside Dar Al Hay’s central Shuwaikh distribution hub, over 15,000 genuine Komatsu parts — from seal kits and hydraulic sensors to turbochargers and undercarriage rollers — are cataloged with 95%+ first-pick availability.\n\n📦 Watch how our expedited logistics keeps Kuwait’s machinery fleets running non-stop.",
+        "captionAr": "انتظار وصول قطع الغيار من الخارج لأيام أصبح من الماضي.\n\nمن داخل مركز التوزيع الرئيسي لدار الحي بالشويخ، أكثر من 15,000 قطعة غيار أصلية جاهزة على الرفوف — من أطقم الجوانات ومستشعرات الهيدروليك إلى التيربو وبكرات الجنازير — بنسبة توافر فوري تتجاوز 95%.\n\n📦 شاهد سرعة منظومتنا اللوجستية في خدمة أساطيل المقاولات بالكويت.",
+        "hashtags": "#SpareParts #Warehouse #KomatsuKuwait #SupplyChain #ZeroDowntime #Shuwaikh #DarAlHay #GenuineParts",
+        "ctaText": "Check spare parts availability via our direct WhatsApp parts counter.",
+        "slides": []
+      },
+      {
+        "id": 309,
+        "conceptNumber": 9,
+        "week": "Week 3",
+        "day": "Thursday",
+        "publishDate": "2026-10-22",
+        "deliverableCode": "DELIVERABLE 09 • DAY 20 (THU)",
+        "title": "Undercarriage Diagnostics: Signs of Wear – دليل فحص وتآكل هيكل السير والجنزير",
+        "pillar": "pillar_parts_fluids",
+        "format": "carousel",
+        "platforms": [
+          "linkedin",
+          "instagram",
+          "facebook"
+        ],
+        "goal": "expertise",
+        "status": "ready",
+        "targetAudience": "Heavy Machinery Workshop Chiefs",
+        "tov": "Technical, Cost-Saving",
+        "summary": "Visual comparison illustrating sprocket tooth thinning, track link pitch extension, and carrier roller scalloping. Includes actionable thresholds on when to turn pins and bushings to double the operational lifecycle of the track chains.",
+        "slides": [
+          {
+            "slideNo": 1,
+            "title": "Sprocket Tooth Thinning & Root Wear",
+            "body": "Inspect drive sprocket teeth for reverse-drive thinning and root pocket erosion. As link pitch extends, bushings ride up on tooth tips, accelerating drive motor stress and track slap."
+          },
+          {
+            "slideNo": 2,
+            "title": "Track Link Pitch Extension Measurement",
+            "body": "Use a precision 4-link caliper across 4 pins. A pitch extension greater than 3% indicates internal pin and bushing wear, alerting you to schedule maintenance before master link failure."
+          },
+          {
+            "slideNo": 3,
+            "title": "Actionable Threshold: Turning Pins & Bushings",
+            "body": "Turning pins and bushings 180° at 50% wear exposes unworn contact surfaces. This simple workshop procedure doubles track chain lifecycle and saves up to 45% compared to purchasing new chains."
+          },
+          {
+            "slideNo": 4,
+            "title": "Carrier & Track Roller Scalloping",
+            "body": "Check roller flanges for uneven dish-shaped wear (scalloping). Uneven wear indicates misalignment or packed debris, which damages track rail surfaces and increases rolling resistance."
+          }
+        ],
+        "brollChecklist": [
+          "Ultrasonic gauge measuring remaining track shoe grouser thickness",
+          "Worn vs brand-new sprocket side-by-side graphic overlay",
+          "Hydraulic track tensioner grease relief valve inspection"
+        ],
+        "postProductionNotes": "Clear before/after diagrammatic slides with measurement millimeter callouts.",
+        "captionEn": "The undercarriage represents up to 50% of an excavator or dozer’s lifetime maintenance cost.\n\nCatching wear early and turning pins and bushings at the right threshold can double the operational life of your track chains and slash replacement costs by thousands of dinars.\n\nSwipe through our certified workshop guide for actionable inspection thresholds ➡️",
+        "captionAr": "يمثل هيكل السير والجنزير (Undercarriage) ما يصل إلى 50% من إجمالي تكاليف صيانة الحفارات والبلدوزرات طوال عمرها التشغيلي.\n\nاكتشاف التآكل مبكراً وتدوير البنوز والجلب (Pin & Bushing Turn) في التوقيت المناسب يضاعف عمر الجنزير ويوفر آلاف الدنانير مقارنة بشراء طقم جديد بالكامل.\n\nاسحب الشاشة للاطلاع على دليل الفحص الهندسي والنسب المسموحة ➡️",
+        "hashtags": "#Undercarriage #TrackWear #SprocketWear #PreventiveMaintenance #WorkshopChiefs #DarAlHay #Komatsu #CostSaving",
+        "ctaText": "Book an on-site Ultrasonic Undercarriage Wear Inspection with Dar Al Hay specialists.",
+        "scenes": []
+      },
+      {
+        "id": 310,
+        "conceptNumber": 10,
+        "week": "Week 4",
+        "day": "Sunday",
+        "publishDate": "2026-10-25",
+        "deliverableCode": "DELIVERABLE 10 • DAY 23 (SUN)",
+        "title": "HM400 Articulated Dump Truck: Sand Mobility – نظام الجر المتطور KTCS: ثبات كامل في الرمال الناعمة",
+        "pillar": "pillar_heavy_iron",
+        "format": "reel",
+        "platforms": [
+          "instagram",
+          "linkedin",
+          "facebook"
+        ],
+        "goal": "product_education",
+        "status": "ready",
+        "targetAudience": "Large Bulk-Earthmoving Contractors",
+        "tov": "Authoritative, Heavy-Duty",
+        "summary": "High-definition footage of an HM400 fully loaded traversing deep desert dunes. Dynamic overlay graphics illustrate the Komatsu Traction Control System (KTCS) auto-locking inter-axle differentials without operator intervention.",
+        "hook": {
+          "spokenEn": "40 tons of rock moving through soft desert sand without getting stuck. How?",
+          "spokenAr": "40 طناً من الصخور تتحرك بسلاسة عبر الرمال الصحراوية الناعمة دون توقف أو غرز.. كيف؟",
+          "visualHook": "Massive Komatsu HM400 hauler thundering through a steep dune incline, kicking up rooster tails of sand while maintaining relentless forward momentum."
+        },
+        "scenes": [
+          {
+            "sceneNo": 1,
+            "time": "0:00 - 0:04",
+            "visual": "Dune level camera: Massive HM400 articulated hauler loaded with 40 tons navigating soft deep sand incline with total traction.",
+            "talentAction": "Truck maintains steady climbing speed without wheel spin.",
+            "audioVoiceoverEn": "Deep desert dunes and loose sand stop ordinary haul trucks in their tracks.",
+            "audioVoiceoverAr": "الرمال الصحراوية الناعمة توقف شاحنات النقل العادية في مكانها..",
+            "onScreenTextEn": "CONQUERING SOFT DESERT SAND",
+            "onScreenTextAr": "ثبات وقوة في الرمال الناعمة",
+            "sfxMusic": "Low rumble + heavy engine turbo spool"
+          },
+          {
+            "sceneNo": 2,
+            "time": "0:04 - 0:10",
+            "visual": "3D HUD graphic overlay on wheels: KTCS sensors detect micro-slip on left rear axle and automatically engage differential inter-lock in milliseconds.",
+            "talentAction": "Close-up inside cab: Operator keeps hands steadily on wheel, no manual diff-lock buttons pressed.",
+            "audioVoiceoverEn": "KTCS: Komatsu Traction Control System. Automatic differential locking with zero operator input required.",
+            "audioVoiceoverAr": "نظام الجر المتطور KTCS: إقفال تفاضلي تلقائي ذكي دون أي تدخل يدوي من السائق.",
+            "onScreenTextEn": "KTCS • AUTOMATIC TRACTION CONTROL",
+            "onScreenTextAr": "نظام KTCS للتحكم الذكي بالجر",
+            "sfxMusic": "Futuristic mechanical engagement click + bass synth"
+          },
+          {
+            "sceneNo": 3,
+            "time": "0:10 - 0:16",
+            "visual": "HM400 cresting ridge effortlessly and dumping payload at fill site; Dar Al Hay badge.",
+            "talentAction": "Truck body raises smoothly, rocks unloading.",
+            "audioVoiceoverEn": "Move more material, faster, through the harshest terrain. Komatsu HM400.",
+            "audioVoiceoverAr": "انقل كميات أكبر، بسرعة وأمان، في أقسى التضاريس. كوماتسو HM400.",
+            "onScreenTextEn": "KOMATSU HM400 • 40-TON HAULER",
+            "onScreenTextAr": "كوماتسو HM400 • حمولة 40 طناً",
+            "sfxMusic": "Power swell + orchestral hit"
+          }
+        ],
+        "brollChecklist": [
+          "Ground wheel level 4K 60fps showing wide flotation tires flexing over loose sand",
+          "Cab articulate pivot joint twisting smoothly during tight turning",
+          "Payload heap view with sky backdrop"
+        ],
+        "postProductionNotes": "Epic desert color grading, sleek blue-and-gold tech HUD overlays showing wheel speed and torque distribution.",
+        "captionEn": "Moving 40 tons of earth through Kuwait’s loose desert sand requires more than raw horsepower — it requires intelligent traction.\n\nThe Komatsu HM400 articulated dump truck features KTCS (Komatsu Traction Control System). When sensors detect wheel slip, KTCS automatically engages the optimal differential lock within milliseconds, delivering uninterrupted pushing power without slowing the operator down.\n\n🚛 Discover peak hauling productivity with Dar Al Hay Kuwait.",
+        "captionAr": "نقل 40 طناً من التربة والصخور عبر الرمال الناعمة في الكويت يحتاج لأكثر من مجرد قوة محرك.. يحتاج إلى ذكاء حركي متطور.\n\nتتميز شاحنة النقل المفصلية كوماتسو HM400 بنظام التحكم بالجر الذكي (KTCS). بمجرد استشعار أي انزلاق، يقوم النظام تلقائياً بتفعيل القفل التفاضلي المناسب في أجزاء من الثانية دون حاجة لتدخل السائق، مما يحافظ على سرعة النقل واستمرارية العمل.\n\n🚛 اكتشف أعلى إنتاجية لنقل الردم مع دار الحي كوماتسو الكويت.",
+        "hashtags": "#HM400 #ArticulatedDumpTruck #KTCS #SandMobility #BulkEarthmoving #Komatsu #DarAlHay #KuwaitInfrastructure",
+        "ctaText": "Consult with Dar Al Hay specialists on fleet sizing and articulated dump truck leasing or sales.",
+        "slides": []
+      },
+      {
+        "id": 311,
+        "conceptNumber": 11,
+        "week": "Week 4",
+        "day": "Tuesday",
+        "publishDate": "2026-10-27",
+        "deliverableCode": "DELIVERABLE 11 • DAY 25 (TUE)",
+        "title": "Meet the Master Field Technician – سواعد وطنية وخبرات هندسية تضمن استمرار العمل",
+        "pillar": "pillar_service_field",
+        "format": "reel",
+        "platforms": [
+          "instagram",
+          "linkedin",
+          "facebook"
+        ],
+        "goal": "trust_humanize",
+        "status": "ready",
+        "targetAudience": "Corporate Decision Makers",
+        "tov": "Warm, Inspiring, Confident",
+        "summary": "Documentary-style spotlight featuring a senior factory-certified field technician. Captures precise calibration of common-rail injection pressures, hydraulic valve tuning, and a dedication to safeguarding client uptime.",
+        "hook": {
+          "spokenEn": "A machine is only as good as the hands that care for it.",
+          "spokenAr": "قوة المعدة وعمرها التشغيلي يعتمد أولاً على خبرة وإخلاص الأيدي التي تعتني بها.",
+          "visualHook": "Warm cinematic slow-motion portrait of a senior certified master technician strapping his hardhat at sunrise with a calm, proud smile."
+        },
+        "scenes": [
+          {
+            "sceneNo": 1,
+            "time": "0:00 - 0:05",
+            "visual": "Cinematic close-up of senior technician looking at calibrated digital gauge in workshop; delicate precision adjustments.",
+            "talentAction": "Calibrating common-rail injection pressure to exact factory micron specifications.",
+            "audioVoiceoverEn": "Behind every roaring engine is engineering precision measured in microns.",
+            "audioVoiceoverAr": "وراء هدير كل محرك دقة هندسية تُقاس بالميكرون.",
+            "onScreenTextEn": "FACTORY-CERTIFIED MASTERY",
+            "onScreenTextAr": "خبرات هندسية معتمدة من المصنع",
+            "sfxMusic": "Gentle emotional strings + piano chords"
+          },
+          {
+            "sceneNo": 2,
+            "time": "0:05 - 0:11",
+            "visual": "Montage of field visits: Technician greeting site manager with warm professional handshake, checking hydraulic line, tuning valve bank.",
+            "talentAction": "Confident, courteous interaction on site; wiping hands with clean towel, signing off report.",
+            "audioVoiceoverEn": "Years of Komatsu factory training, dedicated to keeping Kuwait’s biggest projects running on schedule.",
+            "audioVoiceoverAr": "سنوات من التدريب في مصانع كوماتسو، نكرسها لنضمن إنجاز أضخم مشاريع الكويت في موعدها.",
+            "onScreenTextEn": "SAFEGUARDING YOUR UPTIME",
+            "onScreenTextAr": "نحمي إنتاجيتك.. ونضمن استمرارية أعمالك",
+            "sfxMusic": "Inspiring orchestral swell"
+          },
+          {
+            "sceneNo": 3,
+            "time": "0:11 - 0:18",
+            "visual": "Technician standing proudly in front of a gleaming PC350LC as the sun illuminates the machine; Dar Al Hay logo lockup.",
+            "talentAction": "Proud smile directly to camera.",
+            "audioVoiceoverEn": "We don’t just repair iron. We build trust. Dar Al Hay — Your engineering partner.",
+            "audioVoiceoverAr": "لا نقوم بصيانة المعدات فقط.. بل نبني شراكة وثقة تدوم. دار الحي — شريكك الهندسي المعتمد.",
+            "onScreenTextEn": "DAR AL HAY • PRECISION & TRUST",
+            "onScreenTextAr": "دار الحي • دقة، خبرة، وثقة مستمرة",
+            "sfxMusic": "Warm cinematic crescendo and resolve"
+          }
+        ],
+        "brollChecklist": [
+          "Macro of technician's hands using micrometer torque wrench",
+          "Portrait framing with natural warm Kuwait golden light",
+          "Komatsu Master Technician certification badge on uniform pocket"
+        ],
+        "postProductionNotes": "Rich documentary film grade, soft filmic grain, inspiring musical track, authentic bilingual voiceover.",
+        "captionEn": "Heavy equipment is only as reliable as the engineers behind it.\n\nMeet the master certified technicians of Dar Al Hay. Armed with rigorous Komatsu factory training, specialized diagnostic tooling, and an uncompromising dedication to precision, our team ensures your machines deliver peak performance every single working day.\n\n🔧 Japanese engineering excellence. Local engineering dedication.",
+        "captionAr": "المعدات الثقيلة لا تكتمل قوتها إلا بخبرة وإخلاص الكوادر الهندسية التي تدعمها.\n\nتعرفوا على مهندسي وفنيي دار الحي المعتمدين من مصانع كوماتسو. خبرات عميقة، أدوات فحص إلكتروني متقدمة، وشغف دائم بضمان أعلى معايير الجودة والأمان في كل صيانة.\n\n🔧 دقة الهندسة اليابانية.. بسواعد هندسية مخلصة في خدمة الكويت.",
+        "hashtags": "#BehindTheIron #MasterTechnician #KomatsuKuwait #HumanTrust #EngineeringPride #DarAlHay #CertifiedService",
+        "ctaText": "Discover the Dar Al Hay certified maintenance difference for your fleet.",
+        "slides": []
+      },
+      {
+        "id": 312,
+        "conceptNumber": 12,
+        "week": "Week 4",
+        "day": "Thursday",
+        "publishDate": "2026-10-29",
+        "deliverableCode": "DELIVERABLE 12 • DAY 27 (THU)",
+        "title": "Fleet Health Check & Preventive Overhaul Kit – عرض خاص: باقة الفحص الشامل وخصم على أطقم الفلاتر",
+        "pillar": "pillar_commercial",
+        "format": "cta_post",
+        "platforms": [
+          "linkedin",
+          "instagram",
+          "facebook"
+        ],
+        "goal": "lead_generation",
+        "status": "ready",
+        "targetAudience": "General Contractors & Owners",
+        "tov": "Urgent, Actionable, High-Value",
+        "summary": "Direct commercial conversion post offering complimentary on-site multi-point inspections for contractor fleets upon booking, paired with bundled tier discounts on genuine filter service kits and routine oil packages.",
+        "photoShots": [
+          {
+            "shotNo": 1,
+            "angle": "Clean commercial promo graphic layout",
+            "focus": "Genuine Komatsu yellow filter boxes neatly arranged next to oil drums and digital diagnostic tablet."
+          },
+          {
+            "shotNo": 2,
+            "angle": "Call-to-action banner lockup",
+            "focus": "Special Offer badge: 'Complimentary 50-Point Fleet Health Check + 15% Off Filter Service Kits'."
+          }
+        ],
+        "brollChecklist": [
+          "Stacked genuine Komatsu filter cartons in Shuwaikh showroom",
+          "Technician completing digital multi-point health check report on iPad",
+          "Clean showroom display of preventive maintenance kits"
+        ],
+        "postProductionNotes": "High-contrast commercial conversion graphic with prominent Komatsu yellow and navy ribbon, clear phone & WhatsApp icons.",
+        "captionEn": "Prepare your machinery fleet for peak winter project deadlines with Dar Al Hay's seasonal fleet health offer!\n\nBook before the end of the month and receive:\n✅ Complimentary on-site 50-point machine health inspection by certified engineers\n✅ Up to 15% discount on bundled genuine Komatsu filter service kits (250h / 500h / 1000h)\n✅ Special package rates on genuine hydraulic & engine oil barrels\n✅ Full telematics health report for your fleet\n\nLimited booking slots available across Kuwait jobsites.\n\n📲 Click the link or WhatsApp our commercial service desk now!",
+        "captionAr": "استعد لأعلى وتيرة عمل في مشاريع الشتاء مع باقة العناية الوقائية الخاصة من دار الحي كوماتسو!\n\nسجل أسطولك قبل نهاية الشهر واحصل على:\n✅ فحص ميداني شامل مجاني (50 نقطة فحص) بواسطة مهندسين معتمدين\n✅ خصم يصل إلى 15% على أطقم فلاتر كوماتسو الأصلية (250 / 500 / 1000 ساعة)\n✅ أسعار خاصة على براميل الزيوت الأصلية (هيدروليك ومحرك)\n✅ تقرير تفصيلي بحالة الأسطول وجاهزيته للمشاريع\n\nالأماكن محدودة لجدولة الفحص الميداني في مواقعكم.\n\n📲 تواصل معنا الآن عبر الواتساب أو اتصل بمسؤولي المبيعات لحجز موعدك!",
+        "hashtags": "#SpecialOffer #FleetCheck #KomatsuKuwait #PreventiveMaintenance #FilterKits #GenuineParts #DarAlHay #ContractorsKuwait",
+        "ctaText": "Book your complimentary on-site fleet health inspection via WhatsApp today.",
+        "scenes": [],
         "slides": []
       }
     ]

@@ -151,9 +151,14 @@ export default function MediaListView({
                         <span className="font-bold text-slate-900 block font-mono">
                           {post.publishDate || 'Not set'}
                         </span>
-                        <span className="text-[11px] text-slate-500 font-medium">
+                        <span className="text-[11px] text-slate-500 font-medium block">
                           {post.day || ''}
                         </span>
+                        {post.deliverableCode && (
+                          <span className="text-[10px] font-mono font-bold text-amber-700 block">
+                            {post.deliverableCode}
+                          </span>
+                        )}
                       </td>
 
                       <td className="py-4 px-4 max-w-sm">

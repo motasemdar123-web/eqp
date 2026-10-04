@@ -5,6 +5,10 @@ export const MEDIA_PLATFORMS = [
 ];
 
 export const CONTENT_PILLARS = [
+  { id: 'pillar_heavy_iron', label: 'Heavy Iron Dominance', shortLabel: 'Heavy Iron', color: 'bg-amber-50 text-amber-800 border-amber-200', tagColor: 'amber', targetPct: 35, desc: 'Highlight power, fuel economy, and Japanese engineering durability in quarrying and earthworks.' },
+  { id: 'pillar_parts_fluids', label: 'Genuine Parts & Fluids', shortLabel: 'Parts & Fluids', color: 'bg-sky-50 text-sky-800 border-sky-200', tagColor: 'sky', targetPct: 25, desc: 'Educate on total cost of ownership (TCO) and component protection against extreme heat and dust.' },
+  { id: 'pillar_service_field', label: 'Service & Field Response', shortLabel: 'Field Service', color: 'bg-emerald-50 text-emerald-800 border-emerald-200', tagColor: 'emerald', targetPct: 25, desc: 'Build contractor confidence via certified mobile technicians, Komtrax monitoring, and quick dispatch.' },
+  { id: 'pillar_commercial', label: 'Commercial & Lead Gen', shortLabel: 'Lead Gen', color: 'bg-rose-50 text-rose-800 border-rose-200', tagColor: 'rose', targetPct: 15, desc: 'Drive direct WhatsApp inquiries, scheduled fleet audits, and seasonal preventive maintenance kits.' },
   { id: 'pillar_authority', label: 'Brand Authority & Japanese Heritage', color: 'bg-sky-100 text-sky-900 border-sky-300', desc: 'Highlighting Komatsu Japanese precision, Dar Al Hay partnership, and Kuwait infrastructure leadership.' },
   { id: 'pillar_engineering', label: 'Technical & Product Education', color: 'bg-indigo-100 text-indigo-900 border-indigo-300', desc: 'Deep-dive machine walkthroughs, specs, KOMTRAX telematics, and heavy-duty desert cooling systems.' },
   { id: 'pillar_workshop', label: 'Behind-The-Scenes & Workshop', color: 'bg-amber-100 text-amber-900 border-amber-300', desc: 'Humanizing certified engineers, engine overhauls, diagnostic testing, and parts warehouse inventory.' },

@@ -7,6 +7,7 @@ import Badge from '../../components/ui/Badge';
 import { INITIAL_MONTHLY_CAMPAIGNS } from '../../lib/mediaMonthlyData';
 import { getMediaCampaigns, saveMediaCampaigns as apiSaveMediaCampaigns, resetMediaCampaigns as apiResetMediaCampaigns } from '../../lib/api';
 import { getStoredUser } from '../../lib/auth';
+import Toast from '../../components/ui/Toast';
 import MediaCalendarGrid from '../../components/media/MediaCalendarGrid';
 import MediaListView from '../../components/media/MediaListView';
 import SimplePostModal from '../../components/media/SimplePostModal';
@@ -18,7 +19,7 @@ const ACTIVE_MONTH_STORAGE_KEY = 'daralhay.social_media_active_month_v5';
 
 export default function MediaCornerPage() {
   const [campaigns, setCampaigns] = useState({});
-  const [selectedMonthId, setSelectedMonthId] = useState('2026-09');
+  const [selectedMonthId, setSelectedMonthId] = useState('2026-10');
   const [viewMode, setViewMode] = useState('calendar'); // 'calendar' | 'list'
   const [loading, setLoading] = useState(true);
 
@@ -38,6 +39,7 @@ export default function MediaCornerPage() {
 
   // New month modal state
   const [isNewMonthModalOpen, setIsNewMonthModalOpen] = useState(false);
+  const [toast, setToast] = useState(null);
 
   // Fetch latest campaigns from central cloud database
   const loadRemoteCampaigns = useCallback(async () => {
@@ -67,21 +69,28 @@ export default function MediaCornerPage() {
       const storedActiveMonth = localStorage.getItem(ACTIVE_MONTH_STORAGE_KEY);
 
       if (storedCampaigns) {
-        const parsed = JSON.parse(storedCampaigns);
+        let parsed = JSON.parse(storedCampaigns);
+        // Ensure October has the full 12-deliverable master blueprint
+        if (!parsed['2026-10'] || !parsed['2026-10'].concepts || parsed['2026-10'].concepts.length < 12) {
+          parsed['2026-10'] = INITIAL_MONTHLY_CAMPAIGNS['2026-10'];
+          try {
+            localStorage.setItem(CAMPAIGNS_STORAGE_KEY, JSON.stringify(parsed));
+          } catch {}
+        }
         setCampaigns(parsed);
         if (storedActiveMonth && parsed[storedActiveMonth]) {
           setSelectedMonthId(storedActiveMonth);
         } else {
-          setSelectedMonthId(parsed['2026-09'] ? '2026-09' : Object.keys(parsed)[0] || '2026-09');
+          setSelectedMonthId(parsed['2026-10'] ? '2026-10' : Object.keys(parsed)[0] || '2026-10');
         }
       } else {
         setCampaigns(INITIAL_MONTHLY_CAMPAIGNS);
         localStorage.setItem(CAMPAIGNS_STORAGE_KEY, JSON.stringify(INITIAL_MONTHLY_CAMPAIGNS));
-        setSelectedMonthId('2026-09');
+        setSelectedMonthId('2026-10');
       }
     } catch {
       setCampaigns(INITIAL_MONTHLY_CAMPAIGNS);
-      setSelectedMonthId('2026-09');
+      setSelectedMonthId('2026-10');
     } finally {
       setLoading(false);
     }
@@ -206,6 +215,53 @@ export default function MediaCornerPage() {
     setIsPostModalOpen(true);
   };
 
+  // Reschedule post to a new date via drag and drop
+  const handleMovePostDate = (postId, newDateStr) => {
+    if (!postId || !newDateStr) return;
+
+    const postToMove = currentConcepts.find((c) => String(c.id) === String(postId));
+    if (!postToMove || postToMove.publishDate === newDateStr) return;
+
+    // Calculate new day name from date string
+    const [y, m, d] = newDateStr.split('-').map(Number);
+    const dateObj = new Date(y, m - 1, d);
+    const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const newDayName = dayNames[dateObj.getDay()];
+
+    let newWeek = postToMove.week;
+    if (d <= 7) newWeek = 'Week 1';
+    else if (d <= 14) newWeek = 'Week 2';
+    else if (d <= 21) newWeek = 'Week 3';
+    else newWeek = 'Week 4';
+
+    const updatedConcepts = currentConcepts.map((c) => {
+      if (String(c.id) === String(postId)) {
+        return {
+          ...c,
+          publishDate: newDateStr,
+          day: newDayName,
+          week: newWeek,
+        };
+      }
+      return c;
+    });
+
+    const updatedCampaign = { ...activeCampaign, concepts: updatedConcepts };
+    const updatedCampaigns = { ...campaigns, [selectedMonthId]: updatedCampaign };
+    saveCampaigns(updatedCampaigns);
+
+    const postTitle = postToMove.title
+      ? postToMove.title.length > 32
+        ? postToMove.title.slice(0, 32) + '...'
+        : postToMove.title
+      : 'Deliverable';
+
+    setToast({
+      message: `Rescheduled "${postTitle}" to ${newDayName}, ${newDateStr}`,
+      type: 'success',
+    });
+  };
+
   // Save (create or update) post
   const handleSavePost = (postData) => {
     let updatedConcepts = [];
@@ -248,7 +304,7 @@ export default function MediaCornerPage() {
       if (res && res.campaigns) {
         setCampaigns(res.campaigns);
         localStorage.setItem(CAMPAIGNS_STORAGE_KEY, JSON.stringify(res.campaigns));
-        setSelectedMonthId('2026-09');
+        setSelectedMonthId('2026-10');
         setSyncStatus('synced');
         setLastSyncTime(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
         return;
@@ -258,7 +314,7 @@ export default function MediaCornerPage() {
     }
     setCampaigns(INITIAL_MONTHLY_CAMPAIGNS);
     localStorage.setItem(CAMPAIGNS_STORAGE_KEY, JSON.stringify(INITIAL_MONTHLY_CAMPAIGNS));
-    setSelectedMonthId('2026-09');
+    setSelectedMonthId('2026-10');
     setSyncStatus('synced');
   };
 
@@ -544,6 +600,7 @@ export default function MediaCornerPage() {
             concepts={currentConcepts}
             onSelectPost={handleOpenEditPost}
             onAddPost={handleOpenAddPost}
+            onMovePost={handleMovePostDate}
           />
         ) : (
           <MediaListView
@@ -589,6 +646,16 @@ export default function MediaCornerPage() {
                 : 'Compressing files into ZIP...'}
             </p>
           </div>
+        </div>
+      )}
+      {/* Drag & Drop Reschedule Toast */}
+      {toast && (
+        <div className="fixed bottom-6 left-6 z-50 animate-[ds-toast-in_180ms_ease]">
+          <Toast
+            message={toast.message}
+            type={toast.type}
+            onClose={() => setToast(null)}
+          />
         </div>
       )}
     </SystemShell>

@@ -37,7 +37,7 @@ export default function MediaBriefDrawer({ concept, onClose, onUpdateStatus, onE
             <div>
               <div className="flex flex-wrap items-center gap-1.5 mb-1">
                 <span className="px-2 py-0.5 rounded-md bg-slate-800 text-slate-300 text-[10px] font-bold">
-                  {concept.week || 'Week 1'} • {concept.day || 'Sunday'}
+                  {concept.deliverableCode || (concept.week || 'Week 1') + ' • ' + (concept.day || 'Sunday')}
                 </span>
                 <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold ${formatMeta.color} border`}>
                   {formatMeta.icon} {formatMeta.label}
