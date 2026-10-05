@@ -1277,49 +1277,6 @@ const htmlContent = `<!DOCTYPE html>
         </tr>
       </tbody>
     </table>
-
-    <h3 class="subsection-title">Collaboration Milestones &amp; Implementation Roadmap</h3>
-    <table class="data-table">
-      <thead>
-        <tr>
-          <th style="width: 15%;">Phase</th>
-          <th style="width: 30%;">Milestone Description</th>
-          <th style="width: 30%;">Deliverable &amp; Expected Output</th>
-          <th style="width: 25%;">Target Turnaround</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><strong>Phase 1</strong></td>
-          <td>Technical Review &amp; Interface Decision</td>
-          <td>ABS defines preferred API endpoint and payload schema.</td>
-          <td>2 Business Days</td>
-        </tr>
-        <tr>
-          <td><strong>Phase 2</strong></td>
-          <td>Sandbox Provisioning &amp; Whitelisting</td>
-          <td>Test database access and scoped service user credentials.</td>
-          <td>1 Business Day</td>
-        </tr>
-        <tr>
-          <td><strong>Phase 3</strong></td>
-          <td>End-to-End Test Transactions</td>
-          <td>5 test orders (Stock + Emergency) transmitted &amp; verified.</td>
-          <td>24 Hours (EQP SLA)</td>
-        </tr>
-        <tr>
-          <td><strong>Phase 4</strong></td>
-          <td>Accounting Sign-off &amp; Production Pilot</td>
-          <td>Live transmission of next Komatsu fleet parts order.</td>
-          <td>Week 2 Go-Live</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <div class="callout callout-emerald" style="margin-top: 3px;">
-      <span class="callout-title">Testing SLA &amp; Next Steps:</span>
-      Upon receipt of ABS's technical feedback and sandbox connection details, the EQP engineering team will adapt our integration client to your exact specifications within 24 hours and execute end-to-end test transactions for validation.
-    </div>
   </div>
 
 </body>
