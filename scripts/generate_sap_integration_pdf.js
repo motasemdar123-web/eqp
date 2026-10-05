@@ -602,7 +602,7 @@ const htmlContent = `<!DOCTYPE html>
       <div class="flow-step">
         <div class="flow-step-num">1</div>
         <div class="flow-step-title">Parts Entry</div>
-        <div class="flow-step-desc">Enter part numbers &amp; requested quantities from maintenance.</div>
+        <div class="flow-step-desc">Enter part numbers &amp; requested quantities.</div>
       </div>
       <div class="flow-arrow">&rarr;</div>
       <div class="flow-step" style="border-color: #0284c7; background: #f0f9ff;">
