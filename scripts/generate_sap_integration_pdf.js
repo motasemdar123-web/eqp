@@ -1225,12 +1225,7 @@ const htmlContent = `<!DOCTYPE html>
     </div>
 
     <div class="rfc-item">
-      <h4>6. Warehouse &amp; Tax Defaults Confirmation</h4>
-      <p>Please confirm whether Warehouse Code <code>003</code> (Central Maintenance Workshop) and Tax Code <code>P0</code> (0% Import / Exempt) are the correct default values for Vendor <code>V000006</code>, or if dynamic warehouse routing is preferred based on equipment jobsite location.</p>
-    </div>
-
-    <div class="rfc-item">
-      <h4>7. Sandbox Connectivity &amp; Access Provisioning</h4>
+      <h4>6. Sandbox Connectivity &amp; Access Provisioning</h4>
       <p>Please provide sandbox/test environment access details (endpoint URL, test company database name, credentials, and firewall whitelisting requirements) so that connectivity and schema validation can begin.</p>
     </div>
 
