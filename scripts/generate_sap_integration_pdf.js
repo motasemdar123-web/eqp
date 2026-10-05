@@ -27,7 +27,7 @@ const htmlContent = `<!DOCTYPE html>
   <style>
     @page {
       size: A4;
-      margin: 14mm 14mm 14mm 14mm;
+      margin: 12mm 13mm 12mm 13mm;
     }
 
     * {
@@ -40,8 +40,8 @@ const htmlContent = `<!DOCTYPE html>
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       color: #1e293b;
       background-color: #ffffff;
-      line-height: 1.45;
-      font-size: 9.5pt;
+      line-height: 1.42;
+      font-size: 9pt;
     }
 
     .page-break {
@@ -51,25 +51,25 @@ const htmlContent = `<!DOCTYPE html>
     /* Header Banner */
     .header-banner {
       border-bottom: 2.5px solid #0284c7;
-      padding-bottom: 10px;
-      margin-bottom: 14px;
+      padding-bottom: 8px;
+      margin-bottom: 12px;
     }
 
     .org-badge {
-      font-size: 8pt;
+      font-size: 7.5pt;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.8px;
       color: #0369a1;
       background: #e0f2fe;
-      padding: 2px 8px;
+      padding: 2px 7px;
       border-radius: 4px;
       display: inline-block;
-      margin-bottom: 5px;
+      margin-bottom: 4px;
     }
 
     h1.doc-title {
-      font-size: 17pt;
+      font-size: 15.5pt;
       font-weight: 800;
       color: #0f172a;
       line-height: 1.25;
@@ -77,7 +77,7 @@ const htmlContent = `<!DOCTYPE html>
     }
 
     p.doc-subtitle {
-      font-size: 9.5pt;
+      font-size: 9pt;
       color: #64748b;
       font-weight: 500;
     }
@@ -85,19 +85,19 @@ const htmlContent = `<!DOCTYPE html>
     .meta-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 8px;
+      gap: 7px;
       background: #f8fafc;
       border: 1px solid #e2e8f0;
       border-radius: 6px;
-      padding: 8px 12px;
-      margin-bottom: 14px;
-      font-size: 8pt;
+      padding: 7px 10px;
+      margin-bottom: 12px;
+      font-size: 7.5pt;
     }
 
     .meta-item strong {
       display: block;
       color: #64748b;
-      font-size: 7pt;
+      font-size: 6.5pt;
       text-transform: uppercase;
       letter-spacing: 0.5px;
       margin-bottom: 1px;
@@ -110,38 +110,39 @@ const htmlContent = `<!DOCTYPE html>
 
     /* Headings */
     h2.section-title {
-      font-size: 11.5pt;
+      font-size: 11pt;
       font-weight: 700;
       color: #0f172a;
       border-left: 3.5px solid #0284c7;
       padding-left: 8px;
-      margin-top: 14px;
-      margin-bottom: 8px;
+      margin-top: 12px;
+      margin-bottom: 6px;
       page-break-after: avoid;
     }
 
     h3.subsection-title {
-      font-size: 10pt;
+      font-size: 9.5pt;
       font-weight: 700;
       color: #1e293b;
-      margin-top: 10px;
+      margin-top: 9px;
       margin-bottom: 4px;
       page-break-after: avoid;
     }
 
     p {
-      margin-bottom: 6px;
+      margin-bottom: 5px;
       color: #334155;
     }
 
     /* Callout Boxes */
     .callout {
-      border-radius: 6px;
-      padding: 8px 12px;
-      margin: 8px 0;
-      font-size: 8.5pt;
+      border-radius: 5px;
+      padding: 7px 11px;
+      margin: 7px 0;
+      font-size: 8pt;
       border-left: 3.5px solid;
       page-break-inside: avoid;
+      line-height: 1.38;
     }
 
     .callout-amber {
@@ -165,7 +166,7 @@ const htmlContent = `<!DOCTYPE html>
     .callout-title {
       display: block;
       font-weight: 700;
-      font-size: 9pt;
+      font-size: 8.5pt;
       margin-bottom: 2px;
     }
 
@@ -175,8 +176,8 @@ const htmlContent = `<!DOCTYPE html>
       align-items: center;
       justify-content: space-between;
       gap: 5px;
-      margin: 10px 0;
-      padding: 10px 8px;
+      margin: 8px 0;
+      padding: 8px 6px;
       background: #f8fafc;
       border: 1px solid #e2e8f0;
       border-radius: 6px;
@@ -188,26 +189,26 @@ const htmlContent = `<!DOCTYPE html>
       background: #ffffff;
       border: 1px solid #cbd5e1;
       border-radius: 5px;
-      padding: 6px 5px;
+      padding: 6px 4px;
       text-align: center;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+      box-shadow: 0 1px 2px rgba(0,0,0,0.03);
     }
 
     .flow-step-num {
       display: inline-block;
-      font-size: 7pt;
+      font-size: 6.5pt;
       font-weight: 700;
       background: #0284c7;
       color: #ffffff;
-      width: 16px;
-      height: 16px;
-      line-height: 16px;
+      width: 15px;
+      height: 15px;
+      line-height: 15px;
       border-radius: 50%;
-      margin-bottom: 3px;
+      margin-bottom: 2px;
     }
 
     .flow-step-title {
-      font-size: 7.5pt;
+      font-size: 7pt;
       font-weight: 700;
       color: #0f172a;
       line-height: 1.2;
@@ -215,30 +216,63 @@ const htmlContent = `<!DOCTYPE html>
     }
 
     .flow-step-desc {
-      font-size: 6.5pt;
+      font-size: 6pt;
       color: #64748b;
       line-height: 1.2;
     }
 
     .flow-arrow {
       color: #94a3b8;
-      font-size: 12pt;
+      font-size: 11pt;
       font-weight: bold;
       user-select: none;
+    }
+
+    /* Badges & Pills */
+    .badge-ds {
+      background: #e0f2fe;
+      color: #0369a1;
+      border: 1px solid #bae6fd;
+      padding: 1px 5px;
+      border-radius: 3px;
+      font-size: 7pt;
+      font-weight: 700;
+      display: inline-block;
+    }
+
+    .badge-eo {
+      background: #fef3c7;
+      color: #92400e;
+      border: 1px solid #fde68a;
+      padding: 1px 5px;
+      border-radius: 3px;
+      font-size: 7pt;
+      font-weight: 700;
+      display: inline-block;
+    }
+
+    .badge-kme {
+      background: #ecfdf5;
+      color: #065f46;
+      border: 1px solid #a7f3d0;
+      padding: 1px 4px;
+      border-radius: 3px;
+      font-size: 6.5pt;
+      font-weight: 700;
     }
 
     /* Tables */
     table.data-table {
       width: 100%;
       border-collapse: collapse;
-      margin: 8px 0 10px 0;
-      font-size: 8pt;
+      margin: 7px 0 9px 0;
+      font-size: 7.5pt;
       page-break-inside: avoid;
     }
 
     table.data-table th, table.data-table td {
       border: 1px solid #cbd5e1;
-      padding: 5px 7px;
+      padding: 4.5px 6.5px;
       text-align: left;
     }
 
@@ -247,7 +281,7 @@ const htmlContent = `<!DOCTYPE html>
       color: #1e293b;
       font-weight: 700;
       text-transform: uppercase;
-      font-size: 7pt;
+      font-size: 6.5pt;
       letter-spacing: 0.5px;
     }
 
@@ -260,8 +294,8 @@ const htmlContent = `<!DOCTYPE html>
       background: #ffffff;
       border: 1px solid #cbd5e1;
       border-radius: 6px;
-      padding: 6px;
-      margin: 8px 0;
+      padding: 5px;
+      margin: 7px 0;
       page-break-inside: avoid;
       box-shadow: 0 1px 3px rgba(0,0,0,0.04);
     }
@@ -275,11 +309,33 @@ const htmlContent = `<!DOCTYPE html>
     }
 
     .figure-caption {
-      font-size: 7.5pt;
+      font-size: 7pt;
       color: #475569;
-      margin-top: 5px;
+      margin-top: 4px;
       font-style: italic;
       text-align: center;
+    }
+
+    /* UI Simulation Widget */
+    .ui-mock-box {
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      padding: 7px 9px;
+      margin: 7px 0;
+      font-size: 7.5pt;
+      page-break-inside: avoid;
+    }
+
+    .ui-mock-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 5px;
+      border-bottom: 1px solid #e2e8f0;
+      margin-bottom: 6px;
+      font-weight: 700;
+      color: #0f172a;
     }
 
     /* Code & JSON block */
@@ -287,18 +343,18 @@ const htmlContent = `<!DOCTYPE html>
       background: #0f172a;
       color: #e2e8f0;
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      font-size: 7pt;
-      padding: 8px;
+      font-size: 6.8pt;
+      padding: 7px 9px;
       border-radius: 5px;
       overflow-x: auto;
       line-height: 1.35;
-      margin: 6px 0;
+      margin: 5px 0;
       page-break-inside: avoid;
     }
 
     code {
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      font-size: 8pt;
+      font-size: 7.5pt;
       background: #f1f5f9;
       color: #0f172a;
       padding: 1px 3px;
@@ -306,9 +362,9 @@ const htmlContent = `<!DOCTYPE html>
     }
 
     ul, ol {
-      margin-left: 16px;
-      margin-bottom: 6px;
-      font-size: 9pt;
+      margin-left: 15px;
+      margin-bottom: 5px;
+      font-size: 8.5pt;
     }
 
     li {
@@ -319,11 +375,11 @@ const htmlContent = `<!DOCTYPE html>
 </head>
 <body>
 
-  <!-- ================= PAGE 1: EXECUTIVE BRIEF & ARCHITECTURE ================= -->
+  <!-- ================= PAGE 1: EXECUTIVE BRIEF & DUAL-CHANNEL ARCHITECTURE ================= -->
   <div class="header-banner">
     <span class="org-badge">Dar Al Hai General Trading • Heavy Equipment Operations</span>
     <h1 class="doc-title">Parts Inquiry &amp; SAP Business One PO API Integration</h1>
-    <p class="doc-subtitle">Operational Context, Komatsu PDX Allocation Rules, and Proposed SAP B1 Service Layer Integration</p>
+    <p class="doc-subtitle">Extended Integration Guide: Normal Stock Orders (DS / SO), Emergency Orders (EO), and Automated Hybrid Routing</p>
   </div>
 
   <div class="meta-grid">
@@ -341,117 +397,223 @@ const htmlContent = `<!DOCTYPE html>
     </div>
     <div class="meta-item">
       <strong>Document Version</strong>
-      <span>v1.0 (Integration RFC &amp; Spec)</span>
+      <span>v2.0 (Hybrid DS/SO + EO RFC)</span>
     </div>
   </div>
 
   <h2 class="section-title">1. Executive Summary &amp; Business Objective</h2>
   <p>
-    Dar Al Hai is the authorized Komatsu equipment operator and service organization managing a major fleet of excavators, bulldozers, and heavy earthmoving machinery across infrastructure sites in Kuwait. To maintain operational readiness and rapidly restore breakdown machines, the Maintenance &amp; Spare Parts department orders genuine replacement components directly from <strong>Komatsu Middle East (KME / PDX Portal)</strong>.
+    Dar Al Hai is the authorized Komatsu equipment operator and service organization managing an extensive fleet of excavators, bulldozers, and heavy earthmoving machinery across major infrastructure projects in Kuwait. To maintain operational readiness and rapidly replenish replacement components, the Maintenance &amp; Spare Parts department orders directly from <strong>Komatsu Middle East (KME / PDX Portal)</strong>.
   </p>
   <p>
-    Once emergency orders are processed on the manufacturer portal, Komatsu confirms the stock and issues official <strong>Komatsu Sales Orders (SOs)</strong>. Each Komatsu Sales Order creates a direct commercial commitment billed by Vendor <strong><code>V000006</code> (Komatsu Middle East)</strong> in US Dollars (USD).
+    The system now supports <strong>Dual-Channel Procurement</strong>:
   </p>
+  <ul>
+    <li><strong>Normal Stock Orders (<span class="badge-ds">DS</span> / <span class="badge-ds">SO</span>):</strong> Used for routine stock replenishment when components are physically in stock at KME Dubai warehouse. These orders carry <strong>0.00% surcharge</strong>, use <strong>DDU</strong> terms, and require <strong>no machine serial numbers or customer assignments</strong>.</li>
+    <li><strong>Emergency Orders (<span class="badge-eo">EO</span>):</strong> Used for urgent breakdown recovery where parts are restricted or backordered. These orders require <strong>13.30% surcharge</strong>, use <strong>EXW</strong> terms, and strictly mandate <strong>genuine machine model &amp; serial binding</strong> with line-item caps.</li>
+    <li><strong>Automated Hybrid Splitting:</strong> When an order contains high quantities, the EQP system automatically splits requested parts between available KME stock (<span class="badge-ds">DS</span>) and breakdown shortages (<span class="badge-eo">EO</span>).</li>
+  </ul>
 
   <div class="callout callout-blue">
-    <span class="callout-title">The Objective for the ABS Team:</span>
-    We need to enable the EQP system to automatically create corresponding <strong>Purchase Orders (POs)</strong> in <strong>SAP Business One</strong> for Vendor <code>V000006</code> via the <strong>SAP B1 Service Layer (REST API)</strong>. This replaces our current temporary desktop RPA bridge, prevents manual entry delays, and ensures 100% accounting alignment between Komatsu billing and SAP financial ledgers.
+    <span class="callout-title">The Objective for the ABS (SAP Team):</span>
+    We need to enable the EQP system to automatically create corresponding <strong>Purchase Orders (POs)</strong> in <strong>SAP Business One</strong> for Vendor <strong><code>V000006</code> (Komatsu Middle East)</strong> via the <strong>SAP B1 Service Layer (REST API)</strong>. Both Stock Orders (<span class="badge-ds">DS</span>/<span class="badge-ds">SO</span>) and Emergency Orders (<span class="badge-eo">EO</span>) must be recorded in SAP B1 with the appropriate commercial terms, surcharges, and machine metadata.
   </div>
 
-  <h2 class="section-title">2. End-to-End System Architecture</h2>
+  <h2 class="section-title">2. End-to-End System Architecture &amp; Hybrid Flow</h2>
   <p>
-    The target solution connects the field maintenance workflow directly to SAP B1 via automated API requests:
+    The updated operational flow connects field requisitions directly to SAP Business One through an intelligent stock-routing engine:
   </p>
 
   <div class="flow-diagram">
     <div class="flow-step">
       <div class="flow-step-num">1</div>
-      <div class="flow-step-title">Parts Inquiry</div>
-      <div class="flow-step-desc">Enter part numbers &amp; enforce allocation caps per machine.</div>
-    </div>
-    <div class="flow-arrow">&rarr;</div>
-    <div class="flow-step">
-      <div class="flow-step-num">2</div>
-      <div class="flow-step-title">Fleet Allocation</div>
-      <div class="flow-step-desc">Distribute across active chassis serial numbers.</div>
-    </div>
-    <div class="flow-arrow">&rarr;</div>
-    <div class="flow-step">
-      <div class="flow-step-num">3</div>
-      <div class="flow-step-title">Komatsu PDX</div>
-      <div class="flow-step-desc">Submit sub-orders &amp; convert to Komatsu Sales Orders (SO).</div>
+      <div class="flow-step-title">Parts Entry</div>
+      <div class="flow-step-desc">Enter part numbers &amp; total quantities required.</div>
     </div>
     <div class="flow-arrow">&rarr;</div>
     <div class="flow-step" style="border-color: #0284c7; background: #f0f9ff;">
-      <div class="flow-step-num" style="background: #0284c7;">4</div>
-      <div class="flow-step-title" style="color: #0369a1;">SAP Service Layer</div>
-      <div class="flow-step-desc">REST API <code>POST /b1s/v1/PurchaseOrders</code>.</div>
+      <div class="flow-step-num" style="background: #0284c7;">2</div>
+      <div class="flow-step-title" style="color: #0369a1;">Stock Inquiry</div>
+      <div class="flow-step-desc">Query live PDX stock (KME Dubai, EOR, KLTD).</div>
     </div>
     <div class="flow-arrow">&rarr;</div>
     <div class="flow-step" style="border-color: #10b981; background: #ecfdf5;">
-      <div class="flow-step-num" style="background: #10b981;">5</div>
-      <div class="flow-step-title" style="color: #065f46;">SAP B1 Database</div>
-      <div class="flow-step-desc">Official <code>DocEntry</code> &amp; <code>DocNum</code> registered in SAP.</div>
+      <div class="flow-step-num" style="background: #10b981;">3</div>
+      <div class="flow-step-title" style="color: #065f46;">Hybrid Routing</div>
+      <div class="flow-step-desc">Split into DS (KME Stock) &amp; EO (Shortage/Fleet).</div>
+    </div>
+    <div class="flow-arrow">&rarr;</div>
+    <div class="flow-step">
+      <div class="flow-step-num">4</div>
+      <div class="flow-step-title">Komatsu PDX</div>
+      <div class="flow-step-desc">Submit sub-orders &amp; convert quotes to SOs.</div>
+    </div>
+    <div class="flow-arrow">&rarr;</div>
+    <div class="flow-step" style="border-color: #f59e0b; background: #fffbeb;">
+      <div class="flow-step-num" style="background: #f59e0b;">5</div>
+      <div class="flow-step-title" style="color: #b45309;">SAP Service Layer</div>
+      <div class="flow-step-desc"><code>POST /b1s/v1/PurchaseOrders</code> (DS &amp; EO POs).</div>
     </div>
   </div>
 
-  <h2 class="section-title">3. The Business Need: Why Orders Must Be Split</h2>
-  <p>
-    From an ERP perspective, purchasing 22 hydraulic hoses would normally be consolidated into a single PO line. However, the <strong>Komatsu Middle East PDX Portal</strong> enforces strict Emergency Order (EO) policies:
-  </p>
-  <ul>
-    <li><strong>Mandatory Machine Chassis Binding:</strong> Every emergency breakdown line item must be validated against a genuine Komatsu Model (e.g. <code>PC500LC-10R</code>) and registered Kuwait Chassis Serial Number (e.g. <code>100433</code>).</li>
-    <li><strong>Anti-Hoarding Line-Item Quotas:</strong> To prevent distributors from using breakdown channels to accumulate stock, Komatsu strictly caps the quantity per item per machine (e.g. <strong>maximum 1 or 2 hoses per machine</strong>).</li>
-    <li><strong>Rejection of Bulk Orders:</strong> Submitting a single order of 22 hoses against one excavator is <strong>rejected by Komatsu portal validation</strong>.</li>
-    <li><strong>Sequential Reference Numbering:</strong> Each dispatched sub-order must have a unique sequential distributor reference (e.g. <code>R229/2026</code> through <code>R238/2026</code>).</li>
-  </ul>
-
-  <div class="callout callout-amber">
-    <span class="callout-title">The Operational Result:</span>
-    To legitimately procure 22 hoses during a major emergency overhaul, the EQP system splits the request across <strong>10 compatible machines</strong>, resulting in <strong>10 Komatsu Quotations</strong>, which convert into <strong>10 Komatsu Sales Orders</strong>, and requires <strong>10 corresponding Purchase Orders in SAP Business One</strong>.
-  </div>
-
-  <!-- ================= PAGE 2: STEP 1 & STEP 2 SCREENSHOTS ================= -->
+  <!-- ================= PAGE 2: COMMERCIAL POLICIES & ORDER MATRIX ================= -->
   <div class="page-break"></div>
 
-  <h2 class="section-title">4. Step-by-Step Functional Workflow &amp; Screenshots</h2>
-
-  <h3 class="subsection-title">Step 1: Requested Parts &amp; Item Sub-Order Caps</h3>
+  <h2 class="section-title">3. Order Types &amp; Commercial Policies Matrix (Essential for SAP)</h2>
   <p>
-    The maintenance engineer enters required part numbers. The EQP engine verifies them against the genuine Komatsu catalogue, fetches official USD unit prices, and establishes the <strong>Max / Sub-Order</strong> constraint.
+    Komatsu PDX enforces radically different commercial terms and data requirements depending on the order type. SAP Business One must record each PO according to its specific classification:
   </p>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th style="width: 18%;">Feature / Dimension</th>
+        <th style="width: 41%;">Normal Stock Orders (<span class="badge-ds">DS</span> / <span class="badge-ds">SO</span>)</th>
+        <th style="width: 41%;">Emergency Orders (<span class="badge-eo">EO</span>)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Definition &amp; Purpose</strong></td>
+        <td><strong>DS:</strong> Daily Stock Shipment • <strong>SO:</strong> Stock Order.<br>General warehouse replenishment.</td>
+        <td><strong>EO:</strong> Emergency Order.<br>Urgent breakdown recovery for halted equipment.</td>
+      </tr>
+      <tr>
+        <td><strong>Fulfilled From</strong></td>
+        <td><strong>KME Stock</strong> (Dubai local warehouse physical stock).</td>
+        <td><strong>KME EOR</strong> (Dubai restricted) or <strong>KLTD</strong> (Japan factory).</td>
+      </tr>
+      <tr>
+        <td><strong>Premium Surcharge</strong></td>
+        <td><strong>0.00% Premium</strong> (Base DNet catalogue pricing).</td>
+        <td><strong>+13.30% Emergency Surcharge</strong> added to total line value.</td>
+      </tr>
+      <tr>
+        <td><strong>Incoterms / Delivery</strong></td>
+        <td><strong>DDU</strong> (Delivery Duty Unpaid — Delivered to Kuwait).</td>
+        <td><strong>EXW</strong> (Ex Works — Picked up at KME PDC Dubai).</td>
+      </tr>
+      <tr>
+        <td><strong>Machine Model &amp; Serial</strong></td>
+        <td><strong>NOT REQUIRED</strong> (Model: Blank, Serial: Blank).<br>Komatsu PDX disables machine fields.</td>
+        <td><strong>STRICTLY MANDATORY</strong> (e.g. Model <code>PC500LC-10R</code>, SN <code>100433</code>).<br>Chassis validated against Komatsu worldwide database.</td>
+      </tr>
+      <tr>
+        <td><strong>Customer Account</strong></td>
+        <td><strong>NOT REQUIRED / BLANK</strong> (General Stock).<br>Order belongs to dealership distributor account.</td>
+        <td><strong>MANDATORY</strong> (e.g. <code>LAALA AL KUWAIT REAL ESTATE CO.</code>).</td>
+      </tr>
+      <tr>
+        <td><strong>Line Item Caps</strong></td>
+        <td><strong>NO CAP PER ITEM</strong> (e.g. 50 or 500 units allowed on 1 PO).</td>
+        <td><strong>STRICTLY CAPPED</strong> (e.g. max 1, 2, or 5 EA per machine asset).</td>
+      </tr>
+      <tr>
+        <td><strong>SAP Receiving Warehouse</strong></td>
+        <td>Central General Spare Parts Warehouse (e.g. <code>001</code> / <code>003</code>).</td>
+        <td>Project / Job-Site Breakdown Warehouse (e.g. <code>003</code> / Project).</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2 class="section-title">4. Real-World Hybrid Ordering Scenario: 50 Units Requested</h2>
+  <p>
+    Consider an engineer requesting <strong>50 units of Fuel Filter (Part <code>600-311-6742</code>)</strong>:
+  </p>
+
+  <div class="callout callout-amber">
+    <span class="callout-title">The Problem if Ordered Purely via Emergency Channel (EO):</span>
+    Komatsu caps Fuel Filters at <strong>20 units per machine</strong> on EO. Furthermore, placing 50 units on EO incurs an unnecessary <strong>13.30% premium surcharge</strong> across the entire batch, even on parts already sitting in Dubai!
+  </div>
+
+  <div class="callout callout-emerald">
+    <span class="callout-title">The Intelligent EQP Hybrid Solution:</span>
+    The EQP system checks live PDX availability:
+    <ul style="margin-top: 3px;">
+      <li><strong>KME Stock available:</strong> 10 units.</li>
+      <li><strong>Remaining shortage:</strong> 40 units (factory backorder).</li>
+    </ul>
+    <strong>Automated Order Generation:</strong>
+    <ol style="margin-top: 3px;">
+      <li><strong>Sub-Order #1 (<span class="badge-ds">DS</span>) — Ref <code>R229/2026</code>:</strong> 10 units routed to Daily Stock. <strong>0% premium, DDU, no machine serial, no customer name</strong>. Consolidates into <strong>1 PO in SAP</strong>.</li>
+      <li><strong>Sub-Order #2 (<span class="badge-eo">EO</span>) — Ref <code>R230/2026</code>:</strong> 20 units routed to Machine #1 (Model <code>PC500LC-10R</code>, SN <code>100433</code>). 13.3% premium, EXW. Generates <strong>1 PO in SAP</strong>.</li>
+      <li><strong>Sub-Order #3 (<span class="badge-eo">EO</span>) — Ref <code>R231/2026</code>:</strong> 20 units routed to Machine #2 (Model <code>PC500LC-10R</code>, SN <code>100434</code>). 13.3% premium, EXW. Generates <strong>1 PO in SAP</strong>.</li>
+    </ol>
+    <strong>Financial Benefit:</strong> Dar Al Hai saves the 13.3% surcharge on the 10 local units and ensures 100% portal compliance without rejections.
+  </div>
+
+  <!-- ================= PAGE 3: STEP 1 & STEP 2 SCREENSHOTS & UI FLOW ================= -->
+  <div class="page-break"></div>
+
+  <h2 class="section-title">5. Step-by-Step Functional Workflow &amp; UI Verification</h2>
+
+  <h3 class="subsection-title">Step 1: Part Entry, Real-Time Stock Badges &amp; Routing Split Inputs</h3>
+  <p>
+    The maintenance dispatcher enters part numbers. The system instantly queries the Komatsu PDX master and renders real-time stock availability badges: <strong>KME Stock</strong> (Dubai), <strong>EOR</strong> (Emergency Restriction), and <strong>KLTD</strong> (Factory). The user can toggle between <span class="badge-ds">DS (Daily)</span> and <span class="badge-ds">SO (Stock)</span> as the default normal order type.
+  </p>
+
+  <div class="ui-mock-box">
+    <div class="ui-mock-header">
+      <span>Part Number &amp; Real-Time Master Stock</span>
+      <span>Routing Split Configuration (Auto &amp; Manual)</span>
+    </div>
+    <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px;">
+      <div>
+        <strong style="font-family: monospace; font-size: 8.5pt;">600-311-6742</strong> &bull; FUEL FILTER
+        <div style="margin-top: 3px; display: flex; gap: 4px;">
+          <span class="badge-kme">KME Stock: 10</span>
+          <span class="badge-eo" style="font-size: 6.5pt;">EOR: 40</span>
+          <span class="badge-ds" style="font-size: 6.5pt;">KLTD: 0</span>
+        </div>
+      </div>
+      <div style="text-align: right; font-family: monospace;">
+        Requested Qty: <strong>50 EA</strong> &rarr;
+        <span class="badge-ds" style="font-size: 8pt;">DS (Stock): 10</span> +
+        <span class="badge-eo" style="font-size: 8pt;">EO (Emergency): 40</span>
+        <span style="display: block; font-size: 6.5pt; color: #64748b; margin-top: 2px;">EO Max/Order: 20 EA per SN</span>
+      </div>
+    </div>
+  </div>
 
   <div class="figure-card">
     <img src="${img1}" alt="Step 1: Requested Parts and Item Types" />
-    <div class="figure-caption">Figure 1: Part Entry and Sub-Order Caps (Part 2A8-62-12230 capped at 2 EA/sub-order; Part 2A8-62-11751 capped at 1 EA/sub-order; Total: 22 EA, $1,498.020).</div>
+    <div class="figure-caption">Figure 1: Baseline Parts Entry table showing part verification, catalogue descriptions, and sub-order caps.</div>
   </div>
 
-  <h3 class="subsection-title">Step 2 &amp; 3: Fleet Machine Pool Allocation &amp; Sequence Parameters</h3>
+  <h3 class="subsection-title">Step 2: Intelligent Fleet Allocation &amp; 100% Stock Bypass</h3>
   <p>
-    The dispatcher selects the customer fleet account (<em>Laala Al-Kuwait Real Estate Co.</em>), filters for model compatibility (<em>PC500LC-10R - 100% Match</em>), and activates a pool of genuine machines (20 serial numbers). The starting distributor reference is set (e.g., <code>R229/2026</code>) with breakdown remarks.
+    If an order is <strong>100% Stock (<span class="badge-ds">DS</span>/<span class="badge-ds">SO</span>)</strong>, Step 2 automatically displays a <em>"Machine Details Not Required — Bypassed"</em> banner and skips fleet selection entirely. If the order is <strong>Hybrid</strong>, the fleet selector is activated <em>strictly for the EO portion</em> (40 units divided across 2 machines).
   </p>
 
   <div class="figure-card">
     <img src="${img2}" alt="Step 2 and 3: Fleet Allocation and Sequence Setup" />
-    <div class="figure-caption">Figure 2: Active Machine Pool Selection (20 SNs allocated) and Sequential Reference Generation.</div>
+    <div class="figure-caption">Figure 2: Active Machine Pool Selection (filtered for compatible PC500LC-10R models) with sequential distributor references.</div>
   </div>
 
-  <!-- ================= PAGE 3: STEP 3 & STEP 4 SCREENSHOTS ================= -->
+  <!-- ================= PAGE 4: DISPATCH MANIFEST & SO CONVERSION ================= -->
   <div class="page-break"></div>
 
-  <h3 class="subsection-title">Step 4: Planned Unified Quotations &amp; Live Dispatch Queue</h3>
+  <h3 class="subsection-title">Step 3: Unified Quotations Manifest (Clear Stock vs Emergency Visual Badging)</h3>
   <p>
-    The dispatcher algorithm groups requested parts into compliant sub-orders, maximizing lines per order while respecting the individual quantity caps. Here, 22 units across 2 part numbers are allocated across 10 machines into <strong>10 sub-orders</strong> (<code>R229/2026</code> to <code>R238/2026</code>) ready for live dispatch to Komatsu PDX.
+    The EQP engine generates the unified manifest, clearly differentiating normal stock from emergency breakdown sub-orders:
   </p>
+  <ul>
+    <li><strong>Sub-Order #1:</strong> Displays <span class="badge-ds">DS &bull; Direct Stock</span> badge, Asset: <em>"KME Direct Stock • No Machine Required • DDU"</em>, uncapped.</li>
+    <li><strong>Sub-Order #2 &amp; #3:</strong> Displays <span class="badge-eo">EO &bull; Emergency</span> badge, Asset: <em>"SN: 100433 • PC500LC-10R • Laala Al-Kuwait"</em>, capped at 20 EA.</li>
+    <li><strong>Continuous Distributor Sequence:</strong> <code>R229/2026</code> &rarr; <code>R230/2026</code> &rarr; <code>R231/2026</code>.</li>
+  </ul>
 
   <div class="figure-card">
     <img src="${img3}" alt="Step 4: Planned Unified Quotations and Live Dispatch Queue" />
-    <div class="figure-caption">Figure 3: Unified Quotations Dispatch Queue displaying DB order numbers, target asset serial numbers, and line items.</div>
+    <div class="figure-caption">Figure 3: Planned Unified Dispatch Queue showing sub-order references, target asset serial numbers, and line items.</div>
   </div>
 
-  <h3 class="subsection-title">Step 5: Komatsu Quotation to Sales Order (SO) Conversion &amp; SAP Trigger</h3>
+  <!-- ================= PAGE 5: SO CONVERSION & SAP TRIGGER ================= -->
+  <div class="page-break"></div>
+
+  <h3 class="subsection-title">Step 4: Komatsu Quotation to Sales Order (SO) Conversion &amp; SAP Trigger</h3>
   <p>
-    Once submitted to Komatsu PDX, the portal returns official Komatsu Quotation Numbers (e.g., <code>0000282871</code>). The EQP system batch-confirms these quotations and converts them into official <strong>Komatsu Sales Orders (SO)</strong> (e.g., <code>SO #0000278046</code>, <code>SO #0000278047</code>...).
+    Once submitted to Komatsu PDX, the portal returns official Komatsu Quotation Numbers (e.g. <code>0000282871</code>). The EQP system batch-confirms these quotations and converts them into official <strong>Komatsu Sales Orders (SO)</strong> (e.g., <code>SO #0000278046</code>, <code>SO #0000278047</code>...).
   </p>
 
   <div class="figure-card">
@@ -461,228 +623,231 @@ const htmlContent = `<!DOCTYPE html>
 
   <div class="callout callout-emerald">
     <span class="callout-title">The Exact Integration Trigger:</span>
-    At this stage, the Komatsu Sales Order is officially confirmed. Clicking <strong>"Create SAP PO"</strong> should call the SAP Service Layer API to instantly create the approved Purchase Order in SAP B1 for Vendor <code>V000006</code>, returning the SAP <code>DocNum</code> directly into this screen.
+    When the Komatsu Sales Order is confirmed, clicking <strong>"Create SAP PO"</strong> calls the SAP Service Layer API to instantly create the approved Purchase Order in SAP B1 for Vendor <code>V000006</code>, returning the SAP <code>DocNum</code> directly into this screen.
   </div>
 
-  <!-- ================= PAGE 4: TECHNICAL API SPECIFICATION FOR ABS ================= -->
+  <!-- ================= PAGE 5: TECHNICAL API SPECIFICATION FOR ABS ================= -->
   <div class="page-break"></div>
 
-  <h2 class="section-title">5. Technical API Specification for the ABS / SAP Team</h2>
+  <h2 class="section-title">6. Technical API Specification for the ABS / SAP Team</h2>
   <p>
-    To implement direct creation of Purchase Orders in SAP Business One, we propose integrating with the <strong>SAP Business One Service Layer</strong> (OData v4 REST API).
+    We propose integrating directly with the <strong>SAP Business One Service Layer</strong> (OData v4 REST API).
   </p>
 
-  <h3 class="subsection-title">A. Authentication &amp; Session Management</h3>
-  <ul>
-    <li><strong>Endpoint:</strong> <code>POST https://&lt;sap-server&gt;:50000/b1s/v1/Login</code></li>
-    <li><strong>Payload:</strong> <code>{ "CompanyDB": "DAR_AL_HAI", "UserName": "API_USER", "Password": "..." }</code></li>
-    <li><strong>Session Handling:</strong> SAP returns HTTP Session Cookies (<code>B1SESSION</code> and <code>ROUTEID</code>) which our backend preserves and attaches to subsequent requests.</li>
-  </ul>
-
-  <h3 class="subsection-title">B. Header Field Mapping (Table: <code>OPOR</code> / Entity: <code>PurchaseOrders</code>)</h3>
+  <h3 class="subsection-title">A. Header Field Mapping (Table: <code>OPOR</code> / Entity: <code>PurchaseOrders</code>)</h3>
   <table class="data-table">
     <thead>
       <tr>
-        <th style="width: 20%;">SAP Field</th>
-        <th style="width: 25%;">SAP Description</th>
-        <th style="width: 30%;">Source from EQP System</th>
-        <th style="width: 25%;">Example Value</th>
+        <th style="width: 17%;">SAP Field</th>
+        <th style="width: 22%;">SAP Description</th>
+        <th style="width: 31%;">Stock Order (<span class="badge-ds">DS</span> / <span class="badge-ds">SO</span>)</th>
+        <th style="width: 30%;">Emergency Order (<span class="badge-eo">EO</span>)</th>
       </tr>
     </thead>
     <tbody>
       <tr>
         <td><code>CardCode</code></td>
         <td>Vendor Code</td>
-        <td>Komatsu Middle East Vendor Code</td>
-        <td><code>V000006</code></td>
+        <td><code>V000006</code> (Komatsu Middle East)</td>
+        <td><code>V000006</code> (Komatsu Middle East)</td>
       </tr>
       <tr>
         <td><code>DocDate</code></td>
         <td>Posting Date</td>
-        <td>Order Date (YYYY-MM-DD)</td>
-        <td><code>2026-10-05</code></td>
+        <td>Current Date (<code>2026-10-05</code>)</td>
+        <td>Current Date (<code>2026-10-05</code>)</td>
       </tr>
       <tr>
         <td><code>DocDueDate</code></td>
         <td>Delivery Due Date</td>
-        <td>Required Delivery Date</td>
-        <td><code>2026-10-12</code></td>
+        <td>Expected Delivery Date</td>
+        <td>Expected Delivery Date (Urgent)</td>
       </tr>
       <tr>
         <td><code>DocCurrency</code></td>
         <td>Document Currency</td>
-        <td>Komatsu Billed Currency</td>
+        <td><code>USD</code></td>
         <td><code>USD</code></td>
       </tr>
       <tr>
         <td><code>NumAtCard</code></td>
-        <td>Vendor Ref / BP Reference</td>
-        <td>Komatsu SO Number + DB Order Ref</td>
-        <td><code>SO #0000278046 / R228/2026</code></td>
+        <td>Vendor Ref / BP Ref</td>
+        <td><code>SO #0000278046 / R229/2026</code></td>
+        <td><code>SO #0000278047 / R230/2026</code></td>
       </tr>
       <tr>
         <td><code>Comments</code></td>
         <td>Remarks</td>
-        <td>Breakdown Machine Model &amp; Serial</td>
+        <td><code>Komatsu DS Stock Replenishment (KME)</code></td>
         <td><code>Komatsu EO: PC500LC-10R (SN: 100433)</code></td>
+      </tr>
+      <tr>
+        <td><code>U_OrderType</code></td>
+        <td>UDF: Order Type</td>
+        <td><code>DS</code> (or <code>SO</code>)</td>
+        <td><code>EO</code></td>
       </tr>
       <tr>
         <td><code>U_KomatsuSO</code></td>
         <td>UDF: Komatsu SO No</td>
-        <td>Official Komatsu Sales Order Number</td>
-        <td><code>0000278046</code></td>
+        <td>Official Komatsu SO Number</td>
+        <td>Official Komatsu SO Number</td>
+      </tr>
+      <tr>
+        <td><code>U_DeliveryTerms</code></td>
+        <td>UDF: Delivery Terms</td>
+        <td><code>DDU</code></td>
+        <td><code>EXW</code></td>
+      </tr>
+      <tr>
+        <td><code>U_PremiumRate</code></td>
+        <td>UDF: Surcharge Rate</td>
+        <td><code>0.00</code> (0% surcharge)</td>
+        <td><code>13.30</code> (13.3% surcharge)</td>
       </tr>
       <tr>
         <td><code>U_MachineSerial</code></td>
         <td>UDF: Machine Serial</td>
-        <td>Chassis Serial Number</td>
-        <td><code>100433</code></td>
+        <td><em>null / empty string</em> (Not applicable)</td>
+        <td><code>100433</code> (Chassis Serial)</td>
       </tr>
       <tr>
         <td><code>U_MachineModel</code></td>
         <td>UDF: Machine Model</td>
-        <td>Equipment Model Code</td>
-        <td><code>PC500LC-10R</code></td>
+        <td><em>null / empty string</em> (Not applicable)</td>
+        <td><code>PC500LC-10R</code> (Model Code)</td>
+      </tr>
+      <tr>
+        <td><code>U_Customer</code></td>
+        <td>UDF: End Customer</td>
+        <td><em>null / empty string</em> (General Stock)</td>
+        <td><code>LAALA AL KUWAIT REAL ESTATE CO.</code></td>
       </tr>
     </tbody>
   </table>
 
-  <h3 class="subsection-title">C. Line Item Field Mapping (Table: <code>POR1</code> / Entity: <code>DocumentLines</code>)</h3>
-  <table class="data-table">
-    <thead>
-      <tr>
-        <th style="width: 20%;">SAP Field</th>
-        <th style="width: 25%;">SAP Description</th>
-        <th style="width: 30%;">Source from EQP System</th>
-        <th style="width: 25%;">Example Value</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><code>ItemCode</code></td>
-        <td>Item Number</td>
-        <td>Genuine Komatsu Part Number</td>
-        <td><code>2A8-62-12230</code></td>
-      </tr>
-      <tr>
-        <td><code>ItemDescription</code></td>
-        <td>Item Description</td>
-        <td>Part Description from Komatsu Master</td>
-        <td><code>HOSE</code></td>
-      </tr>
-      <tr>
-        <td><code>Quantity</code></td>
-        <td>Quantity</td>
-        <td>Sub-order allocated quantity</td>
-        <td><code>2.00</code></td>
-      </tr>
-      <tr>
-        <td><code>UnitPrice</code></td>
-        <td>Unit Price (USD)</td>
-        <td>Komatsu Unit Price in USD</td>
-        <td><code>66.31</code></td>
-      </tr>
-      <tr>
-        <td><code>WarehouseCode</code></td>
-        <td>Warehouse</td>
-        <td>Receiving Warehouse</td>
-        <td><code>003</code> <em>(or default per ABS)</em></td>
-      </tr>
-      <tr>
-        <td><code>TaxCode</code></td>
-        <td>Tax Code</td>
-        <td>Import Zero/Exempt</td>
-        <td><code>P0</code> <em>(or default per ABS)</em></td>
-      </tr>
-    </tbody>
-  </table>
+  <h3 class="subsection-title">B. Concrete JSON Payload Comparison: Normal Stock vs Emergency Breakdown</h3>
 
-  <!-- ================= PAGE 5: JSON PAYLOAD & ACTION ITEMS ================= -->
-  <div class="page-break"></div>
-
-  <h3 class="subsection-title">D. Concrete JSON Request Payload (<code>POST /b1s/v1/PurchaseOrders</code>)</h3>
-  <p>
-    Below is the exact JSON structure our backend will send to the Service Layer for each confirmed sub-order:
-  </p>
-
-  <pre class="code-block">{
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 7px;">
+    <div>
+      <span style="font-size: 7.5pt; font-weight: 700; color: #0369a1;">Example 1: Normal Stock PO (DS) — No Machine Details</span>
+      <pre class="code-block">{
   "CardCode": "V000006",
   "DocDate": "2026-10-05",
   "DocDueDate": "2026-10-12",
   "DocCurrency": "USD",
-  "NumAtCard": "SO #0000278046 / R228/2026",
-  "Comments": "Komatsu Emergency Order | Asset: PC500LC-10R (SN: 100433) | Customer: Laala Al-Kuwait | Quote: 0000282871",
+  "NumAtCard": "SO #0000278046 / R229/2026",
+  "Comments": "Komatsu DS Stock Replenishment",
+  "U_OrderType": "DS",
   "U_KomatsuSO": "0000278046",
   "U_KomatsuQuote": "0000282871",
-  "U_MachineSerial": "100433",
-  "U_MachineModel": "PC500LC-10R",
+  "U_DeliveryTerms": "DDU",
+  "U_PremiumRate": 0.0,
+  "U_MachineSerial": null,
+  "U_MachineModel": null,
+  "U_Customer": null,
   "DocumentLines": [
     {
-      "ItemCode": "2A8-62-12230",
-      "ItemDescription": "HOSE",
-      "Quantity": 2.0,
-      "UnitPrice": 66.31,
-      "WarehouseCode": "003",
+      "ItemCode": "600-311-6742",
+      "ItemDescription": "FUEL FILTER",
+      "Quantity": 10.0,
+      "UnitPrice": 25.00,
+      "WarehouseCode": "001",
       "TaxCode": "P0"
-    },
+    }
+  ]
+}</pre>
+    </div>
+
+    <div>
+      <span style="font-size: 7.5pt; font-weight: 700; color: #b45309;">Example 2: Emergency Breakdown PO (EO) — With Machine Details</span>
+      <pre class="code-block">{
+  "CardCode": "V000006",
+  "DocDate": "2026-10-05",
+  "DocDueDate": "2026-10-08",
+  "DocCurrency": "USD",
+  "NumAtCard": "SO #0000278047 / R230/2026",
+  "Comments": "Komatsu EO: PC500LC-10R (SN: 100433)",
+  "U_OrderType": "EO",
+  "U_KomatsuSO": "0000278047",
+  "U_KomatsuQuote": "0000282872",
+  "U_DeliveryTerms": "EXW",
+  "U_PremiumRate": 13.3,
+  "U_MachineSerial": "100433",
+  "U_MachineModel": "PC500LC-10R",
+  "U_Customer": "LAALA AL KUWAIT",
+  "DocumentLines": [
     {
-      "ItemCode": "2A8-62-11751",
-      "ItemDescription": "HOSE",
-      "Quantity": 1.0,
-      "UnitPrice": 70.23,
+      "ItemCode": "600-311-6742",
+      "ItemDescription": "FUEL FILTER",
+      "Quantity": 20.0,
+      "UnitPrice": 28.325,
       "WarehouseCode": "003",
       "TaxCode": "P0"
     }
   ]
 }</pre>
+    </div>
+  </div>
 
-  <h3 class="subsection-title">E. Expected SAP Response &amp; Storage</h3>
+  <!-- ================= PAGE 6: SAP RESPONSE & ALIGNMENT QUESTIONS ================= -->
+  <div class="page-break"></div>
+
+  <h3 class="subsection-title">C. Expected SAP Response &amp; Cross-System Traceability</h3>
   <p>
-    Upon successful creation, SAP B1 returns HTTP 201 Created with the document identifiers:
+    Upon successful creation, the SAP B1 Service Layer returns HTTP 201 Created with document numbers:
   </p>
   <pre class="code-block">{
   "DocEntry": 14205,
   "DocNum": 20260481,
   "DocDate": "2026-10-05",
   "CardCode": "V000006",
-  "DocTotal": 202.85,
+  "DocTotal": 250.00,
   "DocCurrency": "USD"
 }</pre>
   <p>
-    The EQP database saves <code>DocNum: 20260481</code> and <code>DocEntry: 14205</code> alongside the Komatsu quotation record, giving the maintenance and finance teams instant cross-traceability.
+    The EQP database saves <code>DocNum: 20260481</code> and <code>DocEntry: 14205</code> directly onto the Komatsu quotation record, giving maintenance, procurement, and accounting teams complete end-to-end traceability across both systems.
   </p>
 
-  <h2 class="section-title">6. Key Questions &amp; Alignment Needed from ABS</h2>
+  <h2 class="section-title">7. Key Questions &amp; Alignment Needed from the ABS Team</h2>
   <ol>
     <li>
-      <strong>Service Layer Endpoint URL &amp; Connectivity:</strong><br>
-      Please provide the official Service Layer URL (e.g., <code>https://daralhai.b1pro.com:50000/b1s/v1/</code>) and confirm firewall access for the EQP backend server.
+      <strong>Service Layer Endpoint URL &amp; Firewall Whitelisting:</strong><br>
+      Please provide the official Service Layer URL (e.g. <code>https://daralhai.b1pro.com:50000/b1s/v1/</code>) and confirm network access for the EQP server.
     </li>
     <li>
       <strong>Dedicated Technical API User:</strong><br>
-      We request a dedicated API service account (e.g., <code>B1_API_EQP</code>) with authorizations limited to <code>PurchaseOrders</code> (Create/Read) to avoid relying on interactive user credentials.
+      We request a dedicated API service account (e.g. <code>B1_API_EQP</code>) with permissions restricted to <code>PurchaseOrders</code> (Create/Read) and <code>Items</code> (Read/Create).
+    </li>
+    <li>
+      <strong>Warehouse Code Mapping for Stock vs Emergency:</strong><br>
+      Should normal stock orders (<span class="badge-ds">DS</span>/<span class="badge-ds">SO</span>) route to the Central Stock Warehouse (e.g. <code>001</code>) while emergency breakdown parts (<span class="badge-eo">EO</span>) route to the Job-Site/Transit Warehouse (e.g. <code>003</code>)?
+    </li>
+    <li>
+      <strong>Pricing &amp; 13.30% Surcharge Representation:</strong><br>
+      For Emergency Orders, should the 13.30% Komatsu surcharge be incorporated into the line-item unit price (e.g. $\$25.00 \times 1.133 = \$28.325$) or recorded as an additional document freight/charge expense?
     </li>
     <li>
       <strong>Handling New Part Numbers (Item Master <code>OITM</code>):</strong><br>
-      With over 500,000 Komatsu catalogue items, occasionally an emergency breakdown part does not yet exist in SAP B1. What is ABS's preferred procedure?
-      <ul style="margin-top: 3px;">
-        <li><em>Option 1 (Recommended):</em> Allow our API to auto-create missing parts via <code>POST /b1s/v1/Items</code> using Komatsu catalogue metadata prior to PO creation.</li>
-        <li><em>Option 2:</em> Use a standard non-inventory item master with explicit line-item descriptions.</li>
+      With over 500,000 Komatsu parts, an urgent breakdown item may not yet exist in SAP B1. What is ABS's preferred procedure?
+      <ul style="margin-top: 2px;">
+        <li><em>Option 1 (Recommended):</em> Allow our API to auto-create missing parts via <code>POST /b1s/v1/Items</code> using Komatsu catalogue master data before creating the PO.</li>
+        <li><em>Option 2:</em> Use a generic non-inventory item master with explicit line-item descriptions.</li>
       </ul>
     </li>
     <li>
-      <strong>Document Status: Active PO vs. Draft:</strong><br>
-      Should the API create approved open POs (<code>PurchaseOrders</code>) directly, or create Drafts (<code>PurchaseOrderDrafts</code>) for accounting verification during the pilot phase?
+      <strong>PO Approval Status (Active vs Draft):</strong><br>
+      Should the API create approved open POs (<code>PurchaseOrders</code>) directly, or create Drafts (<code>PurchaseOrderDrafts</code>) during the pilot validation period?
     </li>
     <li>
-      <strong>Existing UDFs:</strong><br>
-      Please confirm if user-defined fields already exist on <code>OPOR</code> for Komatsu SO numbers or Machine Serials that we should populate.
+      <strong>Existing UDF Alignment on <code>OPOR</code>:</strong><br>
+      Please confirm if user-defined fields already exist on <code>OPOR</code> for <code>U_OrderType</code>, <code>U_KomatsuSO</code>, <code>U_MachineSerial</code>, and <code>U_DeliveryTerms</code>, or if ABS will create them.
     </li>
   </ol>
 
-  <div class="callout callout-emerald" style="margin-top: 10px;">
-    <span class="callout-title">Next Steps:</span>
-    Once ABS provides the Service Layer connection parameters and confirms the Item Master policy, the EQP engineering team will execute test transactions in the SAP sandbox environment within 24 hours.
+  <div class="callout callout-emerald" style="margin-top: 8px;">
+    <span class="callout-title">Next Steps &amp; Testing Plan:</span>
+    Once ABS provides the Service Layer connection credentials and confirms the UDF structure, the EQP engineering team will execute sample test transactions in the SAP sandbox environment within 24 hours.
   </div>
 
 </body>
@@ -706,14 +871,14 @@ async function generatePdf() {
     format: 'A4',
     printBackground: true,
     margin: {
-      top: '12mm',
-      bottom: '12mm',
+      top: '11mm',
+      bottom: '11mm',
       left: '12mm',
       right: '12mm'
     },
     displayHeaderFooter: true,
-    headerTemplate: '<div style="font-size: 7.5pt; color: #94a3b8; width: 100%; text-align: right; padding-right: 12mm; font-family: sans-serif;">Dar Al Hai &bull; Parts Inquiry &amp; SAP B1 PO API Integration Guide</div>',
-    footerTemplate: '<div style="font-size: 7.5pt; color: #94a3b8; width: 100%; text-align: center; font-family: sans-serif;">Confidential &bull; Prepared for ABS Consulting &bull; Page <span class="pageNumber"></span> of <span class="totalPages"></span></div>'
+    headerTemplate: '<div style="font-size: 7pt; color: #94a3b8; width: 100%; text-align: right; padding-right: 12mm; font-family: sans-serif;">Dar Al Hai &bull; Parts Inquiry &amp; SAP B1 PO API Integration Guide (v2.0)</div>',
+    footerTemplate: '<div style="font-size: 7pt; color: #94a3b8; width: 100%; text-align: center; font-family: sans-serif;">Confidential &bull; Prepared for ABS Consulting &bull; Page <span class="pageNumber"></span> of <span class="totalPages"></span></div>'
   });
 
   await browser.close();
