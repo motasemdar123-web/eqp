@@ -198,6 +198,12 @@ const ENTERPRISE_PROFILES = {
     permissions: ['REPORTS_READ', 'EQP_MANAGE', 'SCHEDULE_MANAGE'],
     redirectTo: '/management',
   },
+  'mahmoud.khanfur@daralhai.com': {
+    fullName: 'Mahmoud Khanfur',
+    roles: ['SERVICE_ENGINEER'],
+    permissions: ['REPORTS_READ', 'EQP_MANAGE', 'SCHEDULE_MANAGE'],
+    redirectTo: '/management',
+  },
   'operations.manager@daralhai.com': {
     fullName: 'Operations Manager',
     roles: ['OPERATIONS_MANAGER'],

@@ -38,11 +38,11 @@ const env = {
       .split(',')
       .map((email) => email.trim().toLowerCase())
       .filter(Boolean),
-    engineerEmails: (process.env.MICROSOFT_ENGINEER_EMAILS || 'motasem.ghanem@daralhai.com,abdelrahman@daralhai.com,faisal@daralhai.com')
+    engineerEmails: (process.env.MICROSOFT_ENGINEER_EMAILS || 'motasem.ghanem@daralhai.com,abdelrahman@daralhai.com,faisal@daralhai.com,mahmoud.khanfur@daralhai.com')
       .split(',')
       .map((email) => email.trim().toLowerCase())
       .filter(Boolean),
-    engineerNames: (process.env.MICROSOFT_ENGINEER_NAMES || 'motasem,abdelrahman,faisal,mahmoud qaddour')
+    engineerNames: (process.env.MICROSOFT_ENGINEER_NAMES || 'motasem,abdelrahman,faisal,mahmoud qaddour,mahmoud khanfur,khanfur')
       .split(',')
       .map((name) => name.trim().toLowerCase())
       .filter(Boolean),

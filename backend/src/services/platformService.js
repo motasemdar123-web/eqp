@@ -574,8 +574,26 @@ function frontendCallbackUrl(req, preferredCallbackUrl) {
   if (preferred) return preferred;
 
   const configured = env.microsoft.frontendCallbackUrl;
+  if (configured) {
+    try {
+      const url = new URL(configured);
+      if (url.pathname === '/' || url.pathname === '') {
+        url.pathname = '/auth/microsoft/callback';
+      }
+      return url;
+    } catch {}
+  }
+
+  // Check request headers for client origin or referer
+  if (req && typeof req.get === 'function') {
+    const candidateOrigin = safeFrontendCallbackUrl(req.get('origin')) || safeFrontendCallbackUrl(req.get('referer'));
+    if (candidateOrigin) return candidateOrigin;
+  }
+
+  // Prefer a production HTTPS allowed origin over localhost
+  const prodOrigin = env.security.allowedOrigins.find((origin) => origin.startsWith('https://') && !origin.includes('*'));
   const fallbackOrigin = env.security.allowedOrigins.find((origin) => origin.startsWith('http') && !origin.includes('*'));
-  const base = configured || fallbackOrigin || 'http://localhost:3000';
+  const base = prodOrigin || fallbackOrigin || 'http://localhost:3000';
   const url = new URL(base);
 
   if (url.pathname === '/' || url.pathname === '') {
@@ -593,7 +611,14 @@ function safeReturnTo(returnTo) {
 }
 
 function microsoftErrorRedirect(req, message, preferredCallbackUrl) {
-  const url = frontendCallbackUrl(req, preferredCallbackUrl);
+  let callbackUrl = preferredCallbackUrl;
+  if (!callbackUrl && req?.query?.state) {
+    const savedState = microsoftStates.get(req.query.state);
+    if (savedState?.frontendCallbackUrl) {
+      callbackUrl = savedState.frontendCallbackUrl;
+    }
+  }
+  const url = frontendCallbackUrl(req, callbackUrl);
   url.searchParams.set('error', message || 'Microsoft authentication failed.');
   return url.toString();
 }
