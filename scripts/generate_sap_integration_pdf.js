@@ -514,7 +514,7 @@ const htmlContent = `<!DOCTYPE html>
     <div class="header-banner">
       <span class="org-badge">Dar Al Hai General Trading Co. W.L.L. &bull; Heavy Equipment Operations</span>
       <h1 class="doc-title">Komatsu Parts Procurement &amp; SAP Business One Integration Specification</h1>
-      <p class="doc-subtitle">Operational Fleet Context, Komatsu PDX Manufacturer Ordering Rules, and Order Data Delivery Specification for ABS Consulting</p>
+      <p class="doc-subtitle">Komatsu PDX Manufacturer Ordering Rules and Order Data Delivery Specification for ABS Consulting</p>
     </div>
 
     <div class="meta-grid">
@@ -536,14 +536,6 @@ const htmlContent = `<!DOCTYPE html>
       </div>
     </div>
 
-    <h2 class="section-title">1. Operational Fleet Context: Mission-Critical Asset Management</h2>
-    <p>
-      Dar Al Hai General Trading operates a major heavy equipment fleet deployed across Kuwait's civil infrastructure, deep earthmoving, pipeline installation, and marine reclamation projects. The core operational fleet comprises heavy <strong>Komatsu hydraulic excavators</strong> (including <code>PC500LC-10R</code> and <code>PC400-8R</code>), high-tonnage crawler bulldozers (<code>D375A-6</code>), and heavy wheel loaders (<code>WA470-6</code>). In Kuwait's extreme operating conditions—where ambient summer temperatures consistently exceed 50&deg;C and abrasive desert silica dust accelerates component wear—heavy earthmoving assets operate on continuous multi-shift production cycles. Machine uptime directly governs critical infrastructure contract milestones.
-    </p>
-    <p>
-      Maintenance and overhaul operations are centered at Dar Al Hai's <strong>Shuwaikh Central Maintenance Workshop</strong>, supported by the <strong>Sulaibiya Logistics Staging Depot</strong>. Genuine OEM replacement parts are procured directly from the regional manufacturer hub, <strong>Komatsu Middle East FZE (KME)</strong> in Dubai JAFZA, via their B2B digital portal (<strong>Komatsu PDX</strong>). In SAP Business One, Komatsu Middle East is registered as foreign Vendor <strong><code>V000006</code></strong>, transacting exclusively in <strong>US Dollars (USD)</strong>.
-    </p>
-
     <div class="metric-strip">
       <div class="metric-box">
         <span class="metric-val">500,000+</span>
@@ -559,7 +551,7 @@ const htmlContent = `<!DOCTYPE html>
       </div>
     </div>
 
-    <h2 class="section-title">2. Guiding Integration Philosophy: Respecting Domain Boundaries</h2>
+    <h2 class="section-title">1. Guiding Integration Philosophy: Respecting Domain Boundaries</h2>
     <div class="callout callout-emerald">
       <span class="callout-title">Guiding Principle for ABS Consultants &amp; Developers:</span>
       <strong>ABS are the recognized SAP Business One implementation experts. We do not dictate SAP internal database schemas, table structures, or system triggers.</strong><br>
@@ -605,7 +597,7 @@ const htmlContent = `<!DOCTYPE html>
       </tbody>
     </table>
 
-    <h2 class="section-title">3. End-to-End System Workflow Architecture</h2>
+    <h2 class="section-title">2. End-to-End System Workflow Architecture</h2>
     <div class="flow-diagram">
       <div class="flow-step">
         <div class="flow-step-num">1</div>
@@ -657,7 +649,7 @@ const htmlContent = `<!DOCTYPE html>
 
   <!-- ================= PAGE 2: WHY ORDERS ARE SPLIT & FINANCIAL RECONCILIATION ================= -->
   <div class="pdf-page" id="page-2">
-    <h2 class="section-title">4. Operational Constraint: Why Orders Are Split on Komatsu PDX</h2>
+    <h2 class="section-title">3. Operational Constraint: Why Orders Are Split on Komatsu PDX</h2>
     <p>
       In standard enterprise ERP configurations, ordering 50 units of a spare part is recorded as a single purchase requisition line. However, the <strong>Komatsu Middle East PDX Portal</strong> enforces strict manufacturer routing and anti-hoarding policies designed to safeguard factory inventory across the Middle East. Consequently, our EQP procurement middleware must partition requisitions into distinct sub-orders before submission.
     </p>
@@ -720,7 +712,7 @@ const htmlContent = `<!DOCTYPE html>
       </tbody>
     </table>
 
-    <h2 class="section-title">5. Concrete Walkthrough: Requisition for 50 EA Fuel Filters (Part 600-311-6742)</h2>
+    <h2 class="section-title">4. Concrete Walkthrough: Requisition for 50 EA Fuel Filters (Part 600-311-6742)</h2>
     <p>
       When field maintenance requests 50 fuel filters, the EQP system checks live PDX inventory and automatically executes a hybrid split across channels:
     </p>
@@ -777,7 +769,7 @@ const htmlContent = `<!DOCTYPE html>
       </p>
     </div>
 
-    <h2 class="section-title">6. Financial Reconciliation &amp; Three-Way Matching Governance</h2>
+    <h2 class="section-title">5. Financial Reconciliation &amp; Three-Way Matching Governance</h2>
     <div class="callout callout-emerald">
       <span class="callout-title">Flawless Accounting &amp; Warehouse Reconciliation in SAP Business One:</span>
       Each resulting SAP Purchase Order captures the exact Komatsu Sales Order Number and Distributor Reference in SAP PO reference fields.<br>
@@ -830,7 +822,7 @@ const htmlContent = `<!DOCTYPE html>
 
   <!-- ================= PAGE 3: OPERATIONAL WORKFLOW PHASE I ================= -->
   <div class="pdf-page" id="page-3">
-    <h2 class="section-title">7. Operational Workflow Phase I: Part Entry &amp; Fleet Allocation</h2>
+    <h2 class="section-title">6. Operational Workflow Phase I: Part Entry &amp; Fleet Allocation</h2>
 
     <h3 class="subsection-title">Step 1: Part Entry, Real-Time Master Stock &amp; Allocation</h3>
     <p>
@@ -890,7 +882,7 @@ const htmlContent = `<!DOCTYPE html>
 
   <!-- ================= PAGE 4: OPERATIONAL WORKFLOW PHASE II ================= -->
   <div class="pdf-page" id="page-4">
-    <h2 class="section-title">8. Operational Workflow Phase II: Planned Unified Quotations Manifest</h2>
+    <h2 class="section-title">7. Operational Workflow Phase II: Planned Unified Quotations Manifest</h2>
 
     <h3 class="subsection-title">Step 3: Planned Unified Quotations Manifest &amp; Live Dispatch Queue</h3>
     <p>
@@ -954,7 +946,7 @@ const htmlContent = `<!DOCTYPE html>
 
   <!-- ================= PAGE 5: OPERATIONAL WORKFLOW PHASE III ================= -->
   <div class="pdf-page" id="page-5">
-    <h2 class="section-title">9. Operational Workflow Phase III: Quotation-to-SO Conversion &amp; SAP Trigger</h2>
+    <h2 class="section-title">8. Operational Workflow Phase III: Quotation-to-SO Conversion &amp; SAP Trigger</h2>
 
     <h3 class="subsection-title">Step 4: Komatsu Quotation to Sales Order (SO) Converter</h3>
     <p>
@@ -1019,7 +1011,7 @@ const htmlContent = `<!DOCTYPE html>
 
   <!-- ================= PAGE 6: DATA MANIFEST PROVIDED BY EQP SYSTEM ================= -->
   <div class="pdf-page" id="page-6">
-    <h2 class="section-title">10. EQP Order Data Manifest: Structured Data Delivered to SAP B1</h2>
+    <h2 class="section-title">9. EQP Order Data Manifest: Structured Data Delivered to SAP B1</h2>
     <p>
       For every confirmed Komatsu Sales Order, our EQP procurement engine produces a clean, validated, and complete order manifest. We do not prescribe internal SAP table structures or dictate database fields; rather, we provide our exact operational business data below so that ABS consultants can determine the optimal mapping and ingestion logic in SAP Business One.
     </p>
@@ -1184,7 +1176,7 @@ const htmlContent = `<!DOCTYPE html>
 
   <!-- ================= PAGE 7: CONSULTATIVE RFC & QUESTIONS FOR ABS ================= -->
   <div class="pdf-page" id="page-7">
-    <h2 class="section-title">11. Consultative Technical Request for ABS Consulting (RFC)</h2>
+    <h2 class="section-title">10. Consultative Technical Request for ABS Consulting (RFC)</h2>
     <p>
       ABS brings specialized domain expertise in Dar Al Hai's SAP Business One configuration, financial workflows, and database governance. We respect your architectural ownership of the SAP environment and invite your team to define how our EQP procurement engine should interface with SAP B1. Please review the following technical points and advise on your preferred approach:
     </p>
