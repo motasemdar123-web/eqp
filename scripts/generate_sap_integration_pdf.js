@@ -1215,17 +1215,12 @@ const htmlContent = `<!DOCTYPE html>
     </div>
 
     <div class="rfc-item">
-      <h4>4. Document Status Workflow (Approved Open PO vs. PO Draft)</h4>
-      <p>Should the automated integration create open, active Purchase Orders directly, or should it create Purchase Order Drafts for review and manual posting during the initial pilot phase?</p>
-    </div>
-
-    <div class="rfc-item">
-      <h4>5. Dedicated API Service User &amp; Authentication Protocol</h4>
+      <h4>4. Dedicated API Service User &amp; Authentication Protocol</h4>
       <p>What authentication protocol does ABS recommend for our automated service (e.g. dedicated API service user credentials, session cookies, OAuth tokens)? We request a dedicated service user with scoped permissions to avoid dependence on individual employee accounts.</p>
     </div>
 
     <div class="rfc-item">
-      <h4>6. Sandbox Connectivity &amp; Access Provisioning</h4>
+      <h4>5. Sandbox Connectivity &amp; Access Provisioning</h4>
       <p>Please provide sandbox/test environment access details (endpoint URL, test company database name, credentials, and firewall whitelisting requirements) so that connectivity and schema validation can begin.</p>
     </div>
 
@@ -1263,12 +1258,6 @@ const htmlContent = `<!DOCTYPE html>
           <td>Joint Technical Decision</td>
           <td>API Auto-creation (Rec. A)</td>
           <td><em>[ABS preferred method]</em></td>
-        </tr>
-        <tr>
-          <td><strong>Document Status</strong></td>
-          <td>Dar Al Hai Ops &amp; ABS</td>
-          <td>PO Draft (Pilot) &rarr; Open PO</td>
-          <td><em>[To be confirmed by ABS]</em></td>
         </tr>
       </tbody>
     </table>
