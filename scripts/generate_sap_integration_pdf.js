@@ -1072,11 +1072,11 @@ const htmlContent = `<!DOCTYPE html>
           <td><code>"STOCK"</code></td>
         </tr>
         <tr>
-          <td><strong>Order / Delivery Date</strong></td>
+          <td><strong>Order Date / Due Date</strong></td>
           <td>Date (ISO)</td>
-          <td>Order confirmation and target fulfillment dates</td>
-          <td><code>2026-10-05 / 12</code></td>
-          <td><code>2026-10-05 / 19</code></td>
+          <td>Order placement date &amp; target delivery date</td>
+          <td><code>2026-10-05 &rarr; 2026-10-12</code></td>
+          <td><code>2026-10-05 &rarr; 2026-10-19</code></td>
         </tr>
         <tr>
           <td><strong>Currency</strong></td>
