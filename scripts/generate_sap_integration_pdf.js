@@ -712,6 +712,11 @@ const htmlContent = `<!DOCTYPE html>
           <td>Consolidated sea/land freight to Shuwaikh Workshop receiving bay.</td>
           <td>Expedited air freight directly to Kuwait International Airport clearance.</td>
         </tr>
+        <tr>
+          <td><strong>Target Delivery Due Date</strong></td>
+          <td><strong>DS: 10 Days</strong> (Dubai stock) &bull; <strong>SO: 120 Days</strong> (Factory stock order)</td>
+          <td><strong>EO: 30 Days</strong> (Emergency order turnaround)</td>
+        </tr>
       </tbody>
     </table>
 
@@ -1075,8 +1080,8 @@ const htmlContent = `<!DOCTYPE html>
           <td><strong>Order Date / Due Date</strong></td>
           <td>Date (ISO)</td>
           <td>Order placement date &amp; target delivery date</td>
-          <td><code>2026-10-05 &rarr; 2026-10-12</code></td>
-          <td><code>2026-10-05 &rarr; 2026-10-19</code></td>
+          <td><code>2026-10-05 &rarr; 2026-11-04 (30d)</code></td>
+          <td><code>2026-10-05 &rarr; 2026-10-15 (10d)</code><br><span style="font-size: 6.8pt; color: #64748b;">(SO: +120d &rarr; 2027-02-02)</span></td>
         </tr>
         <tr>
           <td><strong>Currency</strong></td>
@@ -1100,11 +1105,11 @@ const htmlContent = `<!DOCTYPE html>
           <td><code>null</code> <em>(Stock)</em></td>
         </tr>
         <tr>
-          <td><strong>Audit Remarks</strong></td>
+          <td><strong>Document Remarks</strong></td>
           <td>String</td>
-          <td>Structured audit string for document header</td>
-          <td><code>"EO | 100433 | R230"</code></td>
-          <td><code>"DS | Stock | R229"</code></td>
+          <td>Distributor reference tracking number</td>
+          <td><code>"R230/2026"</code></td>
+          <td><code>"R229/2026"</code></td>
         </tr>
       </tbody>
     </table>
@@ -1153,11 +1158,11 @@ const htmlContent = `<!DOCTYPE html>
     "komatsuQuotationNo": "0000282872",
     "fulfillmentChannel": "EMERGENCY_ORDER",
     "orderDate": "2026-10-05",
-    "deliveryDueDate": "2026-10-12",
+    "deliveryDueDate": "2026-11-04",
     "currency": "USD",
     "targetEquipmentSerial": "100433",
     "targetEquipmentModel": "PC500LC-10R",
-    "comments": "Komatsu Emergency Order | DB Ref: R230/2026 | Machine: 100433 (PC500LC-10R)"
+    "comments": "R230/2026"
   },
   "lineItems": [
     {
