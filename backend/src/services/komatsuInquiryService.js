@@ -169,21 +169,25 @@ function parsePdxHtmlTable(htmlText, queriedParts) {
 
     if (cleanTds.length >= 22) {
       const rawPartNo = cleanTds[0] || '';
-      const desc = cleanTds[3] || '';
-      const cc = cleanTds[4] || '';
-      const ic = cleanTds[5] || '';
-      const lpn = cleanTds[6] || '';
-      const stock = cleanTds[7] || '0';
-      const eor = cleanTds[8] || '';
-      const onOrder = cleanTds[9] || '0';
-      const regionalInv = cleanTds[10] || '';
-      const kltdTotal = cleanTds[16] || '0';
-      const kmeqa = cleanTds[17] || '0';
-      const dnetPrice = cleanTds[18] || '0.00';
-      const weight = cleanTds[19] || '0';
-      const leadTime = cleanTds[20] || '';
-      const mor = cleanTds[21] || '';
-      const orRank = cleanTds[22] || '';
+      // PDX HTML column layout:
+      // [0]=PartNo, [4]=Description, [5]=CC, [6]=IC, [7]=LPN,
+      // [8]=KME Stock, [9]=KME EOR, [10]=KME On Order, [11]=Regional Inventory,
+      // [12]=KLTD Total, [13]=KMEQA, [19]=DNet Price, [20]=Weight(gm), [21]=KLTD LT, [22]=MOR, [23]=OR
+      const desc = cleanTds[4] || cleanTds[3] || '';
+      const cc = cleanTds[5] || '';
+      const ic = cleanTds[6] || '';
+      const lpn = cleanTds[7] || rawPartNo;
+      const stock = cleanTds[8] || '0';
+      const eor = cleanTds[9] || '';
+      const onOrder = cleanTds[10] || '0';
+      const regionalInv = cleanTds[11] || '0';
+      const kltdTotal = cleanTds[12] || '0';
+      const kmeqa = cleanTds[13] || '0';
+      const dnetPrice = cleanTds[19] || cleanTds[18] || '0.00';
+      const weight = cleanTds[20] || cleanTds[19] || '0';
+      const leadTime = cleanTds[21] || cleanTds[20] || '';
+      const mor = cleanTds[22] || '';
+      const orRank = cleanTds[23] || '';
 
       const isMain = queriedSet.has(rawPartNo.trim().toUpperCase()) && (rawPartNo === lpn || !ic || ic === '000');
       const rowKey = `${rawPartNo}_${lpn}_${dnetPrice}_${stock}_${isMain}`;

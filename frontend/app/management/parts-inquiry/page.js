@@ -59,6 +59,11 @@ const SAMPLE_EO_ITEMS = [
     unit_price: '51.200',
     verified: true,
     models: ['PC400', 'PC500'],
+    kme_stock: 0,
+    kme_eor: 0,
+    kltd_total: 0,
+    ds_quantity: 0,
+    eo_quantity: 12,
   },
   {
     id: 'item-2',
@@ -70,6 +75,11 @@ const SAMPLE_EO_ITEMS = [
     unit_price: '54.100',
     verified: true,
     models: ['PC400', 'PC500'],
+    kme_stock: 0,
+    kme_eor: 0,
+    kltd_total: 0,
+    ds_quantity: 0,
+    eo_quantity: 10,
   },
 ];
 
@@ -142,6 +152,11 @@ function parseInputText(text) {
       verified: false,
       models: [],
       originalRow: idx + 1,
+      kme_stock: 0,
+      kme_eor: 0,
+      kltd_total: 0,
+      ds_quantity: 0,
+      eo_quantity: qty,
     });
   }
 
@@ -161,6 +176,7 @@ export default function SparePartsPage() {
   // TAB 1: EMERGENCY ORDER (EO) MULTI-ITEM & MULTI-SN STATE
   // =========================================================
   const [eoItems, setEoItems] = useState(SAMPLE_EO_ITEMS);
+  const [normalOrderType, setNormalOrderType] = useState('DS'); // 'DS' (Daily Stock) | 'SO' (Stock Order)
   const [isVerifyingParts, setIsVerifyingParts] = useState(false);
   const [pastePartsModalOpen, setPastePartsModalOpen] = useState(false);
   const [pastePartsInput, setPastePartsInput] = useState('');
@@ -179,6 +195,7 @@ export default function SparePartsPage() {
   const [selectedSerials, setSelectedSerials] = useState(new Set());
   const [customSerialsMode, setCustomSerialsMode] = useState(false);
   const [customSerialsInput, setCustomSerialsInput] = useState('');
+  const [showFleetEvenIfStock, setShowFleetEvenIfStock] = useState(false);
   const [customModalOpen, setCustomModalOpen] = useState(false);
   const [customForm, setCustomForm] = useState({ customer: '', machine_type: 'Excavator', model: '', serials: '' });
 
@@ -332,10 +349,10 @@ export default function SparePartsPage() {
     }
   }, [selectedCustomer, fleetData]);
 
-  // Regenerate plan whenever items, SN selections, customer, model, or starting order no changes
+  // Regenerate plan whenever items, SN selections, customer, model, starting order no, or normalOrderType changes
   useEffect(() => {
     generatePlan();
-  }, [eoItems, selectedCustomer, selectedMachineType, selectedModel, selectedSerials, customSerialsMode, customSerialsInput, eoStartingOrderNo, fleetData]);
+  }, [eoItems, normalOrderType, selectedCustomer, selectedMachineType, selectedModel, selectedSerials, customSerialsMode, customSerialsInput, eoStartingOrderNo, fleetData]);
 
   useEffect(() => {
     if (activeTab === 'so-converter' && inProcessQuotations.length === 0) {
@@ -518,6 +535,11 @@ export default function SparePartsPage() {
       unit_price: '0.000',
       verified: false,
       models: [],
+      kme_stock: 0,
+      kme_eor: 0,
+      kltd_total: 0,
+      ds_quantity: 0,
+      eo_quantity: 1,
     };
     setEoItems((prev) => [...prev, newItem]);
   }
@@ -528,14 +550,35 @@ export default function SparePartsPage() {
         if (it.id !== id) return it;
         const updated = { ...it, [field]: value };
         if (field === 'quantity') {
-          const qty = parseInt(value, 10) || 1;
+          const qty = Math.max(0, parseInt(value, 10) || 0);
+          updated.quantity = qty;
           if (it.max_per_order === it.quantity || it.max_per_order > qty) {
-            updated.max_per_order = qty;
+            updated.max_per_order = Math.max(1, qty);
           }
+          const kStock = parseInt(it.kme_stock, 10) || 0;
+          updated.ds_quantity = Math.min(qty, kStock);
+          updated.eo_quantity = Math.max(0, qty - updated.ds_quantity);
+        }
+        if (field === 'ds_quantity') {
+          const totalQty = parseInt(it.quantity, 10) || 0;
+          const dsVal = Math.max(0, parseInt(value, 10) || 0);
+          updated.ds_quantity = Math.min(dsVal, totalQty);
+          updated.eo_quantity = Math.max(0, totalQty - updated.ds_quantity);
+        }
+        if (field === 'eo_quantity') {
+          const totalQty = parseInt(it.quantity, 10) || 0;
+          const eoVal = Math.max(0, parseInt(value, 10) || 0);
+          updated.eo_quantity = Math.min(eoVal, totalQty);
+          updated.ds_quantity = Math.max(0, totalQty - updated.eo_quantity);
         }
         if (field === 'part_no') {
           updated.part_no = String(value).toUpperCase();
           updated.verified = false;
+          updated.kme_stock = 0;
+          updated.kme_eor = 0;
+          updated.kltd_total = 0;
+          updated.ds_quantity = 0;
+          updated.eo_quantity = parseInt(it.quantity, 10) || 1;
         }
         return updated;
       })
@@ -582,8 +625,22 @@ export default function SparePartsPage() {
             }
             item.models = res.models || [];
             item.verified = true;
+
+            // Live Stock & Auto-split calculation
+            const kmeStock = parseInt(res.kme_stock ?? res.stock_info?.kme_stock ?? 0, 10) || 0;
+            const kmeEor = parseInt(res.kme_eor ?? res.stock_info?.kme_eor ?? 0, 10) || 0;
+            const kltdTotal = parseInt(res.kltd_total ?? res.stock_info?.kltd_total ?? 0, 10) || 0;
+
+            item.kme_stock = kmeStock;
+            item.kme_eor = kmeEor;
+            item.kltd_total = kltdTotal;
+
+            const reqQty = parseInt(item.quantity, 10) || 1;
+            item.ds_quantity = Math.min(reqQty, kmeStock);
+            item.eo_quantity = Math.max(0, reqQty - item.ds_quantity);
+
             successCount++;
-            addLog(`Verified ${pNo}: ${item.description} (Unit limit: ${res.qty_by_unit || 1})`, 'success');
+            addLog(`Verified ${pNo}: ${item.description} (Stock: ${kmeStock}, EOR: ${kmeEor}, KLTD: ${kltdTotal}) -> Split: ${normalOrderType}=${item.ds_quantity}, EO=${item.eo_quantity}`, 'success');
           } else {
             item.verified = false;
             addLog(`Lookup failed for ${pNo}: ${res.error || 'Not found'}`, 'warn');
@@ -845,7 +902,7 @@ export default function SparePartsPage() {
   }
 
   // =========================================================
-  // SMART MULTI-ITEM & MULTI-SN PACKING ENGINE (`generatePlan`)
+  // SMART HYBRID (DS/SO + EO) MULTI-ITEM & MULTI-SN PACKING ENGINE (`generatePlan`)
   // =========================================================
   function generatePlan() {
     const validItems = eoItems.filter((it) => it.part_no && it.part_no.trim() && parseInt(it.quantity, 10) > 0);
@@ -861,35 +918,92 @@ export default function SparePartsPage() {
     let seq = match ? parseInt(match[1], 10) : 1;
     let year = match ? match[2] : '2026';
 
-    // Build tracking array for remaining quantities
-    const tracking = validItems.map((it) => ({
-      id: it.id,
-      part_no: it.part_no.trim(),
-      description: it.description || 'Komatsu Genuine Component',
-      unit: it.unit || 'EA',
-      unit_price: parseFloat(it.unit_price) || 0,
-      remaining: parseInt(it.quantity, 10) || 0,
-      max_per_order: parseInt(it.max_per_order, 10) || parseInt(it.quantity, 10) || 1,
-    }));
-
     const orders = [];
     let orderIdx = 0;
 
-    // Loop until all parts have 0 remaining quantity
-    // Bundles all available parts together in each sub-order as much as possible
-    while (tracking.some((t) => t.remaining > 0)) {
+    // 1. CONSOLIDATED NORMAL STOCK ORDER (DS or SO)
+    // Gather all items that have ds_quantity > 0
+    const dsParts = [];
+    let dsTotalAmount = 0;
+
+    for (const it of validItems) {
+      const dsQty = typeof it.ds_quantity === 'number'
+        ? it.ds_quantity
+        : Math.min(parseInt(it.quantity, 10) || 0, it.kme_stock || 0);
+
+      if (dsQty > 0) {
+        const uPrice = parseFloat(it.unit_price) || 0;
+        const lineTotal = dsQty * uPrice;
+        dsTotalAmount += lineTotal;
+
+        dsParts.push({
+          part_no: it.part_no.trim(),
+          description: it.description || 'Komatsu Genuine Component',
+          quantity: dsQty,
+          unit: it.unit || 'EA',
+          unit_price: uPrice > 0 ? uPrice.toFixed(3) : '0.000',
+          total_price: lineTotal > 0 ? lineTotal.toFixed(3) : '0.000',
+        });
+      }
+    }
+
+    if (dsParts.length > 0) {
       orderIdx++;
       const currentDbOrderNo = `R${seq}/${year}`;
       seq++;
 
-      const machineIdx = (orderIdx - 1) % machinesPool.length;
-      const cycleNum = Math.floor((orderIdx - 1) / machinesPool.length) + 1;
+      orders.push({
+        index: orderIdx,
+        order_type: normalOrderType || 'DS',
+        db_order_no: currentDbOrderNo,
+        customer: '',
+        model: 'Direct Stock (KME)',
+        serial: 'N/A',
+        parts: dsParts,
+        total_items: dsParts.length,
+        total_quantity: dsParts.reduce((sum, p) => sum + p.quantity, 0),
+        total_amount: dsTotalAmount > 0 ? dsTotalAmount.toFixed(3) : '0.000',
+        cycle_num: 1,
+        compat_badge: normalOrderType === 'SO' ? 'SO Stock' : 'DS Daily Stock',
+        quotation_no: '',
+        status: 'READY',
+      });
+    }
+
+    // 2. EMERGENCY ORDERS (EO)
+    // Build tracking array for EO quantities only
+    const eoTracking = validItems
+      .map((it) => {
+        const eoQty = typeof it.eo_quantity === 'number'
+          ? it.eo_quantity
+          : Math.max(0, (parseInt(it.quantity, 10) || 0) - (it.ds_quantity ?? (it.kme_stock || 0)));
+        return {
+          id: it.id,
+          part_no: it.part_no.trim(),
+          description: it.description || 'Komatsu Genuine Component',
+          unit: it.unit || 'EA',
+          unit_price: parseFloat(it.unit_price) || 0,
+          remaining: Math.max(0, eoQty),
+          max_per_order: parseInt(it.max_per_order, 10) || eoQty || 1,
+        };
+      })
+      .filter((t) => t.remaining > 0);
+
+    let eoCycleCounter = 0;
+    while (eoTracking.some((t) => t.remaining > 0)) {
+      orderIdx++;
+      eoCycleCounter++;
+      const currentDbOrderNo = `R${seq}/${year}`;
+      seq++;
+
+      const machineIdx = (eoCycleCounter - 1) % machinesPool.length;
+      const cycleNum = Math.floor((eoCycleCounter - 1) / machinesPool.length) + 1;
       const machine = machinesPool[machineIdx];
 
       const orderParts = [];
       let orderTotalAmount = 0;
 
-      for (const t of tracking) {
+      for (const t of eoTracking) {
         if (t.remaining > 0) {
           const batchQty = Math.min(t.remaining, t.max_per_order);
           t.remaining -= batchQty;
@@ -915,11 +1029,12 @@ export default function SparePartsPage() {
         })
       );
       const chosenMachine = compatibleMachines.length > 0
-        ? compatibleMachines[(orderIdx - 1) % compatibleMachines.length]
+        ? compatibleMachines[(eoCycleCounter - 1) % compatibleMachines.length]
         : machinesPool[machineIdx];
 
       orders.push({
         index: orderIdx,
+        order_type: 'EO',
         db_order_no: currentDbOrderNo,
         customer: chosenMachine.customer || cust,
         model: chosenMachine.model,
@@ -971,7 +1086,7 @@ export default function SparePartsPage() {
     }
 
     if (!eoDryRun) {
-      const confirmed = window.confirm(`Dispatch ${plannedOrders.length} Emergency Orders on Komatsu PDX?`);
+      const confirmed = window.confirm(`Dispatch ${plannedOrders.length} Sub-Orders (${normalOrderType} Stock & EO) on Komatsu PDX?`);
       if (!confirmed) return;
     }
 
@@ -1006,11 +1121,13 @@ export default function SparePartsPage() {
           }
         }
 
+        const isStock = ['DS', 'SO', 'SA'].includes(current.order_type);
         const payload = {
+          order_type: current.order_type || 'EO',
           db_order_no: current.db_order_no,
-          model_code: current.model,
-          serial_no: current.serial,
-          customer_detail: current.customer,
+          model_code: isStock ? '' : current.model,
+          serial_no: isStock ? '' : current.serial,
+          customer_detail: isStock ? '' : current.customer,
           comments: eoComments,
           parts: current.parts.map((p) => ({ part_no: p.part_no, quantity: p.quantity })),
           dryRun: eoDryRun,
@@ -1023,10 +1140,12 @@ export default function SparePartsPage() {
           current.quotation_no = res.quotation_no;
           current.status = 'SUCCESS';
           successCount++;
+          const typeLabel = current.order_type || 'EO';
+          const assetInfo = current.order_type === 'EO' ? `SN: ${current.serial}` : 'Stock Direct';
           if (res.fallback) {
-            addLog(`✓ Order #${current.index} (${current.db_order_no} | SN: ${current.serial} | ${current.parts.length} items) -> Quotation ${res.quotation_no} (Simulation Fallback - Update PDX Cookie for live Komatsu sync)`, 'warn');
+            addLog(`✓ Order #${current.index} [${typeLabel}] (${current.db_order_no} | ${assetInfo} | ${current.parts.length} items) -> Quotation ${res.quotation_no} (Simulation Fallback - Update PDX Cookie for live Komatsu sync)`, 'warn');
           } else {
-            addLog(`✓ Order #${current.index} (${current.db_order_no} | SN: ${current.serial} | ${current.parts.length} items) -> Quotation ${res.quotation_no}`, 'success');
+            addLog(`✓ Order #${current.index} [${typeLabel}] (${current.db_order_no} | ${assetInfo} | ${current.parts.length} items) -> Quotation ${res.quotation_no}`, 'success');
           }
         } else {
           current.status = 'FAILED';
@@ -1080,11 +1199,13 @@ export default function SparePartsPage() {
           }
         }
 
+        const isStock = ['DS', 'SO', 'SA'].includes(current.order_type);
         const payload = {
+          order_type: current.order_type || 'EO',
           db_order_no: current.db_order_no,
-          model_code: current.model,
-          serial_no: current.serial,
-          customer_detail: current.customer,
+          model_code: isStock ? '' : current.model,
+          serial_no: isStock ? '' : current.serial,
+          customer_detail: isStock ? '' : current.customer,
           comments: eoComments,
           parts: current.parts.map((p) => ({ part_no: p.part_no, quantity: p.quantity })),
           dryRun: eoDryRun,
@@ -1095,7 +1216,7 @@ export default function SparePartsPage() {
         if (res && (res.status === 'SUCCESS' || res.quotation_no)) {
           current.quotation_no = res.quotation_no;
           current.status = 'SUCCESS';
-          addLog(`✓ Retry Order #${current.index} succeeded -> Quotation ${res.quotation_no}`, 'success');
+          addLog(`✓ Retry Order #${current.index} [${current.order_type || 'EO'}] succeeded -> Quotation ${res.quotation_no}`, 'success');
         } else {
           current.status = 'FAILED';
           const errMsg = res?.error || 'Unknown error';
@@ -1126,6 +1247,7 @@ export default function SparePartsPage() {
     if (plannedOrders.length === 0) return;
     const headers = [
       'Order Index',
+      'Order Type',
       'DB Order No',
       'Customer',
       'Machine Model',
@@ -1146,6 +1268,7 @@ export default function SparePartsPage() {
       o.parts.forEach((p) => {
         rows.push([
           o.index,
+          `"${o.order_type || 'EO'}"`,
           `"${o.db_order_no}"`,
           `"${o.customer}"`,
           `"${o.model}"`,
@@ -1168,7 +1291,7 @@ export default function SparePartsPage() {
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `komatsu-eo-multi-item-report-${new Date().toISOString().slice(0, 10)}.csv`;
+    link.download = `komatsu-hybrid-order-report-${new Date().toISOString().slice(0, 10)}.csv`;
     link.click();
     URL.revokeObjectURL(url);
     setToast({ type: 'success', message: 'Report CSV exported with multi-item breakdowns.' });
@@ -1919,6 +2042,19 @@ export default function SparePartsPage() {
 
   const successfulOrdersCount = plannedOrders.filter((o) => o.status === 'SUCCESS').length;
   const failedOrdersCount = plannedOrders.filter((o) => ['FAILED', 'ERROR'].includes(o.status)).length;
+  const stockOrdersCount = useMemo(
+    () => plannedOrders.filter((o) => ['DS', 'SO'].includes(o.order_type)).length,
+    [plannedOrders]
+  );
+  const eoOrdersCount = useMemo(
+    () => plannedOrders.filter((o) => o.order_type === 'EO').length,
+    [plannedOrders]
+  );
+  const is100PercentStock = useMemo(() => {
+    const valid = eoItems.filter((it) => it.part_no && it.part_no.trim() && parseInt(it.quantity, 10) > 0);
+    if (valid.length === 0) return false;
+    return valid.every((it) => (it.eo_quantity || 0) === 0 && (it.ds_quantity || 0) > 0);
+  }, [eoItems]);
 
   return (
     <SystemShell
@@ -1984,14 +2120,20 @@ export default function SparePartsPage() {
             value={activeMachinePool.length}
             unit="Allocated Assets"
             subtext={`${selectedCustomer || 'Fleet'} pool`}
-            status="Active"
-            statusTone="active"
+            status={is100PercentStock ? 'Bypassed' : 'Active'}
+            statusTone={is100PercentStock ? 'neutral' : 'active'}
           />
           <MetricCard
-            label="Planned EO Batches"
+            label="Planned Sub-Orders"
             value={plannedOrders.length}
             unit="Sub-Orders"
-            subtext={`${eoItems.length} item types (${totalPlannedPieces} units)`}
+            subtext={
+              stockOrdersCount > 0 && eoOrdersCount > 0
+                ? `${stockOrdersCount} ${normalOrderType} Stock • ${eoOrdersCount} EO`
+                : stockOrdersCount > 0
+                ? `${stockOrdersCount} ${normalOrderType} Stock (100%)`
+                : `${eoOrdersCount} EO Sub-Orders`
+            }
             status="Calculated"
             statusTone="neutral"
           />
@@ -2104,7 +2246,35 @@ export default function SparePartsPage() {
                 </p>
               </div>
 
-              <div className="flex items-center gap-2 shrink-0">
+              <div className="flex flex-wrap items-center gap-2 shrink-0">
+                <div className="flex items-center gap-1 bg-slate-100 p-0.5 rounded-lg border border-slate-200 text-xs">
+                  <span className="text-[11px] font-semibold text-slate-500 px-2">Stock Type:</span>
+                  <button
+                    type="button"
+                    onClick={() => setNormalOrderType('DS')}
+                    className={`px-2.5 py-1 rounded text-xs font-bold transition-all cursor-pointer ${
+                      normalOrderType === 'DS'
+                        ? 'bg-sky-600 text-white shadow-2xs'
+                        : 'text-slate-600 hover:text-slate-900'
+                    }`}
+                    title="DS: Daily Stock Shipment (0% Premium, DDU, No Asset)"
+                  >
+                    DS (Daily)
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setNormalOrderType('SO')}
+                    className={`px-2.5 py-1 rounded text-xs font-bold transition-all cursor-pointer ${
+                      normalOrderType === 'SO'
+                        ? 'bg-sky-600 text-white shadow-2xs'
+                        : 'text-slate-600 hover:text-slate-900'
+                    }`}
+                    title="SO: Stock Order (0% Premium, DDU, No Asset)"
+                  >
+                    SO (Stock)
+                  </button>
+                </div>
+
                 <Button
                   type="button"
                   variant="secondary"
@@ -2147,19 +2317,22 @@ export default function SparePartsPage() {
               <table className="w-full text-left border-collapse text-xs">
                 <thead className="bg-slate-50/80 border-b border-slate-200 text-slate-700 text-[11px] uppercase tracking-wider font-semibold">
                   <tr>
-                    <th className="py-3 px-4 min-w-[220px]">Part Number</th>
-                    <th className="py-3 px-4 min-w-[220px]">Description</th>
+                    <th className="py-3 px-4 min-w-[200px]">Part Number & Master Stock</th>
+                    <th className="py-3 px-4 min-w-[170px]">Description</th>
                     <th className="py-3 px-4 w-28 text-right">Requested Qty</th>
-                    <th className="py-3 px-4 w-32 text-right">Max / Sub-Order</th>
-                    <th className="py-3 px-4 w-32 text-right">Unit Price ($)</th>
-                    <th className="py-3 px-4 w-32 text-right">Line Total ($)</th>
+                    <th className="py-3 px-3 w-48 text-center bg-slate-100/60 border-x border-slate-200">
+                      Routing Split ({normalOrderType} / EO)
+                    </th>
+                    <th className="py-3 px-4 w-28 text-right">EO Max / Order</th>
+                    <th className="py-3 px-4 w-28 text-right">Unit Price ($)</th>
+                    <th className="py-3 px-4 w-28 text-right">Line Total ($)</th>
                     <th className="py-3 px-3 w-12 text-center"></th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 bg-white">
                   {eoItems.length === 0 ? (
                     <tr>
-                      <td colSpan={7} className="py-10 text-center text-slate-400">
+                      <td colSpan={8} className="py-10 text-center text-slate-400">
                         <div className="flex flex-col items-center justify-center gap-2">
                           <span className="text-2xl">📦</span>
                           <p className="font-medium text-slate-600">No parts added to the dispatch queue.</p>
@@ -2182,13 +2355,25 @@ export default function SparePartsPage() {
                               placeholder="e.g. 2A8-62-12230"
                               className="w-full font-mono text-xs font-semibold uppercase px-2.5 py-1.5 border border-slate-300 rounded-md focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 bg-white shadow-2xs"
                             />
-                            {item.verified && (
-                              <div className="flex items-center gap-1 text-[11px] text-emerald-700 font-medium mt-1">
-                                <svg className="w-3.5 h-3.5 text-emerald-600 shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                                </svg>
-                                <span>Verified Genuine {item.models?.length > 0 ? `(${item.models.join(', ')})` : ''}</span>
+                            {item.verified ? (
+                              <div className="flex flex-wrap items-center gap-1.5 mt-1.5">
+                                <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200" title="KME Dubai local warehouse stock">
+                                  KME Stock: {item.kme_stock ?? 0}
+                                </span>
+                                <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-amber-50 text-amber-800 border border-amber-200" title="Emergency Order Restriction (Dubai)">
+                                  EOR: {item.kme_eor ?? 0}
+                                </span>
+                                <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-blue-50 text-blue-800 border border-blue-200" title="KLTD Japan factory / global stock">
+                                  KLTD: {item.kltd_total ?? 0}
+                                </span>
+                                {item.models?.length > 0 && (
+                                  <span className="text-[10px] text-slate-500 font-normal">
+                                    ({item.models.slice(0, 2).join(', ')}{item.models.length > 2 ? '...' : ''})
+                                  </span>
+                                )}
                               </div>
+                            ) : (
+                              <span className="text-[10px] text-slate-400 mt-1 block">Click &ldquo;Verify Parts&rdquo; for stock & pricing</span>
                             )}
                           </td>
                           <td className="py-2.5 px-4">
@@ -2206,8 +2391,41 @@ export default function SparePartsPage() {
                               min={1}
                               value={item.quantity}
                               onChange={(e) => handleUpdateItem(item.id, 'quantity', e.target.value)}
-                              className="w-24 font-mono text-xs text-right font-medium px-2.5 py-1.5 border border-slate-300 rounded-md focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 bg-white shadow-2xs"
+                              className="w-20 font-mono text-xs text-right font-bold px-2 py-1.5 border border-slate-300 rounded-md focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 bg-white shadow-2xs"
                             />
+                          </td>
+                          <td className="py-2.5 px-3 text-center bg-slate-50/50 border-x border-slate-200">
+                            <div className="flex items-center justify-center gap-1.5">
+                              <div className="flex flex-col items-center">
+                                <span className="text-[9px] uppercase font-bold text-sky-700 tracking-wider mb-0.5">
+                                  {normalOrderType} (Stock)
+                                </span>
+                                <input
+                                  type="number"
+                                  min={0}
+                                  max={qty}
+                                  value={item.ds_quantity ?? 0}
+                                  onChange={(e) => handleUpdateItem(item.id, 'ds_quantity', e.target.value)}
+                                  title={`${normalOrderType} quantity fulfilled from KME stock (No machine/customer needed)`}
+                                  className="w-16 font-mono text-xs text-center font-bold px-1.5 py-1 border border-sky-300 rounded bg-sky-50 text-sky-900 focus:ring-2 focus:ring-sky-500/20"
+                                />
+                              </div>
+                              <span className="text-slate-300 text-sm font-light mt-3">+</span>
+                              <div className="flex flex-col items-center">
+                                <span className="text-[9px] uppercase font-bold text-amber-700 tracking-wider mb-0.5">
+                                  EO (Emergency)
+                                </span>
+                                <input
+                                  type="number"
+                                  min={0}
+                                  max={qty}
+                                  value={item.eo_quantity ?? 0}
+                                  onChange={(e) => handleUpdateItem(item.id, 'eo_quantity', e.target.value)}
+                                  title="EO quantity ordered through machine fleet (Requires serial & customer)"
+                                  className="w-16 font-mono text-xs text-center font-bold px-1.5 py-1 border border-amber-300 rounded bg-amber-50 text-amber-900 focus:ring-2 focus:ring-amber-500/20"
+                                />
+                              </div>
+                            </div>
                           </td>
                           <td className="py-2.5 px-4 text-right">
                             <input
@@ -2215,8 +2433,13 @@ export default function SparePartsPage() {
                               min={1}
                               value={item.max_per_order}
                               onChange={(e) => handleUpdateItem(item.id, 'max_per_order', e.target.value)}
-                              title="Maximum quantity allowed per sub-order quotation"
-                              className="w-24 font-mono text-xs text-right font-medium px-2.5 py-1.5 border border-slate-300 rounded-md focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 bg-white shadow-2xs"
+                              disabled={(item.eo_quantity ?? 0) === 0}
+                              title={(item.eo_quantity ?? 0) === 0 ? 'Not applicable for Stock-only orders' : 'Maximum quantity allowed per sub-order quotation'}
+                              className={`w-20 font-mono text-xs text-right font-medium px-2 py-1.5 border rounded-md shadow-2xs ${
+                                (item.eo_quantity ?? 0) === 0
+                                  ? 'bg-slate-100 text-slate-400 border-slate-200 cursor-not-allowed'
+                                  : 'border-slate-300 bg-white focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500'
+                              }`}
                             />
                           </td>
                           <td className="py-2.5 px-4 text-right">
@@ -2225,7 +2448,7 @@ export default function SparePartsPage() {
                               value={item.unit_price}
                               onChange={(e) => handleUpdateItem(item.id, 'unit_price', e.target.value)}
                               placeholder="0.000"
-                              className="w-24 font-mono text-xs text-right font-medium px-2.5 py-1.5 border border-slate-300 rounded-md focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 bg-white shadow-2xs"
+                              className="w-20 font-mono text-xs text-right font-medium px-2 py-1.5 border border-slate-300 rounded-md focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 bg-white shadow-2xs"
                             />
                           </td>
                           <td className="py-2.5 px-4 text-right font-mono text-xs font-bold text-slate-800">
@@ -2257,6 +2480,11 @@ export default function SparePartsPage() {
                       <td className="py-3 px-4 text-right font-mono font-bold text-slate-900">
                         {totalPlannedPieces} EA
                       </td>
+                      <td className="py-3 px-3 text-center bg-slate-100/50 border-x border-slate-200 text-[11px] font-mono">
+                        <span className="text-sky-700 font-bold">{eoItems.reduce((acc, it) => acc + (it.ds_quantity ?? 0), 0)} {normalOrderType}</span>
+                        <span className="text-slate-400 mx-1">+</span>
+                        <span className="text-amber-700 font-bold">{eoItems.reduce((acc, it) => acc + (it.eo_quantity ?? 0), 0)} EO</span>
+                      </td>
                       <td className="py-3 px-4"></td>
                       <td className="py-3 px-4 text-right text-slate-500 font-normal text-[11px]">
                         Est. Total:
@@ -2286,165 +2514,214 @@ export default function SparePartsPage() {
             <Card className="lg:col-span-7 p-5 sm:p-6 space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-slate-100">
                 <div className="flex items-center gap-2">
-                  <span className="flex items-center justify-center w-6 h-6 rounded-full bg-amber-100 text-amber-900 font-bold text-xs">
+                  <span className={`flex items-center justify-center w-6 h-6 rounded-full font-bold text-xs ${is100PercentStock ? 'bg-sky-100 text-sky-900' : 'bg-amber-100 text-amber-900'}`}>
                     2
                   </span>
                   <div>
                     <h3 className="text-base font-bold text-slate-900 tracking-tight">
-                      Target Fleet & Multi-SNs Allocation
+                      {is100PercentStock ? 'Target Fleet Allocation (Bypassed)' : 'Target Fleet & Multi-SNs Allocation'}
                     </h3>
                     <p className="text-xs text-slate-500">
-                      Select target equipment serial numbers to distribute inquiry quotations
+                      {is100PercentStock
+                        ? `100% of parts routed to ${normalOrderType} Stock — No machine allocation needed`
+                        : stockOrdersCount > 0
+                        ? `Allocating machine pool for ${eoOrdersCount} Emergency Sub-Order(s) • ${stockOrdersCount} ${normalOrderType} Stock sub-order bypasses fleet`
+                        : `Select target equipment serial numbers to distribute inquiry quotations`}
                     </p>
                   </div>
                 </div>
-              </div>
-
-              {/* Filters */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <Field label="Customer Account">
-                  <Select
-                    value={selectedCustomer}
-                    onChange={(e) => setSelectedCustomer(e.target.value)}
+                {is100PercentStock && (
+                  <button
+                    type="button"
+                    onClick={() => setShowFleetEvenIfStock(!showFleetEvenIfStock)}
+                    className="text-xs text-sky-700 hover:text-sky-900 font-medium underline cursor-pointer"
                   >
-                    {allCustomers.map((c) => (
-                      <option key={c} value={c}>{c}</option>
-                    ))}
-                  </Select>
-                </Field>
-                <Field label="Machine Type">
-                  <Select
-                    value={selectedMachineType}
-                    onChange={(e) => setSelectedMachineType(e.target.value)}
-                  >
-                    <option value="">All Types ({customerFleet.length})</option>
-                    {availableMachineTypes.map((t) => (
-                      <option key={t} value={t}>{t}</option>
-                    ))}
-                  </Select>
-                </Field>
-                <Field label="Model (Compatibility)">
-                  <Select
-                    value={selectedModel}
-                    onChange={(e) => setSelectedModel(e.target.value)}
-                  >
-                    <option value="">All Models ({availableModels.length})</option>
-                    {availableModels.map((m) => (
-                      <option key={m.model} value={m.model}>
-                        {m.label}
-                      </option>
-                    ))}
-                  </Select>
-                </Field>
-              </div>
-
-              {/* Action Toolbar for SNs */}
-              <div className="space-y-2 pt-2 border-t border-slate-100">
-                <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
-                  <span className="font-semibold text-slate-800">
-                    Serial Numbers in Pool:{' '}
-                    <strong className="text-amber-600 font-mono text-sm">{activeMachinePool.length}</strong>
-                  </span>
-                  <div className="flex items-center gap-1.5">
-                    {!customSerialsMode ? (
-                      <>
-                        <button
-                          type="button"
-                          onClick={handleSelectCompatibleSn}
-                          className="text-xs text-emerald-800 hover:text-emerald-900 font-semibold px-2.5 py-1 rounded-md bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 cursor-pointer shadow-2xs transition"
-                          title="Auto-select all machines compatible with requested parts"
-                        >
-                          ★ Auto-Select Compatible
-                        </button>
-                        <button
-                          type="button"
-                          onClick={handleSelectAllSn}
-                          className="text-xs text-slate-700 hover:text-slate-900 font-medium px-2 py-1 rounded-md bg-white hover:bg-slate-50 border border-slate-300 cursor-pointer shadow-2xs transition"
-                        >
-                          Select All ({filteredFleetMachines.length})
-                        </button>
-                        <button
-                          type="button"
-                          onClick={handleClearSn}
-                          className="text-xs text-slate-500 hover:text-slate-700 font-medium px-2 py-1 rounded-md hover:bg-slate-100 cursor-pointer transition"
-                        >
-                          Clear
-                        </button>
-                      </>
-                    ) : null}
-                    <button
-                      type="button"
-                      onClick={() => setCustomSerialsMode(!customSerialsMode)}
-                      className="text-xs text-indigo-600 hover:text-indigo-800 font-medium px-2 py-1 rounded-md hover:bg-indigo-50 cursor-pointer transition"
-                    >
-                      {customSerialsMode ? 'Switch to Fleet List' : 'Custom SNs Input'}
-                    </button>
-                  </div>
-                </div>
-
-                {customSerialsMode ? (
-                  <div className="space-y-1.5 pt-1">
-                    <Field label="Custom Serial Numbers (Comma or line separated)">
-                      <Textarea
-                        rows={3}
-                        value={customSerialsInput}
-                        onChange={(e) => setCustomSerialsInput(e.target.value)}
-                        placeholder="e.g. 100433, 100434, 100435"
-                        className="font-mono text-xs"
-                      />
-                    </Field>
-                    <p className="text-[11px] text-slate-500">
-                      Sub-orders will cycle sequentially through these custom serial numbers.
-                    </p>
-                  </div>
-                ) : (
-                  <div className="max-h-56 overflow-y-auto border border-slate-200 rounded-lg p-2.5 grid grid-cols-1 sm:grid-cols-2 gap-2 bg-slate-50/50">
-                    {filteredFleetMachines.length === 0 ? (
-                      <p className="col-span-2 text-center text-xs text-slate-400 py-6">
-                        No fleet machines found matching filter.
-                      </p>
-                    ) : (
-                      filteredFleetMachines.map((m, idx) => {
-                        const isChecked = selectedSerials.has(m.serial);
-                        const isFull = m.compatInfo?.isFullMatch;
-                        const isPart = m.compatInfo?.isPartialMatch;
-                        return (
-                          <label
-                            key={`${m.serial}-${idx}`}
-                            className={`flex items-center gap-2.5 p-2 rounded-lg border text-xs cursor-pointer select-none transition-all ${
-                              isChecked
-                                ? isFull
-                                  ? 'bg-emerald-50 border-emerald-300 text-slate-900 shadow-2xs font-medium'
-                                  : 'bg-amber-50 border-amber-300 text-slate-900 font-medium shadow-2xs'
-                                : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'
-                            }`}
-                          >
-                            <input
-                              type="checkbox"
-                              checked={isChecked}
-                              onChange={() => handleToggleSerial(m.serial)}
-                              className="rounded text-amber-500 focus:ring-amber-400"
-                            />
-                            <div className="truncate flex-1">
-                              <span className="font-mono font-bold text-slate-900">{m.serial}</span>
-                              <span className="text-[11px] text-slate-500 ml-1.5">({m.model})</span>
-                            </div>
-                            {isFull ? (
-                              <span className="text-[10px] text-emerald-800 bg-emerald-100 px-1.5 py-0.5 rounded font-bold">
-                                Full Match
-                              </span>
-                            ) : isPart ? (
-                              <span className="text-[10px] text-amber-800 bg-amber-100 px-1.5 py-0.5 rounded font-medium">
-                                {m.compatInfo.matchedCount}/{m.compatInfo.totalCount} Fit
-                              </span>
-                            ) : null}
-                          </label>
-                        );
-                      })
-                    )}
-                  </div>
+                    {showFleetEvenIfStock ? 'Hide Fleet Pool' : 'Inspect Fleet Pool'}
+                  </button>
                 )}
               </div>
+
+              {is100PercentStock && !showFleetEvenIfStock ? (
+                <div className="p-5 bg-sky-50/80 border border-sky-200 rounded-lg space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="p-1.5 rounded-md bg-sky-600 text-white font-bold text-xs">✓ 100% {normalOrderType} Stock Order</span>
+                      <span className="font-bold text-sky-950 text-sm">Machine Details Not Required</span>
+                    </div>
+                  </div>
+                  <p className="text-xs text-sky-900 leading-relaxed">
+                    All requested parts are 100% fulfilled from <strong>KME Dubai local warehouse stock</strong>. Komatsu PDX rules for <strong>{normalOrderType}</strong> orders do not require machine serial numbers, models, or customer names.
+                  </p>
+                  <div className="p-3 bg-white/90 rounded border border-sky-200/70 text-xs text-sky-950 flex flex-wrap items-center justify-between gap-3">
+                    <div>
+                      <span className="text-slate-500 block text-[10px] uppercase font-bold">Consolidated Sub-Order</span>
+                      <strong className="text-sky-900 font-mono text-sm">1 Quotation ({totalPlannedPieces} Units)</strong>
+                    </div>
+                    <div>
+                      <span className="text-slate-500 block text-[10px] uppercase font-bold">Portal Premium</span>
+                      <strong className="text-emerald-700 font-bold">0.00% (No Surcharge)</strong>
+                    </div>
+                    <div>
+                      <span className="text-slate-500 block text-[10px] uppercase font-bold">Delivery Terms</span>
+                      <strong className="text-slate-800 font-bold">DDU</strong>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  {stockOrdersCount > 0 && eoOrdersCount > 0 && (
+                    <div className="p-3 bg-sky-50 border border-sky-200 rounded-lg text-xs text-sky-900">
+                      <strong>Hybrid Allocation Notice:</strong> 1 consolidated {normalOrderType} order will be created without machine info for in-stock items. Machine pool below applies strictly to the <strong>{eoOrdersCount} EO sub-orders</strong>.
+                    </div>
+                  )}
+
+                  {/* Filters */}
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <Field label="Customer Account">
+                      <Select
+                        value={selectedCustomer}
+                        onChange={(e) => setSelectedCustomer(e.target.value)}
+                      >
+                        {allCustomers.map((c) => (
+                          <option key={c} value={c}>{c}</option>
+                        ))}
+                      </Select>
+                    </Field>
+                    <Field label="Machine Type">
+                      <Select
+                        value={selectedMachineType}
+                        onChange={(e) => setSelectedMachineType(e.target.value)}
+                      >
+                        <option value="">All Types ({customerFleet.length})</option>
+                        {availableMachineTypes.map((t) => (
+                          <option key={t} value={t}>{t}</option>
+                        ))}
+                      </Select>
+                    </Field>
+                    <Field label="Model (Compatibility)">
+                      <Select
+                        value={selectedModel}
+                        onChange={(e) => setSelectedModel(e.target.value)}
+                      >
+                        <option value="">All Models ({availableModels.length})</option>
+                        {availableModels.map((m) => (
+                          <option key={m.model} value={m.model}>
+                            {m.label}
+                          </option>
+                        ))}
+                      </Select>
+                    </Field>
+                  </div>
+
+                  {/* Action Toolbar for SNs */}
+                  <div className="space-y-2 pt-2 border-t border-slate-100">
+                    <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
+                      <span className="font-semibold text-slate-800">
+                        Serial Numbers in Pool:{' '}
+                        <strong className="text-amber-600 font-mono text-sm">{activeMachinePool.length}</strong>
+                      </span>
+                      <div className="flex items-center gap-1.5">
+                        {!customSerialsMode ? (
+                          <>
+                            <button
+                              type="button"
+                              onClick={handleSelectCompatibleSn}
+                              className="text-xs text-emerald-800 hover:text-emerald-900 font-semibold px-2.5 py-1 rounded-md bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 cursor-pointer shadow-2xs transition"
+                              title="Auto-select all machines compatible with requested parts"
+                            >
+                              ★ Auto-Select Compatible
+                            </button>
+                            <button
+                              type="button"
+                              onClick={handleSelectAllSn}
+                              className="text-xs text-slate-700 hover:text-slate-900 font-medium px-2 py-1 rounded-md bg-white hover:bg-slate-50 border border-slate-300 cursor-pointer shadow-2xs transition"
+                            >
+                              Select All ({filteredFleetMachines.length})
+                            </button>
+                            <button
+                              type="button"
+                              onClick={handleClearSn}
+                              className="text-xs text-slate-500 hover:text-slate-700 font-medium px-2 py-1 rounded-md hover:bg-slate-100 cursor-pointer transition"
+                            >
+                              Clear
+                            </button>
+                          </>
+                        ) : null}
+                        <button
+                          type="button"
+                          onClick={() => setCustomSerialsMode(!customSerialsMode)}
+                          className="text-xs text-indigo-600 hover:text-indigo-800 font-medium px-2 py-1 rounded-md hover:bg-indigo-50 cursor-pointer transition"
+                        >
+                          {customSerialsMode ? 'Switch to Fleet List' : 'Custom SNs Input'}
+                        </button>
+                      </div>
+                    </div>
+
+                    {customSerialsMode ? (
+                      <div className="space-y-1.5 pt-1">
+                        <Field label="Custom Serial Numbers (Comma or line separated)">
+                          <Textarea
+                            rows={3}
+                            value={customSerialsInput}
+                            onChange={(e) => setCustomSerialsInput(e.target.value)}
+                            placeholder="e.g. 100433, 100434, 100435"
+                            className="font-mono text-xs"
+                          />
+                        </Field>
+                        <p className="text-[11px] text-slate-500">
+                          Sub-orders will cycle sequentially through these custom serial numbers.
+                        </p>
+                      </div>
+                    ) : (
+                      <div className="max-h-56 overflow-y-auto border border-slate-200 rounded-lg p-2.5 grid grid-cols-1 sm:grid-cols-2 gap-2 bg-slate-50/50">
+                        {filteredFleetMachines.length === 0 ? (
+                          <p className="col-span-2 text-center text-xs text-slate-400 py-6">
+                            No fleet machines found matching filter.
+                          </p>
+                        ) : (
+                          filteredFleetMachines.map((m, idx) => {
+                            const isChecked = selectedSerials.has(m.serial);
+                            const isFull = m.compatInfo?.isFullMatch;
+                            const isPart = m.compatInfo?.isPartialMatch;
+                            return (
+                              <label
+                                key={`${m.serial}-${idx}`}
+                                className={`flex items-center gap-2.5 p-2 rounded-lg border text-xs cursor-pointer select-none transition-all ${
+                                  isChecked
+                                    ? isFull
+                                      ? 'bg-emerald-50 border-emerald-300 text-slate-900 shadow-2xs font-medium'
+                                      : 'bg-amber-50 border-amber-300 text-slate-900 font-medium shadow-2xs'
+                                    : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'
+                                }`}
+                              >
+                                <input
+                                  type="checkbox"
+                                  checked={isChecked}
+                                  onChange={() => handleToggleSerial(m.serial)}
+                                  className="rounded text-amber-500 focus:ring-amber-400"
+                                />
+                                <div className="truncate flex-1">
+                                  <span className="font-mono font-bold text-slate-900">{m.serial}</span>
+                                  <span className="text-[11px] text-slate-500 ml-1.5">({m.model})</span>
+                                </div>
+                                {isFull ? (
+                                  <span className="text-[10px] text-emerald-800 bg-emerald-100 px-1.5 py-0.5 rounded font-bold">
+                                    Full Match
+                                  </span>
+                                ) : isPart ? (
+                                  <span className="text-[10px] text-amber-800 bg-amber-100 px-1.5 py-0.5 rounded font-medium">
+                                    {m.compatInfo.matchedCount}/{m.compatInfo.totalCount} Fit
+                                  </span>
+                                ) : null}
+                              </label>
+                            );
+                          })
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </>
+              )}
             </Card>
 
             {/* Right Column: Order Configuration & Sequence (5 cols) */}
@@ -2507,8 +2784,17 @@ export default function SparePartsPage() {
                     <span className="font-mono text-sm">{plannedOrders.length} Quotation(s)</span>
                   </div>
                   <div className="flex items-center justify-between text-[11px] text-amber-800">
+                    <span>Routing Split:</span>
+                    <span className="font-semibold">
+                      {stockOrdersCount > 0 && `${stockOrdersCount} ${normalOrderType} Stock`}
+                      {stockOrdersCount > 0 && eoOrdersCount > 0 && ' • '}
+                      {eoOrdersCount > 0 && `${eoOrdersCount} EO`}
+                      {stockOrdersCount === 0 && eoOrdersCount === 0 && '0 Quotations'}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between text-[11px] text-amber-800">
                     <span>Target Machine Pool:</span>
-                    <span>{activeMachinePool.length} SNs allocated</span>
+                    <span>{eoOrdersCount > 0 ? `${activeMachinePool.length} SNs allocated` : 'Bypassed (Stock Order)'}</span>
                   </div>
                   <div className="flex items-center justify-between text-[11px] text-amber-800">
                     <span>Est. Total Order Value:</span>
@@ -2636,12 +2922,34 @@ export default function SparePartsPage() {
                         className="group hover:bg-slate-50/80 transition-colors"
                       >
                         <TableCell className="font-mono text-xs text-slate-400 text-center">{order.index}</TableCell>
-                        <TableCell className="font-mono text-xs font-bold text-slate-900 group-hover:text-amber-600 transition-colors">
-                          {order.db_order_no}
+                        <TableCell>
+                          <div className="font-mono text-xs font-bold text-slate-900 group-hover:text-amber-600 transition-colors">
+                            {order.db_order_no}
+                          </div>
+                          <div className="mt-1">
+                            {['DS', 'SO'].includes(order.order_type) ? (
+                              <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-sky-100 text-sky-800 border border-sky-200">
+                                {order.order_type} • Direct Stock
+                              </span>
+                            ) : (
+                              <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-200">
+                                EO • Emergency
+                              </span>
+                            )}
+                          </div>
                         </TableCell>
                         <TableCell>
-                          <div className="text-xs font-mono font-bold text-slate-900">{order.serial}</div>
-                          <div className="text-[11px] text-slate-500 font-medium">{order.model} • {order.customer}</div>
+                          {['DS', 'SO'].includes(order.order_type) ? (
+                            <>
+                              <div className="text-xs font-bold text-sky-900">KME Direct Stock</div>
+                              <div className="text-[11px] text-slate-500 font-medium">No Machine Required • DDU</div>
+                            </>
+                          ) : (
+                            <>
+                              <div className="text-xs font-mono font-bold text-slate-900">{order.serial}</div>
+                              <div className="text-[11px] text-slate-500 font-medium">{order.model} • {order.customer}</div>
+                            </>
+                          )}
                         </TableCell>
                         <TableCell>
                           <div className="flex flex-wrap gap-1.5 py-1">
@@ -3318,7 +3626,7 @@ export default function SparePartsPage() {
         open={Boolean(viewingOrder)}
         onClose={() => setViewingOrder(null)}
         title={`Quotation Sub-Order: ${viewingOrder?.db_order_no || `#${viewingOrder?.index}`}`}
-        subtitle={`Komatsu PDX • Model: ${viewingOrder?.model || 'Equipment'} • Serial: ${viewingOrder?.serial || 'N/A'}`}
+        subtitle={`Komatsu PDX • Order Type: ${viewingOrder?.order_type || 'EO'} • ${['DS', 'SO'].includes(viewingOrder?.order_type) ? 'KME Direct Stock' : `Model: ${viewingOrder?.model || 'Equipment'} • Serial: ${viewingOrder?.serial || 'N/A'}`}`}
         badge={
           viewingOrder && (
             <Badge
@@ -3337,7 +3645,7 @@ export default function SparePartsPage() {
                 ? 'Submitted'
                 : viewingOrder.status === 'RUNNING'
                 ? 'Submitting...'
-                : viewingOrder.status === 'FAILED'
+                : viewingOrder.status === 'FAILED' || viewingOrder.status === 'ERROR'
                 ? 'Failed'
                 : 'Ready in Queue'}
             </Badge>
@@ -3372,14 +3680,30 @@ export default function SparePartsPage() {
             <div className="p-4 bg-slate-50/80 rounded-lg border border-slate-200/80 space-y-3">
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
                 <div>
-                  <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-500 block">Target Asset Serial</span>
-                  <span className="font-mono font-bold text-slate-900 text-sm mt-0.5 block">{viewingOrder.serial}</span>
-                  <span className="text-[11px] text-slate-500">Model: {viewingOrder.model}</span>
+                  <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-500 block">Order Routing Type</span>
+                  <div className="mt-0.5">
+                    {['DS', 'SO'].includes(viewingOrder.order_type) ? (
+                      <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[11px] font-bold bg-sky-100 text-sky-800 border border-sky-300">
+                        {viewingOrder.order_type} • Direct Stock
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[11px] font-bold bg-amber-100 text-amber-800 border border-amber-300">
+                        EO • Emergency Order
+                      </span>
+                    )}
+                  </div>
+                  <span className="text-[11px] text-slate-500 block mt-0.5">
+                    {['DS', 'SO'].includes(viewingOrder.order_type) ? '0% Premium • DDU Terms' : '13.3% Premium • EXW Terms'}
+                  </span>
                 </div>
                 <div>
-                  <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-500 block">Customer Account</span>
-                  <span className="font-semibold text-slate-800 text-xs mt-0.5 block">{viewingOrder.customer}</span>
-                  <span className="text-[11px] text-slate-500">Cycle #{viewingOrder.cycle_num}</span>
+                  <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-500 block">Target Asset Serial</span>
+                  <span className="font-mono font-bold text-slate-900 text-sm mt-0.5 block">
+                    {['DS', 'SO'].includes(viewingOrder.order_type) ? 'N/A (Stock Order)' : viewingOrder.serial}
+                  </span>
+                  <span className="text-[11px] text-slate-500">
+                    {['DS', 'SO'].includes(viewingOrder.order_type) ? 'No Machine Required' : `Model: ${viewingOrder.model}`}
+                  </span>
                 </div>
                 <div>
                   <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-500 block">Quotation Reference</span>
@@ -3469,9 +3793,10 @@ export default function SparePartsPage() {
                 {JSON.stringify(
                   {
                     order_no: viewingOrder.db_order_no,
-                    customer: viewingOrder.customer,
-                    machine_model: viewingOrder.model,
-                    machine_serial: viewingOrder.serial,
+                    order_type: viewingOrder.order_type || 'EO',
+                    customer: ['DS', 'SO', 'SA'].includes(viewingOrder.order_type) ? '' : (viewingOrder.customer || ''),
+                    machine_model: ['DS', 'SO', 'SA'].includes(viewingOrder.order_type) ? '' : (viewingOrder.model || ''),
+                    machine_serial: ['DS', 'SO', 'SA'].includes(viewingOrder.order_type) ? '' : (viewingOrder.serial || ''),
                     comments: eoComments || '',
                     dry_run: eoDryRun,
                     quotation: viewingOrder.quotation_no || null,

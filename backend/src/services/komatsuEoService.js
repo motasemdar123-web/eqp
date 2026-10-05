@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const ExcelJS = require('exceljs');
-const { loadCookie, parseCookieInput } = require('./komatsuInquiryService');
+const { loadCookie, parseCookieInput, runBulkInquiry } = require('./komatsuInquiryService');
 
 const BASE_PORTAL_URL = 'https://www.komatsu.ae/kmewebportal';
 const FLEET_EXCEL_PATH = path.join(__dirname, '../../data/fleet_machines.xlsx');
@@ -202,8 +202,20 @@ async function lookupPartMaster(partNo, customCookie = null) {
         const rawModels = resJson.txtModelInfo || '';
         const models = rawModels
           .split(';')
-          .map((m) => m.trim())
-          .filter(Boolean);
+        // Also fetch live KME Stock, EOR, and KLTD availability
+        let stockInfo = null;
+        try {
+          const inqRes = await runBulkInquiry([pNo], cookieStr);
+          if (inqRes && inqRes.results && inqRes.results.length > 0) {
+            stockInfo = inqRes.results[0];
+          }
+        } catch {
+          // non-blocking
+        }
+
+        const kmeStockNum = parseInt(stockInfo?.kmeStock || '0', 10) || 0;
+        const kmeEorNum = parseInt(stockInfo?.eor || '0', 10) || 0;
+        const kltdTotalNum = parseInt(stockInfo?.kltdTotal || '0', 10) || 0;
 
         const result = {
           part_no: pNo,
@@ -214,6 +226,18 @@ async function lookupPartMaster(partNo, customCookie = null) {
           price: resJson.txtKMELstPrc || '0.00',
           weight: resJson.txtUWEI || '0',
           rank: resJson.txtKMERank || '',
+          kme_stock: kmeStockNum,
+          kme_eor: kmeEorNum,
+          kltd_total: kltdTotalNum,
+          stock_info: {
+            kme_stock: kmeStockNum,
+            kme_eor: kmeEorNum,
+            kltd_total: kltdTotalNum,
+            kme_on_order: parseInt(stockInfo?.onOrder || '0', 10) || 0,
+            regional_inventory: stockInfo?.regionalInventory || '0',
+            dnet_price: stockInfo?.dnetPrice || resJson.txtKMELstPrc || '0.00',
+            lead_time: stockInfo?.leadTime || '',
+          },
         };
         LOCAL_PARTS_CACHE.set(pNo, result);
         return result;
@@ -420,6 +444,7 @@ async function executeSingleEmergencyOrder(orderData, customCookie = null) {
   }
 
   // Pre-flight 2: Trigger order type initialization in session
+  let otJson = null;
   try {
     const orderTypeUrl = `${BASE_PORTAL_URL}/QuotationCondition/OrderTypes_OnChange`;
     const otResp = await fetch(orderTypeUrl, {
@@ -442,9 +467,19 @@ async function executeSingleEmergencyOrder(orderData, customCookie = null) {
     if (otCookies.length > 0) {
       cookieStr = mergeCookies(cookieStr, otCookies);
     }
+    try {
+      otJson = await otResp.json();
+    } catch {
+      // non-fatal
+    }
   } catch (e) {
     console.warn('[executeSingleEmergencyOrder] OrderTypes_OnChange warning:', e.message);
   }
+
+  const isStockOrder = ['DS', 'SO', 'SA'].includes(order_type);
+  const resolvedDeliveryTerms = otJson?.DeliveryTerms || (isStockOrder ? 'DDU' : 'EXW');
+  const resolvedPremiumRate = otJson?.PremiumRate || (isStockOrder ? '0.00' : '13.30');
+  const resolvedModelInfoMark = typeof otJson?.ModelInfoMark === 'boolean' ? otJson.ModelInfoMark : !isStockOrder;
 
   // STEP 2: Save Quotation Condition
   const saveUrl = `${BASE_PORTAL_URL}/QuotationCondition/Save`;
@@ -472,7 +507,7 @@ async function executeSingleEmergencyOrder(orderData, customCookie = null) {
       Usance: '30',
       TaxRate: '0',
       Transportation: 'RD',
-      DeliveryTerms: 'DDU',
+      DeliveryTerms: resolvedDeliveryTerms,
       PaymentTerms: 'T2',
       OrderPRobability: 'A',
       Region: 'AE',
@@ -487,7 +522,7 @@ async function executeSingleEmergencyOrder(orderData, customCookie = null) {
       RequestedDeliveryTime: formatPortalDate(0),
       PriceCalculationMethod: 'D',
       DiscountRateOther: '0',
-      PremiumRate: '13.30',
+      PremiumRate: resolvedPremiumRate,
       BillingRateA: '0',
       BillingRateB: '0',
       BillingRateC: '0',
@@ -502,14 +537,14 @@ async function executeSingleEmergencyOrder(orderData, customCookie = null) {
       FixPrice: false,
       ModelInformation: '',
       Memo: '',
-      Comments: String(comments || 'URGENT').toUpperCase(),
+      Comments: comments ? String(comments).toUpperCase() : (isStockOrder ? 'STOCK REPLENISHMENT' : 'URGENT'),
       isDetailsExist: '0',
       LineNo: '0',
-      ModelCode: model_code || 'PC500LC-10R',
-      SerialNo: serial_no || '100466',
-      EngineSrNo: '1',
-      CustomerDetails: customer_detail || 'LAALA AL KUWAIT',
-      ModelInfoMark: true,
+      ModelCode: resolvedModelInfoMark ? (model_code || 'PC500LC-10R') : '',
+      SerialNo: resolvedModelInfoMark ? (serial_no || '100466') : '',
+      EngineSrNo: resolvedModelInfoMark ? '1' : '',
+      CustomerDetails: resolvedModelInfoMark ? (customer_detail || 'LAALA AL KUWAIT') : '',
+      ModelInfoMark: resolvedModelInfoMark,
       jobCard: '',
       Warranty: '',
       TSINumber: '',
@@ -685,9 +720,10 @@ async function executeSingleEmergencyOrder(orderData, customCookie = null) {
     status: 'SUCCESS',
     quotation_no: newQtn,
     db_order_no: activeOrderNo,
-    model_code,
-    serial_no,
-    customer: customer_detail,
+    order_type: order_type || 'EO',
+    model_code: resolvedModelInfoMark ? model_code : '',
+    serial_no: resolvedModelInfoMark ? serial_no : '',
+    customer: resolvedModelInfoMark ? customer_detail : '',
     parts,
   };
 }

@@ -328,6 +328,18 @@ async function lookupKomatsuPartMaster(req, res) {
       price: '0.00',
       weight: '0',
       rank: 'A',
+      kme_stock: 0,
+      kme_eor: 0,
+      kltd_total: 0,
+      stock_info: {
+        kme_stock: 0,
+        kme_eor: 0,
+        kltd_total: 0,
+        kme_on_order: 0,
+        regional_inventory: '0',
+        dnet_price: '0.00',
+        lead_time: '',
+      },
       warning: err.message,
     });
   }
@@ -360,14 +372,16 @@ async function executeKomatsuEoOrder(req, res) {
 
   if (dryRun) {
     const mockQtn = `0000${Math.floor(280350 + Math.random() * 9000)}`;
+    const isStock = ['DS', 'SO', 'SA'].includes(orderData.order_type);
     return res.json({
       success: true,
       status: 'SUCCESS',
       quotation_no: mockQtn,
+      order_type: orderData.order_type || 'EO',
       db_order_no: orderData.db_order_no,
-      model_code: orderData.model_code,
-      serial_no: orderData.serial_no,
-      customer: orderData.customer_detail,
+      model_code: isStock ? '' : (orderData.model_code || ''),
+      serial_no: isStock ? '' : (orderData.serial_no || ''),
+      customer: isStock ? '' : (orderData.customer_detail || ''),
       dry_run: true,
     });
   }
