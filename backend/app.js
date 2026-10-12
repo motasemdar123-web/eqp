@@ -3,6 +3,7 @@ require('dotenv').config();
 const { createApp } = require('./src/app');
 const { connectDatabase } = require('./src/config/database');
 const { env } = require('./src/config/env');
+const { startScheduler } = require('./src/services/cronSchedulerService');
 
 async function startServer() {
   try {
@@ -10,6 +11,7 @@ async function startServer() {
 
     const server = app.listen(env.port, env.host, () => {
       console.log(`Server running on ${env.host}:${env.port}`);
+      startScheduler();
     });
 
     server.timeout = 600000;

@@ -1,0 +1,405 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Dar Al Hai EQP - SAP Business One M2M Integration API",
+    "description": "Secure Machine-to-Machine (M2M) API designed for ABS Consulting and SAP Business One Integration Engine to ingest Komatsu Middle East Purchase Orders, report sync confirmations, and handle error lifecycles.",
+    "version": "1.0.0",
+    "contact": {
+      "name": "Dar Al Hai Systems Engineering",
+      "email": "motasem.ghanem@daralhai.com"
+    }
+  },
+  "servers": [
+    {
+      "url": "/api/v1/integration/sap",
+      "description": "Current Environment Gateway"
+    },
+    {
+      "url": "https://eqp.daralhai.com/api/v1/integration/sap",
+      "description": "Production Server"
+    }
+  ],
+  "security": [
+    {
+      "BearerAuth": []
+    }
+  ],
+  "paths": {
+    "/health": {
+      "get": {
+        "summary": "M2M Health & Connectivity Check",
+        "description": "Verifies that the integration gateway is operational and validates the client API Key credentials.",
+        "responses": {
+          "200": {
+            "description": "Gateway is online and key is valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid API Key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/orders/pending": {
+      "get": {
+        "summary": "Retrieve Pending Komatsu Orders for SAP Pickup",
+        "description": "Retrieves confirmed Komatsu orders that are queued for creation as Purchase Orders in SAP Business One. By default, retrieved orders are transitioned to `PULLED_BY_SAP` to avoid duplicate pickups.",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number (1-based)",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Items per page (max 100)",
+            "schema": {
+              "type": "integer",
+              "default": 50
+            }
+          },
+          {
+            "name": "channel",
+            "in": "query",
+            "description": "Filter by order channel",
+            "schema": {
+              "type": "string",
+              "enum": ["EMERGENCY_ORDER", "DAILY_STOCK", "STOCK_ORDER"]
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "Filter by SAP integration status (default: PENDING_SAP_PULL; also supports PULLED_BY_SAP, ALL, or comma-separated values)",
+            "schema": {
+              "type": "string",
+              "default": "PENDING_SAP_PULL"
+            }
+          },
+          {
+            "name": "autoMarkPulled",
+            "in": "query",
+            "description": "Whether to automatically mark returned orders as PULLED_BY_SAP",
+            "schema": {
+              "type": "boolean",
+              "default": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of pending orders ready for SAP PO creation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PendingOrdersResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/orders/{id}": {
+      "get": {
+        "summary": "Get Order Manifest by ID or Komatsu Sales Order Number",
+        "description": "Retrieves the full order manifest including all line items, customer details, and audit history.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Order UUID or Komatsu Sales Order Number (e.g., 200451)",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Order manifest details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrderDetailResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Order not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/orders/{id}/acknowledge": {
+      "post": {
+        "summary": "Acknowledge SAP PO Creation",
+        "description": "Informs the EQP System that ABS has successfully generated the Purchase Order inside SAP Business One.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Order UUID or Komatsu Sales Order Number",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AcknowledgePayload"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Order status updated to SAP_PO_CREATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ActionSuccessResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error or order is excluded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Order not found"
+          },
+          "409": {
+            "description": "Conflict - Order is already confirmed under a different SAP PO number",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/orders/{id}/fail": {
+      "post": {
+        "summary": "Report SAP Integration Failure",
+        "description": "Flags the order as `SAP_SYNC_FAILED` with the exact error diagnostic reported by SAP Business One.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Order UUID, Komatsu Sales Order Number, or Quotation Number",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FailPayload"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Failure status recorded for operator retry",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ActionSuccessResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Order is excluded from SAP processing"
+          },
+          "404": {
+            "description": "Order not found"
+          },
+          "409": {
+            "description": "Conflict - Cannot report failure on an already confirmed SAP PO"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "APIKey",
+        "description": "Standard Bearer API token generated for ABS Consulting (e.g., Authorization: Bearer eqp_live_...)"
+      }
+    },
+    "schemas": {
+      "HealthResponse": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean", "example": true },
+          "service": { "type": "string", "example": "Dar Al Hai EQP - SAP B1 M2M Integration API" },
+          "status": { "type": "string", "example": "HEALTHY" },
+          "version": { "type": "string", "example": "1.0.0" },
+          "timestamp": { "type": "string", "format": "date-time" },
+          "authenticatedKey": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "name": { "type": "string", "example": "ABS SAP Integration Service" },
+              "role": { "type": "string", "example": "SAP_INTEGRATION_SERVICE" },
+              "scopes": { "type": "array", "items": { "type": "string" } }
+            }
+          }
+        }
+      },
+      "KomatsuOrderItem": {
+        "type": "object",
+        "properties": {
+          "lineNumber": { "type": "integer", "example": 1 },
+          "partNumber": { "type": "string", "example": "6742-01-5280" },
+          "description": { "type": "string", "example": "GASKET, HEAD" },
+          "quantity": { "type": "integer", "example": 2 },
+          "unitPriceUSD": { "type": "number", "format": "float", "example": 45.50 },
+          "lineTotalUSD": { "type": "number", "format": "float", "example": 91.00 },
+          "suggestedWarehouse": { "type": "string", "example": "003" },
+          "suggestedTaxCode": { "type": "string", "example": "P0" }
+        }
+      },
+      "KomatsuOrder": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "komatsuSalesOrderNo": { "type": "string", "example": "200451" },
+          "komatsuQuotationNo": { "type": "string", "example": "0000281449" },
+          "distributorRefNo": { "type": "string", "example": "R197/2026" },
+          "channel": { "type": "string", "enum": ["EMERGENCY_ORDER", "DAILY_STOCK", "STOCK_ORDER"], "example": "EMERGENCY_ORDER" },
+          "orderDate": { "type": "string", "format": "date-time" },
+          "deliveryDueDate": { "type": "string", "format": "date-time" },
+          "currency": { "type": "string", "example": "USD" },
+          "vendorCode": { "type": "string", "example": "V000006" },
+          "customerCode": { "type": "string", "example": "C0001" },
+          "customerName": { "type": "string", "example": "KUWAIT GENERAL TRADING" },
+          "equipmentSerial": { "type": "string", "example": "100433" },
+          "equipmentModel": { "type": "string", "example": "PC500LC-10R" },
+          "remarks": { "type": "string" },
+          "tags": { "type": "array", "items": { "type": "string" } },
+          "sapStatus": { "type": "string", "enum": ["PENDING_SAP_PULL", "PULLED_BY_SAP", "SAP_PO_CREATED", "SAP_SYNC_FAILED", "EXCLUDED"] },
+          "items": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/KomatsuOrderItem" }
+          }
+        }
+      },
+      "PendingOrdersResponse": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean", "example": true },
+          "totalCount": { "type": "integer", "example": 12 },
+          "page": { "type": "integer", "example": 1 },
+          "pageSize": { "type": "integer", "example": 50 },
+          "returnedCount": { "type": "integer", "example": 12 },
+          "orders": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/KomatsuOrder" }
+          }
+        }
+      },
+      "OrderDetailResponse": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean", "example": true },
+          "order": { "$ref": "#/components/schemas/KomatsuOrder" }
+        }
+      },
+      "AcknowledgePayload": {
+        "type": "object",
+        "required": ["sapDocNum"],
+        "properties": {
+          "sapDocNum": { "type": "string", "description": "Purchase Order document number generated in SAP B1", "example": "300189" },
+          "sapDocEntry": { "type": "integer", "description": "Internal DocEntry in SAP B1", "example": 1042 },
+          "remarks": { "type": "string", "example": "PO created successfully in SAP B1" }
+        }
+      },
+      "FailPayload": {
+        "type": "object",
+        "required": ["reason"],
+        "properties": {
+          "reason": { "type": "string", "description": "Diagnostic error message from SAP", "example": "Item code 6742-01-5280 not registered in SAP Item Master" },
+          "errorCode": { "type": "string", "example": "-1002" },
+          "rawError": { "type": "object" }
+        }
+      },
+      "ActionSuccessResponse": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean", "example": true },
+          "message": { "type": "string" },
+          "order": { "$ref": "#/components/schemas/KomatsuOrder" }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean", "example": false },
+          "error": { "type": "string", "example": "UNAUTHORIZED" },
+          "message": { "type": "string", "example": "Invalid API key or token has expired" }
+        }
+      }
+    }
+  }
+}

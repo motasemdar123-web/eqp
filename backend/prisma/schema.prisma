@@ -683,4 +683,182 @@ model MediaCampaign {
   @@map("media_campaigns")
 }
 
+enum KomatsuOrderChannel {
+  EMERGENCY_ORDER
+  DAILY_STOCK
+  STOCK_ORDER
+}
+
+enum SapIntegrationStatus {
+  PENDING_SAP_PULL
+  PULLED_BY_SAP
+  SAP_PO_CREATED
+  SAP_SYNC_FAILED
+  EXCLUDED
+}
+
+enum KomatsuAuditAction {
+  SYNC_CREATED
+  SYNC_UPDATED
+  STATUS_CHANGED
+  SAP_PULLED
+  SAP_ACKNOWLEDGED
+  SAP_FAILED
+  MANUAL_EDIT
+  RETRY_QUEUED
+}
+
+enum KomatsuSyncTrigger {
+  SCHEDULED_CRON
+  MANUAL_USER
+}
+
+enum KomatsuSyncStatus {
+  SUCCESS
+  PARTIAL
+  FAILED
+  AUTH_EXPIRED
+}
+
+model KomatsuOrder {
+  id                  String                @id @default(uuid())
+  komatsuSalesOrderNo String?               @unique @map("komatsu_sales_order_no")
+  komatsuQuotationNo  String?               @map("komatsu_quotation_no")
+  distributorRefNo    String?               @map("distributor_ref_no")
+  channel             KomatsuOrderChannel   @default(EMERGENCY_ORDER)
+  orderDate           DateTime?             @map("order_date")
+  deliveryDueDate     DateTime?             @map("delivery_due_date")
+  currency            String                @default("USD")
+  vendorCode          String                @default("V000006") @map("vendor_code")
+  equipmentSerial     String?               @map("equipment_serial")
+  equipmentModel      String?               @map("equipment_model")
+  customerCode        String?               @map("customer_code")
+  customerName        String?               @map("customer_name")
+  comments            String?
+  remarks             String?
+  tags                String[]              @default([])
+  sapStatus           SapIntegrationStatus  @default(PENDING_SAP_PULL) @map("sap_status")
+  sapDocNum           String?               @map("sap_doc_num")
+  sapDocEntry         Int?                  @map("sap_doc_entry")
+  sapSyncedAt         DateTime?             @map("sap_synced_at")
+  sapFailureReason    String?               @map("sap_failure_reason")
+  syncJobId           String?               @map("sync_job_id")
+  rawPayload          Json?                 @map("raw_payload")
+  items               KomatsuOrderItem[]
+  auditLogs           KomatsuOrderAuditLog[]
+  createdAt           DateTime              @default(now()) @map("created_at")
+  updatedAt           DateTime              @updatedAt @map("updated_at")
+  createdById         String?               @map("created_by")
+  updatedById         String?               @map("updated_by")
+  deletedAt           DateTime?             @map("deleted_at")
+
+  @@index([sapStatus])
+  @@index([komatsuQuotationNo])
+  @@index([distributorRefNo])
+  @@index([orderDate])
+  @@map("komatsu_orders")
+}
+
+model KomatsuOrderItem {
+  id                 String       @id @default(uuid())
+  orderId            String       @map("order_id")
+  order              KomatsuOrder @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  lineNumber         Int          @default(1) @map("line_number")
+  partNumber         String       @map("part_number")
+  description        String?
+  quantity           Int          @default(1)
+  unitPriceUSD       Float        @default(0) @map("unit_price_usd")
+  lineTotalUSD       Float        @default(0) @map("line_total_usd")
+  suggestedWarehouse String       @default("003") @map("suggested_warehouse")
+  suggestedTaxCode   String       @default("P0") @map("suggested_tax_code")
+  rawMetadata        Json?        @map("raw_metadata")
+  createdAt          DateTime     @default(now()) @map("created_at")
+  updatedAt          DateTime     @updatedAt @map("updated_at")
+
+  @@index([orderId])
+  @@index([partNumber])
+  @@map("komatsu_order_items")
+}
+
+model KomatsuOrderAuditLog {
+  id         String             @id @default(uuid())
+  orderId    String             @map("order_id")
+  order      KomatsuOrder       @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  action     KomatsuAuditAction @default(STATUS_CHANGED)
+  actorType  String             @default("SYSTEM_CRON") @map("actor_type")
+  actorId    String?            @map("actor_id")
+  actorName  String?            @map("actor_name")
+  oldValues  Json?              @map("old_values")
+  newValues  Json?              @map("new_values")
+  ipAddress  String?            @map("ip_address")
+  userAgent  String?            @map("user_agent")
+  createdAt  DateTime           @default(now()) @map("created_at")
+
+  @@index([orderId])
+  @@index([createdAt])
+  @@map("komatsu_order_audit_logs")
+}
+
+model KomatsuSyncJob {
+  id               String             @id @default(uuid())
+  triggerType      KomatsuSyncTrigger @default(SCHEDULED_CRON) @map("trigger_type")
+  status           KomatsuSyncStatus  @default(SUCCESS)
+  ordersFound      Int                @default(0) @map("orders_found")
+  ordersInserted   Int                @default(0) @map("orders_inserted")
+  ordersUpdated    Int                @default(0) @map("orders_updated")
+  errorMessage     String?            @map("error_message")
+  metadata         Json?
+  startedAt        DateTime           @default(now()) @map("started_at")
+  completedAt      DateTime?          @map("completed_at")
+  triggeredById    String?            @map("triggered_by_id")
+  triggeredByName  String?            @map("triggered_by_name")
+  createdAt        DateTime           @default(now()) @map("created_at")
+
+  @@index([status])
+  @@index([startedAt])
+  @@map("komatsu_sync_jobs")
+}
+
+model ApiKey {
+  id          String         @id @default(uuid())
+  name        String
+  keyPrefix   String         @map("key_prefix")
+  keyHash     String         @unique @map("key_hash")
+  scopes      String[]       @default(["sap:read", "sap:write"])
+  allowedIps  String[]       @default([]) @map("allowed_ips")
+  role        String         @default("SAP_INTEGRATION_SERVICE")
+  isActive    Boolean        @default(true) @map("is_active")
+  expiresAt   DateTime?      @map("expires_at")
+  lastUsedAt  DateTime?      @map("last_used_at")
+  accessLogs  ApiAccessLog[]
+  createdAt   DateTime       @default(now()) @map("created_at")
+  updatedAt   DateTime       @updatedAt @map("updated_at")
+  createdById String?        @map("created_by")
+
+  @@index([keyHash])
+  @@index([isActive])
+  @@map("api_keys")
+}
+
+model ApiAccessLog {
+  id             String    @id @default(uuid())
+  apiKeyId       String?   @map("api_key_id")
+  apiKey         ApiKey?   @relation(fields: [apiKeyId], references: [id], onDelete: SetNull)
+  endpoint       String
+  httpMethod     String    @map("http_method")
+  statusCode     Int       @map("status_code")
+  ipAddress      String?   @map("ip_address")
+  userAgent      String?   @map("user_agent")
+  responseTimeMs Int?      @map("response_time_ms")
+  requestPayload Json?     @map("request_payload")
+  errorMessage   String?   @map("error_message")
+  createdAt      DateTime  @default(now()) @map("created_at")
+
+  @@index([apiKeyId])
+  @@index([endpoint])
+  @@index([createdAt])
+  @@map("api_access_logs")
+}
+
+
 
