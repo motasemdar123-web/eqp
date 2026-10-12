@@ -37,13 +37,9 @@ async function getMediaCampaigns(req, res) {
     });
   } catch (err) {
     console.error('[getMediaCampaigns] Error:', err);
-    // Fallback to static JSON if database error
-    return res.json({
-      success: true,
-      campaigns: initialCampaigns,
-      updatedAt: new Date().toISOString(),
-      updatedBy: 'Fallback Template',
-      warning: err.message,
+    return res.status(503).json({
+      success: false,
+      error: 'Database connection failed: ' + err.message,
     });
   }
 }

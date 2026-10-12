@@ -47,14 +47,16 @@ export default function MediaCornerPage() {
     try {
       const res = await getMediaCampaigns();
       if (res && res.success && res.campaigns && Object.keys(res.campaigns).length > 0) {
-        setCampaigns(res.campaigns);
-        try {
-          localStorage.setItem(CAMPAIGNS_STORAGE_KEY, JSON.stringify(res.campaigns));
-        } catch {}
-        setSyncStatus('synced');
-        setLastSyncTime(new Date(res.updatedAt || Date.now()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
-        if (res.updatedBy) setSyncAuthor(res.updatedBy);
-        return;
+        if (!res.updatedBy?.includes('Fallback')) {
+          setCampaigns(res.campaigns);
+          try {
+            localStorage.setItem(CAMPAIGNS_STORAGE_KEY, JSON.stringify(res.campaigns));
+          } catch {}
+          setSyncStatus('synced');
+          setLastSyncTime(new Date(res.updatedAt || Date.now()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
+          if (res.updatedBy) setSyncAuthor(res.updatedBy);
+          return;
+        }
       }
     } catch (err) {
       console.warn('[Media] Remote sync warning:', err.message);
@@ -70,8 +72,8 @@ export default function MediaCornerPage() {
 
       if (storedCampaigns) {
         let parsed = JSON.parse(storedCampaigns);
-        // Ensure October has the full 12-deliverable master blueprint
-        if (!parsed['2026-10'] || !parsed['2026-10'].concepts || parsed['2026-10'].concepts.length < 12) {
+        // Only initialize October if month does not exist at all (never wipe custom edits)
+        if (!parsed['2026-10']) {
           parsed['2026-10'] = INITIAL_MONTHLY_CAMPAIGNS['2026-10'];
           try {
             localStorage.setItem(CAMPAIGNS_STORAGE_KEY, JSON.stringify(parsed));

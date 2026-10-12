@@ -19,7 +19,7 @@ router.get('/openapi.json', (req, res) => {
 /**
  * Serve Interactive Swagger UI Console with Dar Al Hai styling
  */
-router.get(['/', ''], (req, res) => {
+router.get('/', (req, res) => {
   const html = `<!DOCTYPE html>
 <html lang="en">
 <head>

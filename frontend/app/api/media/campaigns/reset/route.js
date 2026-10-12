@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server';
 import { INITIAL_MONTHLY_CAMPAIGNS } from '../../../../../lib/mediaMonthlyData';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://eqp-1.onrender.com';
 
 export async function POST(request) {

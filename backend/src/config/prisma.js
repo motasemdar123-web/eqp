@@ -32,7 +32,12 @@ function buildDatabaseUrlFromLegacyEnv() {
 }
 
 function getDatabaseUrl() {
-  return process.env.DATABASE_URL || buildDatabaseUrlFromLegacyEnv();
+  let url = process.env.DATABASE_URL || buildDatabaseUrlFromLegacyEnv();
+  if (url && !url.includes('connection_limit=')) {
+    const separator = url.includes('?') ? '&' : '?';
+    url = `${url}${separator}connection_limit=5`;
+  }
+  return url;
 }
 
 function getPrisma() {

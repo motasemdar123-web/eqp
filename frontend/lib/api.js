@@ -1120,7 +1120,7 @@ export async function getLocalSapQuotationStatus() {
 export async function getMediaCampaigns() {
   try {
     const res = await request('/api/media/campaigns', { timeoutMs: 8000 });
-    if (res && res.success && res.campaigns) {
+    if (res && res.success && res.campaigns && !res.updatedBy?.includes('Fallback')) {
       return res;
     }
   } catch (err) {
@@ -1131,7 +1131,23 @@ export async function getMediaCampaigns() {
   try {
     const localRes = await fetch('/api/media/campaigns');
     if (localRes.ok) {
-      return await localRes.json();
+      const data = await localRes.json();
+      if (data && data.success && data.campaigns && !data.updatedBy?.includes('Fallback')) {
+        return data;
+      }
+    }
+  } catch {}
+
+  // Direct cloud fallback if local endpoints are offline
+  try {
+    const cloudRes = await fetch('https://eqp-1.onrender.com/api/media/campaigns', {
+      headers: { 'Content-Type': 'application/json' },
+    });
+    if (cloudRes.ok) {
+      const data = await cloudRes.json();
+      if (data && data.success && data.campaigns && !data.updatedBy?.includes('Fallback')) {
+        return data;
+      }
     }
   } catch {}
 
@@ -1160,7 +1176,25 @@ export async function saveMediaCampaigns(campaigns, updatedBy) {
       body: JSON.stringify({ campaigns, updatedBy }),
     });
     if (localRes.ok) {
-      return await localRes.json();
+      const data = await localRes.json();
+      if (data && data.success) {
+        return data;
+      }
+    }
+  } catch {}
+
+  // Direct cloud fallback
+  try {
+    const cloudRes = await fetch('https://eqp-1.onrender.com/api/media/campaigns', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ campaigns, updatedBy }),
+    });
+    if (cloudRes.ok) {
+      const data = await cloudRes.json();
+      if (data && data.success) {
+        return data;
+      }
     }
   } catch {}
 

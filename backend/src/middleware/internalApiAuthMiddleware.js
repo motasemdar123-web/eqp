@@ -25,6 +25,8 @@ const publicApiPaths = new Set([
 
 function isPublicApiPath(path) {
   if (path.startsWith('/api/media/')) return true;
+  if (path.startsWith('/api/v1/integration/sap')) return true;
+  if (path.startsWith('/api/docs/sap-integration')) return true;
   return publicApiPaths.has(path);
 }
 
