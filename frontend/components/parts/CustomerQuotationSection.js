@@ -580,14 +580,15 @@ export default function CustomerQuotationSection({
           part_no: it.part_no,
           latest_part_no: it.latest_part_no || it.part_no,
           description: it.description || 'KOMATSU COMPONENT',
-          quantity: neededQty,
-          original_qty: qty,
+          quantity: it.custom_av_quantity !== undefined ? it.custom_av_quantity : qty, // Total requested quantity sent in Availability form
+          total_qty: qty,
+          remainder_qty: neededQty,
           kme_stock: it.kme_stock,
           kltd_stock: it.kltd_total,
           models: it.models || [],
           model: currentModel,
           serial: currentSerial,
-          remarks: null,
+          remarks: it.custom_av_remarks || null,
         });
       }
     });
@@ -600,6 +601,12 @@ export default function CustomerQuotationSection({
     setItems((prev) =>
       prev.map((it) => {
         if (it.id !== id) return it;
+        if (field === 'quantity' || field === 'qty') {
+          return { ...it, custom_av_quantity: parseInt(value, 10) || 1 };
+        }
+        if (field === 'remarks') {
+          return { ...it, custom_av_remarks: value };
+        }
         return {
           ...it,
           [field === 'model' ? 'selected_model' : 'selected_serial']: value,
@@ -932,7 +939,7 @@ export default function CustomerQuotationSection({
                 <TableHead isNumeric className="w-36 text-[11px] font-bold text-emerald-800 bg-emerald-50/40">
                   Total Price (KWD)
                 </TableHead>
-                <TableHead className="min-w-[220px] text-[11px] font-bold">
+                <TableHead className="min-w-[280px] text-[11px] font-bold">
                   <div className="flex items-center gap-1.5">
                     <span>Delivery Time</span>
                     <span className="text-[9px] font-normal text-slate-500">(Free Text)</span>
@@ -1048,7 +1055,7 @@ export default function CustomerQuotationSection({
                             type="text"
                             value={row.deliveryTime}
                             onChange={(e) => handleUpdateItem(row.id, 'custom_delivery', e.target.value)}
-                            className="text-xs font-medium text-slate-800 bg-white border border-slate-200 hover:border-slate-300 focus:border-amber-500 rounded px-2.5 py-1 w-full outline-none shadow-2xs"
+                            className="text-xs font-medium text-slate-800 bg-white border border-slate-200 hover:border-slate-300 focus:border-amber-500 rounded px-2.5 py-1 w-full min-w-[240px] outline-none shadow-2xs font-mono"
                             placeholder="e.g. 7-10 Days, 3-5 Weeks"
                           />
                         </div>
@@ -1185,8 +1192,21 @@ export default function CustomerQuotationSection({
                       </TableCell>
 
                       {/* 5. Req Qty */}
-                      <TableCell isNumeric className="font-mono text-xs font-bold text-slate-900">
-                        {avItem.quantity}
+                      <TableCell isNumeric>
+                        <div className="flex flex-col items-end gap-0.5">
+                          <input
+                            type="number"
+                            min="1"
+                            value={avItem.quantity}
+                            onChange={(e) => handleUpdateAvailabilityRow(avItem.id, 'quantity', e.target.value)}
+                            className="font-mono text-xs font-bold text-slate-900 text-right bg-white border border-slate-200 hover:border-slate-300 focus:border-indigo-500 rounded px-2 py-0.5 w-20 outline-none"
+                          />
+                          {avItem.kme_stock > 0 && (
+                            <span className="text-[9px] text-slate-500 font-mono">
+                              (Total: {avItem.total_qty})
+                            </span>
+                          )}
+                        </div>
                       </TableCell>
 
                       {/* 6. Machine Model (Editable / Model Picker) */}
@@ -1228,8 +1248,14 @@ export default function CustomerQuotationSection({
                       </TableCell>
 
                       {/* 8. KME Remarks */}
-                      <TableCell className="text-xs text-slate-400 italic">
-                        {avItem.remarks || '—'}
+                      <TableCell>
+                        <input
+                          type="text"
+                          value={avItem.remarks || ''}
+                          onChange={(e) => handleUpdateAvailabilityRow(avItem.id, 'remarks', e.target.value)}
+                          className="text-xs text-slate-700 bg-white border border-slate-200 hover:border-slate-300 focus:border-indigo-500 rounded px-2 py-0.5 w-full outline-none"
+                          placeholder="Optional remarks..."
+                        />
                       </TableCell>
                     </TableRow>
                   );
