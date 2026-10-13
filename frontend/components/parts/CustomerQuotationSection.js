@@ -14,6 +14,7 @@ import {
   lookupKomatsuPart,
   verifyBatchQuotationParts,
   downloadAvailabilityFormExcel,
+  downloadCustomerQuotationExcel,
 } from '../../lib/api';
 
 const SAMPLE_QUOTATION_INPUT = `17M-22-43430, 1
@@ -151,6 +152,8 @@ export default function CustomerQuotationSection({
 
   // Excel download state
   const [isDownloadingExcel, setIsDownloadingExcel] = useState(false);
+  const [isDownloadingQuotationExcel, setIsDownloadingQuotationExcel] = useState(false);
+  const [copiedColumn, setCopiedColumn] = useState(null);
   const [pasteModalOpen, setPasteModalOpen] = useState(false);
   const [tempPasteText, setTempPasteText] = useState('');
 
@@ -263,6 +266,11 @@ export default function CustomerQuotationSection({
         }
         if (field === 'quantity') {
           updated.quantity = Math.max(1, parseInt(value, 10) || 1);
+        }
+        if (field === 'dnet_price') {
+          const num = parseFloat(value);
+          updated.dnet_price = isNaN(num) || num < 0 ? 0 : num;
+          updated.price = updated.dnet_price;
         }
         return updated;
       })
@@ -391,8 +399,11 @@ export default function CustomerQuotationSection({
         if (batchSuccess && batchItemsMap.has(pNo)) {
           const res = batchItemsMap.get(pNo);
           item.description = res.description || item.description || 'Komatsu Component';
-          item.dnet_price = res.dnet_price || res.price || 0;
-          item.price = item.dnet_price;
+          const rawPrice = parseFloat(res.dnet_price ?? res.price ?? 0);
+          const cleanPrice = !isNaN(rawPrice) && rawPrice > 0 ? rawPrice : 0;
+          item.dnet_price = cleanPrice;
+          item.price = cleanPrice;
+          item.isUnregistered = Boolean(res.isUnregistered);
           item.kme_stock = res.kme_stock || 0;
           item.kme_eor = res.kme_eor || 0;
           item.kltd_total = res.kltd_total || 0;
@@ -405,6 +416,10 @@ export default function CustomerQuotationSection({
           item.selected_model = item.selected_model || match.model;
           item.selected_serial = item.selected_serial || match.serial;
 
+          if (cleanPrice === 0 || item.isUnregistered) {
+            setRevealedDNetIds((prev) => new Set([...prev, item.id]));
+          }
+
           verifiedCount++;
         } else {
           // Individual lookup fallback
@@ -412,9 +427,11 @@ export default function CustomerQuotationSection({
             const res = await lookupKomatsuPart(pNo);
             if (res && !res.error) {
               item.description = res.description || item.description || 'Komatsu Component';
-              const rawPrice = parseFloat(res.stock_info?.dnet_price ?? res.price ?? 0) || 0;
-              item.dnet_price = rawPrice;
-              item.price = rawPrice;
+              const rawPrice = parseFloat(res.dnet_price ?? res.stock_info?.dnet_price ?? res.price ?? 0);
+              const cleanPrice = !isNaN(rawPrice) && rawPrice > 0 ? rawPrice : 0;
+              item.dnet_price = cleanPrice;
+              item.price = cleanPrice;
+              item.isUnregistered = Boolean(res.isUnregistered);
               item.kme_stock = parseInt(res.kme_stock ?? res.stock_info?.kme_stock ?? 0, 10) || 0;
               item.kme_eor = parseInt(res.kme_eor ?? res.stock_info?.kme_eor ?? 0, 10) || 0;
               item.kltd_total = parseInt(res.kltd_total ?? res.stock_info?.kltd_total ?? 0, 10) || 0;
@@ -426,14 +443,26 @@ export default function CustomerQuotationSection({
               item.selected_model = item.selected_model || match.model;
               item.selected_serial = item.selected_serial || match.serial;
 
+              if (cleanPrice === 0 || item.isUnregistered) {
+                setRevealedDNetIds((prev) => new Set([...prev, item.id]));
+              }
+
               verifiedCount++;
               onLog(`Verified ${pNo}: Stock KME=${item.kme_stock}, EOR=${item.kme_eor}, KLTD=${item.kltd_total}, DNet=$${item.dnet_price}`, 'success');
             } else {
               item.verified = false;
+              item.isUnregistered = true;
+              item.dnet_price = 0;
+              item.price = 0;
+              setRevealedDNetIds((prev) => new Set([...prev, item.id]));
               onLog(`Lookup failed for ${pNo}: ${res.error || 'Part not found'}`, 'warn');
             }
           } catch (err) {
             item.verified = false;
+            item.isUnregistered = true;
+            item.dnet_price = 0;
+            item.price = 0;
+            setRevealedDNetIds((prev) => new Set([...prev, item.id]));
             onLog(`Error verifying ${pNo}: ${err.message}`, 'error');
           }
         }
@@ -683,6 +712,96 @@ export default function CustomerQuotationSection({
       setIsDownloadingExcel(false);
     }
   }
+
+  // Download Customer Quotation Excel (.xlsx)
+  async function handleDownloadQuotationExcel() {
+    if (calculatedTableRows.length === 0) {
+      onToast({ type: 'warn', message: 'No quotation items to download.' });
+      return;
+    }
+
+    try {
+      setIsDownloadingQuotationExcel(true);
+      onLog(`Generating Customer Quotation Excel for ${selectedCustomer} (${calculatedTableRows.length} items)...`, 'info');
+
+      await downloadCustomerQuotationExcel({
+        customer: selectedCustomer || 'Customer',
+        customerMode,
+        marginFactorR: sliderR,
+        items: calculatedTableRows.map((it) => ({
+          part_no: it.part_no,
+          description: it.description,
+          quantity: it.quantity,
+          dnet_price: it.dnet_price,
+          unitPriceKwd: it.unitPriceKwd,
+          totalPriceKwd: it.totalPriceKwd,
+          deliveryTime: it.deliveryTime,
+        })),
+      });
+
+      onToast({
+        type: 'success',
+        message: 'Customer Quotation (.xlsx) generated and downloaded!',
+      });
+      onLog('Customer Quotation Excel download complete.', 'success');
+    } catch (err) {
+      onToast({ type: 'error', message: err.message || 'Failed to download Customer Quotation Excel' });
+      onLog(`Quotation Excel generation error: ${err.message}`, 'error');
+    } finally {
+      setIsDownloadingQuotationExcel(false);
+    }
+  }
+
+  // Copy Single Column to Clipboard (newline-separated values, exactly like copying an Excel column)
+  const handleCopyColumn = useCallback(
+    (colKey, colName) => {
+      if (calculatedTableRows.length === 0) {
+        onToast({ type: 'warn', message: 'No items in table to copy.' });
+        return;
+      }
+
+      let values = [];
+      switch (colKey) {
+        case 'rowNumber':
+          values = calculatedTableRows.map((r) => String(r.rowNumber));
+          break;
+        case 'part_no':
+          values = calculatedTableRows.map((r) => r.part_no || '');
+          break;
+        case 'description':
+          values = calculatedTableRows.map((r) => r.description || '');
+          break;
+        case 'quantity':
+          values = calculatedTableRows.map((r) => String(r.quantity || 1));
+          break;
+        case 'dnet_price':
+          values = calculatedTableRows.map((r) => (parseFloat(r.dnet_price || 0)).toFixed(2));
+          break;
+        case 'unitPriceKwd':
+          values = calculatedTableRows.map((r) => r.unitPriceKwd.toFixed(3));
+          break;
+        case 'totalPriceKwd':
+          values = calculatedTableRows.map((r) => r.totalPriceKwd.toFixed(3));
+          break;
+        case 'deliveryTime':
+          values = calculatedTableRows.map((r) => r.deliveryTime || '');
+          break;
+        default:
+          values = calculatedTableRows.map((r) => String(r[colKey] || ''));
+      }
+
+      const textToCopy = values.join('\n');
+      navigator.clipboard.writeText(textToCopy).then(() => {
+        setCopiedColumn(colKey);
+        setTimeout(() => setCopiedColumn(null), 2000);
+        onToast({
+          type: 'success',
+          message: `Copied "${colName}" column to clipboard (${values.length} rows).`,
+        });
+      });
+    },
+    [calculatedTableRows, onToast]
+  );
 
   // Copy Quotation Table to Clipboard
   function handleCopyQuotationClipboard() {
@@ -946,7 +1065,7 @@ export default function CustomerQuotationSection({
             </p>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <button
               type="button"
               onClick={handleToggleRevealAllDNet}
@@ -961,6 +1080,25 @@ export default function CustomerQuotationSection({
             >
               📋 Copy Table
             </button>
+            <Button
+              variant="primary"
+              size="sm"
+              onClick={handleDownloadQuotationExcel}
+              disabled={isDownloadingQuotationExcel || calculatedTableRows.length === 0}
+              className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-2xs cursor-pointer"
+            >
+              {isDownloadingQuotationExcel ? (
+                <span className="flex items-center gap-1.5">
+                  <svg className="animate-spin h-3.5 w-3.5" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+                  </svg>
+                  Exporting...
+                </span>
+              ) : (
+                '📥 Download Quotation (.xlsx)'
+              )}
+            </Button>
           </div>
         </div>
 
@@ -968,28 +1106,164 @@ export default function CustomerQuotationSection({
           <Table>
             <TableHeader>
               <TableRow className="bg-slate-100/70 border-b border-slate-200">
-                <TableHead className="w-12 text-center text-[11px] font-bold">#</TableHead>
-                <TableHead className="min-w-[150px] text-[11px] font-bold">Item (Part No.)</TableHead>
-                <TableHead className="min-w-[200px] text-[11px] font-bold">Description</TableHead>
-                <TableHead isNumeric className="w-20 text-[11px] font-bold">Qty</TableHead>
-                <TableHead isNumeric className="w-36 text-[11px] font-bold bg-amber-50/50">
-                  <div className="flex items-center justify-end gap-1">
-                    <span>DNet Price ($)</span>
-                    <span className="text-[9px] text-amber-700 font-mono">(Hidden)</span>
+                {/* # Column */}
+                <TableHead className="w-14 text-center text-[11px] font-bold">
+                  <div className="flex items-center justify-center gap-1 group">
+                    <span>#</span>
+                    <button
+                      type="button"
+                      onClick={() => handleCopyColumn('rowNumber', '#')}
+                      className={`inline-flex items-center justify-center w-4 h-4 rounded transition-all cursor-pointer ${
+                        copiedColumn === 'rowNumber'
+                          ? 'bg-emerald-600 text-white'
+                          : 'opacity-30 group-hover:opacity-100 text-slate-500 hover:text-slate-900 hover:bg-slate-200'
+                      }`}
+                      title="Copy row numbers"
+                    >
+                      {copiedColumn === 'rowNumber' ? '✓' : '📋'}
+                    </button>
                   </div>
                 </TableHead>
-                <TableHead isNumeric className="w-36 text-[11px] font-bold text-slate-900">
-                  Price / Unit (KWD)
+
+                {/* 1. Item */}
+                <TableHead className="min-w-[160px] text-[11px] font-bold">
+                  <div className="flex items-center justify-between gap-1 group">
+                    <span>Item (Part No.)</span>
+                    <button
+                      type="button"
+                      onClick={() => handleCopyColumn('part_no', 'Item')}
+                      className={`inline-flex items-center justify-center w-5 h-5 rounded text-xs transition-all cursor-pointer ${
+                        copiedColumn === 'part_no'
+                          ? 'bg-emerald-600 text-white'
+                          : 'opacity-40 group-hover:opacity-100 text-slate-500 hover:text-slate-900 hover:bg-slate-200'
+                      }`}
+                      title="Copy Item column (Excel newline format)"
+                    >
+                      {copiedColumn === 'part_no' ? '✓' : '📋'}
+                    </button>
+                  </div>
                 </TableHead>
-                <TableHead isNumeric className="w-36 text-[11px] font-bold text-emerald-800 bg-emerald-50/40">
-                  Total Price (KWD)
+
+                {/* 2. Description */}
+                <TableHead className="min-w-[200px] text-[11px] font-bold">
+                  <div className="flex items-center justify-between gap-1 group">
+                    <span>Description</span>
+                    <button
+                      type="button"
+                      onClick={() => handleCopyColumn('description', 'Description')}
+                      className={`inline-flex items-center justify-center w-5 h-5 rounded text-xs transition-all cursor-pointer ${
+                        copiedColumn === 'description'
+                          ? 'bg-emerald-600 text-white'
+                          : 'opacity-40 group-hover:opacity-100 text-slate-500 hover:text-slate-900 hover:bg-slate-200'
+                      }`}
+                      title="Copy Description column"
+                    >
+                      {copiedColumn === 'description' ? '✓' : '📋'}
+                    </button>
+                  </div>
                 </TableHead>
+
+                {/* 3. Qty */}
+                <TableHead isNumeric className="w-24 text-[11px] font-bold">
+                  <div className="flex items-center justify-end gap-1.5 group">
+                    <span>Qty</span>
+                    <button
+                      type="button"
+                      onClick={() => handleCopyColumn('quantity', 'Qty')}
+                      className={`inline-flex items-center justify-center w-5 h-5 rounded text-xs transition-all cursor-pointer ${
+                        copiedColumn === 'quantity'
+                          ? 'bg-emerald-600 text-white'
+                          : 'opacity-40 group-hover:opacity-100 text-slate-500 hover:text-slate-900 hover:bg-slate-200'
+                      }`}
+                      title="Copy Qty column"
+                    >
+                      {copiedColumn === 'quantity' ? '✓' : '📋'}
+                    </button>
+                  </div>
+                </TableHead>
+
+                {/* 4. DNet Price ($) */}
+                <TableHead isNumeric className="w-40 text-[11px] font-bold bg-amber-50/50">
+                  <div className="flex items-center justify-end gap-1.5 group">
+                    <div className="flex items-center gap-1">
+                      <span>DNet Price ($)</span>
+                      <span className="text-[9px] text-amber-700 font-mono">(Hidden)</span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => handleCopyColumn('dnet_price', 'DNet Price')}
+                      className={`inline-flex items-center justify-center w-5 h-5 rounded text-xs transition-all cursor-pointer ${
+                        copiedColumn === 'dnet_price'
+                          ? 'bg-emerald-600 text-white'
+                          : 'opacity-40 group-hover:opacity-100 text-slate-500 hover:text-slate-900 hover:bg-amber-100'
+                      }`}
+                      title="Copy DNet Price column"
+                    >
+                      {copiedColumn === 'dnet_price' ? '✓' : '📋'}
+                    </button>
+                  </div>
+                </TableHead>
+
+                {/* 5. Price / Unit (KWD) */}
+                <TableHead isNumeric className="w-40 text-[11px] font-bold text-slate-900">
+                  <div className="flex items-center justify-end gap-1.5 group">
+                    <span>Price / Unit (KWD)</span>
+                    <button
+                      type="button"
+                      onClick={() => handleCopyColumn('unitPriceKwd', 'Price / Unit')}
+                      className={`inline-flex items-center justify-center w-5 h-5 rounded text-xs transition-all cursor-pointer ${
+                        copiedColumn === 'unitPriceKwd'
+                          ? 'bg-emerald-600 text-white'
+                          : 'opacity-40 group-hover:opacity-100 text-slate-500 hover:text-slate-900 hover:bg-slate-200'
+                      }`}
+                      title="Copy Price / Unit column"
+                    >
+                      {copiedColumn === 'unitPriceKwd' ? '✓' : '📋'}
+                    </button>
+                  </div>
+                </TableHead>
+
+                {/* 6. Total Price (KWD) */}
+                <TableHead isNumeric className="w-40 text-[11px] font-bold text-emerald-800 bg-emerald-50/40">
+                  <div className="flex items-center justify-end gap-1.5 group">
+                    <span>Total Price (KWD)</span>
+                    <button
+                      type="button"
+                      onClick={() => handleCopyColumn('totalPriceKwd', 'Total Price')}
+                      className={`inline-flex items-center justify-center w-5 h-5 rounded text-xs transition-all cursor-pointer ${
+                        copiedColumn === 'totalPriceKwd'
+                          ? 'bg-emerald-600 text-white'
+                          : 'opacity-40 group-hover:opacity-100 text-slate-500 hover:text-slate-900 hover:bg-emerald-100'
+                      }`}
+                      title="Copy Total Price column"
+                    >
+                      {copiedColumn === 'totalPriceKwd' ? '✓' : '📋'}
+                    </button>
+                  </div>
+                </TableHead>
+
+                {/* 7. Delivery Time */}
                 <TableHead className="min-w-[280px] text-[11px] font-bold">
-                  <div className="flex items-center gap-1.5">
-                    <span>Delivery Time</span>
-                    <span className="text-[9px] font-normal text-slate-500">(Free Text)</span>
+                  <div className="flex items-center justify-between gap-1.5 group">
+                    <div className="flex items-center gap-1.5">
+                      <span>Delivery Time</span>
+                      <span className="text-[9px] font-normal text-slate-500">(Free Text)</span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => handleCopyColumn('deliveryTime', 'Delivery Time')}
+                      className={`inline-flex items-center justify-center w-5 h-5 rounded text-xs transition-all cursor-pointer ${
+                        copiedColumn === 'deliveryTime'
+                          ? 'bg-emerald-600 text-white'
+                          : 'opacity-40 group-hover:opacity-100 text-slate-500 hover:text-slate-900 hover:bg-slate-200'
+                      }`}
+                      title="Copy Delivery Time column"
+                    >
+                      {copiedColumn === 'deliveryTime' ? '✓' : '📋'}
+                    </button>
                   </div>
                 </TableHead>
+
                 <TableHead className="w-16 text-center text-[11px] font-bold">Action</TableHead>
               </TableRow>
             </TableHeader>
@@ -1026,15 +1300,29 @@ export default function CustomerQuotationSection({
                             className="font-mono text-xs font-bold text-slate-900 bg-transparent hover:bg-white focus:bg-white border border-transparent hover:border-slate-300 focus:border-amber-500 rounded px-1.5 py-0.5 w-full uppercase outline-none"
                             placeholder="PART NO."
                           />
-                          <div className="flex items-center gap-1.5 pl-1.5">
+                          <div className="flex flex-wrap items-center gap-1.5 pl-1.5">
                             <span
                               className={`inline-block w-1.5 h-1.5 rounded-full ${
-                                row.verified ? 'bg-emerald-500' : 'bg-amber-400'
+                                row.isUnregistered
+                                  ? 'bg-rose-500'
+                                  : row.verified
+                                  ? 'bg-emerald-500'
+                                  : 'bg-amber-400'
                               }`}
                             />
                             <span className="text-[10px] text-slate-500 font-mono">
-                              {row.verified ? row.stockTag : 'Unverified'}
+                              {row.isUnregistered ? 'Unregistered in PDX' : row.verified ? row.stockTag : 'Unverified'}
                             </span>
+                            {row.isUnregistered && (
+                              <span className="text-[9px] px-1.5 py-0.2 rounded font-bold bg-rose-100 text-rose-700 border border-rose-200">
+                                Unregistered
+                              </span>
+                            )}
+                            {row.dnet_price === 0 && (
+                              <span className="text-[9px] px-1.5 py-0.2 rounded font-bold bg-amber-100 text-amber-800 border border-amber-200">
+                                Zero Price (000)
+                              </span>
+                            )}
                           </div>
                         </div>
                       </TableCell>
@@ -1060,37 +1348,72 @@ export default function CustomerQuotationSection({
                         />
                       </TableCell>
 
-                      {/* 4. DNet Price (Hidden, Click to view) */}
+                      {/* 4. DNet Price (Hidden, Click to view or edit directly) */}
                       <TableCell isNumeric className="bg-amber-50/20">
-                        <button
-                          type="button"
-                          onClick={() => handleToggleRevealDNet(row.id)}
-                          className="inline-flex items-center justify-end gap-1.5 px-2 py-1 rounded text-right transition-all cursor-pointer hover:bg-amber-100/60 w-full"
-                          title="Click to toggle DNet price visibility"
-                        >
-                          {isDNetRevealed ? (
-                            <span className="font-mono text-xs font-semibold text-amber-900">
-                              ${row.dnet_price.toFixed(2)}
-                            </span>
-                          ) : (
+                        {isDNetRevealed || row.dnet_price === 0 ? (
+                          <div className="flex items-center justify-end gap-1">
+                            <span className="text-xs text-amber-800 font-bold">$</span>
+                            <input
+                              type="number"
+                              step="0.01"
+                              min="0"
+                              value={row.dnet_price === 0 ? '' : row.dnet_price}
+                              onChange={(e) => {
+                                const val = parseFloat(e.target.value);
+                                handleUpdateItem(row.id, 'dnet_price', isNaN(val) ? 0 : val);
+                              }}
+                              placeholder="0.00"
+                              className={`w-20 text-right font-mono text-xs font-bold px-1.5 py-0.5 rounded border ${
+                                row.dnet_price === 0
+                                  ? 'border-amber-400 bg-amber-50 text-amber-900 focus:border-amber-600 focus:ring-1 focus:ring-amber-500'
+                                  : 'border-slate-300 bg-white text-slate-800 focus:border-amber-500'
+                              } outline-none shadow-2xs`}
+                              title="Manual DNet Price ($) - type to override"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => handleToggleRevealDNet(row.id)}
+                              className="text-[10px] text-slate-400 hover:text-slate-600 p-0.5 cursor-pointer"
+                              title="Hide DNet price"
+                            >
+                              🔒
+                            </button>
+                          </div>
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={() => handleToggleRevealDNet(row.id)}
+                            className="inline-flex items-center justify-end gap-1.5 px-2 py-1 rounded text-right transition-all cursor-pointer hover:bg-amber-100/60 w-full"
+                            title="Click to reveal & edit DNet price"
+                          >
                             <span className="font-mono text-xs text-slate-400 tracking-wider">
                               ••••••
                             </span>
-                          )}
-                          <span className="text-[10px] text-amber-700 opacity-60">
-                            {isDNetRevealed ? '👁' : '🔒'}
-                          </span>
-                        </button>
+                            <span className="text-[10px] text-amber-700 opacity-60">
+                              👁
+                            </span>
+                          </button>
+                        )}
                       </TableCell>
 
                       {/* 5. Price per Unit (KWD) */}
-                      <TableCell isNumeric className="font-mono text-xs font-bold text-slate-900">
-                        {row.unitPriceKwd.toFixed(3)} KWD
+                      <TableCell isNumeric className="font-mono text-xs font-bold">
+                        {row.dnet_price === 0 ? (
+                          <span className="text-[11px] font-semibold text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
+                            0.000 KWD (Unpriced)
+                          </span>
+                        ) : (
+                          <span className="text-slate-900">{row.unitPriceKwd.toFixed(3)} KWD</span>
+                        )}
                       </TableCell>
 
                       {/* 6. Total Price (KWD) */}
-                      <TableCell isNumeric className="font-mono text-xs font-bold text-emerald-700 bg-emerald-50/20">
-                        {row.totalPriceKwd.toFixed(3)} KWD
+                      <TableCell isNumeric className="font-mono text-xs font-bold bg-emerald-50/20">
+                        {row.dnet_price === 0 ? (
+                          <span className="text-xs text-slate-400">0.000 KWD</span>
+                        ) : (
+                          <span className="text-emerald-700">{row.totalPriceKwd.toFixed(3)} KWD</span>
+                        )}
                       </TableCell>
 
                       {/* 7. Delivery Time (Free Text Editable) */}

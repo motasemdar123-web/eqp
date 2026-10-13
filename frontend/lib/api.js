@@ -957,6 +957,46 @@ export function verifyBatchQuotationParts(items = []) {
   });
 }
 
+export async function downloadCustomerQuotationExcel(payload) {
+  let token = '';
+  if (typeof window !== 'undefined') {
+    try {
+      token = localStorage.getItem('platformToken') || JSON.parse(localStorage.getItem('user') || 'null')?.sessionToken || '';
+    } catch {
+      localStorage.removeItem('user');
+    }
+  }
+
+  const response = await fetch(`${API_BASE_URL}/api/komatsu/quotations/customer-excel`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+    body: JSON.stringify(payload),
+  });
+
+  if (!response.ok) {
+    const errData = await response.json().catch(() => ({}));
+    throw new Error(errData.message || 'Failed to download Customer Quotation Excel');
+  }
+
+  const disposition = response.headers.get('Content-Disposition') || '';
+  let filename = `Customer_Quotation_${payload.customer || 'Export'}_${new Date().toISOString().split('T')[0]}.xlsx`;
+  const match = disposition.match(/filename="?([^"]+)"?/);
+  if (match && match[1]) filename = match[1];
+
+  const blob = await response.blob();
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  window.URL.revokeObjectURL(url);
+}
+
 
 export async function getComments(params = {}) {
   const query = new URLSearchParams(params).toString();

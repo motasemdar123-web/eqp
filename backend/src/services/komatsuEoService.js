@@ -217,30 +217,66 @@ async function lookupPartMaster(partNo, customCookie = null) {
         const kmeEorNum = parseInt(stockInfo?.eor || '0', 10) || 0;
         const kltdTotalNum = parseInt(stockInfo?.kltdTotal || '0', 10) || 0;
 
+        const rawPriceStr = String(resJson.txtKMELstPrc || '0.00').replace(/,/g, '').trim();
+        const parsedLstPrc = parseFloat(rawPriceStr);
+        const validPrice = !isNaN(parsedLstPrc) && rawPriceStr !== '000' && rawPriceStr !== '0' && parsedLstPrc > 0
+          ? parsedLstPrc.toFixed(2)
+          : '0.00';
+
         const result = {
           part_no: pNo,
           description: desc,
           qty_by_unit: qtyByUnit,
           models: models,
           raw_models: rawModels,
-          price: resJson.txtKMELstPrc || '0.00',
+          price: validPrice,
           weight: resJson.txtUWEI || '0',
           rank: resJson.txtKMERank || '',
           kme_stock: kmeStockNum,
           kme_eor: kmeEorNum,
           kltd_total: kltdTotalNum,
+          isUnregistered: false,
           stock_info: {
             kme_stock: kmeStockNum,
             kme_eor: kmeEorNum,
             kltd_total: kltdTotalNum,
             kme_on_order: parseInt(stockInfo?.onOrder || '0', 10) || 0,
             regional_inventory: stockInfo?.regionalInventory || '0',
-            dnet_price: stockInfo?.dnetPrice || resJson.txtKMELstPrc || '0.00',
+            dnet_price: stockInfo?.dnetPrice || validPrice,
             lead_time: stockInfo?.leadTime || '',
           },
         };
         LOCAL_PARTS_CACHE.set(pNo, result);
         return result;
+      }
+
+      // If response is valid JSON from PDX but txtPNAM is empty, part is unregistered/not found in PDX
+      if (resJson && typeof resJson === 'object') {
+        const unregResult = {
+          part_no: pNo,
+          description: 'Unregistered / Not in PDX',
+          qty_by_unit: 1,
+          models: [],
+          raw_models: '',
+          price: '0.00',
+          weight: '0',
+          rank: '',
+          kme_stock: 0,
+          kme_eor: 0,
+          kltd_total: 0,
+          isUnregistered: true,
+          stock_info: {
+            kme_stock: 0,
+            kme_eor: 0,
+            kltd_total: 0,
+            kme_on_order: 0,
+            regional_inventory: '0',
+            dnet_price: '0.00',
+            lead_time: '',
+          },
+        };
+        LOCAL_PARTS_CACHE.set(pNo, unregResult);
+        return unregResult;
       }
     }
   } catch (err) {

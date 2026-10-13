@@ -167,27 +167,45 @@ function parsePdxHtmlTable(htmlText, queriedParts) {
       return txt.replace(/\s+/g, ' ');
     });
 
-    if (cleanTds.length >= 22) {
+    if (cleanTds.length >= 18) {
       const rawPartNo = cleanTds[0] || '';
       // PDX HTML column layout:
-      // [0]=PartNo, [4]=Description, [5]=CC, [6]=IC, [7]=LPN,
-      // [8]=KME Stock, [9]=KME EOR, [10]=KME On Order, [11]=Regional Inventory,
-      // [12]=KLTD Total, [13]=KMEQA, [19]=DNet Price, [20]=Weight(gm), [21]=KLTD LT, [22]=MOR, [23]=OR
-      const desc = cleanTds[4] || cleanTds[3] || '';
-      const cc = cleanTds[5] || '';
-      const ic = cleanTds[6] || '';
-      const lpn = cleanTds[7] || rawPartNo;
-      const stock = cleanTds[8] || '0';
-      const eor = cleanTds[9] || '';
-      const onOrder = cleanTds[10] || '0';
-      const regionalInv = cleanTds[11] || '0';
-      const kltdTotal = cleanTds[12] || '0';
-      const kmeqa = cleanTds[13] || '0';
-      const dnetPrice = cleanTds[19] || cleanTds[18] || '0.00';
-      const weight = cleanTds[20] || cleanTds[19] || '0';
-      const leadTime = cleanTds[21] || cleanTds[20] || '';
-      const mor = cleanTds[22] || '';
-      const orRank = cleanTds[23] || '';
+      // [0]=PartNo, [1]=IntExist, [2]=tmpDnet, [3]=Desc, [4]=CC, [5]=IC, [6]=LPN,
+      // [7]=KME Stock, [8]=KME EOR, [9]=KME On Order, [10]=Regional Inv,
+      // [16]=KLTD Total, [17]=KMEQA, [18]=DNet / ListPrice, [19]=Weight(gm), [20]=KLTD LT, [21]=MOR, [22]=OR
+      const desc = cleanTds[3] || cleanTds[4] || '';
+      const cc = cleanTds[4] || cleanTds[5] || '';
+      const ic = cleanTds[5] || cleanTds[6] || '';
+      const lpn = cleanTds[6] || cleanTds[7] || rawPartNo;
+      const stock = cleanTds[7] || cleanTds[8] || '0';
+      const eor = cleanTds[8] || cleanTds[9] || '';
+      const onOrder = cleanTds[9] || cleanTds[10] || '0';
+      const regionalInv = cleanTds[10] || cleanTds[11] || '0';
+      const kltdTotal = cleanTds[16] || cleanTds[12] || '0';
+      const kmeqa = cleanTds[17] || cleanTds[13] || '0';
+
+      // Extract DNet / ListPrice strictly from ListPrice class or column 18
+      let dnetPrice = '0.00';
+      let rawPriceText = '';
+      const listPriceMatch = tr.match(/<td[^>]*class=["'][^"']*ListPrice[^"']*["'][^>]*>([\s\S]*?)<\/td>/i);
+      if (listPriceMatch) {
+        rawPriceText = listPriceMatch[1].replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ').trim();
+      } else if (cleanTds.length >= 19) {
+        rawPriceText = cleanTds[18] || '';
+      }
+      rawPriceText = rawPriceText.replace(/,/g, '').trim();
+      const parsedP = parseFloat(rawPriceText);
+      // Strictly treat 000, 0, or negative/NaN as 0.00 (never fallback to Weight or 1)
+      if (!isNaN(parsedP) && rawPriceText !== '000' && rawPriceText !== '0' && parsedP > 0) {
+        dnetPrice = parsedP.toFixed(2);
+      } else {
+        dnetPrice = '0.00';
+      }
+
+      const weight = cleanTds[19] || cleanTds[20] || '0';
+      const leadTime = cleanTds[20] || cleanTds[21] || '';
+      const mor = cleanTds[21] || cleanTds[22] || '';
+      const orRank = cleanTds[22] || cleanTds[23] || '';
 
       const isMain = queriedSet.has(rawPartNo.trim().toUpperCase()) && (rawPartNo === lpn || !ic || ic === '000');
       const rowKey = `${rawPartNo}_${lpn}_${dnetPrice}_${stock}_${isMain}`;

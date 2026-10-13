@@ -850,6 +850,30 @@ async function downloadAvailabilityFormExcel(req, res) {
   return res.send(Buffer.from(buffer));
 }
 
+async function downloadCustomerQuotationExcel(req, res) {
+  const { items, customer, customerMode, marginFactorR } = req.body || {};
+  if (!Array.isArray(items) || items.length === 0) {
+    return res.status(400).json({ success: false, message: 'Array of items is required' });
+  }
+
+  const komatsuQuotationExcelService = require('../services/komatsuQuotationExcelService');
+  const buffer = await komatsuQuotationExcelService.generateCustomerQuotationExcelBuffer({
+    items,
+    customer: customer || 'Customer',
+    customerMode: customerMode || 'LALAA',
+    marginFactorR: parseFloat(marginFactorR) || 0.65,
+  });
+
+  const safeCustomer = String(customer || 'Customer').replace(/[^a-zA-Z0-9_-]/g, '_');
+  const dateStr = new Date().toISOString().split('T')[0];
+  const filename = `Customer_Quotation_${safeCustomer}_${dateStr}.xlsx`;
+
+  res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+  res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+  res.setHeader('Access-Control-Expose-Headers', 'Content-Disposition');
+  return res.send(Buffer.from(buffer));
+}
+
 async function batchVerifyCustomerQuotationParts(req, res) {
   const { items, cookie } = req.body || {};
   if (!Array.isArray(items) || items.length === 0) {
@@ -872,11 +896,16 @@ async function batchVerifyCustomerQuotationParts(req, res) {
       const kmeStock = parseInt(master.kme_stock ?? master.stock_info?.kme_stock ?? 0, 10) || 0;
       const kmeEor = parseInt(master.kme_eor ?? master.stock_info?.kme_eor ?? 0, 10) || 0;
       const kltdTotal = parseInt(master.kltd_total ?? master.stock_info?.kltd_total ?? 0, 10) || 0;
-      const dnetPrice = parseFloat(master.stock_info?.dnet_price ?? master.price ?? 0) || 0;
+
+      const rawPrice = String(master.stock_info?.dnet_price ?? master.price ?? '0.00').replace(/,/g, '').trim();
+      let dnetPrice = parseFloat(rawPrice);
+      if (isNaN(dnetPrice) || rawPrice === '000' || rawPrice === '0' || dnetPrice <= 0) {
+        dnetPrice = 0;
+      }
 
       verified.push({
         part_no: pNo,
-        description: master.description || 'Komatsu Genuine Component',
+        description: master.description || (master.isUnregistered ? 'Unregistered in PDX' : 'Komatsu Genuine Component'),
         quantity: reqQty,
         dnet_price: dnetPrice,
         price: dnetPrice,
@@ -886,6 +915,7 @@ async function batchVerifyCustomerQuotationParts(req, res) {
         models: Array.isArray(master.models) ? master.models : [],
         latest_part_no: master.latest_part_no || master.lpn || pNo,
         verified: true,
+        isUnregistered: Boolean(master.isUnregistered),
       });
     } catch (err) {
       console.warn(`[batchVerifyCustomerQuotationParts] Lookup error for ${pNo}:`, err.message);
@@ -1056,6 +1086,7 @@ module.exports = {
   getSapPoStatus,
   exportSapPoExcel,
   downloadAvailabilityFormExcel,
+  downloadCustomerQuotationExcel,
   batchVerifyCustomerQuotationParts,
   downloadSapBridgeZip,
   downloadOutlookBridgeZip,
