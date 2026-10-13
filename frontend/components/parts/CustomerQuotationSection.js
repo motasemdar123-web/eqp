@@ -109,6 +109,37 @@ export default function CustomerQuotationSection({
 
   // Margin Factor Slider: R between 0.01 and 1.00 (default 0.65)
   const [sliderR, setSliderR] = useState(0.65);
+  const [sliderRInput, setSliderRInput] = useState('0.65');
+
+  const handleUpdateR = (val) => {
+    setSliderRInput(String(val));
+    const num = parseFloat(val);
+    if (!isNaN(num)) {
+      const clamped = Math.max(0.01, Math.min(1.0, num));
+      setSliderR(clamped);
+    }
+  };
+
+  const handleBlurR = () => {
+    const num = parseFloat(sliderRInput);
+    if (isNaN(num) || num < 0.01 || num > 1.0) {
+      setSliderRInput(sliderR.toFixed(2));
+    } else {
+      setSliderR(num);
+      setSliderRInput(num.toFixed(2));
+    }
+  };
+
+  const handleSliderChange = (e) => {
+    const val = parseFloat(e.target.value);
+    setSliderR(val);
+    setSliderRInput(val.toFixed(2));
+  };
+
+  const handleResetR = () => {
+    setSliderR(0.65);
+    setSliderRInput('0.65');
+  };
 
   // Hidden DNet price state: set of item IDs that are revealed
   const [revealedDNetIds, setRevealedDNetIds] = useState(new Set());
@@ -808,37 +839,51 @@ export default function CustomerQuotationSection({
             </div>
           </div>
 
-          {/* Dynamic Slider R */}
+          {/* Dynamic Slider R & Manual Entry Field */}
           <div>
             <div className="flex items-center justify-between mb-1.5">
               <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">
-                3. Margin Divisor (Slider R: {sliderR.toFixed(2)})
+                3. Margin Divisor (R)
               </label>
               <button
                 type="button"
-                onClick={() => setSliderR(0.65)}
+                onClick={handleResetR}
                 className="text-[11px] text-amber-600 font-semibold hover:underline cursor-pointer"
               >
                 Reset (0.65)
               </button>
             </div>
 
-            <div className="space-y-1.5">
+            <div className="space-y-2">
               <input
                 type="range"
                 min="0.01"
                 max="1.00"
                 step="0.01"
                 value={sliderR}
-                onChange={(e) => setSliderR(parseFloat(e.target.value))}
+                onChange={handleSliderChange}
                 className="w-full accent-amber-500 h-2 bg-slate-200 rounded-lg cursor-pointer"
               />
 
               <div className="flex items-center justify-between text-[10px] text-slate-500 font-mono">
                 <span>0.01 (High Margin)</span>
-                <span className="font-bold text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200">
-                  R = {sliderR.toFixed(2)}
-                </span>
+
+                {/* Interactive Manual Entry Field */}
+                <div className="flex items-center gap-1.5 bg-amber-50 px-2 py-0.5 rounded border border-amber-300 shadow-2xs">
+                  <span className="font-bold text-amber-800 text-xs">R =</span>
+                  <input
+                    type="number"
+                    min="0.01"
+                    max="1.00"
+                    step="0.01"
+                    value={sliderRInput}
+                    onChange={(e) => handleUpdateR(e.target.value)}
+                    onBlur={handleBlurR}
+                    className="w-16 text-center font-bold font-mono text-xs text-amber-900 bg-white border border-amber-300 rounded px-1.5 py-0.5 outline-none focus:border-amber-600 focus:ring-1 focus:ring-amber-500 shadow-2xs"
+                    placeholder="0.65"
+                  />
+                </div>
+
                 <span>1.00 (At Cost)</span>
               </div>
             </div>
