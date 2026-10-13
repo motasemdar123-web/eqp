@@ -195,6 +195,8 @@ function planHybridOrders({
 
     orders.push({
       index: orderIdx,
+      priority: 1,
+      priority_label: 'Priority 1 (Stock First)',
       order_type: normalOrderType || 'DS',
       db_order_no: currentDbOrderNo,
       customer: '',
@@ -210,7 +212,7 @@ function planHybridOrders({
     });
   }
 
-  // 2. Emergency Orders (EO)
+  // 2. Emergency Orders (EO) - Priority 2
   const eoTracking = items
     .map((it) => {
       const eoQty = typeof it.eo_quantity === 'number'
@@ -261,6 +263,8 @@ function planHybridOrders({
 
     orders.push({
       index: orderIdx,
+      priority: 2,
+      priority_label: 'Priority 2 (Emergency)',
       order_type: 'EO',
       db_order_no: currentDbOrderNo,
       customer: machine.customer || customer,
@@ -275,6 +279,19 @@ function planHybridOrders({
       status: 'READY',
     });
   }
+
+  // Strict Priority Enforcement: DS orders must always precede EO orders
+  orders.sort((a, b) => {
+    const isStockA = ['DS', 'SO', 'SA'].includes(a.order_type);
+    const isStockB = ['DS', 'SO', 'SA'].includes(b.order_type);
+    if (isStockA && !isStockB) return -1;
+    if (!isStockA && isStockB) return 1;
+    return (a.index || 0) - (b.index || 0);
+  });
+
+  orders.forEach((o, idx) => {
+    o.index = idx + 1;
+  });
 
   return orders;
 }
@@ -404,5 +421,88 @@ describe('Hybrid Normal Stock (DS/SO) and Emergency (EO) Planning Engine', () =>
     expect(orders[0].db_order_no).toBe('R300/2026');
     expect(orders[1].db_order_no).toBe('R301/2026');
     expect(orders[2].db_order_no).toBe('R302/2026');
+  });
+
+  it('strictly prioritizes DS orders before EO orders so portal confusion does not happen', () => {
+    const items = [
+      {
+        part_no: '600-311-6742',
+        description: 'FUEL FILTER',
+        quantity: 50,
+        kme_stock: 20,
+        ds_quantity: 20,
+        eo_quantity: 30,
+        max_per_order: 15,
+        unit_price: '25.000',
+        unit: 'EA',
+      },
+      {
+        part_no: '07000-12010',
+        description: 'O-RING',
+        quantity: 10,
+        kme_stock: 10,
+        ds_quantity: 10,
+        eo_quantity: 0,
+        unit_price: '4.500',
+        unit: 'EA',
+      },
+    ];
+
+    const machines = [
+      { customer: 'DAR AL HAI', model: 'PC500LC-10R', serial: '100433' },
+      { customer: 'DAR AL HAI', model: 'PC500LC-10R', serial: '100434' },
+    ];
+
+    const orders = planHybridOrders({
+      items,
+      selectedMachines: machines,
+      startingOrderNo: 'R150/2026',
+      normalOrderType: 'DS',
+    });
+
+    // 1 DS order (Priority 1) + 2 EO orders (Priority 2)
+    expect(orders.length).toBe(3);
+
+    // Order 0 MUST be DS (Daily Stock) with Priority 1 and lowest reference number
+    expect(orders[0].priority).toBe(1);
+    expect(orders[0].order_type).toBe('DS');
+    expect(orders[0].db_order_no).toBe('R150/2026');
+    expect(orders[0].parts.length).toBe(2); // Has both stock items
+
+    // Subsequent orders MUST be EO (Emergency) with Priority 2
+    expect(orders[1].priority).toBe(2);
+    expect(orders[1].order_type).toBe('EO');
+    expect(orders[1].db_order_no).toBe('R151/2026');
+
+    expect(orders[2].priority).toBe(2);
+    expect(orders[2].order_type).toBe('EO');
+    expect(orders[2].db_order_no).toBe('R152/2026');
+
+    // Verify all DS orders precede all EO orders in array order
+    const allDsBeforeEo = orders.every((order, idx) => {
+      if (order.order_type === 'DS') {
+        // No EO order should have an index smaller than this DS order
+        return !orders.slice(0, idx).some((prev) => prev.order_type === 'EO');
+      }
+      return true;
+    });
+    expect(allDsBeforeEo).toBe(true);
+
+    // Simulate batch submission queue sorting rule
+    const isStockOrder = (o) => ['DS', 'SO', 'SA'].includes(o.order_type);
+    const simulatedMixed = [orders[1], orders[0], orders[2]]; // Intentionally shuffled
+    const sortedQueue = [...simulatedMixed].sort((a, b) => {
+      const isA = isStockOrder(a);
+      const isB = isStockOrder(b);
+      if (isA && !isB) return -1;
+      if (!isA && isB) return 1;
+      return (a.index || 0) - (b.index || 0);
+    });
+
+    // First in execution queue MUST be DS order
+    expect(sortedQueue[0].order_type).toBe('DS');
+    expect(sortedQueue[0].priority).toBe(1);
+    expect(sortedQueue[1].order_type).toBe('EO');
+    expect(sortedQueue[2].order_type).toBe('EO');
   });
 });

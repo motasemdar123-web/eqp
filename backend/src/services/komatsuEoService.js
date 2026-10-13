@@ -458,8 +458,17 @@ async function executeSingleEmergencyOrder(orderData, customCookie = null) {
       },
       body: new URLSearchParams({
         strOTYP: order_type || 'EO',
+        strOrderType: order_type || 'EO',
+        strOrderTypes: order_type || 'EO',
+        OrderTypes: order_type || 'EO',
+        OrderType: order_type || 'EO',
+        orderType: order_type || 'EO',
         strDCOD: db_code || '536K',
+        strDistributerCode: db_code || '536K',
+        distributerCode: db_code || '536K',
         strCSCD: customer_code || 'REG',
+        strCustomerCode: customer_code || 'REG',
+        customerCode: customer_code || 'REG',
       }).toString(),
       signal: AbortSignal.timeout(15000),
     });
@@ -469,6 +478,7 @@ async function executeSingleEmergencyOrder(orderData, customCookie = null) {
     }
     try {
       otJson = await otResp.json();
+      console.log(`[executeSingleEmergencyOrder] OrderTypes_OnChange response for ${order_type}:`, JSON.stringify(otJson));
     } catch {
       // non-fatal
     }
@@ -476,10 +486,14 @@ async function executeSingleEmergencyOrder(orderData, customCookie = null) {
     console.warn('[executeSingleEmergencyOrder] OrderTypes_OnChange warning:', e.message);
   }
 
-  const isStockOrder = ['DS', 'SO', 'SA'].includes(order_type);
+  const targetOrderType = String(order_type || 'EO').trim().toUpperCase();
+  const isStockOrder = ['DS', 'SO', 'SA'].includes(targetOrderType);
   const resolvedDeliveryTerms = otJson?.DeliveryTerms || (isStockOrder ? 'DDU' : 'EXW');
   const resolvedPremiumRate = otJson?.PremiumRate || (isStockOrder ? '0.00' : '13.30');
   const resolvedModelInfoMark = typeof otJson?.ModelInfoMark === 'boolean' ? otJson.ModelInfoMark : !isStockOrder;
+  const resolvedComments = isStockOrder
+    ? (comments && !comments.toUpperCase().includes('URGENT') ? String(comments).toUpperCase() : 'STOCK REPLENISHMENT')
+    : String(comments || 'URGENT').toUpperCase();
 
   // STEP 2: Save Quotation Condition
   const saveUrl = `${BASE_PORTAL_URL}/QuotationCondition/Save`;
@@ -503,7 +517,12 @@ async function executeSingleEmergencyOrder(orderData, customCookie = null) {
       SalesPriceList: 'USD037',
       Currency: 'USD',
       ExchangeRate: '1.0',
-      OrderType: order_type || 'EO',
+      OrderType: targetOrderType,
+      OrderTypes: targetOrderType,
+      SelectedOrderType: targetOrderType,
+      SelectedOrderTypeCode: targetOrderType,
+      strOTYP: targetOrderType,
+      strOrderType: targetOrderType,
       Usance: '30',
       TaxRate: '0',
       Transportation: 'RD',
@@ -537,7 +556,7 @@ async function executeSingleEmergencyOrder(orderData, customCookie = null) {
       FixPrice: false,
       ModelInformation: '',
       Memo: '',
-      Comments: comments ? String(comments).toUpperCase() : (isStockOrder ? 'STOCK REPLENISHMENT' : 'URGENT'),
+      Comments: resolvedComments,
       isDetailsExist: '0',
       LineNo: '0',
       ModelCode: resolvedModelInfoMark ? (model_code || 'PC500LC-10R') : '',
@@ -949,6 +968,20 @@ async function confirmQuotation(quotationNo, seqNo = '00', customCookie = null) 
   }
 
   // STEP 3: Save with Status = '2' (Confirmed)
+  // Preserve actual order type from QuotationCondition/Search (DS vs EO vs SO)
+  const qtnOrderType = String(
+    searchData.OrderType ||
+    searchData.OrderTypes ||
+    searchData.SelectedOrderTypeCode ||
+    searchData.strOTYP ||
+    'EO'
+  ).trim().toUpperCase();
+  const isStockOrder = ['DS', 'SO', 'SA'].includes(qtnOrderType);
+  const qtnDeliveryTerms = searchData.DeliveryTerms || (isStockOrder ? 'DDU' : 'EXW');
+  const qtnPremiumRate = searchData.PremiumRate || (isStockOrder ? '0.00' : '13.30');
+  const qtnModelInfoMark = typeof searchData.ModelInfoMark === 'boolean' ? searchData.ModelInfoMark : !isStockOrder;
+  const qtnComments = searchData.Comments || (isStockOrder ? 'STOCK REPLENISHMENT' : 'Urgent');
+
   const saveUrl = `${BASE_PORTAL_URL}/QuotationCondition/Save`;
   const savePayload = {
     objQuotationConditionPostModel: {
@@ -962,11 +995,16 @@ async function confirmQuotation(quotationNo, seqNo = '00', customCookie = null) 
       SalesPriceList: 'USD037',
       Currency: 'USD',
       ExchangeRate: '1',
-      OrderType: 'EO',
+      OrderType: qtnOrderType,
+      OrderTypes: qtnOrderType,
+      SelectedOrderType: qtnOrderType,
+      SelectedOrderTypeCode: qtnOrderType,
+      strOTYP: qtnOrderType,
+      strOrderType: qtnOrderType,
       Usance: '30',
       TaxRate: '0',
       Transportation: searchData.SelectedTransportationCode || 'RD',
-      DeliveryTerms: 'DDU',
+      DeliveryTerms: qtnDeliveryTerms,
       PaymentTerms: 'T2',
       OrderPRobability: 'A',
       Region: 'AE',
@@ -978,7 +1016,7 @@ async function confirmQuotation(quotationNo, seqNo = '00', customCookie = null) 
       RequestedDeliveryTime: searchData.RequestedDeliveryTime || formatPortalDate(7),
       PriceCalculationMethod: 'D',
       DiscountRateOther: '0',
-      PremiumRate: '13.3',
+      PremiumRate: qtnPremiumRate,
       BillingRateA: '0',
       BillingRateB: '0',
       BillingRateC: '0',
@@ -992,12 +1030,12 @@ async function confirmQuotation(quotationNo, seqNo = '00', customCookie = null) 
       DontConsiderEORes: false,
       FixPrice: false,
       Memo: '',
-      Comments: searchData.Comments || 'Urgent',
-      ModelCode: searchData.ModelCode || 'PC500LC-10R',
-      SerialNo: searchData.SerialNo || '100433',
-      EngineSrNo: '-',
-      CustomerDetails: searchData.CustomerDetails || 'DAR AL HAI',
-      ModelInfoMark: true,
+      Comments: qtnComments,
+      ModelCode: qtnModelInfoMark ? (searchData.ModelCode || 'PC500LC-10R') : '',
+      SerialNo: qtnModelInfoMark ? (searchData.SerialNo || '100433') : '',
+      EngineSrNo: qtnModelInfoMark ? (searchData.EngineSrNo || '-') : '',
+      CustomerDetails: qtnModelInfoMark ? (searchData.CustomerDetails || 'DAR AL HAI') : '',
+      ModelInfoMark: qtnModelInfoMark,
       jobCard: '',
       Warranty: '',
       TSINumber: '',

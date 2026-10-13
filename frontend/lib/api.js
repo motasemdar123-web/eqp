@@ -909,6 +909,54 @@ export async function downloadSapPoExcel(payload) {
   window.URL.revokeObjectURL(url);
 }
 
+export async function downloadAvailabilityFormExcel(payload) {
+  let token = '';
+  if (typeof window !== 'undefined') {
+    try {
+      token = localStorage.getItem('platformToken') || JSON.parse(localStorage.getItem('user') || 'null')?.sessionToken || '';
+    } catch {
+      localStorage.removeItem('user');
+    }
+  }
+
+  const response = await fetch(`${API_BASE_URL}/api/komatsu/availability-form/excel`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+    body: JSON.stringify(payload),
+  });
+
+  if (!response.ok) {
+    const errData = await response.json().catch(() => ({}));
+    throw new Error(errData.message || 'Failed to download Parts Availability Request Form');
+  }
+
+  const disposition = response.headers.get('Content-Disposition') || '';
+  let filename = `Parts_Availability_Request_Form_${payload.customer || 'Export'}_${new Date().toISOString().split('T')[0]}.xlsx`;
+  const match = disposition.match(/filename="?([^"]+)"?/);
+  if (match && match[1]) filename = match[1];
+
+  const blob = await response.blob();
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  window.URL.revokeObjectURL(url);
+}
+
+export function verifyBatchQuotationParts(items = []) {
+  const cookie = getStoredPdxCookie();
+  return request('/api/komatsu/quotations/verify-batch', {
+    method: 'POST',
+    body: JSON.stringify({ items, cookie }),
+  });
+}
+
 
 export async function getComments(params = {}) {
   const query = new URLSearchParams(params).toString();

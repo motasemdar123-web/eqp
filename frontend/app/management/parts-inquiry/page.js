@@ -19,6 +19,7 @@ import Disclosure from '../../../components/ui/Disclosure';
 import StatusIndicator from '../../../components/ui/StatusIndicator';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '../../../components/ui/Table';
 import BridgesModal, { BridgesStatusBadge } from '../../../components/BridgesModal';
+import CustomerQuotationSection from '../../../components/parts/CustomerQuotationSection';
 
 import {
   getKomatsuStatus,
@@ -332,6 +333,13 @@ export default function SparePartsPage() {
     loadFleetDatabase();
     loadLatestOrderNumber();
     loadUserSapCredentials();
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const tabParam = params.get('tab');
+      if (tabParam === 'customer-quotation' || tabParam === 'quotation' || tabParam === 'customer') {
+        setActiveTab('customer-quotation');
+      }
+    }
   }, []);
 
   useEffect(() => {
@@ -954,6 +962,8 @@ export default function SparePartsPage() {
 
       orders.push({
         index: orderIdx,
+        priority: 1,
+        priority_label: 'Priority 1 (DS Stock First)',
         order_type: normalOrderType || 'DS',
         db_order_no: currentDbOrderNo,
         customer: '',
@@ -970,7 +980,7 @@ export default function SparePartsPage() {
       });
     }
 
-    // 2. EMERGENCY ORDERS (EO)
+    // 2. EMERGENCY ORDERS (EO) - PRIORITY 2
     // Build tracking array for EO quantities only
     const eoTracking = validItems
       .map((it) => {
@@ -1034,6 +1044,8 @@ export default function SparePartsPage() {
 
       orders.push({
         index: orderIdx,
+        priority: 2,
+        priority_label: 'Priority 2 (Emergency Order)',
         order_type: 'EO',
         db_order_no: currentDbOrderNo,
         customer: chosenMachine.customer || cust,
@@ -1049,6 +1061,20 @@ export default function SparePartsPage() {
         status: 'READY',
       });
     }
+
+    // STRICT PRIORITY ENFORCEMENT: DS orders MUST be placed before EO orders to prevent portal confusion
+    orders.sort((a, b) => {
+      const isStockA = ['DS', 'SO', 'SA'].includes(a.order_type);
+      const isStockB = ['DS', 'SO', 'SA'].includes(b.order_type);
+      if (isStockA && !isStockB) return -1;
+      if (!isStockA && isStockB) return 1;
+      return (a.index || 0) - (b.index || 0);
+    });
+
+    // Re-index sequentially 1..N
+    orders.forEach((o, idx) => {
+      o.index = idx + 1;
+    });
 
     setPlannedOrders(orders);
   }
@@ -1085,17 +1111,39 @@ export default function SparePartsPage() {
       return;
     }
 
+    // STRICT PRIORITY RULE: DS (Daily Stock) orders are submitted before EO (Emergency Orders) to prevent portal confusion
+    const isStockOrder = (o) => ['DS', 'SO', 'SA'].includes(o.order_type);
+    const sortedOrders = [...plannedOrders].sort((a, b) => {
+      const isA = isStockOrder(a);
+      const isB = isStockOrder(b);
+      if (isA && !isB) return -1;
+      if (!isA && isB) return 1;
+      return (a.index || 0) - (b.index || 0);
+    });
+
+    const dsCount = sortedOrders.filter(isStockOrder).length;
+    const eoCount = sortedOrders.filter((o) => !isStockOrder(o)).length;
+
     if (!eoDryRun) {
-      const confirmed = window.confirm(`Dispatch ${plannedOrders.length} Sub-Orders (${normalOrderType} Stock & EO) on Komatsu PDX?`);
+      const confirmPrompt = dsCount > 0 && eoCount > 0
+        ? `Dispatch ${sortedOrders.length} Sub-Orders on Komatsu PDX?\n\nPRIORITY EXECUTION ORDER:\n1. Priority 1: ${dsCount} ${normalOrderType} Stock order(s) submitted FIRST\n2. Priority 2: ${eoCount} Emergency (EO) order(s) submitted AFTER\n\nThis guarantees stock quotations are certified before emergency allocations to avoid portal confusion.`
+        : `Dispatch ${sortedOrders.length} Sub-Orders (${normalOrderType} Stock & EO) on Komatsu PDX?`;
+      const confirmed = window.confirm(confirmPrompt);
       if (!confirmed) return;
     }
 
     setIsExecutingEo(true);
     shouldStopEoRef.current = false;
-    addLog(`Dispatching ${plannedOrders.length} sub-orders across ${activeMachinePool.length} SNs - Mode: ${eoDryRun ? 'DRY-RUN' : 'LIVE PDX'}`, 'info');
+
+    if (dsCount > 0 && eoCount > 0) {
+      addLog(`[Priority Dispatch] Initiating strict sequence: Priority 1 for ${dsCount} ${normalOrderType} Stock order(s) FIRST, then Priority 2 for ${eoCount} EO Emergency order(s) - Mode: ${eoDryRun ? 'DRY-RUN' : 'LIVE PDX'}`, 'info');
+    } else {
+      addLog(`Dispatching ${sortedOrders.length} sub-orders across ${activeMachinePool.length} SNs - Mode: ${eoDryRun ? 'DRY-RUN' : 'LIVE PDX'}`, 'info');
+    }
 
     let successCount = 0;
-    const updatedOrders = [...plannedOrders];
+    const updatedOrders = sortedOrders;
+    let hasLoggedEoTransition = false;
 
     for (let i = 0; i < updatedOrders.length; i++) {
       if (shouldStopEoRef.current) {
@@ -1105,6 +1153,14 @@ export default function SparePartsPage() {
 
       setEoExecutionIndex(i + 1);
       const current = updatedOrders[i];
+      const isStock = isStockOrder(current);
+      const priorityTag = isStock ? 'Priority 1 • Stock' : 'Priority 2 • EO';
+
+      if (!isStock && dsCount > 0 && !hasLoggedEoTransition) {
+        hasLoggedEoTransition = true;
+        addLog(`✓ Priority 1 Completed: All ${dsCount} ${normalOrderType} Stock sub-order(s) submitted. Now starting Priority 2: EO Emergency sub-orders...`, 'info');
+      }
+
       current.status = 'RUNNING';
       setPlannedOrders([...updatedOrders]);
 
@@ -1121,14 +1177,13 @@ export default function SparePartsPage() {
           }
         }
 
-        const isStock = ['DS', 'SO', 'SA'].includes(current.order_type);
         const payload = {
           order_type: current.order_type || 'EO',
           db_order_no: current.db_order_no,
           model_code: isStock ? '' : current.model,
           serial_no: isStock ? '' : current.serial,
           customer_detail: isStock ? '' : current.customer,
-          comments: eoComments,
+          comments: isStock ? (eoComments === 'Urgent Breakdown' ? 'Stock Replenishment' : eoComments) : eoComments,
           parts: current.parts.map((p) => ({ part_no: p.part_no, quantity: p.quantity })),
           dryRun: eoDryRun,
           ...(activeUserId ? { user_id: activeUserId } : {}),
@@ -1141,21 +1196,21 @@ export default function SparePartsPage() {
           current.status = 'SUCCESS';
           successCount++;
           const typeLabel = current.order_type || 'EO';
-          const assetInfo = current.order_type === 'EO' ? `SN: ${current.serial}` : 'Stock Direct';
+          const assetInfo = isStock ? 'Stock Direct' : `SN: ${current.serial}`;
           if (res.fallback) {
-            addLog(`✓ Order #${current.index} [${typeLabel}] (${current.db_order_no} | ${assetInfo} | ${current.parts.length} items) -> Quotation ${res.quotation_no} (Simulation Fallback - Update PDX Cookie for live Komatsu sync)`, 'warn');
+            addLog(`✓ [${priorityTag}] Order #${current.index} [${typeLabel}] (${current.db_order_no} | ${assetInfo} | ${current.parts.length} items) -> Quotation ${res.quotation_no} (Simulation Fallback - Update PDX Cookie for live Komatsu sync)`, 'warn');
           } else {
-            addLog(`✓ Order #${current.index} [${typeLabel}] (${current.db_order_no} | ${assetInfo} | ${current.parts.length} items) -> Quotation ${res.quotation_no}`, 'success');
+            addLog(`✓ [${priorityTag}] Order #${current.index} [${typeLabel}] (${current.db_order_no} | ${assetInfo} | ${current.parts.length} items) -> Quotation ${res.quotation_no}`, 'success');
           }
         } else {
           current.status = 'FAILED';
           const errMsg = res?.error || 'Unknown error';
-          addLog(`✕ Order #${current.index} failed: ${errMsg}`, 'error');
+          addLog(`✕ [${priorityTag}] Order #${current.index} failed: ${errMsg}`, 'error');
         }
       } catch (err) {
         current.status = 'ERROR';
         const errMsg = err.message || 'Request failed';
-        addLog(`✕ Order #${current.index} error: ${errMsg}`, 'error');
+        addLog(`✕ [${priorityTag}] Order #${current.index} error: ${errMsg}`, 'error');
       }
 
       setPlannedOrders([...updatedOrders]);
@@ -1163,19 +1218,30 @@ export default function SparePartsPage() {
     }
 
     setIsExecutingEo(false);
-    setToast({ type: 'success', message: `Batch complete: ${successCount} / ${updatedOrders.length} orders placed.` });
+    setToast({ type: 'success', message: `Batch complete: ${successCount} / ${updatedOrders.length} orders placed (DS prioritized before EO).` });
   }
 
   async function retryFailedOrders() {
+    const isStockOrder = (o) => ['DS', 'SO', 'SA'].includes(o.order_type);
+
+    // Prioritize retrying failed DS orders before failed EO orders
     const failedIndices = plannedOrders
       .map((o, idx) => (['FAILED', 'ERROR'].includes(o.status) ? idx : -1))
-      .filter((idx) => idx !== -1);
+      .filter((idx) => idx !== -1)
+      .sort((aIdx, bIdx) => {
+        const isA = isStockOrder(plannedOrders[aIdx]);
+        const isB = isStockOrder(plannedOrders[bIdx]);
+        if (isA && !isB) return -1;
+        if (!isA && isB) return 1;
+        return aIdx - bIdx;
+      });
 
     if (failedIndices.length === 0) {
       setToast({ type: 'info', message: 'No failed orders to retry.' });
       return;
     }
 
+    addLog(`[Priority Retry] Retrying ${failedIndices.length} failed sub-order(s) — prioritizing DS orders first before EO...`, 'info');
     setIsExecutingEo(true);
     shouldStopEoRef.current = false;
     const updatedOrders = [...plannedOrders];
@@ -1183,6 +1249,9 @@ export default function SparePartsPage() {
     for (const idx of failedIndices) {
       if (shouldStopEoRef.current) break;
       const current = updatedOrders[idx];
+      const isStock = isStockOrder(current);
+      const priorityTag = isStock ? 'Priority 1 • Stock' : 'Priority 2 • EO';
+
       current.status = 'RUNNING';
       setPlannedOrders([...updatedOrders]);
 
@@ -1199,14 +1268,13 @@ export default function SparePartsPage() {
           }
         }
 
-        const isStock = ['DS', 'SO', 'SA'].includes(current.order_type);
         const payload = {
           order_type: current.order_type || 'EO',
           db_order_no: current.db_order_no,
           model_code: isStock ? '' : current.model,
           serial_no: isStock ? '' : current.serial,
           customer_detail: isStock ? '' : current.customer,
-          comments: eoComments,
+          comments: isStock ? (eoComments === 'Urgent Breakdown' ? 'Stock Replenishment' : eoComments) : eoComments,
           parts: current.parts.map((p) => ({ part_no: p.part_no, quantity: p.quantity })),
           dryRun: eoDryRun,
           ...(activeUserId ? { user_id: activeUserId } : {}),
@@ -1216,7 +1284,7 @@ export default function SparePartsPage() {
         if (res && (res.status === 'SUCCESS' || res.quotation_no)) {
           current.quotation_no = res.quotation_no;
           current.status = 'SUCCESS';
-          addLog(`✓ Retry Order #${current.index} [${current.order_type || 'EO'}] succeeded -> Quotation ${res.quotation_no}`, 'success');
+          addLog(`✓ [${priorityTag} Retry] Order #${current.index} [${current.order_type || 'EO'}] succeeded -> Quotation ${res.quotation_no}`, 'success');
         } else {
           current.status = 'FAILED';
           const errMsg = res?.error || 'Unknown error';
@@ -1247,6 +1315,7 @@ export default function SparePartsPage() {
     if (plannedOrders.length === 0) return;
     const headers = [
       'Order Index',
+      'Priority',
       'Order Type',
       'DB Order No',
       'Customer',
@@ -1265,9 +1334,12 @@ export default function SparePartsPage() {
 
     const rows = [];
     plannedOrders.forEach((o) => {
+      const isStock = ['DS', 'SO', 'SA'].includes(o.order_type);
+      const priorityLabel = o.priority ? `Priority ${o.priority}` : (isStock ? 'Priority 1 (DS Stock)' : 'Priority 2 (EO Emergency)');
       o.parts.forEach((p) => {
         rows.push([
           o.index,
+          `"${priorityLabel}"`,
           `"${o.order_type || 'EO'}"`,
           `"${o.db_order_no}"`,
           `"${o.customer}"`,
@@ -1294,7 +1366,7 @@ export default function SparePartsPage() {
     link.download = `komatsu-hybrid-order-report-${new Date().toISOString().slice(0, 10)}.csv`;
     link.click();
     URL.revokeObjectURL(url);
-    setToast({ type: 'success', message: 'Report CSV exported with multi-item breakdowns.' });
+    setToast({ type: 'success', message: 'Report CSV exported with priority sequence and breakdowns.' });
   }
 
   // =========================================================
@@ -2129,9 +2201,9 @@ export default function SparePartsPage() {
             unit="Sub-Orders"
             subtext={
               stockOrdersCount > 0 && eoOrdersCount > 0
-                ? `${stockOrdersCount} ${normalOrderType} Stock • ${eoOrdersCount} EO`
+                ? `Priority: ${stockOrdersCount} ${normalOrderType} (1st) → ${eoOrdersCount} EO (2nd)`
                 : stockOrdersCount > 0
-                ? `${stockOrdersCount} ${normalOrderType} Stock (100%)`
+                ? `${stockOrdersCount} ${normalOrderType} Stock (Priority 1)`
                 : `${eoOrdersCount} EO Sub-Orders`
             }
             status="Calculated"
@@ -2213,6 +2285,13 @@ export default function SparePartsPage() {
             className={`px-3.5 py-1.5 rounded-md transition-all cursor-pointer ${activeTab === 'inquiry' ? 'bg-white text-slate-900 shadow-2xs font-semibold' : 'text-slate-600 hover:text-slate-900'}`}
           >
             PDX Stock & Price Inquiry
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab('customer-quotation')}
+            className={`px-3.5 py-1.5 rounded-md transition-all cursor-pointer ${activeTab === 'customer-quotation' ? 'bg-white text-slate-900 shadow-2xs font-semibold' : 'text-slate-600 hover:text-slate-900'}`}
+          >
+            Quotations for Customers
           </button>
           <button
             type="button"
@@ -2885,13 +2964,30 @@ export default function SparePartsPage() {
               </div>
             </div>
 
+            {/* Priority Notice Banner */}
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 p-3 bg-sky-50/80 border border-sky-200 rounded-lg text-xs text-sky-950">
+              <div className="flex items-center gap-2">
+                <span className="px-1.5 py-0.5 rounded bg-sky-600 text-white font-extrabold text-[10px] uppercase tracking-wider shrink-0">
+                  Priority Submission
+                </span>
+                <p className="font-medium text-sky-900 leading-snug">
+                  <strong>DS (Daily Stock) orders are submitted first before EO (Emergency Orders)</strong> so Dubai stock is certified before factory emergency allocations, eliminating quotation confusion on Komatsu PDX.
+                </p>
+              </div>
+              <div className="flex items-center gap-1.5 shrink-0 text-[11px] font-mono">
+                <span className="px-2 py-0.5 rounded bg-white text-sky-900 font-bold border border-sky-200 shadow-2xs">1st: DS Daily Stock (P1)</span>
+                <span className="text-slate-400 font-bold">→</span>
+                <span className="px-2 py-0.5 rounded bg-white text-amber-900 font-bold border border-amber-200 shadow-2xs">2nd: EO Emergency (P2)</span>
+              </div>
+            </div>
+
             {/* Wide Full-Width Quotations Table - NO HORIZONTAL SCROLLBAR */}
             <div className="border border-slate-200 rounded-lg overflow-hidden">
               <Table density="normal">
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="w-12 text-center">#</TableHead>
-                    <TableHead className="w-32">DB Order No</TableHead>
+                    <TableHead className="w-16 text-center"># / Priority</TableHead>
+                    <TableHead className="w-36">DB Order No</TableHead>
                     <TableHead className="w-44">Target Asset</TableHead>
                     <TableHead>Bundled Parts Requested</TableHead>
                     <TableHead isNumeric className="w-20">Total Qty</TableHead>
@@ -2921,19 +3017,34 @@ export default function SparePartsPage() {
                         onClick={() => setViewingOrder(order)}
                         className="group hover:bg-slate-50/80 transition-colors"
                       >
-                        <TableCell className="font-mono text-xs text-slate-400 text-center">{order.index}</TableCell>
+                        <TableCell className="text-center">
+                          <div className="font-mono text-xs font-bold text-slate-700">#{order.index}</div>
+                          <div className="mt-0.5">
+                            {['DS', 'SO', 'SA'].includes(order.order_type) ? (
+                              <span className="inline-block px-1 py-0.2 rounded text-[9px] font-black tracking-wider bg-sky-100 text-sky-800 border border-sky-300" title="Priority 1: Dispatched First">
+                                P1
+                              </span>
+                            ) : (
+                              <span className="inline-block px-1 py-0.2 rounded text-[9px] font-bold tracking-wider bg-amber-100 text-amber-800 border border-amber-300" title="Priority 2: Dispatched After DS">
+                                P2
+                              </span>
+                            )}
+                          </div>
+                        </TableCell>
                         <TableCell>
                           <div className="font-mono text-xs font-bold text-slate-900 group-hover:text-amber-600 transition-colors">
                             {order.db_order_no}
                           </div>
                           <div className="mt-1">
                             {['DS', 'SO'].includes(order.order_type) ? (
-                              <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-sky-100 text-sky-800 border border-sky-200">
-                                {order.order_type} • Direct Stock
+                              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold bg-sky-100 text-sky-800 border border-sky-200" title="Priority 1: Stock direct order dispatched first on Komatsu PDX">
+                                <span className="w-1.5 h-1.5 rounded-full bg-sky-500 shrink-0"></span>
+                                Priority 1 • {order.order_type} Direct Stock
                               </span>
                             ) : (
-                              <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-200">
-                                EO • Emergency
+                              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-200" title="Priority 2: Emergency order dispatched after stock quotations to eliminate portal confusion">
+                                <span className="w-1.5 h-1.5 rounded-full bg-amber-500 shrink-0"></span>
+                                Priority 2 • EO Emergency
                               </span>
                             )}
                           </div>
@@ -3511,6 +3622,18 @@ export default function SparePartsPage() {
         </Card>
       )}
 
+      {/* ========================================== */}
+      {/* TAB 5: QUOTATIONS FOR CUSTOMERS            */}
+      {/* ========================================== */}
+      {activeTab === 'customer-quotation' && (
+        <CustomerQuotationSection
+          fleetData={fleetData}
+          allCustomers={allCustomers}
+          onLog={addLog}
+          onToast={(t) => setToast(t)}
+        />
+      )}
+
       {/* Modal: Paste Parts Line Items */}
       <Dialog open={pastePartsModalOpen} onClose={() => setPastePartsModalOpen(false)}>
         <DialogHeader>
@@ -3680,20 +3803,20 @@ export default function SparePartsPage() {
             <div className="p-4 bg-slate-50/80 rounded-lg border border-slate-200/80 space-y-3">
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
                 <div>
-                  <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-500 block">Order Routing Type</span>
+                  <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-500 block">Order Routing & Priority</span>
                   <div className="mt-0.5">
-                    {['DS', 'SO'].includes(viewingOrder.order_type) ? (
+                    {['DS', 'SO', 'SA'].includes(viewingOrder.order_type) ? (
                       <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[11px] font-bold bg-sky-100 text-sky-800 border border-sky-300">
-                        {viewingOrder.order_type} • Direct Stock
+                        Priority 1 • {viewingOrder.order_type} Direct Stock
                       </span>
                     ) : (
                       <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[11px] font-bold bg-amber-100 text-amber-800 border border-amber-300">
-                        EO • Emergency Order
+                        Priority 2 • EO Emergency Order
                       </span>
                     )}
                   </div>
                   <span className="text-[11px] text-slate-500 block mt-0.5">
-                    {['DS', 'SO'].includes(viewingOrder.order_type) ? '0% Premium • DDU Terms' : '13.3% Premium • EXW Terms'}
+                    {['DS', 'SO', 'SA'].includes(viewingOrder.order_type) ? '0% Premium • DDU Terms • Dispatched 1st' : '13.3% Premium • EXW Terms • Dispatched after DS'}
                   </span>
                 </div>
                 <div>

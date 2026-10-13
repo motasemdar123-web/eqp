@@ -828,6 +828,92 @@ async function exportSapPoExcel(req, res) {
   res.send(buffer);
 }
 
+async function downloadAvailabilityFormExcel(req, res) {
+  const { items, customer } = req.body || {};
+  if (!Array.isArray(items) || items.length === 0) {
+    return res.status(400).json({ success: false, message: 'Array of items is required' });
+  }
+
+  const komatsuAvailabilityFormService = require('../services/komatsuAvailabilityFormService');
+  const buffer = await komatsuAvailabilityFormService.generateAvailabilityFormExcelBuffer({
+    items,
+    customer: customer || 'Customer',
+  });
+
+  const safeCustomer = String(customer || 'Customer').replace(/[^a-zA-Z0-9_-]/g, '_');
+  const dateStr = new Date().toISOString().split('T')[0];
+  const filename = `Parts_Availability_Request_Form_${safeCustomer}_${dateStr}.xlsx`;
+
+  res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+  res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+  res.setHeader('Access-Control-Expose-Headers', 'Content-Disposition');
+  return res.send(Buffer.from(buffer));
+}
+
+async function batchVerifyCustomerQuotationParts(req, res) {
+  const { items, cookie } = req.body || {};
+  if (!Array.isArray(items) || items.length === 0) {
+    return res.status(400).json({ success: false, message: 'Items array is required' });
+  }
+
+  const cookieStr = cookie || req.query?.cookie;
+  if (cookieStr) {
+    komatsuInquiryService.saveCookie(cookieStr);
+  }
+
+  const verified = [];
+  for (const item of items) {
+    const pNo = String(item.part_no || item.partNo || '').trim().toUpperCase();
+    if (!pNo) continue;
+
+    try {
+      const master = await komatsuEoService.lookupPartMaster(pNo, cookieStr);
+      const reqQty = parseInt(item.quantity || item.qty || 1, 10) || 1;
+      const kmeStock = parseInt(master.kme_stock ?? master.stock_info?.kme_stock ?? 0, 10) || 0;
+      const kmeEor = parseInt(master.kme_eor ?? master.stock_info?.kme_eor ?? 0, 10) || 0;
+      const kltdTotal = parseInt(master.kltd_total ?? master.stock_info?.kltd_total ?? 0, 10) || 0;
+      const dnetPrice = parseFloat(master.stock_info?.dnet_price ?? master.price ?? 0) || 0;
+
+      verified.push({
+        part_no: pNo,
+        description: master.description || 'Komatsu Genuine Component',
+        quantity: reqQty,
+        dnet_price: dnetPrice,
+        price: dnetPrice,
+        kme_stock: kmeStock,
+        kme_eor: kmeEor,
+        kltd_total: kltdTotal,
+        models: Array.isArray(master.models) ? master.models : [],
+        latest_part_no: master.latest_part_no || master.lpn || pNo,
+        verified: true,
+      });
+    } catch (err) {
+      console.warn(`[batchVerifyCustomerQuotationParts] Lookup error for ${pNo}:`, err.message);
+      verified.push({
+        part_no: pNo,
+        description: item.description || 'Komatsu Component',
+        quantity: parseInt(item.quantity || item.qty || 1, 10) || 1,
+        dnet_price: 0,
+        price: 0,
+        kme_stock: 0,
+        kme_eor: 0,
+        kltd_total: 0,
+        models: [],
+        latest_part_no: pNo,
+        verified: false,
+        error: err.message,
+      });
+    }
+  }
+
+  res.json({
+    success: true,
+    total: verified.length,
+    items: verified,
+  });
+}
+
+
 async function downloadSapBridgeZip(req, res) {
   const staticZipPath = path.join(__dirname, '../../../frontend/public/sap-local-bridge.zip');
   if (fs.existsSync(staticZipPath)) {
@@ -969,6 +1055,8 @@ module.exports = {
   createSapPurchaseOrder,
   getSapPoStatus,
   exportSapPoExcel,
+  downloadAvailabilityFormExcel,
+  batchVerifyCustomerQuotationParts,
   downloadSapBridgeZip,
   downloadOutlookBridgeZip,
   getSapCredentials,
