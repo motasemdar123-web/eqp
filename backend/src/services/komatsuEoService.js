@@ -1029,10 +1029,11 @@ async function confirmQuotation(quotationNo, seqNo = '00', customCookie = null) 
     throw new Error(`QuotationCondition/Search returned non-JSON (status ${searchResp.status}). Session may be expired.`);
   }
 
-  const timestamp = searchData.TimeStamp || '';
-  console.log(`[confirmQuotation] ${qtn} timestamp=${timestamp} status=${JSON.stringify(searchData.Status)}`);
+  const condModel = searchData.data || searchData.objQuotationConditionPostModel || searchData.objQuotationCondition || searchData;
+  const timestamp = condModel.TimeStamp || searchData.TimeStamp || '';
+  console.log(`[confirmQuotation] ${qtn} timestamp=${timestamp} status=${JSON.stringify(condModel.Status)}`);
 
-  let rates = searchData.Rates || searchData.lstRates || [];
+  let rates = condModel.Rates || condModel.lstRates || searchData.Rates || searchData.lstRates || [];
   if (!rates || rates.length === 0) {
     rates = ['A', 'B', 'C', 'D', 'DA', 'E', 'F', 'NA', 'Other', 'S'].map((grp) => ({
       QuotationNo: qtn,
@@ -1046,80 +1047,65 @@ async function confirmQuotation(quotationNo, seqNo = '00', customCookie = null) 
   // STEP 3: Save with Status = '2' (Confirmed)
   // Preserve actual order type from QuotationCondition/Search (DS vs EO vs SO)
   const qtnOrderType = String(
-    searchData.OrderType ||
-    searchData.OrderTypes ||
-    searchData.SelectedOrderTypeCode ||
-    searchData.strOTYP ||
+    condModel.OrderType ||
+    condModel.OrderTypes ||
+    condModel.SelectedOrderTypeCode ||
+    condModel.strOTYP ||
     'EO'
   ).trim().toUpperCase();
   const isStockOrder = ['DS', 'SO', 'SA'].includes(qtnOrderType);
-  const qtnDeliveryTerms = searchData.DeliveryTerms || (isStockOrder ? 'DDU' : 'EXW');
-  const qtnPremiumRate = searchData.PremiumRate || (isStockOrder ? '0.00' : '13.30');
-  const qtnModelInfoMark = typeof searchData.ModelInfoMark === 'boolean' ? searchData.ModelInfoMark : !isStockOrder;
-  const qtnComments = searchData.Comments || (isStockOrder ? 'STOCK REPLENISHMENT' : 'Urgent');
+  const qtnDeliveryTerms = condModel.DeliveryTerms || (isStockOrder ? 'DDU' : 'EXW');
+  const qtnPremiumRate = condModel.PremiumRate || (isStockOrder ? '0.00' : '13.30');
+  const qtnModelInfoMark = typeof condModel.ModelInfoMark === 'boolean' ? condModel.ModelInfoMark : !isStockOrder;
+  const qtnComments = condModel.Comments || (isStockOrder ? 'STOCK REPLENISHMENT' : 'Urgent');
 
   const saveUrl = `${BASE_PORTAL_URL}/QuotationCondition/Save`;
   const savePayload = {
     objQuotationConditionPostModel: {
+      ...condModel,
       OrigQuotationNo: qtn,
       OrigQuotationSeqNo: seq,
       QuotationNo: qtn,
       QuotationSeqNo: seq,
-      DistributerOrderNo: searchData.DistributerOrderNo || '',
-      DistributerCodes: '536K',
-      DistributerName: searchData.DistributerName || 'DAR AL HAI',
-      SalesPriceList: 'USD037',
-      Currency: 'USD',
-      ExchangeRate: '1',
+      DistributerOrderNo: condModel.DistributerOrderNo || searchData.DistributerOrderNo || '',
+      DistributerCodes: condModel.DistributerCodes || '536K',
+      DistributerName: condModel.DistributerName || searchData.DistributerName || 'DAR AL HAI',
+      SalesPriceList: condModel.SalesPriceList || 'USD037',
+      Currency: condModel.Currency || 'USD',
+      ExchangeRate: condModel.ExchangeRate || '1',
       OrderType: qtnOrderType,
       OrderTypes: qtnOrderType,
       SelectedOrderType: qtnOrderType,
       SelectedOrderTypeCode: qtnOrderType,
       strOTYP: qtnOrderType,
       strOrderType: qtnOrderType,
-      Usance: '30',
-      TaxRate: '0',
-      Transportation: searchData.SelectedTransportationCode || 'RD',
+      Usance: condModel.Usance || '30',
+      TaxRate: condModel.TaxRate || '0',
+      Transportation: condModel.SelectedTransportationCode || condModel.Transportation || 'RD',
       DeliveryTerms: qtnDeliveryTerms,
-      PaymentTerms: 'T2',
-      OrderPRobability: 'A',
-      Region: 'AE',
+      PaymentTerms: condModel.PaymentTerms || 'T2',
+      OrderPRobability: condModel.OrderPRobability || 'A',
+      Region: condModel.Region || 'AE',
       Status: '2', // 2 = Confirmed
-      LoadingPort: 'JEA',
-      UnloadingPort: 'KWI',
-      PersonIncharge: searchData.PersonIncharge || 'motasemgha',
-      QuotationValidity: searchData.QuotationValidity || formatPortalDate(14),
-      RequestedDeliveryTime: searchData.RequestedDeliveryTime || formatPortalDate(7),
-      PriceCalculationMethod: 'D',
-      DiscountRateOther: '0',
+      LoadingPort: condModel.LoadingPort || 'JEA',
+      UnloadingPort: condModel.UnloadingPort || 'KWI',
+      PersonIncharge: condModel.PersonIncharge || searchData.PersonIncharge || 'motasemgha',
+      QuotationValidity: condModel.QuotationValidity || formatPortalDate(14),
+      RequestedDeliveryTime: condModel.RequestedDeliveryTime || formatPortalDate(7),
+      PriceCalculationMethod: condModel.PriceCalculationMethod || 'D',
+      DiscountRateOther: condModel.DiscountRateOther || '0',
       PremiumRate: qtnPremiumRate,
-      BillingRateA: '0',
-      BillingRateB: '0',
-      BillingRateC: '0',
-      BillingRateD: '0',
-      BillingRateE: '0',
-      BillingRateF: '0',
-      ShipToAddress: searchData.ShipToAddress || 'DAR AL HAI\nKUWAIT GENERAL TRADING. Al-Rai Industrial Area Plot # 1732 Block # 2 Street # 4 Behind the Avenues Kuwait',
+      ShipToAddress: condModel.ShipToAddress || searchData.ShipToAddress || 'DAR AL HAI\nKUWAIT GENERAL TRADING. Al-Rai Industrial Area Plot # 1732 Block # 2 Street # 4 Behind the Avenues Kuwait',
       AvailableMark: true,
-      UseHSCode: false,
-      ReserverStock: false,
-      DontConsiderEORes: false,
-      FixPrice: false,
-      Memo: '',
       Comments: qtnComments,
-      ModelCode: qtnModelInfoMark ? (searchData.ModelCode || 'PC500LC-10R') : '',
-      SerialNo: qtnModelInfoMark ? (searchData.SerialNo || '100433') : '',
-      EngineSrNo: qtnModelInfoMark ? (searchData.EngineSrNo || '-') : '',
-      CustomerDetails: qtnModelInfoMark ? (searchData.CustomerDetails || 'DAR AL HAI') : '',
+      ModelCode: qtnModelInfoMark ? (condModel.ModelCode || 'PC500LC-10R') : '',
+      SerialNo: qtnModelInfoMark ? (condModel.SerialNo || '100433') : '',
+      EngineSrNo: qtnModelInfoMark ? (condModel.EngineSrNo || '-') : '',
+      CustomerDetails: qtnModelInfoMark ? (condModel.CustomerDetails || 'DAR AL HAI') : '',
       ModelInfoMark: qtnModelInfoMark,
-      jobCard: '',
-      Warranty: '',
-      TSINumber: '',
-      ModelSVREMark: false,
-      ExitPoint: 'JEA',
-      CustomerCode: searchData.SavedCustomerCode || 'REG',
+      ExitPoint: condModel.ExitPoint || 'JEA',
+      CustomerCode: condModel.SavedCustomerCode || condModel.CustomerCode || 'REG',
       lstRates: rates,
-      MarkingCode: 'MCOIL',
       TimeStamp: timestamp,
     },
   };
@@ -1161,14 +1147,15 @@ async function confirmQuotation(quotationNo, seqNo = '00', customCookie = null) 
   const hasError = saveJson.ErrorOccured && Number(saveJson.ErrorOccured) !== 0;
   const isUpdated = Number(saveJson.RecordUpdated) === 1 || Number(saveJson.OperationSuccessful) === 1;
 
-  if (hasError && !isUpdated) {
-    throw new Error(saveJson.ErrorMessage || 'Failed to update quotation status to Confirmed');
+  if (hasError || !isUpdated) {
+    const errText = saveJson.ErrorMessage || saveJson.MessageToDisplay || saveJson.Message || (saveJson.ErrorOccured === 5 ? 'Please select your own DB Code' : saveJson.ErrorOccured === 6 ? 'Invalid Billing Rate' : null);
+    throw new Error(errText ? `Komatsu portal rejected confirmation: ${errText} (code ${saveJson.ErrorOccured})` : `Failed to update quotation status to Confirmed: ${JSON.stringify(saveJson)}`);
   }
 
   return {
     status: 'CONFIRMED',
     quotation_no: qtn,
-    db_order_no: searchData.DistributerOrderNo,
+    db_order_no: condModel.DistributerOrderNo || searchData.DistributerOrderNo,
     timestamp,
     raw_response: saveJson,
   };
