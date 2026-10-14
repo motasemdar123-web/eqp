@@ -503,11 +503,10 @@ async function confirmKomatsuQuotation(req, res) {
   } catch (err) {
     console.error(`[confirmKomatsuQuotation] Error for ${quotationNo}:`, err.message);
     const isSessionErr =
-      err.message.includes('expired') ||
-      err.message.includes('cookie') ||
-      err.message.includes('Session') ||
-      err.message.includes('login') ||
-      err.message.includes('Login');
+      err.message.toLowerCase().includes('cookie has expired') ||
+      err.message.toLowerCase().includes('session expired') ||
+      err.message.toLowerCase().includes('session cookie') ||
+      err.message.toLowerCase().includes('re-authenticate');
     return res.status(400).json({
       success: false,
       sessionExpired: isSessionErr,
@@ -562,11 +561,10 @@ async function copyKomatsuQuotationToSo(req, res) {
   } catch (err) {
     console.error(`[copyKomatsuQuotationToSo] Error for ${quotationNo}:`, err.message);
     const isSessionErr =
-      err.message.includes('expired') ||
-      err.message.includes('cookie') ||
-      err.message.includes('Session') ||
-      err.message.includes('login') ||
-      err.message.includes('Login');
+      err.message.toLowerCase().includes('cookie has expired') ||
+      err.message.toLowerCase().includes('session expired') ||
+      err.message.toLowerCase().includes('session cookie') ||
+      err.message.toLowerCase().includes('re-authenticate');
     res.status(400).json({
       success: false,
       sessionExpired: isSessionErr,

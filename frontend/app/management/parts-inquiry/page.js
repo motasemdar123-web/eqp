@@ -1517,8 +1517,15 @@ export default function SparePartsPage() {
       try {
         if (actionType === 'FULL_CONVERT' || actionType === 'CONFIRM_ONLY') {
           if (q.status !== 'Confirmed') {
-            await confirmKomatsuQuotation({ quotationNo: q.quotation_no, seqNo: q.revision_no || '00' });
-            q.status = 'Confirmed';
+            try {
+              await confirmKomatsuQuotation({ quotationNo: q.quotation_no, seqNo: q.revision_no || '00' });
+              q.status = 'Confirmed';
+            } catch (confErr) {
+              if (actionType === 'CONFIRM_ONLY') {
+                throw confErr;
+              }
+              addSoLog(`Quotation #${q.quotation_no} condition confirm notice: ${confErr.message}. Proceeding to CopyToSO...`, 'info');
+            }
           }
         }
         if (actionType === 'FULL_CONVERT' || actionType === 'COPY_ONLY') {
@@ -1530,11 +1537,11 @@ export default function SparePartsPage() {
         successCount++;
       } catch (err) {
         addSoLog(`Failed for ${q.quotation_no}: ${err.message}`, 'error');
-        if (
-          err.message?.toLowerCase().includes('cookie') ||
-          err.message?.toLowerCase().includes('expired') ||
-          err.message?.toLowerCase().includes('session')
-        ) {
+        const isTrueExpired =
+          err.sessionExpired === true ||
+          err.message?.toLowerCase().includes('cookie has expired') ||
+          err.message?.toLowerCase().includes('session expired');
+        if (isTrueExpired) {
           setCookieModalOpen(true);
           setToast({ type: 'error', message: 'Komatsu PDX session cookie expired. Please update your cookie.' });
         }
@@ -1556,9 +1563,16 @@ export default function SparePartsPage() {
       setIsConvertingSo(true);
       if (actionType === 'FULL_CONVERT' || actionType === 'CONFIRM_ONLY') {
         if (q.status !== 'Confirmed') {
-          await confirmKomatsuQuotation({ quotationNo: q.quotation_no, seqNo: q.revision_no || '00' });
-          q.status = 'Confirmed';
-          addSoLog(`Quotation #${q.quotation_no} successfully Confirmed.`, 'success');
+          try {
+            await confirmKomatsuQuotation({ quotationNo: q.quotation_no, seqNo: q.revision_no || '00' });
+            q.status = 'Confirmed';
+            addSoLog(`Quotation #${q.quotation_no} successfully Confirmed.`, 'success');
+          } catch (confErr) {
+            if (actionType === 'CONFIRM_ONLY') {
+              throw confErr;
+            }
+            addSoLog(`Quotation #${q.quotation_no} condition notice: ${confErr.message}. Proceeding to CopyToSO...`, 'info');
+          }
         }
       }
       if (actionType === 'FULL_CONVERT' || actionType === 'COPY_ONLY') {
@@ -1572,11 +1586,11 @@ export default function SparePartsPage() {
       setToast({ type: 'success', message: `Quotation #${q.quotation_no} ${actionLabel} completed!` });
     } catch (err) {
       addSoLog(`Failed for #${q.quotation_no}: ${err.message}`, 'error');
-      if (
-        err.message?.toLowerCase().includes('cookie') ||
-        err.message?.toLowerCase().includes('expired') ||
-        err.message?.toLowerCase().includes('session')
-      ) {
+      const isTrueExpired =
+        err.sessionExpired === true ||
+        err.message?.toLowerCase().includes('cookie has expired') ||
+        err.message?.toLowerCase().includes('session expired');
+      if (isTrueExpired) {
         setCookieModalOpen(true);
         setToast({ type: 'error', message: 'Komatsu PDX session cookie expired. Please update your cookie.' });
       } else {

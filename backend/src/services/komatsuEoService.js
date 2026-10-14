@@ -932,56 +932,22 @@ async function confirmQuotation(quotationNo, seqNo = '00', customCookie = null) 
   const qtn = String(quotationNo).trim();
   const seq = String(seqNo || '00').trim();
 
-  // STEP 1: Ensure Quotation Details are loaded and calculated in session
-  // (non-blocking — errors here do not fail the confirm; they just pre-warm the session)
+  // STEP 1: Navigate to QuotationCondition/Index to initialize condition controller and state
+  const condIndexUrl = `${BASE_PORTAL_URL}/QuotationCondition/Index?strQUTN=${qtn}&strQutnSubNo=${seq}&DBCode=536K`;
   try {
-    const detailUrl = `${BASE_PORTAL_URL}/QuotationDetails/Index?strQUTN=${qtn}&strQutnSubNo=${seq}&DBCode=536K`;
-    await fetch(detailUrl, { method: 'GET', headers: defaultHeaders });
-
-    // Correct field names confirmed from live API inspection
-    const searchUrl = `${BASE_PORTAL_URL}/QuotationDetails/Search`;
-    await fetch(searchUrl, {
-      method: 'POST',
-      headers: {
-        ...defaultHeaders,
-        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-        'X-Requested-With': 'XMLHttpRequest',
-        'Referer': detailUrl,
-      },
-      body: new URLSearchParams({
-        strQuotationNo: qtn,
-        strQuotSeqNo: seq,
-        DBCode: '536K',
-        page: '1',
-        pageSize: '50',
-        group: '',
-        filter: '',
-      }).toString(),
+    const idxResp = await fetch(condIndexUrl, {
+      method: 'GET',
+      headers: defaultHeaders,
+      redirect: 'follow',
+      signal: AbortSignal.timeout(20000),
     });
-
-    // UpdateDetails returns empty string "" — just call it to warm up session
-    const updateUrl = `${BASE_PORTAL_URL}/QuotationDetails/UpdateDetails`;
-    const uResp = await fetch(updateUrl, {
-      method: 'POST',
-      headers: {
-        ...defaultHeaders,
-        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-        'X-Requested-With': 'XMLHttpRequest',
-        'Referer': detailUrl,
-      },
-      body: new URLSearchParams({
-        strQuotationNo: qtn,
-        strQuotSeqNo: seq,
-        DBCode: '536K',
-      }).toString(),
-    });
-    const uCookies = extractResponseCookies(uResp);
-    if (uCookies.length > 0) {
-      cookieStr = mergeCookies(cookieStr, uCookies);
+    const idxCookies = extractResponseCookies(idxResp);
+    if (idxCookies.length > 0) {
+      cookieStr = mergeCookies(cookieStr, idxCookies);
       defaultHeaders.Cookie = cookieStr;
     }
-  } catch {
-    // Non-blocking detail refresh — safe to ignore
+  } catch (idxErr) {
+    console.warn(`[confirmQuotation] ${qtn} QuotationCondition/Index navigation warning:`, idxErr.message);
   }
 
   // STEP 2: Search QuotationCondition to load fresh state & TimeStamp
@@ -998,7 +964,7 @@ async function confirmQuotation(quotationNo, seqNo = '00', customCookie = null) 
       ...defaultHeaders,
       'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
       'X-Requested-With': 'XMLHttpRequest',
-      'Referer': `${BASE_PORTAL_URL}/QuotationCondition/Index?strQUTN=${qtn}&strQutnSubNo=${seq}&DBCode=536K`,
+      'Referer': condIndexUrl,
     },
     body: condSearchData.toString(),
   });
@@ -1026,11 +992,12 @@ async function confirmQuotation(quotationNo, seqNo = '00', customCookie = null) 
     ) {
       throw new Error('Komatsu PDX session cookie has expired. Please update your PDX Cookie in settings.');
     }
-    throw new Error(`QuotationCondition/Search returned non-JSON (status ${searchResp.status}). Session may be expired.`);
+    throw new Error(`QuotationCondition/Search returned non-JSON (status ${searchResp.status}): ${searchText.slice(0, 200)}`);
   }
 
   const condModel = searchData.data || searchData.objQuotationConditionPostModel || searchData.objQuotationCondition || searchData;
-  const timestamp = condModel.TimeStamp || searchData.TimeStamp || '';
+  const rawTimestamp = condModel.TimeStamp || searchData.TimeStamp;
+  const timestamp = rawTimestamp && rawTimestamp !== '""' && rawTimestamp !== '' ? rawTimestamp : null;
   console.log(`[confirmQuotation] ${qtn} timestamp=${timestamp} status=${JSON.stringify(condModel.Status)}`);
 
   let rates = condModel.Rates || condModel.lstRates || searchData.Rates || searchData.lstRates || [];
@@ -1127,7 +1094,7 @@ async function confirmQuotation(quotationNo, seqNo = '00', customCookie = null) 
       CustomerCode: condModel.SavedCustomerCode || condModel.CustomerCode || 'REG',
       lstRates: rates,
       MarkingCode: '',
-      TimeStamp: timestamp,
+      ...(timestamp ? { TimeStamp: timestamp } : {}),
     },
   };
 
@@ -1138,7 +1105,7 @@ async function confirmQuotation(quotationNo, seqNo = '00', customCookie = null) 
       'Content-Type': 'application/json',
       'Accept': 'application/json, text/javascript, */*; q=0.01',
       'X-Requested-With': 'XMLHttpRequest',
-      'Referer': `${BASE_PORTAL_URL}/QuotationCondition/Index?strQUTN=${qtn}&strQutnSubNo=${seq}&DBCode=536K`,
+      'Referer': condIndexUrl,
     },
     body: JSON.stringify(savePayload),
   });
