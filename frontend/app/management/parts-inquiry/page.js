@@ -1382,10 +1382,6 @@ export default function SparePartsPage() {
   // =========================================================
   const isQuotationAlreadySo = useCallback((q) => {
     if (!q) return false;
-    const qtn = String(q.quotation_no || '').trim();
-    if (q.is_converted_to_so) return true;
-    if (localConvertedSet.has(qtn)) return true;
-
     // Check if sales_order_no is present
     const soNo = String(q.sales_order_no || '').trim();
     if (soNo && soNo !== '-' && soNo !== '0' && soNo !== 'null' && soNo !== 'undefined' && soNo !== 'Converted') return true;
@@ -1395,7 +1391,7 @@ export default function SparePartsPage() {
     if (st.includes('transferred to so') || st.includes('copied to so') || st === 'transferred' || st === 'completed' || st === 'so created') return true;
 
     return false;
-  }, [localConvertedSet]);
+  }, []);
 
   const selectedQuotations = useMemo(() => {
     return inProcessQuotations.filter((q) => selectedQtnNumbers.has(q.quotation_no));
@@ -1415,9 +1411,8 @@ export default function SparePartsPage() {
         setInProcessQuotations(res.quotations);
         // Sync any returned quotations that are flagged as converted
         res.quotations.forEach((q) => {
-          if (q.is_converted_to_so || (q.sales_order_no && q.sales_order_no.trim() !== '' && q.sales_order_no !== '-')) {
-            markQuotationAsConvertedLocal(q.quotation_no, true);
-          }
+          const isActuallySo = isQuotationAlreadySo(q);
+          markQuotationAsConvertedLocal(q.quotation_no, isActuallySo);
         });
         // Only pre-select quotations that have NOT already been converted to SO
         const eligible = res.quotations.filter((q) => !isQuotationAlreadySo(q));
@@ -3224,6 +3219,19 @@ export default function SparePartsPage() {
 
             <div className="flex flex-wrap items-center gap-2">
               <Button
+                variant={status.connected ? "secondary" : "danger"}
+                size="sm"
+                onClick={() => setCookieModalOpen(true)}
+                className={`text-xs font-semibold cursor-pointer ${
+                  status.connected
+                    ? 'text-emerald-700 bg-emerald-50 border-emerald-300 hover:bg-emerald-100'
+                    : 'text-rose-700 bg-rose-50 border-rose-300 hover:bg-rose-100 font-bold'
+                }`}
+                title="Manage Komatsu PDX Session Cookie"
+              >
+                {status.connected ? '● PDX Connected' : '⚠️ Cookie Expired (Update)'}
+              </Button>
+              <Button
                 variant="secondary"
                 size="sm"
                 onClick={() => loadInProcessQuotations(qtnPage, qtnLimit, qtnStatusFilter)}
@@ -3304,6 +3312,26 @@ export default function SparePartsPage() {
               </Button>
             </div>
           </div>
+
+          {/* Warning Banner: Cookie Expired */}
+          {!status.connected && (
+            <div className="p-3 bg-amber-50 border border-amber-300 rounded-lg text-xs text-amber-950 flex flex-wrap items-center justify-between gap-2 shadow-2xs">
+              <div className="flex items-center gap-2">
+                <span className="text-base font-bold text-amber-600">⚠️</span>
+                <span>
+                  <strong>Komatsu PDX Session Cookie is Expired or Missing:</strong> Confirming quotations and converting to SO requires an active portal session.
+                </span>
+              </div>
+              <Button
+                size="xs"
+                variant="primary"
+                className="bg-amber-600 hover:bg-amber-700 text-white font-semibold cursor-pointer whitespace-nowrap"
+                onClick={() => setCookieModalOpen(true)}
+              >
+                🔑 Update PDX Cookie
+              </Button>
+            </div>
+          )}
 
           {/* Warning Banner: Converted Quotations Selected */}
           {hasConvertedSelected && (

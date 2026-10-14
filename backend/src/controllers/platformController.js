@@ -472,7 +472,7 @@ async function searchKomatsuQuotations(req, res) {
         st === 'completed' ||
         st === 'so created';
 
-      const isConverted = Boolean(persisted || hasSalesOrderNo || statusIndicatesSo);
+      const isConverted = Boolean(hasSalesOrderNo || statusIndicatesSo);
 
       if (isConverted) {
         return {
@@ -526,16 +526,6 @@ async function copyKomatsuQuotationToSo(req, res) {
   }
   try {
     const qtn = String(quotationNo).trim();
-    const convertedMap = loadConvertedSoMap();
-
-    // Check if quotation is recorded as already converted
-    if (convertedMap[qtn] && !options?.force) {
-      return res.status(400).json({
-        success: false,
-        alreadyConverted: true,
-        message: `Quotation #${qtn} has already been transferred to Sales Order (locked to protect Komatsu PDX).`,
-      });
-    }
 
     // Check if quotation is already converted on Komatsu PDX
     if (!options?.force) {
