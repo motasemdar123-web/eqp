@@ -92,10 +92,34 @@ const mediaAssetUpload = multer({
   },
 });
 
+const quotationRequestUpload = multer({
+  storage: multer.memoryStorage(),
+  limits: {
+    fileSize: 50 * 1024 * 1024, // 50MB max
+    files: 1,
+  },
+  fileFilter(req, file, callback) {
+    const isAllowed =
+      /\.(pdf|xlsx|xls|csv|tsv|txt|jpe?g|png)$/i.test(file.originalname || '') ||
+      file.mimetype === 'application/pdf' ||
+      file.mimetype.includes('spreadsheet') ||
+      file.mimetype.includes('excel') ||
+      file.mimetype.startsWith('text/') ||
+      file.mimetype.startsWith('image/');
+
+    if (!isAllowed) {
+      callback(new ApiError(400, 'Unsupported quotation request file type. Please upload a PDF, Excel (.xlsx/.xls), or CSV/Text file.'));
+      return;
+    }
+    callback(null, true);
+  },
+});
+
 module.exports = {
   manualUpload,
   audioUpload,
   reportUpload,
   mediaAssetUpload,
+  quotationRequestUpload,
 };
 

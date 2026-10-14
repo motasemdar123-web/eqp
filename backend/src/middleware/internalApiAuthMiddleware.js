@@ -21,6 +21,10 @@ const publicApiPaths = new Set([
   '/api/komatsu/eqpc/status',
   '/api/komatsu/eqpc/cookie',
   '/api/sap/bridge/download',
+  '/api/komatsu/quotations/parse-request',
+  '/api/komatsu/quotations/verify-batch',
+  '/api/komatsu/quotations/customer-excel',
+  '/api/komatsu/availability-form/excel',
 ]);
 
 function isPublicApiPath(path) {

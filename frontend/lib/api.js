@@ -997,6 +997,23 @@ export async function downloadCustomerQuotationExcel(payload) {
   window.URL.revokeObjectURL(url);
 }
 
+export async function parseQuotationRequestFile(fileOrText) {
+  if (typeof fileOrText === 'string') {
+    return await request('/api/komatsu/quotations/parse-request', {
+      method: 'POST',
+      body: JSON.stringify({ text: fileOrText, fileName: 'pasted_request.txt' }),
+    });
+  }
+
+  const formData = new FormData();
+  formData.append('file', fileOrText);
+  return await request('/api/komatsu/quotations/parse-request', {
+    method: 'POST',
+    body: formData,
+    timeoutMs: 60000,
+  });
+}
+
 
 export async function getComments(params = {}) {
   const query = new URLSearchParams(params).toString();

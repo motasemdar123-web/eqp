@@ -874,6 +874,40 @@ async function downloadCustomerQuotationExcel(req, res) {
   return res.send(Buffer.from(buffer));
 }
 
+async function parseQuotationRequest(req, res) {
+  const komatsuQuotationRequestParser = require('../services/komatsuQuotationRequestParser');
+
+  let buffer = req.file?.buffer;
+  let fileName = req.file?.originalname || req.body?.fileName || '';
+  let text = req.body?.text || '';
+
+  if (!buffer && req.body?.fileBase64) {
+    buffer = Buffer.from(req.body.fileBase64, 'base64');
+  }
+
+  if (!buffer && !text) {
+    return res.status(400).json({
+      success: false,
+      message: 'No quotation request file or text content was provided.',
+    });
+  }
+
+  try {
+    const result = await komatsuQuotationRequestParser.parseQuotationRequest({
+      buffer,
+      fileName,
+      text,
+    });
+    return res.json(result);
+  } catch (err) {
+    console.error('[parseQuotationRequest] Error:', err);
+    return res.status(500).json({
+      success: false,
+      message: err.message || 'Failed to parse quotation request.',
+    });
+  }
+}
+
 async function batchVerifyCustomerQuotationParts(req, res) {
   const { items, cookie } = req.body || {};
   if (!Array.isArray(items) || items.length === 0) {
@@ -1087,6 +1121,7 @@ module.exports = {
   exportSapPoExcel,
   downloadAvailabilityFormExcel,
   downloadCustomerQuotationExcel,
+  parseQuotationRequest,
   batchVerifyCustomerQuotationParts,
   downloadSapBridgeZip,
   downloadOutlookBridgeZip,

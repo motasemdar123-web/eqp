@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useEffect, useCallback } from 'react';
+import { useState, useMemo, useEffect, useCallback, useRef } from 'react';
 import Card, { CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '../ui/Card';
 import Badge from '../ui/Badge';
 import Button from '../ui/Button';
@@ -15,6 +15,7 @@ import {
   verifyBatchQuotationParts,
   downloadAvailabilityFormExcel,
   downloadCustomerQuotationExcel,
+  parseQuotationRequestFile,
 } from '../../lib/api';
 
 const SAMPLE_QUOTATION_INPUT = `17M-22-43430, 1
@@ -157,6 +158,16 @@ export default function CustomerQuotationSection({
   const [pasteModalOpen, setPasteModalOpen] = useState(false);
   const [tempPasteText, setTempPasteText] = useState('');
 
+  // Quotation Request File Upload state
+  const fileInputRef = useRef(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadModalOpen, setUploadModalOpen] = useState(false);
+  const [uploadResult, setUploadResult] = useState(null);
+  const [uploadMode, setUploadMode] = useState('replace'); // 'replace' | 'append'
+  const [autoVerifyOnUpload, setAutoVerifyOnUpload] = useState(true);
+  const [applyMetadataOnUpload, setApplyMetadataOnUpload] = useState(true);
+  const [dragOverCard, setDragOverCard] = useState(false);
+
   // Sync customer mode when customer selector changes
   useEffect(() => {
     if (selectedCustomer) {
@@ -230,6 +241,92 @@ export default function CustomerQuotationSection({
     }
     setItems(parsed);
     onToast({ type: 'success', message: `Imported ${parsed.length} part items. Click 'Verify Parts' to check PDX.` });
+  }
+
+  // Handle Quotation Request File Selection
+  async function handleQuotationFileSelected(file) {
+    if (!file) return;
+    try {
+      setIsUploading(true);
+      setUploadModalOpen(true);
+      setUploadResult(null);
+      onLog(`Analyzing customer quotation request file "${file.name}" (${(file.size / 1024).toFixed(1)} KB)...`, 'info');
+
+      const res = await parseQuotationRequestFile(file);
+      if (res && res.success) {
+        setUploadResult(res);
+        onLog(`Parsed ${res.items?.length || 0} parts from ${file.name}. Customer: ${res.metadata?.customer || 'General'}`, 'success');
+      } else {
+        throw new Error(res?.message || 'Failed to parse quotation request file.');
+      }
+    } catch (err) {
+      onToast({ type: 'error', message: err.message || 'Error uploading quotation request file.' });
+      onLog(`Upload parse error: ${err.message}`, 'error');
+      setUploadModalOpen(false);
+    } finally {
+      setIsUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+  }
+
+  // Handle Confirming Uploaded Items into Quotation
+  function handleConfirmImport(shouldAutoVerify = autoVerifyOnUpload) {
+    if (!uploadResult || !Array.isArray(uploadResult.items) || uploadResult.items.length === 0) {
+      onToast({ type: 'error', message: 'No items to import.' });
+      return;
+    }
+
+    const detectedModel = uploadResult.metadata?.equipmentModel || '';
+    const detectedSerial = uploadResult.metadata?.serialNo || '';
+    const mappedRows = uploadResult.items.map((it, idx) => {
+      return {
+        id: `imported-${Date.now()}-${idx}-${Math.random().toString(36).substr(2, 5)}`,
+        part_no: it.part_no.toUpperCase(),
+        description: it.description || 'Komatsu Component',
+        quantity: it.quantity > 0 ? it.quantity : 1,
+        dnet_price: 0,
+        price: 0,
+        kme_stock: 0,
+        kme_eor: 0,
+        kltd_total: 0,
+        models: [],
+        latest_part_no: it.part_no.toUpperCase(),
+        verified: false,
+        custom_delivery: '',
+        selected_model: detectedModel,
+        selected_serial: detectedSerial,
+      };
+    });
+
+    if (applyMetadataOnUpload && uploadResult.metadata?.customer) {
+      const cust = uploadResult.metadata.customer;
+      if (cust.toLowerCase() === 'lalaa') {
+        setSelectedCustomer('Lalaa');
+        setCustomerMode('LALAA');
+      } else {
+        setSelectedCustomer(cust);
+        setCustomerMode('OTHER');
+      }
+    }
+
+    let nextItems;
+    if (uploadMode === 'replace') {
+      nextItems = mappedRows;
+      setItems(mappedRows);
+    } else {
+      nextItems = [...items, ...mappedRows];
+      setItems(nextItems);
+    }
+
+    setUploadModalOpen(false);
+    onToast({
+      type: 'success',
+      message: `Successfully imported ${mappedRows.length} parts from ${uploadResult.fileName || 'quotation request'}!`,
+    });
+
+    if (shouldAutoVerify) {
+      handleVerifyParts(nextItems);
+    }
   }
 
   // Add a blank row
@@ -355,8 +452,9 @@ export default function CustomerQuotationSection({
   );
 
   // Batch Verify Parts via PDX
-  async function handleVerifyParts() {
-    const validItems = items.filter((it) => it.part_no && it.part_no.trim());
+  async function handleVerifyParts(itemsOverride = null) {
+    const targetItems = Array.isArray(itemsOverride) ? itemsOverride : items;
+    const validItems = targetItems.filter((it) => it.part_no && it.part_no.trim());
     if (validItems.length === 0) {
       onToast({ type: 'error', message: 'Please add at least one part number to verify.' });
       return;
@@ -386,7 +484,7 @@ export default function CustomerQuotationSection({
         console.warn('Batch verification endpoint not available, falling back to individual lookups:', err.message);
       }
 
-      const updated = [...items];
+      const updated = [...targetItems];
       let verifiedCount = 0;
 
       for (let i = 0; i < updated.length; i++) {
@@ -826,7 +924,33 @@ export default function CustomerQuotationSection({
       {/* ========================================================================= */}
       {/* 1. TOP HEADER & CUSTOMER / PRICING CONTROLS CARD                          */}
       {/* ========================================================================= */}
-      <Card className="p-5 sm:p-6 space-y-5 border-slate-200 shadow-2xs">
+      <Card
+        className={`p-5 sm:p-6 space-y-5 border-slate-200 shadow-2xs relative transition-all ${
+          dragOverCard ? 'ring-2 ring-emerald-500 bg-emerald-50/40' : ''
+        }`}
+        onDragOver={(e) => {
+          e.preventDefault();
+          setDragOverCard(true);
+        }}
+        onDragLeave={(e) => {
+          e.preventDefault();
+          setDragOverCard(false);
+        }}
+        onDrop={(e) => {
+          e.preventDefault();
+          setDragOverCard(false);
+          const f = e.dataTransfer.files?.[0];
+          if (f) handleQuotationFileSelected(f);
+        }}
+      >
+        {dragOverCard && (
+          <div className="absolute inset-0 z-30 bg-emerald-600/90 backdrop-blur-xs rounded-xl flex flex-col items-center justify-center text-white pointer-events-none p-6">
+            <span className="text-4xl mb-2">📥</span>
+            <p className="text-base font-bold">Drop Customer Quotation Request File Here</p>
+            <p className="text-xs text-emerald-100 mt-1">Supports PDF (multi-page), Excel (.xlsx/.xls), and CSV files</p>
+          </div>
+        )}
+
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 pb-4 border-b border-slate-100">
           <div>
             <div className="flex items-center gap-2">
@@ -846,6 +970,35 @@ export default function CustomerQuotationSection({
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) handleQuotationFileSelected(file);
+              }}
+              accept=".pdf,.xlsx,.xls,.csv,.tsv,.txt"
+              className="hidden"
+            />
+            <Button
+              variant="primary"
+              size="sm"
+              onClick={() => fileInputRef.current?.click()}
+              disabled={isUploading}
+              className="text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white shadow-2xs border-emerald-700"
+            >
+              {isUploading ? (
+                <span className="flex items-center gap-1.5">
+                  <svg className="animate-spin h-3.5 w-3.5" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+                  </svg>
+                  Reading Request...
+                </span>
+              ) : (
+                '📄 Upload Quotation Request'
+              )}
+            </Button>
             <Button
               variant="secondary"
               size="sm"
@@ -868,7 +1021,7 @@ export default function CustomerQuotationSection({
             <Button
               variant="primary"
               size="sm"
-              onClick={handleVerifyParts}
+              onClick={() => handleVerifyParts()}
               disabled={isVerifying || items.length === 0}
               className="text-xs font-bold"
             >
@@ -1006,6 +1159,31 @@ export default function CustomerQuotationSection({
                 <span>1.00 (At Cost)</span>
               </div>
             </div>
+          </div>
+        </div>
+
+        {/* Quick upload drop bar */}
+        <div
+          onClick={() => fileInputRef.current?.click()}
+          className="border border-dashed border-emerald-300 hover:border-emerald-500 bg-emerald-50/50 hover:bg-emerald-50 rounded-lg p-2.5 flex flex-wrap items-center justify-between gap-2 cursor-pointer transition-colors"
+        >
+          <div className="flex items-center gap-2.5">
+            <span className="flex items-center justify-center w-7 h-7 rounded-full bg-emerald-600 text-white font-bold text-xs shadow-2xs">
+              ⚡
+            </span>
+            <div>
+              <p className="text-xs font-bold text-emerald-900">
+                Automatic Customer Quotation Request Importer
+              </p>
+              <p className="text-[11px] text-emerald-700">
+                Upload or drag any customer quotation request (e.g. <strong>MR-35211.pdf</strong>, Excel RFQ, or CSV) to automatically extract all parts, quantities, and customer metadata.
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-emerald-800 font-semibold underline">
+              Browse Request File (.pdf, .xlsx, .csv) &rarr;
+            </span>
           </div>
         </div>
       </Card>
@@ -1680,6 +1858,261 @@ export default function CustomerQuotationSection({
           >
             Import Items
           </Button>
+        </DialogFooter>
+      </Dialog>
+
+      {/* ========================================================================= */}
+      {/* MODAL: UPLOAD & PREVIEW CUSTOMER QUOTATION REQUEST                        */}
+      {/* ========================================================================= */}
+      <Dialog open={uploadModalOpen} onClose={() => setUploadModalOpen(false)}>
+        <DialogHeader>
+          <div className="flex items-center gap-2">
+            <span className="flex items-center justify-center w-6 h-6 rounded-full bg-emerald-600 text-white font-bold text-xs shadow-2xs">
+              📄
+            </span>
+            <DialogTitle>Customer Quotation Request - Parts Extractor</DialogTitle>
+          </div>
+        </DialogHeader>
+
+        <DialogContent className="space-y-4 max-h-[75vh] overflow-y-auto">
+          {isUploading && (
+            <div className="p-8 text-center space-y-3">
+              <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-emerald-100 text-emerald-600">
+                <svg className="animate-spin h-6 w-6" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+                </svg>
+              </div>
+              <h3 className="text-sm font-bold text-slate-900">
+                Analyzing Customer Quotation Request Document...
+              </h3>
+              <p className="text-xs text-slate-500 max-w-md mx-auto">
+                Scanning multi-page document structure, extracting tabular part numbers, matching descriptions, detecting ordered quantities, and identifying customer metadata.
+              </p>
+            </div>
+          )}
+
+          {!isUploading && !uploadResult && (
+            <div
+              onClick={() => fileInputRef.current?.click()}
+              className="p-8 text-center border-2 border-dashed border-slate-300 hover:border-emerald-500 rounded-xl bg-slate-50 hover:bg-emerald-50/30 transition-colors cursor-pointer space-y-3"
+            >
+              <div className="text-4xl">📥</div>
+              <div>
+                <p className="text-sm font-bold text-slate-800">
+                  Select or drop customer quotation request file here
+                </p>
+                <p className="text-xs text-slate-500 mt-1">
+                  Supports PDF (e.g. <code>MR-35211.pdf</code>), Excel (.xlsx/.xls), and CSV files
+                </p>
+              </div>
+              <Button variant="secondary" size="sm" className="text-xs">
+                Browse File
+              </Button>
+            </div>
+          )}
+
+          {!isUploading && uploadResult && (
+            <div className="space-y-4">
+              {/* Document Metadata Cards */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                <div className="bg-slate-50 p-2.5 rounded-lg border border-slate-200">
+                  <span className="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">
+                    Source File
+                  </span>
+                  <span className="text-xs font-bold text-slate-800 truncate block mt-0.5" title={uploadResult.fileName}>
+                    {uploadResult.fileName || 'Quotation Request'}
+                  </span>
+                  {uploadResult.metadata?.pageCount && (
+                    <span className="text-[10px] text-slate-500 block">
+                      {uploadResult.metadata.pageCount} Pages Processed
+                    </span>
+                  )}
+                </div>
+
+                <div className="bg-slate-50 p-2.5 rounded-lg border border-slate-200">
+                  <span className="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">
+                    Detected Customer
+                  </span>
+                  <div className="flex items-center gap-1.5 mt-0.5">
+                    <span className="text-xs font-bold text-slate-800">
+                      {uploadResult.metadata?.customer || 'General / Other'}
+                    </span>
+                    {uploadResult.metadata?.customerMode === 'LALAA' && (
+                      <Badge tone="live" size="sm">
+                        LALAA Tier
+                      </Badge>
+                    )}
+                  </div>
+                </div>
+
+                <div className="bg-slate-50 p-2.5 rounded-lg border border-slate-200">
+                  <span className="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">
+                    Quotation / MR No
+                  </span>
+                  <span className="text-xs font-mono font-bold text-emerald-700 block mt-0.5">
+                    {uploadResult.metadata?.quotationNo || '-'}
+                  </span>
+                </div>
+
+                <div className="bg-slate-50 p-2.5 rounded-lg border border-slate-200">
+                  <span className="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">
+                    Equipment Model / S/N
+                  </span>
+                  <span className="text-xs font-bold text-slate-800 block mt-0.5 truncate" title={uploadResult.metadata?.equipmentModel}>
+                    {uploadResult.metadata?.equipmentModel || '-'}
+                    {uploadResult.metadata?.serialNo ? ` (S/N: ${uploadResult.metadata.serialNo})` : ''}
+                  </span>
+                </div>
+              </div>
+
+              {/* Extraction Metrics Bar */}
+              <div className="flex items-center justify-between p-3 bg-emerald-50 border border-emerald-200 rounded-lg text-emerald-950">
+                <div className="flex items-center gap-3">
+                  <span className="flex items-center justify-center w-6 h-6 rounded-full bg-emerald-600 text-white font-bold text-xs">
+                    ✓
+                  </span>
+                  <div>
+                    <span className="text-xs font-bold block">
+                      Successfully extracted {uploadResult.summary?.totalItems || 0} unique part items
+                    </span>
+                    <span className="text-[11px] text-emerald-700 block">
+                      Total requested pieces: {uploadResult.summary?.totalQuantity || 0} pcs across all pages
+                    </span>
+                  </div>
+                </div>
+                <Badge tone="ready" size="sm">
+                  {uploadResult.summary?.totalItems || 0} Line Items
+                </Badge>
+              </div>
+
+              {/* Import Options */}
+              <div className="p-3 bg-slate-50 rounded-lg border border-slate-200 space-y-2.5">
+                <div className="text-xs font-bold text-slate-700 uppercase tracking-wider">
+                  Import Configuration
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                  <label className="flex items-center gap-2 cursor-pointer p-1.5 rounded hover:bg-slate-100">
+                    <input
+                      type="radio"
+                      name="uploadMode"
+                      value="replace"
+                      checked={uploadMode === 'replace'}
+                      onChange={() => setUploadMode('replace')}
+                      className="accent-emerald-600"
+                    />
+                    <span className="text-slate-800">
+                      <strong>Replace current items</strong> ({uploadResult.summary?.totalItems} items)
+                    </span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer p-1.5 rounded hover:bg-slate-100">
+                    <input
+                      type="radio"
+                      name="uploadMode"
+                      value="append"
+                      checked={uploadMode === 'append'}
+                      onChange={() => setUploadMode('append')}
+                      className="accent-emerald-600"
+                    />
+                    <span className="text-slate-800">
+                      <strong>Append to existing</strong> ({items.length} current + {uploadResult.summary?.totalItems} new)
+                    </span>
+                  </label>
+                </div>
+
+                <div className="pt-2 border-t border-slate-200 grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={autoVerifyOnUpload}
+                      onChange={(e) => setAutoVerifyOnUpload(e.target.checked)}
+                      className="accent-emerald-600 rounded"
+                    />
+                    <span className="text-slate-700">
+                      Auto-verify parts with <strong>Komatsu PDX</strong> immediately
+                    </span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={applyMetadataOnUpload}
+                      onChange={(e) => setApplyMetadataOnUpload(e.target.checked)}
+                      className="accent-emerald-600 rounded"
+                    />
+                    <span className="text-slate-700">
+                      Apply detected customer ({uploadResult.metadata?.customer || 'General'}) & model
+                    </span>
+                  </label>
+                </div>
+              </div>
+
+              {/* Items Preview Table */}
+              <div>
+                <div className="flex items-center justify-between mb-1.5">
+                  <span className="text-xs font-bold text-slate-700 uppercase tracking-wider">
+                    Extracted Parts Preview ({uploadResult.items?.length || 0} rows)
+                  </span>
+                  <span className="text-[11px] text-slate-500">
+                    Scroll to view all items
+                  </span>
+                </div>
+                <div className="border border-slate-200 rounded-lg max-h-56 overflow-y-auto">
+                  <Table>
+                    <TableHeader className="bg-slate-100 sticky top-0 z-10">
+                      <TableRow>
+                        <TableHead className="w-12 text-center text-xs">#</TableHead>
+                        <TableHead className="text-xs">Part Number</TableHead>
+                        <TableHead className="text-xs">Description</TableHead>
+                        <TableHead className="w-20 text-center text-xs">Qty</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {uploadResult.items?.map((it, idx) => (
+                        <TableRow key={idx} className="hover:bg-slate-50">
+                          <TableCell className="text-center font-mono text-xs text-slate-500">
+                            {idx + 1}
+                          </TableCell>
+                          <TableCell className="font-mono font-bold text-xs text-slate-900">
+                            {it.part_no}
+                          </TableCell>
+                          <TableCell className="text-xs text-slate-700">
+                            {it.description}
+                          </TableCell>
+                          <TableCell className="text-center font-bold text-xs text-emerald-800">
+                            {it.quantity}
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+
+        <DialogFooter>
+          <Button variant="secondary" onClick={() => setUploadModalOpen(false)}>
+            Cancel
+          </Button>
+          {uploadResult && (
+            <>
+              <Button
+                variant="secondary"
+                onClick={() => fileInputRef.current?.click()}
+                className="text-xs"
+              >
+                Choose Different File
+              </Button>
+              <Button
+                variant="primary"
+                onClick={() => handleConfirmImport(autoVerifyOnUpload)}
+                className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs"
+              >
+                Import {uploadResult.summary?.totalItems || 0} Parts into Quotation
+              </Button>
+            </>
+          )}
         </DialogFooter>
       </Dialog>
     </div>

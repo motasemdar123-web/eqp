@@ -3,7 +3,7 @@ const platformController = require('../controllers/platformController');
 const mediaController = require('../controllers/mediaController');
 const { asyncHandler } = require('../utils/asyncHandler');
 const { requirePlatformAuth, optionalPlatformAuth, requirePermission } = require('../middleware/platformAuthMiddleware');
-const { audioUpload, manualUpload, reportUpload, mediaAssetUpload } = require('../middleware/uploadMiddleware');
+const { audioUpload, manualUpload, reportUpload, mediaAssetUpload, quotationRequestUpload } = require('../middleware/uploadMiddleware');
 
 const router = Router();
 
@@ -74,6 +74,7 @@ router.post('/api/komatsu/quotations/confirm', requirePlatformAuth, asyncHandler
 router.post('/api/komatsu/quotations/copy-to-so', requirePlatformAuth, asyncHandler(platformController.copyKomatsuQuotationToSo));
 router.post('/api/komatsu/quotations/toggle-so-status', requirePlatformAuth, asyncHandler(platformController.toggleQuotationSoStatus));
 router.post('/api/komatsu/quotations/verify-batch', optionalPlatformAuth, asyncHandler(platformController.batchVerifyCustomerQuotationParts));
+router.post('/api/komatsu/quotations/parse-request', optionalPlatformAuth, quotationRequestUpload.single('file'), asyncHandler(platformController.parseQuotationRequest));
 router.post('/api/komatsu/quotations/customer-excel', optionalPlatformAuth, asyncHandler(platformController.downloadCustomerQuotationExcel));
 router.post('/api/komatsu/availability-form/excel', optionalPlatformAuth, asyncHandler(platformController.downloadAvailabilityFormExcel));
 

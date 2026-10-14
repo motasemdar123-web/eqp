@@ -10,7 +10,7 @@
     "start": "node app.js",
     "start:with-migrations": "node scripts/migrate-deploy.js && node app.js",
     "check": "node --check app.js",
-    "test": "jest --runInBand",
+    "test": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --runInBand",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "node scripts/migrate-deploy.js",
     "prisma:seed": "node prisma/seed.js",
