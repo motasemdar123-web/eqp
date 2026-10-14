@@ -1535,6 +1535,14 @@ export default function SparePartsPage() {
         successCount++;
       } catch (err) {
         addSoLog(`Failed for ${q.quotation_no}: ${err.message}`, 'error');
+        if (
+          err.message?.toLowerCase().includes('cookie') ||
+          err.message?.toLowerCase().includes('expired') ||
+          err.message?.toLowerCase().includes('session')
+        ) {
+          setCookieModalOpen(true);
+          setToast({ type: 'error', message: 'Komatsu PDX session cookie expired. Please update your cookie.' });
+        }
       }
       setInProcessQuotations([...inProcessQuotations]);
       await new Promise((r) => setTimeout(r, 500));
@@ -1569,7 +1577,16 @@ export default function SparePartsPage() {
       setToast({ type: 'success', message: `Quotation #${q.quotation_no} ${actionLabel} completed!` });
     } catch (err) {
       addSoLog(`Failed for #${q.quotation_no}: ${err.message}`, 'error');
-      setToast({ type: 'error', message: err.message || `${actionLabel} failed for #${q.quotation_no}` });
+      if (
+        err.message?.toLowerCase().includes('cookie') ||
+        err.message?.toLowerCase().includes('expired') ||
+        err.message?.toLowerCase().includes('session')
+      ) {
+        setCookieModalOpen(true);
+        setToast({ type: 'error', message: 'Komatsu PDX session cookie expired. Please update your cookie.' });
+      } else {
+        setToast({ type: 'error', message: err.message || `${actionLabel} failed for #${q.quotation_no}` });
+      }
     } finally {
       setIsConvertingSo(false);
     }

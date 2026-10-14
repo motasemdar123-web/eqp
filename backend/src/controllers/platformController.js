@@ -497,8 +497,23 @@ async function confirmKomatsuQuotation(req, res) {
   if (cookie) {
     komatsuInquiryService.saveCookie(cookie);
   }
-  const result = await komatsuEoService.confirmQuotation(quotationNo, seqNo || '00', cookie);
-  res.json({ success: true, ...result });
+  try {
+    const result = await komatsuEoService.confirmQuotation(quotationNo, seqNo || '00', cookie);
+    return res.json({ success: true, ...result });
+  } catch (err) {
+    console.error(`[confirmKomatsuQuotation] Error for ${quotationNo}:`, err.message);
+    const isSessionErr =
+      err.message.includes('expired') ||
+      err.message.includes('cookie') ||
+      err.message.includes('Session') ||
+      err.message.includes('login') ||
+      err.message.includes('Login');
+    return res.status(400).json({
+      success: false,
+      sessionExpired: isSessionErr,
+      message: err.message || 'Failed to confirm quotation on Komatsu PDX',
+    });
+  }
 }
 
 async function copyKomatsuQuotationToSo(req, res) {
@@ -556,7 +571,17 @@ async function copyKomatsuQuotationToSo(req, res) {
     res.json({ success: true, ...result });
   } catch (err) {
     console.error(`[copyKomatsuQuotationToSo] Error for ${quotationNo}:`, err.message);
-    res.status(500).json({ success: false, error: err.message });
+    const isSessionErr =
+      err.message.includes('expired') ||
+      err.message.includes('cookie') ||
+      err.message.includes('Session') ||
+      err.message.includes('login') ||
+      err.message.includes('Login');
+    res.status(400).json({
+      success: false,
+      sessionExpired: isSessionErr,
+      message: err.message || 'Failed to copy quotation to Sales Order',
+    });
   }
 }
 

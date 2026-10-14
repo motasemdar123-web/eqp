@@ -984,24 +984,7 @@ async function confirmQuotation(quotationNo, seqNo = '00', customCookie = null) 
     // Non-blocking detail refresh — safe to ignore
   }
 
-  // STEP 2: Navigate to QuotationCondition/Index to initialize condition state & load TimeStamp
-  const condIndexUrl = `${BASE_PORTAL_URL}/QuotationCondition/Index?strQUTN=${qtn}&strQutnSubNo=${seq}&DBCode=536K`;
-  try {
-    const idxResp = await fetch(condIndexUrl, {
-      method: 'GET',
-      headers: defaultHeaders,
-      redirect: 'follow',
-    });
-    const idxCookies = extractResponseCookies(idxResp);
-    if (idxCookies.length > 0) {
-      cookieStr = mergeCookies(cookieStr, idxCookies);
-      defaultHeaders.Cookie = cookieStr;
-    }
-  } catch (idxErr) {
-    console.warn(`[confirmQuotation] ${qtn} QuotationCondition/Index warning:`, idxErr.message);
-  }
-
-  // STEP 2b: Search QuotationCondition to load fresh state & TimeStamp
+  // STEP 2: Search QuotationCondition to load fresh state & TimeStamp
   const condSearchUrl = `${BASE_PORTAL_URL}/QuotationCondition/Search`;
   const condSearchData = new URLSearchParams({
     strQuotationNo: qtn,
@@ -1015,10 +998,16 @@ async function confirmQuotation(quotationNo, seqNo = '00', customCookie = null) 
       ...defaultHeaders,
       'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
       'X-Requested-With': 'XMLHttpRequest',
-      'Referer': condIndexUrl,
+      'Referer': `${BASE_PORTAL_URL}/QuotationCondition/Index?strQUTN=${qtn}&strQutnSubNo=${seq}&DBCode=536K`,
     },
     body: condSearchData.toString(),
   });
+
+  const searchCookies = extractResponseCookies(searchResp);
+  if (searchCookies.length > 0) {
+    cookieStr = mergeCookies(cookieStr, searchCookies);
+    defaultHeaders.Cookie = cookieStr;
+  }
 
   const searchText = await searchResp.text();
   console.log(`[confirmQuotation] ${qtn} CondSearch status=${searchResp.status} bodyLen=${searchText.length} isHTML=${searchText.includes('<html')}`);
@@ -1028,6 +1017,15 @@ async function confirmQuotation(quotationNo, seqNo = '00', customCookie = null) 
     searchData = JSON.parse(searchText);
   } catch (parseErr) {
     console.error(`[confirmQuotation] ${qtn} CondSearch parse error. First 500 chars:`, searchText.substring(0, 500));
+    if (
+      searchText.includes('Account/Login') ||
+      searchText.includes('/SSO/') ||
+      searchText.includes('Dashboard') ||
+      searchResp.status === 401 ||
+      searchResp.status === 302
+    ) {
+      throw new Error('Komatsu PDX session cookie has expired. Please update your PDX Cookie in settings.');
+    }
     throw new Error(`QuotationCondition/Search returned non-JSON (status ${searchResp.status}). Session may be expired.`);
   }
 
@@ -1146,6 +1144,15 @@ async function confirmQuotation(quotationNo, seqNo = '00', customCookie = null) 
     saveJson = JSON.parse(saveText);
   } catch (parseErr) {
     console.error(`[confirmQuotation] ${qtn} Save parse error. First 500 chars:`, saveText.substring(0, 500));
+    if (
+      saveText.includes('Account/Login') ||
+      saveText.includes('/SSO/') ||
+      saveText.includes('Dashboard') ||
+      saveResp.status === 401 ||
+      saveResp.status === 302
+    ) {
+      throw new Error('Komatsu PDX session cookie has expired. Please update your PDX Cookie in settings.');
+    }
     throw new Error(`QuotationCondition/Save returned non-JSON (status ${saveResp.status}). Session may be expired.`);
   }
 
