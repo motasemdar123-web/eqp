@@ -211,4 +211,64 @@ describe('Komatsu Emergency Order Service', () => {
       global.fetch = originalFetch;
     }
   });
+
+  test('copyQuotationToSo initializes session view and posts conversion parameters', async () => {
+    const originalFetch = global.fetch;
+    const fetchCalls = [];
+
+    global.fetch = jest.fn(async (url, options) => {
+      fetchCalls.push({ url, options });
+
+      if (url.includes('/Inquiry/CopyToSO')) {
+        return {
+          status: 200,
+          headers: { getSetCookie: () => [] },
+          text: async () => JSON.stringify({ ErrorOccured: 0 }),
+        };
+      }
+
+      if (url.includes('/CopyToSO/CopyToSOView')) {
+        return {
+          status: 200,
+          headers: { getSetCookie: () => [] },
+          text: async () => '<html>CopyToSOView loaded</html>',
+        };
+      }
+
+      if (url.includes('/CopyToSO/CheckConsumedLines')) {
+        return {
+          status: 200,
+          headers: { getSetCookie: () => [] },
+          text: async () => '[]',
+        };
+      }
+
+      if (url.includes('/CopyToSO/CopyTOSOConversion')) {
+        return {
+          status: 200,
+          headers: { getSetCookie: () => [] },
+          text: async () => '<html>Success: Quotation copied to Sales Order</html>',
+        };
+      }
+
+      return { status: 200, headers: { getSetCookie: () => [] }, text: async () => '' };
+    });
+
+    try {
+      const result = await komatsuEoService.copyQuotationToSo('0000289999', '00', 'ASP.NET_SessionId=testCookie', { bods: '1' });
+      expect(result.status).toBe('COPIED_TO_SO');
+      expect(result.quotation_no).toBe('0000289999');
+
+      const viewCall = fetchCalls.find((c) => c.url.includes('/CopyToSO/CopyToSOView'));
+      expect(viewCall).toBeDefined();
+
+      const convCall = fetchCalls.find((c) => c.url.includes('/CopyToSO/CopyTOSOConversion'));
+      expect(convCall).toBeDefined();
+      expect(convCall.options.body).toContain('QuotationNo=0000289999');
+      expect(convCall.options.body).toContain('ddlBODSSelectedVal=1');
+    } finally {
+      global.fetch = originalFetch;
+    }
+  });
 });
+

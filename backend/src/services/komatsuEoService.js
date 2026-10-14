@@ -386,6 +386,18 @@ function mergeCookies(existingCookieStr = '', setCookieHeaders = []) {
     .join('; ');
 }
 
+function extractResponseCookies(resp) {
+  if (!resp || !resp.headers) return [];
+  if (typeof resp.headers.getSetCookie === 'function') {
+    return resp.headers.getSetCookie() || [];
+  }
+  if (typeof resp.headers.get === 'function') {
+    const sc = resp.headers.get('set-cookie');
+    return sc ? [sc] : [];
+  }
+  return [];
+}
+
 async function executeSingleEmergencyOrder(orderData, customCookie = null) {
   let cookieStr = customCookie ? parseCookieInput(customCookie) : loadCookie();
   if (!cookieStr) {
@@ -438,7 +450,7 @@ async function executeSingleEmergencyOrder(orderData, customCookie = null) {
     signal: AbortSignal.timeout(25000),
   });
 
-  const initSetCookies = initResp.headers.getSetCookie ? initResp.headers.getSetCookie() : [initResp.headers.get('set-cookie')].filter(Boolean);
+  const initSetCookies = extractResponseCookies(initResp);
   if (initSetCookies.length > 0) {
     cookieStr = mergeCookies(cookieStr, initSetCookies);
   }
@@ -479,7 +491,7 @@ async function executeSingleEmergencyOrder(orderData, customCookie = null) {
       }).toString(),
       signal: AbortSignal.timeout(15000),
     });
-    const custCookies = custResp.headers.getSetCookie ? custResp.headers.getSetCookie() : [custResp.headers.get('set-cookie')].filter(Boolean);
+    const custCookies = extractResponseCookies(custResp);
     if (custCookies.length > 0) {
       cookieStr = mergeCookies(cookieStr, custCookies);
     }
@@ -516,7 +528,7 @@ async function executeSingleEmergencyOrder(orderData, customCookie = null) {
       }).toString(),
       signal: AbortSignal.timeout(15000),
     });
-    const otCookies = otResp.headers.getSetCookie ? otResp.headers.getSetCookie() : [otResp.headers.get('set-cookie')].filter(Boolean);
+    const otCookies = extractResponseCookies(otResp);
     if (otCookies.length > 0) {
       cookieStr = mergeCookies(cookieStr, otCookies);
     }
@@ -633,7 +645,7 @@ async function executeSingleEmergencyOrder(orderData, customCookie = null) {
     signal: AbortSignal.timeout(25000),
   });
 
-  const saveSetCookies = saveResp.headers.getSetCookie ? saveResp.headers.getSetCookie() : [saveResp.headers.get('set-cookie')].filter(Boolean);
+  const saveSetCookies = extractResponseCookies(saveResp);
   if (saveSetCookies.length > 0) {
     cookieStr = mergeCookies(cookieStr, saveSetCookies);
   }
@@ -687,7 +699,7 @@ async function executeSingleEmergencyOrder(orderData, customCookie = null) {
     signal: AbortSignal.timeout(25000),
   });
 
-  const detailSetCookies = detailResp.headers.getSetCookie ? detailResp.headers.getSetCookie() : [detailResp.headers.get('set-cookie')].filter(Boolean);
+  const detailSetCookies = extractResponseCookies(detailResp);
   if (detailSetCookies.length > 0) {
     cookieStr = mergeCookies(cookieStr, detailSetCookies);
   }
@@ -949,7 +961,7 @@ async function confirmQuotation(quotationNo, seqNo = '00', customCookie = null) 
 
     // UpdateDetails returns empty string "" — just call it to warm up session
     const updateUrl = `${BASE_PORTAL_URL}/QuotationDetails/UpdateDetails`;
-    await fetch(updateUrl, {
+    const uResp = await fetch(updateUrl, {
       method: 'POST',
       headers: {
         ...defaultHeaders,
@@ -963,11 +975,33 @@ async function confirmQuotation(quotationNo, seqNo = '00', customCookie = null) 
         DBCode: '536K',
       }).toString(),
     });
+    const uCookies = extractResponseCookies(uResp);
+    if (uCookies.length > 0) {
+      cookieStr = mergeCookies(cookieStr, uCookies);
+      defaultHeaders.Cookie = cookieStr;
+    }
   } catch {
     // Non-blocking detail refresh — safe to ignore
   }
 
-  // STEP 2: Search QuotationCondition to load fresh state & TimeStamp
+  // STEP 2: Navigate to QuotationCondition/Index to initialize condition state & load TimeStamp
+  const condIndexUrl = `${BASE_PORTAL_URL}/QuotationCondition/Index?strQUTN=${qtn}&strQutnSubNo=${seq}&DBCode=536K`;
+  try {
+    const idxResp = await fetch(condIndexUrl, {
+      method: 'GET',
+      headers: defaultHeaders,
+      redirect: 'follow',
+    });
+    const idxCookies = extractResponseCookies(idxResp);
+    if (idxCookies.length > 0) {
+      cookieStr = mergeCookies(cookieStr, idxCookies);
+      defaultHeaders.Cookie = cookieStr;
+    }
+  } catch (idxErr) {
+    console.warn(`[confirmQuotation] ${qtn} QuotationCondition/Index warning:`, idxErr.message);
+  }
+
+  // STEP 2b: Search QuotationCondition to load fresh state & TimeStamp
   const condSearchUrl = `${BASE_PORTAL_URL}/QuotationCondition/Search`;
   const condSearchData = new URLSearchParams({
     strQuotationNo: qtn,
@@ -981,7 +1015,7 @@ async function confirmQuotation(quotationNo, seqNo = '00', customCookie = null) 
       ...defaultHeaders,
       'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
       'X-Requested-With': 'XMLHttpRequest',
-      'Referer': `${BASE_PORTAL_URL}/QuotationCondition/Index?strQUTN=${qtn}&strQutnSubNo=${seq}&DBCode=536K`,
+      'Referer': condIndexUrl,
     },
     body: condSearchData.toString(),
   });
@@ -1167,24 +1201,61 @@ async function copyQuotationToSo(quotationNo, seqNo = '00', options = {}, custom
     body: new URLSearchParams({ strQutn: quotationNo, strQuto: seqNo }).toString(),
   });
 
-  const copyJson = await copyResp.json();
+  const copySetCookies = extractResponseCookies(copyResp);
+  if (copySetCookies.length > 0) {
+    cookieStr = mergeCookies(cookieStr, copySetCookies);
+    defaultHeaders.Cookie = cookieStr;
+  }
+
+  const copyText = await copyResp.text();
+  let copyJson;
+  try {
+    copyJson = JSON.parse(copyText);
+  } catch {
+    if (copyText.includes('SSO/Dashboard') || copyText.includes('login') || copyText.includes('401')) {
+      throw new Error('PDX session expired. Please re-authenticate your session cookie.');
+    }
+    throw new Error(`Inquiry/CopyToSO returned non-JSON response: ${copyText.substring(0, 200)}`);
+  }
+
   const hasCopyError = copyJson.ErrorOccured && Number(copyJson.ErrorOccured) !== 0;
   if (hasCopyError) {
     throw new Error(copyJson.ErrorMessage || 'CopyToSO pre-check failed');
   }
 
+  // STEP 1.5: Navigate to CopyToSOView to initialize session view model
+  const viewUrl = `${BASE_PORTAL_URL}/CopyToSO/CopyToSOView?strQUTN=${quotationNo}&strQUTO=${seqNo}`;
+  try {
+    const viewResp = await fetch(viewUrl, {
+      method: 'GET',
+      headers: defaultHeaders,
+    });
+    const viewSetCookies = extractResponseCookies(viewResp);
+    if (viewSetCookies.length > 0) {
+      cookieStr = mergeCookies(cookieStr, viewSetCookies);
+      defaultHeaders.Cookie = cookieStr;
+    }
+  } catch (viewErr) {
+    console.warn(`[copyQuotationToSo] CopyToSOView warning for ${quotationNo}:`, viewErr.message);
+  }
+
   // STEP 2: CheckConsumedLines
   const chkUrl = `${BASE_PORTAL_URL}/CopyToSO/CheckConsumedLines`;
-  await fetch(chkUrl, {
+  const chkResp = await fetch(chkUrl, {
     method: 'POST',
     headers: {
       ...defaultHeaders,
       'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
       'X-Requested-With': 'XMLHttpRequest',
-      'Referer': `${BASE_PORTAL_URL}/CopyToSO/CopyToSOView?strQUTN=${quotationNo}&strQUTO=${seqNo}`,
+      'Referer': viewUrl,
     },
     body: new URLSearchParams({ strQuotationNumber: quotationNo, strQuotationSubNumber: seqNo }).toString(),
   });
+  const chkSetCookies = extractResponseCookies(chkResp);
+  if (chkSetCookies.length > 0) {
+    cookieStr = mergeCookies(cookieStr, chkSetCookies);
+    defaultHeaders.Cookie = cookieStr;
+  }
 
   // STEP 3: CopyTOSOConversion
   const convUrl = `${BASE_PORTAL_URL}/CopyToSO/CopyTOSOConversion`;
@@ -1203,7 +1274,7 @@ async function copyQuotationToSo(quotationNo, seqNo = '00', options = {}, custom
       ...defaultHeaders,
       'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
       'X-Requested-With': 'XMLHttpRequest',
-      'Referer': `${BASE_PORTAL_URL}/CopyToSO/CopyToSOView?strQUTN=${quotationNo}&strQUTO=${seqNo}`,
+      'Referer': viewUrl,
     },
     body: convData.toString(),
   });

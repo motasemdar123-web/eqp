@@ -217,7 +217,7 @@ export default function SparePartsPage() {
   const [loadingSapParts, setLoadingSapParts] = useState(false);
   const [selectedQtnNumbers, setSelectedQtnNumbers] = useState(new Set());
   const [localConvertedSet, setLocalConvertedSet] = useState(() => {
-    const initialSet = new Set(['0000281449']);
+    const initialSet = new Set();
     if (typeof window !== 'undefined') {
       try {
         const saved = localStorage.getItem('komatsu_converted_so_quotations');
@@ -1388,12 +1388,11 @@ export default function SparePartsPage() {
 
     // Check if sales_order_no is present
     const soNo = String(q.sales_order_no || '').trim();
-    if (soNo && soNo !== '-' && soNo !== '0' && soNo !== 'null' && soNo !== 'undefined') return true;
+    if (soNo && soNo !== '-' && soNo !== '0' && soNo !== 'null' && soNo !== 'undefined' && soNo !== 'Converted') return true;
 
-    // Check status text
+    // Check status text strictly for completed SO transfer
     const st = String(q.status || '').trim().toLowerCase();
-    if (st.includes('transferred') || st.includes('copied') || st.includes('completed')) return true;
-    if (st.includes('so') && !st.includes('copy to sales order')) return true;
+    if (st.includes('transferred to so') || st.includes('copied to so') || st === 'transferred' || st === 'completed' || st === 'so created') return true;
 
     return false;
   }, [localConvertedSet]);
@@ -1544,6 +1543,36 @@ export default function SparePartsPage() {
     setIsConvertingSo(false);
     setSoConversionProgress(null);
     setToast({ type: 'success', message: `Converted ${successCount} / ${selectedList.length} quotations to SO.` });
+  }
+
+  async function handleSingleQuotationAction(q, actionType = 'FULL_CONVERT') {
+    const actionLabel = actionType === 'CONFIRM_ONLY' ? 'Confirm' : actionType === 'COPY_ONLY' ? 'Copy to SO' : 'Confirm and Copy to SO';
+    if (!window.confirm(`${actionLabel} quotation #${q.quotation_no} on Komatsu PDX?`)) return;
+
+    try {
+      setIsConvertingSo(true);
+      if (actionType === 'FULL_CONVERT' || actionType === 'CONFIRM_ONLY') {
+        if (q.status !== 'Confirmed') {
+          await confirmKomatsuQuotation({ quotationNo: q.quotation_no, seqNo: q.revision_no || '00' });
+          q.status = 'Confirmed';
+          addSoLog(`Quotation #${q.quotation_no} successfully Confirmed.`, 'success');
+        }
+      }
+      if (actionType === 'FULL_CONVERT' || actionType === 'COPY_ONLY') {
+        await copyKomatsuQuotationToSo({ quotationNo: q.quotation_no, seqNo: q.revision_no || '00' });
+        q.status = 'Transferred to SO';
+        q.is_converted_to_so = true;
+        markQuotationAsConvertedLocal(q.quotation_no, true);
+        addSoLog(`Quotation #${q.quotation_no} successfully transferred to Sales Order.`, 'success');
+      }
+      setInProcessQuotations([...inProcessQuotations]);
+      setToast({ type: 'success', message: `Quotation #${q.quotation_no} ${actionLabel} completed!` });
+    } catch (err) {
+      addSoLog(`Failed for #${q.quotation_no}: ${err.message}`, 'error');
+      setToast({ type: 'error', message: err.message || `${actionLabel} failed for #${q.quotation_no}` });
+    } finally {
+      setIsConvertingSo(false);
+    }
   }
 
   // =========================================================
@@ -3176,7 +3205,7 @@ export default function SparePartsPage() {
               </p>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               <Button
                 variant="secondary"
                 size="sm"
@@ -3200,7 +3229,7 @@ export default function SparePartsPage() {
                 disabled={selectedQtnNumbers.size === 0 || isConvertingSo || hasConvertedSelected}
                 title={
                   hasConvertedSelected
-                    ? `Conversion Blocked: ${convertedSelectedQuotations.length} selected quotation(s) (${convertedSelectedQuotations.map((q) => '#' + q.quotation_no).join(', ')}) are already converted to Sales Order. You must uncheck them before converting.`
+                    ? `Conversion Blocked: ${convertedSelectedQuotations.length} selected quotation(s) are already converted to Sales Order. You must uncheck them before converting.`
                     : selectedQtnNumbers.size === 0
                     ? 'Select quotations to convert'
                     : 'Batch confirm and copy selected quotations to Komatsu Sales Orders'
@@ -3211,8 +3240,31 @@ export default function SparePartsPage() {
                 ) : hasConvertedSelected ? (
                   `🚫 Blocked: Unselect ${convertedSelectedQuotations.length} Converted SO`
                 ) : (
-                  `1-Click Convert (${selectedQtnNumbers.size})`
+                  `⚡ 1-Click Convert (${selectedQtnNumbers.size})`
                 )}
+              </Button>
+              <Button
+                variant="secondary"
+                size="sm"
+                className="bg-amber-50 text-amber-800 hover:bg-amber-100 border-amber-300 font-semibold text-xs"
+                onClick={() => startBatchConfirmAndCopy('CONFIRM_ONLY')}
+                disabled={selectedQtnNumbers.size === 0 || isConvertingSo}
+                title="Only update quotation condition to Confirmed (Status 2) without copying to SO"
+              >
+                ✓ Confirm Only ({selectedQtnNumbers.size})
+              </Button>
+              <Button
+                variant="secondary"
+                size="sm"
+                className="bg-indigo-50 text-indigo-800 hover:bg-indigo-100 border-indigo-300 font-semibold text-xs"
+                onClick={() => {
+                  if (hasConvertedSelected) return;
+                  startBatchConfirmAndCopy('COPY_ONLY');
+                }}
+                disabled={selectedQtnNumbers.size === 0 || isConvertingSo || hasConvertedSelected}
+                title="Copy selected confirmed quotations to Komatsu Sales Orders"
+              >
+                📑 Copy to SO ({selectedQtnNumbers.size})
               </Button>
               <Button
                 variant="primary"
@@ -3257,13 +3309,33 @@ export default function SparePartsPage() {
           )}
 
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               <Input
                 value={qtnSearchFilter}
                 onChange={(e) => setQtnSearchFilter(e.target.value)}
                 placeholder="Search quotation #, customer, order #..."
                 className="max-w-xs text-xs"
               />
+              <div className="flex items-center gap-1.5 bg-slate-50 p-1 rounded-md border border-slate-200">
+                <span className="text-[11px] text-slate-500 font-medium px-1">PDX Status:</span>
+                <select
+                  value={qtnStatusFilter}
+                  onChange={(e) => {
+                    const newStatus = e.target.value;
+                    setQtnStatusFilter(newStatus);
+                    setQtnPage(1);
+                    loadInProcessQuotations(1, qtnLimit, newStatus);
+                  }}
+                  disabled={loadingQuotations || isConvertingSo}
+                  className="rounded border border-slate-300 bg-white px-2 py-0.5 text-xs text-slate-800 font-semibold focus:border-amber-500 focus:outline-none cursor-pointer"
+                  title="Query Komatsu PDX by quotation status"
+                >
+                  <option value="1">In-Process (Status 1)</option>
+                  <option value="2">Confirmed (Status 2)</option>
+                  <option value="">All Statuses (In-Process, Confirmed, SO)</option>
+                </select>
+              </div>
+
               <div className="inline-flex rounded-md shadow-2xs border border-slate-200 bg-slate-50 p-0.5 text-xs">
                 <button
                   type="button"
@@ -3420,13 +3492,48 @@ export default function SparePartsPage() {
                             </>
                           ) : (
                             <>
+                              {q.status !== 'Confirmed' ? (
+                                <>
+                                  <Button
+                                    variant="primary"
+                                    size="xs"
+                                    className="bg-amber-600 hover:bg-amber-700 text-white font-semibold text-xs"
+                                    onClick={() => handleSingleQuotationAction(q, 'CONFIRM_ONLY')}
+                                    disabled={isConvertingSo}
+                                    title="Confirm quotation on Komatsu PDX"
+                                  >
+                                    Confirm
+                                  </Button>
+                                  <Button
+                                    variant="primary"
+                                    size="xs"
+                                    className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs"
+                                    onClick={() => handleSingleQuotationAction(q, 'FULL_CONVERT')}
+                                    disabled={isConvertingSo}
+                                    title="Confirm and Copy to SO in 1 click"
+                                  >
+                                    ⚡ SO
+                                  </Button>
+                                </>
+                              ) : (
+                                <Button
+                                  variant="primary"
+                                  size="xs"
+                                  className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs"
+                                  onClick={() => handleSingleQuotationAction(q, 'COPY_ONLY')}
+                                  disabled={isConvertingSo}
+                                  title="Copy confirmed quotation to Komatsu Sales Order"
+                                >
+                                  📑 Copy SO
+                                </Button>
+                              )}
                               <Button
                                 variant="ghost"
                                 size="xs"
                                 className="text-emerald-700 hover:bg-emerald-50 hover:text-emerald-800 font-medium"
                                 onClick={() => openSapPoModalForQuotation(q)}
                               >
-                                SAP Excel ➔
+                                SAP ➔
                               </Button>
                               <button
                                 type="button"
@@ -3503,6 +3610,30 @@ export default function SparePartsPage() {
               </Button>
             </div>
           </div>
+
+          {/* Live SO Conversion Activity Log */}
+          {soLogs.length > 0 && (
+            <div className="mt-4 p-3 bg-slate-900 text-slate-100 rounded-lg text-xs font-mono space-y-1 max-h-56 overflow-y-auto border border-slate-800 shadow-inner">
+              <div className="flex items-center justify-between pb-1.5 mb-1.5 border-b border-slate-800 text-[11px] text-slate-400 font-sans">
+                <span className="font-semibold text-slate-300">Live PDX Conversion Activity Log ({soLogs.length})</span>
+                <button
+                  type="button"
+                  onClick={() => setSoLogs([])}
+                  className="text-slate-400 hover:text-white underline cursor-pointer text-[10px]"
+                >
+                  Clear Logs
+                </button>
+              </div>
+              {soLogs.map((log, idx) => (
+                <div key={idx} className="flex items-start gap-2 leading-relaxed">
+                  <span className="text-slate-500 shrink-0">[{log.timestamp}]</span>
+                  <span className={log.type === 'error' ? 'text-rose-400 font-semibold' : log.type === 'success' ? 'text-emerald-400 font-semibold' : 'text-slate-200'}>
+                    {log.text}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
         </Card>
       )}
 

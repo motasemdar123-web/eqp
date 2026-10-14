@@ -461,14 +461,16 @@ async function searchKomatsuQuotations(req, res) {
         String(q.sales_order_no).trim() !== '' && 
         String(q.sales_order_no).trim() !== '-' && 
         String(q.sales_order_no).trim() !== '0' &&
-        String(q.sales_order_no).trim() !== 'null';
+        String(q.sales_order_no).trim() !== 'null' &&
+        String(q.sales_order_no).trim() !== 'undefined';
 
       const st = String(q.status || '').trim().toLowerCase();
       const statusIndicatesSo = 
-        st.includes('transferred') || 
-        st.includes('copied') || 
-        st.includes('completed') || 
-        (st.includes('so') && !st.includes('copy to sales order'));
+        st.includes('transferred to so') || 
+        st.includes('copied to so') || 
+        st === 'transferred' || 
+        st === 'completed' ||
+        st === 'so created';
 
       const isConverted = Boolean(persisted || hasSalesOrderNo || statusIndicatesSo);
 
@@ -523,15 +525,17 @@ async function copyKomatsuQuotationToSo(req, res) {
     // Check if quotation is already converted on Komatsu PDX
     if (!options?.force) {
       try {
-        const searchData = await komatsuEoService.searchQuotations({ quotationNo: qtn }, cookie);
+        const searchData = await komatsuEoService.searchQuotations({ quotationNo: qtn, status: '' }, cookie);
         const match = searchData?.quotations?.find((q) => q.quotation_no === qtn);
         if (match) {
           const hasSo = match.sales_order_no && 
             String(match.sales_order_no).trim() !== '' && 
             match.sales_order_no !== '-' &&
-            match.sales_order_no !== '0';
-          const st = (match.status || '').toLowerCase();
-          const isMatchSo = hasSo || st.includes('transferred') || st.includes('copied') || (st.includes('so') && !st.includes('copy to sales order'));
+            match.sales_order_no !== '0' &&
+            match.sales_order_no !== 'null' &&
+            match.sales_order_no !== 'undefined';
+          const st = (match.status || '').toLowerCase().trim();
+          const isMatchSo = hasSo || st.includes('transferred to so') || st.includes('copied to so') || st === 'transferred' || st === 'completed';
           if (isMatchSo) {
             saveConvertedSoRecord(qtn, { salesOrderNo: match.sales_order_no || 'Converted' });
             return res.status(400).json({
