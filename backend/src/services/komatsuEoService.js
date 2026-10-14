@@ -213,9 +213,17 @@ async function lookupPartMaster(partNo, customCookie = null) {
           // non-blocking
         }
 
-        const kmeStockNum = parseInt(stockInfo?.kmeStock || '0', 10) || 0;
-        const kmeEorNum = parseInt(stockInfo?.eor || '0', 10) || 0;
-        const kltdTotalNum = parseInt(stockInfo?.kltdTotal || '0', 10) || 0;
+        function parseSafeStockInt(val) {
+          if (val === null || val === undefined) return 0;
+          const str = String(val).replace(/,/g, '').trim();
+          if (!str || str.includes('-') || /[a-z]/i.test(str)) return 0;
+          const num = parseInt(str, 10);
+          return isNaN(num) || num < 0 ? 0 : num;
+        }
+
+        const kmeStockNum = parseSafeStockInt(stockInfo?.kmeStock);
+        const kmeEorNum = parseSafeStockInt(stockInfo?.eor);
+        const kltdTotalNum = parseSafeStockInt(stockInfo?.kltdTotal);
 
         const rawPriceStr = String(resJson.txtKMELstPrc || '0.00').replace(/,/g, '').trim();
         const parsedLstPrc = parseFloat(rawPriceStr);
@@ -240,7 +248,7 @@ async function lookupPartMaster(partNo, customCookie = null) {
             kme_stock: kmeStockNum,
             kme_eor: kmeEorNum,
             kltd_total: kltdTotalNum,
-            kme_on_order: parseInt(stockInfo?.onOrder || '0', 10) || 0,
+            kme_on_order: parseSafeStockInt(stockInfo?.onOrder),
             regional_inventory: stockInfo?.regionalInventory || '0',
             dnet_price: stockInfo?.dnetPrice || validPrice,
             lead_time: stockInfo?.leadTime || '',

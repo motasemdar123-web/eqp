@@ -529,10 +529,16 @@ export default function CustomerQuotationSection({
               const cleanPrice = !isNaN(rawPrice) && rawPrice > 0 ? rawPrice : 0;
               item.dnet_price = cleanPrice;
               item.price = cleanPrice;
-              item.isUnregistered = Boolean(res.isUnregistered);
-              item.kme_stock = parseInt(res.kme_stock ?? res.stock_info?.kme_stock ?? 0, 10) || 0;
-              item.kme_eor = parseInt(res.kme_eor ?? res.stock_info?.kme_eor ?? 0, 10) || 0;
-              item.kltd_total = parseInt(res.kltd_total ?? res.stock_info?.kltd_total ?? 0, 10) || 0;
+              const parseSafeStock = (val) => {
+                if (val === null || val === undefined) return 0;
+                const s = String(val).replace(/,/g, '').trim();
+                if (!s || s.includes('-') || /[a-z]/i.test(s)) return 0;
+                const n = parseInt(s, 10);
+                return isNaN(n) || n < 0 ? 0 : n;
+              };
+              item.kme_stock = parseSafeStock(res.kme_stock ?? res.stock_info?.kme_stock ?? 0);
+              item.kme_eor = parseSafeStock(res.kme_eor ?? res.stock_info?.kme_eor ?? 0);
+              item.kltd_total = parseSafeStock(res.kltd_total ?? res.stock_info?.kltd_total ?? 0);
               item.models = Array.isArray(res.models) ? res.models : [];
               item.latest_part_no = res.latest_part_no || res.lpn || pNo;
               item.verified = true;

@@ -151,9 +151,97 @@ async function testPdxConnection(customCookie = null) {
   }
 }
 
-function parsePdxHtmlTable(htmlText, queriedParts) {
+function sanitizeQty(val) {
+  if (val === null || val === undefined) return '0';
+  const str = String(val).replace(/,/g, '').trim();
+  // Part numbers contain hyphens (e.g. 208-62-21260) or letters.
+  // Stock/reserve quantities must strictly be numeric digits only.
+  if (!str || str.includes('-') || /[a-z]/i.test(str)) {
+    return '0';
+  }
+  const num = parseInt(str, 10);
+  return isNaN(num) || num < 0 ? '0' : String(num);
+}
+
+function sanitizePrice(val) {
+  if (val === null || val === undefined) return '0.00';
+  const str = String(val).replace(/,/g, '').trim();
+  if (!str || str.includes('-') || /[a-z]/i.test(str) || str === '000' || str === '0') {
+    return '0.00';
+  }
+  const parsedP = parseFloat(str);
+  return !isNaN(parsedP) && parsedP > 0 ? parsedP.toFixed(2) : '0.00';
+}
+
+function extractColumnMapping(theadHtml) {
+  if (!theadHtml) return null;
+  const thMatches = theadHtml.match(/<(?:td|th)[^>]*>([\s\S]*?)<\/(?:td|th)>/gi) || [];
+  if (thMatches.length === 0) return null;
+
+  const colMap = {};
+  let visibleColIdx = 0;
+
+  for (const th of thMatches) {
+    if (/display:\s*none/i.test(th) || /visibility:\s*hidden/i.test(th)) continue;
+    const title = th.replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ').trim().replace(/\s+/g, ' ');
+    const lower = title.toLowerCase();
+
+    if (/part\s*no/i.test(lower)) colMap.partNo = visibleColIdx;
+    else if (/part\s*desc|description/i.test(lower)) colMap.desc = visibleColIdx;
+    else if (/^cc$/i.test(title) || /character\s*code/i.test(lower)) colMap.cc = visibleColIdx;
+    else if (/^ic$/i.test(title) || /interchangeable/i.test(lower)) colMap.ic = visibleColIdx;
+    else if (/^lpn$/i.test(title) || /latest\s*part/i.test(lower)) colMap.lpn = visibleColIdx;
+    else if (/kme\s*stock/i.test(lower) || (/stock/i.test(lower) && !/point|regional|excess/i.test(lower))) colMap.stock = visibleColIdx;
+    else if (/kme\s*eor/i.test(lower) || /^eor$/i.test(title) || /eor/i.test(lower)) colMap.eor = visibleColIdx;
+    else if (/kme\s*on\s*order|on\s*order/i.test(lower)) colMap.onOrder = visibleColIdx;
+    else if (/regional\s*inv|excess/i.test(lower)) colMap.regionalInv = visibleColIdx;
+    else if (/kltd\s*total|japan\s*total/i.test(lower)) colMap.kltdTotal = visibleColIdx;
+    else if (/kmeqa/i.test(lower)) colMap.kmeqa = visibleColIdx;
+    else if (/dnet\s*price|list\s*price|^price$/i.test(lower)) colMap.dnetPrice = visibleColIdx;
+    else if (/weight/i.test(lower)) colMap.weight = visibleColIdx;
+    else if (/kltd\s*lt|lead\s*time|^lt$/i.test(lower)) colMap.leadTime = visibleColIdx;
+    else if (/^mor$/i.test(title)) colMap.mor = visibleColIdx;
+    else if (/^or$/i.test(title) || /order\s*rank/i.test(lower)) colMap.orderRank = visibleColIdx;
+
+    visibleColIdx++;
+  }
+
+  // Ensure essential partNo and stock columns were identified
+  if (colMap.partNo === undefined || colMap.stock === undefined) {
+    return null;
+  }
+  return colMap;
+}
+
+function parsePdxHtmlTable(htmlText, queriedParts = []) {
   const tbodyMatch = htmlText.match(/<tbody>([\s\S]*?)<\/tbody>/i);
   if (!tbodyMatch) return [];
+
+  const theadMatch = htmlText.match(/<thead>([\s\S]*?)<\/thead>/i);
+  const detectedColMap = theadMatch ? extractColumnMapping(theadMatch[1]) : null;
+
+  // Standard fallback visible column layout (when visible cells exclude display:none)
+  // [0]=PartNo, [1]=IntExist, [2]=tmpDnet, [3]=Desc, [4]=CC, [5]=IC, [6]=LPN,
+  // [7]=KME Stock, [8]=KME EOR, [9]=KME On Order, [10]=Regional Inv,
+  // [11]=KLTD Total, [12]=KMEQA, [13]=DNet Price, [14]=Weight(gm), [15]=KLTD LT, [16]=MOR, [17]=OR
+  const colMap = detectedColMap || {
+    partNo: 0,
+    desc: 3,
+    cc: 4,
+    ic: 5,
+    lpn: 6,
+    stock: 7,
+    eor: 8,
+    onOrder: 9,
+    regionalInv: 10,
+    kltdTotal: 11,
+    kmeqa: 12,
+    dnetPrice: 13,
+    weight: 14,
+    leadTime: 15,
+    mor: 16,
+    orderRank: 17,
+  };
 
   const trMatches = tbodyMatch[1].match(/<tr[^>]*>([\s\S]*?)<\/tr>/gi) || [];
   const parsedRows = [];
@@ -161,79 +249,76 @@ function parsePdxHtmlTable(htmlText, queriedParts) {
   const queriedSet = new Set(queriedParts.map((p) => String(p).trim().toUpperCase()));
 
   for (const tr of trMatches) {
-    const tdMatches = tr.match(/<td[^>]*>([\s\S]*?)<\/td>/gi) || [];
-    const cleanTds = tdMatches.map((td) => {
-      let txt = td.replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ').trim();
-      return txt.replace(/\s+/g, ' ');
-    });
-
-    if (cleanTds.length >= 18) {
-      const rawPartNo = cleanTds[0] || '';
-      // PDX HTML column layout:
-      // [0]=PartNo, [1]=IntExist, [2]=tmpDnet, [3]=Desc, [4]=CC, [5]=IC, [6]=LPN,
-      // [7]=KME Stock, [8]=KME EOR, [9]=KME On Order, [10]=Regional Inv,
-      // [16]=KLTD Total, [17]=KMEQA, [18]=DNet / ListPrice, [19]=Weight(gm), [20]=KLTD LT, [21]=MOR, [22]=OR
-      const desc = cleanTds[3] || cleanTds[4] || '';
-      const cc = cleanTds[4] || cleanTds[5] || '';
-      const ic = cleanTds[5] || cleanTds[6] || '';
-      const lpn = cleanTds[6] || cleanTds[7] || rawPartNo;
-      const stock = cleanTds[7] || cleanTds[8] || '0';
-      const eor = cleanTds[8] || cleanTds[9] || '';
-      const onOrder = cleanTds[9] || cleanTds[10] || '0';
-      const regionalInv = cleanTds[10] || cleanTds[11] || '0';
-      const kltdTotal = cleanTds[16] || cleanTds[12] || '0';
-      const kmeqa = cleanTds[17] || cleanTds[13] || '0';
-
-      // Extract DNet / ListPrice strictly from ListPrice class or column 18
-      let dnetPrice = '0.00';
-      let rawPriceText = '';
-      const listPriceMatch = tr.match(/<td[^>]*class=["'][^"']*ListPrice[^"']*["'][^>]*>([\s\S]*?)<\/td>/i);
-      if (listPriceMatch) {
-        rawPriceText = listPriceMatch[1].replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ').trim();
-      } else if (cleanTds.length >= 19) {
-        rawPriceText = cleanTds[18] || '';
-      }
-      rawPriceText = rawPriceText.replace(/,/g, '').trim();
-      const parsedP = parseFloat(rawPriceText);
-      // Strictly treat 000, 0, or negative/NaN as 0.00 (never fallback to Weight or 1)
-      if (!isNaN(parsedP) && rawPriceText !== '000' && rawPriceText !== '0' && parsedP > 0) {
-        dnetPrice = parsedP.toFixed(2);
-      } else {
-        dnetPrice = '0.00';
-      }
-
-      const weight = cleanTds[19] || cleanTds[20] || '0';
-      const leadTime = cleanTds[20] || cleanTds[21] || '';
-      const mor = cleanTds[21] || cleanTds[22] || '';
-      const orRank = cleanTds[22] || cleanTds[23] || '';
-
-      const isMain = queriedSet.has(rawPartNo.trim().toUpperCase()) && (rawPartNo === lpn || !ic || ic === '000');
-      const rowKey = `${rawPartNo}_${lpn}_${dnetPrice}_${stock}_${isMain}`;
-      if (seenKeys.has(rowKey)) continue;
-      seenKeys.add(rowKey);
-
-      parsedRows.push({
-        itemType: isMain ? 'Main Part' : '↳ Alternative Part',
-        isAlternative: !isMain,
-        partNumber: isMain ? rawPartNo : `↳ ${rawPartNo}`,
-        rawPartNumber: rawPartNo,
-        description: desc,
-        lpn: lpn,
-        kmeStock: stock,
-        eor: eor,
-        onOrder: onOrder,
-        dnetPrice: dnetPrice,
-        weight: weight,
-        leadTime: leadTime,
-        characterCode: cc,
-        interchangeableCode: ic,
-        regionalInventory: regionalInv,
-        kltdTotal: kltdTotal,
-        kmeqa: kmeqa,
-        mor: mor,
-        orderRank: orRank,
-      });
+    const rawTds = tr.match(/<td[^>]*>([\s\S]*?)<\/td>/gi) || [];
+    // Filter out internal hidden cells (e.g. style="display: none;") to align visible columns
+    const visibleTds = [];
+    for (const td of rawTds) {
+      if (/display:\s*none/i.test(td) || /visibility:\s*hidden/i.test(td)) continue;
+      const clean = td.replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ').trim().replace(/\s+/g, ' ');
+      visibleTds.push(clean);
     }
+
+    const minRequiredCols = detectedColMap
+      ? Math.max((colMap.partNo ?? 0) + 1, (colMap.stock ?? 0) + 1)
+      : 8;
+    if (visibleTds.length < minRequiredCols) continue;
+
+    const rawPartNo = visibleTds[colMap.partNo ?? 0] || '';
+    const desc = visibleTds[colMap.desc ?? 3] || '';
+    const cc = visibleTds[colMap.cc ?? 4] || '';
+    const ic = visibleTds[colMap.ic ?? 5] || '';
+    const lpnCandidate = visibleTds[colMap.lpn ?? 6];
+    const lpn = (lpnCandidate && lpnCandidate.trim()) ? lpnCandidate.trim() : rawPartNo;
+
+    // Numerical stock & inventory metrics with strict sanitization
+    const stock = sanitizeQty(visibleTds[colMap.stock ?? 7]);
+    const eor = sanitizeQty(visibleTds[colMap.eor ?? 8]);
+    const onOrder = sanitizeQty(visibleTds[colMap.onOrder ?? 9]);
+    const regionalInv = sanitizeQty(visibleTds[colMap.regionalInv ?? 10]);
+    const kltdTotal = sanitizeQty(visibleTds[colMap.kltdTotal ?? 11]);
+    const kmeqa = sanitizeQty(visibleTds[colMap.kmeqa ?? 12]);
+
+    // Extract DNet / ListPrice strictly from ListPrice class or mapped price column
+    let rawPriceText = '';
+    const listPriceMatch = tr.match(/<td[^>]*class=["'][^"']*ListPrice[^"']*["'][^>]*>([\s\S]*?)<\/td>/i);
+    if (listPriceMatch) {
+      rawPriceText = listPriceMatch[1].replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ').trim();
+    } else if (colMap.dnetPrice !== undefined && visibleTds[colMap.dnetPrice]) {
+      rawPriceText = visibleTds[colMap.dnetPrice];
+    }
+    const dnetPrice = sanitizePrice(rawPriceText);
+
+    const weight = visibleTds[colMap.weight ?? 14] || '0';
+    const leadTime = visibleTds[colMap.leadTime ?? 15] || '';
+    const mor = visibleTds[colMap.mor ?? 16] || '';
+    const orRank = visibleTds[colMap.orderRank ?? 17] || '';
+
+    const isMain = queriedSet.size === 0 || (queriedSet.has(rawPartNo.trim().toUpperCase()) && (rawPartNo === lpn || !ic || ic === '000'));
+    const rowKey = `${rawPartNo}_${lpn}_${dnetPrice}_${stock}_${isMain}`;
+    if (seenKeys.has(rowKey)) continue;
+    seenKeys.add(rowKey);
+
+    parsedRows.push({
+      itemType: isMain ? 'Main Part' : '↳ Alternative Part',
+      isAlternative: !isMain,
+      partNumber: isMain ? rawPartNo : `↳ ${rawPartNo}`,
+      rawPartNumber: rawPartNo,
+      description: desc,
+      lpn: lpn,
+      kmeStock: stock,
+      eor: eor,
+      onOrder: onOrder,
+      dnetPrice: dnetPrice,
+      weight: weight,
+      leadTime: leadTime,
+      characterCode: cc,
+      interchangeableCode: ic,
+      regionalInventory: regionalInv,
+      kltdTotal: kltdTotal,
+      kmeqa: kmeqa,
+      mor: mor,
+      orderRank: orRank,
+    });
   }
 
   return parsedRows;
@@ -332,4 +417,7 @@ module.exports = {
   testPdxConnection,
   queryPdxBatch,
   runBulkInquiry,
+  parsePdxHtmlTable,
+  sanitizeQty,
 };
+

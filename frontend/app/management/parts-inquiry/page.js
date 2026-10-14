@@ -635,9 +635,17 @@ export default function SparePartsPage() {
             item.verified = true;
 
             // Live Stock & Auto-split calculation
-            const kmeStock = parseInt(res.kme_stock ?? res.stock_info?.kme_stock ?? 0, 10) || 0;
-            const kmeEor = parseInt(res.kme_eor ?? res.stock_info?.kme_eor ?? 0, 10) || 0;
-            const kltdTotal = parseInt(res.kltd_total ?? res.stock_info?.kltd_total ?? 0, 10) || 0;
+            const parseSafeStock = (val) => {
+              if (val === null || val === undefined) return 0;
+              const s = String(val).replace(/,/g, '').trim();
+              if (!s || s.includes('-') || /[a-z]/i.test(s)) return 0;
+              const n = parseInt(s, 10);
+              return isNaN(n) || n < 0 ? 0 : n;
+            };
+
+            const kmeStock = parseSafeStock(res.kme_stock ?? res.stock_info?.kme_stock ?? 0);
+            const kmeEor = parseSafeStock(res.kme_eor ?? res.stock_info?.kme_eor ?? 0);
+            const kltdTotal = parseSafeStock(res.kltd_total ?? res.stock_info?.kltd_total ?? 0);
 
             item.kme_stock = kmeStock;
             item.kme_eor = kmeEor;

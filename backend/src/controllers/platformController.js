@@ -927,9 +927,17 @@ async function batchVerifyCustomerQuotationParts(req, res) {
     try {
       const master = await komatsuEoService.lookupPartMaster(pNo, cookieStr);
       const reqQty = parseInt(item.quantity || item.qty || 1, 10) || 1;
-      const kmeStock = parseInt(master.kme_stock ?? master.stock_info?.kme_stock ?? 0, 10) || 0;
-      const kmeEor = parseInt(master.kme_eor ?? master.stock_info?.kme_eor ?? 0, 10) || 0;
-      const kltdTotal = parseInt(master.kltd_total ?? master.stock_info?.kltd_total ?? 0, 10) || 0;
+      const parseSafeStockInt = (val) => {
+        if (val === null || val === undefined) return 0;
+        const str = String(val).replace(/,/g, '').trim();
+        if (!str || str.includes('-') || /[a-z]/i.test(str)) return 0;
+        const num = parseInt(str, 10);
+        return isNaN(num) || num < 0 ? 0 : num;
+      };
+
+      const kmeStock = parseSafeStockInt(master.kme_stock ?? master.stock_info?.kme_stock ?? 0);
+      const kmeEor = parseSafeStockInt(master.kme_eor ?? master.stock_info?.kme_eor ?? 0);
+      const kltdTotal = parseSafeStockInt(master.kltd_total ?? master.stock_info?.kltd_total ?? 0);
 
       const rawPrice = String(master.stock_info?.dnet_price ?? master.price ?? '0.00').replace(/,/g, '').trim();
       let dnetPrice = parseFloat(rawPrice);
