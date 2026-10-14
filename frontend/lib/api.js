@@ -119,9 +119,13 @@ async function request(path, options = {}) {
         // If renewal was impossible, clear stale token so user isn't stuck permanently
         localStorage.removeItem('platformToken');
         throw new Error('Your EQP portal login session has expired. Please refresh the page or sign back in.');
-      }
     }
-    throw new Error(data.message || data.error || 'Request failed');
+    const err = new Error(data.message || data.error || 'Request failed');
+    err.status = response.status;
+    err.sessionExpired = Boolean(data.sessionExpired);
+    err.alreadyConverted = Boolean(data.alreadyConverted);
+    err.data = data;
+    throw err;
   }
 
   return data;

@@ -545,6 +545,7 @@ async function copyKomatsuQuotationToSo(req, res) {
             return res.status(400).json({
               success: false,
               alreadyConverted: true,
+              sessionExpired: false,
               message: `Quotation #${qtn} has already been transferred to Sales Order (Status: "${match.status}", SO: ${match.sales_order_no || 'Confirmed'}). Duplicate SO conversion was blocked to protect Komatsu PDX.`,
             });
           }

@@ -426,7 +426,14 @@ export default function SparePartsPage() {
       }
       setStatus(res);
       if (res.connected) {
-        setToast({ type: 'success', message: 'PDX session authenticated successfully!' });
+        if (!cleanCookie.includes('.AspNet.Cookies')) {
+          setToast({
+            type: 'warn',
+            message: 'PDX connected, but .AspNet.Cookies auth ticket is missing! Copy via Network tab (cURL) or EQP Extension to enable SO conversion.',
+          });
+        } else {
+          setToast({ type: 'success', message: 'PDX session fully authenticated (including .AspNet.Cookies)!' });
+        }
         setCookieModalOpen(false);
         loadLatestOrderNumber();
         if (activeTab === 'so-converter') loadInProcessQuotations();
@@ -1537,13 +1544,11 @@ export default function SparePartsPage() {
         successCount++;
       } catch (err) {
         addSoLog(`Failed for ${q.quotation_no}: ${err.message}`, 'error');
-        const isTrueExpired =
-          err.sessionExpired === true ||
-          err.message?.toLowerCase().includes('cookie has expired') ||
-          err.message?.toLowerCase().includes('session expired');
-        if (isTrueExpired) {
+        if (err.sessionExpired === true) {
           setCookieModalOpen(true);
           setToast({ type: 'error', message: 'Komatsu PDX session cookie expired. Please update your cookie.' });
+        } else {
+          setToast({ type: 'error', message: err.message || `Failed to convert #${q.quotation_no}` });
         }
       }
       setInProcessQuotations([...inProcessQuotations]);
@@ -1586,11 +1591,7 @@ export default function SparePartsPage() {
       setToast({ type: 'success', message: `Quotation #${q.quotation_no} ${actionLabel} completed!` });
     } catch (err) {
       addSoLog(`Failed for #${q.quotation_no}: ${err.message}`, 'error');
-      const isTrueExpired =
-        err.sessionExpired === true ||
-        err.message?.toLowerCase().includes('cookie has expired') ||
-        err.message?.toLowerCase().includes('session expired');
-      if (isTrueExpired) {
+      if (err.sessionExpired === true) {
         setCookieModalOpen(true);
         setToast({ type: 'error', message: 'Komatsu PDX session cookie expired. Please update your cookie.' });
       } else {
@@ -3867,11 +3868,30 @@ export default function SparePartsPage() {
             <p className="text-xs text-slate-600">
               Paste your session cookie from the Komatsu PDX portal (<code>https://www.komatsu.ae/kmewebportal</code>).
             </p>
-            <div className="p-2.5 bg-blue-50 border border-blue-200 rounded text-[11px] text-blue-900 leading-relaxed">
-              <strong>💡 Easy way via Console:</strong><br />
-              1. In your logged-in Komatsu portal tab, press <kbd className="px-1 bg-white border rounded">F12</kbd> ➔ go to <strong>Console</strong>.<br />
-              2. Type <code>copy(document.cookie)</code> and press <kbd className="px-1 bg-white border rounded">Enter</kbd>.<br />
-              3. Paste here and click <strong>Save & Verify Cookie</strong>.
+            <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg text-[11px] text-blue-950 leading-relaxed space-y-2">
+              <div className="font-bold text-xs flex items-center gap-1.5 text-blue-900">
+                <span>🔑</span> Required for SO Conversion: Full Authenticated Cookie (.AspNet.Cookies)
+              </div>
+              <p className="text-[11px] text-slate-700">
+                Converting quotations to SO requires your authentication ticket (<code>.AspNet.Cookies</code>). Because ASP.NET marks it <code>HttpOnly</code>, <code>document.cookie</code> in the Console cannot copy it.
+              </p>
+              <div className="space-y-1.5 pt-1">
+                <div className="p-2 bg-white rounded border border-blue-200">
+                  <span className="font-bold text-blue-900 block text-xs">⚡ Recommended: Network Tab (cURL)</span>
+                  <ol className="list-decimal list-inside space-y-0.5 text-[11px] text-slate-600 mt-0.5">
+                    <li>In your logged-in Komatsu tab, press <kbd className="px-1 bg-slate-100 border rounded">F12</kbd> ➔ <strong>Network</strong> tab.</li>
+                    <li>Click any portal request (or refresh).</li>
+                    <li>Right-click ➔ <strong>Copy</strong> ➔ <strong>Copy as cURL</strong> (or copy Request Header <code>Cookie</code>).</li>
+                    <li>Paste directly below (EQP automatically extracts the cookies).</li>
+                  </ol>
+                </div>
+                <div className="p-2 bg-white rounded border border-blue-200">
+                  <span className="font-bold text-blue-900 block text-xs">🧩 1-Click Extension</span>
+                  <p className="text-[11px] text-slate-600 mt-0.5">
+                    You can also load the bundled EQP extension from <code>tools/pdx-sync-extension</code> in Edge to sync with 1 click.
+                  </p>
+                </div>
+              </div>
             </div>
             <Field label="Cookie String" required>
               <Textarea
