@@ -71,6 +71,7 @@ router.post('/api/komatsu/eo-execute', requirePlatformAuth, asyncHandler(platfor
 router.get('/api/komatsu/quotations', requirePlatformAuth, asyncHandler(platformController.searchKomatsuQuotations));
 router.get('/api/komatsu/quotations/:quotationNo/parts', requirePlatformAuth, asyncHandler(platformController.getKomatsuQuotationParts));
 router.post('/api/komatsu/quotations/confirm', requirePlatformAuth, asyncHandler(platformController.confirmKomatsuQuotation));
+router.get('/api/komatsu/quotations/:quotationNo/condition', requirePlatformAuth, asyncHandler(platformController.debugQuotationCondition));
 router.post('/api/komatsu/quotations/copy-to-so', requirePlatformAuth, asyncHandler(platformController.copyKomatsuQuotationToSo));
 router.post('/api/komatsu/quotations/toggle-so-status', requirePlatformAuth, asyncHandler(platformController.toggleQuotationSoStatus));
 router.post('/api/komatsu/quotations/verify-batch', optionalPlatformAuth, asyncHandler(platformController.batchVerifyCustomerQuotationParts));

@@ -516,6 +516,17 @@ async function confirmKomatsuQuotation(req, res) {
   }
 }
 
+async function debugQuotationCondition(req, res) {
+  const { quotationNo } = req.params;
+  const { seqNo, cookie } = req.query || {};
+  try {
+    const data = await komatsuEoService.debugQuotationCondition(quotationNo, seqNo || '00', cookie);
+    return res.json({ success: true, ...data });
+  } catch (err) {
+    return res.status(400).json({ success: false, error: err.message });
+  }
+}
+
 async function copyKomatsuQuotationToSo(req, res) {
   const { quotationNo, seqNo, cookie, options } = req.body || {};
   if (!quotationNo) {
@@ -1131,6 +1142,7 @@ module.exports = {
   searchKomatsuQuotations,
   getKomatsuQuotationParts,
   confirmKomatsuQuotation,
+  debugQuotationCondition,
   copyKomatsuQuotationToSo,
   toggleQuotationSoStatus,
   getEqpcStatus,

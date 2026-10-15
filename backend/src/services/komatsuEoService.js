@@ -940,24 +940,8 @@ async function confirmQuotation(quotationNo, seqNo = '00', customCookie = null) 
     DBCode: '536K',
   });
 
-  // STEP 0: Pre-load QuotationCondition/Index to initialize ASP.NET session for this quotation
-  try {
-    const initResp = await fetch(condIndexUrl, {
-      method: 'GET',
-      headers: defaultHeaders,
-      redirect: 'follow',
-      signal: AbortSignal.timeout(15000),
-    });
-    const initCookies = extractResponseCookies(initResp);
-    if (initCookies.length > 0) {
-      cookieStr = mergeCookies(cookieStr, initCookies);
-      defaultHeaders.Cookie = cookieStr;
-    }
-  } catch (initErr) {
-    console.warn(`[confirmQuotation] ${qtn} QuotationCondition/Index GET notice:`, initErr.message);
-  }
-
   // STEP 1: Search QuotationCondition to load fresh state & TimeStamp
+  // (We bypass GET QuotationCondition/Index here because visiting the action without anti-forgery token resets the ASP.NET session state)
   const searchResp = await fetch(condSearchUrl, {
     method: 'POST',
     headers: {
@@ -1044,7 +1028,6 @@ async function confirmQuotation(quotationNo, seqNo = '00', customCookie = null) 
   const saveUrl = `${BASE_PORTAL_URL}/QuotationCondition/Save`;
   const savePayload = {
     objQuotationConditionPostModel: {
-      ...condModel,
       OrigQuotationNo: condModel.OrigQuotationNo || qtn,
       OrigQuotationSeqNo: condModel.OrigQuotationSeqNo || seq,
       QuotationNo: qtn,
@@ -1072,23 +1055,44 @@ async function confirmQuotation(quotationNo, seqNo = '00', customCookie = null) 
       Manufacturer: condModel.Manufacturer || '',
       LoadingPort: condModel.LoadingPort || 'JEA',
       UnloadingPort: condModel.UnloadingPort || 'KWI',
+      SubstitutionCodes: condModel.SubstitutionCodes || '',
+      PriceSettingCodes: condModel.PriceSettingCodes || '',
       PersonIncharge: condModel.PersonIncharge || searchData.PersonIncharge || 'motasemgha',
       QuotationValidity: condModel.QuotationValidity || formatPortalDate(14),
       RequestedDeliveryTime: condModel.RequestedDeliveryTime || formatPortalDate(7),
       PriceCalculationMethod: condModel.PriceCalculationMethod || 'D',
       DiscountRateOther: condModel.DiscountRateOther || '0',
       PremiumRate: qtnPremiumRate,
+      BillingRateA: condModel.BillingRateA || '0',
+      BillingRateB: condModel.BillingRateB || '0',
+      BillingRateC: condModel.BillingRateC || '0',
+      BillingRateD: condModel.BillingRateD || '0',
+      BillingRateE: condModel.BillingRateE || '0',
+      BillingRateF: condModel.BillingRateF || '0',
       ShipToAddress: condModel.ShipToAddress || searchData.ShipToAddress || 'DAR AL HAI\nKUWAIT GENERAL TRADING. Al-Rai Industrial Area Plot # 1732 Block # 2 Street # 4 Behind the Avenues Kuwait',
+      AvailableMark: typeof condModel.AvailableMark === 'boolean' ? condModel.AvailableMark : true,
+      UseHSCode: Boolean(condModel.UseHSCode),
+      ReserverStock: Boolean(condModel.ReserverStock),
+      DontConsiderEORes: Boolean(condModel.DontConsiderEORes),
+      FixPrice: Boolean(condModel.FixPrice),
+      ModelInformation: condModel.ModelInformation || '',
+      Memo: condModel.Memo || '',
       Comments: qtnComments,
       isDetailsExist: condModel.isDetailsExist || '1',
+      LineNo: condModel.LineNo || '0',
       ModelCode: qtnModelInfoMark ? (condModel.ModelCode || 'PC500LC-10R') : '',
       SerialNo: qtnModelInfoMark ? (condModel.SerialNo || '100433') : '',
       EngineSrNo: qtnModelInfoMark ? (condModel.EngineSrNo || '1') : '',
       CustomerDetails: qtnModelInfoMark ? (condModel.CustomerDetails || 'DAR AL HAI') : '',
       ModelInfoMark: qtnModelInfoMark,
+      jobCard: condModel.jobCard || '',
+      Warranty: condModel.Warranty || '',
+      TSINumber: condModel.TSINumber || '',
+      ModelSVREMark: Boolean(condModel.ModelSVREMark),
       ExitPoint: condModel.ExitPoint || 'JEA',
       CustomerCode: condModel.SavedCustomerCode || condModel.CustomerCode || 'REG',
       lstRates: rates,
+      MarkingCode: condModel.MarkingCode || '',
       ...(timestamp ? { TimeStamp: timestamp } : {}),
     },
   };
@@ -1112,7 +1116,39 @@ async function confirmQuotation(quotationNo, seqNo = '00', customCookie = null) 
   try {
     saveJson = JSON.parse(saveText);
   } catch (parseErr) {
-    console.error(`[confirmQuotation] ${qtn} Save parse error. First 500 chars:`, saveText.substring(0, 500));
+    console.error(`[confirmQuotation] ${qtn} Save parse non-JSON (status ${saveResp.status}). Snippet:`, saveText.substring(0, 300));
+
+    // Concurrency / recovery verification: If save triggered an unhandled notification fault (e.g. SMTP drop),
+    // check if the quotation condition actually got updated to Confirmed in the portal database
+    try {
+      const verifyResp = await fetch(condSearchUrl, {
+        method: 'POST',
+        headers: {
+          ...defaultHeaders,
+          'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+          'X-Requested-With': 'XMLHttpRequest',
+          'Referer': condIndexUrl,
+        },
+        body: condSearchData.toString(),
+      });
+      const verifyText = await verifyResp.text();
+      const verifyJson = JSON.parse(verifyText);
+      const vModel = verifyJson.data || verifyJson.objQuotationConditionPostModel || verifyJson.objQuotationCondition || verifyJson;
+      const vStatus = String(vModel.Status || '').trim().toLowerCase();
+      if (vStatus === '2' || vStatus === 'confirmed') {
+        console.log(`[confirmQuotation] ${qtn} verified confirmed despite non-JSON Save response!`);
+        return {
+          status: 'CONFIRMED',
+          quotation_no: qtn,
+          db_order_no: vModel.DistributerOrderNo || condModel.DistributerOrderNo,
+          timestamp: vModel.TimeStamp,
+          raw_response: { status: 'CONFIRMED_VIA_VERIFY' },
+        };
+      }
+    } catch {
+      // Non-fatal
+    }
+
     if (
       saveResp.status === 401 ||
       saveResp.status === 302 ||
@@ -1123,7 +1159,9 @@ async function confirmQuotation(quotationNo, seqNo = '00', customCookie = null) 
     ) {
       throw new Error('Komatsu PDX session cookie has expired. Please update your PDX Cookie in settings.');
     }
-    throw new Error(`QuotationCondition/Save returned non-JSON (status ${saveResp.status}): ${saveText.slice(0, 300)}`);
+    const titleMatch = saveText.match(/<title>([^<]+)<\/title>/i);
+    const cleanErr = titleMatch ? titleMatch[1].trim() : saveText.slice(0, 200);
+    throw new Error(`Komatsu portal server error on Save (status ${saveResp.status}): ${cleanErr}`);
   }
 
   console.log(`[confirmQuotation] ${qtn} Save result: ErrorOccured=${saveJson.ErrorOccured}(${typeof saveJson.ErrorOccured}) RecordUpdated=${saveJson.RecordUpdated}(${typeof saveJson.RecordUpdated}) ErrorMessage=${saveJson.ErrorMessage}`);
@@ -1313,6 +1351,53 @@ async function copyQuotationToSo(quotationNo, seqNo = '00', options = {}, custom
   };
 }
 
+async function debugQuotationCondition(quotationNo, seqNo = '00', customCookie = null) {
+  const cookieStr = customCookie ? parseCookieInput(customCookie) : loadCookie();
+  const qtn = String(quotationNo).trim();
+  const seq = String(seqNo || '00').trim();
+
+  const defaultHeaders = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36 Edg/151.0.0.0',
+    'Accept-Language': 'en-US,en;q=0.9,ar;q=0.8',
+    'Origin': 'https://www.komatsu.ae',
+    'Connection': 'close',
+    'Cookie': cookieStr,
+  };
+
+  const condIndexUrl = `${BASE_PORTAL_URL}/QuotationCondition/Index?strQUTN=${qtn}&strQutnSubNo=${seq}&DBCode=536K`;
+  const condSearchUrl = `${BASE_PORTAL_URL}/QuotationCondition/Search`;
+  const condSearchData = new URLSearchParams({
+    strQuotationNo: qtn,
+    strQuotSeqNo: seq,
+    DBCode: '536K',
+  });
+
+  const searchResp = await fetch(condSearchUrl, {
+    method: 'POST',
+    headers: {
+      ...defaultHeaders,
+      'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+      'X-Requested-With': 'XMLHttpRequest',
+      'Referer': condIndexUrl,
+    },
+    body: condSearchData.toString(),
+  });
+
+  const searchText = await searchResp.text();
+  let searchJson = null;
+  try {
+    searchJson = JSON.parse(searchText);
+  } catch {}
+
+  return {
+    quotation_no: qtn,
+    seq_no: seq,
+    search_status: searchResp.status,
+    search_json: searchJson,
+    search_raw_snippet: searchText.slice(0, 1000),
+  };
+}
+
 module.exports = {
   loadFleetData,
   addCustomMachine,
@@ -1322,4 +1407,5 @@ module.exports = {
   searchQuotations,
   confirmQuotation,
   copyQuotationToSo,
+  debugQuotationCondition,
 };
