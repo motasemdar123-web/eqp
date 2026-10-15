@@ -97,6 +97,8 @@ async function request(path, options = {}) {
   const data = await response.json().catch(() => ({}));
 
   if (!response.ok) {
+    console.error(`[API Error ${response.status}] ${path}:`, data);
+
     if (response.status === 401) {
       const err = String(data.error || '');
       const isAuthErr =
@@ -119,7 +121,9 @@ async function request(path, options = {}) {
         // If renewal was impossible, clear stale token so user isn't stuck permanently
         localStorage.removeItem('platformToken');
         throw new Error('Your EQP portal login session has expired. Please refresh the page or sign back in.');
+      }
     }
+
     const err = new Error(data.message || data.error || 'Request failed');
     err.status = response.status;
     err.sessionExpired = Boolean(data.sessionExpired);

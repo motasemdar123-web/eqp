@@ -1527,8 +1527,9 @@ export default function SparePartsPage() {
             try {
               await confirmKomatsuQuotation({ quotationNo: q.quotation_no, seqNo: q.revision_no || '00' });
               q.status = 'Confirmed';
+              addSoLog(`Quotation #${q.quotation_no} successfully Confirmed.`, 'success');
             } catch (confErr) {
-              if (actionType === 'CONFIRM_ONLY') {
+              if (actionType === 'CONFIRM_ONLY' || confErr.sessionExpired || confErr.alreadyConverted) {
                 throw confErr;
               }
               addSoLog(`Quotation #${q.quotation_no} condition confirm notice: ${confErr.message}. Proceeding to CopyToSO...`, 'info');
@@ -1573,7 +1574,7 @@ export default function SparePartsPage() {
             q.status = 'Confirmed';
             addSoLog(`Quotation #${q.quotation_no} successfully Confirmed.`, 'success');
           } catch (confErr) {
-            if (actionType === 'CONFIRM_ONLY') {
+            if (actionType === 'CONFIRM_ONLY' || confErr.sessionExpired || confErr.alreadyConverted) {
               throw confErr;
             }
             addSoLog(`Quotation #${q.quotation_no} condition notice: ${confErr.message}. Proceeding to CopyToSO...`, 'info');
