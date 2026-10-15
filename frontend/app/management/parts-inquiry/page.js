@@ -1529,10 +1529,12 @@ export default function SparePartsPage() {
               q.status = 'Confirmed';
               addSoLog(`Quotation #${q.quotation_no} successfully Confirmed.`, 'success');
             } catch (confErr) {
-              if (actionType === 'CONFIRM_ONLY' || confErr.sessionExpired || confErr.alreadyConverted) {
+              if (confErr.alreadyConfirmed || confErr.message?.toLowerCase().includes('already confirmed')) {
+                q.status = 'Confirmed';
+                addSoLog(`Quotation #${q.quotation_no} is already Confirmed. Proceeding to CopyToSO...`, 'info');
+              } else {
                 throw confErr;
               }
-              addSoLog(`Quotation #${q.quotation_no} condition confirm notice: ${confErr.message}. Proceeding to CopyToSO...`, 'info');
             }
           }
         }
@@ -1574,10 +1576,12 @@ export default function SparePartsPage() {
             q.status = 'Confirmed';
             addSoLog(`Quotation #${q.quotation_no} successfully Confirmed.`, 'success');
           } catch (confErr) {
-            if (actionType === 'CONFIRM_ONLY' || confErr.sessionExpired || confErr.alreadyConverted) {
+            if (confErr.alreadyConfirmed || confErr.message?.toLowerCase().includes('already confirmed')) {
+              q.status = 'Confirmed';
+              addSoLog(`Quotation #${q.quotation_no} is already Confirmed. Proceeding to CopyToSO...`, 'info');
+            } else {
               throw confErr;
             }
-            addSoLog(`Quotation #${q.quotation_no} condition notice: ${confErr.message}. Proceeding to CopyToSO...`, 'info');
           }
         }
       }

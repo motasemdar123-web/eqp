@@ -511,6 +511,7 @@ async function confirmKomatsuQuotation(req, res) {
       success: false,
       sessionExpired: isSessionErr,
       message: err.message || 'Failed to confirm quotation on Komatsu PDX',
+      saveJson: err.saveJson || null,
     });
   }
 }

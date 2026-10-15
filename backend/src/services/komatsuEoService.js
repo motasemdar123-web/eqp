@@ -932,8 +932,6 @@ async function confirmQuotation(quotationNo, seqNo = '00', customCookie = null) 
   const qtn = String(quotationNo).trim();
   const seq = String(seqNo || '00').trim();
 
-  // STEP 1: Search QuotationCondition to load fresh state & TimeStamp
-  // Note: We avoid GET QuotationCondition/Index here because that MVC action is for NEW quotations and resets session state.
   const condIndexUrl = `${BASE_PORTAL_URL}/QuotationCondition/Index?strQUTN=${qtn}&strQutnSubNo=${seq}&DBCode=536K`;
   const condSearchUrl = `${BASE_PORTAL_URL}/QuotationCondition/Search`;
   const condSearchData = new URLSearchParams({
@@ -942,6 +940,24 @@ async function confirmQuotation(quotationNo, seqNo = '00', customCookie = null) 
     DBCode: '536K',
   });
 
+  // STEP 0: Pre-load QuotationCondition/Index to initialize ASP.NET session for this quotation
+  try {
+    const initResp = await fetch(condIndexUrl, {
+      method: 'GET',
+      headers: defaultHeaders,
+      redirect: 'follow',
+      signal: AbortSignal.timeout(15000),
+    });
+    const initCookies = extractResponseCookies(initResp);
+    if (initCookies.length > 0) {
+      cookieStr = mergeCookies(cookieStr, initCookies);
+      defaultHeaders.Cookie = cookieStr;
+    }
+  } catch (initErr) {
+    console.warn(`[confirmQuotation] ${qtn} QuotationCondition/Index GET notice:`, initErr.message);
+  }
+
+  // STEP 1: Search QuotationCondition to load fresh state & TimeStamp
   const searchResp = await fetch(condSearchUrl, {
     method: 'POST',
     headers: {
@@ -985,6 +1001,20 @@ async function confirmQuotation(quotationNo, seqNo = '00', customCookie = null) 
   const timestamp = rawTimestamp && rawTimestamp !== '""' && rawTimestamp !== '' ? rawTimestamp : null;
   console.log(`[confirmQuotation] ${qtn} timestamp=${timestamp} status=${JSON.stringify(condModel.Status)}`);
 
+  // Check if quotation is ALREADY confirmed in Komatsu PDX
+  const currentSt = String(condModel.Status || '').trim().toLowerCase();
+  if (currentSt === '2' || currentSt === 'confirmed') {
+    console.log(`[confirmQuotation] ${qtn} is already Confirmed (Status 2). Proceeding...`);
+    return {
+      status: 'CONFIRMED',
+      quotation_no: qtn,
+      db_order_no: condModel.DistributerOrderNo || searchData.DistributerOrderNo,
+      alreadyConfirmed: true,
+      timestamp,
+      raw_response: condModel,
+    };
+  }
+
   let rates = condModel.Rates || condModel.lstRates || searchData.Rates || searchData.lstRates || [];
   if (!rates || rates.length === 0) {
     rates = ['A', 'B', 'C', 'D', 'DA', 'E', 'F', 'NA', 'Other', 'S'].map((grp) => ({
@@ -1014,71 +1044,51 @@ async function confirmQuotation(quotationNo, seqNo = '00', customCookie = null) 
   const saveUrl = `${BASE_PORTAL_URL}/QuotationCondition/Save`;
   const savePayload = {
     objQuotationConditionPostModel: {
-      OrigQuotationNo: qtn,
-      OrigQuotationSeqNo: seq,
+      ...condModel,
+      OrigQuotationNo: condModel.OrigQuotationNo || qtn,
+      OrigQuotationSeqNo: condModel.OrigQuotationSeqNo || seq,
       QuotationNo: qtn,
       QuotationSeqNo: seq,
       DistributerOrderNo: condModel.DistributerOrderNo || searchData.DistributerOrderNo || '',
-      DistributerCodes: '536K',
+      DistributerCodes: condModel.DistributerCodes || '536K',
       DistributerName: condModel.DistributerName || searchData.DistributerName || 'DAR AL HAI',
-      SalesPriceList: 'USD037',
-      Currency: 'USD',
-      ExchangeRate: '1.0',
+      SalesPriceList: condModel.SalesPriceList || 'USD037',
+      Currency: condModel.Currency || 'USD',
+      ExchangeRate: condModel.ExchangeRate || '1.0',
       OrderType: qtnOrderType,
       OrderTypes: qtnOrderType,
       SelectedOrderType: qtnOrderType,
       SelectedOrderTypeCode: qtnOrderType,
       strOTYP: qtnOrderType,
       strOrderType: qtnOrderType,
-      Usance: '30',
-      TaxRate: '0',
-      Transportation: condModel.SelectedTransportationCode || 'RD',
+      Usance: condModel.Usance || '30',
+      TaxRate: condModel.TaxRate || '0',
+      Transportation: condModel.SelectedTransportationCode || condModel.Transportation || 'RD',
       DeliveryTerms: qtnDeliveryTerms,
-      PaymentTerms: 'T2',
-      OrderPRobability: 'A',
-      Region: 'AE',
+      PaymentTerms: condModel.PaymentTerms || 'T2',
+      OrderPRobability: condModel.OrderPRobability || 'A',
+      Region: condModel.Region || 'AE',
       Status: '2', // 2 = Confirmed
-      Manufacturer: '',
-      LoadingPort: 'JEA',
-      UnloadingPort: 'KWI',
-      SubstitutionCodes: '',
-      PriceSettingCodes: '',
+      Manufacturer: condModel.Manufacturer || '',
+      LoadingPort: condModel.LoadingPort || 'JEA',
+      UnloadingPort: condModel.UnloadingPort || 'KWI',
       PersonIncharge: condModel.PersonIncharge || searchData.PersonIncharge || 'motasemgha',
       QuotationValidity: condModel.QuotationValidity || formatPortalDate(14),
       RequestedDeliveryTime: condModel.RequestedDeliveryTime || formatPortalDate(7),
-      PriceCalculationMethod: 'D',
-      DiscountRateOther: '0',
+      PriceCalculationMethod: condModel.PriceCalculationMethod || 'D',
+      DiscountRateOther: condModel.DiscountRateOther || '0',
       PremiumRate: qtnPremiumRate,
-      BillingRateA: '0',
-      BillingRateB: '0',
-      BillingRateC: '0',
-      BillingRateD: '0',
-      BillingRateE: '0',
-      BillingRateF: '0',
       ShipToAddress: condModel.ShipToAddress || searchData.ShipToAddress || 'DAR AL HAI\nKUWAIT GENERAL TRADING. Al-Rai Industrial Area Plot # 1732 Block # 2 Street # 4 Behind the Avenues Kuwait',
-      AvailableMark: true,
-      UseHSCode: false,
-      ReserverStock: false,
-      DontConsiderEORes: false,
-      FixPrice: false,
-      ModelInformation: '',
-      Memo: '',
       Comments: qtnComments,
-      isDetailsExist: '1',
-      LineNo: '0',
+      isDetailsExist: condModel.isDetailsExist || '1',
       ModelCode: qtnModelInfoMark ? (condModel.ModelCode || 'PC500LC-10R') : '',
       SerialNo: qtnModelInfoMark ? (condModel.SerialNo || '100433') : '',
-      EngineSrNo: qtnModelInfoMark ? '1' : '',
+      EngineSrNo: qtnModelInfoMark ? (condModel.EngineSrNo || '1') : '',
       CustomerDetails: qtnModelInfoMark ? (condModel.CustomerDetails || 'DAR AL HAI') : '',
       ModelInfoMark: qtnModelInfoMark,
-      jobCard: '',
-      Warranty: '',
-      TSINumber: '',
-      ModelSVREMark: false,
-      ExitPoint: 'JEA',
+      ExitPoint: condModel.ExitPoint || 'JEA',
       CustomerCode: condModel.SavedCustomerCode || condModel.CustomerCode || 'REG',
       lstRates: rates,
-      MarkingCode: '',
       ...(timestamp ? { TimeStamp: timestamp } : {}),
     },
   };
@@ -1121,9 +1131,44 @@ async function confirmQuotation(quotationNo, seqNo = '00', customCookie = null) 
   const hasError = saveJson.ErrorOccured && Number(saveJson.ErrorOccured) !== 0;
   const isUpdated = Number(saveJson.RecordUpdated) === 1 || Number(saveJson.OperationSuccessful) === 1;
 
+  if (!isUpdated && !hasError) {
+    // Portal concurrency / update verification check
+    try {
+      const verifyResp = await fetch(condSearchUrl, {
+        method: 'POST',
+        headers: {
+          ...defaultHeaders,
+          'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+          'X-Requested-With': 'XMLHttpRequest',
+          'Referer': condIndexUrl,
+        },
+        body: condSearchData.toString(),
+      });
+      const verifyText = await verifyResp.text();
+      const verifyJson = JSON.parse(verifyText);
+      const vModel = verifyJson.data || verifyJson.objQuotationConditionPostModel || verifyJson.objQuotationCondition || verifyJson;
+      const vStatus = String(vModel.Status || '').trim().toLowerCase();
+      if (vStatus === '2' || vStatus === 'confirmed') {
+        console.log(`[confirmQuotation] ${qtn} verified confirmed on portal status re-check!`);
+        return {
+          status: 'CONFIRMED',
+          quotation_no: qtn,
+          db_order_no: vModel.DistributerOrderNo || condModel.DistributerOrderNo,
+          timestamp: vModel.TimeStamp,
+          raw_response: saveJson,
+        };
+      }
+    } catch {
+      // Non-fatal, proceed to error throw below
+    }
+  }
+
   if (hasError || !isUpdated) {
     const errText = saveJson.ErrorMessage || saveJson.MessageToDisplay || saveJson.Message || (saveJson.ErrorOccured === 5 ? 'Please select your own DB Code' : saveJson.ErrorOccured === 6 ? 'Invalid Billing Rate' : null);
-    throw new Error(errText ? `Komatsu portal rejected confirmation: ${errText} (code ${saveJson.ErrorOccured})` : `Failed to update quotation status to Confirmed: ${JSON.stringify(saveJson)}`);
+    const err = new Error(errText ? `Komatsu portal rejected confirmation: ${errText} (code ${saveJson.ErrorOccured})` : `Failed to update quotation status to Confirmed: ${JSON.stringify(saveJson)}`);
+    err.saveJson = saveJson;
+    err.rawResponse = saveJson;
+    throw err;
   }
 
   return {
