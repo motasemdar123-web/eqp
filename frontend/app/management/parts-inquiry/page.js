@@ -426,14 +426,7 @@ export default function SparePartsPage() {
       }
       setStatus(res);
       if (res.connected) {
-        if (!cleanCookie.includes('.AspNet.Cookies')) {
-          setToast({
-            type: 'warn',
-            message: 'PDX connected, but .AspNet.Cookies auth ticket is missing! Copy via Network tab (cURL) or EQP Extension to enable SO conversion.',
-          });
-        } else {
-          setToast({ type: 'success', message: 'PDX session fully authenticated (including .AspNet.Cookies)!' });
-        }
+        setToast({ type: 'success', message: 'PDX session cookie saved and verified!' });
         setCookieModalOpen(false);
         loadLatestOrderNumber();
         if (activeTab === 'so-converter') loadInProcessQuotations();
@@ -1560,7 +1553,9 @@ export default function SparePartsPage() {
 
     setIsConvertingSo(false);
     setSoConversionProgress(null);
-    setToast({ type: 'success', message: `Converted ${successCount} / ${selectedList.length} quotations to SO.` });
+    if (successCount > 0) {
+      setToast({ type: 'success', message: `Converted ${successCount} / ${selectedList.length} quotations to SO.` });
+    }
   }
 
   async function handleSingleQuotationAction(q, actionType = 'FULL_CONVERT') {
@@ -3875,25 +3870,20 @@ export default function SparePartsPage() {
             </p>
             <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg text-[11px] text-blue-950 leading-relaxed space-y-2">
               <div className="font-bold text-xs flex items-center gap-1.5 text-blue-900">
-                <span>🔑</span> Required for SO Conversion: Full Authenticated Cookie (.AspNet.Cookies)
+                <span>🔑</span> How to Copy Your PDX Session Cookie
               </div>
-              <p className="text-[11px] text-slate-700">
-                Converting quotations to SO requires your authentication ticket (<code>.AspNet.Cookies</code>). Because ASP.NET marks it <code>HttpOnly</code>, <code>document.cookie</code> in the Console cannot copy it.
-              </p>
               <div className="space-y-1.5 pt-1">
                 <div className="p-2 bg-white rounded border border-blue-200">
-                  <span className="font-bold text-blue-900 block text-xs">⚡ Recommended: Network Tab (cURL)</span>
+                  <span className="font-bold text-blue-900 block text-xs">⚡ Option 1: Browser Console (Quickest)</span>
                   <ol className="list-decimal list-inside space-y-0.5 text-[11px] text-slate-600 mt-0.5">
-                    <li>In your logged-in Komatsu tab, press <kbd className="px-1 bg-slate-100 border rounded">F12</kbd> ➔ <strong>Network</strong> tab.</li>
-                    <li>Click any portal request (or refresh).</li>
-                    <li>Right-click ➔ <strong>Copy</strong> ➔ <strong>Copy as cURL</strong> (or copy Request Header <code>Cookie</code>).</li>
-                    <li>Paste directly below (EQP automatically extracts the cookies).</li>
+                    <li>In your logged-in Komatsu PDX tab, press <kbd className="px-1 bg-slate-100 border rounded">F12</kbd> ➔ <strong>Console</strong> tab.</li>
+                    <li>Run <code>copy(document.cookie)</code> and paste below.</li>
                   </ol>
                 </div>
                 <div className="p-2 bg-white rounded border border-blue-200">
-                  <span className="font-bold text-blue-900 block text-xs">🧩 1-Click Extension</span>
+                  <span className="font-bold text-blue-900 block text-xs">🌐 Option 2: Network Tab (cURL) or 1-Click Extension</span>
                   <p className="text-[11px] text-slate-600 mt-0.5">
-                    You can also load the bundled EQP extension from <code>tools/pdx-sync-extension</code> in Edge to sync with 1 click.
+                    You can also right-click any portal request in <strong>F12 ➔ Network</strong> ➔ <strong>Copy as cURL</strong>, or use the bundled EQP extension from <code>tools/pdx-sync-extension</code>.
                   </p>
                 </div>
               </div>

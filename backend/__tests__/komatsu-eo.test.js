@@ -270,5 +270,117 @@ describe('Komatsu Emergency Order Service', () => {
       global.fetch = originalFetch;
     }
   });
+
+  test('confirmQuotation sanitizes ASP.NET SelectListItem[] dropdown arrays and merges Set-Cookie headers', async () => {
+    const originalFetch = global.fetch;
+    const fetchCalls = [];
+
+    global.fetch = jest.fn(async (url, options = {}) => {
+      fetchCalls.push({ url, options });
+
+      if (url.includes('/QuotationDetails/')) {
+        return {
+          status: 200,
+          headers: { getSetCookie: () => ['ASP.NET_SessionId=updatedSession1'] },
+          text: async () => '',
+        };
+      }
+
+      if (url.includes('/QuotationCondition/Search')) {
+        return {
+          status: 200,
+          headers: { getSetCookie: () => ['__RequestVerificationToken=tok123'] },
+          text: async () =>
+            JSON.stringify({
+              TimeStamp: 'AAAAABBBB=',
+              DistributerOrderNo: 'EO314/2026',
+              DistributerName: 'DAR AL HAI',
+              SelectedTransportationCode: 'RD',
+              SavedCustomerCode: 'REG',
+              OrderType: [
+                { Disabled: false, Selected: true, Text: 'EO:Emergency Order', Value: 'EO' },
+                { Disabled: false, Selected: false, Text: 'DS:Direct Shipment', Value: 'DS' },
+              ],
+              DeliveryTerms: [
+                { Disabled: false, Selected: true, Text: 'EXW', Value: 'EXW' },
+                { Disabled: false, Selected: false, Text: 'DDU', Value: 'DDU' },
+              ],
+              PersonIncharge: [
+                { Disabled: false, Selected: true, Text: 'Motasem', Value: 'motasemgha' },
+              ],
+              Status: [
+                { Disabled: false, Selected: true, Text: 'In Process', Value: '1' },
+                { Disabled: false, Selected: false, Text: 'Confirmed', Value: '2' },
+              ],
+              Currency: [{ Selected: true, Text: 'USD', Value: 'USD' }],
+              DistributerCodes: [{ Selected: true, Text: '536K', Value: '536K' }],
+              PremiumRate: '13.30',
+              ModelInfoMark: true,
+              ModelCode: 'D155A-6R',
+              SerialNo: '85296',
+              CustomerDetails: 'KCPC',
+              Comments: 'Urgent',
+            }),
+        };
+      }
+
+      if (url.includes('/QuotationCondition/Save')) {
+        return {
+          status: 200,
+          headers: { getSetCookie: () => ['ASP.NET_SessionId=updatedSession2'] },
+          text: async () =>
+            JSON.stringify({
+              ErrorOccured: 0,
+              RecordUpdated: 1,
+              OperationSuccessful: 1,
+            }),
+        };
+      }
+
+      return { status: 200, headers: { getSetCookie: () => [] }, text: async () => '' };
+    });
+
+    try {
+      const result = await komatsuEoService.confirmQuotation(
+        '0000284086',
+        '00',
+        'SelectedLanguage=; ASP.NET_SessionId=initialSession'
+      );
+      expect(result.status).toBe('CONFIRMED');
+      expect(result.quotation_no).toBe('0000284086');
+
+      // Verify QuotationDetails warmup ran first
+      expect(fetchCalls.some((c) => c.url.includes('/QuotationDetails/Index'))).toBe(true);
+      expect(fetchCalls.some((c) => c.url.includes('/QuotationDetails/Search'))).toBe(true);
+      expect(fetchCalls.some((c) => c.url.includes('/QuotationDetails/UpdateDetails'))).toBe(true);
+
+      const saveCall = fetchCalls.find((c) => c.url.includes('/QuotationCondition/Save'));
+      expect(saveCall).toBeDefined();
+
+      const savePayload = JSON.parse(saveCall.options.body);
+      const postModel = savePayload.objQuotationConditionPostModel;
+
+      expect(postModel.OrderType).toBe('EO');
+      expect(postModel.DeliveryTerms).toBe('EXW');
+      expect(postModel.PersonIncharge).toBe('motasemgha');
+      expect(postModel.Status).toBe('2');
+
+      // Ensure NO field except lstRates is an Array or "[OBJECT OBJECT]"
+      for (const [key, val] of Object.entries(postModel)) {
+        if (key === 'lstRates') {
+          expect(Array.isArray(val)).toBe(true);
+        } else {
+          expect(Array.isArray(val)).toBe(false);
+          expect(typeof val === 'string' || typeof val === 'boolean').toBe(true);
+          if (typeof val === 'string') {
+            expect(val.toUpperCase()).not.toContain('[OBJECT OBJECT]');
+          }
+        }
+      }
+    } finally {
+      global.fetch = originalFetch;
+    }
+  });
 });
+
 

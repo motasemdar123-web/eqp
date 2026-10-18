@@ -157,6 +157,46 @@ function formatPortalDate(offsetDays = 14) {
   return `${mm}/${dd}/${yyyy}`;
 }
 
+function extractScalarValue(val, fallback = '') {
+  if (val === null || val === undefined) return fallback;
+  if (typeof val === 'string') {
+    const trimmed = val.trim();
+    if (!trimmed || trimmed.toUpperCase().includes('[OBJECT OBJECT]')) return fallback;
+    return trimmed;
+  }
+  if (typeof val === 'number' || typeof val === 'boolean') {
+    return String(val);
+  }
+  if (Array.isArray(val)) {
+    const selected = val.find(
+      (item) =>
+        item &&
+        typeof item === 'object' &&
+        (item.Selected === true || item.Selected === 'true' || item.selected === true) &&
+        String(item.Value ?? item.value ?? '').trim() !== ''
+    );
+    if (selected) {
+      return String(selected.Value ?? selected.value).trim();
+    }
+    if (val.length === 1 && val[0] && typeof val[0] === 'object') {
+      const singleVal = val[0].Value ?? val[0].value;
+      if (singleVal !== undefined && singleVal !== null && String(singleVal).trim() !== '') {
+        return String(singleVal).trim();
+      }
+    }
+    return fallback;
+  }
+  if (typeof val === 'object') {
+    const objVal = val.Value ?? val.value ?? val.SelectedValue ?? val.selectedValue;
+    if (objVal !== undefined && objVal !== null && typeof objVal !== 'object') {
+      const s = String(objVal).trim();
+      return s !== '' ? s : fallback;
+    }
+    return fallback;
+  }
+  return fallback;
+}
+
 async function lookupPartMaster(partNo, customCookie = null) {
   const pNo = String(partNo || '').trim().toUpperCase();
   const cached = LOCAL_PARTS_CACHE.get(pNo);
@@ -916,7 +956,7 @@ async function searchQuotations(filters = {}, customCookie = null) {
 }
 
 async function confirmQuotation(quotationNo, seqNo = '00', customCookie = null) {
-  const cookieStr = customCookie ? parseCookieInput(customCookie) : loadCookie();
+  let cookieStr = customCookie ? parseCookieInput(customCookie) : loadCookie();
   if (!cookieStr) {
     throw new Error('No PDX session cookie configured.');
   }
@@ -925,12 +965,71 @@ async function confirmQuotation(quotationNo, seqNo = '00', customCookie = null) 
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36 Edg/151.0.0.0',
     'Accept-Language': 'en-US,en;q=0.9,ar;q=0.8',
     'Origin': 'https://www.komatsu.ae',
-    'Connection': 'close',
     'Cookie': cookieStr,
   };
 
   const qtn = String(quotationNo).trim();
   const seq = String(seqNo || '00').trim();
+
+  // STEP 1: Load and calculate QuotationDetails in ASP.NET session before confirming Condition
+  const detailsIndexUrl = `${BASE_PORTAL_URL}/QuotationDetails/Index?strQUTN=${qtn}&strQutnSubNo=${seq}&DBCode=536K`;
+  try {
+    const dtIdxResp = await fetch(detailsIndexUrl, {
+      method: 'GET',
+      headers: defaultHeaders,
+    });
+    const dtIdxCookies = extractResponseCookies(dtIdxResp);
+    if (dtIdxCookies.length > 0) {
+      cookieStr = mergeCookies(cookieStr, dtIdxCookies);
+      defaultHeaders.Cookie = cookieStr;
+    }
+
+    const dtSearchResp = await fetch(`${BASE_PORTAL_URL}/QuotationDetails/Search`, {
+      method: 'POST',
+      headers: {
+        ...defaultHeaders,
+        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+        'X-Requested-With': 'XMLHttpRequest',
+        'Referer': detailsIndexUrl,
+      },
+      body: new URLSearchParams({
+        strQuotationNo: qtn,
+        strQuotSeqNo: seq,
+        DBCode: '536K',
+        page: '1',
+        pageSize: '50',
+        group: '',
+        filter: '',
+      }).toString(),
+    });
+    const dtSearchCookies = extractResponseCookies(dtSearchResp);
+    if (dtSearchCookies.length > 0) {
+      cookieStr = mergeCookies(cookieStr, dtSearchCookies);
+      defaultHeaders.Cookie = cookieStr;
+    }
+
+    const dtUpdateResp = await fetch(`${BASE_PORTAL_URL}/QuotationDetails/UpdateDetails`, {
+      method: 'POST',
+      headers: {
+        ...defaultHeaders,
+        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+        'X-Requested-With': 'XMLHttpRequest',
+        'Referer': detailsIndexUrl,
+      },
+      body: new URLSearchParams({
+        strQuotationNo: qtn,
+        strQuotSeqNo: seq,
+        DBCode: '536K',
+      }).toString(),
+    });
+    const dtUpdateCookies = extractResponseCookies(dtUpdateResp);
+    if (dtUpdateCookies.length > 0) {
+      cookieStr = mergeCookies(cookieStr, dtUpdateCookies);
+      defaultHeaders.Cookie = cookieStr;
+    }
+  } catch (dtErr) {
+    console.warn(`[confirmQuotation] ${qtn} QuotationDetails warmup warning:`, dtErr.message);
+  }
 
   const condIndexUrl = `${BASE_PORTAL_URL}/QuotationCondition/Index?strQUTN=${qtn}&strQutnSubNo=${seq}&DBCode=536K`;
   const condSearchUrl = `${BASE_PORTAL_URL}/QuotationCondition/Search`;
@@ -940,8 +1039,8 @@ async function confirmQuotation(quotationNo, seqNo = '00', customCookie = null) 
     DBCode: '536K',
   });
 
-  // STEP 1: Search QuotationCondition to load fresh state & TimeStamp
-  // (We bypass GET QuotationCondition/Index here because visiting the action without anti-forgery token resets the ASP.NET session state)
+  // STEP 2: Search QuotationCondition to load fresh state & TimeStamp
+  // (We bypass GET QuotationCondition/Index here because visiting the action without parameters resets the condition session state)
   const searchResp = await fetch(condSearchUrl, {
     method: 'POST',
     headers: {
@@ -961,7 +1060,7 @@ async function confirmQuotation(quotationNo, seqNo = '00', customCookie = null) 
 
   const searchText = await searchResp.text();
   console.log(`[confirmQuotation] ${qtn} CondSearch status=${searchResp.status} bodyLen=${searchText.length} isHTML=${searchText.includes('<html')}`);
-  
+
   let searchData;
   try {
     searchData = JSON.parse(searchText);
@@ -981,26 +1080,35 @@ async function confirmQuotation(quotationNo, seqNo = '00', customCookie = null) 
   }
 
   const condModel = searchData.data || searchData.objQuotationConditionPostModel || searchData.objQuotationCondition || searchData;
-  const rawTimestamp = condModel.TimeStamp || searchData.TimeStamp;
-  const timestamp = rawTimestamp && rawTimestamp !== '""' && rawTimestamp !== '' ? rawTimestamp : null;
-  console.log(`[confirmQuotation] ${qtn} timestamp=${timestamp} status=${JSON.stringify(condModel.Status)}`);
+  const rawTimestamp = extractScalarValue(condModel.TimeStamp || searchData.TimeStamp, '');
+  const timestamp = rawTimestamp && rawTimestamp !== '""' ? rawTimestamp : null;
+  const currentSt = extractScalarValue(condModel.SelectedStatusCode || condModel.Status || searchData.Status, '').toLowerCase();
+  console.log(`[confirmQuotation] ${qtn} timestamp=${timestamp} extractedStatus=${currentSt}`);
 
   // Check if quotation is ALREADY confirmed in Komatsu PDX
-  const currentSt = String(condModel.Status || '').trim().toLowerCase();
   if (currentSt === '2' || currentSt === 'confirmed') {
     console.log(`[confirmQuotation] ${qtn} is already Confirmed (Status 2). Proceeding...`);
     return {
       status: 'CONFIRMED',
       quotation_no: qtn,
-      db_order_no: condModel.DistributerOrderNo || searchData.DistributerOrderNo,
+      db_order_no: extractScalarValue(condModel.DistributerOrderNo || searchData.DistributerOrderNo, ''),
       alreadyConfirmed: true,
       timestamp,
       raw_response: condModel,
     };
   }
 
-  let rates = condModel.Rates || condModel.lstRates || searchData.Rates || searchData.lstRates || [];
-  if (!rates || rates.length === 0) {
+  const rawRates = condModel.Rates || condModel.lstRates || searchData.Rates || searchData.lstRates || [];
+  let rates;
+  if (Array.isArray(rawRates) && rawRates.length > 0) {
+    rates = rawRates.map((r) => ({
+      QuotationNo: extractScalarValue(r.QuotationNo, qtn),
+      QuotationSubNo: extractScalarValue(r.QuotationSubNo, seq),
+      RateType: extractScalarValue(r.RateType, '1'),
+      CommodityGroupCode: extractScalarValue(r.CommodityGroupCode, ''),
+      RateValue: extractScalarValue(r.RateValue, '0.00'),
+    }));
+  } else {
     rates = ['A', 'B', 'C', 'D', 'DA', 'E', 'F', 'NA', 'Other', 'S'].map((grp) => ({
       QuotationNo: qtn,
       QuotationSubNo: seq,
@@ -1011,93 +1119,118 @@ async function confirmQuotation(quotationNo, seqNo = '00', customCookie = null) 
   }
 
   // STEP 3: Save with Status = '2' (Confirmed)
-  // Preserve actual order type from QuotationCondition/Search (DS vs EO vs SO)
-  const qtnOrderType = String(
-    condModel.OrderType ||
-    condModel.OrderTypes ||
-    condModel.SelectedOrderTypeCode ||
-    condModel.strOTYP ||
-    'EO'
-  ).trim().toUpperCase();
+  // Safely extract primitive string for OrderType (QuotationCondition/Search returns SelectListItem[] arrays for dropdowns)
+  const distOrderNo = extractScalarValue(condModel.DistributerOrderNo || searchData.DistributerOrderNo, '');
+  const extractedComments = extractScalarValue(condModel.Comments || searchData.Comments, '');
+  const rawOrderType =
+    extractScalarValue(condModel.SelectedOrderTypeCode) ||
+    extractScalarValue(condModel.SelectedOrderType) ||
+    extractScalarValue(condModel.strOTYP) ||
+    extractScalarValue(condModel.strOrderType) ||
+    extractScalarValue(condModel.OrderType) ||
+    extractScalarValue(condModel.OrderTypes) ||
+    extractScalarValue(searchData.SelectedOrderTypeCode) ||
+    extractScalarValue(searchData.OrderType);
+
+  const inferredDefaultOrderType =
+    condModel.ModelInfoMark === false ||
+    extractedComments.toUpperCase().includes('STOCK') ||
+    /^R\d+/i.test(distOrderNo)
+      ? 'DS'
+      : 'EO';
+
+  const qtnOrderType = (rawOrderType || inferredDefaultOrderType).toUpperCase();
   const isStockOrder = ['DS', 'SO', 'SA'].includes(qtnOrderType);
-  const qtnDeliveryTerms = condModel.DeliveryTerms || (isStockOrder ? 'DDU' : 'EXW');
-  const qtnPremiumRate = condModel.PremiumRate || (isStockOrder ? '0.00' : '13.30');
+  const qtnDeliveryTerms =
+    extractScalarValue(condModel.SelectedDeliveryTerms || condModel.DeliveryTerms || searchData.DeliveryTerms) ||
+    (isStockOrder ? 'DDU' : 'EXW');
+  const extractedPremium = extractScalarValue(condModel.PremiumRate || searchData.PremiumRate, '');
+  const qtnPremiumRate = extractedPremium !== '' ? extractedPremium : (isStockOrder ? '0.00' : '13.30');
   const qtnModelInfoMark = typeof condModel.ModelInfoMark === 'boolean' ? condModel.ModelInfoMark : !isStockOrder;
-  const qtnComments = condModel.Comments || (isStockOrder ? 'STOCK REPLENISHMENT' : 'Urgent');
+  const qtnComments = extractedComments || (isStockOrder ? 'STOCK REPLENISHMENT' : 'Urgent');
 
   const saveUrl = `${BASE_PORTAL_URL}/QuotationCondition/Save`;
   const savePayload = {
     objQuotationConditionPostModel: {
-      OrigQuotationNo: condModel.OrigQuotationNo || qtn,
-      OrigQuotationSeqNo: condModel.OrigQuotationSeqNo || seq,
+      OrigQuotationNo: extractScalarValue(condModel.OrigQuotationNo, qtn),
+      OrigQuotationSeqNo: extractScalarValue(condModel.OrigQuotationSeqNo, seq),
       QuotationNo: qtn,
       QuotationSeqNo: seq,
-      DistributerOrderNo: condModel.DistributerOrderNo || searchData.DistributerOrderNo || '',
-      DistributerCodes: condModel.DistributerCodes || '536K',
-      DistributerName: condModel.DistributerName || searchData.DistributerName || 'DAR AL HAI',
-      SalesPriceList: condModel.SalesPriceList || 'USD037',
-      Currency: condModel.Currency || 'USD',
-      ExchangeRate: condModel.ExchangeRate || '1.0',
+      DistributerOrderNo: distOrderNo,
+      DistributerCodes: '536K',
+      DistributerName: extractScalarValue(condModel.DistributerName || searchData.DistributerName, 'DAR AL HAI'),
+      SalesPriceList: 'USD037',
+      Currency: 'USD',
+      ExchangeRate: extractScalarValue(condModel.ExchangeRate || searchData.ExchangeRate, '1.0'),
       OrderType: qtnOrderType,
       OrderTypes: qtnOrderType,
       SelectedOrderType: qtnOrderType,
       SelectedOrderTypeCode: qtnOrderType,
       strOTYP: qtnOrderType,
       strOrderType: qtnOrderType,
-      Usance: condModel.Usance || '30',
-      TaxRate: condModel.TaxRate || '0',
-      Transportation: condModel.SelectedTransportationCode || condModel.Transportation || 'RD',
+      Usance: '30',
+      TaxRate: extractScalarValue(condModel.TaxRate, '0'),
+      Transportation: extractScalarValue(
+        condModel.SelectedTransportationCode || searchData.SelectedTransportationCode || condModel.Transportation,
+        'RD'
+      ),
       DeliveryTerms: qtnDeliveryTerms,
-      PaymentTerms: condModel.PaymentTerms || 'T2',
-      OrderPRobability: condModel.OrderPRobability || 'A',
-      Region: condModel.Region || 'AE',
+      PaymentTerms: 'T2',
+      OrderPRobability: 'A',
+      Region: 'AE',
       Status: '2', // 2 = Confirmed
-      Manufacturer: condModel.Manufacturer || '',
-      LoadingPort: condModel.LoadingPort || 'JEA',
-      UnloadingPort: condModel.UnloadingPort || 'KWI',
-      SubstitutionCodes: condModel.SubstitutionCodes || '',
-      PriceSettingCodes: condModel.PriceSettingCodes || '',
-      PersonIncharge: condModel.PersonIncharge || searchData.PersonIncharge || 'motasemgha',
-      QuotationValidity: condModel.QuotationValidity || formatPortalDate(14),
-      RequestedDeliveryTime: condModel.RequestedDeliveryTime || formatPortalDate(7),
-      PriceCalculationMethod: condModel.PriceCalculationMethod || 'D',
-      DiscountRateOther: condModel.DiscountRateOther || '0',
+      Manufacturer: '',
+      LoadingPort: 'JEA',
+      UnloadingPort: 'KWI',
+      SubstitutionCodes: '',
+      PriceSettingCodes: '',
+      PersonIncharge: extractScalarValue(
+        condModel.SelectedPersonIncharge || condModel.PersonIncharge || searchData.PersonIncharge,
+        'motasemgha'
+      ),
+      QuotationValidity: extractScalarValue(condModel.QuotationValidity || searchData.QuotationValidity, formatPortalDate(14)),
+      RequestedDeliveryTime: extractScalarValue(condModel.RequestedDeliveryTime || searchData.RequestedDeliveryTime, formatPortalDate(7)),
+      PriceCalculationMethod: 'D',
+      DiscountRateOther: extractScalarValue(condModel.DiscountRateOther, '0'),
       PremiumRate: qtnPremiumRate,
-      BillingRateA: condModel.BillingRateA || '0',
-      BillingRateB: condModel.BillingRateB || '0',
-      BillingRateC: condModel.BillingRateC || '0',
-      BillingRateD: condModel.BillingRateD || '0',
-      BillingRateE: condModel.BillingRateE || '0',
-      BillingRateF: condModel.BillingRateF || '0',
-      ShipToAddress: condModel.ShipToAddress || searchData.ShipToAddress || 'DAR AL HAI\nKUWAIT GENERAL TRADING. Al-Rai Industrial Area Plot # 1732 Block # 2 Street # 4 Behind the Avenues Kuwait',
+      BillingRateA: extractScalarValue(condModel.BillingRateA, '0'),
+      BillingRateB: extractScalarValue(condModel.BillingRateB, '0'),
+      BillingRateC: extractScalarValue(condModel.BillingRateC, '0'),
+      BillingRateD: extractScalarValue(condModel.BillingRateD, '0'),
+      BillingRateE: extractScalarValue(condModel.BillingRateE, '0'),
+      BillingRateF: extractScalarValue(condModel.BillingRateF, '0'),
+      ShipToAddress: extractScalarValue(
+        condModel.ShipToAddress || searchData.ShipToAddress,
+        'DAR AL HAI\nKUWAIT GENERAL TRADING. Al-Rai Industrial Area Plot # 1732 Block # 2 Street # 4 Behind the Avenues Kuwait'
+      ),
       AvailableMark: typeof condModel.AvailableMark === 'boolean' ? condModel.AvailableMark : true,
       UseHSCode: Boolean(condModel.UseHSCode),
       ReserverStock: Boolean(condModel.ReserverStock),
       DontConsiderEORes: Boolean(condModel.DontConsiderEORes),
       FixPrice: Boolean(condModel.FixPrice),
-      ModelInformation: condModel.ModelInformation || '',
-      Memo: condModel.Memo || '',
+      ModelInformation: extractScalarValue(condModel.ModelInformation, ''),
+      Memo: extractScalarValue(condModel.Memo, ''),
       Comments: qtnComments,
-      isDetailsExist: condModel.isDetailsExist || '1',
-      LineNo: condModel.LineNo || '0',
-      ModelCode: qtnModelInfoMark ? (condModel.ModelCode || 'PC500LC-10R') : '',
-      SerialNo: qtnModelInfoMark ? (condModel.SerialNo || '100433') : '',
-      EngineSrNo: qtnModelInfoMark ? (condModel.EngineSrNo || '1') : '',
-      CustomerDetails: qtnModelInfoMark ? (condModel.CustomerDetails || 'DAR AL HAI') : '',
+      isDetailsExist: '1',
+      LineNo: extractScalarValue(condModel.LineNo, '0'),
+      ModelCode: qtnModelInfoMark ? extractScalarValue(condModel.ModelCode || searchData.ModelCode, 'PC500LC-10R') : '',
+      SerialNo: qtnModelInfoMark ? extractScalarValue(condModel.SerialNo || searchData.SerialNo, '100433') : '',
+      EngineSrNo: qtnModelInfoMark ? extractScalarValue(condModel.EngineSrNo || searchData.EngineSrNo, '1') : '',
+      CustomerDetails: qtnModelInfoMark ? extractScalarValue(condModel.CustomerDetails || searchData.CustomerDetails, 'DAR AL HAI') : '',
       ModelInfoMark: qtnModelInfoMark,
-      jobCard: condModel.jobCard || '',
-      Warranty: condModel.Warranty || '',
-      TSINumber: condModel.TSINumber || '',
+      jobCard: extractScalarValue(condModel.jobCard, ''),
+      Warranty: extractScalarValue(condModel.Warranty, ''),
+      TSINumber: extractScalarValue(condModel.TSINumber, ''),
       ModelSVREMark: Boolean(condModel.ModelSVREMark),
-      ExitPoint: condModel.ExitPoint || 'JEA',
-      CustomerCode: condModel.SavedCustomerCode || condModel.CustomerCode || 'REG',
+      ExitPoint: 'JEA',
+      CustomerCode: extractScalarValue(condModel.SavedCustomerCode || searchData.SavedCustomerCode || condModel.CustomerCode, 'REG'),
       lstRates: rates,
-      MarkingCode: condModel.MarkingCode || '',
+      MarkingCode: 'MCOIL',
       ...(timestamp ? { TimeStamp: timestamp } : {}),
     },
   };
 
-  const saveResp = await fetch(saveUrl, {
+  let saveResp = await fetch(saveUrl, {
     method: 'POST',
     headers: {
       ...defaultHeaders,
@@ -1108,6 +1241,28 @@ async function confirmQuotation(quotationNo, seqNo = '00', customCookie = null) 
     },
     body: JSON.stringify(savePayload),
   });
+
+  if (saveResp.status >= 500) {
+    console.warn(`[confirmQuotation] ${qtn} Save returned status ${saveResp.status}, retrying once after 400ms...`);
+    await new Promise((r) => setTimeout(r, 400));
+    saveResp = await fetch(saveUrl, {
+      method: 'POST',
+      headers: {
+        ...defaultHeaders,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json, text/javascript, */*; q=0.01',
+        'X-Requested-With': 'XMLHttpRequest',
+        'Referer': condIndexUrl,
+      },
+      body: JSON.stringify(savePayload),
+    });
+  }
+
+  const saveCookies = extractResponseCookies(saveResp);
+  if (saveCookies.length > 0) {
+    cookieStr = mergeCookies(cookieStr, saveCookies);
+    defaultHeaders.Cookie = cookieStr;
+  }
 
   const saveText = await saveResp.text();
   console.log(`[confirmQuotation] ${qtn} Save status=${saveResp.status} bodyLen=${saveText.length}`);
@@ -1134,14 +1289,14 @@ async function confirmQuotation(quotationNo, seqNo = '00', customCookie = null) 
       const verifyText = await verifyResp.text();
       const verifyJson = JSON.parse(verifyText);
       const vModel = verifyJson.data || verifyJson.objQuotationConditionPostModel || verifyJson.objQuotationCondition || verifyJson;
-      const vStatus = String(vModel.Status || '').trim().toLowerCase();
+      const vStatus = extractScalarValue(vModel.SelectedStatusCode || vModel.Status, '').toLowerCase();
       if (vStatus === '2' || vStatus === 'confirmed') {
         console.log(`[confirmQuotation] ${qtn} verified confirmed despite non-JSON Save response!`);
         return {
           status: 'CONFIRMED',
           quotation_no: qtn,
-          db_order_no: vModel.DistributerOrderNo || condModel.DistributerOrderNo,
-          timestamp: vModel.TimeStamp,
+          db_order_no: extractScalarValue(vModel.DistributerOrderNo, distOrderNo),
+          timestamp: extractScalarValue(vModel.TimeStamp, timestamp || ''),
           raw_response: { status: 'CONFIRMED_VIA_VERIFY' },
         };
       }
@@ -1185,14 +1340,14 @@ async function confirmQuotation(quotationNo, seqNo = '00', customCookie = null) 
       const verifyText = await verifyResp.text();
       const verifyJson = JSON.parse(verifyText);
       const vModel = verifyJson.data || verifyJson.objQuotationConditionPostModel || verifyJson.objQuotationCondition || verifyJson;
-      const vStatus = String(vModel.Status || '').trim().toLowerCase();
+      const vStatus = extractScalarValue(vModel.SelectedStatusCode || vModel.Status, '').toLowerCase();
       if (vStatus === '2' || vStatus === 'confirmed') {
         console.log(`[confirmQuotation] ${qtn} verified confirmed on portal status re-check!`);
         return {
           status: 'CONFIRMED',
           quotation_no: qtn,
-          db_order_no: vModel.DistributerOrderNo || condModel.DistributerOrderNo,
-          timestamp: vModel.TimeStamp,
+          db_order_no: extractScalarValue(vModel.DistributerOrderNo, distOrderNo),
+          timestamp: extractScalarValue(vModel.TimeStamp, timestamp || ''),
           raw_response: saveJson,
         };
       }
@@ -1212,7 +1367,7 @@ async function confirmQuotation(quotationNo, seqNo = '00', customCookie = null) 
   return {
     status: 'CONFIRMED',
     quotation_no: qtn,
-    db_order_no: condModel.DistributerOrderNo || searchData.DistributerOrderNo,
+    db_order_no: distOrderNo,
     timestamp,
     raw_response: saveJson,
   };
@@ -1226,7 +1381,7 @@ async function copyQuotationToSo(quotationNo, seqNo = '00', options = {}, custom
     opts = typeof customCookie === 'object' && customCookie !== null ? customCookie : {};
   }
 
-  const cookieStr = cookie ? parseCookieInput(cookie) : loadCookie();
+  let cookieStr = cookie ? parseCookieInput(cookie) : loadCookie();
   if (!cookieStr) {
     throw new Error('No PDX session cookie configured.');
   }
@@ -1235,48 +1390,60 @@ async function copyQuotationToSo(quotationNo, seqNo = '00', options = {}, custom
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36 Edg/151.0.0.0',
     'Accept-Language': 'en-US,en;q=0.9,ar;q=0.8',
     'Origin': 'https://www.komatsu.ae',
-    'Connection': 'close',
     'Cookie': cookieStr,
   };
 
   // STEP 1: Inquiry/CopyToSO
   const copyUrl = `${BASE_PORTAL_URL}/Inquiry/CopyToSO`;
-  const copyResp = await fetch(copyUrl, {
-    method: 'POST',
-    headers: {
-      ...defaultHeaders,
-      'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-      'X-Requested-With': 'XMLHttpRequest',
-      'Referer': `${BASE_PORTAL_URL}/Inquiry/Index`,
-    },
-    body: new URLSearchParams({ strQutn: quotationNo, strQuto: seqNo }).toString(),
-  });
+  const runCopyPreCheck = async () => {
+    const resp = await fetch(copyUrl, {
+      method: 'POST',
+      headers: {
+        ...defaultHeaders,
+        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+        'X-Requested-With': 'XMLHttpRequest',
+        'Referer': `${BASE_PORTAL_URL}/Inquiry/Index`,
+      },
+      body: new URLSearchParams({ strQutn: quotationNo, strQuto: seqNo }).toString(),
+    });
 
-  const copySetCookies = extractResponseCookies(copyResp);
-  if (copySetCookies.length > 0) {
-    cookieStr = mergeCookies(cookieStr, copySetCookies);
-    defaultHeaders.Cookie = cookieStr;
-  }
-
-  const copyText = await copyResp.text();
-  let copyJson;
-  try {
-    copyJson = JSON.parse(copyText);
-  } catch {
-    if (
-      copyResp.status === 401 ||
-      copyResp.status === 302 ||
-      copyText.includes('login.microsoftonline.com') ||
-      copyText.includes('/Account/Login') ||
-      copyText.includes('/User/Login') ||
-      copyText.includes('Sign in to your account')
-    ) {
-      throw new Error('PDX session expired. Please re-authenticate your session cookie.');
+    const setCookies = extractResponseCookies(resp);
+    if (setCookies.length > 0) {
+      cookieStr = mergeCookies(cookieStr, setCookies);
+      defaultHeaders.Cookie = cookieStr;
     }
-    throw new Error(`Inquiry/CopyToSO returned non-JSON response: ${copyText.substring(0, 200)}`);
+
+    const text = await resp.text();
+    let json;
+    try {
+      json = JSON.parse(text);
+    } catch {
+      if (
+        resp.status === 401 ||
+        resp.status === 302 ||
+        text.includes('login.microsoftonline.com') ||
+        text.includes('/Account/Login') ||
+        text.includes('/User/Login') ||
+        text.includes('Sign in to your account')
+      ) {
+        throw new Error('PDX session expired. Please re-authenticate your session cookie.');
+      }
+      throw new Error(`Inquiry/CopyToSO returned non-JSON response: ${text.substring(0, 200)}`);
+    }
+    return json;
+  };
+
+  let copyJson = await runCopyPreCheck();
+  let hasCopyError = copyJson.ErrorOccured && Number(copyJson.ErrorOccured) !== 0;
+
+  // If the quotation was still In Process when CopyToSO was called, auto-confirm it and retry once
+  if (hasCopyError && String(copyJson.ErrorMessage || '').toLowerCase().includes('confirmed quotation')) {
+    console.log(`[copyQuotationToSo] ${quotationNo} requires confirmation before CopyToSO. Auto-confirming now...`);
+    await confirmQuotation(quotationNo, seqNo, cookieStr);
+    copyJson = await runCopyPreCheck();
+    hasCopyError = copyJson.ErrorOccured && Number(copyJson.ErrorOccured) !== 0;
   }
 
-  const hasCopyError = copyJson.ErrorOccured && Number(copyJson.ErrorOccured) !== 0;
   if (hasCopyError) {
     throw new Error(copyJson.ErrorMessage || 'CopyToSO pre-check failed');
   }
@@ -1320,7 +1487,7 @@ async function copyQuotationToSo(quotationNo, seqNo = '00', options = {}, custom
   const convData = new URLSearchParams({
     QuotationNo: quotationNo,
     QuotationSubNo: String(parseInt(seqNo, 10) || 0),
-    ddlBODSSelectedVal: String(options.bods || '1'),
+    ddlBODSSelectedVal: String(opts.bods || '1'),
     chkPickingAllowed: 'true',
     chkMixPackingAllowed: 'true',
     chkPartialShipmentAllowed: 'true',
