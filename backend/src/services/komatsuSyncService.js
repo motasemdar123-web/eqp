@@ -508,6 +508,7 @@ module.exports = {
   runSync,
   getSyncStatus,
   checkCookieHealth,
+  notifyAuthExpired,
   computeDeliveryDueDate,
   resolveChannel,
 };

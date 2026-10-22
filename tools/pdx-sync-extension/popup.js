@@ -1,12 +1,9 @@
-﻿const EQP_BACKEND_URL = "https://eqp-1.onrender.com/api/komatsu/cookie";
-
-async function getKomatsuCookieString() {
-  const cookies = await chrome.cookies.getAll({ domain: "komatsu.ae" });
-  if (!cookies || cookies.length === 0) {
-    throw new Error("No cookies found for komatsu.ae. Please ensure you are logged in to the Komatsu portal.");
-  }
-  return cookies.map((c) => `${c.name}=${c.value}`).join("; ");
-}
+﻿const DEFAULTS = {
+  serverUrl: "https://eqp-1.onrender.com",
+  syncToken: "",
+  autoSync: true,
+  lastSync: null,
+};
 
 function showStatus(msg, isSuccess) {
   const st = document.getElementById("status");
@@ -15,36 +12,54 @@ function showStatus(msg, isSuccess) {
   st.textContent = msg;
 }
 
+function renderLastSync(lastSync) {
+  const el = document.getElementById("lastSync");
+  if (!lastSync) {
+    el.textContent = "No sync yet.";
+    return;
+  }
+  const when = new Date(lastSync.at).toLocaleString();
+  el.textContent = `${lastSync.ok ? "✓" : "✕"} ${lastSync.message} (${lastSync.reason}, ${when})`;
+  el.className = lastSync.ok ? "last ok" : "last bad";
+}
+
+async function load() {
+  const s = await chrome.storage.local.get(DEFAULTS);
+  document.getElementById("serverUrl").value = s.serverUrl;
+  document.getElementById("syncToken").value = s.syncToken;
+  document.getElementById("autoSync").checked = s.autoSync;
+  renderLastSync(s.lastSync);
+}
+
+document.getElementById("btnSave").addEventListener("click", async () => {
+  const serverUrl = document.getElementById("serverUrl").value.trim() || DEFAULTS.serverUrl;
+  const syncToken = document.getElementById("syncToken").value.trim();
+  const autoSync = document.getElementById("autoSync").checked;
+  // Clearing the hash makes the next sync send the cookie to the (possibly new) server.
+  await chrome.storage.local.set({ serverUrl, syncToken, autoSync, lastSyncedHash: "" });
+  showStatus("Settings saved.", true);
+});
+
+document.getElementById("btnSync").addEventListener("click", async () => {
+  showStatus("Syncing session with EQP server...", true);
+  const result = await chrome.runtime.sendMessage({ type: "sync-now" });
+  showStatus(result?.message || "No response from background worker.", Boolean(result?.ok));
+  const { lastSync } = await chrome.storage.local.get({ lastSync: null });
+  renderLastSync(lastSync);
+});
+
 document.getElementById("btnCopy").addEventListener("click", async () => {
   try {
-    const cookieStr = await getKomatsuCookieString();
-    await navigator.clipboard.writeText(cookieStr);
+    const { cookie, hasAuth } = await chrome.runtime.sendMessage({ type: "get-cookie" });
+    if (!hasAuth) {
+      showStatus("Not logged in to Komatsu PDX in this browser.", false);
+      return;
+    }
+    await navigator.clipboard.writeText(cookie);
     showStatus("✓ Full Cookie copied to clipboard! Paste it into the EQP modal.", true);
   } catch (err) {
     showStatus(err.message, false);
   }
 });
 
-document.getElementById("btnSync").addEventListener("click", async () => {
-  try {
-    showStatus("Syncing session with EQP server...", true);
-    const cookieStr = await getKomatsuCookieString();
-
-    const resp = await fetch(EQP_BACKEND_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ cookie: cookieStr }),
-    });
-
-    const data = await resp.json();
-    if (data.success && data.connected) {
-      showStatus("✓ Connected: " + (data.message || "PDX authenticated!"), true);
-    } else {
-      showStatus("Server responded: " + (data.message || "Cookie verification failed"), false);
-    }
-  } catch (err) {
-    showStatus("Sync error: " + err.message, false);
-  }
-});
+load();

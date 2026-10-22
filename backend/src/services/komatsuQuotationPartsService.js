@@ -1,8 +1,9 @@
-const { loadCookie, parseCookieInput } = require('./komatsuInquiryService');
+const { loadCookie, parseCookieInput, rememberRefreshedCookies } = require('./komatsuInquiryService');
 
 const BASE_PORTAL_URL = 'https://www.komatsu.ae/kmewebportal';
 
 function mergeCookies(existingCookieStr, newCookiesArray) {
+  if (newCookiesArray) rememberRefreshedCookies(existingCookieStr, newCookiesArray);
   const map = new Map();
   if (existingCookieStr) {
     existingCookieStr.split(';').forEach((p) => {

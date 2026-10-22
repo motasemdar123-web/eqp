@@ -3,6 +3,7 @@ const platformController = require('../controllers/platformController');
 const mediaController = require('../controllers/mediaController');
 const { asyncHandler } = require('../utils/asyncHandler');
 const { requirePlatformAuth, optionalPlatformAuth, requirePermission } = require('../middleware/platformAuthMiddleware');
+const { requirePdxSessionWriter } = require('../middleware/pdxSyncAuthMiddleware');
 const { audioUpload, manualUpload, reportUpload, mediaAssetUpload, quotationRequestUpload } = require('../middleware/uploadMiddleware');
 
 const router = Router();
@@ -61,7 +62,7 @@ router.delete('/api/scheduling/tasks/:id', requirePlatformAuth, requirePermissio
 router.post('/api/scheduling/technician-schedules', requirePlatformAuth, requirePermission('SCHEDULE_MANAGE'), asyncHandler(platformController.upsertTechnicianSchedule));
 
 router.get('/api/komatsu/status', optionalPlatformAuth, asyncHandler(platformController.getKomatsuStatus));
-router.post('/api/komatsu/cookie', optionalPlatformAuth, asyncHandler(platformController.saveKomatsuCookie));
+router.post('/api/komatsu/cookie', requirePdxSessionWriter, asyncHandler(platformController.saveKomatsuCookie));
 router.post('/api/komatsu/inquiry', requirePlatformAuth, asyncHandler(platformController.runKomatsuInquiry));
 router.get('/api/komatsu/fleet', requirePlatformAuth, asyncHandler(platformController.getKomatsuFleet));
 router.post('/api/komatsu/custom-machine', requirePlatformAuth, asyncHandler(platformController.addKomatsuCustomMachine));

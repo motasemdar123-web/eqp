@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const ExcelJS = require('exceljs');
-const { loadCookie, parseCookieInput, runBulkInquiry } = require('./komatsuInquiryService');
+const { loadCookie, parseCookieInput, runBulkInquiry, rememberRefreshedCookies } = require('./komatsuInquiryService');
 
 const BASE_PORTAL_URL = 'https://www.komatsu.ae/kmewebportal';
 const FLEET_EXCEL_PATH = path.join(__dirname, '../../data/fleet_machines.xlsx');
@@ -401,6 +401,7 @@ async function getLatestDbOrderNo(customerCode = 'REG', customCookie = null) {
 function mergeCookies(existingCookieStr = '', setCookieHeaders = []) {
   if (!setCookieHeaders || setCookieHeaders.length === 0) return existingCookieStr;
   const headers = Array.isArray(setCookieHeaders) ? setCookieHeaders : [setCookieHeaders];
+  rememberRefreshedCookies(existingCookieStr, headers);
   const cookieMap = new Map();
 
   // Parse existing cookies

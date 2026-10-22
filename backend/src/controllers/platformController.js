@@ -255,14 +255,18 @@ const komatsuEqpCareService = require('../services/komatsuEqpCareService');
 const sapPoAutomationService = require('../services/sapPoAutomationService');
 const userSapCredentialsService = require('../services/userSapCredentialsService');
 const komatsuQuotationPartsService = require('../services/komatsuQuotationPartsService');
+const pdxSessionKeepAliveService = require('../services/pdxSessionKeepAliveService');
 
 async function getKomatsuStatus(req, res) {
+  // Public endpoint: it may test a cookie but never stores one (writes go through POST /api/komatsu/cookie).
   const { cookie } = req.query || {};
-  if (cookie) {
-    komatsuInquiryService.saveCookie(cookie);
-  }
   const status = await komatsuInquiryService.testPdxConnection(cookie);
-  res.json({ success: true, ...status, hasSavedCookie: Boolean(komatsuInquiryService.loadCookie()) });
+  res.json({
+    success: true,
+    ...status,
+    hasSavedCookie: Boolean(komatsuInquiryService.loadCookie()),
+    keepAlive: pdxSessionKeepAliveService.getKeepAliveState(),
+  });
 }
 
 async function saveKomatsuCookie(req, res) {
@@ -279,6 +283,7 @@ async function saveKomatsuCookie(req, res) {
       message: komatsuInquiryService.MISSING_AUTH_MESSAGE,
     });
   }
+  console.log(`[saveKomatsuCookie] PDX session updated by ${req.pdxSessionWriter || 'unknown'}`);
   const status = await komatsuInquiryService.testPdxConnection(saved);
   res.json({ success: true, ...status, cookie: saved });
 }

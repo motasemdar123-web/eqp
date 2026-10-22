@@ -85,6 +85,39 @@
       color: #f87171;
       border: 1px solid rgba(239, 68, 68, 0.3);
     }
+    label {
+      display: block;
+      font-size: 11px;
+      color: #94a3b8;
+      margin-bottom: 4px;
+    }
+    input[type="text"],
+    input[type="password"] {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 7px 8px;
+      margin-bottom: 8px;
+      border-radius: 6px;
+      border: 1px solid #334155;
+      background: #1e293b;
+      color: #f8fafc;
+      font-size: 12px;
+    }
+    .row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      margin-bottom: 10px;
+    }
+    .last {
+      font-size: 11px;
+      margin: 0 0 12px 0;
+      color: #94a3b8;
+      word-break: break-word;
+    }
+    .last.ok { color: #34d399; }
+    .last.bad { color: #f87171; }
   </style>
 </head>
 <body>
@@ -92,9 +125,21 @@
     <span class="badge">EQP</span>
     <h3>Komatsu PDX Session</h3>
   </div>
-  <p>1-Click extraction of your active Komatsu PDX login session (including HttpOnly credentials).</p>
+  <p>Syncs your Komatsu PDX login to EQP automatically whenever it changes. Just log in to PDX in this browser.</p>
 
-  <button id="btnSync" class="btn btn-primary">⚡ Sync Directly to EQP Server</button>
+  <label for="serverUrl">EQP server URL</label>
+  <input id="serverUrl" type="text" placeholder="https://eqp-1.onrender.com" />
+  <label for="syncToken">Sync token (PDX_SYNC_TOKEN)</label>
+  <input id="syncToken" type="password" placeholder="Ask your EQP admin" />
+  <div class="row">
+    <input id="autoSync" type="checkbox" />
+    <label for="autoSync" style="margin:0">Sync automatically</label>
+  </div>
+  <button id="btnSave" class="btn btn-secondary">💾 Save Settings</button>
+
+  <div id="lastSync" class="last"></div>
+
+  <button id="btnSync" class="btn btn-primary">⚡ Sync Now</button>
   <button id="btnCopy" class="btn btn-secondary">📋 Copy Full Cookie to Clipboard</button>
 
   <div id="status"></div>

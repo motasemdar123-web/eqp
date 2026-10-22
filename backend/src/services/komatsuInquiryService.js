@@ -110,19 +110,62 @@ function saveCookie(rawInput) {
   if (!hasAuthTicket(cookieStr)) {
     return '';
   }
-  if (cookieStr) {
-    inMemoryCookie = cookieStr;
-    try {
-      const dir = path.dirname(COOKIE_FILE_PATH);
-      if (!fs.existsSync(dir)) {
-        fs.mkdirSync(dir, { recursive: true });
-      }
-      fs.writeFileSync(COOKIE_FILE_PATH, cookieStr, 'utf-8');
-    } catch {
-      // Non-fatal if filesystem is read-only
-    }
-  }
+  persistSession(cookieStr);
   return cookieStr;
+}
+
+function persistSession(cookieStr) {
+  inMemoryCookie = cookieStr;
+  try {
+    const dir = path.dirname(COOKIE_FILE_PATH);
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+    }
+    fs.writeFileSync(COOKIE_FILE_PATH, cookieStr, 'utf-8');
+  } catch {
+    // Non-fatal if filesystem is read-only
+  }
+}
+
+// Concatenated .AspNet.Cookies (and chunk) values; identifies which login session a cookie belongs to.
+function authTicketOf(cookieStr = '') {
+  return String(cookieStr || '')
+    .split(';')
+    .map((part) => part.trim())
+    .filter((part) => /^\.AspNet\.Cookies(C\d+)?=/.test(part))
+    .sort()
+    .join(';');
+}
+
+// PDX slides the session by re-issuing cookies in Set-Cookie. Fold them into the stored session when the
+// request was made with that same session, so the refreshed ticket survives past this one request.
+function rememberRefreshedCookies(usedCookieStr, setCookieHeaders = []) {
+  const headers = (Array.isArray(setCookieHeaders) ? setCookieHeaders : [setCookieHeaders]).filter(Boolean);
+  if (headers.length === 0) return false;
+
+  const stored = loadCookie();
+  const storedTicket = authTicketOf(stored);
+  if (!storedTicket || storedTicket !== authTicketOf(usedCookieStr)) return false;
+
+  const cookieMap = new Map();
+  stored.split(';').forEach((part) => {
+    const [k, ...v] = part.trim().split('=');
+    if (k && v.length > 0) cookieMap.set(k.trim(), v.join('=').trim());
+  });
+  headers.forEach((h) => {
+    const [k, ...v] = String(h).split(';')[0].trim().split('=');
+    if (k && v.length > 0) cookieMap.set(k.trim(), v.join('=').trim());
+  });
+
+  const merged = Array.from(cookieMap.entries())
+    .filter(([, v]) => v !== '')
+    .map(([k, v]) => `${k}=${v}`)
+    .join('; ');
+
+  // A cleared ticket means PDX ended the session; keep the old one so the expiry is reported, not hidden.
+  if (merged === stored || !hasAuthTicket(merged)) return false;
+  persistSession(merged);
+  return true;
 }
 
 async function testPdxConnection(customCookie = null) {
@@ -439,6 +482,8 @@ module.exports = {
   loadCookie,
   parseCookieInput,
   hasAuthTicket,
+  authTicketOf,
+  rememberRefreshedCookies,
   MISSING_AUTH_MESSAGE,
   testPdxConnection,
   queryPdxBatch,
