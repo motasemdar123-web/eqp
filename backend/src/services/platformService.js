@@ -3,14 +3,13 @@ const fs = require('fs/promises');
 const fsSync = require('fs');
 const path = require('path');
 const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 const OpenAI = require('openai');
 const { getPrisma } = require('../config/prisma');
 const { env } = require('../config/env');
 const { ApiError } = require('../utils/ApiError');
-const { signJwt } = require('../middleware/platformAuthMiddleware');
+const { signJwt, verifyPlatformJwtWithGrace } = require('../middleware/platformAuthMiddleware');
 const { normalizeArabicStatus } = require('../utils/platformEnums');
-const { createSessionToken } = require('../utils/sessionToken');
+const { createSessionToken, verifySessionToken } = require('../utils/sessionToken');
 const storageService = require('./storageService');
 const machineRepository = require('../repositories/machineRepository');
 const historyRepository = require('../repositories/historyRepository');
@@ -368,11 +367,6 @@ async function unifiedLogin(payload = {}) {
     isValidPassword = await bcrypt.compare(password, user.passwordHash).catch(() => false);
   }
 
-  // Fallback check against standard seed password if hash did not match
-  if (!isValidPassword && ['ChangeMe123!', 'DarAlHai123!', 'Daralhai@123', 'Mohammad@123', 'Rami@123', 'Mohammad@2026', 'Mohammad@8080'].includes(password)) {
-    isValidPassword = true;
-  }
-
   if (!isValidPassword) {
     throw new ApiError(401, 'Invalid email or password.');
   }
@@ -387,84 +381,36 @@ async function login(payload) {
 async function refreshToken(req) {
   const header = req.get('authorization') || '';
   const [scheme, token] = header.split(' ');
-  const emailFromBody = req.body?.email;
 
-  let email = emailFromBody;
-  let decodedUser = null;
+  if (scheme !== 'Bearer' || !token) {
+    throw new ApiError(401, 'Authentication required');
+  }
 
-  if (scheme === 'Bearer' && token) {
+  // Identity comes only from a token this server signed, never from the request body.
+  let where = null;
+  try {
+    const decoded = verifyPlatformJwtWithGrace(token);
+    if (decoded.sub) where = { id: decoded.sub };
+    else if (decoded.email) where = { email: String(decoded.email).toLowerCase() };
+  } catch {
     try {
-      const decoded = jwt.decode(token);
-      if (decoded && decoded.email) {
-        email = decoded.email;
-        decodedUser = decoded;
-      }
+      const session = verifySessionToken(token);
+      if (session.sub) where = { id: session.sub };
     } catch {}
   }
 
-  if (!email && req.body?.user?.email) {
-    email = req.body.user.email;
+  if (!where) {
+    throw new ApiError(401, 'Invalid or expired token');
   }
 
-  if (!email) {
-    throw new ApiError(400, 'Cannot refresh session without email or token.');
+  const prisma = requirePrisma();
+  const user = await prisma.user.findUnique({ where }).catch(() => null);
+
+  if (!user || user.status !== 'ACTIVE') {
+    throw new ApiError(401, 'User not found or inactive.');
   }
 
-  let prisma = null;
-  let user = null;
-  try {
-    prisma = requirePrisma();
-    if (prisma) {
-      user = await prisma.user.findUnique({
-        where: { email: email.toLowerCase() },
-      });
-    }
-  } catch {}
-
-  if (user && user.status === 'ACTIVE') {
-    return buildPlatformAuthResult(prisma, user, 'auto', 'DIRECT');
-  }
-
-  // Fallback for enterprise staff email (e.g. @daralhai.com or jessica)
-  const lowerEmail = email.toLowerCase();
-  const isEnterprise = lowerEmail.endsWith('@daralhai.com') || lowerEmail === 'jessicaafawzyy80@gmail.com';
-  if (isEnterprise) {
-    const fallbackId = `user-${lowerEmail.replace(/[^a-z0-9]/g, '-')}`;
-    const fullName = decodedUser?.fullName || (lowerEmail.includes('motasem') ? 'Motasem Ghanem' : 'Enterprise Staff');
-    const roles = decodedUser?.roles || ['SUPER_ADMIN', 'ENGINEER'];
-    const permissions = decodedUser?.permissions || ['EQP_MANAGE', 'REPORTS_READ', 'REPORTS_WRITE', 'SYSTEM_CONFIGURE', 'PARTS_MANAGE'];
-
-    const sessionToken = createSessionToken({
-      id: fallbackId,
-      user_number: decodedUser?.userNumber || 'EMP-01',
-      full_name: fullName,
-    });
-
-    const refreshedToken = signJwt({
-      sub: fallbackId,
-      email: lowerEmail,
-      fullName,
-      userNumber: decodedUser?.userNumber || 'EMP-01',
-      roles,
-      permissions,
-    });
-
-    return {
-      authType: 'DIRECT',
-      token: refreshedToken,
-      user: {
-        id: fallbackId,
-        email: lowerEmail,
-        fullName,
-        roles,
-        permissions,
-        sessionToken,
-      },
-      redirectTo: '/management',
-    };
-  }
-
-  throw new ApiError(401, 'User not found or inactive.');
+  return buildPlatformAuthResult(prisma, user, 'auto', 'DIRECT');
 }
 
 async function technicianLogin(payload) {

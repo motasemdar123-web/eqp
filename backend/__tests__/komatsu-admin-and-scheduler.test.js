@@ -3,6 +3,7 @@ require('dotenv').config({ path: path.resolve(__dirname, '..', '.env') });
 const request = require('supertest');
 const { createApp } = require('../src/app');
 const { getPrisma } = require('../src/config/prisma');
+const { signJwt } = require('../src/middleware/platformAuthMiddleware');
 const { getKuwaitTimeString, SCHEDULED_TIMES } = require('../src/services/cronSchedulerService');
 const { checkCookieHealth } = require('../src/services/komatsuSyncService');
 
@@ -18,16 +19,13 @@ describe('Komatsu Admin Management & Scheduler Suite', () => {
     app = createApp();
     prisma = getPrisma();
 
-    // Create staff token recognized by internalApiAuthMiddleware
-    const payload = Buffer.from(
-      JSON.stringify({
-        sub: 'admin-user-test',
-        email: 'ops-admin@daralhai.com',
-        fullName: 'Operations Manager',
-        roles: ['SUPER_ADMIN'],
-      })
-    ).toString('base64url');
-    adminToken = `test-header.${payload}.test-sig`;
+    // Staff token signed with the server secret, as internalApiAuthMiddleware requires
+    adminToken = signJwt({
+      sub: 'admin-user-test',
+      email: 'ops-admin@daralhai.com',
+      fullName: 'Operations Manager',
+      roles: ['SUPER_ADMIN'],
+    });
 
     // Create a test Komatsu order
     testOrder = await prisma.komatsuOrder.create({
