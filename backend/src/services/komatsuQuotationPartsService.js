@@ -1,25 +1,6 @@
-const fs = require('fs');
-const path = require('path');
+const { loadCookie, parseCookieInput } = require('./komatsuInquiryService');
 
 const BASE_PORTAL_URL = 'https://www.komatsu.ae/kmewebportal';
-const COOKIE_FILE_PATH = path.join(__dirname, '../../data/pdx_cookies.txt');
-
-function loadCookie() {
-  if (process.env.PDX_COOKIES) return process.env.PDX_COOKIES;
-  if (fs.existsSync(COOKIE_FILE_PATH)) {
-    return fs.readFileSync(COOKIE_FILE_PATH, 'utf8').trim();
-  }
-  return '';
-}
-
-function parseCookieInput(cookieInput) {
-  if (!cookieInput) return '';
-  return cookieInput
-    .split(';')
-    .map((c) => c.trim())
-    .filter(Boolean)
-    .join('; ');
-}
 
 function mergeCookies(existingCookieStr, newCookiesArray) {
   const map = new Map();

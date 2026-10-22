@@ -271,6 +271,14 @@ async function saveKomatsuCookie(req, res) {
     return res.status(400).json({ success: false, message: 'Cookie content is required' });
   }
   const saved = komatsuInquiryService.saveCookie(cookie);
+  if (!saved) {
+    return res.status(400).json({
+      success: false,
+      connected: false,
+      missingAuthTicket: true,
+      message: komatsuInquiryService.MISSING_AUTH_MESSAGE,
+    });
+  }
   const status = await komatsuInquiryService.testPdxConnection(saved);
   res.json({ success: true, ...status, cookie: saved });
 }

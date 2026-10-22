@@ -417,15 +417,12 @@ export default function SparePartsPage() {
 
     try {
       setSavingCookie(true);
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('komatsuPdxCookie', cleanCookie);
-      }
       const res = await saveKomatsuCookie(cleanCookie);
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('komatsuPdxCookie', res?.cookie || cleanCookie);
-      }
       setStatus(res);
       if (res.connected) {
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('komatsuPdxCookie', res?.cookie || cleanCookie);
+        }
         setToast({ type: 'success', message: 'PDX session cookie saved and verified!' });
         setCookieModalOpen(false);
         loadLatestOrderNumber();
@@ -434,9 +431,6 @@ export default function SparePartsPage() {
         setToast({ type: 'error', message: res.message || 'Cookie verification failed' });
       }
     } catch (err) {
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('komatsuPdxCookie', cleanCookie);
-      }
       setToast({ type: 'error', message: err.message || 'Failed to save cookie' });
     } finally {
       setSavingCookie(false);
@@ -3874,18 +3868,20 @@ export default function SparePartsPage() {
               </div>
               <div className="space-y-1.5 pt-1">
                 <div className="p-2 bg-white rounded border border-blue-200">
-                  <span className="font-bold text-blue-900 block text-xs">⚡ Option 1: Browser Console (Quickest)</span>
-                  <ol className="list-decimal list-inside space-y-0.5 text-[11px] text-slate-600 mt-0.5">
-                    <li>In your logged-in Komatsu PDX tab, press <kbd className="px-1 bg-slate-100 border rounded">F12</kbd> ➔ <strong>Console</strong> tab.</li>
-                    <li>Run <code>copy(document.cookie)</code> and paste below.</li>
-                  </ol>
-                </div>
-                <div className="p-2 bg-white rounded border border-blue-200">
-                  <span className="font-bold text-blue-900 block text-xs">🌐 Option 2: Network Tab (cURL) or 1-Click Extension</span>
+                  <span className="font-bold text-blue-900 block text-xs">⚡ Option 1: 1-Click Extension (Recommended)</span>
                   <p className="text-[11px] text-slate-600 mt-0.5">
-                    You can also right-click any portal request in <strong>F12 ➔ Network</strong> ➔ <strong>Copy as cURL</strong>, or use the bundled EQP extension from <code>tools/pdx-sync-extension</code>.
+                    Use the bundled EQP extension from <code>tools/pdx-sync-extension</code> ➔ <strong>Sync Directly to EQP Server</strong> or <strong>Copy Full Cookie</strong>.
                   </p>
                 </div>
+                <div className="p-2 bg-white rounded border border-blue-200">
+                  <span className="font-bold text-blue-900 block text-xs">🌐 Option 2: Network Tab (cURL)</span>
+                  <p className="text-[11px] text-slate-600 mt-0.5">
+                    Right-click any portal request in <strong>F12 ➔ Network</strong> ➔ <strong>Copy as cURL</strong> and paste it below.
+                  </p>
+                </div>
+                <p className="text-[11px] text-amber-800">
+                  ⚠ <code>document.cookie</code> does not work: it can't read the HttpOnly <code>.AspNet.Cookies</code> login ticket.
+                </p>
               </div>
             </div>
             <Field label="Cookie String" required>
@@ -3893,7 +3889,7 @@ export default function SparePartsPage() {
                 rows={4}
                 value={cookieInput}
                 onChange={(e) => setCookieInput(e.target.value)}
-                placeholder="SelectedLanguage=; ASP.NET_SessionId=..."
+                placeholder="ASP.NET_SessionId=...; .AspNet.Cookies=..."
                 className="font-mono text-xs"
               />
             </Field>

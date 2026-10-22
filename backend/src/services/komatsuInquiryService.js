@@ -5,11 +5,19 @@ const COOKIE_FILE_PATH = path.join(__dirname, '../../data/pdx_cookies.txt');
 const INQUIRY_PAGE_URL = 'https://www.komatsu.ae/kmewebportal/StockInquiry/MultiplePartsStockInquiry';
 const SEARCH_API_URL = 'https://www.komatsu.ae/kmewebportal/StockInquiry/MultiPartsStockInqSearch';
 
-const DEFAULT_INITIAL_COOKIES =
-  'SelectedLanguage=; ' +
-  'ASP.NET_SessionId=y5wbtej0sk0rnpghb5d1sadi;';
+// PDX authenticates through the OWIN `.AspNet.Cookies` ticket (possibly chunked as .AspNet.CookiesC1, C2...).
+// It is HttpOnly, so `document.cookie` never includes it; a cookie without it always lands on the SSO login page.
+const AUTH_COOKIE_PATTERN = /(^|;\s*)\.AspNet\.Cookies(C\d+)?=[^;\s]+/;
+
+const MISSING_AUTH_MESSAGE =
+  'Cookie is missing the .AspNet.Cookies login ticket (document.cookie cannot read it). ' +
+  'Use the EQP PDX extension or F12 > Network > Copy as cURL from a logged-in PDX tab.';
 
 let inMemoryCookie = '';
+
+function hasAuthTicket(cookieStr = '') {
+  return AUTH_COOKIE_PATTERN.test(String(cookieStr || ''));
+}
 
 function loadSavedCookieRaw() {
   try {
@@ -30,9 +38,21 @@ function extractStoredAuthCookie() {
   return match ? match[1] : '';
 }
 
+// Resolves a cookie sent with a request. A cookie without the auth ticket never replaces a stored
+// authenticated session, so a stale browser copy cannot break orders for everyone.
 function parseCookieInput(rawInput = '') {
+  const parsed = normalizeCookieString(rawInput);
+  if (!parsed) return loadCookie();
+  if (!hasAuthTicket(parsed)) {
+    const stored = loadCookie();
+    if (hasAuthTicket(stored)) return stored;
+  }
+  return parsed;
+}
+
+function normalizeCookieString(rawInput = '') {
   const trimmed = String(rawInput || '').trim();
-  if (!trimmed) return loadCookie();
+  if (!trimmed) return '';
 
   let extracted = trimmed;
 
@@ -81,14 +101,15 @@ function loadCookie() {
   if (process.env.KOMATSU_COOKIES) {
     return parseCookieInput(process.env.KOMATSU_COOKIES);
   }
-  const saved = loadSavedCookieRaw();
-  if (saved) return saved;
-
-  return DEFAULT_INITIAL_COOKIES;
+  return loadSavedCookieRaw();
 }
 
+// Returns '' (and keeps the current session) when the input has no auth ticket.
 function saveCookie(rawInput) {
-  const cookieStr = parseCookieInput(rawInput);
+  const cookieStr = normalizeCookieString(rawInput);
+  if (!hasAuthTicket(cookieStr)) {
+    return '';
+  }
   if (cookieStr) {
     inMemoryCookie = cookieStr;
     try {
@@ -108,6 +129,9 @@ async function testPdxConnection(customCookie = null) {
   const cookieStr = customCookie ? parseCookieInput(customCookie) : loadCookie();
   if (!cookieStr) {
     return { connected: false, message: 'No PDX session cookie configured yet.' };
+  }
+  if (!hasAuthTicket(cookieStr)) {
+    return { connected: false, missingAuthTicket: true, message: MISSING_AUTH_MESSAGE };
   }
 
   try {
@@ -414,6 +438,8 @@ module.exports = {
   saveCookie,
   loadCookie,
   parseCookieInput,
+  hasAuthTicket,
+  MISSING_AUTH_MESSAGE,
   testPdxConnection,
   queryPdxBatch,
   runBulkInquiry,

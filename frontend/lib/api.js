@@ -452,7 +452,13 @@ export function dismissWorkspacePlannerTask(id) {
 
 function getStoredPdxCookie() {
   if (typeof window !== 'undefined') {
-    return localStorage.getItem('komatsuPdxCookie') || '';
+    const stored = localStorage.getItem('komatsuPdxCookie') || '';
+    // Without the HttpOnly .AspNet.Cookies ticket the cookie can't authenticate; drop it so the server session is used.
+    if (stored && !/\.AspNet\.Cookies(C\d+)?=/.test(stored)) {
+      localStorage.removeItem('komatsuPdxCookie');
+      return '';
+    }
+    return stored;
   }
   return '';
 }
@@ -464,9 +470,6 @@ export function getKomatsuStatus(customCookie) {
 }
 
 export function saveKomatsuCookie(cookie) {
-  if (typeof window !== 'undefined' && cookie) {
-    localStorage.setItem('komatsuPdxCookie', cookie);
-  }
   return request('/api/komatsu/cookie', {
     method: 'POST',
     body: JSON.stringify({ cookie }),
